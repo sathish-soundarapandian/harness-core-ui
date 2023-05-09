@@ -37,6 +37,7 @@ customConnectorDetails: Custom Health Connector Details
 prometheusLabel: Prometheus
 dynatraceLabel: Dynatrace
 appdLabel: AppDynamics
+signalFXLabel: SignalFX
 newRelicLabel: New Relic
 splunkLabel: Splunk
 customLabel: Custom Health
@@ -422,6 +423,8 @@ errorTracking:
   urlValidation: Error Tracking URL is required.
 dynatrace:
   urlValidation: Dynatrace URL is required.
+signalfx:
+  urlValidation: SignalFX URL is required.
 sumologic:
   urlLabel: Sumo Logic API Server URL
   encryptedAccessIdLabel: Encrypted Access Id
@@ -992,12 +995,6 @@ policyEvaluations:
 sameCredentialsAsAbove: Same credentials as above
 linkToGitProvider: 'Link to {{gitProvider}}'
 relinkToGitProvider: 'Re-link to {{gitProvider}}'
-oAuth:
-  inProgress: OAuth in progress...
-  failed: Error while authorizing user via OAuth. Please try using an access token instead.
-  configured: OAuth configured successfully
-  reConfigured: OAuth re-configured successfully
-  accessRevoked: Access revoked. Please reconfigure the connection.
 gitProviderURLs:
   github: 'https://github.com'
   gitlab: 'https://gitlab.com'

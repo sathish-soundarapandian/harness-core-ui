@@ -239,7 +239,9 @@ planEnforcement:
       upgradeRequired: 'You have exceeded your developer subscription limit'
 
 customRoles: new Roles
+customRolesTooltip: To create custom roles
 customResourceGroups: new Resource Groups
+customResourceGroupsTooltip: To create Resource Groups
 communityErrorMessages:
   role: Requires upgrade to set up Roles
   resourceGroup: Requires upgrade to set up Resource Groups

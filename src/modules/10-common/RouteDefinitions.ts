@@ -1145,6 +1145,25 @@ const routes = {
       }
     }
   ),
+  toTriggersActivityHistoryPage: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      triggerIdentifier,
+      accountId: _accountId,
+      module,
+      ...rest
+    }: PipelineType<TriggerPathProps> & GitQueryParams) => {
+      const basePath = module || 'home'
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      if (queryString.length > 0) {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}/activity-history?${queryString}`
+      } else {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/triggers/${triggerIdentifier}/activity-history`
+      }
+    }
+  ),
   toExecution: withAccountId(
     ({
       orgIdentifier,

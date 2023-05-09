@@ -359,7 +359,7 @@ describe('Create Github connector Wizard', () => {
 
     expect(container.querySelector('input[name="authType"][value="common.oAuthLabel"]')).toBeInTheDocument()
 
-    expect(getByText('connectors.oAuth.configured')).toBeInTheDocument()
+    expect(getByText('common.oAuth.configured')).toBeInTheDocument()
 
     const relinkBtn = getByText('connectors.relinkToGitProvider')
 
@@ -369,7 +369,7 @@ describe('Create Github connector Wizard', () => {
       fireEvent.click(relinkBtn)
     })
 
-    expect(getByText('connectors.oAuth.inProgress')).toBeInTheDocument()
+    expect(getByText('common.oAuth.inProgress')).toBeInTheDocument()
 
     expect(global.fetch).toBeCalled()
   })

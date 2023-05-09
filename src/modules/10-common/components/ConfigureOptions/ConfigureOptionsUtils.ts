@@ -145,6 +145,61 @@ export function isExecutionInput(input: string): boolean {
   return splitData.some(val => val.startsWith(InputSetFunction.EXECUTION_INPUT))
 }
 
+export function parseInputStringWithCommas(input: string): string[] {
+  const values: string[] = []
+  let startPosition = 0
+  let isInSingleQuotes = false
+  let isInDoubleQuotes = false
+
+  if (!input) {
+    return []
+  }
+
+  if (typeof input !== 'string') {
+    return input
+  }
+
+  for (let currentPosition = 0; currentPosition < input.length; currentPosition++) {
+    // Checking if the current position has substring \'
+    if (
+      currentPosition + 1 < input.length &&
+      input.charAt(currentPosition) == '\\' &&
+      input.charAt(currentPosition + 1) == "'"
+    ) {
+      isInSingleQuotes = !isInSingleQuotes
+    }
+    // Checking if the current position has substring \"
+    else if (
+      currentPosition + 1 < input.length &&
+      input.charAt(currentPosition) == '\\' &&
+      input.charAt(currentPosition + 1) == '"'
+    ) {
+      isInDoubleQuotes = !isInDoubleQuotes
+    }
+    // If current char is , and it's not within single or double quotes, then add the substring to the list
+    else if (input.charAt(currentPosition) == ',' && !isInSingleQuotes && !isInDoubleQuotes) {
+      values.push(input.substring(startPosition, currentPosition).trim())
+      startPosition = currentPosition + 1
+    }
+  }
+
+  // Add last value after the last comma to the list
+  const lastValue = input.substring(startPosition)
+  values.push(lastValue.trim())
+
+  // remove outer quotes from \" ... \" and \' ... \'
+  for (let i = 0; i < values.length; i++) {
+    if (
+      (values[i].startsWith('\\"') && values[i].endsWith('\\"')) ||
+      (values[i].startsWith("\\'") && values[i].endsWith("\\'"))
+    ) {
+      values[i] = values[i].substring(2, values[i].length - 2)
+    }
+  }
+
+  return values
+}
+
 interface parseInputOptions {
   variableType?: NGVariable['type']
 }
@@ -181,10 +236,10 @@ export function parseInput(input: string, options?: parseInputOptions): ParsedIn
     } else if (fn.startsWith(InputSetFunction.ALLOWED_VALUES)) {
       // slice the function name along with surrounding parenthesis
       const fnArgs = fn.slice(InputSetFunction.ALLOWED_VALUES.length + 1).slice(0, -1)
-
+      const split = parseInputStringWithCommas(fnArgs)
       parsedInput[InputSetFunction.ALLOWED_VALUES] = {
         // do not parse numbers if present under a string variables to support existing pipelines
-        values: fnArgs.split(',').map(fnArg => {
+        values: split.map(fnArg => {
           try {
             if (variableType && variableType === 'Number') {
               const value = yamlParse(fnArg)
@@ -220,6 +275,20 @@ export function parseInput(input: string, options?: parseInputOptions): ParsedIn
   return parsedInput
 }
 
+/**
+ *
+ * getStringValueWithComma -
+ * this converts the string values containing comma to a accepted format (containing delimiters), which helps to retain this value as single value and prevent spliting on comma
+ */
+export const getStringValueWithComma = (
+  value?: string | number | MultiSelectOption
+): string | number | MultiSelectOption | undefined => {
+  if (typeof value === 'string') {
+    return value.includes(',') ? `\\'${value}\\'` : value
+  }
+  return value
+}
+
 export const getInputStr = (data: FormValues, shouldUseNewDefaultFormat: boolean): string => {
   let inputStr = RUNTIME_INPUT_VALUE
 
@@ -228,11 +297,13 @@ export const getInputStr = (data: FormValues, shouldUseNewDefaultFormat: boolean
   }
 
   if (shouldUseNewDefaultFormat && data.defaultValue) {
-    inputStr += `.${InputSetFunction.DEFAULT}(${data.defaultValue})`
+    inputStr += `.${InputSetFunction.DEFAULT}(${getStringValueWithComma(data.defaultValue)})`
   }
 
   if (data.validation === Validation.AllowedValues && data.allowedValues?.length > 0) {
-    inputStr += `.${InputSetFunction.ALLOWED_VALUES}(${data.allowedValues.join(',')})`
+    inputStr += `.${InputSetFunction.ALLOWED_VALUES}(${data.allowedValues.map((str: string | MultiSelectOption) =>
+      getStringValueWithComma(str)
+    )})`
   } /* istanbul ignore else */ else if (data.validation === Validation.Regex && data.regExValues?.length > 0) {
     inputStr += `.${InputSetFunction.REGEX}(${data.regExValues})`
   }

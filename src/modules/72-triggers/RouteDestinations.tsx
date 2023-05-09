@@ -18,10 +18,11 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 
 import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
 import TriggersPage from '@triggers/pages/triggers/TriggersPage'
-import TriggersDetailPage from '@triggers/pages/triggers/TriggersDetailPage'
 
 import TriggersWizardPage from '@triggers/components/pages/TriggersWizardPage/TriggersWizardPage'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
+import TriggerLandingPage from '@triggers/pages/triggers/TriggerLandingPage/TriggerLandingPage'
+import TriggerDetailPage from '@triggers/pages/triggers/TriggerLandingPage/TriggerDetailPage/TriggerDetailPage'
 
 export const TriggersRouteDestinations: React.FC<{
   moduleParams: ModulePathParams
@@ -58,7 +59,9 @@ export const TriggersRouteDestinations: React.FC<{
       path={routes.toTriggersDetailPage({ ...accountPathProps, ...triggerPathProps, ...moduleParams })}
       pageName={PAGE_NAME.TriggersDetailPage}
     >
-      <TriggersDetailPage />
+      <TriggerLandingPage>
+        <TriggerDetailPage />
+      </TriggerLandingPage>
     </RouteWithLayout>
     <RouteWithLayout
       exact
@@ -67,7 +70,9 @@ export const TriggersRouteDestinations: React.FC<{
       path={routes.toTriggersDetailPage({ ...accountPathProps, ...triggerPathProps })}
       pageName={PAGE_NAME.TriggersDetailPage}
     >
-      <TriggersDetailPage />
+      <TriggerLandingPage>
+        <TriggerDetailPage />
+      </TriggerLandingPage>
     </RouteWithLayout>
     <RouteWithLayout
       exact

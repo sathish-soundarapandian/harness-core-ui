@@ -37,8 +37,6 @@ import { FormGroup, Label } from '@blueprintjs/core'
 import { HelpPanel } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
-import type { ResponseMessage } from 'services/cd-ng'
-import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
@@ -58,6 +56,7 @@ import { getLastURLPathParam } from '@common/utils/utils'
 import { useDeepCompareEffect } from '@common/hooks'
 import {
   APIError,
+  DEFAULT_SAMPLE_REPO,
   DeploymentType,
   getFullAgentWithScope,
   RepositoryInterface,
@@ -155,8 +154,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   const [revisionType, setRevisionType] = React.useState<string>(RevisionType.Branch)
   const [repositoryListdata, setRepositoryListData] = useState<Servicev1Repository[]>([])
   const [selectedRepo, setSelectedRepo] = useState<Servicev1Repository>({})
-  const [testConnectionErrors, setTestConnectionErrors] = useState<ResponseMessage[]>()
   const [isDestinationStepEnabled, setDestinationStepEnabled] = useState<boolean>(true)
+  const [sampleRepo, setSampleRepo] = useState<Servicev1Repository | null>(null)
 
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
@@ -295,6 +294,11 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
       setRepositoryListData(defaultTo(response?.content, []))
       if (!response?.content?.length) {
         formikRef.current?.setFieldValue('isNewRepository', true)
+      } else {
+        const existingSampleRepo = response?.content?.find(repo => repo?.repository?.repo === DEFAULT_SAMPLE_REPO)
+        if (existingSampleRepo) {
+          setSampleRepo(existingSampleRepo)
+        }
       }
     })
   }, [])
@@ -308,13 +312,13 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
 
   useEffect(() => {
     if (appsFetchError) {
-      toast.showError(`Failed loading paths: ${(appsFetchError as APIError).data.error}`)
+      toast.showError(`Failed loading paths: ${(appsFetchError as APIError)?.data?.error}`)
     }
   }, [appsFetchError])
 
   useEffect(() => {
     if (testConnectionError) {
-      toast.showError(`Failed testing connection: ${(appsFetchError as APIError).data.error}`)
+      toast.showError(`Failed testing connection: ${(appsFetchError as APIError)?.data?.error}`)
     }
   }, [testConnectionError])
 
@@ -349,12 +353,6 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
       }
     } else {
       setTestConnectionStatus(TestStatus.FAILED)
-      setTestConnectionErrors([
-        {
-          level: 'ERROR',
-          message: (repository as any)?.message
-        }
-      ])
     }
   }
 
@@ -409,15 +407,14 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
               type="submit"
               onClick={e => {
                 if (
-                  !formikRef.current?.values?.isNewRepository &&
-                  formikRef.current?.values?.sourceCodeType === SourceCodeType.PROVIDE_MY_OWN
+                  (!formikRef.current?.values?.isNewRepository &&
+                    formikRef.current?.values?.sourceCodeType === SourceCodeType.PROVIDE_MY_OWN) ||
+                  (sampleRepo && formikRef.current?.values?.sourceCodeType === SourceCodeType.USE_SAMPLE) // when user has selected already created sample repo then only connection test is required
                 ) {
                   setTestConnectionStatus(TestStatus.IN_PROGRESS)
-                  setTestConnectionErrors([])
                   refreshConnectionStatus(e)
                 } else {
                   setTestConnectionStatus(TestStatus.IN_PROGRESS)
-                  setTestConnectionErrors([])
                   const data: RepositoryInterface = getRepoPayloadData(formikRef.current?.values || {})
 
                   const repoPayload = {
@@ -435,9 +432,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                         deployment_type: DeploymentType.GitOps
                       })
                     })
-                    .catch(err => {
+                    .catch(() => {
                       setTestConnectionStatus(TestStatus.FAILED)
-                      setTestConnectionErrors((err?.data as any)?.responseMessages)
                       trackEvent(CDOnboardingActions.RepoCreateFailure, { deployment_type: DeploymentType.GitOps })
                     })
                 }
@@ -445,13 +441,6 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
               className={css.downloadButton}
               id="test-connection-btn"
             />
-            {testConnectionStatus === TestStatus.FAILED &&
-            Array.isArray(testConnectionErrors) &&
-            testConnectionErrors.length > 0 ? (
-              <Container padding={{ top: 'medium' }}>
-                <ErrorHandler responseMessages={testConnectionErrors || []} />
-              </Container>
-            ) : null}
           </Layout.Vertical>
         )
       case TestStatus.IN_PROGRESS:
@@ -478,17 +467,14 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   }
 
   const handleConnectionTypeChange = (val: string) => {
-    setTestConnectionErrors([])
     formikRef.current?.setFieldValue('connectionType', val)
   }
 
   const handleSourceCodeTypeChange = (val: string) => {
-    setTestConnectionErrors([])
     formikRef.current?.setFieldValue('sourceCodeType', val)
   }
 
   const handleAuthTypeChange = (val: string) => {
-    setTestConnectionErrors([])
     formikRef.current?.setFieldValue('authType', val)
   }
   const repositoryTypes = [
@@ -717,12 +703,63 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                           )}
                                           {sourceCodeType === SourceCodeType.USE_SAMPLE ? (
                                             <Layout.Vertical>
-                                              <FormInput.Text
-                                                name="repo"
-                                                style={{ width: '400px' }}
-                                                placeholder={getString('UrlLabel')}
-                                                label={getString('UrlLabel')}
-                                              />
+                                              {sampleRepo ? (
+                                                <Layout.Vertical>
+                                                  <Text
+                                                    font={{ variation: FontVariation.BODY2 }}
+                                                    className={moduleCss.text}
+                                                    margin={{ bottom: 'medium' }}
+                                                  >
+                                                    {`You currently have 1 Sample repository, would you like to connect it to?`}
+                                                  </Text>
+                                                  <CardSelect
+                                                    data={[sampleRepo] as Servicev1Repository[]}
+                                                    cornerSelected={true}
+                                                    className={moduleCss.icons}
+                                                    cardClassName={moduleCss.repositoryListCard}
+                                                    renderItem={(item: Servicev1Repository) => (
+                                                      <>
+                                                        <Layout.Vertical
+                                                          spacing={'small'}
+                                                          className={moduleCss.repositoryListItem}
+                                                        >
+                                                          <Layout.Horizontal className={moduleCss.repositoryHeader}>
+                                                            <Icon
+                                                              name={'service-github'}
+                                                              size={24}
+                                                              flex
+                                                              className={moduleCss.repositoriesIcon}
+                                                            />
+                                                            <Text
+                                                              font={{ variation: FontVariation.BODY2 }}
+                                                              className={moduleCss.text3}
+                                                            >
+                                                              {item?.repository?.name}
+                                                            </Text>
+                                                          </Layout.Horizontal>
+                                                          <Text font="normal">{item?.repository?.repo}</Text>
+                                                        </Layout.Vertical>
+                                                      </>
+                                                    )}
+                                                    selected={selectedRepo}
+                                                    onChange={(item: Servicev1Repository) => {
+                                                      setSelectedRepo(item)
+                                                      formikProps.setValues({
+                                                        ...formikProps.values,
+                                                        repo: item?.repository?.repo,
+                                                        identifier: item?.identifier
+                                                      })
+                                                    }}
+                                                  />
+                                                </Layout.Vertical>
+                                              ) : (
+                                                <FormInput.Text
+                                                  name="repo"
+                                                  style={{ width: '400px' }}
+                                                  placeholder={getString('UrlLabel')}
+                                                  label={getString('UrlLabel')}
+                                                />
+                                              )}
                                             </Layout.Vertical>
                                           ) : (
                                             sourceCodeType === SourceCodeType.PROVIDE_MY_OWN &&

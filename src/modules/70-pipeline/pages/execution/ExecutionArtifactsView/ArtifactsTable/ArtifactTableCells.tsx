@@ -90,7 +90,7 @@ export const ViolationsCell: CellType = ({ row }) => {
   const data = row.original
   return (
     <Text font={{ variation: FontVariation.SMALL }} lineClamp={2}>
-      {data?.violations ?? getString('pipeline.notAvailable')}
+      {data?.violations ?? getString('na')}
     </Text>
   )
 }

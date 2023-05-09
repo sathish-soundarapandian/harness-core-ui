@@ -11,9 +11,11 @@ import { Select, SelectOption, SelectProps } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetProjectFlags } from 'services/cf'
 import { EnvironmentResponseDTO, useGetEnvironmentListForProject } from 'services/cd-ng'
+import type { FilterProps } from '@cf/components/TableFilters/TableFilters'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import css from './useEnvironmentSelectV2.module.scss'
 
 export interface UseEnvironmentSelectV2Params {
@@ -27,28 +29,32 @@ export interface UseEnvironmentSelectV2Params {
   searchTerm?: string
 }
 
-export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const useEnvironmentSelectV2 = ({
+  onChange = () => undefined,
+  onEmpty = () => undefined,
+  selectedEnvironmentIdentifier,
+  allowCreatingNewItems,
+  showCreateButton,
+  noDefault,
+  allowAllOption,
+  searchTerm
+}: UseEnvironmentSelectV2Params) => {
+  const { getString } = useStrings()
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
+  const [pageNumber] = useQueryParamsState('page', 0)
+  const [flagFilter] = useQueryParamsState<Optional<FilterProps>>('filter', {})
   const [, setActiveEnvironment] = useQueryParamsState('activeEnvironment', '', {
     serializer: env => env,
     deserializer: env => env
   })
-
   const { preference: preferredEnvironment, setPreference: setPreferredEnvironment } = usePreferenceStore<string>(
     PreferenceScope.USER,
     'FF_SELECTED_ENV'
   )
-  const { getString } = useStrings()
-  const {
-    onChange = () => undefined,
-    onEmpty = () => undefined,
-    selectedEnvironmentIdentifier,
-    allowCreatingNewItems,
-    showCreateButton,
-    noDefault,
-    allowAllOption,
-    searchTerm
-  } = params
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
+  const [selectedEnvironment, setSelectedEnvironment] = useState<SelectOption>()
+  const { FFM_6683_ALL_ENVIRONMENTS_FLAGS } = useFeatureFlags()
+
   const {
     data: environmentList,
     loading,
@@ -57,21 +63,24 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
   } = useGetEnvironmentListForProject({
     queryParams: { accountId, orgIdentifier, projectIdentifier }
   })
-  const [selectedEnvironment, setSelectedEnvironment] = useState<SelectOption>()
+
   const selectOptions: SelectOption[] =
     environmentList?.data?.content?.map<SelectOption>(elem => ({
       label: elem.name as string,
       value: elem.identifier as string
     })) || []
 
-  const { FFM_6683_ALL_ENVIRONMENTS_FLAGS } = useFeatureFlags()
-
-  const queryParams = {
+  const projectFlagsQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
-    name: searchTerm
+    name: searchTerm,
+    [flagFilter.queryProps?.key]: flagFilter.queryProps?.value,
+    pageSize: CF_DEFAULT_PAGE_SIZE,
+    pageNumber,
+    flagCounts: true
   }
+
   const {
     loading: loadingProjectFlags,
     error: getProjectFlagsError,
@@ -79,7 +88,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
     refetch: refetchProjectFlags
   } = useGetProjectFlags({
     identifier: projectIdentifier,
-    queryParams,
+    queryParams: projectFlagsQueryParams,
     lazy: true
   })
 
@@ -155,16 +164,16 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
           allowCreatingNewItems={allowCreatingNewItems}
           onChange={opt => {
             setSelectedEnvironment(opt)
+            onChange(
+              opt,
+              environmentList?.data?.content?.find(env => env.identifier === opt.value) as EnvironmentResponseDTO,
+              true
+            )
             if (opt.value === getString('common.allEnvironments')) {
               refetchProjectFlags()
               return
             }
             if (selectedEnvironment?.value !== opt.value) {
-              onChange(
-                opt,
-                environmentList?.data?.content?.find(env => env.identifier === opt.value) as EnvironmentResponseDTO,
-                true
-              )
               setActiveEnvironment(opt.value as string)
             }
           }}

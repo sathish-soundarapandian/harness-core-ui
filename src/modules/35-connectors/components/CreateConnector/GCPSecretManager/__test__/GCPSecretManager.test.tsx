@@ -25,7 +25,6 @@ const commonProps = {
 
 const createConnector = jest.fn()
 const updateConnector = jest.fn()
-
 jest.mock('services/cd-ng', () => ({
   useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
   useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector })),
@@ -51,7 +50,11 @@ jest.mock('services/portal', () => ({
 describe('Create Secret Manager Wizard', () => {
   test('should be able to render first and second step form', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper
+        defaultFeatureFlagValues={{ PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM: true }}
+        path="/account/:accountId/resources/connectors"
+        pathParams={{ accountId: 'dummy' }}
+      >
         <CreateGCPSecretManager {...commonProps} isEditMode={false} connectorInfo={undefined} />
       </TestWrapper>
     )
@@ -79,7 +82,11 @@ describe('Create Secret Manager Wizard', () => {
   })
   test('Should render previous step for edit', async () => {
     const { container, queryByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper
+        defaultFeatureFlagValues={{ PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM: true }}
+        path="/account/:accountId/resources/connectors"
+        pathParams={{ accountId: 'dummy' }}
+      >
         <CreateGCPSecretManager {...commonProps} isEditMode={true} connectorInfo={connectorInfo} mock={mockResponse} />
       </TestWrapper>
     )
@@ -97,6 +104,7 @@ describe('Create Secret Manager Wizard', () => {
     })
     await waitFor(() => expect(queryByText('connectors.gcpSecretManager.gcpSMSecretFile')).toBeTruthy())
     // step 2 - details  step
+    expect(queryByText('connectors.GCP.delegateOutClusterInfo')).toBeTruthy()
     expect(queryByText('connectors.gcpSecretManager.gcpSMSecretFile')).toBeTruthy()
     await act(async () => {
       fireEvent.click(queryByText('back') as HTMLElement)
@@ -108,7 +116,11 @@ describe('Create Secret Manager Wizard', () => {
 
   test('Should render form for edit', async () => {
     const { container, queryByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper
+        defaultFeatureFlagValues={{ PL_USE_CREDENTIALS_FROM_DELEGATE_FOR_GCP_SM: true }}
+        path="/account/:accountId/resources/connectors"
+        pathParams={{ accountId: 'dummy' }}
+      >
         <CreateGCPSecretManager {...commonProps} isEditMode={true} connectorInfo={connectorInfo} mock={mockResponse} />
       </TestWrapper>
     )

@@ -10,6 +10,11 @@ import { Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 import CustomMetricsSectionHeader from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CustomMetricsSectionHeader'
+import type {
+  AssignSectionType,
+  HealthSourceConfig
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import type { RecordProps } from '../../../CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer.types'
 import RiskProfileCategeory from './components/RiskProfileCategeory/RiskProfileCategeory'
 import Deviation from './components/Deviation/Deviation'
 import ServiceInstance from './components/ServiceInstance/ServiceInstance'
@@ -21,6 +26,8 @@ interface RiskProfileProps {
   serviceInstanceField?: string
   riskCategory?: string
   defaultServiceInstance?: string
+  healthSourceConfig: HealthSourceConfig
+  recordProps: RecordProps
 }
 
 export function RiskProfile(props: RiskProfileProps): JSX.Element {
@@ -29,9 +36,18 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
     serviceInstanceField,
     riskCategory,
     riskProfileResponse,
-    defaultServiceInstance
+    defaultServiceInstance,
+    healthSourceConfig,
+    recordProps
   } = props
   const { getString } = useStrings()
+
+  const { customMetrics } = healthSourceConfig
+
+  const { assign } = customMetrics as NonNullable<HealthSourceConfig['customMetrics']>
+
+  const { serviceInstance: serviceInstanceConfig } = assign as NonNullable<AssignSectionType>
+
   return (
     <>
       <CustomMetricsSectionHeader
@@ -42,9 +58,11 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
         <RiskProfileCategeory riskCategory={riskCategory} riskProfileResponse={riskProfileResponse} />
         <Deviation />
         <ServiceInstance
+          serviceInstanceConfig={serviceInstanceConfig}
           serviceInstanceField={serviceInstanceField}
           defaultServiceInstance={defaultServiceInstance}
           continuousVerificationEnabled={continuousVerificationEnabled}
+          recordProps={recordProps}
         />
       </Layout.Vertical>
     </>

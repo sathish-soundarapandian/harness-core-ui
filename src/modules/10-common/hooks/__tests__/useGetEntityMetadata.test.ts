@@ -1,11 +1,19 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { renderHook, RenderHookResult } from '@testing-library/react-hooks'
 import {
   getPipelineMetadataByIdentifier,
   getTemplateMetadataByIdentifier,
-  useGetEntityMetadata
+  useGetEntityMetadata,
+  UseGetEntityUrlProp
 } from '@common/hooks/useGetEntityMetadata'
 import { TestWrapper } from '@common/utils/testUtils'
-import type { EntityDetail, EntityReference } from 'services/cd-ng'
+import type { EntityReference } from 'services/cd-ng'
 import { mockRemotePipelineSummary, mockInlinePipelineSummary, mockTemplateMetadataList } from '../__mocks__/mockdata'
 
 const entityMockscope = { accountIdentifier: 'mockAccount', orgIdentifier: 'mockOrg', projectIdentifier: 'mockProject' }
@@ -21,7 +29,7 @@ jest.mock('services/template-ng', () => ({
 }))
 
 const renderuseGetEntityMetadataHook = (
-  entityInfo?: EntityDetail
+  entityInfo?: UseGetEntityUrlProp['entityInfo']
 ): RenderHookResult<undefined, { getEntityURL: () => Promise<string> }> =>
   renderHook(() => useGetEntityMetadata({ entityInfo }), {
     wrapper: TestWrapper
@@ -188,7 +196,7 @@ describe('useGetEntityMetadata tests', () => {
       '/account/mockAccount/home/orgs/mockOrg/projects/mockProject/services/mock_enity?tab=configuration'
     )
   })
-  test('For service it should open service details page', async () => {
+  test('For EnvironmentGroup it should open EnvironmentGroup summary page', async () => {
     const { result } = renderuseGetEntityMetadataHook({
       type: 'EnvironmentGroup',
       entityRef: {
@@ -202,9 +210,9 @@ describe('useGetEntityMetadata tests', () => {
       '/account/mockAccount/home/orgs/mockOrg/projects/mockProject/environments/groups/mock_enity/details'
     )
   })
-  test('For service it should open service details page', async () => {
+  test('For Environment it should open Environment summary page', async () => {
     const { result } = renderuseGetEntityMetadataHook({
-      type: 'Infrastructure',
+      type: 'Environment',
       entityRef: {
         identifier: 'mock_enity',
         ...entityMockscope
@@ -213,7 +221,22 @@ describe('useGetEntityMetadata tests', () => {
 
     const entityUrl = await result.current.getEntityURL()
     expect(entityUrl).toBe(
-      '/account/mockAccount/home/orgs/mockOrg/projects/mockProject/environments/mock_enity/details?sectionId=INFRASTRUCTURE'
+      '/account/mockAccount/home/orgs/mockOrg/projects/mockProject/environments/mock_enity/details'
+    )
+  })
+  test('For Infrastructure it should open Infrastructure definiitons page', async () => {
+    const { result } = renderuseGetEntityMetadataHook({
+      type: 'Infrastructure',
+      entityRef: {
+        identifier: 'mock_entity',
+        envIdentifier: 'mock_env_entity',
+        ...entityMockscope
+      }
+    })
+
+    const entityUrl = await result.current.getEntityURL()
+    expect(entityUrl).toBe(
+      '/account/mockAccount/home/orgs/mockOrg/projects/mockProject/environments/mock_env_entity/details?sectionId=INFRASTRUCTURE&infrastructureId=mock_entity'
     )
   })
 })

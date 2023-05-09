@@ -106,6 +106,7 @@ interface RetryPipelineProps {
     stagesExecuted?: string[]
   }> &
     GitQueryParams
+  preSelectLastStage?: boolean
 }
 
 function RetryPipeline({
@@ -113,7 +114,8 @@ function RetryPipeline({
   pipelineIdentifier: pipelineIdf,
   modules,
   onClose,
-  params
+  params,
+  preSelectLastStage = false
 }: RetryPipelineProps): React.ReactElement {
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -661,7 +663,16 @@ function RetryPipeline({
     [yamlHandler?.getLatestYaml]
   )
 
-  const handleStageChange = (value: ParallelStageOption): void => {
+  const handleParallelStagesSelection = (value: ParallelStageOption): void => {
+    if ((value as ParallelStageOption).isLastIndex === (stageResponse?.data?.groups as RetryGroup[])?.length - 1) {
+      setIsLastIndex(true)
+    } else {
+      setIsLastIndex(false)
+    }
+    setIsParallelStage(true)
+  }
+
+  const selectListOfSelectedStages = (value: ParallelStageOption): void => {
     const stagesList = stageResponse?.data?.groups?.filter((_, stageIdx) => stageIdx < value.isLastIndex)
     const listOfIds: string[] = []
 
@@ -670,18 +681,42 @@ function RetryPipeline({
         listOfIds.push(stageInfo.identifier as string)
       })
     })
+    setListOfSelectedStages(listOfIds)
+  }
 
+  useEffect(() => {
+    if (stageResponse?.data?.groups?.length && preSelectLastStage) {
+      let value: ParallelStageOption
+      stageResponse.data.groups.forEach((stageGroup, idx) => {
+        const [{ name, identifier }] = stageGroup.info || []
+        if (stageGroup.info?.length === 1) {
+          value = { label: name as string, value: identifier as string, isLastIndex: idx }
+          setSelectedStage(value)
+          selectListOfSelectedStages(value)
+        } else {
+          const parallelStagesLabel = stageGroup.info?.map(stageName => stageName.name).join(' | ')
+          const parallelStagesValue = stageGroup.info?.map(stageName => stageName.identifier).join(' | ')
+          value = {
+            label: parallelStagesLabel as string,
+            value: parallelStagesValue as string,
+            isLastIndex: idx
+          }
+          handleParallelStagesSelection(value)
+          setSelectedStage(value)
+          selectListOfSelectedStages(value)
+        }
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stageResponse?.data, preSelectLastStage])
+
+  const handleStageChange = (value: ParallelStageOption): void => {
     if (value.label.includes('|')) {
-      if ((value as ParallelStageOption).isLastIndex === (stageResponse?.data?.groups as RetryGroup[])?.length - 1) {
-        setIsLastIndex(true)
-      } else {
-        setIsLastIndex(false)
-      }
-      setIsParallelStage(true)
+      handleParallelStagesSelection(value)
     } else {
       setIsParallelStage(false)
     }
-    setListOfSelectedStages(listOfIds)
+    selectListOfSelectedStages(value)
     setSelectedStage(value)
   }
   const handleStageType = (e: FormEvent<HTMLInputElement>): void => {

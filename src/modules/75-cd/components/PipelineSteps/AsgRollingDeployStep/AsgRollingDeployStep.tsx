@@ -19,7 +19,7 @@ import {
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
-import { defaultTo, isEmpty, set, toString } from 'lodash-es'
+import { defaultTo, get, isEmpty, set, toString } from 'lodash-es'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import type { AsgRollingDeployStepInfo, StepElementConfig } from 'services/cd-ng'
@@ -106,7 +106,7 @@ function AsgRollingDeployWidget(
           setFormikRef(formikRef, formik)
           return (
             <>
-              {stepViewType === StepViewType.Template ? null : (
+              {stepViewType !== StepViewType.Template && (
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormInput.InputWithIdentifier
                     inputLabel={getString('name')}
@@ -162,6 +162,7 @@ function AsgRollingDeployWidget(
                           }}
                         />
                         {getMultiTypeFromValue(values.spec.minimumHealthyPercentage) === MultiTypeInputType.RUNTIME && (
+                          /* istanbul ignore next */
                           <ConfigureOptions
                             value={toString(values.spec.minimumHealthyPercentage)}
                             type="Number"
@@ -190,6 +191,7 @@ function AsgRollingDeployWidget(
                           }}
                         />
                         {getMultiTypeFromValue(values.spec.instanceWarmup) === MultiTypeInputType.RUNTIME && (
+                          /* istanbul ignore next */
                           <ConfigureOptions
                             value={toString(values.spec.instanceWarmup)}
                             type="Number"
@@ -234,7 +236,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
   const prefix = isEmpty(path) ? '' : `${path}.`
   return (
     <>
-      {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
+      {getMultiTypeFromValue(get(template, 'timeout')) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeDurationField
             multiTypeDurationProps={{
@@ -250,8 +252,8 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
             disabled={readonly}
           />
         </div>
-      ) : null}
-      {getMultiTypeFromValue(template?.spec?.useAlreadyRunningInstances) === MultiTypeInputType.RUNTIME && (
+      )}
+      {getMultiTypeFromValue(get(template, 'spec.useAlreadyRunningInstances')) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{
@@ -265,7 +267,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
           />
         </div>
       )}
-      {getMultiTypeFromValue(template?.spec?.minimumHealthyPercentage) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(get(template, 'spec.minimumHealthyPercentage')) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
             name={`${prefix}spec.minimumHealthyPercentage`}
@@ -283,7 +285,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
           />
         </div>
       )}
-      {getMultiTypeFromValue(template?.spec?.instanceWarmup) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(get(template, 'spec.instanceWarmup')) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <TextFieldInputSetView
             name={`${prefix}spec.instanceWarmup`}
@@ -301,7 +303,7 @@ const AsgRollingDeployInputStep: React.FC<AsgRollingDeployProps> = ({
           />
         </div>
       )}
-      {getMultiTypeFromValue(template?.spec?.skipMatching) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(get(template, 'spec.skipMatching')) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{
@@ -377,9 +379,9 @@ export class AsgRollingDeploy extends PipelineStep<AsgRollingDeployData> {
           initialValues={initialValues}
           onUpdate={onUpdate}
           stepViewType={stepViewType}
-          template={inputSetData?.template}
-          readonly={inputSetData?.readonly}
-          path={inputSetData?.path}
+          template={get(inputSetData, 'template')}
+          readonly={get(inputSetData, 'readonly')}
+          path={get(inputSetData, 'path')}
           allowableTypes={allowableTypes}
         />
       )
@@ -415,7 +417,7 @@ export class AsgRollingDeploy extends PipelineStep<AsgRollingDeployData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const errors = { spec: {} } as any
-    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
+    if (getMultiTypeFromValue(get(template, 'timeout')) === MultiTypeInputType.RUNTIME) {
       let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
       /* istanbul ignore else */
       if (isRequired) {
@@ -436,7 +438,7 @@ export class AsgRollingDeploy extends PipelineStep<AsgRollingDeployData> {
         }
       }
     }
-    if (getMultiTypeFromValue(template?.spec?.minimumHealthyPercentage) === MultiTypeInputType.RUNTIME) {
+    if (getMultiTypeFromValue(get(template, 'spec.minimumHealthyPercentage')) === MultiTypeInputType.RUNTIME) {
       try {
         const schema = Yup.object().shape({
           spec: Yup.object().shape({
@@ -448,7 +450,7 @@ export class AsgRollingDeploy extends PipelineStep<AsgRollingDeployData> {
         set(errors, 'spec.minimumHealthyPercentage', error.message)
       }
     }
-    if (getMultiTypeFromValue(template?.spec?.instanceWarmup) === MultiTypeInputType.RUNTIME) {
+    if (getMultiTypeFromValue(get(template, 'spec.instanceWarmup')) === MultiTypeInputType.RUNTIME) {
       try {
         const schema = Yup.object().shape({
           spec: Yup.object().shape({

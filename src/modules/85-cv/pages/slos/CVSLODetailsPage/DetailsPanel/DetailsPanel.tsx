@@ -24,6 +24,7 @@ import { SLOType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import { EvaluationType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { TWENTY_FOUR_HOURS } from './DetailsPanel.constants'
 import DowntimeBanner from './views/DowntimeBanner'
+import SLOErrorBanner from './views/SLOErrorBanner'
 import { getDownTimeStartTimeAndEndTime } from './DetailsPanel.utils'
 import css from './DetailsPanel.module.scss'
 
@@ -110,6 +111,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   )
 
   const shouldRenderDowntimeBanner = showDowntimeBanner && !calculatingSLI && !recalculatingSLI
+  const shouldRenderSLOErrorBanner = sloDashboardWidget?.sloError?.failedState
 
   return (
     <Page.Body
@@ -125,6 +127,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
           {shouldRenderDowntimeBanner && !!bannerData?.length && (
             <DowntimeBanner showBanner={setShowDowntimeBanner} bannerData={bannerData} />
           )}
+          {shouldRenderSLOErrorBanner && <SLOErrorBanner sloError={sloDashboardWidget?.sloError} />}
           <Container padding="xlarge">
             <ServiceDetails sloDashboardWidget={sloDashboardWidget} />
             <SLOCardContent

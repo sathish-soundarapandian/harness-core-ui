@@ -24,7 +24,7 @@ import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { Menu } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
-import { defaultTo, memoize } from 'lodash-es'
+import { defaultTo, get, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import {
@@ -53,9 +53,12 @@ import { useQueryParams } from '@common/hooks'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isValueFixed } from '@common/utils/utils'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
+import { GarArtifactDigestField } from './GarArtifactDigestField'
 import css from '../../ArtifactConnector.module.scss'
 
 export const repositoryType: SelectOption[] = [
@@ -107,6 +110,7 @@ function FormComponent(
   const repositoryNameValue = defaultTo(formik.values?.spec.repositoryName, initialValues?.spec?.repositoryName)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const isTemplateContext = context === ModalViewFor.Template
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const {
     data: buildDetails,
@@ -413,6 +417,17 @@ function FormComponent(
             )}
           </div>
         )}
+
+        {CD_NG_DOCKER_ARTIFACT_DIGEST && (
+          <GarArtifactDigestField
+            formik={formik}
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            isReadonly={isReadonly}
+            connectorRefValue={getConnectorRefQueryData()}
+            isVersionDetailsLoading={fetchingBuilds}
+          />
+        )}
       </div>
       {!hideHeaderAndNavBtns && (
         <Layout.Horizontal spacing="medium">
@@ -484,19 +499,21 @@ export function GoogleArtifactRegistry(
         region: defaultTo(formData.spec.region.value, formData.spec.region),
         repositoryName: formData.spec.repositoryName,
         package: formData.spec.package,
-        ...versionData
+        ...versionData,
+        digest: formData.spec.digest
       }
     })
   }
 
   const handleValidate = (formData: GoogleArtifactRegistryInitialValuesType) => {
+    const digestValue = get(formData.spec, 'digest') as SelectOption | string
+    const finalDigestValue = isValueFixed(digestValue) ? get(digestValue, 'value') : digestValue
+    const submitObject = {
+      ...formData,
+      spec: { ...formData.spec, digest: finalDigestValue }
+    }
     if (hideHeaderAndNavBtns) {
-      submitFormData(
-        {
-          ...formData
-        },
-        getConnectorIdValue(modifiedPrevStepData)
-      )
+      submitFormData(submitObject, getConnectorIdValue(modifiedPrevStepData))
     }
   }
 
@@ -555,12 +572,14 @@ export function GoogleArtifactRegistry(
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         validate={handleValidate}
         onSubmit={formData => {
-          submitFormData(
-            {
-              ...formData
-            },
-            getConnectorIdValue(modifiedPrevStepData)
-          )
+          const digestValue = get(formData.spec, 'digest') as SelectOption | string
+          const finalDigestValue = isValueFixed(digestValue) ? get(digestValue, 'value') : digestValue
+          const submitObject = {
+            ...formData,
+            spec: { ...formData.spec, digest: finalDigestValue }
+          }
+
+          submitFormData(submitObject, getConnectorIdValue(modifiedPrevStepData))
         }}
       >
         {formik => {

@@ -117,7 +117,8 @@ export const Connectors: ConnectorType = {
   SPOT: 'Spot',
   TAS: 'Tas',
   TERRAFORM_CLOUD: 'TerraformCloud',
-  Bamboo: 'Bamboo'
+  Bamboo: 'Bamboo',
+  SignalFX: 'SignalFX'
 }
 
 export const ConnectorLabels: Record<ConnectorInfoDTO['type'], string> = {
@@ -167,7 +168,8 @@ export const ConnectorLabels: Record<ConnectorInfoDTO['type'], string> = {
   AzureArtifacts: 'AzureArtifacts',
   Spot: 'Spot',
   Tas: 'TAS',
-  TerraformCloud: 'TerraformCloud'
+  TerraformCloud: 'TerraformCloud',
+  SignalFX: 'SignalFX'
 }
 
 export const ConnectorStatus: ConnectorStatusType = {

@@ -130,3 +130,13 @@ export const V2_HEALTHSOURCES = [
   HealthSourceTypes.SumologicMetrics,
   HealthSourceTypes.Elk
 ]
+
+export enum VerifyStepActions {
+  AddHealthSource = 'Add Healthsource on verify step click',
+  ApplyChangesVerifyStep = 'Apply Changes Verify Step',
+  SaveHealthSource = 'Save Health Source'
+}
+
+export enum Category {
+  VERIFY_STEP = 'Verify Step'
+}

@@ -9,9 +9,9 @@ import React, { BaseSyntheticEvent, PropsWithChildren, ReactNode, useState } fro
 import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { get } from 'lodash-es'
-import { AllowedTypes, Card, Container, Text } from '@harness/uicore'
+import { AllowedTypes, Card, Container, Text, Layout, HarnessDocTooltip } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { RadioGroup } from '@blueprintjs/core'
+import { Radio, RadioGroup } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
 
@@ -61,23 +61,34 @@ export default function InlineEntityFiltersWidget<T>({
       </Text>
 
       <RadioGroup
-        options={[
-          {
-            label: getString('common.selectNameManually', { name: getString(entityStringKey) }),
-            value: InlineEntityFiltersRadioType.MANUAL
-          },
-          {
-            label: getString('common.deployToFilteredList'),
-            value: InlineEntityFiltersRadioType.FILTERS,
-            disabled: !isInfraClusterTaggingEnabled
-          }
-        ]}
         onChange={handleFilterRadio}
         selectedValue={radioValue}
         disabled={readonly}
         className={css.radioGroup}
         inline
-      />
+      >
+        <Radio value={InlineEntityFiltersRadioType.MANUAL} style={{ display: 'flex' }}>
+          <Layout.Horizontal>
+            <div data-tooltip-id="inline-selectNameManually" style={{ textAlign: 'center' }}>
+              {getString('common.selectNameManually', { name: getString(entityStringKey) })}
+            </div>
+            <HarnessDocTooltip tooltipId="inline-selectNameManually" useStandAlone={true} />
+          </Layout.Horizontal>
+        </Radio>
+
+        <Radio
+          value={InlineEntityFiltersRadioType.FILTERS}
+          style={{ display: 'flex' }}
+          disabled={!isInfraClusterTaggingEnabled}
+        >
+          <Layout.Horizontal>
+            <div data-tooltip-id="inline-deployToFilteredList" style={{ textAlign: 'center' }}>
+              {getString('common.deployToFilteredList')}
+            </div>
+            <HarnessDocTooltip tooltipId="inline-deployToFilteredList" useStandAlone={true} />
+          </Layout.Horizontal>
+        </Radio>
+      </RadioGroup>
     </>
   )
 

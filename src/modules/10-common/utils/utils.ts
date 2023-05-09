@@ -41,6 +41,9 @@ export const getModuleIcon = (module: ModuleName): IconName => {
       return 'chaos-main'
     case ModuleName.CET:
       return 'cet'
+    case ModuleName.IDP:
+    case ModuleName.IDPAdmin:
+      return 'idp'
   }
   return 'nav-project'
 }

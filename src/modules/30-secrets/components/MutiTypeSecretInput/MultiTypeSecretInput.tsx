@@ -95,6 +95,7 @@ export interface MultiTypeSecretInputProps extends IFormGroupProps {
     isTemplatizedView: true
     templateValue: string | undefined
   }
+  isOptional?: boolean
 }
 
 export interface ConnectedMultiTypeSecretInputProps extends MultiTypeSecretInputProps {
@@ -117,9 +118,12 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     enableConfigureOptions = false,
     configureOptionsProps,
     templateProps,
+    isOptional = false,
     ...restProps
   } = props
-
+  const { getString } = useStrings()
+  const optionalLabel = getString('common.optionalLabel')
+  const labelText = !isOptional ? label : `${label} ${optionalLabel}`
   const { openCreateSSHCredModal } = useCreateSSHCredModal({
     onSuccess: /* istanbul ignore next */ data => {
       const secret = {
@@ -197,7 +201,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
       {...rest}
       className={cx({ [css.smallForm]: small })}
       labelFor={name}
-      label={label ? <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} /> : label}
+      label={labelText ? <HarnessDocTooltip tooltipId={dataTooltipId} labelText={labelText} /> : labelText}
       intent={intent}
       helperText={helperText}
       style={{ flexGrow: 1 }}

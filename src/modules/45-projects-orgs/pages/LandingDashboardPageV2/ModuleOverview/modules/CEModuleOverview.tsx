@@ -6,22 +6,85 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
+import { Container, Icon } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { GetCCMOverviewQueryParams, useGetCCMOverview } from 'services/ce'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
+import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
+import { getDateLabelToDisplayText } from '@common/components/TimeRangePicker/TimeRangePicker'
+import { useStrings } from 'framework/strings'
+import { numberFormatter } from '@common/utils/utils'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
 import DefaultFooter from '../EmptyState/DefaultFooter'
+import ModuleColumnChart from '../../ModuleColumnChart/ModuleColumnChart'
 
-const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded }) => {
-  if (isExpanded) {
+const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmptyState, timeRange }) => {
+  const { accountId } = useParams<AccountPathProps>()
+  const { getString } = useStrings()
+  const { data: ccmData, loading } = useGetCCMOverview({
+    queryParams: {
+      accountIdentifier: accountId,
+      startTime: getGMTStartDateTime(timeRange?.from),
+      endTime: getGMTEndDateTime(timeRange?.to),
+      groupBy: getGroupByFromTimeRange(timeRange) as GetCCMOverviewQueryParams['groupBy']
+    }
+  })
+
+  if (isEmptyState) {
+    if (isExpanded) {
+      return (
+        <EmptyStateExpandedView
+          title={'common.moduleDetails.ce.expanded.title'}
+          footer={<DefaultFooter learnMoreLink="https://docs.harness.io/category/exgoemqhji-ccm" />}
+        />
+      )
+    }
+    return <EmptyStateCollapsedView description={'common.moduleDetails.ce.collapsed.title'} />
+  }
+
+  if (loading) {
     return (
-      <EmptyStateExpandedView
-        title={'common.moduleDetails.ce.expanded.title'}
-        footer={<DefaultFooter learnMoreLink="https://docs.harness.io/category/exgoemqhji-ccm" />}
-      />
+      <Container flex={{ justifyContent: 'center' }} height="100%">
+        <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
+      </Container>
     )
   }
 
-  return <EmptyStateCollapsedView description={'common.moduleDetails.ce.collapsed.title'} />
+  const dataPoints = ccmData?.data?.costPerDay?.map(cost => {
+    return cost?.values?.reduce((total, c) => Number(c.value) + total, 0) || 0
+  })
+
+  const data = [
+    {
+      name: 'Cloud Spend',
+      data: dataPoints,
+      color: '#01C9CC'
+    }
+  ]
+
+  return (
+    <ModuleColumnChart
+      count={ccmData?.data?.totalCost ? `$${numberFormatter(ccmData?.data?.totalCost)}` : '$0'}
+      countChangeInfo={{
+        countChange: ccmData?.data?.totalCost,
+        countChangeRate: ccmData?.data?.totalCostTrend
+      }}
+      timeRange={ccmData?.data?.costPerDay?.map(cost => cost.time || 0)}
+      data={data}
+      isExpanded={isExpanded}
+      timeRangeLabel={
+        timeRange.type
+          ? getString('common.cloudSpendsIn', {
+              value: getDateLabelToDisplayText(getString)[timeRange.type]
+            }).toUpperCase()
+          : undefined
+      }
+    />
+  )
 }
 
 export default CEModuleOverview

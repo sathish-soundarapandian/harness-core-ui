@@ -26,7 +26,7 @@ export default function ConditionalExecutionStatus(props: ConditionalExecutionSt
   const { mode, isReadonly, path = 'when', statusPath } = props
   const { getString } = useStrings()
   const formik = useFormikContext()
-  const statusValue = get(formik.values, `${path}.${statusPath}`, PipelineOrStageStatus.SUCCESS)
+  const statusValue = get(formik.values, `${path}.${statusPath}`)
   const strVariables = {
     entity: ModeEntityNameMap[mode],
     parentEntity: ParentModeEntityNameMap[mode]

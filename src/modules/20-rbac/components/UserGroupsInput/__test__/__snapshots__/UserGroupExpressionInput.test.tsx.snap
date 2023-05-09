@@ -2,9 +2,12 @@
 
 exports[`UserGroup Expression Input tests should render without any issue 1`] = `
 <div>
-  <div>
+  <div
+    class="radioBtns"
+  >
     <label
       class="bp3-control bp3-radio bp3-inline"
+      style="display: flex;"
     >
       <input
         checked=""
@@ -15,10 +18,20 @@ exports[`UserGroup Expression Input tests should render without any issue 1`] = 
       <span
         class="bp3-control-indicator"
       />
-      common.individual
+      <div
+        class="Layout--horizontal StyledProps--main"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+          data-tooltip-id="usergroup-individual"
+        >
+          common.individual
+        </p>
+      </div>
     </label>
     <label
       class="bp3-control bp3-radio bp3-inline"
+      style="display: flex;"
     >
       <input
         name="userGroupExpression"
@@ -28,7 +41,16 @@ exports[`UserGroup Expression Input tests should render without any issue 1`] = 
       <span
         class="bp3-control-indicator"
       />
-      common.combined
+      <div
+        class="Layout--horizontal StyledProps--main"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+          data-tooltip-id="usergroup-combined"
+        >
+          common.combined
+        </p>
+      </div>
     </label>
   </div>
   <button

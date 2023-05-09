@@ -158,6 +158,7 @@ export enum PermissionIdentifier {
   DELETE_CHAOS_INFRASTRUCTURE = 'chaos_chaosinfrastructure_delete',
   VIEW_CHAOS_GAMEDAY = 'chaos_chaosgameday_view',
   EDIT_CHAOS_GAMEDAY = 'chaos_chaosgameday_edit',
+  DELETE_CHAOS_GAMEDAY = 'chaos_chaosgameday_delete',
 
   // STO Permissions
   VIEW_STO_ISSUE = 'sto_issue_view',

@@ -1,4 +1,4 @@
-import { ElkProduct } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
+import { ElkProduct, SignalFX } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 import { HealthSourceTypes } from '../../types'
 import type { CommonCustomMetricFormikInterface, HealthSourceProductsType } from './CommonHealthSource.types'
 
@@ -14,6 +14,10 @@ export const HealthSourceProducts: HealthSourceProductsType = {
   [HealthSourceTypes.Elk]: {
     value: ElkProduct.ELK_LOGS,
     label: ElkProduct.ELK_LOGS
+  },
+  [HealthSourceTypes.SignalFX]: {
+    label: SignalFX.SIGNALFX_METRICS_DISPLAY_NAME,
+    value: HealthSourceTypes.SplunkSignalFXMetrics
   }
 }
 

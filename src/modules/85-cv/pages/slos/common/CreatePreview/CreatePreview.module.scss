@@ -17,3 +17,9 @@
     overflow: hidden;
   }
 }
+
+.addSLO {
+  p[title='SLO'] {
+    width: 300px !important;
+  }
+}

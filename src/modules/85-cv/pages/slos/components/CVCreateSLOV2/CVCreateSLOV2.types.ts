@@ -21,7 +21,8 @@ import type {
   ServiceLevelIndicatorSpec,
   RatioSLIMetricSpec,
   ThresholdSLIMetricSpec,
-  WindowBasedServiceLevelIndicatorSpec
+  WindowBasedServiceLevelIndicatorSpec,
+  CompositeServiceLevelObjectiveSpec
 } from 'services/cv'
 import type { SLOTargetChartWithAPIGetSliGraphProps } from '../SLOTargetChart/SLOTargetChart.types'
 
@@ -53,7 +54,8 @@ export const enum SLOV2FormFields {
   SERVICE_LEVEL_INDICATOR_TYPE = 'serviceLevelIndicatorType',
   EVALUATION_TYPE = 'evaluationType',
   CONSIDER_CONSECUTIVE_MINUTES = 'considerConsecutiveMinutes',
-  CONSIDER_ALL_CONSECUTIVE_MINUTES_FROM_START_AS_BAD = 'considerAllConsecutiveMinutesFromStartAsBad'
+  CONSIDER_ALL_CONSECUTIVE_MINUTES_FROM_START_AS_BAD = 'considerAllConsecutiveMinutesFromStartAsBad',
+  FORMULA_TYPE = 'sloFormulaType'
 }
 
 export interface SLOObjective extends Partial<SLOHealthListView> {
@@ -93,6 +95,7 @@ export interface SLOV2Form {
   [SLOV2FormFields.EVALUATION_TYPE]?: ServiceLevelIndicatorDTO['type']
   [SLOV2FormFields.CONSIDER_CONSECUTIVE_MINUTES]?: ThresholdSLIMetricSpec['considerConsecutiveMinutes']
   [SLOV2FormFields.CONSIDER_ALL_CONSECUTIVE_MINUTES_FROM_START_AS_BAD]?: ThresholdSLIMetricSpec['considerAllConsecutiveMinutesFromStartAsBad']
+  [SLOV2FormFields.FORMULA_TYPE]?: CompositeServiceLevelObjectiveSpec['sloFormulaType']
 }
 
 export interface GetSLOIdentifierWithOrgAndProjectProps {
@@ -196,4 +199,9 @@ export interface GetSimpleSLOCustomErrorProps {
 export interface GetSimpleSLOCustomErrorValues {
   status: boolean
   errorMessage?: Record<string, string>
+}
+
+export enum SLOFormulaType {
+  WEIGHTED_AVERAGE = 'WeightedAverage',
+  LEAST_PERFORMANCE = 'LeastPerformance'
 }

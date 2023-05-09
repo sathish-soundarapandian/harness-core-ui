@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   Formik,
   FormInput,
@@ -23,7 +23,7 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps, FormikValues } from 'formik'
 import * as Yup from 'yup'
-import { defaultTo, get, isEqual, memoize, merge } from 'lodash-es'
+import { defaultTo, get, isEqual, memoize, merge, filter } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
@@ -137,7 +137,8 @@ function Artifactory({
     isSSHWinRmDeploymentType ||
     isAzureWebAppDeploymentTypeSelected ||
     isCustomDeploymentTypeSelected ||
-    isTasDeploymentTypeSelected
+    isTasDeploymentTypeSelected ||
+    isArtifactTemplate
 
   // For Serverless and AWS Lambda, there is not dropdown for repositoryFormat to select from
   // By default, UI should be rendered assuming repositoryFormat is Generic
@@ -165,15 +166,13 @@ function Artifactory({
     return repositoryFormat === RepositoryFormatTypes.Generic
   }, [repositoryFormat])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     let repoFormat = RepositoryFormatTypes.Docker
     if (shouldChooseGenericAsDefault) repoFormat = RepositoryFormatTypes.Generic
     if (showRepositoryFormatForAllowedTypes) {
-      repoFormat = getRepositoryFormat(initialValues)
-        ? (getRepositoryFormat(initialValues) as RepositoryFormatTypes)
-        : RepositoryFormatTypes.Generic
+      const repoFormatFromValues = getRepositoryFormat(initialValues) as RepositoryFormatTypes
+      repoFormat = repoFormatFromValues ? repoFormatFromValues : RepositoryFormatTypes.Generic
     }
-
     setRepositoryFormat(repoFormat)
   }, [])
 
@@ -385,7 +384,7 @@ function Artifactory({
     merge(artifactObj.spec, {
       repository: getRepositoryValue(formData, isGenericArtifactory),
       repositoryUrl: formData?.repositoryUrl,
-      repositoryFormat
+      repositoryFormat: defaultTo(formData.repositoryFormat, repositoryFormat)
     })
 
     if (isAzureWebAppGeneric) {
@@ -430,9 +429,16 @@ function Artifactory({
     isGenericArtifactory
   ])
 
-  const tags = artifactoryBuildDetailsLoading
-    ? [{ label: loadingPlaceholderText, value: loadingPlaceholderText }]
-    : getSelectItems()
+  const tags = React.useMemo(
+    () =>
+      artifactoryBuildDetailsLoading
+        ? [{ label: loadingPlaceholderText, value: loadingPlaceholderText }]
+        : defaultTo(
+            filter(getSelectItems(), (option: SelectOption) => option?.label && option?.value),
+            []
+          ),
+    [artifactoryBuildDetailsLoading, loadingPlaceholderText, getSelectItems]
+  ) as SelectOption[]
 
   const itemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={artifactoryBuildDetailsLoading} />
@@ -500,22 +506,26 @@ function Artifactory({
               <div className={cx(css.artifactForm, formClassName)}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-                {(showRepositoryFormatForAllowedTypes || isArtifactTemplate) && (
+                {showRepositoryFormatForAllowedTypes && (
                   <div className={css.imagePathContainer}>
                     <FormInput.Select
                       name="repositoryFormat"
                       label={getString('common.repositoryFormat')}
                       items={repositoryFormats}
-                      onChange={value => {
-                        selectedArtifact &&
+                      onChange={selectedRepoFormatValue => {
+                        setTagList([])
+                        setArtifactPaths([])
+                        setRepositoryFormat(selectedRepoFormatValue?.value as string)
+                        if (selectedArtifact) {
                           formik.setValues({
                             ...defaultArtifactInitialValues(selectedArtifact),
-                            identifier: formik.values.identifier
+                            identifier: formik.values.identifier,
+                            repositoryFormat: selectedRepoFormatValue?.value
                           })
-                        formik.setFieldValue('repositoryFormat', value?.value)
-                        setRepositoryFormat(value?.value as string)
+                        }
                         setIsAzureWebAppGeneric(
-                          showRepositoryFormatForAllowedTypes && value?.value === RepositoryFormatTypes.Generic
+                          showRepositoryFormatForAllowedTypes &&
+                            selectedRepoFormatValue?.value === RepositoryFormatTypes.Generic
                         )
                       }}
                     />

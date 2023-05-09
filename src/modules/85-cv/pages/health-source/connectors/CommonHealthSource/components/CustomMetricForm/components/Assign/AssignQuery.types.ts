@@ -6,7 +6,9 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
+import type { HealthSourceConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import type { useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
+import type { RecordProps } from '../CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer.types'
 
 export type AssignQueryProps = {
   values: {
@@ -16,11 +18,10 @@ export type AssignQueryProps = {
     serviceInstanceField?: string | SelectOption
     riskCategory?: string
   }
-  hideServiceIdentifier?: boolean
-  hideCV?: boolean
-  hideSLIAndHealthScore?: boolean
   showOnlySLI?: boolean
   key?: string
   riskProfileResponse?: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
   defaultServiceInstance?: string
+  healthSourceConfig: HealthSourceConfig
+  recordProps: RecordProps
 }

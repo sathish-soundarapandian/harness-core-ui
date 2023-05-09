@@ -79,9 +79,19 @@
     margin-right: var(--spacing-3);
   }
 
+  .pipelineRollbackIcon {
+    margin-right: var(--spacing-2);
+    margin-left: calc(-1 * var(--spacing-1));
+  }
+
   .spinner {
     margin: 0 auto var(--spacing-6);
   }
+}
+
+.stageUtil {
+  display: flex;
+  align-items: center;
 }
 
 .stageName {

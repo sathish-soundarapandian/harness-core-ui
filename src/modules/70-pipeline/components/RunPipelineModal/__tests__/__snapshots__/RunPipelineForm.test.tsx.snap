@@ -89,7 +89,8 @@ exports[`EXECUTION VIEW should should have the values prefilled and fields as di
                         class="Layout--vertical StyledProps--main"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
                         >
                           checkVariable1
                         </p>
@@ -545,7 +546,8 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                         class="Layout--vertical StyledProps--main"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
                         >
                           checkVariable1
                         </p>
@@ -1169,7 +1171,8 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                         class="Layout--vertical StyledProps--main"
                       >
                         <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                          style="--text-line-clamp: 1;"
                         >
                           checkVariable1
                         </p>

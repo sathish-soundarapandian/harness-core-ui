@@ -306,17 +306,15 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
   const envVars = get(values.spec, `${fieldPath}.spec.environmentVariables`)
   const targets = get(values.spec, `${fieldPath}.spec.targets`) as MultiTypeInputType
   const cmdFlags = get(values.spec, `${fieldPath}.commandFlags`)
-  const processCmdFlags = cmdFlags?.map((commandFlag: TerraformCliOptionFlag) =>
-    commandFlag.commandType && commandFlag.flag
-      ? {
-          commandType: commandFlag.commandType,
-          flag: commandFlag.flag
-        }
-      : {
-          commandType: '',
-          flag: ''
-        }
-  )
+
+  const processCmdFlags = (): TerraformCliOptionFlag[] | undefined => {
+    if (cmdFlags?.length && cmdFlags[0].commandType) {
+      return cmdFlags.map((commandFlag: TerraformCliOptionFlag) => ({
+        commandType: commandFlag.commandType,
+        flag: defaultTo(commandFlag?.flag, '')
+      }))
+    }
+  }
 
   if (values?.spec?.configuration?.type === 'Inline' || values?.spec?.cloudCliConfiguration) {
     const envMap: StringNGVariable[] = []
@@ -437,7 +435,7 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
           configuration: {
             type: values?.spec?.configuration?.type,
             skipRefreshCommand: values?.spec?.configuration?.skipRefreshCommand,
-            commandFlags: cmdFlags?.length && cmdFlags[0].commandType && processCmdFlags,
+            commandFlags: processCmdFlags(),
             spec: {
               ...configObject
             }
@@ -451,7 +449,7 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
         spec: {
           ...values.spec,
           cloudCliConfiguration: {
-            commandFlags: cmdFlags?.length && cmdFlags[0].commandType && processCmdFlags,
+            commandFlags: processCmdFlags(),
             spec: {
               ...configObject
             }
@@ -468,7 +466,7 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
       configuration: {
         type: values?.spec?.configuration?.type,
         skipRefreshCommand: values?.spec?.configuration?.skipRefreshCommand,
-        commandFlags: cmdFlags?.length && cmdFlags[0].commandType && processCmdFlags
+        commandFlags: processCmdFlags()
       }
     }
   }
@@ -565,17 +563,10 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
   const cmdFlags = get(values.spec, `${fieldPath}.commandFlags`)
 
   if (cmdFlags?.length && cmdFlags[0].commandType) {
-    configObject['commandFlags'] = cmdFlags?.map((commandFlag: TerraformCliOptionFlag) =>
-      commandFlag.commandType && commandFlag.flag
-        ? {
-            commandType: commandFlag.commandType,
-            flag: commandFlag.flag
-          }
-        : {
-            commandType: '',
-            flag: ''
-          }
-    )
+    configObject['commandFlags'] = cmdFlags.map((commandFlag: TerraformCliOptionFlag) => ({
+      commandType: commandFlag.commandType,
+      flag: defaultTo(commandFlag?.flag, '')
+    }))
   }
 
   if (get(values.spec, `${fieldPath}.varFiles`)?.length) {

@@ -1,6 +1,16 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { StoreType } from '@common/constants/GitSyncTypes'
+import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import type { EntityDetail } from 'services/cd-ng'
+import type { EntityDetail, EntityReference } from 'services/cd-ng'
 import { getPipelineSummaryPromise, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { getTemplateMetadataListPromise, TemplateMetadataSummaryResponse } from 'services/template-ng'
 
@@ -12,8 +22,8 @@ export interface EntityScope {
   versionLabel?: string
 }
 
-interface UseGetEntityUrlProp {
-  entityInfo?: EntityDetail
+export interface UseGetEntityUrlProp {
+  entityInfo?: EntityDetail & { entityRef?: EntityReference & { envIdentifier?: string } }
 }
 
 export const getPipelineMetadataByIdentifier = (
@@ -147,7 +157,8 @@ export const useGetEntityMetadata = (prop: UseGetEntityUrlProp): { getEntityURL:
   const entityInfo = prop.entityInfo
   const { accountIdentifier = '', orgIdentifier = '', projectIdentifier = '' } = entityInfo?.entityRef || {}
   const entityType = entityInfo?.type
-  const identifier = entityInfo?.entityRef?.identifier || ''
+  const identifier = defaultTo(entityInfo?.entityRef?.identifier, '')
+  const { module } = useParams<ModulePathParams>()
 
   const getEntityURL = async (): Promise<string> => {
     let entityUrl: string
@@ -205,12 +216,22 @@ export const useGetEntityMetadata = (prop: UseGetEntityUrlProp): { getEntityURL:
           secretId: identifier
         })}`
         break
+      case 'Environment':
+        entityUrl = `${routes.toEnvironmentDetails({
+          accountId: accountIdentifier,
+          orgIdentifier,
+          projectIdentifier,
+          environmentIdentifier: identifier,
+          module
+        })}`
+        break
       case 'EnvironmentGroup':
         entityUrl = `${routes.toEnvironmentGroupDetails({
           accountId: accountIdentifier,
           orgIdentifier,
           projectIdentifier,
-          environmentGroupIdentifier: identifier
+          environmentGroupIdentifier: identifier,
+          module
         })}`
         break
       case 'Infrastructure':
@@ -218,8 +239,9 @@ export const useGetEntityMetadata = (prop: UseGetEntityUrlProp): { getEntityURL:
           accountId: accountIdentifier,
           orgIdentifier,
           projectIdentifier,
-          environmentIdentifier: identifier
-        })}?sectionId=INFRASTRUCTURE`
+          environmentIdentifier: defaultTo(entityInfo?.entityRef?.envIdentifier, ''),
+          module
+        })}?sectionId=INFRASTRUCTURE&infrastructureId=${identifier}`
         break
       default:
         entityUrl = routes.toLandingDashboard({ accountId: accountIdentifier })

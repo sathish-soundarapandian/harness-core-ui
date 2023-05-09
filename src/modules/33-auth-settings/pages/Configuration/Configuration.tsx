@@ -12,9 +12,11 @@ import { Layout, Tabs, Tab, Text } from '@harness/uicore'
 
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import Authentication from './Authentication'
+import Allowlist from './Allowlist'
 import css from './Configuration.module.scss'
 
 export const VIEWS = {
@@ -24,6 +26,8 @@ export const VIEWS = {
 
 const Configuration: React.FC = () => {
   const { getString } = useStrings()
+  const { PL_IP_ALLOWLIST_NG } = useFeatureFlags()
+
   const [view, setView] = useQueryParamsState<string>('view', '', {
     serializer: identity,
     deserializer: identity
@@ -47,6 +51,13 @@ const Configuration: React.FC = () => {
               title={<Text>{getString('authentication')}</Text>}
               panel={<Authentication />}
             />
+            {PL_IP_ALLOWLIST_NG && (
+              <Tab
+                id={VIEWS.ALLOWLIST}
+                title={<Text>{getString('authSettings.allowlist')}</Text>}
+                panel={<Allowlist />}
+              />
+            )}
           </Tabs>
         </Layout.Horizontal>
       </Page.Body>

@@ -8,16 +8,20 @@
 import React from 'react'
 import { cloneDeep, defaultTo } from 'lodash-es'
 import { Text } from '@harness/uicore'
-import type { Renderer, CellProps } from 'react-table'
-import type { SLODashboardApiFilter, SLOTargetFilterDTO } from 'services/cv'
+import { Color } from '@harness/design-system'
+import type { Renderer, CellProps, Row } from 'react-table'
+import type { RadioButtonProps } from '@harness/uicore/dist/components/RadioButton/RadioButton'
+import type { SLODashboardApiFilter, SLOError, SLOTargetFilterDTO } from 'services/cv'
 import {
   SLOObjective,
   SLOV2Form,
   PeriodTypes,
-  PeriodLengthTypes
+  PeriodLengthTypes,
+  SLOFormulaType
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { getSLORefIdWithOrgAndProject } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
-import { SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
+import { SLOErrorType, SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
+import CVRadioLabelTextAndDescription from '@cv/components/CVRadioLabelTextAndDescription'
 import type {
   GetDistributionUpdatedProps,
   ResetOnDeleteProps,
@@ -82,7 +86,13 @@ export const getDistribution = ({
 }
 
 export const RenderName: Renderer<CellProps<SLOObjective>> = ({ row }) => {
-  return <Text>{row.original.name || row.original.serviceLevelObjectiveRef}</Text>
+  const { name, serviceLevelObjectiveRef, sloError } = row.original
+  const colorProp = getColorProp(sloError)
+  return (
+    <Text {...colorProp} lineClamp={1}>
+      {name || serviceLevelObjectiveRef}
+    </Text>
+  )
 }
 
 export const createRequestBodyForSLOHealthListViewV2 = ({ values }: { values: SLOV2Form }): SLODashboardApiFilter => {
@@ -144,6 +154,31 @@ const getManuallyUpdatedSlos = (sloDetailsList: SLOObjective[]) =>
       }
     })
     .filter(item => item !== undefined) as number[]
+
+export const onImpactPercentageChange = ({
+  weight,
+  index,
+  serviceLevelObjectivesDetails,
+  setServiceLevelObjectivesDetails,
+  setCursorIndex
+}: {
+  weight: number
+  index: number
+  setCursorIndex: React.Dispatch<React.SetStateAction<number>>
+  serviceLevelObjectivesDetails: SLOObjective[]
+  setServiceLevelObjectivesDetails: (updatedSLODetails: SLOObjective[]) => void
+  isReset?: boolean
+}): void => {
+  const sloDetailsList = cloneDeep(serviceLevelObjectivesDetails)
+  const neweDistInta = sloDetailsList.map((sloDetail, sloIndex) => {
+    if (sloIndex === index) {
+      sloDetail.weightagePercentage = weight
+    }
+    return sloDetail
+  })
+  setServiceLevelObjectivesDetails(neweDistInta)
+  setCursorIndex(index)
+}
 
 export const onWeightChange = ({
   weight,
@@ -261,4 +296,43 @@ const updateNonManuallyUpdatedSlos = (
       sloList: updatedSLOList
     })
   }
+}
+
+export const getIsLastRow = (row: Row<SLOObjective>, serviceLevelObjectivesDetails: SLOObjective[]): boolean => {
+  const totalRows = serviceLevelObjectivesDetails.length + 1
+  const indexOfCurrentRow = row.index + 1
+  return totalRows === indexOfCurrentRow
+}
+
+export const getColorProp = (sloError?: SLOError) => {
+  const hasDeleteSLO = sloError?.sloErrorType === SLOErrorType.SimpleSLODeletion
+  return hasDeleteSLO ? { color: Color.RED_450 } : {}
+}
+
+export const getFormulaTypeOptions = () => [
+  { label: 'Weighted Average', value: SLOFormulaType.WEIGHTED_AVERAGE },
+  { label: 'Least Performance', value: SLOFormulaType.LEAST_PERFORMANCE }
+]
+
+export const getSLOFormulaSelectOptions = (): Pick<RadioButtonProps, 'label' | 'value'>[] => {
+  return [
+    {
+      label: (
+        <CVRadioLabelTextAndDescription
+          label="cv.CompositeSLO.weightedAverage"
+          description="cv.CompositeSLO.AddSLOMessage" //"cv.CompositeSLO.weightedAverageSubtext"
+        />
+      ),
+      value: SLOFormulaType.WEIGHTED_AVERAGE
+    },
+    {
+      label: (
+        <CVRadioLabelTextAndDescription
+          label="cv.CompositeSLO.leastPerformance"
+          description="cv.CompositeSLO.leastPerformanceSubText"
+        />
+      ),
+      value: SLOFormulaType.LEAST_PERFORMANCE
+    }
+  ]
 }

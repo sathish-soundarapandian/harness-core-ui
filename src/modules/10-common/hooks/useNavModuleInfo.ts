@@ -193,6 +193,7 @@ const getModuleInfo = (
   backgroundColor?: string
 ): useNavModuleInfoReturnType => {
   const { icon: moduleIcon, label, getHomePageUrl } = moduleInfo
+
   return {
     icon: moduleIcon,
     label,
@@ -235,7 +236,7 @@ const useNavModuleInfo = (module: NavModuleName) => {
   const isCommunity = useGetCommunity()
   const { color, backgroundColor } = moduleInfoMap[module]
 
-  return getModuleInfo(
+  const moduleInfo = getModuleInfo(
     moduleInfoMap[module],
     accountId,
     !!licenseInformation[module]?.id,
@@ -243,6 +244,8 @@ const useNavModuleInfo = (module: NavModuleName) => {
     color,
     backgroundColor
   ) as useNavModuleInfoReturnType
+
+  return moduleInfo
 }
 
 export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoReturnType> => {

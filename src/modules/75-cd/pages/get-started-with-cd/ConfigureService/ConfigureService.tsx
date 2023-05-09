@@ -236,11 +236,11 @@ const ConfigureServiceRef = (
               ? ENABLED_ARTIFACT_TYPES.DockerRegistry
               : formikRef?.current?.values?.artifactType
           if (isSvcEnvEnabled) {
-            set(draft, 'primary.sources[0].type', artifactType)
-            set(draft, 'primary.sources[0].spec', formikRef?.current?.values?.artifactConfig?.spec)
-            set(draft, 'primary.primaryArtifactRef', formikRef?.current?.values?.artifactConfig?.identifier)
-            unset(draft, 'primary.spec')
+            set(draft, 'primary.type', artifactType)
+            set(draft, 'primary.spec', formikRef?.current?.values?.artifactConfig?.spec)
+            unset(draft, 'primary.sources')
             unset(draft, 'primary.identifier')
+            unset(draft, 'primary.primaryArtifactRef')
           } else {
             set(draft, 'primary.type', artifactType)
             set(draft, 'primary.spec', formikRef?.current?.values?.artifactConfig?.spec)
@@ -537,7 +537,7 @@ const ConfigureServiceRef = (
     const manifestStoreType = get(serviceData, 'data.manifestStoreType', ManifestStoreMap.Harness)
     const manifestConfig = get(serviceData, 'serviceDefinition.spec.manifests[0]', defaultManifestConfig)
     const manifestData = get(serviceData, 'data.manifestData')
-    const artifactConfig = get(serviceData, 'serviceDefinition.spec.artifacts.primary.sources[0].spec')
+    const artifactConfig = get(serviceData, 'serviceDefinition.spec.artifacts.primary.spec')
     const artifactData = get(serviceData, 'data.artifactData')
     const artifactType = get(serviceData, 'data.artifactType')
 

@@ -14,6 +14,7 @@ export interface HeaderTitleProps {
   loading: boolean
   title?: string
   description?: string
+  tag?: string
 }
 
 export interface HeaderToolbarProps {

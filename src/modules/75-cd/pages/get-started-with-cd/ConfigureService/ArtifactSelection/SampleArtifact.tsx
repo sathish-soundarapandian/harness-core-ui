@@ -16,8 +16,6 @@ import useCreateEditConnector from '@connectors/hooks/useCreateEditConnector'
 import { buildDockerPayload, DockerProviderType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { StringKeys, useStrings } from 'framework/strings'
 import type { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { DelegateSelectorStepData } from './ArtifactAuthStep'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import {
@@ -63,10 +61,7 @@ function SampleArtifact(): JSX.Element {
     saveServiceData
   } = useCDOnboardingContext()
   const { values: formValues, setFieldValue } = useFormikContext<ConfigureServiceInterface>()
-  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
-  const artifactPath = isSvcEnvEnabled
-    ? 'serviceDefinition.spec.artifacts.primary.sources[0]'
-    : 'serviceDefinition.spec.artifacts.primary'
+  const artifactPath = 'serviceDefinition.spec.artifacts.primary'
 
   const [artifactAuthData, setArtifactAuthData] = React.useState({
     ...sampleArtifactAuthData,

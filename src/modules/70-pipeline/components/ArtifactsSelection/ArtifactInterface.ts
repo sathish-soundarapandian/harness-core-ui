@@ -287,6 +287,7 @@ export interface GoogleArtifactRegistryInitialValuesType {
     repositoryName: string
     version?: string
     versionRegex?: string
+    digest?: string
   }
 }
 

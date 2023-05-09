@@ -128,7 +128,14 @@ const CVSLODetailsPage: React.FC = () => {
     <>
       <Page.Header
         size="large"
-        title={<HeaderTitle loading={sloDetailsLoading} title={sloDashboardWidget?.title} description={description} />}
+        title={
+          <HeaderTitle
+            loading={sloDetailsLoading}
+            title={sloDashboardWidget?.title}
+            description={description}
+            tag={sloType}
+          />
+        }
         toolbar={<HeaderToolbar loading={sloDetailsLoading} createdAt={createdAt} lastModifiedAt={lastModifiedAt} />}
         breadcrumbs={<NGBreadcrumbs links={breadcrumbLinks} />}
       />

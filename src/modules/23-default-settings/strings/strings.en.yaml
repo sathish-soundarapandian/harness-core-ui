@@ -8,11 +8,25 @@ mandateAuthorizationForCustomWebhookTriggers: Mandate Authorization for Custom W
 enableForceDelete: Enable Force Delete of Harness Resources
 enableGitCommands: Use Git client for commits
 allowDifferentRepoForInputSets: Allow different repo for Pipeline and InputSets
-enforceGitExperience: Enforce git experience
+enforceGitExperience: Enforce git experience for pipelines and templates
 pipelineTimeout: Pipeline Timeout
 stageTimeout: Stage Timeout
 stepTimeout: Step Timeout
 concurrentActivePipelineExecutions: Concurrent Active Pipeline Executions
-enableNodeExecutionAuditEvents: Enable Node Execution Audit Events
+enablePipelineExecutionAuditEvents: Enable Pipeline Execution Audit Events
 allowUserToMarkStepAsFailedExplicitly: Allow users to mark a running Step as failure
 enableMatrixFieldNames: Enable Matrix Labels By Name
+perspectivePreferences: PERSPECTIVES PREFERENCES
+showAnomalies: Show anomalies
+showOthers: Show "others"
+showUnallocatedClusterCost: Show "unallocated" costs on Clusters
+awsIncludeDiscounts: (AWS only) Include Discounts
+awsIncludeCredit: (AWS only) Include Credit
+awsIncludeRefunds: (AWS only) Include Refunds
+awsIncludeTaxes: (AWS only) Include Taxes
+showAwsCostAs: (AWS only) Show costs as
+azureIncludeRefunds: (Azure only) Include Refunds
+showAzureCostAs: (Azure only) Show costs as
+gcpIncludeDiscounts: (GCP only) Include Discounts
+gcpIncludeTaxes: (GCP Only) Include Taxes
+showGcpCostAs: (GCP only) Show costs as

@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect } from 'react'
-import { isEqual, isEmpty } from 'lodash-es'
+import React, { useCallback } from 'react'
+import { isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ConfigurationsWithRef } from '@cv/pages/monitored-service/components/Configurations/Configurations'
@@ -17,7 +17,6 @@ import { TemplateContext } from '@templates-library/components/TemplateStudio/Te
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { createdInitTemplateValue } from './MonitoredServiceTemplateCanvas.utils'
-import { DefaultSpec } from './MonitoredServiceTemplateCanvas.constants'
 
 const MonitoredServiceTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef<unknown>) => {
   const {
@@ -52,15 +51,6 @@ const MonitoredServiceTemplateCanvas = (_props: unknown, formikRef: TemplateForm
     },
     [template]
   )
-
-  useEffect(() => {
-    if (!template?.spec || isEmpty(template?.spec)) {
-      updateTemplate({
-        ...template,
-        spec: { type: DefaultSpec.type }
-      })
-    }
-  }, [])
 
   const initialTemplate = createdInitTemplateValue(template)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()

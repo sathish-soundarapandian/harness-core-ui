@@ -247,7 +247,8 @@ export default function ChaosRoutes(): React.ReactElement {
       category: ResourceCategory.CHAOS,
       permissionLabels: {
         [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
+        [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.DELETE_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.delete" />
       }
     })
   }

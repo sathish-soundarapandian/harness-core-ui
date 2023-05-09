@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccessTokenCalloutForCommit test suite It should show setUp accessToken messgae if accessToken is not availble 1`] = `
+<div>
+  <div
+    class="bp3-callout callout calloutWarning"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main"
+        style="display: flex; align-items: center;"
+      >
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+          data-icon="loading"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 10 8"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              fill="currentColor"
+              r="1"
+              transform="translate(2 4)"
+            >
+              <animatetransform
+                additive="sum"
+                attributeName="transform"
+                begin="0s"
+                dur="1s"
+                repeatCount="indefinite"
+                type="scale"
+                values="0; 1.25; 0"
+              />
+            </circle>
+            <circle
+              fill="currentColor"
+              r="1"
+              transform="translate(5 4)"
+            >
+              <animatetransform
+                additive="sum"
+                attributeName="transform"
+                begin="0.2s"
+                dur="1s"
+                repeatCount="indefinite"
+                type="scale"
+                values="0; 1.25; 0"
+              />
+            </circle>
+            <circle
+              fill="currentColor"
+              r="1"
+              transform="translate(8 4)"
+            >
+              <animatetransform
+                additive="sum"
+                attributeName="transform"
+                begin="0.4s"
+                dur="1s"
+                repeatCount="indefinite"
+                type="scale"
+                values="0; 1.25; 0"
+              />
+            </circle>
+          </svg>
+        </span>
+        common.oAuth.fetchingUserAccessTokens
+      </p>
+    </div>
+  </div>
+</div>
+`;

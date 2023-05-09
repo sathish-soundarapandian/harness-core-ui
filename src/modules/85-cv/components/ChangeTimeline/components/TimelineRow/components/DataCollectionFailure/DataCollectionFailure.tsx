@@ -36,7 +36,7 @@ export default function DataCollectionFailure(props: DataCollectionFailureProps)
   return (
     <Container key={`${startTime}-${position}-${index}`} className={css.event} style={initialPosition}>
       <Popover
-        interactionKind={PopoverInteractionKind.CLICK}
+        interactionKind={PopoverInteractionKind.HOVER}
         popoverClassName={css.widgetsPopover}
         position={PopoverPosition.TOP}
         content={

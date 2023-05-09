@@ -45,7 +45,9 @@ export enum HealthSourceTypes {
   AwsPrometheus = 'AwsPrometheus',
   SumoLogic = 'SumoLogic',
   SumologicMetrics = 'SumologicMetrics',
-  SumologicLogs = 'SumologicLogs'
+  SumologicLogs = 'SumologicLogs',
+  SignalFX = 'SignalFX',
+  SplunkSignalFXMetrics = 'SplunkSignalFXMetrics'
 }
 
 export type CommonNonCustomMetricFieldsType = {

@@ -8,12 +8,14 @@
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { Icon } from '@harness/uicore'
+import { ButtonSize, ButtonVariation, Icon, Layout, SplitButton, SplitButtonOption, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { PopoverInteractionKind } from '@blueprintjs/core'
 import routes from '@common/RouteDefinitions'
 import { Duration } from '@common/components/Duration/Duration'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
-import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
+import ExecutionActions, { getValidExecutionActions } from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
@@ -23,7 +25,7 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { StoreType } from '@common/constants/GitSyncTypes'
-import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import { ExecutionStatus, isRetryPipelineAllowed } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { TagsPopover } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -41,11 +43,37 @@ import { useQueryParams } from '@common/hooks'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useOpenRetryPipelineModal } from '@pipeline/components/ExecutionActions/useOpenRetryPipelineModal'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {
   pipelineMetadata?: ResponsePMSPipelineSummaryResponse | null
 }
+
+interface TooltipContentProps {
+  pipelineExecutionSummary: PipelineExecutionSummary
+}
+
+const MemoizedTooltipContent = React.memo(({ pipelineExecutionSummary }: TooltipContentProps) => {
+  const { getString } = useStrings()
+  return (
+    <Layout.Vertical padding="medium">
+      <Duration
+        className={css.duration}
+        startTime={pipelineExecutionSummary.startTs}
+        endTime={pipelineExecutionSummary.endTs}
+        color={Color.WHITE}
+      />
+      {pipelineExecutionSummary.startTs && (
+        <Text inline color={Color.WHITE} className={css.startTime}>
+          {`${getString('pipeline.startTime')}: ${formatDatetoLocale(pipelineExecutionSummary.startTs)}`}
+        </Text>
+      )}
+    </Layout.Vertical>
+  )
+})
+
+MemoizedTooltipContent.displayName = 'MemoizedTooltipContent'
 
 export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): React.ReactElement {
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
@@ -65,6 +93,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
   const { CI_REMOTE_DEBUG } = useFeatureFlags()
+
   const [canView, canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -146,6 +175,28 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     isDebugMode: hasCI
   })
 
+  const { status, canRetry, modules, stagesExecuted } = pipelineExecutionSummary
+  const params = {
+    orgIdentifier,
+    pipelineIdentifier,
+    projectIdentifier,
+    accountId,
+    executionIdentifier,
+    module,
+    repoIdentifier,
+    connectorRef,
+    repoName,
+    branch,
+    storeType: pipelineMetadata?.data?.storeType,
+    stagesExecuted
+  }
+  const { canRerun } = getValidExecutionActions(canExecute, status as ExecutionStatus)
+  const showRetryPipelineOption = isRetryPipelineAllowed(status as ExecutionStatus) && canRetry
+  const { openRetryPipelineModal } = useOpenRetryPipelineModal({ modules, params })
+  const reRunPipeline = (): void => {
+    isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? openRunPipelineModalV1() : openRunPipelineModal()
+  }
+
   let moduleLabel = getString('common.pipelineExecution')
   if (module) {
     switch (module.toUpperCase() as ModuleName) {
@@ -200,12 +251,6 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
           {pipelineExecutionSummary.status ? (
             <ExecutionStatusLabel status={pipelineExecutionSummary.status as ExecutionStatus} />
           ) : null}
-          {pipelineExecutionSummary.startTs && (
-            <div className={css.startTime}>
-              <String tagName="div" className={css.startTimeText} stringID="pipeline.startTime" />
-              <span>{formatDatetoLocale(pipelineExecutionSummary.startTs)}</span>
-            </div>
-          )}
           <Duration
             className={css.duration}
             startTime={pipelineExecutionSummary.startTs}
@@ -213,6 +258,11 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             icon="time"
             iconProps={{ size: 12 }}
             durationText={' '}
+            tooltip={<MemoizedTooltipContent pipelineExecutionSummary={pipelineExecutionSummary} />}
+            tooltipProps={{
+              isDark: true,
+              interactionKind: PopoverInteractionKind.HOVER
+            }}
           />
           {pipelineExecutionSummary.showRetryHistory && (
             <RetryHistory
@@ -232,25 +282,49 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             <Icon name="Edit" size={12} />
             <String stringID="editPipeline" />
           </Link>
-
+          {canRerun && (
+            <SplitButton
+              variation={ButtonVariation.SECONDARY}
+              data-testid="retry-pipeline"
+              icon={'repeat'}
+              text={getString('pipeline.execution.actions.reRun')}
+              minimal
+              size={ButtonSize.SMALL}
+              iconProps={{ size: 12 }}
+              onClick={reRunPipeline}
+              tooltipProps={{
+                dataTooltipId: 'retry-pipeline'
+              }}
+              usePortal={true}
+              disabled={!canExecute || isPipelineInvalid}
+            >
+              {showRetryPipelineOption && (
+                <>
+                  <SplitButtonOption
+                    data-test-id="retry-failed-pipeline"
+                    onClick={() => openRetryPipelineModal(true)}
+                    text={getString('pipeline.execution.actions.reRunLastFailedStage')}
+                    disabled={isPipelineInvalid}
+                  />
+                  <SplitButtonOption
+                    data-test-id="retry-failed-pipeline-specific-stage"
+                    onClick={() => openRetryPipelineModal()}
+                    text={getString('pipeline.execution.actions.reRunSelectedStage')}
+                    disabled={isPipelineInvalid}
+                  />
+                </>
+              )}
+              <SplitButtonOption
+                onClick={reRunPipeline}
+                text={getString('pipeline.execution.actions.reRunEntirePipeline')}
+              />
+            </SplitButton>
+          )}
           <ExecutionActions
             executionStatus={pipelineExecutionSummary.status as ExecutionStatus}
             refetch={refetch}
             source={source}
-            params={{
-              orgIdentifier,
-              pipelineIdentifier,
-              projectIdentifier,
-              accountId,
-              executionIdentifier,
-              module,
-              repoIdentifier,
-              connectorRef,
-              repoName,
-              branch,
-              storeType: pipelineMetadata?.data?.storeType,
-              stagesExecuted: pipelineExecutionSummary?.stagesExecuted
-            }}
+            params={params}
             isPipelineInvalid={isPipelineInvalid}
             canEdit={canEdit}
             showEditButton={true}

@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { RestResponsePageTimeSeriesMetricDataDTO } from 'services/cv'
+
 export const mockedMetricsData = {
   resource: {
     totalPages: 4,
@@ -138,4 +140,59 @@ export const mockedMetricsData = {
     pageIndex: 0,
     empty: false
   }
+}
+
+export const mockedMetricsDataWithDeeplink: RestResponsePageTimeSeriesMetricDataDTO = {
+  metaData: {},
+  resource: {
+    totalPages: 1,
+    totalItems: 1,
+    pageItemCount: 1,
+    pageSize: 10,
+    content: [
+      {
+        projectIdentifier: 'demokaran',
+        orgIdentifier: 'default',
+        monitoredServiceIdentifier: 'prommock_testing',
+        dataSourceType: 'PROMETHEUS',
+        monitoredServiceDataSourceType: 'Prometheus',
+        groupName: 'g1',
+        metricName: 'Prometheus Metric',
+        deeplinkURL:
+          'http://35.214.81.102:9090/graph?g0.step_input=60&g0.expr=scrape_duration_seconds%7Bgroup%3D%22cv%22%2Cinstance%3D%22prometheuscv.cie-demo.co.uk%3A80%22%2Cjob%3D%22payment-service-nikpapag%22%7D&g0.range_input=87m&g0.end_input=2023-05-05+07%3A20&g0.tab=0',
+        metricDataList: [
+          {
+            timestamp: 1683265920000,
+            risk: 'NO_DATA'
+          },
+          {
+            timestamp: 1683265980000,
+            risk: 'NO_DATA'
+          },
+          {
+            timestamp: 1683266040000,
+            risk: 'NO_DATA'
+          },
+          {
+            timestamp: 1683266100000,
+            value: 0.009006256,
+            risk: 'HEALTHY'
+          },
+          {
+            timestamp: 1683266160000,
+            value: 0.008301429,
+            risk: 'HEALTHY'
+          },
+          {
+            timestamp: 1683266220000,
+            value: 0.008349191,
+            risk: 'HEALTHY'
+          }
+        ]
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  responseMessages: []
 }

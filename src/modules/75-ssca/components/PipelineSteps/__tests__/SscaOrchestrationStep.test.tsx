@@ -17,7 +17,7 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const runtimeValues = {
   identifier: 'Ssca_Orchestration_Step',
-  name: 'Ssca Orchestration Step',
+  name: 'SSCA Orchestration Step',
   timeout: RUNTIME_INPUT_VALUE,
   spec: {
     tool: {
@@ -41,7 +41,7 @@ const runtimeValues = {
 
 const fixedValues = {
   identifier: 'Ssca_Orchestration_Step',
-  name: 'Ssca Orchestration Step',
+  name: 'SSCA Orchestration Step',
   timeout: '10s',
   spec: {
     tool: {

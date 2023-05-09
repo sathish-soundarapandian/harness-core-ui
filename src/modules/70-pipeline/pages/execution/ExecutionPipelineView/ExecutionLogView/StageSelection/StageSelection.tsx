@@ -23,7 +23,7 @@ import type { ExecutionNode, GraphLayoutNode } from 'services/pipeline-ng'
 import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
 import { StepsTree } from '../StepsTree/StepsTree'
 import { StatusIcon } from '../StepsTree/StatusIcon'
-
+import statusIconCss from '../StepsTree/StatusIcon.module.scss'
 import css from './StageSelection.module.scss'
 
 const SCROLL_OFFSET = 250
@@ -241,8 +241,20 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
               disabled={isExecutionSkipped(stage.status) || isExecutionNotStarted(stage.status)}
               summary={
                 <div className={css.stageName}>
-                  <div>
-                    <StatusIcon className={css.icon} status={stage.status as ExecutionStatus} />
+                  <div className={css.stageUtil}>
+                    {stage.nodeType !== StageType.PIPELINE_ROLLBACK ? (
+                      <StatusIcon className={css.icon} status={stage.status as ExecutionStatus} />
+                    ) : (
+                      <Icon
+                        className={cx(
+                          statusIconCss.statusIcon,
+                          statusIconCss.pipelinerollback,
+                          css.pipelineRollbackIcon
+                        )}
+                        name={'circle-pipeline-rollback'}
+                        size={23}
+                      />
+                    )}
                     <span>{stage.name}</span>
                   </div>
                   {shouldShowExecutionInputs ? (

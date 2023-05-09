@@ -13,8 +13,8 @@ const orgIdentifier = 'default'
 const connectorName = 'testConnector'
 const connectorType = 'Jenkins'
 
-export const connectorsListAPI = `/ng/api/connectors/listV2?routingId=${accountId}&pageIndex=0&pageSize=10&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&accountIdentifier=${accountId}`
-export const accountConnectorsListAPI = `/ng/api/connectors/listV2?routingId=${accountId}&pageIndex=0&pageSize=10&accountIdentifier=${accountId}`
+export const connectorsListAPI = `/ng/api/connectors/listV2?routingId=${accountId}&sortOrders=lastModifiedAt%2CDESC&pageIndex=0&pageSize=10&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&accountIdentifier=${accountId}`
+export const accountConnectorsListAPI = `/ng/api/connectors/listV2?routingId=${accountId}&sortOrders=lastModifiedAt%2CDESC&pageIndex=0&pageSize=10&accountIdentifier=${accountId}`
 export const connectorsCatalogueAPI = `/ng/api/connectors/catalogue?routingId=${accountId}&accountIdentifier=${accountId}`
 export const delegatesListAPI = `/api/setup/delegates/delegate-selectors-up-the-hierarchy?routingId=${accountId}&accountId=${accountId}&orgId=${orgIdentifier}&projectId=${projectId}`
 export const connectorsRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/connectors`

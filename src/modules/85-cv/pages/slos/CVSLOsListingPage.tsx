@@ -584,17 +584,17 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     },
     {
       Header: getString('cv.slos.target').toUpperCase(),
-      width: '6%',
+      width: isAccountLevel ? '10%' : '6%',
       Cell: RenderTarget
     },
     {
       Header: getString('cv.slos.burnRate').toUpperCase(),
-      width: '9%',
+      width: isAccountLevel ? '10%' : '9%',
       Cell: RenderBurnRate
     },
     {
       Header: getString('ce.budgets.listPage.tableHeaders.alerts').toUpperCase(),
-      width: '6%',
+      width: isAccountLevel ? '10%' : '6%',
       Cell: RenderAlerts
     },
     {
@@ -605,7 +605,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     {
       Header: '',
       id: 'sloActions',
-      width: '8%',
+      width: isAccountLevel ? '20%' : '8%',
       Cell: RenderSLOActions
     }
   ]

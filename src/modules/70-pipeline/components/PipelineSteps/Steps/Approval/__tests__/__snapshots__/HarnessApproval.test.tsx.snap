@@ -2010,9 +2010,12 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
             <div
               class="bp3-form-content"
             >
-              <div>
+              <div
+                class="radioBtns"
+              >
                 <label
                   class="bp3-control bp3-radio bp3-inline"
+                  style="display: flex;"
                 >
                   <input
                     name="userGroupExpression"
@@ -2022,10 +2025,20 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
                   <span
                     class="bp3-control-indicator"
                   />
-                  common.individual
+                  <div
+                    class="Layout--horizontal StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                      data-tooltip-id="usergroup-individual"
+                    >
+                      common.individual
+                    </p>
+                  </div>
                 </label>
                 <label
                   class="bp3-control bp3-radio bp3-inline"
+                  style="display: flex;"
                 >
                   <input
                     name="userGroupExpression"
@@ -2035,7 +2048,16 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
                   <span
                     class="bp3-control-indicator"
                   />
-                  common.combined
+                  <div
+                    class="Layout--horizontal StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                      data-tooltip-id="usergroup-combined"
+                    >
+                      common.combined
+                    </p>
+                  </div>
                 </label>
               </div>
               <div
@@ -2667,9 +2689,12 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
             <div
               class="bp3-form-content"
             >
-              <div>
+              <div
+                class="radioBtns"
+              >
                 <label
                   class="bp3-control bp3-radio bp3-inline"
+                  style="display: flex;"
                 >
                   <input
                     name="userGroupExpression"
@@ -2679,10 +2704,20 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
                   <span
                     class="bp3-control-indicator"
                   />
-                  common.individual
+                  <div
+                    class="Layout--horizontal StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                      data-tooltip-id="usergroup-individual"
+                    >
+                      common.individual
+                    </p>
+                  </div>
                 </label>
                 <label
                   class="bp3-control bp3-radio bp3-inline"
+                  style="display: flex;"
                 >
                   <input
                     name="userGroupExpression"
@@ -2692,7 +2727,16 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
                   <span
                     class="bp3-control-indicator"
                   />
-                  common.combined
+                  <div
+                    class="Layout--horizontal StyledProps--main"
+                  >
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                      data-tooltip-id="usergroup-combined"
+                    >
+                      common.combined
+                    </p>
+                  </div>
                 </label>
               </div>
               <div

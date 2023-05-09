@@ -102,7 +102,7 @@ const MetricsAnalysisContent: React.FC<MetricsAnalysisContentProps> = ({
   return (
     <>
       <div className={css.content}>
-        {timeSeriesInfo.map(({ groupName, metricName, metricDataList, dataSourceType }) => {
+        {timeSeriesInfo.map(({ groupName, metricName, metricDataList, dataSourceType, deeplinkURL }) => {
           return (
             metricName &&
             groupName &&
@@ -111,6 +111,7 @@ const MetricsAnalysisContent: React.FC<MetricsAnalysisContentProps> = ({
                 key={`$${groupName}-${metricName}`}
                 metricName={metricName}
                 dataSourceType={dataSourceType}
+                metricDeeplinkURL={deeplinkURL}
                 startTime={startTime}
                 endTime={endTime}
                 transactionName={groupName}

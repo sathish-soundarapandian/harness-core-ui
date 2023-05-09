@@ -287,6 +287,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'tas'
     case Connectors.TERRAFORM_CLOUD:
       return 'terraform-cloud'
+    case Connectors.SignalFX:
+      return 'service-signalfx'
     default:
       return 'placeholder'
   }

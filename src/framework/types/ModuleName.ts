@@ -23,6 +23,7 @@ export enum ModuleName {
   IACM = 'IACM',
   SSCA = 'SSCA',
   IDP = 'IDP',
+  IDPAdmin = 'IDPAdmin',
   CET = 'CET'
 }
 
@@ -38,7 +39,21 @@ export const moduleToModuleNameMapping: Record<Module, ModuleName> = {
   iacm: ModuleName.IACM,
   ssca: ModuleName.SSCA,
   idp: ModuleName.IDP,
+  'idp-admin': ModuleName.IDPAdmin,
   cet: ModuleName.CET
 }
 
-export type Module = 'ci' | 'cd' | 'cf' | 'cv' | 'ce' | 'sto' | 'chaos' | 'code' | 'iacm' | 'ssca' | 'idp' | 'cet'
+export type Module =
+  | 'ci'
+  | 'cd'
+  | 'cf'
+  | 'cv'
+  | 'ce'
+  | 'sto'
+  | 'chaos'
+  | 'code'
+  | 'iacm'
+  | 'ssca'
+  | 'idp'
+  | 'idp-admin'
+  | 'cet'

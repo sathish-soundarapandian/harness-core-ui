@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, FormEvent } from 'react'
 import { useFormikContext } from 'formik'
+import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import type { GetDataError } from 'restful-react'
@@ -21,37 +22,44 @@ import {
   useConfirmationDialog,
   Container,
   Layout,
-  Page
+  Page,
+  FormInput
 } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
+import dataCollectionFailure from '@cv/assets/dataCollectionFailure.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { SLOObjective, SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import {
+  SLOFormulaType,
+  SLOObjective,
+  SLOV2Form,
+  SLOV2FormFields
+} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import DataCollectionFailureTooltip from '@cv/pages/slos/common/DataCollectionFailureTooltip/DataCollectionFailureTooltip'
 import {
   getSLORefIdWithOrgAndProject,
   getSLOIdentifierWithOrgAndProject
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
+import { SLOErrorType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import type { ResponsePageSLOHealthListView, ServiceLevelObjectiveDetailsDTO, SLOHealthListView } from 'services/cv'
 import {
   createRequestBodyForSLOHealthListViewV2,
+  getIsLastRow,
+  getSLOFormulaSelectOptions,
+  onImpactPercentageChange,
   onWeightChange,
   RenderName,
   resetOnDelete,
   resetSLOWeightage
 } from './AddSLOs.utils'
 import { SLOList } from './components/SLOList'
-import {
-  RenderMonitoredService,
-  RenderSLIType,
-  RenderTags,
-  RenderTarget,
-  RenderUserJourney
-} from './components/SLOList.utils'
-import { SLOWeight } from '../../CreateCompositeSloForm.constant'
+import { RenderMonitoredService, RenderTags, RenderUserJourney } from './components/SLOList.utils'
+import { ImpactPercentage, SLOWeight } from '../../CreateCompositeSloForm.constant'
 import { getColumsForProjectAndAccountLevel, getProjectAndOrgColumn } from '../../CreateCompositeSloForm.utils'
+import radiocss from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.module.scss'
 import css from './AddSLOs.module.scss'
 
 interface AddSLOsProp {
@@ -69,6 +77,7 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
     error: dashboardWidgetsError
   } = props
   const formikProps = useFormikContext<SLOV2Form>()
+  const isFormulaWeightedAverage = formikProps?.values?.sloFormulaType === SLOFormulaType.WEIGHTED_AVERAGE
   const { getString } = useStrings()
   const [isListViewDataInitialised, setIsListViewDataInitialised] = useState(false)
 
@@ -123,29 +132,38 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
   const setServiceLevelObjectivesDetails = (updatedSLODetails: SLOObjective[]): void =>
     formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLODetails)
 
-  const RenderWeightInput: Renderer<CellProps<ServiceLevelObjectiveDetailsDTO>> = ({ row }) => {
+  const RenderWeightInput: Renderer<CellProps<SLOObjective>> = ({ row }) => {
+    const { sloError } = row.original
+    const weightOrPercentage = isFormulaWeightedAverage ? SLOWeight : ImpactPercentage
+    const isLastRow = getIsLastRow(row, serviceLevelObjectivesDetails)
+    if (isLastRow && isFormulaWeightedAverage) {
+      return <Text intent={showErrorState ? Intent.DANGER : Intent.SUCCESS}>{totalOfSloWeight}</Text>
+    }
     return (
       <Container className={css.weightageInput}>
         <TextInput
           type="number"
-          step={SLOWeight.STEP}
-          max={SLOWeight.MAX}
-          min={SLOWeight.MIN}
+          step={weightOrPercentage.STEP}
+          max={weightOrPercentage.MAX}
+          min={weightOrPercentage.MIN}
           autoFocus={row.index === cursorIndex}
           intent={
-            row.original.weightagePercentage > SLOWeight.MAX || row.original.weightagePercentage < SLOWeight.MIN
+            row.original.weightagePercentage > weightOrPercentage.MAX ||
+            row.original.weightagePercentage < weightOrPercentage.MIN
               ? Intent.DANGER
               : Intent.PRIMARY
           }
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            onWeightChange({
+          disabled={sloError?.sloErrorType === SLOErrorType.SimpleSLODeletion}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const params = {
               index: row.index,
               weight: Number(e.currentTarget.value),
               serviceLevelObjectivesDetails,
               setServiceLevelObjectivesDetails,
               setCursorIndex
-            })
-          }
+            }
+            return isFormulaWeightedAverage ? onWeightChange({ ...params }) : onImpactPercentageChange({ ...params })
+          }}
           name="weightagePercentage"
           value={row.original.weightagePercentage.toString()}
         />
@@ -174,8 +192,9 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
     )
   }
 
-  const RenderDelete: Renderer<CellProps<ServiceLevelObjectiveDetailsDTO>> = ({ row }) => {
-    const { serviceLevelObjectiveRef } = row.original
+  const RenderDelete: Renderer<CellProps<SLOObjective>> = ({ row }) => {
+    const { serviceLevelObjectiveRef, sloError } = row.original
+    const isLastRow = getIsLastRow(row, serviceLevelObjectivesDetails)
     const { openDialog } = useConfirmationDialog({
       titleText: getString('common.delete', { name: serviceLevelObjectiveRef }),
       contentText: (
@@ -202,16 +221,35 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       }
     })
 
+    if (isLastRow && isFormulaWeightedAverage) {
+      return <></>
+    }
     return (
-      <Icon
-        style={{ cursor: 'pointer', float: 'right' }}
-        padding={'small'}
-        name="main-trash"
-        onClick={e => {
-          e.stopPropagation()
-          openDialog()
-        }}
-      />
+      <Layout.Horizontal spacing={'large'} flex={{ justifyContent: 'flex-end', alignItems: 'center' }}>
+        {sloError?.failedState && (
+          <Text
+            flex
+            tooltip={<DataCollectionFailureTooltip sloError={sloError} />}
+            tooltipProps={{
+              isDark: true,
+              interactionKind: PopoverInteractionKind.HOVER,
+              position: Position.LEFT,
+              usePortal: false
+            }}
+          >
+            <img src={dataCollectionFailure} />
+          </Text>
+        )}
+        <Icon
+          style={{ cursor: 'pointer', float: 'right' }}
+          padding={'small'}
+          name="main-trash"
+          onClick={e => {
+            e.stopPropagation()
+            openDialog()
+          }}
+        />
+      </Layout.Horizontal>
     )
   }
 
@@ -219,45 +257,60 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
     {
       accessor: 'serviceLevelObjectiveRef',
       Header: getString('name'),
-      width: '20%',
+      width: isAccountLevel ? '15%' : '20%',
       Cell: RenderName
     },
-    ...(getProjectAndOrgColumn({ getString }) as Column<SLOObjective>[]),
+    ...(getProjectAndOrgColumn({ getString, isAccountLevel }) as Column<SLOObjective>[]),
     {
       accessor: 'serviceName',
       Header: getString('cv.slos.monitoredService').toUpperCase(),
-      width: '20%',
+      width: isAccountLevel ? '15%' : '20%',
       Cell: RenderMonitoredService
     },
     {
       accessor: 'userJourneyName',
       Header: getString('cv.slos.userJourney').toUpperCase(),
-      width: '20%',
+      width: isAccountLevel ? '15%' : '20%',
       Cell: RenderUserJourney
     },
     {
       Header: getString('tagsLabel').toUpperCase(),
-      width: '10%',
       Cell: RenderTags
-    },
-    {
-      accessor: 'sliType',
-      Header: getString('cv.slos.sliType').toUpperCase(),
-      width: '10%',
-      Cell: RenderSLIType
     },
     {
       accessor: 'sloTargetPercentage',
       Header: getString('cv.slos.target').toUpperCase(),
-      width: '10%',
-      Cell: RenderTarget
+      Cell: ({ row }) => {
+        const slo = row.original
+        const isLastRow = getIsLastRow(row, serviceLevelObjectivesDetails)
+        if (isLastRow && isFormulaWeightedAverage) {
+          return (
+            <Text className={css.weightageText}>{`${getString('total')} ${getString(
+              'cv.CompositeSLO.Weightage'
+            ).toLowerCase()}`}</Text>
+          )
+        }
+        return (
+          <Text
+            lineClamp={1}
+            title={` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
+            font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
+          >
+            {` ${Number((Number(slo?.sloTargetPercentage) || 0).toFixed(2))}%`}
+          </Text>
+        )
+      }
     },
     {
       accessor: 'weightagePercentage',
       disableSortBy: true,
       Header: (
         <>
-          <Text>{getString('cv.CompositeSLO.Weightage')}</Text>
+          <Text>
+            {isFormulaWeightedAverage
+              ? getString('cv.CompositeSLO.Weightage')
+              : getString('cv.CompositeSLO.impactPercentage')}
+          </Text>
           <Button
             color={Color.PRIMARY_7}
             withoutBoxShadow
@@ -282,12 +335,10 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
           </Button>
         </>
       ),
-      width: '15%',
       Cell: RenderWeightInput
     },
     {
       id: 'deletSLO',
-      width: '5%',
       Cell: RenderDelete,
       disableSortBy: true
     }
@@ -304,40 +355,55 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
       .toFixed(2)
   )
   const showErrorState = totalOfSloWeight > 100 || totalOfSloWeight < 100
+  const tabelClassNames = isFormulaWeightedAverage
+    ? {
+        [css.rowFailure]: showErrorState,
+        [css.rowSuccess]: !showErrorState
+      }
+    : {}
+
+  const SLOFormulaSelectOptions = useMemo(() => getSLOFormulaSelectOptions(), [])
 
   return (
     <Page.Body
       loading={dashboardWidgetsLoading}
       error={getErrorMessage(dashboardWidgetsError)}
       retryOnError={() => refetchDashboardWidgets?.()}
-      className={css.noMinHeight}
+      className={css.addSloContainer}
     >
-      {showSLOTableAndMessage && <Text>{getString('cv.CompositeSLO.AddSLOMessage')}</Text>}
-      <Button
-        width={150}
-        loading={dashboardWidgetsLoading}
-        data-testid={'addSlosButton'}
-        variation={ButtonVariation.SECONDARY}
-        text={getString('cv.CompositeSLO.AddSLO')}
-        iconProps={{ name: 'plus' }}
-        onClick={showDrawer}
-        margin={showSLOTableAndMessage ? { bottom: 'large', top: 'large' } : {}}
-      />
+      <Layout.Vertical spacing={'large'} margin={showSLOTableAndMessage ? { bottom: 'large', top: 'large' } : {}}>
+        <Button
+          width={150}
+          loading={dashboardWidgetsLoading}
+          data-testid={'addSlosButton'}
+          variation={ButtonVariation.SECONDARY}
+          text={getString('cv.CompositeSLO.AddSLO')}
+          iconProps={{ name: 'plus' }}
+          onClick={showDrawer}
+        />
+        <FormInput.RadioGroup
+          label={getString('cv.CompositeSLO.ChooseSLOFormula')}
+          name={SLOV2FormFields.FORMULA_TYPE}
+          className={radiocss.radioGroup}
+          items={SLOFormulaSelectOptions}
+          onChange={(e: FormEvent<HTMLInputElement>) => {
+            formikProps.setFieldValue(SLOV2FormFields.FORMULA_TYPE, e.currentTarget.value)
+          }}
+        />
+      </Layout.Vertical>
+
       {showSLOTableAndMessage && (
         <>
-          <TableV2 sortable columns={filteredColumns} data={serviceLevelObjectivesDetails} minimal />
+          <TableV2
+            className={cx(css.addSlo, {
+              ...tabelClassNames
+            })}
+            sortable
+            columns={filteredColumns}
+            data={isFormulaWeightedAverage ? [...serviceLevelObjectivesDetails, {}] : serviceLevelObjectivesDetails}
+            minimal
+          />
           <HelpPanel referenceId={'compositeSLOWeightage'} type={HelpPanelType.FLOATING_CONTAINER} />
-          <Container className={cx(css.totalRow, showErrorState ? css.rowFailure : css.rowSuccess)}>
-            {Array(5)
-              .fill(0)
-              .map((_, index) => (
-                <div key={index.toString()}></div>
-              ))}
-            <Layout.Horizontal spacing={'medium'}>
-              <Text>{`${getString('total')} ${getString('cv.CompositeSLO.Weightage').toLowerCase()}`}</Text>
-              <Text intent={showErrorState ? Intent.DANGER : Intent.SUCCESS}>{totalOfSloWeight}</Text>
-            </Layout.Horizontal>
-          </Container>
         </>
       )}
     </Page.Body>

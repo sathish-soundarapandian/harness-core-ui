@@ -25,7 +25,7 @@ describe('RenderField test', () => {
     }
     const { container } = render(
       <TestWrapper>
-        <RenderField getString={getString} isReadonly={false} formik={formik as any} />
+        <RenderField getString={getString} isReadonly={false} formik={formik as any} variableType={'String'} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -43,6 +43,7 @@ describe('RenderField test', () => {
         <RenderField
           getString={getString}
           allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+          variableType={'Time'}
           isReadonly={false}
           formik={formik as any}
         />

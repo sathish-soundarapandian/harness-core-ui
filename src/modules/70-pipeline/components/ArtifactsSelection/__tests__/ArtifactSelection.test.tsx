@@ -43,6 +43,13 @@ const getContextValue = (): PipelineContextInterface => {
 }
 const fetchConnectors = (): Promise<unknown> => Promise.resolve({})
 
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
 jest.mock('services/cd-ng', () => ({
   useGetImagePathsForArtifactory: jest.fn().mockImplementation(() => {
     return {
@@ -60,6 +67,9 @@ jest.mock('services/cd-ng', () => ({
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   }),
   useGetRepositoriesDetailsForArtifactory: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  }),
+  useGetRepositoriesDetailsV2ForArtifactory: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   }),
   useGetV2BucketListForS3: jest.fn().mockImplementation(() => {

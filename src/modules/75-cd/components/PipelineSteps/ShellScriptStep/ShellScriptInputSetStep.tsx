@@ -6,10 +6,18 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, AllowedTypes } from '@harness/uicore'
-import { isEmpty, get, isArray } from 'lodash-es'
+import {
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  FormInput,
+  FormikForm,
+  AllowedTypes,
+  MultiSelectOption,
+  SelectOption
+} from '@harness/uicore'
+import { isEmpty, get, isArray, defaultTo } from 'lodash-es'
 import cx from 'classnames'
-import { FieldArray } from 'formik'
+import { FieldArray, useFormikContext } from 'formik'
 
 import { useStrings } from 'framework/strings'
 import type { SecretDTOV2 } from 'services/cd-ng'
@@ -21,6 +29,14 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import {
+  MultiSelectVariableAllowedValues,
+  concatValuesWithQuotes,
+  isFixedInput
+} from '@pipeline/components/PipelineSteps/Steps/CustomVariables/MultiSelectVariableAllowedValues/MultiSelectVariableAllowedValues'
+import { getAllowedValuesFromTemplate, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { scriptInputType, scriptOutputType, ShellScriptData, ShellScriptFormData } from './shellScriptTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScript.module.scss'
@@ -38,6 +54,27 @@ export interface ShellScriptInputSetStepProps {
   shellScriptType?: ScriptType
 }
 
+type variablesInfo = {
+  selectOption: SelectOption[]
+  variableType: 'String' | 'Number' | 'Secret'
+  variableValue: string
+}
+const getMultiSelectProps = (
+  template: ShellScriptData,
+  initialValues: ShellScriptFormData,
+  path: string
+): variablesInfo => {
+  const selectOpt = defaultTo(getAllowedValuesFromTemplate(template, `${path}.value`), [])
+  const variableValue = get(initialValues, `${path}.value`, '')
+  const variableType = get(initialValues, `${path}.type`, 'String') as 'String' | 'Number' | 'Secret'
+
+  return {
+    selectOption: selectOpt,
+    variableType,
+    variableValue
+  }
+}
+
 export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepProps): React.ReactElement {
   const { template, path, readonly, initialValues, allowableTypes, stepViewType, connectorType, shellScriptType } =
     props
@@ -47,6 +84,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
   const scriptType: ScriptType = get(initialValues, 'spec.shell') || 'Bash'
   const prefix = isEmpty(path) ? '' : `${path}.`
   const isExecutionTimeFieldDisabledForStep = isExecutionTimeFieldDisabled(stepViewType)
+  const multiSelectSupportForAllowedValues = useFeatureFlag(FeatureFlag.PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES)
+  const formik = useFormikContext()
 
   return (
     <FormikForm>
@@ -123,6 +162,19 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                       <span className={css.label}>{getString('valueLabel')}</span>
                     </div>
                     {template.spec.environmentVariables?.map((type, i: number) => {
+                      const variableInfo = getMultiSelectProps(
+                        template,
+                        initialValues,
+                        `spec.environmentVariables[${i}]`
+                      )
+                      const allowMultiSelectAllowedValues =
+                        multiSelectSupportForAllowedValues &&
+                        variableInfo.variableType === 'String' &&
+                        shouldRenderRunTimeInputViewWithAllowedValues(
+                          `spec.environmentVariables[${i}].value`,
+                          template
+                        ) &&
+                        isFixedInput(formik, `${prefix}spec.environmentVariables[${i}].value`)
                       return (
                         <div className={css.environmentVarHeader} key={type.value}>
                           <FormInput.Text
@@ -137,24 +189,40 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                             placeholder={getString('typeLabel')}
                             disabled={true}
                           />
-
-                          <TextFieldInputSetView
-                            name={`${prefix}spec.environmentVariables[${i}].value`}
-                            multiTextInputProps={{
-                              allowableTypes,
-                              expressions,
-                              disabled: readonly,
-                              defaultValueToReset: ''
-                            }}
-                            label=""
-                            placeholder={getString('valueLabel')}
-                            fieldPath={`spec.environmentVariables[${i}].value`}
-                            template={template}
-                            enableConfigureOptions
-                            configureOptionsProps={{
-                              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
-                            }}
-                          />
+                          {allowMultiSelectAllowedValues ? (
+                            <MultiSelectVariableAllowedValues
+                              name={`${prefix}spec.environmentVariables[${i}].value`}
+                              allowableTypes={allowableTypes}
+                              disabled={readonly}
+                              selectOption={variableInfo.selectOption}
+                              onChange={val => {
+                                const finalValue =
+                                  getMultiTypeFromValue(val) === MultiTypeInputType.FIXED
+                                    ? concatValuesWithQuotes(val as MultiSelectOption[])
+                                    : val
+                                formik.setFieldValue(`${prefix}spec.environmentVariables[${i}].value`, finalValue)
+                              }}
+                              label=""
+                            />
+                          ) : (
+                            <TextFieldInputSetView
+                              name={`${prefix}spec.environmentVariables[${i}].value`}
+                              multiTextInputProps={{
+                                allowableTypes,
+                                expressions,
+                                disabled: readonly,
+                                defaultValueToReset: ''
+                              }}
+                              label=""
+                              placeholder={getString('valueLabel')}
+                              fieldPath={`spec.environmentVariables[${i}].value`}
+                              template={template}
+                              enableConfigureOptions
+                              configureOptionsProps={{
+                                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                              }}
+                            />
+                          )}
                         </div>
                       )
                     })}
@@ -188,6 +256,12 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                       </span>
                     </div>
                     {template.spec.outputVariables?.map((output, i: number) => {
+                      const variableInfo = getMultiSelectProps(template, initialValues, `spec.outputVariables[${i}]`)
+                      const allowMultiSelectAllowedValues =
+                        multiSelectSupportForAllowedValues &&
+                        variableInfo.variableType === 'String' &&
+                        shouldRenderRunTimeInputViewWithAllowedValues(`spec.outputVariables[${i}].value`, template) &&
+                        isFixedInput(formik, `${prefix}spec.outputVariables[${i}].value`)
                       return (
                         <div className={css.outputVarHeader} key={output.name}>
                           <FormInput.Text
@@ -203,23 +277,40 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                             disabled={true}
                           />
 
-                          <TextFieldInputSetView
-                            name={`${prefix}spec.outputVariables[${i}].value`}
-                            multiTextInputProps={{
-                              allowableTypes,
-                              expressions,
-                              disabled: readonly,
-                              defaultValueToReset: ''
-                            }}
-                            label=""
-                            placeholder={getString('valueLabel')}
-                            fieldPath={`spec.outputVariables[${i}].value`}
-                            template={template}
-                            enableConfigureOptions
-                            configureOptionsProps={{
-                              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
-                            }}
-                          />
+                          {allowMultiSelectAllowedValues ? (
+                            <MultiSelectVariableAllowedValues
+                              name={`${prefix}spec.outputVariables[${i}].value`}
+                              allowableTypes={allowableTypes}
+                              disabled={readonly}
+                              selectOption={variableInfo.selectOption}
+                              onChange={val => {
+                                const finalValue =
+                                  getMultiTypeFromValue(val) === MultiTypeInputType.FIXED
+                                    ? concatValuesWithQuotes(val as MultiSelectOption[])
+                                    : val
+                                formik.setFieldValue(`${prefix}spec.outputVariables[${i}].value`, finalValue)
+                              }}
+                              label=""
+                            />
+                          ) : (
+                            <TextFieldInputSetView
+                              name={`${prefix}spec.outputVariables[${i}].value`}
+                              multiTextInputProps={{
+                                allowableTypes,
+                                expressions,
+                                disabled: readonly,
+                                defaultValueToReset: ''
+                              }}
+                              label=""
+                              placeholder={getString('valueLabel')}
+                              fieldPath={`spec.outputVariables[${i}].value`}
+                              template={template}
+                              enableConfigureOptions
+                              configureOptionsProps={{
+                                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabledForStep
+                              }}
+                            />
+                          )}
                         </div>
                       )
                     })}

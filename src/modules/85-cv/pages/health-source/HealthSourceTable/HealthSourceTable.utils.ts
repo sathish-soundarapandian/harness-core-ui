@@ -27,6 +27,8 @@ export const getTypeByFeature = (feature: string, getString: UseStringsReturn['g
     case HealthSourceTypes.CloudWatchMetrics:
     case HealthSourceTypes.SumologicMetrics:
     case HealthSourceTypes.AwsPrometheus:
+    case HealthSourceTypes.SignalFX:
+    case HealthSourceTypes.SplunkSignalFXMetrics:
       return getString('pipeline.verification.analysisTab.metrics')
     case HealthSourceTypes.StackdriverLog:
     case HealthSourceTypes.DatadogLog:
@@ -102,6 +104,9 @@ export const getIconBySourceType = (type: string): IconName => {
     case HealthSourceTypes.SumologicLogs:
     case HealthSourceTypes.SumologicMetrics:
       return 'service-sumologic'
+    case HealthSourceTypes.SignalFX:
+    case HealthSourceTypes.SplunkSignalFXMetrics:
+      return 'service-signalfx'
     default:
       return 'placeholder'
   }

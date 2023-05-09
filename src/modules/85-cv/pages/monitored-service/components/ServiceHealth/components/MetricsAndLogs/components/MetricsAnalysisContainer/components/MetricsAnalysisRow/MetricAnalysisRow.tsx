@@ -16,6 +16,7 @@ import css from './MetricAnalysisRow.module.scss'
 
 interface MetricAnalysisRowProps {
   metricName: string
+  metricDeeplinkURL?: string
   categoryName?: string
   transactionName: string
   analysisData: MetricData[]
@@ -50,6 +51,7 @@ function getTimeMaskWidthBasedOnTimeRange(startTime: number, endTime: number): n
 export default function MetricAnalysisRow(props: MetricAnalysisRowProps): JSX.Element {
   const {
     metricName,
+    metricDeeplinkURL,
     analysisData = [],
     transactionName,
     startTime,
@@ -72,6 +74,7 @@ export default function MetricAnalysisRow(props: MetricAnalysisRowProps): JSX.El
       <TimeseriesRow
         transactionName={transactionName}
         metricName={metricName}
+        metricDeeplinkURL={metricDeeplinkURL}
         dataSourceType={dataSourceType}
         seriesData={timeseriesOptions}
         chartOptions={{

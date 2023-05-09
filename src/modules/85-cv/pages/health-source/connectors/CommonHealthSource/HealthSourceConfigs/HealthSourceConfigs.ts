@@ -144,5 +144,48 @@ export const healthSourcesConfig: HealthSourcesConfig = {
     metricThresholds: {
       enabled: false
     }
+  },
+  [HealthSourceTypes.SplunkSignalFXMetrics]: {
+    addQuery: {
+      label: 'Metric',
+      enableDefaultGroupName: false
+    },
+    customMetrics: {
+      enabled: true,
+      queryAndRecords: {
+        enabled: true,
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics'
+      },
+      metricsChart: {
+        enabled: true,
+        chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO
+      },
+      logsTable: {
+        enabled: true,
+        selectOnlyLastKey: true
+      },
+      assign: {
+        enabled: true,
+        hideCV: false,
+        hideSLIAndHealthScore: false,
+        serviceInstance: [
+          {
+            type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
+            isTemplateSupportEnabled: true,
+            label: 'Service Instance Identifier',
+            identifier: 'serviceInstanceField'
+          }
+        ]
+      }
+    },
+    metricPacks: {
+      enabled: false
+    },
+    sideNav: {
+      shouldBeAbleToDeleteLastMetric: false
+    },
+    metricThresholds: {
+      enabled: true
+    }
   }
 }

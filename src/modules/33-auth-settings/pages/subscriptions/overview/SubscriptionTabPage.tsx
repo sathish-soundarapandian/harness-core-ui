@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Card } from '@harness/uicore'
+import { Card, Heading, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { Tabs } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -32,8 +33,37 @@ function SubscriptionTabPage(props: SubscriptionTabPageProps) {
   if (props.module !== ModuleName.CI && props.module !== ModuleName.CD) {
     return <></>
   }
+  const renderHeading = () => {
+    switch (props.module) {
+      case ModuleName.CD:
+        return (
+          <Layout.Vertical className={pageCss.headerMargin}>
+            <Heading color={Color.BLACK} font={{ size: 'medium' }}>
+              {getString('common.subscriptions.usage.services')}
+            </Heading>
+            <div className={pageCss.tooltip}>
+              <Text
+                color={Color.PRIMARY_7}
+                tooltip={getString('common.subscriptions.usage.cdServiceTooltip')}
+                font={{ size: 'xsmall' }}
+              >
+                {getString('common.whatIsActiveService')}
+              </Text>
+            </div>
+          </Layout.Vertical>
+        )
+      case ModuleName.CI:
+        return (
+          <Heading color={Color.BLACK} font={{ size: 'medium' }} className={pageCss.headerMargin}>
+            {getString('common.subscriptions.usage.activeDevelopers')}
+          </Heading>
+        )
+    }
+  }
   return (
     <Card>
+      {renderHeading()}
+
       <Tabs
         id="subscription-data"
         className={pageCss.tabs}

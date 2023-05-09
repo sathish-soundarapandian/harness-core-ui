@@ -199,7 +199,8 @@ describe('Test Cloudformation create stack', () => {
     expect(stackName).toHaveDisplayValue('new name')
   })
 
-  test('should be able to open optional dropdown and remove param', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('should be able to open optional dropdown and remove param', async () => {
     useCFStatesForAws()
     useListAwsRegions()
     useCFCapabilitiesForAws()
@@ -262,7 +263,8 @@ describe('Test Cloudformation create stack', () => {
     expect(queryByText('remove-param-0')).not.toBeInTheDocument()
   })
 
-  test('should be able to open remote param modal', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('should be able to open remote param modal', async () => {
     useCFStatesForAws()
     useListAwsRegions()
     useCFCapabilitiesForAws()

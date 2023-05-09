@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { Text, Layout, Card, Heading, PageSpinner, SelectOption } from '@harness/uicore'
+import { Text, Layout, Card, PageSpinner, SelectOption } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { StackedColumnChart } from '@common/components/StackedColumnChart/StackedColumnChart'
@@ -135,11 +135,6 @@ const CIUsageGraph: React.FC<CIUsageGraphProps> = (props: CIUsageGraphProps) => 
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'center' }} width={'100%'}>
-          <Layout.Vertical>
-            <Heading color={Color.BLACK} font={{ size: 'medium' }}>
-              {getString('common.subscriptions.usage.activeDevelopers')}
-            </Heading>
-          </Layout.Vertical>
           <Layout.Vertical className={pageCss.badgesContainer}>
             <div>{getSummaryCardRenderers(summaryCardsData)}</div>
           </Layout.Vertical>

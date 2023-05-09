@@ -252,9 +252,9 @@ describe('Create account level SLO', () => {
     cy.contains('span', 'Add SLOs').click()
     cy.wait('@sloListPostResponseRolling7Days')
 
-    cy.findAllByRole('checkbox', { timeout: 2000 }).eq(1).should('be.checked')
     cy.findAllByRole('checkbox').eq(2).click({ force: true })
-    cy.get('[data-testid="addSloButton"]').click({ force: true })
+    cy.findAllByRole('checkbox', { timeout: 2000 }).eq(1).should('be.checked')
+    cy.get('[data-testid="addSloButton"]').scrollIntoView().click({ force: true })
     cy.contains('span', 'Next').click({ force: true })
     cy.contains('span', 'Save').click({ force: true })
 

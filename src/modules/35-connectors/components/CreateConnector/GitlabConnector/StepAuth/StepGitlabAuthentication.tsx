@@ -46,15 +46,15 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import { GitAuthTypes, GitAPIAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
-import { ConnectViaOAuth } from '@connectors/common/ConnectViaOAuth/ConnectViaOAuth'
+import { ConnectViaOAuth } from '@common/components/ConnectViaOAuth/ConnectViaOAuth'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import {
-  getCommonConnectorsValidationSchema,
-  handleOAuthEventProcessing,
+  OAUTH_PLACEHOLDER_VALUE,
   OAuthEventProcessingResponse,
-  OAUTH_PLACEHOLDER_VALUE
-} from '../../CreateConnectorUtils'
-import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
+  handleOAuthEventProcessing
+} from '@common/components/ConnectViaOAuth/OAuthUtils'
+import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
+import { getCommonConnectorsValidationSchema } from '../../CreateConnectorUtils'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepGitlabAuthentication.module.scss'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
@@ -370,7 +370,7 @@ const StepGitlabAuthentication: React.FC<StepProps<StepGitlabAuthenticationProps
       <PageSpinner
         message={
           formikRef.current?.values.authType === GitAuthTypes.OAUTH && oAuthStatus === Status.IN_PROGRESS
-            ? getString('connectors.oAuth.inProgress')
+            ? getString('common.oAuth.inProgress')
             : ''
         }
       />

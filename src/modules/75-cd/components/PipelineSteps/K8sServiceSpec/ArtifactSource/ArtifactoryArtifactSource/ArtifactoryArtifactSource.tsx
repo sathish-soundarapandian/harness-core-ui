@@ -606,6 +606,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   ])
 
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', artifactPaths: '', repository: '' })
+  const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
 
   // v1 tags api is required to fetch tags for artifact source template usage while linking to service
   // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
@@ -638,7 +639,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     refetch: refetchV2Tags,
     error: fetchTagsV2Error
   } = useMutateAsGet(useGetBuildDetailsForArtifactoryArtifactWithYaml, {
-    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
+    body: pipelineRuntimeYaml,
     requestOptions: {
       headers: {
         'content-type': 'application/json'
@@ -775,6 +776,9 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               fieldPath={`artifacts.${artifactPath}.spec.repository`}
               template={template}
               serviceId={isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined}
+              useRepositoriesV2={true}
+              pipelineRuntimeYaml={pipelineRuntimeYaml}
+              pipelineIdentifier={pipelineIdentifier}
               fqnPath={getFqnPath(
                 path as string,
                 !!isPropagatedStage,

@@ -46,6 +46,19 @@ jest.mock('services/cd-ng', () => ({
       error: null,
       loading: false
     }
+  }),
+  useGetLastSuccessfulBuildForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        metadata: {
+          SHA: 'test',
+          SHAV2: 'test2'
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
   })
 }))
 describe('DockerRegistry Image Path Artifact tests', () => {

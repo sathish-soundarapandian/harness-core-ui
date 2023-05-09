@@ -158,11 +158,19 @@ interface SidebarLinkProps extends NavLinkProps {
   icon?: IconName
   className?: string
   textProps?: TextProps
+  rightIcon?: IconName
 }
 
-export const SidebarLink: React.FC<SidebarLinkProps> = ({ label, icon, className, textProps, ...others }) => (
+export const SidebarLink: React.FC<SidebarLinkProps> = ({
+  label,
+  icon,
+  rightIcon,
+  className,
+  textProps,
+  ...others
+}) => (
   <Link className={cx(css.link, className)} activeClassName={css.selected} {...others}>
-    <Text icon={icon} className={css.text} {...textProps}>
+    <Text icon={icon} rightIcon={rightIcon} className={css.text} {...textProps}>
       {label}
     </Text>
   </Link>

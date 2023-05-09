@@ -7,6 +7,10 @@
 
 import React from 'react'
 import { Card, Container } from '@harness/uicore'
+import type {
+  AssignSectionType,
+  HealthSourceConfig
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { RiskProfile } from './components/RiskProfile/RiskProfile'
 import type { AssignQueryProps } from './AssignQuery.types'
 import AssignSection from './components/AssignSection/AssignSection'
@@ -14,14 +18,18 @@ import css from './AssignQuery.module.scss'
 
 export default function AssignQuery({
   values,
-  hideServiceIdentifier = false,
-  hideCV,
-  hideSLIAndHealthScore,
   showOnlySLI = false,
   riskProfileResponse,
-  defaultServiceInstance
+  healthSourceConfig,
+  recordProps
 }: AssignQueryProps): JSX.Element {
   const { continuousVerification, healthScore, serviceInstanceField, riskCategory } = values
+
+  const { customMetrics } = healthSourceConfig
+  const assign = (customMetrics as NonNullable<HealthSourceConfig['customMetrics']>)
+    .assign as NonNullable<AssignSectionType>
+
+  const { hideCV, hideSLIAndHealthScore, defaultServiceInstance, hideServiceIdentifier = false } = assign
 
   return (
     <Container className={css.main}>
@@ -29,6 +37,7 @@ export default function AssignQuery({
       {(continuousVerification || healthScore) && (
         <Card className={css.riskProfile}>
           <RiskProfile
+            healthSourceConfig={healthSourceConfig}
             continuousVerificationEnabled={continuousVerification && !hideServiceIdentifier}
             serviceInstanceField={
               typeof serviceInstanceField === 'string' ? serviceInstanceField : (serviceInstanceField?.value as string)
@@ -36,6 +45,7 @@ export default function AssignQuery({
             riskCategory={riskCategory}
             riskProfileResponse={riskProfileResponse}
             defaultServiceInstance={defaultServiceInstance}
+            recordProps={recordProps}
           />
         </Card>
       )}

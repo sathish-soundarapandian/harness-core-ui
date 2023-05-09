@@ -372,7 +372,14 @@ function RunPipelineFormV1Basic({
   let runPipelineFormContent: React.ReactElement | null = null
 
   if (inputSetsError) {
-    runPipelineFormContent = <PipelineInvalidRequestContent onClose={onClose} getTemplateError={inputSetsError} />
+    runPipelineFormContent = (
+      <PipelineInvalidRequestContent
+        onClose={onClose}
+        getTemplateError={inputSetsError}
+        branch={branch}
+        repoName={repoIdentifier}
+      />
+    )
   } else {
     runPipelineFormContent = (
       <>

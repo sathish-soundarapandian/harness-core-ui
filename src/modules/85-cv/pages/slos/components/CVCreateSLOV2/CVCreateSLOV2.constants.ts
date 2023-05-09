@@ -16,6 +16,11 @@ export enum SLOType {
   SIMPLE = 'Simple'
 }
 
+export enum SLOErrorType {
+  DataCollectionFailure = 'DataCollectionFailure',
+  SimpleSLODeletion = 'SimpleSLODeletion'
+}
+
 export const getSLITypeOptions = (
   getString: UseStringsReturn['getString']
 ): Pick<RadioButtonProps, 'value' | 'label'>[] => {

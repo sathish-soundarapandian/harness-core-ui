@@ -32,7 +32,9 @@ import {
   FormValues,
   parseInput,
   getInputStr,
-  AllowedValuesCustomComponentProps
+  AllowedValuesCustomComponentProps,
+  getStringValueWithComma,
+  parseInputStringWithCommas
 } from './ConfigureOptionsUtils'
 
 import css from './ConfigureOptions.module.scss'
@@ -59,6 +61,7 @@ export interface ConfigureOptionsDialogProps {
     defaultStr?: string | number | undefined,
     required?: boolean | undefined
   ) => void
+  tagsInputSeparator?: string | RegExp | false
 }
 
 export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProps): JSX.Element | null {
@@ -76,7 +79,8 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
     allowedValuesType,
     allowedValuesValidator,
     getAllowedValuesCustomComponent,
-    closeModal
+    closeModal,
+    tagsInputSeparator
   } = props
   const [input, setInput] = React.useState(value)
   const { showError } = useToaster()
@@ -104,9 +108,18 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
     }
   }
 
+  const getInitialDefaultValue = (): string | number | undefined => {
+    const defValue = parsedValues?.default ?? defaultValue
+
+    if (typeof defValue === 'string') {
+      return defaultTo(parseInputStringWithCommas(defValue), []).toString()
+    }
+    return defValue
+  }
+
   const inputValues: FormValues = {
     isRequired,
-    defaultValue: parsedValues?.default ?? defaultValue,
+    defaultValue: getInitialDefaultValue(),
     allowedValues: getInitialAllowedValues(),
     regExValues,
     isExecutionInput: !!parsedValues?.executionInput,
@@ -157,7 +170,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
         data.allowedValues = formAllowedValues
         const inputStr = getInputStr(data, !!NG_EXECUTION_INPUT)
         setInput(inputStr)
-        closeModal(inputStr, data.defaultValue, data.isRequired)
+        closeModal(inputStr, getStringValueWithComma(data.defaultValue) as string | number | undefined, data.isRequired)
       }}
     >
       {formik => {
@@ -209,6 +222,8 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                     allowedValuesType={allowedValuesType}
                     allowedValuesValidator={allowedValuesValidator}
                     getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
+                    tagsInputSeparator={tagsInputSeparator}
+                    variableType={type}
                   />
                 ) : null}
                 {values.validation === Validation.Regex ? (

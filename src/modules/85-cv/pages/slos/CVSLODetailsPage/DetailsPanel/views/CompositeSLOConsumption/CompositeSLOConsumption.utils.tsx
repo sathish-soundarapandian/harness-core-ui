@@ -8,6 +8,7 @@
 import React from 'react'
 import moment from 'moment'
 import type { CellProps, Renderer } from 'react-table'
+import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Link, useParams } from 'react-router-dom'
 import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -18,6 +19,7 @@ import type { SLOConsumptionBreakdown } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getSearchString } from '@cv/utils/CommonUtils'
 import { RenderTarget } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/components/AddSlos/components/SLOList.utils'
+import DataCollectionFailureTooltip from '@cv/pages/slos/common/DataCollectionFailureTooltip/DataCollectionFailureTooltip'
 import {
   getProjectAndOrgColumn,
   getColumsForProjectAndAccountLevel
@@ -91,11 +93,11 @@ export const RenderMonitoredService: Renderer<CellProps<any>> = ({ row }) => {
       <Link
         to={routes.toCVAddMonitoringServicesEdit({
           accountId,
-          projectIdentifier,
-          orgIdentifier,
+          ...orgProjectParams,
           identifier,
           module: 'cv'
         })}
+        target="_blank"
       >
         <Text color={Color.PRIMARY_7} title={environmentIdentifier} font={{ align: 'left', size: 'xsmall' }}>
           {environmentIdentifier}
@@ -144,6 +146,26 @@ export const durationAsString = (consumptionMinutes: number): string => {
   return [daysFormatted, hoursFormatted, minutesFormatted, secondsFormatted].join('')
 }
 
+export const RenderStatus: Renderer<CellProps<any>> = ({ row }) => {
+  const { sloError } = row.original
+  return sloError?.failedState ? (
+    <Layout.Horizontal flex={{ justifyContent: 'flex-end', alignItems: 'center' }}>
+      <Text
+        flex
+        tooltip={<DataCollectionFailureTooltip sloError={sloError} />}
+        tooltipProps={{
+          isDark: true,
+          interactionKind: PopoverInteractionKind.HOVER,
+          position: Position.LEFT,
+          usePortal: false
+        }}
+        icon="warning-icon"
+        iconProps={{ color: Color.RED_500, size: 24 }}
+      />
+    </Layout.Horizontal>
+  ) : null
+}
+
 export const getConsumptionTableColums = ({
   getString,
   isAccountLevel,
@@ -160,21 +182,22 @@ export const getConsumptionTableColums = ({
       width: '15%',
       Cell: RenderSLOName
     },
-    ...getProjectAndOrgColumn({ getString }),
     {
       accessor: 'serviceName',
       Header: getString('cv.slos.monitoredService').toUpperCase(),
       width: '15%',
       Cell: RenderMonitoredService
     },
+    ...getProjectAndOrgColumn({ getString, isAccountLevel }),
     {
       accessor: 'weightagePercentage',
       Header: getString('cv.CompositeSLO.Consumption.AssignedWeightage').toUpperCase(),
-      width: '15%',
+      width: isAccountLevel ? '10%' : '12%',
       Cell: RenderAssignedWeightage
     },
     {
       accessor: 'sloTargetPercentage',
+      width: '10%',
       Header: getString('cv.slos.target').toUpperCase(),
       Cell: RenderTarget
     },
@@ -208,7 +231,14 @@ export const getConsumptionTableColums = ({
               : durationAsString(slo?.contributedErrorBudgetBurned)}
           </Text>
         )
-      }
+      },
+      width: isAccountLevel ? '12%' : '15%'
+    },
+    {
+      id: 'deletSLO',
+      width: '5%',
+      Cell: RenderStatus,
+      disableSortBy: true
     }
   ]
 

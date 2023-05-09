@@ -42,6 +42,8 @@
 .listHeader {
   margin: 0 !important;
   margin-bottom: var(--spacing-medium) !important;
+  flex: 1;
+  margin-right: var(--spacing-medium) !important;
 }
 
 .truncatedText {

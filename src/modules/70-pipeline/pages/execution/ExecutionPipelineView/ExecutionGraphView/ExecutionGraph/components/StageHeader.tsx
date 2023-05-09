@@ -13,6 +13,7 @@ import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/Exec
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { StringUtils } from '@common/exports'
 import { useStrings } from 'framework/strings'
+import css from './StageHeader.module.scss'
 
 export interface StageHeaderProps {
   data?: any
@@ -27,38 +28,39 @@ export default function StageHeader(props: StageHeaderProps): React.ReactElement
   const timeText = timeToDisplayText(delta)
   return (
     <Container>
-      <Layout.Horizontal padding="medium">
-        <Layout.Vertical style={{ flex: 1 }} flex={{ alignItems: 'flex-start' }} margin={{ right: 'medium' }}>
-          <Text width={300} lineClamp={1} font={{ weight: 'semi-bold', size: 'normal' }} color={Color.BLACK}>
+      <Layout.Vertical style={{ flex: 1 }} flex={{ alignItems: 'flex-start' }} padding="medium">
+        <div className={css.nameAndLabelWrapper}>
+          <Text inline lineClamp={1} font={{ weight: 'semi-bold', size: 'normal' }} color={Color.BLACK}>
             {stageDetails.name}
           </Text>
-          {stageDetails.status !== ExecutionStatusEnum.Skipped && (
-            <Layout.Horizontal spacing={'xsmall'}>
-              {!!stageDetails?.startTs && (
-                <Container margin={{ right: 'small' }}>
-                  <Text inline={true} font={{ size: 'small' }} color={Color.GREY_500}>
-                    {getString('pipeline.startTime')}:{' '}
-                  </Text>
-                  <Text inline={true} font={{ size: 'small' }} color={Color.BLACK}>
-                    {moment(stageDetails.startTs).format(StringUtils.DEFAULT_DATE_FORMAT)}
-                  </Text>
-                </Container>
-              )}
-              {!!timeText && (
-                <Container>
-                  <Text inline={true} font={{ size: 'small' }} color={Color.GREY_500}>
-                    {getString('pipeline.duration')}:
-                  </Text>
-                  <Text inline={true} font={{ size: 'small' }} color={Color.BLACK}>
-                    {timeText}
-                  </Text>
-                </Container>
-              )}
-            </Layout.Horizontal>
-          )}
-        </Layout.Vertical>
-        <ExecutionStatusLabel status={stageDetails?.status === 'IgnoreFailed' ? 'Failed' : stageDetails?.status} />
-      </Layout.Horizontal>
+          <ExecutionStatusLabel className={css.label} status={stageDetails?.status} />
+        </div>
+        {stageDetails.status !== ExecutionStatusEnum.Skipped && (
+          <Layout.Horizontal spacing={'xsmall'}>
+            {!!stageDetails?.startTs && (
+              <Container margin={{ right: 'small' }}>
+                <Text inline={true} font={{ size: 'small' }} color={Color.GREY_500}>
+                  {getString('pipeline.startTime')}:{' '}
+                </Text>
+                <Text inline={true} font={{ size: 'small' }} color={Color.BLACK}>
+                  {moment(stageDetails.startTs).format(StringUtils.DEFAULT_DATE_FORMAT)}
+                </Text>
+              </Container>
+            )}
+            {!!timeText && (
+              <Container>
+                <Text inline={true} font={{ size: 'small' }} color={Color.GREY_500}>
+                  {getString('pipeline.duration')}:
+                </Text>
+                <Text inline={true} font={{ size: 'small' }} color={Color.BLACK}>
+                  {timeText}
+                </Text>
+              </Container>
+            )}
+          </Layout.Horizontal>
+        )}
+      </Layout.Vertical>
+
       {stageDetails.status === ExecutionStatusEnum.Failed && (
         <Layout.Horizontal
           background={Color.RED_100}

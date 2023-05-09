@@ -263,6 +263,16 @@ const SideNavItems = () => {
                 })
               }}
             />
+            <SidebarLink
+              label={getString('common.defaultSettings')}
+              rightIcon={'launch'}
+              to={routes.toDefaultSettings({ accountId })}
+              onClick={() => {
+                trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, {
+                  feature_name: featureNames.DEFAULT_SETTINGS
+                })
+              }}
+            />
           </Layout.Vertical>
         </NavExpandable>
       </React.Fragment>

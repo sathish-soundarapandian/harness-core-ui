@@ -8,8 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetGitRepo } from 'services/cf'
 import { useIsGitSyncEnabled } from 'services/cd-ng'
@@ -24,7 +23,8 @@ const FeatureFlagsLandingPage: React.FC = () => {
     accountId: accountIdentifier,
     orgIdentifier
   } = useParams<ProjectPathProps & ModulePathParams>()
-  const FF_GITSYNC = useFeatureFlag(FeatureFlag.FF_GITSYNC)
+  const { FF_GITSYNC, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED } = useFeatureFlags()
+
   const isGitSyncEnabled = useIsGitSyncEnabled({
     queryParams: {
       accountIdentifier,
@@ -32,6 +32,7 @@ const FeatureFlagsLandingPage: React.FC = () => {
       projectIdentifier
     }
   })
+
   const gitRepo = useGetGitRepo({
     identifier: projectIdentifier,
     queryParams: {
@@ -44,7 +45,12 @@ const FeatureFlagsLandingPage: React.FC = () => {
     return <ContainerSpinner className={css.spinner} />
   }
 
-  if (FF_GITSYNC && isGitSyncEnabled.data?.gitSyncEnabled && !gitRepo?.data?.repoSet) {
+  if (
+    !FF_FLAG_SYNC_THROUGH_GITEX_ENABLED &&
+    FF_GITSYNC &&
+    isGitSyncEnabled.data?.gitSyncEnabled &&
+    !gitRepo?.data?.repoSet
+  ) {
     return <SelectFlagGitRepoPage gitRepoRefetch={gitRepo?.refetch} />
   }
 

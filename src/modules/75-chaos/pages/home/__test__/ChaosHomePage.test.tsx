@@ -15,7 +15,7 @@ import {
   useGetProjectList,
   useSaveFeedback
 } from 'services/cd-ng'
-import useChaosTrialModal from '@chaos/modals/ChaosTrialModal/useChaosTrialModal'
+import useChaosModal from '@chaos/modals/ChaosTrialModal/useChaosTrialModal'
 import ChaosHomePage from '../ChaosHomePage'
 
 jest.mock('services/cd-ng')
@@ -36,7 +36,7 @@ useSaveFeedbackMock.mockImplementation(() => {
 })
 
 jest.mock('@chaos/modals/ChaosTrialModal/useChaosTrialModal')
-const useChaosTrialModalMock = useChaosTrialModal as jest.MockedFunction<any>
+const useChaosTrialModalMock = useChaosModal as jest.MockedFunction<any>
 
 const currentUser = {
   accounts: [

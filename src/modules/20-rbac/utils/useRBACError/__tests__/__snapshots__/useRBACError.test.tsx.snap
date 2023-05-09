@@ -213,7 +213,7 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
          pipelines
       </span>
       <span>
-         rbac.in rbac.org "testOrg"
+        rbac.in rbac.org "testOrg"
       </span>
     </p>
   </Layout.Vertical>
@@ -237,7 +237,7 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
          pipelines
       </span>
       <span>
-         rbac.in rbac.project "proj123"
+        rbac.in rbac.project "proj123"
       </span>
     </p>
   </Layout.Vertical>
@@ -261,7 +261,7 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
          pipelines
       </span>
       <span>
-         rbac.in rbac.org "testOrg3"
+        rbac.in rbac.org "testOrg3"
       </span>
     </p>
   </Layout.Vertical>

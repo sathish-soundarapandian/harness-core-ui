@@ -49,7 +49,7 @@ const DEFAULT_ROLES_PAGE_SIZE = ROLES_PAGE_SIZE_OPTIONS[0] as number
 const NEW_DEFAULT_ROLES_PAGE_SIZE = ROLES_PAGE_SIZE_OPTIONS[3] as number
 
 export const useRolesQueryParamOptions = (): UseQueryParamsOptions<
-  RequiredPick<CommonPaginationQueryParams & { search?: string }, keyof CommonPaginationQueryParams>
+  RequiredPick<CommonPaginationQueryParams & { searchTerm?: string }, keyof CommonPaginationQueryParams>
 > => {
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
 
@@ -68,8 +68,8 @@ const RolesList: React.FC = () => {
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.Roles}`)
   useDocumentTitle(getString('roles'))
   const queryParamOptions = useRolesQueryParamOptions()
-  const { search: searchTerm, size: pageSize, page: pageIndex } = useQueryParams(queryParamOptions)
-  const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
+  const { searchTerm, size: pageSize, page: pageIndex } = useQueryParams(queryParamOptions)
+  const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { searchTerm?: string }>()
 
   const { data, loading, error, refetch } = useGetRoleList({
     queryParams: {
@@ -151,7 +151,7 @@ const RolesList: React.FC = () => {
               alwaysExpanded
               placeholder={getString('common.searchPlaceholder')}
               onChange={text => {
-                updateQueryParams({ search: text.trim(), page: 0 })
+                updateQueryParams({ searchTerm: text.trim(), page: 0 })
               }}
               width={250}
             />

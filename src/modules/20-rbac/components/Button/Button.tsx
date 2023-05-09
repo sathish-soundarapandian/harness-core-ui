@@ -52,6 +52,7 @@ const RbacButton: React.FC<ButtonProps> = ({
             permission={permissionRequest.permission}
             resourceType={permissionRequest.resource.resourceType}
             resourceScope={permissionRequest.resourceScope}
+            resourceIdentifier={permissionRequest.resource.resourceIdentifier}
           />
         )
       }
@@ -75,6 +76,7 @@ const RbacButton: React.FC<ButtonProps> = ({
             permission={permissionRequest.permission}
             resourceType={permissionRequest.resource.resourceType}
             resourceScope={permissionRequest.resourceScope}
+            resourceIdentifier={permissionRequest.resource.resourceIdentifier}
           />
         )
       }

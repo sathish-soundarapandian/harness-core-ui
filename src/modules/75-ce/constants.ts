@@ -295,5 +295,6 @@ export const featureNames = {
   LOAD_BALANCER_FEATURE: 'Load Balancer',
   COST_CATEGORY_FEATURE: 'Cost Categories',
   GOVERNANCE: 'Governance',
-  CURRENCY_PREFERENCES: 'Currency Preferences'
+  CURRENCY_PREFERENCES: 'Currency Preferences',
+  DEFAULT_SETTINGS: 'Default Settings'
 }

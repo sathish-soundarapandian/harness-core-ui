@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { get, set } from 'lodash-es'
+import { get, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { useFormikContext } from 'formik'
 import { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -17,8 +17,6 @@ import {
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import type { ArtifactConfig } from 'services/cd-ng'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import { ALLOWABLE_TYPES, getUniqueEntityIdentifier, ServiceDataType } from '../../CDOnboardingUtils'
@@ -27,7 +25,6 @@ import css from './DockerArtifactory.module.scss'
 
 export default function ArtifactImagePath(): JSX.Element {
   const { values: formValues, setFieldValue } = useFormikContext<ConfigureServiceInterface>()
-  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const {
     state: { service: serviceData },
     saveServiceData
@@ -35,9 +32,7 @@ export default function ArtifactImagePath(): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const isReadonly = false
-  const artifactPath = isSvcEnvEnabled
-    ? 'serviceDefinition.spec.artifacts.primary.sources[0]'
-    : 'serviceDefinition.spec.artifacts.primary'
+  const artifactPath = 'serviceDefinition.spec.artifacts.primary'
   const getInitialArtifactLastStepData = React.useMemo(() => {
     const artifactContextData = get(serviceData, `${artifactPath}.spec`)
     const artifactName = artifactContextData?.name || 'sample_artifact_source'
@@ -65,7 +60,7 @@ export default function ArtifactImagePath(): JSX.Element {
           set(draft, artifactPath, data)
         })
         saveServiceData(updatedContextService)
-        setFieldValue('artifactConfig', data)
+        setFieldValue('artifactConfig', omit(data, 'identifier'))
       },
       artifactIdentifiers: [],
       isReadonly: isReadonly,

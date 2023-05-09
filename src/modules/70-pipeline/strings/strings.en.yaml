@@ -65,6 +65,7 @@ poweredByHarness: powered by Harness
 linuxOnly: Supported on Linux only
 outOf: Out Of
 clickToExpandErrorDetails: Click to expand error details
+requireInput: 'Require User Input'
 totalCount: 'Total: {{ count }}'
 approvalStage:
   settingUpStage: Getting stage data
@@ -93,6 +94,7 @@ utilitiesStep:
   to: Enter recipient email
   subject: Enter the email subject
   cc: Cc
+  certificateKey: Certificate Key
 terraformStep:
   provisionerIdentifier: Enter Provisioner Identifier
   workspace: Enter Workspace
@@ -301,6 +303,9 @@ serviceNowApprovalStep:
     issueNumber: Ticket Number is required
     windowStart: Window Start is required
     windowEnd: Window End is required
+httpStep:
+  validation:
+    certificate: Only certificateKey is provided, we need both certificate and certificateKey or only certificate
 serviceNowCreateStep:
   fieldType:
     configureFields: Configure Fields
@@ -626,6 +631,10 @@ execution:
     viewCompiledYaml: View Compiled YAML
     compareExecutions: Compare Pipeline Executions
     reRunInDebugMode: Re-run in Debug Mode
+    reRun: Re-run
+    reRunLastFailedStage: From Last Failed Stage
+    reRunSelectedStage: Selected Stage(s)
+    reRunEntirePipeline: Entire Pipeline
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -662,6 +671,7 @@ barriers:
 executionStatus:
   Failed: FAILED
   Success: SUCCESS
+  IgnoreFailed: SUCCESS (FAILURE IGNORED)
   Aborted: ABORTED
   AbortedByFreeze: ABORTED BY FREEZE
   Error: ERROR
@@ -1003,6 +1013,7 @@ artifactsSelection:
   filePathRegexPlaceholder: Enter File Path Regex
   amazonS3Title: Amazon S3
   googleArtifactRegistryTitle: Google Artifact Registry
+  garNoDigestErrortest: No Digest Found for Given Version Details
   githubPackageRegistryTitle: Github Package Registry
   AmazonMachineImageTitle: Amazon Machine Image
   existingDocker:
@@ -1450,6 +1461,8 @@ ci:
 imageVersionDeprecated: Image version outdated
 unsupportedImagesWarning: 'You are using unsupported Harness CI images. Harness allows builds to use these images, but we cannot ensure that builds will not fail. Please update the versions of the following image(s):'
 invalidRequest: Invalid Request
+pipelineRunFailed: Pipeline Run failed
+pipelineRunFailedForRepoBranch: Pipeline Run failed for Repo [{{repoName}}], and Branch [{{branch}}]
 serviceDeploymentTypes:
   elastigroup: Elastigroup
   kubernetes: '{{$.kubernetesText}}'
@@ -1746,13 +1759,14 @@ validation:
   policySetIssuesN: Policy set issues ({{n}})
 bamboo:
   planName: Plan Name
+  planKey: Plan Key
 planNamePlaceholder: Enter or Select Plan
 bambooBuilds: Bamboo Builds
 selectBambooBuildsPlaceholder: Select Bamboo Build
 Bamboo: Bamboo Description
 bambooStep:
   validations:
-    planName: Planname is a required field
+    planName: Plan Name is a required field
   planParameter: Plan Parameters
   addPlanParameters: Add Plan Parameter
   noPlans: No Plans Defined

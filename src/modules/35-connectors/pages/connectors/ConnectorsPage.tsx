@@ -15,7 +15,8 @@ import {
   Container,
   ButtonVariation,
   PageError,
-  shouldShowError
+  shouldShowError,
+  SortMethod
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useParams, useHistory } from 'react-router-dom'
@@ -79,6 +80,8 @@ import { resourceAttributeMap } from '@rbac/pages/ResourceGroupDetails/utils'
 import { SettingType } from '@common/constants/Utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import ConnectorsListView from './views/ConnectorsListView'
 import {
   createRequestBodyPayload,
@@ -122,6 +125,8 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const [isRefreshingFilters, setIsRefreshingFilters] = useState<boolean>(false)
   const filterRef = React.useRef<FilterRef<FilterDTO> | null>(null)
   const [gitFilter, setGitFilter] = useState<GitFilterScope>({ repo: '', branch: '' })
+  const { preference: sortPreference = SortMethod.LastModifiedDesc, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ConnectorsPage}`)
   const shouldApplyGitFilters = Boolean(isGitSyncEnabled && gitFilter.repo && gitFilter.branch)
 
   const history = useHistory()
@@ -144,7 +149,12 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   /* #region Connector CRUD section */
 
   // params are passed when calling fetchConnectors
-  const { mutate: fetchConnectors } = useGetConnectorListV2({})
+  const { mutate: fetchConnectors } = useGetConnectorListV2({
+    queryParams: {
+      sortOrders: [sortPreference]
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
+  })
 
   const refetchConnectorList = React.useCallback(
     async (
@@ -654,6 +664,10 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
               reload={refetchAllConnectorsWithStats}
               openConnectorModal={openConnectorModal}
               forceDeleteSupported={PL_FORCE_DELETE_CONNECTOR_SECRET && forceDeleteSettings?.data?.value === 'true'}
+              selectedSort={sortPreference}
+              onSortMethodChange={option => {
+                setSortPreference(option.value as SortMethod)
+              }}
             />
           ) : (
             <Page.NoDataCard

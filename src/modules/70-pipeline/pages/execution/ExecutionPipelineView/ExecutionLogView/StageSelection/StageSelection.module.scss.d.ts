@@ -18,8 +18,10 @@ declare const styles: {
   readonly mainAccordion: string
   readonly mainContainer: string
   readonly pipelineRollback: string
+  readonly pipelineRollbackIcon: string
   readonly spinner: string
   readonly stageName: string
+  readonly stageUtil: string
   readonly statusHeader: string
 }
 export default styles

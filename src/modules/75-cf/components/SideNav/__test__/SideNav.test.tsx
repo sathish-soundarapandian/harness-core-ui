@@ -64,15 +64,31 @@ describe('Sidenav', () => {
   })
 
   test('it should show the Git Experience links when FF_GITSYNC is TRUE', async () => {
-    jest.spyOn(hooks, 'useFeatureFlags').mockImplementation(() => ({ FF_GITSYNC: true }))
+    jest
+      .spyOn(hooks, 'useFeatureFlags')
+      .mockImplementation(() => ({ FF_GITSYNC: true, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: false }))
 
     render(
       <Subject path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/users" />
     )
 
-    expect(screen.queryByText('connectorsLabel')).toBeInTheDocument()
-    expect(screen.queryByText('common.secrets')).toBeInTheDocument()
-    expect(screen.queryByText('gitManagement')).toBeInTheDocument()
+    expect(screen.getByText('connectorsLabel')).toBeInTheDocument()
+    expect(screen.getByText('common.secrets')).toBeInTheDocument()
+    expect(screen.getByText('gitManagement')).toBeInTheDocument()
+  })
+
+  test('it should NOT show the Git Management when FF_GITSYNC is TRUE and FF_FLAG_SYNC_THROUGH_GITEX_ENABLED = TRUE', async () => {
+    jest
+      .spyOn(hooks, 'useFeatureFlags')
+      .mockImplementation(() => ({ FF_GITSYNC: true, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: true }))
+
+    render(
+      <Subject path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/setup/access-control/users" />
+    )
+
+    expect(screen.getByText('connectorsLabel')).toBeInTheDocument()
+    expect(screen.getByText('common.secrets')).toBeInTheDocument()
+    expect(screen.queryByText('gitManagement')).not.toBeInTheDocument()
   })
 
   test('it should fire telemetry event when Feature Flags menu item clicked', () => {

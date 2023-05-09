@@ -6,38 +6,52 @@
  */
 
 import React, { useContext, useEffect, useState } from 'react'
-import { useFormikContext } from 'formik'
-import { Container, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { Container, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { useStrings } from 'framework/strings'
-import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
-import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
+import type { AssignSectionType } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import CustomMetricsSectionHeader from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CustomMetricsSectionHeader'
-import { ServiceInstanceLabel } from '@cv/pages/health-source/common/ServiceInstanceLabel/ServiceInstanceLabel'
-import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
-import { getIsConnectorRuntimeOrExpression } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
+import { FIELD_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { getTypeOfInput } from '@cv/utils/CommonUtils'
+import type { RecordProps } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer.types'
+import { ServiceInstanceTextInput } from './components/ServiceInstanceTextInput'
+import { ServiceInstanceJSONSelector } from './components/ServiceInstanceJSONSelector'
 
-interface ServiceInstanceProps {
+export interface ServiceInstanceProps {
   serviceInstanceField?: string
   defaultServiceInstance?: string
   continuousVerificationEnabled?: boolean
+  serviceInstanceConfig?: AssignSectionType['serviceInstance']
+  recordProps: RecordProps
 }
 
 export default function ServiceInstance({
   serviceInstanceField,
   defaultServiceInstance,
-  continuousVerificationEnabled
-}: ServiceInstanceProps): JSX.Element {
+  continuousVerificationEnabled,
+  serviceInstanceConfig,
+  recordProps
+}: ServiceInstanceProps): JSX.Element | null {
   const { getString } = useStrings()
-  const { isQueryRuntimeOrExpression } = useCommonHealthSource()
-  const { setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
-  const { isTemplate, expressions, sourceData } = useContext(SetupSourceTabsContext)
-  const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
+
+  const { isTemplate } = useContext(SetupSourceTabsContext)
 
   const [metricInstanceMultiType, setMetricPathMultiType] = useState<MultiTypeInputType>(() =>
     getMultiTypeFromValue(serviceInstanceField)
   )
+
+  /**
+   * 💁‍♂️ RULES TO RENDER SERVICE INSTANCE FIELD AS TEXTINPUT
+   *
+   * 1. serviceInstanceConfig is not present (OR)
+   * 2. serviceInstanceConfig is Invalid (OR)
+   * 3. serviceInstanceConfig should have "type" as "TextInput"
+   *
+   */
+  const isServiceInstanceTextField =
+    !serviceInstanceConfig ||
+    !Array.isArray(serviceInstanceConfig) ||
+    serviceInstanceConfig[0].type === FIELD_ENUM.TEXT_INPUT
 
   useEffect(() => {
     if (isTemplate && serviceInstanceField && metricInstanceMultiType === MultiTypeInputType.FIXED) {
@@ -45,49 +59,33 @@ export default function ServiceInstance({
     }
   }, [serviceInstanceField])
 
+  if (!continuousVerificationEnabled) {
+    return null
+  }
+
+  const getContent = (): JSX.Element => {
+    if (isServiceInstanceTextField) {
+      return (
+        <ServiceInstanceTextInput
+          defaultServiceInstance={defaultServiceInstance}
+          serviceInstanceField={serviceInstanceField}
+        />
+      )
+    } else {
+      return <ServiceInstanceJSONSelector serviceInstanceConfig={serviceInstanceConfig} recordProps={recordProps} />
+    }
+  }
+
   return (
     <Container>
-      {continuousVerificationEnabled ? (
-        <>
-          <CustomMetricsSectionHeader
-            sectionTitle={getString('cv.monitoringSources.commonHealthSource.assign.serviceInstance.title')}
-            sectionSubTitle={getString('cv.monitoringSources.commonHealthSource.assign.serviceInstance.helptext')}
-          />
-          {isTemplate ? (
-            <Container width="350px">
-              <FormInput.MultiTextInput
-                label={<ServiceInstanceLabel />}
-                name={CustomMetricFormFieldNames.SERVICE_INSTANCE}
-                onChange={(value, _valueType, multiType) => {
-                  if (multiType !== metricInstanceMultiType) {
-                    setMetricPathMultiType(multiType)
-                    if (!value && multiType === MultiTypeInputType.FIXED) {
-                      setFieldValue(CustomMetricFormFieldNames.SERVICE_INSTANCE, defaultServiceInstance)
-                    }
-                  }
-                  const isServiceInstanceFixed = getMultiTypeFromValue(value) === MultiTypeInputType.FIXED
-                  if (multiType === MultiTypeInputType.EXPRESSION && isServiceInstanceFixed) {
-                    setFieldValue(CustomMetricFormFieldNames.SERVICE_INSTANCE, undefined)
-                  }
-                }}
-                multiTextInputProps={{
-                  value: serviceInstanceField,
-                  expressions,
-                  multitypeInputValue: metricInstanceMultiType,
-                  allowableTypes:
-                    isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression
-                      ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
-                      : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-                }}
-              />
-            </Container>
-          ) : (
-            <Container width="350px">
-              <FormInput.Text name={CustomMetricFormFieldNames.SERVICE_INSTANCE} label={<ServiceInstanceLabel />} />
-            </Container>
-          )}
-        </>
-      ) : null}
+      <>
+        <CustomMetricsSectionHeader
+          sectionTitle={getString('cv.monitoringSources.commonHealthSource.assign.serviceInstance.title')}
+          sectionSubTitle={getString('cv.monitoringSources.commonHealthSource.assign.serviceInstance.helptext')}
+        />
+
+        <Container width="350px">{getContent()}</Container>
+      </>
     </Container>
   )
 }

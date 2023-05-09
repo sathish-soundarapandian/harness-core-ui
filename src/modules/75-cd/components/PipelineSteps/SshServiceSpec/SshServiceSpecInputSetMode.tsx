@@ -10,6 +10,7 @@ import { connect } from 'formik'
 import { Layout, AllowedTypes } from '@harness/uicore'
 import cx from 'classnames'
 
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ServiceSpec } from 'services/cd-ng'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
@@ -108,7 +109,7 @@ const SshServiceSpecInputSetModeFormikForm = (props: SshInputSetProps): React.Re
         <>
           <ConfigFiles
             template={template}
-            configFiles={allValues?.configFiles}
+            configFiles={defaultTo(allValues?.configFiles, initialValues?.configFiles)}
             configFileSourceBaseFactory={configFileSourceBaseFactory}
             stageIdentifier={stageIdentifier}
             {...commonProps}

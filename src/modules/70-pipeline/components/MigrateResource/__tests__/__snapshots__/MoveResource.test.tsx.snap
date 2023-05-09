@@ -6,6 +6,25 @@ exports[`ImportResource - Pipeline initial rendering snapshot testing for pipeli
     class="StyledProps--font StyledProps--main migrateResourceForm"
   >
     <div
+      class="bp3-callout bp3-intent-warning migrateResourceWarning"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
+      >
+        Please make sure you move associated input-sets to Git as well and
+        <a
+          href="https://developer.harness.io/docs/platform/Git-Experience/move-inline-entities-to-git"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <b>
+             update your existing triggers 
+          </b>
+        </a>
+        to work with remote pipelines.
+      </p>
+    </div>
+    <div
       class="OverlaySpinner--overlaySpinner"
     >
       <form

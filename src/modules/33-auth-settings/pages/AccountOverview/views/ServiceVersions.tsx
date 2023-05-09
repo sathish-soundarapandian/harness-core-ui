@@ -40,7 +40,7 @@ const versionAPIs = [
     id: 'ci'
   },
   {
-    label: 'Test Inteliigence',
+    label: 'Test Intelligence',
     url: 'ti-service/version',
     id: 'ti'
   },

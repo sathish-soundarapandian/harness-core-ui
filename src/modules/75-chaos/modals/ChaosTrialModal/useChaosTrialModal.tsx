@@ -54,7 +54,7 @@ const ChaosTrial: React.FC<ChaosTrialModalData> = props => {
     return (
       <>
         <Layout.Vertical flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }} spacing="medium">
-          <Text className={css.titleText}>{getString('chaos.trial.modal.title')}</Text>
+          <Text className={css.titleText}>{getString('chaos.homepage.modal.title')}</Text>
           {isTrialPlan && (
             <Text
               className={css.trialBadge}
@@ -80,8 +80,12 @@ const ChaosTrial: React.FC<ChaosTrialModalData> = props => {
           height="35%"
         >
           <Layout.Vertical spacing="small">
-            <Text className={css.description}>{getString('chaos.trial.modal.welcome')}</Text>
-            <Text className={css.description}>{getString('chaos.trial.modal.description')}</Text>
+            <Text className={css.description}>
+              {isTrialPlan
+                ? getString('chaos.homepage.modal.welcomeTrial')
+                : getString('chaos.homepage.modal.welcomeFree')}
+            </Text>
+            <Text className={css.description}>{getString('chaos.homepage.modal.description')}</Text>
           </Layout.Vertical>
           <Layout.Horizontal spacing="small" padding={{ top: 'large' }}>
             <Button
@@ -104,7 +108,7 @@ const ChaosTrial: React.FC<ChaosTrialModalData> = props => {
   )
 }
 
-const useChaosTrialModal = (props: UseChaosTrialModalProps): UseChaosTrialModalReturn => {
+const useChaosModal = (props: UseChaosTrialModalProps): UseChaosTrialModalReturn => {
   const { onContinue, experience } = props
 
   const [showModal, hideModal] = useModalHook(() => {
@@ -128,4 +132,4 @@ const useChaosTrialModal = (props: UseChaosTrialModalProps): UseChaosTrialModalR
   }
 }
 
-export default useChaosTrialModal
+export default useChaosModal

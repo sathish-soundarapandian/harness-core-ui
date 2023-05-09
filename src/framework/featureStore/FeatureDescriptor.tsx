@@ -18,8 +18,8 @@ export const FeatureDescriptor: { [key: string]: React.ReactElement } = {
   SAML_SUPPORT: <String stringID="authSettings.samlSupport" />,
   OAUTH_SUPPORT: <String stringID="authSettings.oauthSupport" />,
   TWO_FACTOR_AUTH_SUPPORT: <String stringID="authSettings.twoFactorAuthSupport" />,
-  CUSTOM_ROLES: <String stringID="rbac.customRoles" />,
-  CUSTOM_RESOURCE_GROUPS: <String stringID="rbac.customResourceGroups" />,
+  CUSTOM_ROLES: <String stringID="rbac.customRolesTooltip" />,
+  CUSTOM_RESOURCE_GROUPS: <String stringID="rbac.customResourceGroupsTooltip" />,
   DEPLOYMENTS_PER_MONTH: <String stringID="deploymentsText" />,
   INTEGRATED_APPROVALS_WITH_JIRA: <String stringID="pipeline.featureRestriction.integratedApprovalsJira" />
 }

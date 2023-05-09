@@ -3,16 +3,17 @@ import { Color, FontVariation } from '@harness/design-system'
 import Highcharts, { SeriesColumnOptions } from 'highcharts'
 import React from 'react'
 import HighchartsReact from 'highcharts-react-official'
+import moment from 'moment'
 import type { CountChangeAndCountChangeRateInfo } from 'services/dashboard-service'
-import { numberFormatter } from '@common/utils/utils'
 import css from './ModuleColumnChart.module.scss'
 
 interface ModuleColumnChartProps {
   data: Omit<SeriesColumnOptions, 'type'>[]
-  count: number
+  count: string
   countChangeInfo?: CountChangeAndCountChangeRateInfo
   isExpanded?: boolean
   timeRangeLabel?: string
+  timeRange?: number[]
 }
 
 interface DeltaProps {
@@ -34,19 +35,6 @@ const getConfig = (data: DataType): Highcharts.Options => ({
   credits: {
     enabled: false
   },
-  xAxis: {
-    labels: {
-      formatter: /* istanbul ignore next */ function () {
-        return `${this.pos + 1}`
-      },
-
-      style: {
-        fontSize: 'var(--font-size-xsmall)',
-        color: 'var(--grey-400)'
-      }
-    },
-    tickInterval: 1
-  },
   plotOptions: {
     column: {
       pointPadding: 0,
@@ -58,6 +46,9 @@ const getConfig = (data: DataType): Highcharts.Options => ({
           return false
         }
       }
+    },
+    series: {
+      animation: false
     }
   },
   legend: {
@@ -119,7 +110,7 @@ const ModuleColumnChart: React.FC<ModuleColumnChartProps> = props => {
       >
         <Layout.Horizontal padding={{ bottom: 'tiny' }} className={css.countRow}>
           <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_900} margin={{ right: 'small' }}>
-            {numberFormatter(count)}
+            {count}
           </Text>
           {countChangeInfo ? <Delta countChangeInfo={countChangeInfo} /> : undefined}
         </Layout.Horizontal>
@@ -129,9 +120,25 @@ const ModuleColumnChart: React.FC<ModuleColumnChartProps> = props => {
             ...getConfig(data),
             xAxis: {
               visible: true,
-              minorTickLength: 0,
-              tickLength: 0,
-              labels: { enabled: isExpanded }
+              tickInterval: 1,
+              labels: {
+                enabled: isExpanded && !!props.timeRange?.length,
+                formatter: function (this) {
+                  let time = new Date().getTime()
+                  if (props.timeRange?.length) {
+                    // eslint-disable-next-line
+                    // @ts-ignore
+                    const val = props.timeRange?.[this.pos]
+                    time = val ? new Date(val).getTime() : time
+                  }
+                  return moment(time).utc().format('MMM D')
+                },
+                style: {
+                  fontSize: '8px',
+                  color: 'var(--grey-400)'
+                }
+              },
+              tickLength: 0
             },
             chart: { type: 'column', spacing: [1, 1, 1, 1] },
             yAxis: {

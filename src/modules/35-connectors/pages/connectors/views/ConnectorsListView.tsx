@@ -17,7 +17,13 @@ import {
   TagsPopover,
   TableV2,
   useConfirmationDialog,
-  ButtonVariation
+  ButtonVariation,
+  SelectOption,
+  ListHeader,
+  sortByCreated,
+  sortByName,
+  SortMethod,
+  sortByLastModified
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
@@ -64,6 +70,8 @@ interface ConnectorListViewProps {
   reload?: () => Promise<void>
   openConnectorModal: UseCreateConnectorModalReturn['openConnectorModal']
   forceDeleteSupported?: boolean
+  onSortMethodChange?: (option: SelectOption) => void
+  selectedSort?: SortMethod
 }
 
 type CustomColumn = Column<ConnectorResponse> & {
@@ -412,13 +420,14 @@ export const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, 
 }
 
 const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
-  const { data, reload, forceDeleteSupported = false } = props
+  const { data, reload, forceDeleteSupported = false, selectedSort, onSortMethodChange } = props
   const params = useParams<PipelineType<ProjectPathProps>>()
   const history = useHistory()
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const listData: ConnectorResponse[] = useMemo(() => data?.content || [], [data?.content])
+
   const columns: CustomColumn[] = useMemo(
     () => [
       {
@@ -486,6 +495,14 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
   return (
     <>
       <HelpPanel referenceId="connectors" type={HelpPanelType.FLOATING_CONTAINER} />
+      {selectedSort && onSortMethodChange && (
+        <ListHeader
+          selectedSortMethod={selectedSort}
+          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
+          onSortMethodChange={onSortMethodChange}
+          totalCount={data?.totalItems}
+        />
+      )}
       <TableV2<ConnectorResponse>
         className={css.table}
         columns={columns}

@@ -129,7 +129,11 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
   const updatedPath = path?.replace('pipeline.', '')
   const tableRef = React.useRef()
   const { openNestedPath } = useNestedAccordion()
-  const { NG_EXECUTION_INPUT, NG_EXPRESSIONS_NEW_INPUT_ELEMENT } = useFeatureFlags()
+  const {
+    NG_EXECUTION_INPUT,
+    NG_EXPRESSIONS_NEW_INPUT_ELEMENT,
+    PIE_MULTISELECT_AND_COMMA_IN_ALLOWED_VALUES: commasInAllowedValues
+  } = useFeatureFlags()
 
   React.useLayoutEffect(() => {
     if (tableRef.current) {
@@ -345,6 +349,9 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                                   variable.type === VariableType.Number
                                     ? ALLOWED_VALUES_TYPE.NUMBER
                                     : ALLOWED_VALUES_TYPE.TEXT
+                                }
+                                tagsInputSeparator={
+                                  commasInAllowedValues && variable.type === 'String' ? '/[\n\r]/' : undefined
                                 }
                               />
                             </div>

@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import type { Column } from 'react-table'
-import { Text, Layout, Card, Heading, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
+import { Text, Layout, Card, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
@@ -99,13 +99,11 @@ export function ActiveDevelopersTableCI({
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
-        <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-          <Layout.Vertical>
-            <Heading color={Color.BLACK} font={{ size: 'medium' }}>
-              {getString('common.subscriptions.usage.activeDevelopers')}
-            </Heading>
-          </Layout.Vertical>
-        </Layout.Horizontal>
+        <Layout.Horizontal
+          spacing="small"
+          flex={{ justifyContent: 'space-between' }}
+          width={'100%'}
+        ></Layout.Horizontal>
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-end' }} width={'100%'}>
           <Layout.Vertical>
             <OrgDropdown

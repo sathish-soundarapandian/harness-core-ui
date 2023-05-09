@@ -263,6 +263,7 @@ export function ReconcileDialog({
                 resolvedTemplateResponses={resolvedTemplateResponses}
                 onUpdate={onUpdateNode}
                 setYamlDiffLoading={setLoading}
+                storeMetadata={storeMetadata}
               />
             </Container>
           </Layout.Horizontal>

@@ -88,4 +88,6 @@ export interface GitConfigFileCoreValuesPropType {
   context?: any
   selectedConfigFile: string
   editConfigFilePrevStepData?: GitConfigFileLastStepPrevStepData
+  isEditMode: boolean
+  configFileIndex?: number
 }

@@ -26,6 +26,20 @@ const piplelineInvalidRequestProps: any = {
   } as any
 }
 
+const pipelineRunFailedProps: any = {
+  onClose: jest.fn(() => noop),
+  getTemplateError: {
+    data: {
+      status: 'ERROR',
+      code: 'HINT',
+      message:
+        'Please check the requested file path [.harness/testInpSet.yaml] / branch [dummy-master] / Github repo name [dummy-repo] if they exist or not.'
+    },
+    message: 'Failed to fetch: 400 Bad Request',
+    status: 400
+  } as any
+}
+
 describe('<PipelineInvalidRequestContent /> tests', () => {
   test('snapshot test and element assertion', async () => {
     const errorMessage = piplelineInvalidRequestProps.getTemplateError.data.message.split(':')
@@ -44,5 +58,27 @@ describe('<PipelineInvalidRequestContent /> tests', () => {
       fireEvent.click(closeButton)
       await waitFor(() => expect(piplelineInvalidRequestProps.onClose).toBeCalledTimes(1))
     })
+  })
+
+  test('show valid title message when inline pipeline run fails', async () => {
+    const { container, findByText } = render(
+      <TestWrapper>
+        <PipelineInvalidRequestContent {...pipelineRunFailedProps} />
+      </TestWrapper>
+    )
+    const errorMessageTitle = await findByText('pipeline.pipelineRunFailed')
+    expect(container).toMatchSnapshot()
+    expect(errorMessageTitle).toBeInTheDocument()
+  })
+
+  test('show valid title message when remote pipeline run fails', async () => {
+    const { container, findByText } = render(
+      <TestWrapper>
+        <PipelineInvalidRequestContent {...pipelineRunFailedProps} branch="dummy-master" repoName="dummy-repo" />
+      </TestWrapper>
+    )
+    const errorMessageTitle = await findByText('pipeline.pipelineRunFailedForRepoBranch')
+    expect(container).toMatchSnapshot()
+    expect(errorMessageTitle).toBeInTheDocument()
   })
 })

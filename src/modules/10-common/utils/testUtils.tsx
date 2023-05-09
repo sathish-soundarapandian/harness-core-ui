@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { UseGetProps, UseGetReturn, RestfulProvider } from 'restful-react'
-import { queryByAttribute } from '@testing-library/react'
+import { act, fireEvent, getByText, queryByAttribute, waitFor } from '@testing-library/react'
 import { compile } from 'path-to-regexp'
 import { createMemoryHistory } from 'history'
 import { Router, Route, Switch, useLocation, useHistory } from 'react-router-dom'
@@ -15,6 +15,7 @@ import { ModalProvider } from '@harness/use-modal'
 import qs from 'qs'
 import { noop } from 'lodash-es'
 import { enableMapSet } from 'immer'
+import userEvent from '@testing-library/user-event'
 import { AppStoreContext, AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
 import { LicenseStoreContext, LicenseStoreContextProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
@@ -262,3 +263,21 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
 
 export const queryByNameAttribute = (name: string, container: HTMLElement): HTMLElement | null =>
   queryByAttribute('name', container, name)
+
+export const doConfigureOptionsTesting = async (
+  cogModal: HTMLElement,
+  fieldElement: HTMLInputElement
+): Promise<void> => {
+  // Type regex and submit
+  // check if field has desired value
+  await waitFor(() => expect(getByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
+  const regexRadio = getByText(cogModal, 'common.configureOptions.regex')
+  userEvent.click(regexRadio)
+  const regexTextArea = queryByAttribute('name', cogModal, 'regExValues') as HTMLInputElement
+  act(() => {
+    fireEvent.change(regexTextArea, { target: { value: '<+input>.includes(/test/)' } })
+  })
+  const cogSubmit = getByText(cogModal, 'submit')
+  userEvent.click(cogSubmit)
+  await waitFor(() => expect(fieldElement.value).toBe('<+input>.regex(<+input>.includes(/test/))'))
+}

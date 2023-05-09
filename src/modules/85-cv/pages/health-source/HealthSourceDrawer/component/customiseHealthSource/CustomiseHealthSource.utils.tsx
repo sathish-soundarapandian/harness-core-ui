@@ -56,6 +56,9 @@ export const LoadSourceByType = ({
   expressions?: string[]
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
+
+  const isSignalFXEnabled = useFeatureFlag(FeatureFlag.SRM_SPLUNK_SIGNALFX)
+
   const selectedProduct = data?.product?.value || data?.existingMetricDetails?.type
   const productInfo = getSelectedProductInfo(selectedProduct)
   const healthSourceConfig = healthSourcesConfig[productInfo]
@@ -159,15 +162,6 @@ export const LoadSourceByType = ({
     case HealthSourceTypes.SumoLogic:
     case HealthSourceTypes.SumologicLogs:
     case HealthSourceTypes.SumologicMetrics:
-      return (
-        <CommonHealthSourceContainer
-          data={data}
-          healthSourceConfig={healthSourceConfig}
-          isTemplate={isTemplate}
-          expressions={expressions}
-          onSubmit={onSubmit}
-        />
-      )
     case HealthSourceTypes.Elk:
       return (
         <CommonHealthSourceContainer
@@ -178,6 +172,23 @@ export const LoadSourceByType = ({
           onSubmit={onSubmit}
         />
       )
+
+    case HealthSourceTypes.SignalFX:
+    case HealthSourceTypes.SplunkSignalFXMetrics: {
+      if (!isSignalFXEnabled) {
+        return null
+      }
+      return (
+        <CommonHealthSourceContainer
+          data={data}
+          healthSourceConfig={healthSourceConfig}
+          isTemplate={isTemplate}
+          expressions={expressions}
+          onSubmit={onSubmit}
+        />
+      )
+    }
+
     default:
       return null
   }

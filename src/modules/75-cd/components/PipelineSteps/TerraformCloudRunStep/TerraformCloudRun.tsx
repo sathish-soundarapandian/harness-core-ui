@@ -65,7 +65,6 @@ export class TerraformCloudRun extends PipelineStep<any> {
     return errors
   }
 
-  /* istanbul ignore next */
   processFormData(data: TerraformCloudRunFormData): TerraformCloudRunFormData {
     return processFormData(data)
   }

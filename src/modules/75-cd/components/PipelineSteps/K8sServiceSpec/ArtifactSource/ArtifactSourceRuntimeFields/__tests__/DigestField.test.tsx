@@ -28,6 +28,7 @@ describe('Digest Field tests', () => {
       <TestWrapper>
         <DigestField
           {...digestProps}
+          disabled={false}
           artifactSourceBaseFactory={new ArtifactSourceBaseFactory()}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
         />
@@ -42,6 +43,7 @@ describe('Digest Field tests', () => {
       <TestWrapper>
         <DigestField
           {...digestProps}
+          disabled={false}
           fetchDigestError={'DEFAULT_ERROR_CODE' as any}
           artifactSourceBaseFactory={new ArtifactSourceBaseFactory()}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
@@ -72,6 +74,7 @@ describe('Digest Field tests', () => {
       <TestWrapper>
         <DigestField
           {...digesttestProps}
+          disabled={false}
           artifactSourceBaseFactory={new ArtifactSourceBaseFactory()}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
         />
@@ -102,6 +105,7 @@ describe('Digest Field tests', () => {
     const { container } = render(
       <TestWrapper>
         <DigestField
+          disabled={false}
           {...digesttestProps}
           artifactSourceBaseFactory={new ArtifactSourceBaseFactory()}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}

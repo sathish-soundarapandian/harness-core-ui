@@ -519,6 +519,11 @@ gitSync:
   goToGit: Go to Git to fix issue
   invalidYaml: 'We are unable to render your {{{ flagsYamlFilename }}} file because it is invalid. Fix the following issues on Git and try again.'
   setUpGitConnection: Set up a Git connection
+  setUpGitSuccess: 'Successfully connected to repository {{ repoName }}'
+  resetGitSettings: Reset Git Settings
+  resetGitWarning: This will delete all git configurations and you will have to set it up from the beginning
+  resetGitSuccess: Successfully reset Git settings
+  resetGitError: Error resetting Git settings
 policyEvaluations:
   failedToSave: Flag cannot be saved due to the policy evaluation failures
   warning: Flag saved with policy warnings

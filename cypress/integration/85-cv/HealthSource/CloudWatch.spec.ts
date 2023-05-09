@@ -44,7 +44,6 @@ describe('Cloud watch health source', () => {
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
 
-    // cy.populateDefineHealthSource(Connectors.AWS, 'cloudWatchTest', 'CloudWatch Metrics')
     cy.contains('span', 'Add New Health Source').click()
 
     cy.findByText(/CloudWatch/).should('exist')
@@ -58,7 +57,8 @@ describe('Cloud watch health source', () => {
     cy.addNewMonitoredServiceWithServiceAndEnv()
 
     cy.populateDefineHealthSource(Connectors.AWS, 'testAWS', 'CloudWatch Metrics')
-    cy.findByRole('button', { name: /Next/i }).scrollIntoView().click({ force: true })
+
+    cy.contains('span', 'Next').click()
 
     cy.wait('@regionsCall')
 
@@ -130,7 +130,7 @@ describe('Cloud watch health source', () => {
 
     cy.wait(100)
 
-    cy.findByRole('button', { name: /Next/i }).scrollIntoView().click({ force: true })
+    cy.contains('span', 'Next').click()
 
     cy.wait('@regionsCall')
 
@@ -204,7 +204,7 @@ describe('Cloud watch health source', () => {
       cy.addNewMonitoredServiceWithServiceAndEnv()
 
       cy.populateDefineHealthSource(Connectors.AWS, 'testAWS', 'CloudWatch Metrics')
-      cy.findByRole('button', { name: /Next/i }).scrollIntoView().click({ force: true })
+      cy.contains('span', 'Next').click()
 
       cy.wait('@regionsCall')
 
@@ -243,7 +243,7 @@ describe('Cloud watch health source', () => {
       cy.addNewMonitoredServiceWithServiceAndEnv()
 
       cy.populateDefineHealthSource(Connectors.AWS, 'testAWS', 'CloudWatch Metrics')
-      cy.findByRole('button', { name: /Next/i }).scrollIntoView().click({ force: true })
+      cy.contains('span', 'Next').click()
 
       cy.wait('@regionsCall')
 

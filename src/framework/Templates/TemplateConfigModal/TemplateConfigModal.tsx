@@ -18,9 +18,11 @@ import {
   FormInput,
   Icon,
   Layout,
+  OverlaySpinner,
   Select,
   SelectOption,
-  Text
+  Text,
+  useToaster
 } from '@harness/uicore'
 import produce from 'immer'
 import { Classes, Divider } from '@blueprintjs/core'
@@ -28,6 +30,8 @@ import { Color, FontVariation } from '@harness/design-system'
 import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -47,12 +51,14 @@ import { useTemplateAlreadyExistsDialog } from '@templates-library/hooks/useTemp
 import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { CardInterface, InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
 import { SaveTemplateAsType, StoreMetadata, StoreType as GitStoreType } from '@common/constants/GitSyncTypes'
-import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { toBase64 } from '@common/utils/utils'
 import LogoInput from '@common/components/LogoInput/LogoInput'
+import { useGetSettingValue } from 'services/cd-ng'
+import { SettingType } from '@common/constants/Utils'
 import {
   DefaultNewTemplateId,
   DefaultNewVersionLabel,
@@ -104,6 +110,7 @@ export interface ModalProps {
   allowScopeChange?: boolean
   lastPublishedVersion?: string
   disableCreatingNewBranch?: boolean
+  isGitXEnforced?: boolean
   onFailure?: (error: any, latestTemplate: NGTemplateInfoConfig) => void
   saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
 }
@@ -148,6 +155,7 @@ const BasicTemplateDetails = (
     setPreviewValues,
     onClose,
     gitDetails,
+    isGitXEnforced = false,
     storeMetadata,
     allowScopeChange = false,
     title,
@@ -240,10 +248,13 @@ const BasicTemplateDetails = (
           draft.repo = gitDetails?.repoIdentifier
           draft.branch = gitDetails?.branch
         } else if (supportingTemplatesGitx) {
+          isGitXEnforced && formikRef.current?.setFieldValue('storeType', GitStoreType.REMOTE)
           draft.connectorRef = defaultTo(storeMetadata?.connectorRef, '')
           draft.repo = defaultTo(storeMetadata?.repoName, '')
           draft.branch = defaultTo(storeMetadata?.branch, '')
-          draft.storeType = defaultTo(storeMetadata?.storeType, GitStoreType.INLINE)
+          draft.storeType = isGitXEnforced
+            ? GitStoreType.REMOTE
+            : defaultTo(storeMetadata?.storeType, GitStoreType.INLINE)
           draft.filePath = intent === Intent.SAVE ? '' : defaultTo(storeMetadata?.filePath, '')
           if (saveAsType && saveAsType === SaveTemplateAsType.NEW_LABEL_VERSION && intent === Intent.SAVE) {
             const paths = defaultTo(storeMetadata?.filePath, '').split('/')
@@ -254,7 +265,8 @@ const BasicTemplateDetails = (
         }
         draft.iconFile = undefined
       }),
-    [initialValues, storeMetadata, gitDetails, saveAsType]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [initialValues, storeMetadata, gitDetails, saveAsType, isGitXEnforced]
   )
 
   const submitButtonLabel = React.useMemo(() => {
@@ -600,7 +612,9 @@ const BasicTemplateDetails = (
                           className={css.inlineRemoteWrapper}
                           selected={defaultTo(formik.values?.storeType, GitStoreType.INLINE)}
                           onChange={onInlineRemoteChange}
-                          getCardDisabledStatus={() => cardDisabledStatus}
+                          getCardDisabledStatus={current =>
+                            Boolean((isGitXEnforced && current === GitStoreType.INLINE) || cardDisabledStatus)
+                          }
                         />
                         {formik.values?.storeType === GitStoreType.REMOTE && (
                           <GitSyncForm
@@ -653,6 +667,10 @@ const TemplateConfigModal = (
   ref: React.ForwardedRef<TemplateConfigModalHandle>
 ): JSX.Element => {
   const { initialValues, ...rest } = props
+  const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const isInlineRemoteSelectionApplicable = templateFactory.getTemplateIsRemoteEnabled(initialValues.type)
+  const { showError } = useToaster()
   const [previewValues, setPreviewValues] = useState<NGTemplateInfoConfigWithGitDetails>({
     ...initialValues,
     repo: defaultTo(rest.gitDetails?.repoName, rest.gitDetails?.repoIdentifier),
@@ -672,11 +690,34 @@ const TemplateConfigModal = (
     [basicTemplateDetailsHandle.current]
   )
 
+  const {
+    data: enforceGitXSetting,
+    error: enforceGitXSettingError,
+    loading: loadingSetting
+  } = useGetSettingValue({
+    identifier: SettingType.ENFORCE_GIT_EXPERIENCE,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: !isSettingEnabled || !isInlineRemoteSelectionApplicable
+  })
+
+  React.useEffect(() => {
+    if (!loadingSetting) {
+      if (enforceGitXSettingError) {
+        showError(enforceGitXSettingError.message)
+      }
+    }
+  }, [enforceGitXSettingError, showError, loadingSetting])
+
   const content = (
     <Layout.Horizontal>
       <BasicTemplateDetailsWithRef
         initialValues={initialValues}
         setPreviewValues={setPreviewValues}
+        isGitXEnforced={enforceGitXSetting?.data?.value === 'true'}
         ref={basicTemplateDetailsHandle}
         {...rest}
       />
@@ -690,7 +731,11 @@ const TemplateConfigModal = (
       />
     </Layout.Horizontal>
   )
-  return isGitSyncEnabled ? <GitSyncStoreProvider>{content}</GitSyncStoreProvider> : content
+  return isGitSyncEnabled ? (
+    <GitSyncStoreProvider>{content}</GitSyncStoreProvider>
+  ) : (
+    <OverlaySpinner show={loadingSetting}>{content}</OverlaySpinner>
+  )
 }
 
 export const TemplateConfigModalWithRef = React.forwardRef(TemplateConfigModal)

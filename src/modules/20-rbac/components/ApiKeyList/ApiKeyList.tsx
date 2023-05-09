@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
 import { Text, Container, ButtonVariation, Card, PageError } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { TokenDTO, useListAggregatedApiKeys } from 'services/cd-ng'
 import type { ProjectPathProps, ServiceAccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -68,7 +68,7 @@ const ApiKeyList: React.FC<ApiKeyListProps> = ({ apiKeyType = 'SERVICE_ACCOUNT',
 
   return (
     <Container padding={{ bottom: 'xlarge' }}>
-      <Text color={Color.BLACK} font={{ size: 'medium', weight: 'semi-bold' }}>
+      <Text font={{ variation: FontVariation.H5 }}>
         {apiKeyType === 'SERVICE_ACCOUNT' ? getString('common.apiKeys') : getString('rbac.myApiKeys')}
       </Text>
       <Container padding={{ top: 'medium', bottom: 'medium' }}>

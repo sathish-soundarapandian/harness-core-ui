@@ -17,10 +17,13 @@ import {
   ButtonVariation,
   useToaster,
   PageSpinner,
-  FormInput
+  FormInput,
+  Text
 } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { HideModal } from '@harness/use-modal'
 import type { FormikProps } from 'formik'
+import { Callout } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import {
   Error,
@@ -212,6 +215,21 @@ export default function MoveResource({
 
   return (
     <Container className={css.migrateResourceForm}>
+      {resourceType === ResourceType.PIPELINES ? (
+        <Callout className={css.migrateResourceWarning} intent="warning" icon={null}>
+          <Text font={{ variation: FontVariation.BODY2 }}>
+            Please make sure you move associated input-sets to Git as well and
+            <a
+              href="https://developer.harness.io/docs/platform/Git-Experience/move-inline-entities-to-git"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <b>&nbsp;update your existing triggers&nbsp;</b>
+            </a>
+            to work with remote pipelines.
+          </Text>
+        </Callout>
+      ) : null}
       <Formik<ModifiedInitialValuesType>
         initialValues={modifiedInitialValues}
         formName="moveConfig"

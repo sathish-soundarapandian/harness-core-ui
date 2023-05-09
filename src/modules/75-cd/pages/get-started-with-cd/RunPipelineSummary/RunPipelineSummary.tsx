@@ -93,10 +93,7 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
       ?.type as string,
     'cd.getStartedWithCD.manifestStorage': service?.serviceDefinition?.spec?.manifests?.[0]?.manifest?.spec?.store
       ?.type as string,
-    'cd.getStartedWithCD.artifactStorage': defaultTo(
-      service?.serviceDefinition?.spec?.artifacts?.primary?.sources?.[0]?.type,
-      '-'
-    )
+    'cd.getStartedWithCD.artifactStorage': defaultTo(service?.serviceDefinition?.spec?.artifacts?.primary?.type, '-')
   }
   const successsFullConfiguration = (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">

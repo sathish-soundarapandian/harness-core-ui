@@ -45,7 +45,6 @@ import type { BambooFormInterface } from '@connectors/components/CreateConnector
 import type { AWSBackOffStrategyValues } from '@connectors/components/CreateConnector/AWSConnector/StepBackOffStrategy/StepBackOffStrategy'
 import { AuthTypes, GitAuthTypes, GitAPIAuthTypes, BackOffStrategy } from './ConnectorHelper'
 import { useConnectorWizard } from '../../../components/CreateConnectorWizard/ConnectorWizardContext'
-
 export interface DelegateCardInterface {
   type: string
   info: string
@@ -1142,9 +1141,17 @@ export const setupGCPSecretManagerFormData = async (
     orgIdentifier: connectorInfo.orgIdentifier
   }
   const credentials = await setSecretField(connectorInfoSpec?.credentialsRef, scopeQueryParams)
+  let delegateType = undefined
+  if (credentials) {
+    delegateType = DelegateTypes.DELEGATE_OUT_CLUSTER
+  }
+  if (connectorInfoSpec.assumeCredentialsOnDelegate) {
+    delegateType = DelegateTypes.DELEGATE_IN_CLUSTER
+  }
   return {
     credentialsRef: credentials || undefined,
-
+    assumeCredentialsOnDelegate: connectorInfoSpec.assumeCredentialsOnDelegate,
+    delegateType,
     delegate: connectorInfoSpec?.delegateSelectors || undefined,
     default: connectorInfoSpec?.default || false
   }
@@ -1339,8 +1346,8 @@ export const buildGcpSMPayload = (formData: FormData): ConnectorRequestBody => {
     type: Connectors.GcpSecretManager,
     spec: {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
-      credentialsRef: formData?.credentialsRef.referenceString,
-
+      credentialsRef: formData?.credentialsRef?.referenceString,
+      assumeCredentialsOnDelegate: formData?.assumeCredentialsOnDelegate,
       default: formData.default
     }
   }
@@ -2146,6 +2153,26 @@ export const buildPrometheusPayload = (formData: FormData) => {
   }
 }
 
+export const buildSignalFXPayload = (formData: FormData) => {
+  const { name, identifier, projectIdentifier, orgIdentifier, delegateSelectors, url, apiTokenRef, accountId } =
+    formData
+  return {
+    connector: {
+      name,
+      identifier,
+      type: Connectors.SignalFX,
+      projectIdentifier,
+      orgIdentifier,
+      spec: {
+        delegateSelectors: delegateSelectors || {},
+        url,
+        apiTokenRef: apiTokenRef?.referenceString,
+        accountId
+      }
+    }
+  }
+}
+
 export interface DatadogInitialValue {
   apiKeyRef?: SecretReferenceInterface | void
   applicationKeyRef?: SecretReferenceInterface | void
@@ -2596,6 +2623,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'tas'
     case Connectors.TERRAFORM_CLOUD:
       return 'terraform-cloud'
+    case Connectors.SignalFX:
+      return 'service-signalfx'
     default:
       return 'cog'
   }
@@ -2681,6 +2710,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Tanzu Application Service'
     case Connectors.TERRAFORM_CLOUD:
       return 'Terraform Cloud'
+    case Connectors.SignalFX:
+      return 'SignalFX'
     default:
       return ''
   }

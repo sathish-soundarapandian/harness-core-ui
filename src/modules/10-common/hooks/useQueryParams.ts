@@ -9,7 +9,7 @@ import React, { useEffect, useMemo, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import qs from 'qs'
 import type { IParseOptions } from 'qs'
-import { assignWith, isNil } from 'lodash-es'
+import { assignWith, get, isNil, set } from 'lodash-es'
 
 export interface UseQueryParamsOptions<T> extends IParseOptions {
   processQueryParams?(data: any): T
@@ -74,7 +74,7 @@ export const queryParamDecodeAll: CustomQsDecoder =
     return decoder(value)
   }
 
-export const useQueryParamsOptions = <Q, DKey extends keyof Q>(
+export const useQueryParamsOptions = <Q extends object, DKey extends keyof Q>(
   defaultParams: { [K in DKey]: NonNullable<Q[K]> }
 ): UseQueryParamsOptions<RequiredPick<Q, DKey>> => {
   const defaultParamsRef = useRef(defaultParams)
@@ -85,10 +85,19 @@ export const useQueryParamsOptions = <Q, DKey extends keyof Q>(
   const options = useMemo(
     () => ({
       decoder: queryParamDecodeAll(),
-      processQueryParams: (params: Q) =>
-        assignWith({ ...params }, defaultParamsRef.current, (objValue, srcValue) =>
+      processQueryParams: (params: Q) => {
+        const processedParams = { ...params }
+
+        // if searchTerm is '123', queryParamDecodeAll converts it to the number 123
+        // but searchTerm should remain a string
+        if (!isNil(get(processedParams, 'searchTerm'))) {
+          set(processedParams, 'searchTerm', get(processedParams, 'searchTerm').toString())
+        }
+
+        return assignWith(processedParams, defaultParamsRef.current, (objValue, srcValue) =>
           isNil(objValue) ? srcValue : objValue
         ) as RequiredPick<Q, DKey>
+      }
     }),
     []
   )

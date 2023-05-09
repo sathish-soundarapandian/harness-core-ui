@@ -12,11 +12,16 @@ import type { FormikProps } from 'formik'
 import { Menu } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import { AllowedTypes, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
-
 import { useStrings } from 'framework/strings'
-import { Failure, ServiceSpec, useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
+import {
+  Failure,
+  ServiceSpec,
+  useGetRepositoriesDetailsForArtifactory,
+  useGetRepositoriesDetailsV2ForArtifactory
+} from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ImagePathTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { useMutateAsGet } from '@common/hooks'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -50,6 +55,9 @@ export interface ServerlessArtifactoryRepositoryProps {
   repoFormat?: string
   stepViewType?: StepViewType
   onChange?: any
+  useRepositoriesV2?: boolean
+  pipelineRuntimeYaml?: string
+  pipelineIdentifier?: string
 }
 
 export default function ServerlessArtifactoryRepository(
@@ -67,7 +75,10 @@ export default function ServerlessArtifactoryRepository(
     template,
     fieldPath,
     repoFormat,
-    stepViewType
+    stepViewType,
+    useRepositoriesV2 = false,
+    pipelineRuntimeYaml,
+    pipelineIdentifier
   } = props
 
   const { getString } = useStrings()
@@ -75,10 +86,10 @@ export default function ServerlessArtifactoryRepository(
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const {
-    data: artifactRepoData,
-    loading: artifactRepoLoading,
-    refetch: getArtifactRepos,
-    error: artifactRepoError
+    data: artifactRepoDataV1,
+    loading: artifactRepoLoadingV1,
+    refetch: getArtifactReposV1,
+    error: artifactRepoErrorV1
   } = useGetRepositoriesDetailsForArtifactory({
     queryParams: {
       connectorRef: connectorRef,
@@ -91,6 +102,50 @@ export default function ServerlessArtifactoryRepository(
     },
     lazy: true
   })
+
+  const {
+    data: artifactRepoDataV2,
+    loading: artifactRepoLoadingV2,
+    refetch: getArtifactReposV2,
+    error: artifactRepoErrorV2
+  } = useMutateAsGet(useGetRepositoriesDetailsV2ForArtifactory, {
+    queryParams: {
+      connectorRef: connectorRef,
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      repositoryType: repoFormat,
+      serviceId,
+      fqnPath,
+      pipelineIdentifier
+    },
+    body: pipelineRuntimeYaml,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    lazy: true
+  })
+
+  const {
+    data: artifactRepoData,
+    loading: artifactRepoLoading,
+    refetch: getArtifactRepos,
+    error: artifactRepoError
+  } = useRepositoriesV2
+    ? {
+        data: artifactRepoDataV2,
+        loading: artifactRepoLoadingV2,
+        refetch: getArtifactReposV2,
+        error: artifactRepoErrorV2
+      }
+    : {
+        data: artifactRepoDataV1,
+        loading: artifactRepoLoadingV1,
+        refetch: getArtifactReposV1,
+        error: artifactRepoErrorV1
+      }
 
   useEffect(() => {
     if (artifactRepoLoading) {
@@ -141,9 +196,20 @@ export default function ServerlessArtifactoryRepository(
     </div>
   ))
 
+  const repositoryFormValue = get(formik?.values, fieldName)
+  const [repositoryValue, setRepositoryValue] = React.useState(repositoryFormValue)
+  const [inputKeyCount, setInputKeyCount] = React.useState(0)
+
+  useEffect(() => {
+    if (repositoryValue !== repositoryFormValue) {
+      setRepositoryValue(repositoryFormValue)
+      setInputKeyCount(prevCount => prevCount + 1)
+    }
+  }, [repositoryFormValue])
+
   const getFieldHelperText = () => {
     if (
-      getMultiTypeFromValue(get(formik?.values, fieldName)) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(repositoryValue) === MultiTypeInputType.FIXED &&
       (getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME || connectorRef?.length === 0)
     ) {
       return getString('pipeline.artifactRepositoryDependencyRequired')
@@ -153,11 +219,12 @@ export default function ServerlessArtifactoryRepository(
   return (
     <SelectInputSetView
       className={
-        getMultiTypeFromValue(get(formik?.values, fieldName)) === MultiTypeInputType.RUNTIME
+        getMultiTypeFromValue(repositoryValue) === MultiTypeInputType.RUNTIME
           ? repositoryFieldCss.repositoryFieldContainer
           : css.imagePathContainer
       }
       enableConfigureOptions={false}
+      key={inputKeyCount}
       name={fieldName}
       label={getString('repository')}
       fieldPath={defaultTo(fieldPath, '')} // Only used for Runtime view
@@ -170,7 +237,7 @@ export default function ServerlessArtifactoryRepository(
         expressions,
         allowableTypes,
         selectProps: {
-          defaultSelectedItem: get(formik?.values, fieldName) as SelectOption,
+          defaultSelectedItem: repositoryValue as SelectOption,
           noResults: <NoRepositoryResults error={artifactRepoError} />,
           items: connectorRepos,
           addClearBtn: !isReadonly,

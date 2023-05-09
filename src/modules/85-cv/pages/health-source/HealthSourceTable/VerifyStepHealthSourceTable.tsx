@@ -21,6 +21,9 @@ import { useToaster } from '@common/exports'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { ModuleName } from 'framework/types/ModuleName'
+import { Category, VerifyStepActions } from '@cv/components/PipelineSteps/ContinousVerification/constants'
 import HealthSourceTable from './HealthSourceTable'
 import HealthSourceDrawerHeader from '../HealthSourceDrawer/component/HealthSourceDrawerHeader/HealthSourceDrawerHeader'
 import HealthSourceDrawerContent from '../HealthSourceDrawer/HealthSourceDrawerContent'
@@ -43,6 +46,7 @@ export default function VerifyStepHealthSourceTable(tableProps: VerifyStepHealth
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps & { identifier: string }>()
   const { showError, showSuccess } = useToaster()
+  const { trackEvent } = useTelemetry()
   const [rowToDelete, setRowToDelete] = useState<HealthSource>()
   const {
     serviceIdentifier,
@@ -106,6 +110,7 @@ export default function VerifyStepHealthSourceTable(tableProps: VerifyStepHealth
         tableData: values ? createHealthsourceList(healthSourcesList, values) : healthSourcesList,
         changeSources: changeSourcesList,
         onSuccess: (data: MonitoredServiceResponse) => {
+          trackEvent(VerifyStepActions.SaveHealthSource, { category: Category.VERIFY_STEP, module: ModuleName.CD })
           onSuccess(data)
           hideHealthSourceDrawer()
         }
@@ -156,6 +161,7 @@ export default function VerifyStepHealthSourceTable(tableProps: VerifyStepHealth
   }, [healthSourcesList, monitoredServiceData, rowToDelete])
 
   const onAddNewHealthSource = useCallback(() => {
+    trackEvent(VerifyStepActions.AddHealthSource, { category: Category.VERIFY_STEP, module: ModuleName.CD })
     const drawerProps = getHealthSourceDrawerProps()
     showHealthSourceDrawer(drawerProps)
     setDrawerHeaderProps?.(healthSourceDrawerHeaderProps())

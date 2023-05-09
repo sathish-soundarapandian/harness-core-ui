@@ -3,10 +3,10 @@ homepage:
   chaosHomePageTitle: '{{$.common.purpose.chaos.continuous}}'
   slogan: Run controlled 'chaos' experiments to understand how real-world stress and failures impact your systems. Create more reliable applications and infrastructure.
   learnMore: Learn more about Chaos Engineering
-trial:
   modal:
     title: You're ready to go
-    welcome: Your trial of Harness Chaos Engineering has started.
+    welcomeFree: Your free plan of Harness Chaos Engineering has started.
+    welcomeTrial: Your trial of Harness Chaos Engineering has started.
     description: You are one step away from creating more reliable applications and infrastructure and running controlled 'chaos' experiments to understand how real-world stress and failures impact your systems.
 chaosHub: ChaosHub
 chaosExperiment: Chaos Experiment

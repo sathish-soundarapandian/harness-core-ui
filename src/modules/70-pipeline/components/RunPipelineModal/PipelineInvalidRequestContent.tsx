@@ -19,6 +19,8 @@ import css from './RunPipelineForm.module.scss'
 interface PipelineInvalidRequestContentProps {
   onClose?: () => void
   getTemplateError: GetDataError<Failure | Error> | null
+  branch?: string
+  repoName?: string
 }
 
 interface GetErrorTitleAndTextOption {
@@ -28,7 +30,9 @@ interface GetErrorTitleAndTextOption {
 
 export function PipelineInvalidRequestContent({
   getTemplateError,
-  onClose
+  onClose,
+  branch,
+  repoName
 }: PipelineInvalidRequestContentProps): React.ReactElement {
   const { getString } = useStrings()
   const getErrorMessageTitleAndText = (): GetErrorTitleAndTextOption => {
@@ -39,7 +43,10 @@ export function PipelineInvalidRequestContent({
           message: errorMessage[1]
         }
       : {
-          title: getString('pipeline.invalidRequest'),
+          title:
+            branch && repoName
+              ? getString('pipeline.pipelineRunFailedForRepoBranch', { repoName, branch })
+              : getString('pipeline.pipelineRunFailed'),
           message: errorMessage[0]
         }
   }

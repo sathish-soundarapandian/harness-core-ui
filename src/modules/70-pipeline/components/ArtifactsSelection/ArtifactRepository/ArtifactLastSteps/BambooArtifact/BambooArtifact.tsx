@@ -255,7 +255,7 @@ function FormComponent({
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
-            label={getString('pipeline.bamboo.planName')}
+            label={getString('pipeline.bamboo.planKey')}
             name="spec.planKey"
             useValue
             selectItems={planDetails}
@@ -467,8 +467,16 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
     spec: Yup.object().shape({
       planKey: Yup.lazy(value =>
         typeof value === 'object'
-          ? Yup.object().required(getString('pipeline.bambooStep.validations.planName')) // typeError is necessary here, otherwise we get a bad-looking yup error
-          : Yup.string().required(getString('pipeline.bambooStep.validations.planName'))
+          ? Yup.object().required(
+              getString('common.validation.fieldIsRequired', {
+                name: getString('pipeline.bamboo.planKey')
+              })
+            ) // typeError is necessary here, otherwise we get a bad-looking yup error
+          : Yup.string().required(
+              getString('common.validation.fieldIsRequired', {
+                name: getString('pipeline.bamboo.planKey')
+              })
+            )
       ),
       artifactPaths: Yup.string()
     })

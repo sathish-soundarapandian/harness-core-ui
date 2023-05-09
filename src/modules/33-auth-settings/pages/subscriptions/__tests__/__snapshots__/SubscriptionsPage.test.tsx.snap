@@ -534,6 +534,11 @@ exports[`Subscriptions Page Subscription Details Card should render CI details: 
       <div
         class="bp3-card bp3-elevation-0 Card--card"
       >
+        <h1
+          class="StyledProps--font StyledProps--font-h1 StyledProps--main headerMargin StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
+        >
+          common.subscriptions.usage.activeDevelopers
+        </h1>
         <div
           class="bp3-tabs tabs"
         >
@@ -595,17 +600,7 @@ exports[`Subscriptions Page Subscription Details Card should render CI details: 
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
                     style="width: 100%;"
-                  >
-                    <div
-                      class="Layout--vertical StyledProps--main"
-                    >
-                      <h1
-                        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
-                      >
-                        common.subscriptions.usage.activeDevelopers
-                      </h1>
-                    </div>
-                  </div>
+                  />
                   <div
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
                     style="width: 100%;"
@@ -1037,15 +1032,6 @@ exports[`Subscriptions Page Subscription Details Card should render CI details: 
                     class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center"
                     style="width: 100%;"
                   >
-                    <div
-                      class="Layout--vertical StyledProps--main"
-                    >
-                      <h1
-                        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
-                      >
-                        common.subscriptions.usage.activeDevelopers
-                      </h1>
-                    </div>
                     <div
                       class="Layout--vertical StyledProps--main badgesContainer"
                     >
@@ -1970,6 +1956,33 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
         class="bp3-card bp3-elevation-0 Card--card"
       >
         <div
+          class="Layout--vertical StyledProps--main headerMargin"
+        >
+          <h1
+            class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
+          >
+            common.subscriptions.usage.services
+          </h1>
+          <div
+            class="tooltip"
+          >
+            <span
+              class="bp3-popover-wrapper"
+            >
+              <span
+                class="bp3-popover-target Text--targetClass"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                  tabindex="0"
+                >
+                  common.whatIsActiveService
+                </p>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
           class="bp3-tabs tabs"
         >
           <div
@@ -2032,29 +2045,8 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                     style="width: 100%;"
                   >
                     <div
-                      class="Layout--vertical StyledProps--main"
+                      class="exportButtonAlign"
                     >
-                      <h1
-                        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
-                      >
-                        common.subscriptions.usage.services
-                      </h1>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
-                        <span
-                          class="bp3-popover-target Text--targetClass"
-                        >
-                          <p
-                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
-                            tabindex="0"
-                          >
-                            common.whatIsActiveService
-                          </p>
-                        </span>
-                      </span>
-                    </div>
-                    <div>
                        
                       <a
                         class="exportButton"
@@ -3416,6 +3408,33 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
         class="bp3-card bp3-elevation-0 Card--card"
       >
         <div
+          class="Layout--vertical StyledProps--main headerMargin"
+        >
+          <h1
+            class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
+          >
+            common.subscriptions.usage.services
+          </h1>
+          <div
+            class="tooltip"
+          >
+            <span
+              class="bp3-popover-wrapper"
+            >
+              <span
+                class="bp3-popover-target Text--targetClass"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                  tabindex="0"
+                >
+                  common.whatIsActiveService
+                </p>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
           class="bp3-tabs tabs"
         >
           <div
@@ -3478,29 +3497,8 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                     style="width: 100%;"
                   >
                     <div
-                      class="Layout--vertical StyledProps--main"
+                      class="exportButtonAlign"
                     >
-                      <h1
-                        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
-                      >
-                        common.subscriptions.usage.services
-                      </h1>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
-                        <span
-                          class="bp3-popover-target Text--targetClass"
-                        >
-                          <p
-                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
-                            tabindex="0"
-                          >
-                            common.whatIsActiveService
-                          </p>
-                        </span>
-                      </span>
-                    </div>
-                    <div>
                        
                       <a
                         class="exportButton"
@@ -4862,6 +4860,33 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
         class="bp3-card bp3-elevation-0 Card--card"
       >
         <div
+          class="Layout--vertical StyledProps--main headerMargin"
+        >
+          <h1
+            class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
+          >
+            common.subscriptions.usage.services
+          </h1>
+          <div
+            class="tooltip"
+          >
+            <span
+              class="bp3-popover-wrapper"
+            >
+              <span
+                class="bp3-popover-target Text--targetClass"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                  tabindex="0"
+                >
+                  common.whatIsActiveService
+                </p>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
           class="bp3-tabs tabs"
         >
           <div
@@ -4924,29 +4949,8 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                     style="width: 100%;"
                   >
                     <div
-                      class="Layout--vertical StyledProps--main"
+                      class="exportButtonAlign"
                     >
-                      <h1
-                        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
-                      >
-                        common.subscriptions.usage.services
-                      </h1>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
-                        <span
-                          class="bp3-popover-target Text--targetClass"
-                        >
-                          <p
-                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
-                            tabindex="0"
-                          >
-                            common.whatIsActiveService
-                          </p>
-                        </span>
-                      </span>
-                    </div>
-                    <div>
                        
                       <a
                         class="exportButton"
@@ -6246,6 +6250,33 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
         class="bp3-card bp3-elevation-0 Card--card"
       >
         <div
+          class="Layout--vertical StyledProps--main headerMargin"
+        >
+          <h1
+            class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
+          >
+            common.subscriptions.usage.services
+          </h1>
+          <div
+            class="tooltip"
+          >
+            <span
+              class="bp3-popover-wrapper"
+            >
+              <span
+                class="bp3-popover-target Text--targetClass"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                  tabindex="0"
+                >
+                  common.whatIsActiveService
+                </p>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
           class="bp3-tabs tabs"
         >
           <div
@@ -6308,29 +6339,8 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
                     style="width: 100%;"
                   >
                     <div
-                      class="Layout--vertical StyledProps--main"
+                      class="exportButtonAlign"
                     >
-                      <h1
-                        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
-                      >
-                        common.subscriptions.usage.services
-                      </h1>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
-                        <span
-                          class="bp3-popover-target Text--targetClass"
-                        >
-                          <p
-                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
-                            tabindex="0"
-                          >
-                            common.whatIsActiveService
-                          </p>
-                        </span>
-                      </span>
-                    </div>
-                    <div>
                        
                       <a
                         class="exportButton"
@@ -7605,6 +7615,33 @@ exports[`Subscriptions Page it should update the license store 1`] = `
         class="bp3-card bp3-elevation-0 Card--card"
       >
         <div
+          class="Layout--vertical StyledProps--main headerMargin"
+        >
+          <h1
+            class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
+          >
+            common.subscriptions.usage.services
+          </h1>
+          <div
+            class="tooltip"
+          >
+            <span
+              class="bp3-popover-wrapper"
+            >
+              <span
+                class="bp3-popover-target Text--targetClass"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                  tabindex="0"
+                >
+                  common.whatIsActiveService
+                </p>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
           class="bp3-tabs tabs"
         >
           <div
@@ -7667,29 +7704,8 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                     style="width: 100%;"
                   >
                     <div
-                      class="Layout--vertical StyledProps--main"
+                      class="exportButtonAlign"
                     >
-                      <h1
-                        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
-                      >
-                        common.subscriptions.usage.services
-                      </h1>
-                      <span
-                        class="bp3-popover-wrapper"
-                      >
-                        <span
-                          class="bp3-popover-target Text--targetClass"
-                        >
-                          <p
-                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
-                            tabindex="0"
-                          >
-                            common.whatIsActiveService
-                          </p>
-                        </span>
-                      </span>
-                    </div>
-                    <div>
                        
                       <a
                         class="exportButton"

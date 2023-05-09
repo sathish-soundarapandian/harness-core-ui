@@ -6,11 +6,9 @@
  */
 
 import React from 'react'
-import { Redirect, useParams } from 'react-router-dom'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { MinimalLayout } from '@common/layouts'
 import { BannerType } from '@common/layouts/Constants'
 import {
@@ -51,7 +49,6 @@ import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineStudioV1'
 import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import featureFactory from 'framework/featureStore/FeaturesFactory'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
@@ -64,8 +61,8 @@ import { CIStageDetails } from './components/CIStageDetails/CIStageDetails'
 
 import './components/PipelineSteps'
 import './components/PipelineStudio/BuildStage'
-import CIDashboardPage from './pages/dashboard/CIDashboardPage'
 import GetStartedWithCI from './pages/get-started-with-ci/GetStartedWithCI'
+import CIDashboardPage from './pages/dashboard/CIDashboardPage'
 import CIHomePage from './pages/home/CIHomePage'
 import CITrialHomePage from './pages/home/CITrialHomePage'
 
@@ -190,18 +187,10 @@ featureFactory.registerFeaturesByModule('ci', {
 const RedirectToCIProject = RedirectToProjectFactory(ModuleName.CI, routes.toCIHome)
 
 const CIDashboardPageOrRedirect = (): React.ReactElement => {
-  const params = useParams<ProjectPathProps>()
-  const { selectedProject } = useAppStore()
-  const { CI_OVERVIEW_PAGE } = useFeatureFlags()
-
   if (useCIMicroFrontend) {
     return <ChildAppMounter ChildApp={CiuiMicroFrontendPath} />
-  } else if (CI_OVERVIEW_PAGE) {
-    return <CIDashboardPage />
-  } else if (selectedProject?.modules?.includes(ModuleName.CI)) {
-    return <Redirect to={routes.toDeployments({ ...params, module: 'ci' })} />
   } else {
-    return <Redirect to={routes.toCIHome(params)} />
+    return <CIDashboardPage />
   }
 }
 

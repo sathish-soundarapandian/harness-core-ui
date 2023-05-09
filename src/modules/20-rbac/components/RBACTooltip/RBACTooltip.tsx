@@ -28,6 +28,7 @@ export interface RBACTooltipProps {
   resourceScope?: ResourceScope
   resourceTypeLabel?: string
   className?: string
+  resourceIdentifier?: string
 }
 
 const RBACTooltip: React.FC<RBACTooltipProps> = ({
@@ -35,12 +36,14 @@ const RBACTooltip: React.FC<RBACTooltipProps> = ({
   resourceType,
   resourceScope,
   resourceTypeLabel,
-  className
+  className,
+  resourceIdentifier
 }) => {
   const { getString } = useStrings()
   const { selectedProject } = useAppStore()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const resourceTypeHandler = RbacFactory.getResourceTypeHandler(resourceType)
+  const resourceIdentifierLabel = resourceIdentifier ? ` ${getString('common.for')} "${resourceIdentifier}" ` : ''
   const currentScope = getScopeFromDTO(
     resourceScope || {
       projectIdentifier,
@@ -90,7 +93,7 @@ const RBACTooltip: React.FC<RBACTooltipProps> = ({
         {resourceTypeHandler?.permissionLabels?.[permission] || permission}
         <span>{` ${resourceTypeHandler?.label ? getString(resourceTypeHandler?.label) : resourceTypeLabel}`}</span>
         {'"'}
-        <span>{` ${getString('rbac.in')} ${getScopeSuffix()}`}</span>
+        <span>{`${resourceIdentifierLabel}${getString('rbac.in')} ${getScopeSuffix()}`}</span>
       </Text>
     </Layout.Vertical>
   )

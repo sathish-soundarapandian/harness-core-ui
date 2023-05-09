@@ -65,6 +65,7 @@ export interface UseGitSync {
   handleGitPause: (newGitPauseValue: boolean) => Promise<void>
   getGitSyncFormMeta: (commitMessage: string) => GitSyncFormMeta
   handleError: (error: GitSyncErrorResponse) => void
+  refetchGitRepo: () => void
 }
 
 export const GIT_SYNC_ERROR_CODE = 424
@@ -306,6 +307,7 @@ export const useGitSync = (): UseGitSync => {
     isGitSyncPaused,
     isGitSyncActionsEnabled,
     gitSyncLoading,
+    refetchGitRepo: getGitRepo.refetch,
     apiError,
     saveWithGit,
     handleAutoCommit,

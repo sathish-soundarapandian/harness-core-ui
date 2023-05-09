@@ -56,6 +56,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetRegionsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
     return { data: regionData }
+  }),
+  useGetLastSuccessfulBuildForGoogleArtifactRegistryV2: jest.fn().mockImplementation(() => {
+    return { data: regionData }
   })
 }))
 

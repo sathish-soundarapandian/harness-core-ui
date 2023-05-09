@@ -376,7 +376,7 @@ exports[`<ExecutionStatusLabel /> tests IgnoreFailed 1`] = `
       class="StyledProps--font Text--lineclamp StyledProps--main text"
       style="--text-line-clamp: 1;"
     >
-      pipeline.executionStatus.Success
+      pipeline.executionStatus.IgnoreFailed
     </p>
   </div>
 </div>

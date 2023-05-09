@@ -1,9 +1,18 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import { AllowedTypes, Container, FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { get } from 'lodash-es'
+import { useParams } from 'react-router-dom'
+
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { isMultiTypeRuntime } from '@common/utils/utils'
@@ -17,6 +26,10 @@ import MultiTypeCustomMap from '@common/components/MultiTypeCustomMap/MultiTypeC
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { OsTypes } from '@pipeline/utils/constants'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { Connectors } from '@connectors/constants'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+
 import type { ContainerStepData } from './types'
 
 import { getOsTypes } from './helper'
@@ -33,6 +46,7 @@ export default function OptionalConfiguration(props: {
   const { expressions } = useVariablesExpression()
   const tolerationsValue = get(formik.values.spec.infrastructure.spec, 'tolerations')
   const showContainerSecurityContext = get(formik.values.spec.infrastructure.spec, 'os') !== OsTypes.Windows
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   const renderCheckboxFields = React.useCallback(
     ({
@@ -380,6 +394,22 @@ export default function OptionalConfiguration(props: {
           }
           disabled={readonly}
           style={{ width: 300 }}
+        />
+      </div>
+      <div>
+        <FormMultiTypeConnectorField
+          label={getString('connectors.title.harnessImageConnectorRef')}
+          type={Connectors.DOCKER}
+          name="spec.infrastructure.spec.harnessImageConnectorRef"
+          placeholder={getString('connectors.placeholder.harnessImageConnectorRef')}
+          accountIdentifier={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          style={{ marginBottom: 10 }}
+          multiTypeProps={{ allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME] }}
+          disabled={readonly}
+          width={300}
+          setRefValue
         />
       </div>
     </>

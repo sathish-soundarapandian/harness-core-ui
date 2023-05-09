@@ -7,14 +7,15 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { Formik } from '@harness/uicore'
 import {
   DefaultSettingNumberTextbox,
   DefaultSettingCheckBoxWithTrueAndFalse,
   DefaultSettingStringDropDown,
   DefaultSettingTextbox,
-  DefaultSettingRadioBtnWithTrueAndFalse
+  DefaultSettingRadioBtnWithTrueAndFalse,
+  DefaultSettingsToggle
 } from '@default-settings/components/ReusableHandlers'
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
@@ -63,7 +64,6 @@ describe('Reusable Components', () => {
   })
   test('DefaultSettingCheckBoxWithTrueAndFalse', () => {
     const renderObj = render(<DefaultSettingCheckBoxWithTrueAndFalse {...props} identifier="check" />)
-
     const { container } = renderObj
     setFieldValue({ container, type: InputTypes.CHECKBOX, fieldId: 'check', value: 'false' })
     expect(container).toMatchSnapshot()
@@ -121,5 +121,14 @@ describe('Reusable Components', () => {
     const { container } = renderObj
     setFieldValue({ container, type: InputTypes.RADIOS, fieldId: 'nbr', value: 'false' })
     expect(container).toMatchSnapshot()
+  })
+
+  test('DefaultSettingsToggle', () => {
+    const renderObj = render(<DefaultSettingsToggle {...props} identifier="toggle" />)
+    const { container } = renderObj
+
+    const toggle = container.querySelector('input[type="checkbox"]')
+    fireEvent.click(toggle!)
+    expect(toggle).not.toBeChecked()
   })
 })

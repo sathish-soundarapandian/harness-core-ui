@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { Color } from '@harness/design-system'
 import { StringKeys, useStrings } from 'framework/strings'
 import SideNav from '@cf/components/SideNav/SideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
@@ -94,6 +95,21 @@ export const CFVariationColors = [
   '#8c78ed',
   '#ff8f3f',
   '#ed61b5'
+]
+
+export const CFVariationColorsColorRef = [
+  Color.PRIMARY_8,
+  Color.TEAL_400,
+  Color.YELLOW_900,
+  Color.GREEN_600,
+  Color.GREY_200,
+  Color.PRIMARY_5,
+  Color.RED_400,
+  Color.YELLOW_900,
+  Color.GREY_400,
+  Color.PURPLE_400,
+  Color.ORANGE_500,
+  Color.MAGENTA_50
 ]
 
 export const CFSideNavProps: SidebarContext = {

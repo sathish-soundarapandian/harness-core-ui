@@ -39,7 +39,8 @@ const getDefaultOptions = (data: DataType): Highcharts.Options => ({
         color: 'var(--grey-400)'
       }
     },
-    tickInterval: 1
+    tickInterval: 1,
+    tickLength: 0
   },
   yAxis: {
     title: {

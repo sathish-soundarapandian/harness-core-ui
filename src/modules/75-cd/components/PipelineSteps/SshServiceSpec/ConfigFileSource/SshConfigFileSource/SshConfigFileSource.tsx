@@ -12,7 +12,7 @@ import {
 } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase'
 
 import { ENABLE_CONFIG_FILES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
-import SshValuesYamlConfigFileContent from '../ConfigFileSourceRuntimeFields/SshValuesYamlConfigFileContent'
+import SshValuesYamlConfigFileContent from '../ConfigFileSourceRuntimeFields/ConfigFileSource'
 
 export class SshConfigFileSource extends ConfigFileSourceBase<ConfigFileSourceRenderProps> {
   protected configFileType = ENABLE_CONFIG_FILES.Harness

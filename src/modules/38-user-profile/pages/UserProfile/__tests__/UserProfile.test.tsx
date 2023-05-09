@@ -69,6 +69,12 @@ jest.mock('services/cd-ng', () => ({
   useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
     return { data: emptySourceCodeManagers, refetch: jest.fn() }
   }),
+  useGetUserSourceCodeManagers: jest.fn().mockImplementation(() => {
+    return { data: emptySourceCodeManagers, refetch: jest.fn() }
+  }),
+  useDeleteUserSourceCodeManager: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
+  }),
   useGetConnectorList: jest.fn().mockImplementation(() => {
     return { ...connectorMockData, refetch: jest.fn(), error: null, loading: false }
   }),

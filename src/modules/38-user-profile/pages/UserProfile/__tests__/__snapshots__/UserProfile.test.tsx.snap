@@ -224,7 +224,7 @@ exports[`User Profile Page User Profile 1`] = `
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-start"
             >
               <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey900"
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
               >
                 userProfile.myProjects
               </p>
@@ -317,7 +317,7 @@ exports[`User Profile Page User Profile 1`] = `
             class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black"
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
             >
               userProfile.mysourceCodeManagers
             </p>
@@ -342,7 +342,7 @@ exports[`User Profile Page User Profile 1`] = `
             class="StyledProps--font StyledProps--main StyledProps--padding-bottom-xlarge"
           >
             <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium StyledProps--font-weight-semi-bold"
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
             >
               rbac.myApiKeys
             </p>

@@ -23,10 +23,12 @@ declare const styles: {
   readonly expired: string
   readonly expiryCountdown: string
   readonly exportButton: string
+  readonly exportButtonAlign: string
   readonly failed24HrsExecutionsBadge: string
   readonly fetchButton: string
   readonly frequencyContainer: string
   readonly frequencyCount: string
+  readonly headerMargin: string
   readonly moduleIcons: string
   readonly moduleSelectCard: string
   readonly moduleSelectCards: string
@@ -46,5 +48,6 @@ declare const styles: {
   readonly summaryCardsContainer: string
   readonly table: string
   readonly tabs: string
+  readonly tooltip: string
 }
 export default styles

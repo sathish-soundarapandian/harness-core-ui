@@ -16,7 +16,7 @@ import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStor
 import { useQueryParams } from '@common/hooks'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { ResponseModuleLicenseDTO, useStartFreeLicense, useStartTrialLicense } from 'services/cd-ng'
-import useChaosTrialModal from '@chaos/modals/ChaosTrialModal/useChaosTrialModal'
+import useChaosModal from '@chaos/modals/ChaosTrialModal/useChaosTrialModal'
 import routes from '@common/RouteDefinitions'
 import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import bgImageURL from '../../images/chaos.svg'
@@ -60,7 +60,7 @@ const ChaosTrialHomePage: React.FC = () => {
     return isFreeEnabled ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
   }
 
-  const { showModal, hideModal } = useChaosTrialModal({
+  const { showModal, hideModal } = useChaosModal({
     onContinue: () => {
       hideModal()
       history.push(

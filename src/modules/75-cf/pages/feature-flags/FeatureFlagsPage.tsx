@@ -194,9 +194,9 @@ const FeatureFlagsPage: React.FC = () => {
       pagination={
         !emptyFeatureFlags && (
           <Pagination
-            itemCount={features?.itemCount || 0}
-            pageSize={features?.pageSize || 0}
-            pageCount={features?.pageCount || 0}
+            itemCount={projectFlags ? projectFlags.itemCount : features?.itemCount || 0}
+            pageSize={CF_DEFAULT_PAGE_SIZE}
+            pageCount={projectFlags ? projectFlags.pageCount : features?.pageCount || 0}
             pageIndex={pageNumber}
             gotoPage={setPageNumber}
             showPagination

@@ -23,10 +23,12 @@ import {
   isExecutionSuspended,
   isExecutionWaiting
 } from '@pipeline/utils/statusHelpers'
+import type { GraphLayoutNode } from 'services/pipeline-ng'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import css from './StatusHeatMap.module.scss'
 
 // Visually, all of the statuses are limited to these variants - https://www.figma.com/file/4HavSweFhZeVsJoaWwSrj8/Pipelines?node-id=3499%3A285830
-type CombinedStatus = 'default' | 'success' | 'aborted' | 'failed' | 'paused' | 'running'
+type CombinedStatus = 'default' | 'success' | 'aborted' | 'failed' | 'paused' | 'running' | 'rollback'
 
 const statusIconMap: Partial<Record<CombinedStatus, { name: IconName; color?: string; size: number }>> = {
   aborted: {
@@ -48,6 +50,10 @@ const statusIconMap: Partial<Record<CombinedStatus, { name: IconName; color?: st
     name: 'loading',
     color: Color.PRIMARY_7,
     size: 12
+  },
+  rollback: {
+    name: 'circle-pipeline-rollback',
+    size: 16
   }
 }
 
@@ -90,8 +96,10 @@ export interface StatusCell<T> {
 export function StatusHeatMap<T>(props: StatusHeatMapProps<T>): React.ReactElement {
   const { data, getId, getStatus, className, getPopoverProps, onClick, getLinkProps } = props
 
-  function StatusCell({ row, id }: StatusCell<T>) {
-    const combinedStatus = getCombinedStatus(getStatus(row))
+  function StatusCell({ row, id }: StatusCell<T>): JSX.Element {
+    let combinedStatus = getCombinedStatus(getStatus(row))
+    if ((row as GraphLayoutNode)?.nodeType === StageType.PIPELINE_ROLLBACK) combinedStatus = 'rollback'
+
     const iconProps = statusIconMap[combinedStatus]
     return (
       <div

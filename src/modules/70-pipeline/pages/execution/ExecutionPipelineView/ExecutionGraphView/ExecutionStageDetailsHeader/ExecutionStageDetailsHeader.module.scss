@@ -88,11 +88,21 @@
   padding: 0 0 0 var(--spacing-5);
   max-height: var(--execution-stage-details-height);
 }
+.waitingMsgWrapper {
+  background-color: var(--yellow-100);
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 var(--spacing-5);
+  max-height: var(--execution-stage-details-height);
+}
 
 .errorMsg {
   padding: var(--spacing-5);
+  padding-left: 50px;
   max-height: 100%;
   overflow-y: auto;
+  display: flex;
+  align-items: center;
 
   p {
     font-size: var(--font-size-xsmall);
@@ -107,6 +117,23 @@
   line-height: 1.33;
   color: var(--red-600);
   margin-bottom: var(--spacing-1);
+}
+
+.inputMessage {
+  font-weight: 1000;
+  line-height: 1.33;
+  color: var(--orange-600);
+  margin-bottom: var(--spacing-1);
+  text-transform: uppercase;
+}
+
+.waitingCount {
+  margin-left: 20px;
+  min-width: 20px;
+  background-color: var(--grey-100);
+  color: var(--grey-600);
+  text-align: center;
+  padding: 0px 5px 0px 5px;
 }
 
 .repeatIcon {

@@ -535,6 +535,7 @@ export const getServiceLevelObjectiveV2Response = {
       sloTarget: { type: 'Rolling', sloTargetPercentage: 88.0, spec: { periodLength: '1d' } },
       type: 'Composite',
       spec: {
+        sloFormulaType: 'WeightedAverage',
         serviceLevelObjectivesDetails: [
           {
             accountId: '-k53qRQAQ1O7DBLb9ACnjQ',
@@ -1936,6 +1937,7 @@ export const createCompositeSLOPayload = {
   notificationRuleRefs: [],
   sloTarget: { sloTargetPercentage: 99, type: 'Rolling', spec: { periodLength: '7d' } },
   spec: {
+    sloFormulaType: 'WeightedAverage',
     serviceLevelObjectivesDetails: [
       {
         accountId: 'accountId',
@@ -1965,6 +1967,7 @@ export const createProjectLevelCompositeSLOPayload = {
   notificationRuleRefs: [],
   sloTarget: { sloTargetPercentage: 99, type: 'Rolling', spec: { periodLength: '7d' } },
   spec: {
+    sloFormulaType: 'WeightedAverage',
     serviceLevelObjectivesDetails: [
       {
         accountId: 'accountId',

@@ -9,7 +9,7 @@ import React, { FormEvent, useEffect } from 'react'
 import { RadioGroup, Radio } from '@blueprintjs/core'
 
 import { get } from 'lodash-es'
-import { ExpressionInput } from '@harness/uicore'
+import { ExpressionInput, HarnessDocTooltip, Layout, Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 
@@ -17,6 +17,8 @@ import { ExpressionsListInput } from '@common/components/ExpressionsListInput/Ex
 import { isValueExpression } from '@common/utils/utils'
 
 import type { Extended } from './FormMultitypeUserGroupInput'
+
+import css from './usergroupsinput.module.scss'
 
 export enum ExpressionTypes {
   'Individual' = 'Individual',
@@ -51,10 +53,21 @@ const UserGroupExpressionInput: React.FC<Extended> = props => {
             }
           }
         }}
+        className={css.radioBtns}
         selectedValue={formik?.values['userGroupExpression']}
       >
-        <Radio label={getString('common.individual')} value={ExpressionTypes.Individual} />
-        <Radio label={getString('common.combined')} value={ExpressionTypes.Combined} />
+        <Radio value={ExpressionTypes.Individual} style={{ display: 'flex' }}>
+          <Layout.Horizontal>
+            <Text data-tooltip-id="usergroup-individual">{getString('common.individual')}</Text>
+            <HarnessDocTooltip tooltipId="usergroup-individual" useStandAlone={true} />
+          </Layout.Horizontal>
+        </Radio>
+        <Radio value={ExpressionTypes.Combined} style={{ display: 'flex' }}>
+          <Layout.Horizontal>
+            <Text data-tooltip-id="usergroup-combined">{getString('common.combined')}</Text>
+            <HarnessDocTooltip tooltipId="usergroup-combined" useStandAlone={true} />
+          </Layout.Horizontal>
+        </Radio>
       </RadioGroup>
 
       {userGroupExpression === ExpressionTypes.Individual ? (

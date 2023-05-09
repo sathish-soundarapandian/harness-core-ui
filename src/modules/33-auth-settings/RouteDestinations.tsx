@@ -43,6 +43,15 @@ AuditTrailFactory.registerResourceHandler('NG_LOGIN_SETTINGS', {
     })
   }
 })
+
+AuditTrailFactory.registerResourceHandler('IP_ALLOWLIST_CONFIG', {
+  moduleIcon: {
+    name: 'nav-settings'
+  },
+  moduleLabel: 'common.resourceCenter.ticketmenu.platform',
+  resourceLabel: 'authSettings.ipAllowlist'
+})
+
 RbacFactory.registerResourceTypeHandler(ResourceType.ACCOUNT, {
   icon: 'nav-settings',
   label: 'common.accountSettings',
