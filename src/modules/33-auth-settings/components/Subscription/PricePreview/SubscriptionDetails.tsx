@@ -24,7 +24,9 @@ interface SubscriptionDetailsProps {
 
 const TaxLine: React.FC<{ taxAmount?: number }> = ({ taxAmount }) => {
   const { getString } = useStrings()
-  const taxAmountDescr = !isNil(taxAmount) ? taxAmount : getString('authSettings.pricePreview.calculatedNextStep')
+  const taxAmountDescr = !isNil(taxAmount)
+    ? getAmountInCurrency(CurrencyType.USD, taxAmount)
+    : getString('authSettings.pricePreview.calculatedNextStep')
   return (
     <Layout.Horizontal
       flex={{ justifyContent: 'space-between' }}
@@ -32,7 +34,7 @@ const TaxLine: React.FC<{ taxAmount?: number }> = ({ taxAmount }) => {
       padding={{ top: 'small', bottom: 'small' }}
     >
       <Text>{getString('authSettings.costCalculator.tax')}</Text>
-      <Text>{`$${taxAmountDescr}`}</Text>
+      <Text>{`${taxAmountDescr}`}</Text>
     </Layout.Horizontal>
   )
 }
@@ -89,9 +91,8 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         return <PricePreviewLine {...product} key={product.description} unit={unit} minValue={minValue} />
       })}
       {premiumSupport && <PremiumSupportLine premiumSupportAmount={premiumSupportAmount} />}
-      {<TotalAmount totalAmount={totalAmount || 0} />}
       {!isNil(subscriptionDetails.taxAmount) && <TaxLine taxAmount={subscriptionDetails.taxAmount} />}
-
+      {<TotalAmount totalAmount={totalAmount || 0} />}
       {isNil(subscriptionDetails.taxAmount) && (
         <Text font={{ size: 'xsmall' }}>{getString('authSettings.salesTax')}</Text>
       )}

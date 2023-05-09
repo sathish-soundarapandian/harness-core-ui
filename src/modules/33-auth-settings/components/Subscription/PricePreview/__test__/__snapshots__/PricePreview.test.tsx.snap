@@ -120,7 +120,7 @@ exports[`PricePreview ci credit card render ci 1`] = `
         <p
           class="StyledProps--font StyledProps--main"
         >
-          total
+          authSettings.costCalculator.tax
         </p>
         <p
           class="StyledProps--font StyledProps--main"
@@ -134,12 +134,12 @@ exports[`PricePreview ci credit card render ci 1`] = `
         <p
           class="StyledProps--font StyledProps--main"
         >
-          authSettings.costCalculator.tax
+          total
         </p>
         <p
           class="StyledProps--font StyledProps--main"
         >
-          $1000
+          $1,000.00
         </p>
       </div>
     </div>
@@ -331,7 +331,7 @@ exports[`PricePreview render 1`] = `
         <p
           class="StyledProps--font StyledProps--main"
         >
-          total
+          authSettings.costCalculator.tax
         </p>
         <p
           class="StyledProps--font StyledProps--main"
@@ -345,12 +345,12 @@ exports[`PricePreview render 1`] = `
         <p
           class="StyledProps--font StyledProps--main"
         >
-          authSettings.costCalculator.tax
+          total
         </p>
         <p
           class="StyledProps--font StyledProps--main"
         >
-          $1000
+          $1,000.00
         </p>
       </div>
     </div>

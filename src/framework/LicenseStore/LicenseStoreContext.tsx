@@ -153,7 +153,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // 1000 milliseconds * 60 seconds * 1 minute
+  // 1000 milliseconds * 60 seconds * 5 minute
   const POLL_VERSION_INTERVAL = 1000 * 60 * 5
 
   const { requestFeatures } = useFeaturesContext()

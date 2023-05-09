@@ -35,12 +35,12 @@ exports[`SubscriptionDetails render 1`] = `
       <p
         class="StyledProps--font StyledProps--main"
       >
-        total
+        authSettings.costCalculator.tax
       </p>
       <p
         class="StyledProps--font StyledProps--main"
       >
-        $0.00
+        $100.00
       </p>
     </div>
     <div
@@ -49,12 +49,12 @@ exports[`SubscriptionDetails render 1`] = `
       <p
         class="StyledProps--font StyledProps--main"
       >
-        authSettings.costCalculator.tax
+        total
       </p>
       <p
         class="StyledProps--font StyledProps--main"
       >
-        $100
+        $0.00
       </p>
     </div>
   </div>

@@ -224,7 +224,7 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
             paymentFrequency: paymentFreq,
             description: 'common.subscriptions.usage.developers',
             unitDescription: 'common.perDeveloper',
-            quantity: quantities?.ci?.numberOfDevelopers || 0,
+            quantity: quantities?.ci?.numberOfDevelopers || 1,
             unitPrice: developerUnitPrice
           })
         }
@@ -239,7 +239,7 @@ export function getSubscriptionBreakdownsByModuleAndFrequency({
             paymentFrequency: paymentFreq,
             description: 'common.subscriptions.usage.developers',
             unitDescription: 'common.perDeveloper',
-            quantity: quantities?.ci?.numberOfDevelopers || 0,
+            quantity: quantities?.ci?.numberOfDevelopers || 1,
             unitPrice: developerUnitPrice
           })
         }
