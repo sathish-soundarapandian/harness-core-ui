@@ -12,7 +12,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import MetricsAnalysisContainer from '../MetricsAnalysisContainer'
 import type { MetricsAnalysisProps } from '../MetricsAnalysisContainer.types'
 import { mockedHealthSourcesData } from '../../../__tests__/MetricsAndLogs.mock'
-import { mockedMetricsData } from './MetricsAnalysisContainer.mock'
+import { mockedMetricsData, mockedMetricsDataWithDeeplink } from './MetricsAnalysisContainer.mock'
 
 const WrapperComponent = (props: MetricsAnalysisProps): JSX.Element => {
   return (
@@ -57,6 +57,21 @@ describe('Unit tests for MetricsAnalysisContainer', () => {
     await waitFor(() =>
       expect(screen.getAllByTestId('metrics-analysis-row')).toHaveLength(mockedMetricsData.resource.content.length)
     )
+  })
+
+  test('should show link to redirect to prometheus metric', async () => {
+    jest
+      .spyOn(cvServices, 'useGetTimeSeriesMetricData')
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      .mockReturnValue({
+        data: mockedMetricsDataWithDeeplink,
+        loading: false
+      })
+
+    const { container } = render(<WrapperComponent {...props} />)
+
+    expect(container.querySelector('[data-icon="share"')).toBeInTheDocument()
   })
 
   test('should show loading UI when the API is loading', () => {
