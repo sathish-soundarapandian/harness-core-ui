@@ -42,7 +42,7 @@ import {
 } from '../CVCreateSLOV2.utils'
 import { SLOType } from '../CVCreateSLOV2.constants'
 import { SLOV2FormMock } from '../components/CreateSimpleSloForm/__tests__/CreateSimpleSloForm.utils.mock'
-import type { SLOV2Form } from '../CVCreateSLOV2.types'
+import { SLOFormulaType, SLOV2Form } from '../CVCreateSLOV2.types'
 
 jest.useFakeTimers()
 
@@ -488,6 +488,57 @@ describe('CVCreateSloV2', () => {
     expect(updateSLO).toHaveBeenCalledWith(updateSLOMock)
   })
 
+  test('Should update and save composite SLO by updating SLO Formula', async () => {
+    const updateSLO = jest.fn()
+    updateSLO.mockReturnValueOnce({ data: SLODetailsData })
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: SLODetailsData, loading: false, error: null, refetch: jest.fn() } as any))
+    jest.spyOn(cvServices, 'useUpdateSLOV2Data').mockReturnValue({ data: SLODetailsData, mutate: updateSLO } as any)
+
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CVCreateSLOV2 isComposite />
+      </TestWrapper>
+    )
+
+    userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
+    expect(container.querySelector('input[value="WeightedAverage"]')).toBeChecked()
+    act(() => {
+      userEvent.click(container.querySelector('input[value="LeastPerformance"]')!)
+      userEvent.click(screen.getByText('next'))
+    })
+
+    act(() => {
+      userEvent.click(screen.getByText('save'))
+    })
+
+    await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
+
+    act(() => {
+      userEvent.click(document.querySelector('.bp3-dialog button')!)
+    })
+
+    const {
+      serviceLevelObjectiveV2: {
+        name,
+        sloTarget: { sloTargetPercentage }
+      }
+    } = SLODetailsData.resource
+    expect(updateSLO).toHaveBeenCalledWith({
+      ...updateSLOMock,
+      name,
+      sloTarget: {
+        ...updateSLOMock.sloTarget,
+        sloTargetPercentage
+      },
+      spec: {
+        ...updateSLOMock.spec,
+        sloFormulaType: SLOFormulaType.LEAST_PERFORMANCE
+      }
+    })
+  })
+
   test('Should be able to canel with unsaved changes', async () => {
     const updateSLO = jest.fn()
     updateSLO.mockReturnValueOnce({ data: SLODetailsData })
@@ -549,7 +600,7 @@ describe('CVCreateSloV2', () => {
       userEvent.click(screen.getByText('save'))
     })
 
-    await waitFor(() => expect(screen.getByText('cv.slos.sloUpdated')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('cv.CompositeSLO.compositeSloUpdated')).toBeInTheDocument())
   })
 
   test('Should save composite slo of calendar weekly type', async () => {
