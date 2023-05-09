@@ -59,6 +59,9 @@ jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesByRefConnectorV2: jest.fn().mockReturnValue({
     data: {},
     refetch: jest.fn()
+  }),
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
   })
 }))
 
