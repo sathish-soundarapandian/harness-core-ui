@@ -1,6 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Icon, Layout } from '@harness/uicore'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './DocsChat.module.scss'
 
 interface Message {
@@ -35,19 +37,25 @@ function DocsChat(): JSX.Element {
   const [messages, setMessages] = useState<Array<Message>>([])
   const [userInput, setUserInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const { accountId } = useParams<AccountPathProps>()
   const messageList = useRef<HTMLDivElement>(null)
 
   const getAnswer = (oldMessages: Array<Message>, query: string): void => {
     setLoading(true)
-    fetch(window.getApiBaseUrl('/notifications/api/notifications/harness-bot'), {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'POST',
-      body: JSON.stringify({
-        question: query
-      })
-    })
+    fetch(
+      window.getApiBaseUrl(
+        `/notifications/api/notifications/harness-bot?routingId=${accountId}&accountIdentifier=${accountId}`
+      ),
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify({
+          question: query
+        })
+      }
+    )
       .then(res => res.json())
       .then(res => {
         setMessages([
