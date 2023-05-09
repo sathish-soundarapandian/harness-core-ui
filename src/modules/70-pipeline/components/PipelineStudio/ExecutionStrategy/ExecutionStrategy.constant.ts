@@ -6,3 +6,11 @@
  */
 
 export const cvLearnMoreHref = 'https://docs.harness.io/article/3xhqq9xllp-verify-deployments-with-the-verify-step'
+
+export enum VerifyStepActions {
+  EnableVerifyStep = 'Enable Verify Step'
+}
+
+export enum Category {
+  EXECUTION_STARTEGY = 'Execution Strategy'
+}
