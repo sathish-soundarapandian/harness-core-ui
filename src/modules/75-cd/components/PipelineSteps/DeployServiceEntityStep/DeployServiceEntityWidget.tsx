@@ -74,9 +74,9 @@ import {
 import { ServiceEntitiesList } from './ServiceEntitiesList/ServiceEntitiesList'
 import { useGetServicesData } from './useGetServicesData'
 import { setupMode } from '../PipelineStepsUtil'
-import css from './DeployServiceEntityStep.module.scss'
 import NewExpressionDropdown from './NewExpressionDropdown'
 import { expressionTrie } from './utils'
+import css from './DeployServiceEntityStep.module.scss'
 
 export interface DeployServiceEntityWidgetProps extends DeployServiceEntityCustomProps {
   initialValues: DeployServiceEntityData

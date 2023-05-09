@@ -1,12 +1,16 @@
 import { Card, OverflowList } from '@blueprintjs/core'
 import { Icon, Layout, Popover } from '@harness/uicore'
-import { isEmpty, isUndefined } from 'lodash-es'
+import { isUndefined } from 'lodash-es'
 import React, { useState } from 'react'
 
 interface TrieNode {
   value: string
+  valueTillHere: string
   children: TrieNode[]
-  childKeys: string[]
+  childKeys: {
+    key: string
+    value: string
+  }[]
   childExpressions: string[]
 }
 
@@ -19,14 +23,25 @@ interface getVisibleItemRendererProps {
   dropDownItemClickHandler: (value: string) => void
 }
 
+function getTargetElement(
+  isOpen: boolean[],
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean[]>>,
+  valueTillHere: string
+): void {
+  const newIsOpen = [...isOpen]
+  const targetElement = valueTillHere.split('.').length
+  newIsOpen[targetElement] = true
+  setIsOpen(newIsOpen)
+}
+
 function GetVisibleItemRenderer(props: getVisibleItemRendererProps): any {
   const { dropDownItemClickHandler } = props
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState<boolean[]>([])
   // eslint-disable-next-line react/display-name
   return (item: TrieNode, index: number): JSX.Element => {
-    function itemClickHandler(): void {
-      setIsOpen(!isOpen)
+    function itemClickHandler(valueTillHere: string): void {
+      getTargetElement(isOpen, setIsOpen, valueTillHere)
     }
 
     // return the visible item JSX from here
@@ -36,21 +51,27 @@ function GetVisibleItemRenderer(props: getVisibleItemRendererProps): any {
         <Layout.Horizontal>
           <div>{item.value}</div>
           {item.childKeys && (
-            <Icon name={isOpen ? 'main-chevron-up' : 'main-chevron-down'} onClick={itemClickHandler} />
+            <Icon
+              name={isOpen[item.valueTillHere.split('.').length] ? 'main-chevron-up' : 'main-chevron-down'}
+              onClick={() => itemClickHandler(item.valueTillHere)}
+            />
           )}
         </Layout.Horizontal>
         <Layout.Vertical>
-          {item.childKeys.map((dropDownString, ind) => (
-            <div
-              key={`${ind} ${dropDownString}`}
-              onClick={() => {
-                dropDownItemClickHandler(dropDownString)
-                setIsOpen(false)
-              }}
-            >
-              {dropDownString}
-            </div>
-          ))}
+          {item.children.map(
+            (child, ind) =>
+              child.children.length !== 0 && (
+                <div
+                  key={`${ind} ${child.value}`}
+                  onClick={() => {
+                    dropDownItemClickHandler(child.valueTillHere)
+                    getTargetElement(isOpen, setIsOpen, child.valueTillHere)
+                  }}
+                >
+                  {child.value}
+                </div>
+              )
+          )}
         </Layout.Vertical>
       </Popover>
     )
@@ -85,11 +106,7 @@ const NewExpressionDropdown = (props: NewExpressionDropdownProps): JSX.Element =
   }, [queryState])
 
   const dropDownItemClickHandler = (value: string): void => {
-    if (isEmpty(queryState)) {
-      setQueryState(value)
-    } else {
-      setQueryState(`${queryState}.${value}`)
-    }
+    setQueryState(value)
   }
 
   const visibleItemRenderer = GetVisibleItemRenderer({ dropDownItemClickHandler })
