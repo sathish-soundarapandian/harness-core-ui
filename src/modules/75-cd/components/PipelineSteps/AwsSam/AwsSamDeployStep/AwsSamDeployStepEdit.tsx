@@ -20,7 +20,8 @@ import {
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType
+  MultiTypeInputType,
+  Text
 } from '@harness/uicore'
 
 import type { StepElementConfig } from 'services/cd-ng'
@@ -39,6 +40,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import { AwsSamDeployStepOptionalFields } from './AwsSamDeployStepOptionalFields'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import css from './AwsSamDeployStep.module.scss'
 
 interface AwsSamDeployStepFormikValues extends StepElementConfig {
   spec: {
@@ -89,7 +91,7 @@ const AwsSamDeployStepEdit = (
     }
   }
 
-  const onSubmit = (values: AwsSamDeployStepFormikValues) => {
+  const onSubmit = (values: AwsSamDeployStepFormikValues): void => {
     const modifiedValues: AwsSamDeployStepInitialValues = {
       ...values,
       spec: {
@@ -125,6 +127,10 @@ const AwsSamDeployStepEdit = (
                 readonly={readonly}
                 stepViewType={stepViewType}
               />
+
+              <Text className={css.containerConfiguration} tooltipProps={{ dataTooltipId: 'containerConfiguration' }}>
+                {getString('cd.steps.awsSamDeployStep.containerConfigurationText')}
+              </Text>
 
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormMultiTypeConnectorField

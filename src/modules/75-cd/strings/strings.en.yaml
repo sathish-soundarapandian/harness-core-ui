@@ -173,6 +173,7 @@ steps:
       gen1: '1st gen'
       gen2: '2nd gen'
   awsSamDeployStep:
+    containerConfigurationText: Container Configuration
     awsSamDeployCommandOptions: AWS SAM Deploy Command Options
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'

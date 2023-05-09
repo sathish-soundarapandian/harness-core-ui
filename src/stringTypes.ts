@@ -279,6 +279,7 @@ export interface StringsMap {
   'common.enableGitSyncPipeline': string
   'common.enabledFlags': string
   'common.endTime': string
+  'common.enterPlaceholder': string
   'common.entitlement': string
   'common.entityPlaceholderText': string
   'common.entityReferenceSubTitle': string
@@ -6237,6 +6238,7 @@ export interface StringsMap {
   'cd.steps.awsInfraStep.placeholders.vpcs': string
   'cd.steps.awsInfraStep.regionError': string
   'cd.steps.awsSamDeployStep.awsSamDeployCommandOptions': string
+  'cd.steps.awsSamDeployStep.containerConfigurationText': string
   'cd.steps.azureInfraStep.azure': string
   'cd.steps.azureInfraStep.clusterError': string
   'cd.steps.azureInfraStep.resourceGroupError': string

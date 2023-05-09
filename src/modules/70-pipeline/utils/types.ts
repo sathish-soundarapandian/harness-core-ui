@@ -115,5 +115,11 @@ export interface AwsSamDeployStepInitialValues extends StepElementConfig {
     imagePullPolicy?: string
     runAsUser?: string
     envVariables?: { [key: string]: string }[]
+    resources?: {
+      limits?: {
+        memory?: string
+        cpu?: string
+      }
+    }
   }
 }

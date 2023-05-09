@@ -1,23 +1,21 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import {
-  AllowedTypes,
-  Container,
-  FontVariation,
-  FormInput,
-  getMultiTypeFromValue,
-  Layout,
-  MultiTypeInputType,
-  Text
-} from '@harness/uicore'
+import { AllowedTypes, Container, FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { MultiTypeExecutionCondition } from '@common/components/MultiTypeExecutionCondition/MultiTypeExecutionCondition'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
-import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeMap } from '@common/components/MultiTypeMap/MultiTypeMap'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -32,7 +30,7 @@ interface AwsSamDeployStepOptionalFieldsProps {
   formik: FormikProps<AwsSamDeployStepInitialValues>
 }
 
-export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFieldsProps) {
+export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFieldsProps): React.ReactElement {
   const { readonly, allowableTypes, formik } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -46,7 +44,7 @@ export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFi
         >
           {getString('cd.steps.awsSamDeployStep.awsSamDeployCommandOptions')}
         </Text>
-        <div className={cx(stepCss.formGroup)}>
+        <Container className={stepCss.formGroup}>
           <Container padding={{ top: 'small', bottom: 'small' }}>
             <MultiTypeExecutionCondition
               path={'spec.deployCommandOptions'}
@@ -55,10 +53,10 @@ export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFi
               expressions={expressions}
             />
           </Container>
-        </div>
+        </Container>
       </>
 
-      <div className={cx(stepCss.formGroup)}>
+      <Container className={stepCss.formGroup}>
         <FormInput.MultiTextInput
           name="spec.stackName"
           label={getString('cd.cloudFormation.stackName')}
@@ -84,9 +82,9 @@ export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFi
             isReadonly={readonly}
           />
         )}
-      </div>
+      </Container>
 
-      <div className={cx(stepCss.formGroup, stepCss.md)}>
+      <Container className={cx(stepCss.formGroup, stepCss.md)}>
         <FormMultiTypeCheckboxField
           name={'spec.privileged'}
           label={getString('optionalField', { name: getString('pipeline.buildInfra.privileged') })}
@@ -99,9 +97,9 @@ export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFi
           disabled={readonly}
           configureOptionsProps={{ hideExecutionTimeField: true }}
         />
-      </div>
+      </Container>
 
-      <Container className={cx(stepCss.formGroup)}>
+      <Container className={stepCss.formGroup}>
         <FormInput.MultiTypeInput
           name="spec.imagePullPolicy"
           label={getString('optionalField', { name: getString('pipelineSteps.pullLabel') })}
@@ -129,7 +127,7 @@ export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFi
         )}
       </Container>
 
-      <div className={cx(stepCss.formGroup)}>
+      <Container className={stepCss.formGroup}>
         <FormInput.MultiTextInput
           name="spec.runAsUser"
           label={getString('optionalField', { name: getString('pipeline.stepCommonFields.runAsUser') })}
@@ -154,40 +152,64 @@ export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFi
             isReadonly={readonly}
           />
         )}
-      </div>
+      </Container>
 
-      <Layout.Vertical spacing="medium" padding={{ top: 'medium', bottom: 'medium' }}>
-        <Text font={{ variation: FontVariation.FORM_LABEL }} tooltipProps={{ dataTooltipId: 'setContainerResources' }}>
-          {getString('pipelineSteps.setContainerResources')}
-        </Text>
-        <Layout.Horizontal spacing="small">
-          <MultiTypeTextField
-            name="spec.resources.limits.memory"
-            label={getString('optionalField', { name: getString('pipelineSteps.limitMemoryLabel') })}
-            multiTextInputProps={{
-              multiTextInputProps: {
-                expressions,
-                allowableTypes
-              },
-              disabled: readonly
-            }}
-            configureOptionsProps={{ variableName: 'spec.resources.limits.memory', hideExecutionTimeField: true }}
-            style={{ flexGrow: 1, flexBasis: '50%' }}
-          />
-          <MultiTypeTextField
-            name="spec.resources.limits.cpu"
-            label={getString('optionalField', { name: getString('pipelineSteps.limitCPULabel') })}
-            multiTextInputProps={{
-              multiTextInputProps: { expressions, allowableTypes },
-              disabled: readonly
-            }}
-            configureOptionsProps={{ variableName: 'spec.resources.limits.cpu', hideExecutionTimeField: true }}
-            style={{ flexGrow: 1, flexBasis: '50%' }}
-          />
-        </Layout.Horizontal>
-      </Layout.Vertical>
+      <Container className={stepCss.formGroup}>
+        <FormInput.MultiTextInput
+          name="spec.resources.limits.memory"
+          label={getString('optionalField', { name: getString('pipelineSteps.limitMemoryLabel') })}
+          placeholder={getString('common.enterPlaceholder', { name: getString('pipelineSteps.limitMemoryLabel') })}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+        />
+        {getMultiTypeFromValue(formik.values.spec?.resources?.limits?.memory) === MultiTypeInputType.RUNTIME &&
+          !readonly && (
+            <ConfigureOptions
+              value={formik.values.spec?.resources?.limits?.memory as string}
+              type="String"
+              variableName="spec.resources.limits.memory"
+              showRequiredField={false}
+              showDefaultField={false}
+              onChange={value => {
+                formik.setFieldValue('spec.resources.limits.memory', value)
+              }}
+              isReadonly={readonly}
+            />
+          )}
+      </Container>
 
-      <Container className={cx(stepCss.formGroup)}>
+      <Container className={stepCss.formGroup}>
+        <FormInput.MultiTextInput
+          name="spec.resources.limits.cpu"
+          label={getString('optionalField', { name: getString('pipelineSteps.limitCPULabel') })}
+          placeholder={getString('common.enterPlaceholder', { name: getString('pipelineSteps.limitCPULabel') })}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+        />
+        {getMultiTypeFromValue(formik.values.spec?.resources?.limits?.cpu) === MultiTypeInputType.RUNTIME && !readonly && (
+          <ConfigureOptions
+            value={formik.values.spec?.resources?.limits?.cpu as string}
+            type="String"
+            variableName="spec.resources.limits.cpu"
+            showRequiredField={false}
+            showDefaultField={false}
+            onChange={value => {
+              formik.setFieldValue('spec.resources.limits.cpu', value)
+            }}
+            isReadonly={readonly}
+          />
+        )}
+      </Container>
+
+      <Container className={stepCss.formGroup}>
         <MultiTypeMap
           appearance={'minimal'}
           name={'spec.envVariables'}

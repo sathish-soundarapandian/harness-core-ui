@@ -36,7 +36,7 @@ import type { ExecutionWrapperConfig, TemplateStepNode } from 'services/pipeline
 import type { StringsMap } from 'stringTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
-import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
+import type { AwsSamDeployStepInitialValues, ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
@@ -300,6 +300,16 @@ const processNodeImpl = (
     }
     if ((item as StepElementConfig).spec && item.tab !== TabTypes.Advanced) {
       node.spec = { ...(item as StepElementConfig).spec }
+    }
+    if (
+      (item as StepElementConfig).type === StepType.EcsRollingDeploy &&
+      !isEmpty((item as AwsSamDeployStepInitialValues).spec.envVariables)
+    ) {
+      set(
+        node,
+        'spec.envVariables',
+        (item as AwsSamDeployStepInitialValues).spec?.envVariables?.map(envVar => ({ [envVar.key]: envVar.value }))
+      )
     }
   })
 }
