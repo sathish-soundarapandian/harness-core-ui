@@ -59,7 +59,7 @@ export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFi
       <Container className={stepCss.formGroup}>
         <FormInput.MultiTextInput
           name="spec.stackName"
-          label={getString('optionalField', { name: 'cd.cloudFormation.stackName' })}
+          label={getString('optionalField', { name: getString('cd.cloudFormation.stackName') })}
           placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
           disabled={readonly}
           multiTextInputProps={{
@@ -221,6 +221,7 @@ export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFi
             hideExecutionTimeField: true
           }}
           disabled={readonly}
+          formik={formik}
         />
       </Container>
     </>

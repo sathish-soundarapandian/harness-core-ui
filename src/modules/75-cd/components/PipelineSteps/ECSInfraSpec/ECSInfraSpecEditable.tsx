@@ -197,7 +197,7 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                   onChange={selectedConnector => {
                     if (
-                      (formik.values.connectorRef as ConnectorRefFormValueType).value !==
+                      (formik.values.connectorRef as ConnectorRefFormValueType)?.value !==
                       (selectedConnector as unknown as EntityReferenceResponse<ConnectorReferenceDTO>)?.record
                         ?.identifier
                     ) {

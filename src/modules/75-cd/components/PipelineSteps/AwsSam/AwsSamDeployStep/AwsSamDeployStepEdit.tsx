@@ -36,6 +36,8 @@ import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/compo
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
+import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import { AwsSamDeployStepOptionalFields } from './AwsSamDeployStepOptionalFields'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -43,7 +45,7 @@ import css from './AwsSamDeployStep.module.scss'
 
 interface AwsSamDeployStepFormikValues extends StepElementConfig {
   spec: {
-    connectorRef: string
+    connectorRef: ConnectorRef
     image: string
     deployCommandOptions?: string[]
     stackName?: string
@@ -67,11 +69,21 @@ const AwsSamDeployStepEdit = (
   props: AwsSamDeployStepProps,
   formikRef: StepFormikFowardRef<AwsSamDeployStepFormikValues>
 ): React.ReactElement => {
-  const { initialValues, onUpdate, isNewStep = true, readonly, onChange, allowableTypes, stepViewType } = props
+  const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+
+  const validationSchema = Yup.object().shape({
+    ...getNameAndIdentifierSchema(getString, stepViewType),
+    timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
+    spec: Yup.object().shape({
+      connectorRef: Yup.string().required(
+        getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.connectorLabel') })
+      )
+    })
+  })
 
   const getInitialValues = (): AwsSamDeployStepFormikValues => {
     return {
@@ -95,6 +107,7 @@ const AwsSamDeployStepEdit = (
       ...values,
       spec: {
         ...values.spec,
+        connectorRef: getConnectorRefValue(values.spec.connectorRef as ConnectorRefFormValueType),
         envVariables: values.spec?.envVariables?.map(envVar => ({ [envVar.key]: envVar.value }))
       }
     }
@@ -107,13 +120,7 @@ const AwsSamDeployStepEdit = (
         onSubmit={onSubmit}
         formName="AwsSamDeployStepEdit"
         initialValues={getInitialValues()}
-        validate={data => {
-          onChange?.(data)
-        }}
-        validationSchema={Yup.object().shape({
-          ...getNameAndIdentifierSchema(getString, stepViewType),
-          timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
-        })}
+        validationSchema={validationSchema}
       >
         {(formik: FormikProps<AwsSamDeployStepInitialValues>) => {
           setFormikRef(formikRef, formik)
