@@ -78,7 +78,7 @@ const SAMLProviderV2: React.FC<Props> = ({
   const { showSuccess, showError } = useToaster()
   const { accountId } = useParams<AccountPathProps>()
   const [childWindow, setChildWindow] = React.useState<Window | null>(null)
-  const [samlIDToDelete, setSamlIdToDelete] = React.useState<string | undefined>()
+  const [samlSettingToDelete, setSamlSettingToDelete] = React.useState<SAMLSettings | undefined>()
   const samlEnabled = authSettings.authenticationMechanism === AuthenticationMechanisms.SAML
   const samlSettings = authSettings.ngAuthSettings?.filter(
     settings => settings.settingsType === AuthenticationMechanisms.SAML
@@ -136,15 +136,19 @@ const SAMLProviderV2: React.FC<Props> = ({
   const { openDialog: confirmSamlSettingsDelete } = useConfirmationDialog({
     titleText: getString('authSettings.deleteSamlProvider'),
     contentText: (
-      <String stringID="authSettings.deleteSamlProviderDescription" useRichText={true} vars={{ displayName: '' }} />
+      <String
+        stringID="authSettings.deleteSamlProviderDescription"
+        useRichText={true}
+        vars={{ displayName: samlSettingToDelete?.displayName }}
+      />
     ),
     confirmButtonText: getString('confirm'),
     cancelButtonText: getString('cancel'),
     onCloseDialog: async isConfirmed => {
-      /* istanbul ignore else */ if (isConfirmed && samlIDToDelete) {
+      /* istanbul ignore else */ if (isConfirmed && samlSettingToDelete) {
         try {
           const deleted = await deleteSamlSettings('' as any, {
-            pathParams: { samlSSOId: samlIDToDelete },
+            pathParams: { samlSSOId: samlSettingToDelete.identifier },
             queryParams: { accountIdentifier: accountId }
           })
 
@@ -156,7 +160,7 @@ const SAMLProviderV2: React.FC<Props> = ({
           /* istanbul ignore next */ showError(getRBACErrorMessage(e), 5000)
         }
       }
-      setSamlIdToDelete(undefined)
+      setSamlSettingToDelete(undefined)
     }
   })
 
@@ -314,7 +318,7 @@ const SAMLProviderV2: React.FC<Props> = ({
                         <RbacMenuItem
                           text={getString('delete')}
                           onClick={() => {
-                            setSamlIdToDelete(samlSetting.identifier)
+                            setSamlSettingToDelete(samlSetting)
                             confirmSamlSettingsDelete()
                           }}
                           permission={{

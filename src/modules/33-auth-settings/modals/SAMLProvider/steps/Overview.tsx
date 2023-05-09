@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { Container, StepProps, Layout, Button, ButtonVariation, FormInput, FormikForm, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import React from 'react'
@@ -50,6 +57,7 @@ const Overview: React.FC<OverviewProps> = props => {
                   name="friendlySamlName"
                   label={getString('common.friendlyName')}
                   isOptional
+                  tooltipProps={{ dataTooltipId: 'friendlySamlName' }}
                 />
               </Layout.Vertical>
             </Container>
