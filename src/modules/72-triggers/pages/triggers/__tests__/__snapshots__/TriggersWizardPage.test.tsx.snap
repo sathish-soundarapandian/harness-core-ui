@@ -714,12 +714,17 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                     <div
                       class="Layout--vertical StyledProps--main"
                     >
-                      <h5
-                        class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--font-variation-h5"
-                        level="5"
+                      <div
+                        class="Layout--horizontal StyledProps--main"
                       >
-                        triggers.selectStagesToExecute
-                      </h5>
+                        <h5
+                          class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--font-variation-h5"
+                          data-tooltip-id="select-stages-toexecute"
+                          level="5"
+                        >
+                          triggers.selectPipelineStages
+                        </h5>
+                      </div>
                       <div
                         class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled stageDropdown"
                       >
@@ -1538,12 +1543,17 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                     <div
                       class="Layout--vertical StyledProps--main"
                     >
-                      <h5
-                        class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--font-variation-h5"
-                        level="5"
+                      <div
+                        class="Layout--horizontal StyledProps--main"
                       >
-                        triggers.selectStagesToExecute
-                      </h5>
+                        <h5
+                          class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--font-variation-h5"
+                          data-tooltip-id="select-stages-toexecute"
+                          level="5"
+                        >
+                          triggers.selectPipelineStages
+                        </h5>
+                      </div>
                       <div
                         class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled stageDropdown"
                       >
@@ -4586,12 +4596,17 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                     <div
                       class="Layout--vertical StyledProps--main"
                     >
-                      <h5
-                        class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--font-variation-h5"
-                        level="5"
+                      <div
+                        class="Layout--horizontal StyledProps--main"
                       >
-                        triggers.selectStagesToExecute
-                      </h5>
+                        <h5
+                          class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--font-variation-h5"
+                          data-tooltip-id="select-stages-toexecute"
+                          level="5"
+                        >
+                          triggers.selectPipelineStages
+                        </h5>
+                      </div>
                       <div
                         class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled stageDropdown"
                       >
@@ -5801,12 +5816,17 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                     <div
                       class="Layout--vertical StyledProps--main"
                     >
-                      <h5
-                        class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--font-variation-h5"
-                        level="5"
+                      <div
+                        class="Layout--horizontal StyledProps--main"
                       >
-                        triggers.selectStagesToExecute
-                      </h5>
+                        <h5
+                          class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--font-variation-h5"
+                          data-tooltip-id="select-stages-toexecute"
+                          level="5"
+                        >
+                          triggers.selectPipelineStages
+                        </h5>
+                      </div>
                       <div
                         class="bp3-popover-wrapper MultiSelectDropDown--main MultiSelectDropDown--disabled stageDropdown"
                       >

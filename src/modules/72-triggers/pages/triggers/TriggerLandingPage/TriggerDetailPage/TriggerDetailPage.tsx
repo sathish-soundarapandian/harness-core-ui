@@ -161,7 +161,7 @@ const getDetailsContent = ({
   ]
   if (selectiveStageFF) {
     arr.push({
-      label: getString('triggers.selectStagesToExecute'),
+      label: getString('triggers.selectPipelineStages'),
       value: stagesToExecute?.length ? <p>{stagesToExecute}</p> : <p>{getString('pipeline.allStages')}</p>
     })
   }

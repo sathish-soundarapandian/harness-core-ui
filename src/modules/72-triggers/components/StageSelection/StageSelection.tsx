@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { Heading, Layout, MultiSelectDropDown, SelectOption } from '@harness/uicore'
+import { HarnessDocTooltip, Heading, Layout, MultiSelectDropDown, SelectOption } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -145,9 +145,12 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
 
   return (
     <Layout.Vertical>
-      <Heading level={5} font={{ variation: FontVariation.H5 }}>
-        {getString('triggers.selectStagesToExecute')}
-      </Heading>
+      <Layout.Horizontal>
+        <Heading level={5} font={{ variation: FontVariation.H5 }} data-tooltip-id="select-stages-toexecute">
+          {getString('triggers.selectPipelineStages')}
+        </Heading>
+        <HarnessDocTooltip tooltipId="select-stages-toexecute" useStandAlone={true} />
+      </Layout.Horizontal>
       <MultiSelectDropDown
         hideItemCount={allStagesSelected}
         disabled={!allowStageExecutions}

@@ -192,7 +192,7 @@ export const CreateCompositeSloForm = ({
       }, 0)
       .toFixed(2)
   )
-  const isInValid = isFormulaWeightedAverage ? totalOfSloWeight > 100 || totalOfSloWeight < 100 : true
+  const isInValid = isFormulaWeightedAverage ? totalOfSloWeight > 100 || totalOfSloWeight < 100 : false
   return (
     <>
       <Page.Body loading={loading} error={error} retryOnError={() => retryOnError()}>
