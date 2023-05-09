@@ -277,68 +277,69 @@ export const expressionTrie = {
           valueTillHere: 'pipeline.stages',
           children: [
             {
-              value: 's1',
-              valueTillHere: 'pipeline.stages.s1',
+              value: 'stage1',
+              valueTillHere: 'pipeline.stages.stage1',
               children: [
                 {
                   value: 'delegateSelectors',
-                  valueTillHere: 'pipeline.stages.s1.delegateSelectors',
+                  valueTillHere: 'pipeline.stages.stage1.delegateSelectors',
                   children: [],
                   childKeys: [],
                   childExpressions: []
                 },
                 {
                   value: 'description',
-                  valueTillHere: 'pipeline.stages.s1.description',
+                  valueTillHere: 'pipeline.stages.stage1.description',
                   children: [],
                   childKeys: [],
                   childExpressions: []
                 },
                 {
                   value: 'name',
-                  valueTillHere: 'pipeline.stages.s1.name',
+                  valueTillHere: 'pipeline.stages.stage1.name',
                   children: [],
                   childKeys: [],
                   childExpressions: []
                 },
                 {
                   value: 'spec',
-                  valueTillHere: 'pipeline.stages.s1.spec',
+                  valueTillHere: 'pipeline.stages.stage1.spec',
                   children: [
                     {
                       value: 'execution',
-                      valueTillHere: 'pipeline.stages.s1.spec.execution',
+                      valueTillHere: 'pipeline.stages.stage1.spec.execution',
                       children: [
                         {
                           value: 'steps',
-                          valueTillHere: 'pipeline.stages.s1.spec.execution.steps',
+                          valueTillHere: 'pipeline.stages.stage1.spec.execution.steps',
                           children: [
                             {
                               value: 'ShellScript_1',
-                              valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1',
+                              valueTillHere: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1',
                               children: [
                                 {
                                   value: 'description',
-                                  valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.description',
+                                  valueTillHere:
+                                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.description',
                                   children: [],
                                   childKeys: [],
                                   childExpressions: []
                                 },
                                 {
                                   value: 'name',
-                                  valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.name',
+                                  valueTillHere: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.name',
                                   children: [],
                                   childKeys: [],
                                   childExpressions: []
                                 },
                                 {
                                   value: 'spec',
-                                  valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec',
+                                  valueTillHere: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec',
                                   children: [
                                     {
                                       value: 'delegateSelectors',
                                       valueTillHere:
-                                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
                                       children: [],
                                       childKeys: [],
                                       childExpressions: []
@@ -346,7 +347,7 @@ export const expressionTrie = {
                                     {
                                       value: 'onDelegate',
                                       valueTillHere:
-                                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.onDelegate',
                                       children: [],
                                       childKeys: [],
                                       childExpressions: []
@@ -354,17 +355,17 @@ export const expressionTrie = {
                                     {
                                       value: 'source',
                                       valueTillHere:
-                                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source',
+                                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source',
                                       children: [
                                         {
                                           value: 'spec',
                                           valueTillHere:
-                                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec',
+                                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec',
                                           children: [
                                             {
                                               value: 'script',
                                               valueTillHere:
-                                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
                                               children: [],
                                               childKeys: [],
                                               childExpressions: []
@@ -374,17 +375,17 @@ export const expressionTrie = {
                                             {
                                               key: 'script',
                                               value:
-                                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script'
+                                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script'
                                             }
                                           ],
                                           childExpressions: [
-                                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script'
+                                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script'
                                           ]
                                         },
                                         {
                                           value: 'type',
                                           valueTillHere:
-                                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type',
+                                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type',
                                           children: [],
                                           childKeys: [],
                                           childExpressions: []
@@ -394,30 +395,31 @@ export const expressionTrie = {
                                         {
                                           key: 'spec',
                                           value:
-                                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec'
+                                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec'
                                         },
                                         {
                                           key: 'type',
                                           value:
-                                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type'
+                                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type'
                                         }
                                       ],
                                       childExpressions: [
-                                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
-                                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type'
+                                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type'
                                       ]
                                     },
                                     {
                                       value: 'executionTarget',
                                       valueTillHere:
-                                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.executionTarget',
                                       children: [],
                                       childKeys: [],
                                       childExpressions: []
                                     },
                                     {
                                       value: 'shell',
-                                      valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.shell',
+                                      valueTillHere:
+                                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.shell',
                                       children: [],
                                       childKeys: [],
                                       childExpressions: []
@@ -427,85 +429,85 @@ export const expressionTrie = {
                                     {
                                       key: 'delegateSelectors',
                                       value:
-                                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.delegateSelectors'
+                                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.delegateSelectors'
                                     },
                                     {
                                       key: 'onDelegate',
-                                      value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.onDelegate'
+                                      value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.onDelegate'
                                     },
                                     {
                                       key: 'source',
-                                      value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source'
+                                      value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source'
                                     },
                                     {
                                       key: 'executionTarget',
                                       value:
-                                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.executionTarget'
+                                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.executionTarget'
                                     },
                                     {
                                       key: 'shell',
-                                      value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.shell'
+                                      value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.shell'
                                     }
                                   ],
                                   childExpressions: [
-                                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
-                                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.onDelegate',
-                                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
-                                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.executionTarget',
-                                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.shell',
-                                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type'
+                                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.shell',
+                                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type'
                                   ]
                                 },
                                 {
                                   value: 'timeout',
-                                  valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.timeout',
+                                  valueTillHere: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.timeout',
                                   children: [],
                                   childKeys: [],
                                   childExpressions: []
                                 },
                                 {
                                   value: 'when',
-                                  valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.when',
+                                  valueTillHere: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.when',
                                   children: [],
                                   childKeys: [],
                                   childExpressions: []
                                 },
                                 {
                                   value: 'endTs',
-                                  valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.endTs',
+                                  valueTillHere: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.endTs',
                                   children: [],
                                   childKeys: [],
                                   childExpressions: []
                                 },
                                 {
                                   value: 'identifier',
-                                  valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.identifier',
+                                  valueTillHere: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.identifier',
                                   children: [],
                                   childKeys: [],
                                   childExpressions: []
                                 },
                                 {
                                   value: 'startTs',
-                                  valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.startTs',
+                                  valueTillHere: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.startTs',
                                   children: [],
                                   childKeys: [],
                                   childExpressions: []
                                 },
                                 {
                                   value: 'type',
-                                  valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.type',
+                                  valueTillHere: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.type',
                                   children: [],
                                   childKeys: [],
                                   childExpressions: []
                                 },
                                 {
                                   value: 'output',
-                                  valueTillHere: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output',
+                                  valueTillHere: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output',
                                   children: [
                                     {
                                       value: 'outputVariables',
                                       valueTillHere:
-                                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output.outputVariables',
+                                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output.outputVariables',
                                       children: [],
                                       childKeys: [],
                                       childExpressions: []
@@ -515,207 +517,194 @@ export const expressionTrie = {
                                     {
                                       key: 'outputVariables',
                                       value:
-                                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output.outputVariables'
+                                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output.outputVariables'
                                     }
                                   ],
                                   childExpressions: [
-                                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output.outputVariables'
+                                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output.outputVariables'
                                   ]
                                 }
                               ],
                               childKeys: [
                                 {
                                   key: 'description',
-                                  value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.description'
+                                  value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.description'
                                 },
                                 {
                                   key: 'name',
-                                  value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.name'
+                                  value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.name'
                                 },
                                 {
                                   key: 'spec',
-                                  value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec'
+                                  value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec'
                                 },
                                 {
                                   key: 'timeout',
-                                  value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.timeout'
+                                  value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.timeout'
                                 },
                                 {
                                   key: 'when',
-                                  value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.when'
+                                  value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.when'
                                 },
                                 {
                                   key: 'endTs',
-                                  value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.endTs'
+                                  value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.endTs'
                                 },
                                 {
                                   key: 'identifier',
-                                  value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.identifier'
+                                  value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.identifier'
                                 },
                                 {
                                   key: 'startTs',
-                                  value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.startTs'
+                                  value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.startTs'
                                 },
                                 {
                                   key: 'type',
-                                  value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.type'
+                                  value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.type'
                                 },
                                 {
                                   key: 'output',
-                                  value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output'
+                                  value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output'
                                 }
                               ],
                               childExpressions: [
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.description',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.name',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.onDelegate',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.timeout',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.when',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.endTs',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.identifier',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.executionTarget',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.shell',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.startTs',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.type',
-                                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output.outputVariables'
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.description',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.name',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.timeout',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.when',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.endTs',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.identifier',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.shell',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.startTs',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.type',
+                                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output.outputVariables'
                               ]
                             }
                           ],
                           childKeys: [
                             {
                               key: 'ShellScript_1',
-                              value: 'pipeline.stages.s1.spec.execution.steps.ShellScript_1'
+                              value: 'pipeline.stages.stage1.spec.execution.steps.ShellScript_1'
                             }
                           ],
                           childExpressions: [
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.description',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.name',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.onDelegate',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.timeout',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.when',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.endTs',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.identifier',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.executionTarget',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.shell',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.startTs',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.type',
-                            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output.outputVariables'
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.description',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.name',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.timeout',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.when',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.endTs',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.identifier',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.shell',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.startTs',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.type',
+                            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output.outputVariables'
                           ]
                         }
                       ],
                       childKeys: [
                         {
                           key: 'steps',
-                          value: 'pipeline.stages.s1.spec.execution.steps'
+                          value: 'pipeline.stages.stage1.spec.execution.steps'
                         }
                       ],
                       childExpressions: [
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.description',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.name',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.onDelegate',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.timeout',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.when',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.endTs',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.identifier',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.executionTarget',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.shell',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.startTs',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.type',
-                        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output.outputVariables'
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.description',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.name',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.timeout',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.when',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.endTs',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.identifier',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.shell',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.startTs',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.type',
+                        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output.outputVariables'
                       ]
                     }
                   ],
                   childKeys: [
                     {
                       key: 'execution',
-                      value: 'pipeline.stages.s1.spec.execution'
+                      value: 'pipeline.stages.stage1.spec.execution'
                     }
                   ],
                   childExpressions: [
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.description',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.name',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.onDelegate',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.timeout',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.when',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.endTs',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.identifier',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.executionTarget',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.shell',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.startTs',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.type',
-                    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output.outputVariables'
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.description',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.name',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.timeout',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.when',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.endTs',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.identifier',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.shell',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.startTs',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.type',
+                    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output.outputVariables'
                   ]
                 },
                 {
-                  value: 'variables',
-                  valueTillHere: 'pipeline.stages.s1.variables',
-                  children: [
-                    {
-                      value: 'value',
-                      valueTillHere: 'pipeline.stages.s1.variables.value',
-                      children: [],
-                      childKeys: [],
-                      childExpressions: []
-                    }
-                  ],
-                  childKeys: [
-                    {
-                      key: 'value',
-                      value: 'pipeline.stages.s1.variables.value'
-                    }
-                  ],
-                  childExpressions: ['pipeline.stages.s1.variables.value']
-                },
-                {
                   value: 'when',
-                  valueTillHere: 'pipeline.stages.s1.when',
+                  valueTillHere: 'pipeline.stages.stage1.when',
                   children: [],
                   childKeys: [],
                   childExpressions: []
                 },
                 {
                   value: 'endTs',
-                  valueTillHere: 'pipeline.stages.s1.endTs',
+                  valueTillHere: 'pipeline.stages.stage1.endTs',
                   children: [],
                   childKeys: [],
                   childExpressions: []
                 },
                 {
                   value: 'identifier',
-                  valueTillHere: 'pipeline.stages.s1.identifier',
+                  valueTillHere: 'pipeline.stages.stage1.identifier',
                   children: [],
                   childKeys: [],
                   childExpressions: []
                 },
                 {
                   value: 'startTs',
-                  valueTillHere: 'pipeline.stages.s1.startTs',
+                  valueTillHere: 'pipeline.stages.stage1.startTs',
                   children: [],
                   childKeys: [],
                   childExpressions: []
                 },
                 {
                   value: 'tags',
-                  valueTillHere: 'pipeline.stages.s1.tags',
+                  valueTillHere: 'pipeline.stages.stage1.tags',
                   children: [],
                   childKeys: [],
                   childExpressions: []
                 },
                 {
                   value: 'type',
-                  valueTillHere: 'pipeline.stages.s1.type',
+                  valueTillHere: 'pipeline.stages.stage1.type',
+                  children: [],
+                  childKeys: [],
+                  childExpressions: []
+                },
+                {
+                  value: 'variables',
+                  valueTillHere: 'pipeline.stages.stage1.variables',
                   children: [],
                   childKeys: [],
                   childExpressions: []
@@ -724,111 +713,668 @@ export const expressionTrie = {
               childKeys: [
                 {
                   key: 'delegateSelectors',
-                  value: 'pipeline.stages.s1.delegateSelectors'
+                  value: 'pipeline.stages.stage1.delegateSelectors'
                 },
                 {
                   key: 'description',
-                  value: 'pipeline.stages.s1.description'
+                  value: 'pipeline.stages.stage1.description'
                 },
                 {
                   key: 'name',
-                  value: 'pipeline.stages.s1.name'
+                  value: 'pipeline.stages.stage1.name'
                 },
                 {
                   key: 'spec',
-                  value: 'pipeline.stages.s1.spec'
-                },
-                {
-                  key: 'variables',
-                  value: 'pipeline.stages.s1.variables'
+                  value: 'pipeline.stages.stage1.spec'
                 },
                 {
                   key: 'when',
-                  value: 'pipeline.stages.s1.when'
+                  value: 'pipeline.stages.stage1.when'
                 },
                 {
                   key: 'endTs',
-                  value: 'pipeline.stages.s1.endTs'
+                  value: 'pipeline.stages.stage1.endTs'
                 },
                 {
                   key: 'identifier',
-                  value: 'pipeline.stages.s1.identifier'
+                  value: 'pipeline.stages.stage1.identifier'
                 },
                 {
                   key: 'startTs',
-                  value: 'pipeline.stages.s1.startTs'
+                  value: 'pipeline.stages.stage1.startTs'
                 },
                 {
                   key: 'tags',
-                  value: 'pipeline.stages.s1.tags'
+                  value: 'pipeline.stages.stage1.tags'
                 },
                 {
                   key: 'type',
-                  value: 'pipeline.stages.s1.type'
+                  value: 'pipeline.stages.stage1.type'
+                },
+                {
+                  key: 'variables',
+                  value: 'pipeline.stages.stage1.variables'
                 }
               ],
               childExpressions: [
-                'pipeline.stages.s1.delegateSelectors',
-                'pipeline.stages.s1.description',
-                'pipeline.stages.s1.name',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.description',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.name',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.onDelegate',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.timeout',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.when',
-                'pipeline.stages.s1.variables.value',
-                'pipeline.stages.s1.when',
-                'pipeline.stages.s1.endTs',
-                'pipeline.stages.s1.identifier',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.endTs',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.identifier',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.executionTarget',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.shell',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.startTs',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.type',
-                'pipeline.stages.s1.startTs',
-                'pipeline.stages.s1.tags',
-                'pipeline.stages.s1.type',
-                'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output.outputVariables'
+                'pipeline.stages.stage1.delegateSelectors',
+                'pipeline.stages.stage1.description',
+                'pipeline.stages.stage1.name',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.description',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.name',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.timeout',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.when',
+                'pipeline.stages.stage1.when',
+                'pipeline.stages.stage1.endTs',
+                'pipeline.stages.stage1.identifier',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.endTs',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.identifier',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.shell',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.startTs',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.type',
+                'pipeline.stages.stage1.startTs',
+                'pipeline.stages.stage1.tags',
+                'pipeline.stages.stage1.type',
+                'pipeline.stages.stage1.variables',
+                'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output.outputVariables'
+              ]
+            },
+            {
+              value: 'stage2',
+              valueTillHere: 'pipeline.stages.stage2',
+              children: [
+                {
+                  value: 'delegateSelectors',
+                  valueTillHere: 'pipeline.stages.stage2.delegateSelectors',
+                  children: [],
+                  childKeys: [],
+                  childExpressions: []
+                },
+                {
+                  value: 'description',
+                  valueTillHere: 'pipeline.stages.stage2.description',
+                  children: [],
+                  childKeys: [],
+                  childExpressions: []
+                },
+                {
+                  value: 'name',
+                  valueTillHere: 'pipeline.stages.stage2.name',
+                  children: [],
+                  childKeys: [],
+                  childExpressions: []
+                },
+                {
+                  value: 'spec',
+                  valueTillHere: 'pipeline.stages.stage2.spec',
+                  children: [
+                    {
+                      value: 'execution',
+                      valueTillHere: 'pipeline.stages.stage2.spec.execution',
+                      children: [
+                        {
+                          value: 'steps',
+                          valueTillHere: 'pipeline.stages.stage2.spec.execution.steps',
+                          children: [
+                            {
+                              value: 'ShellScript_1',
+                              valueTillHere: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1',
+                              children: [
+                                {
+                                  value: 'description',
+                                  valueTillHere:
+                                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.description',
+                                  children: [],
+                                  childKeys: [],
+                                  childExpressions: []
+                                },
+                                {
+                                  value: 'name',
+                                  valueTillHere: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.name',
+                                  children: [],
+                                  childKeys: [],
+                                  childExpressions: []
+                                },
+                                {
+                                  value: 'spec',
+                                  valueTillHere: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec',
+                                  children: [
+                                    {
+                                      value: 'delegateSelectors',
+                                      valueTillHere:
+                                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                                      children: [],
+                                      childKeys: [],
+                                      childExpressions: []
+                                    },
+                                    {
+                                      value: 'onDelegate',
+                                      valueTillHere:
+                                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                                      children: [],
+                                      childKeys: [],
+                                      childExpressions: []
+                                    },
+                                    {
+                                      value: 'source',
+                                      valueTillHere:
+                                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source',
+                                      children: [
+                                        {
+                                          value: 'spec',
+                                          valueTillHere:
+                                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec',
+                                          children: [
+                                            {
+                                              value: 'script',
+                                              valueTillHere:
+                                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                                              children: [],
+                                              childKeys: [],
+                                              childExpressions: []
+                                            }
+                                          ],
+                                          childKeys: [
+                                            {
+                                              key: 'script',
+                                              value:
+                                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script'
+                                            }
+                                          ],
+                                          childExpressions: [
+                                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script'
+                                          ]
+                                        },
+                                        {
+                                          value: 'type',
+                                          valueTillHere:
+                                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type',
+                                          children: [],
+                                          childKeys: [],
+                                          childExpressions: []
+                                        }
+                                      ],
+                                      childKeys: [
+                                        {
+                                          key: 'spec',
+                                          value:
+                                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec'
+                                        },
+                                        {
+                                          key: 'type',
+                                          value:
+                                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type'
+                                        }
+                                      ],
+                                      childExpressions: [
+                                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type'
+                                      ]
+                                    },
+                                    {
+                                      value: 'executionTarget',
+                                      valueTillHere:
+                                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                                      children: [],
+                                      childKeys: [],
+                                      childExpressions: []
+                                    },
+                                    {
+                                      value: 'shell',
+                                      valueTillHere:
+                                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.shell',
+                                      children: [],
+                                      childKeys: [],
+                                      childExpressions: []
+                                    }
+                                  ],
+                                  childKeys: [
+                                    {
+                                      key: 'delegateSelectors',
+                                      value:
+                                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.delegateSelectors'
+                                    },
+                                    {
+                                      key: 'onDelegate',
+                                      value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.onDelegate'
+                                    },
+                                    {
+                                      key: 'source',
+                                      value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source'
+                                    },
+                                    {
+                                      key: 'executionTarget',
+                                      value:
+                                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.executionTarget'
+                                    },
+                                    {
+                                      key: 'shell',
+                                      value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.shell'
+                                    }
+                                  ],
+                                  childExpressions: [
+                                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.shell',
+                                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type'
+                                  ]
+                                },
+                                {
+                                  value: 'timeout',
+                                  valueTillHere: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.timeout',
+                                  children: [],
+                                  childKeys: [],
+                                  childExpressions: []
+                                },
+                                {
+                                  value: 'when',
+                                  valueTillHere: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.when',
+                                  children: [],
+                                  childKeys: [],
+                                  childExpressions: []
+                                },
+                                {
+                                  value: 'endTs',
+                                  valueTillHere: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.endTs',
+                                  children: [],
+                                  childKeys: [],
+                                  childExpressions: []
+                                },
+                                {
+                                  value: 'identifier',
+                                  valueTillHere: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.identifier',
+                                  children: [],
+                                  childKeys: [],
+                                  childExpressions: []
+                                },
+                                {
+                                  value: 'startTs',
+                                  valueTillHere: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.startTs',
+                                  children: [],
+                                  childKeys: [],
+                                  childExpressions: []
+                                },
+                                {
+                                  value: 'type',
+                                  valueTillHere: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.type',
+                                  children: [],
+                                  childKeys: [],
+                                  childExpressions: []
+                                },
+                                {
+                                  value: 'output',
+                                  valueTillHere: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output',
+                                  children: [
+                                    {
+                                      value: 'outputVariables',
+                                      valueTillHere:
+                                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output.outputVariables',
+                                      children: [],
+                                      childKeys: [],
+                                      childExpressions: []
+                                    }
+                                  ],
+                                  childKeys: [
+                                    {
+                                      key: 'outputVariables',
+                                      value:
+                                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output.outputVariables'
+                                    }
+                                  ],
+                                  childExpressions: [
+                                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output.outputVariables'
+                                  ]
+                                }
+                              ],
+                              childKeys: [
+                                {
+                                  key: 'description',
+                                  value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.description'
+                                },
+                                {
+                                  key: 'name',
+                                  value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.name'
+                                },
+                                {
+                                  key: 'spec',
+                                  value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec'
+                                },
+                                {
+                                  key: 'timeout',
+                                  value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.timeout'
+                                },
+                                {
+                                  key: 'when',
+                                  value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.when'
+                                },
+                                {
+                                  key: 'endTs',
+                                  value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.endTs'
+                                },
+                                {
+                                  key: 'identifier',
+                                  value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.identifier'
+                                },
+                                {
+                                  key: 'startTs',
+                                  value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.startTs'
+                                },
+                                {
+                                  key: 'type',
+                                  value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.type'
+                                },
+                                {
+                                  key: 'output',
+                                  value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output'
+                                }
+                              ],
+                              childExpressions: [
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.description',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.name',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.timeout',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.when',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.endTs',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.identifier',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.shell',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.startTs',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.type',
+                                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output.outputVariables'
+                              ]
+                            }
+                          ],
+                          childKeys: [
+                            {
+                              key: 'ShellScript_1',
+                              value: 'pipeline.stages.stage2.spec.execution.steps.ShellScript_1'
+                            }
+                          ],
+                          childExpressions: [
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.description',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.name',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.timeout',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.when',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.endTs',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.identifier',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.shell',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.startTs',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.type',
+                            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output.outputVariables'
+                          ]
+                        }
+                      ],
+                      childKeys: [
+                        {
+                          key: 'steps',
+                          value: 'pipeline.stages.stage2.spec.execution.steps'
+                        }
+                      ],
+                      childExpressions: [
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.description',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.name',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.timeout',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.when',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.endTs',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.identifier',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.shell',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.startTs',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.type',
+                        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output.outputVariables'
+                      ]
+                    }
+                  ],
+                  childKeys: [
+                    {
+                      key: 'execution',
+                      value: 'pipeline.stages.stage2.spec.execution'
+                    }
+                  ],
+                  childExpressions: [
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.description',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.name',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.timeout',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.when',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.endTs',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.identifier',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.shell',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.startTs',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.type',
+                    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output.outputVariables'
+                  ]
+                },
+                {
+                  value: 'when',
+                  valueTillHere: 'pipeline.stages.stage2.when',
+                  children: [],
+                  childKeys: [],
+                  childExpressions: []
+                },
+                {
+                  value: 'endTs',
+                  valueTillHere: 'pipeline.stages.stage2.endTs',
+                  children: [],
+                  childKeys: [],
+                  childExpressions: []
+                },
+                {
+                  value: 'identifier',
+                  valueTillHere: 'pipeline.stages.stage2.identifier',
+                  children: [],
+                  childKeys: [],
+                  childExpressions: []
+                },
+                {
+                  value: 'startTs',
+                  valueTillHere: 'pipeline.stages.stage2.startTs',
+                  children: [],
+                  childKeys: [],
+                  childExpressions: []
+                },
+                {
+                  value: 'tags',
+                  valueTillHere: 'pipeline.stages.stage2.tags',
+                  children: [],
+                  childKeys: [],
+                  childExpressions: []
+                },
+                {
+                  value: 'type',
+                  valueTillHere: 'pipeline.stages.stage2.type',
+                  children: [],
+                  childKeys: [],
+                  childExpressions: []
+                },
+                {
+                  value: 'variables',
+                  valueTillHere: 'pipeline.stages.stage2.variables',
+                  children: [],
+                  childKeys: [],
+                  childExpressions: []
+                }
+              ],
+              childKeys: [
+                {
+                  key: 'delegateSelectors',
+                  value: 'pipeline.stages.stage2.delegateSelectors'
+                },
+                {
+                  key: 'description',
+                  value: 'pipeline.stages.stage2.description'
+                },
+                {
+                  key: 'name',
+                  value: 'pipeline.stages.stage2.name'
+                },
+                {
+                  key: 'spec',
+                  value: 'pipeline.stages.stage2.spec'
+                },
+                {
+                  key: 'when',
+                  value: 'pipeline.stages.stage2.when'
+                },
+                {
+                  key: 'endTs',
+                  value: 'pipeline.stages.stage2.endTs'
+                },
+                {
+                  key: 'identifier',
+                  value: 'pipeline.stages.stage2.identifier'
+                },
+                {
+                  key: 'startTs',
+                  value: 'pipeline.stages.stage2.startTs'
+                },
+                {
+                  key: 'tags',
+                  value: 'pipeline.stages.stage2.tags'
+                },
+                {
+                  key: 'type',
+                  value: 'pipeline.stages.stage2.type'
+                },
+                {
+                  key: 'variables',
+                  value: 'pipeline.stages.stage2.variables'
+                }
+              ],
+              childExpressions: [
+                'pipeline.stages.stage2.delegateSelectors',
+                'pipeline.stages.stage2.description',
+                'pipeline.stages.stage2.name',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.description',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.name',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.onDelegate',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.timeout',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.when',
+                'pipeline.stages.stage2.when',
+                'pipeline.stages.stage2.endTs',
+                'pipeline.stages.stage2.identifier',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.endTs',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.identifier',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.executionTarget',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.shell',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.startTs',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.type',
+                'pipeline.stages.stage2.startTs',
+                'pipeline.stages.stage2.tags',
+                'pipeline.stages.stage2.type',
+                'pipeline.stages.stage2.variables',
+                'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output.outputVariables'
               ]
             }
           ],
           childKeys: [
             {
-              key: 's1',
-              value: 'pipeline.stages.s1'
+              key: 'stage1',
+              value: 'pipeline.stages.stage1'
+            },
+            {
+              key: 'stage2',
+              value: 'pipeline.stages.stage2'
             }
           ],
           childExpressions: [
-            'pipeline.stages.s1.delegateSelectors',
-            'pipeline.stages.s1.description',
-            'pipeline.stages.s1.name',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.description',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.name',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.onDelegate',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.timeout',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.when',
-            'pipeline.stages.s1.variables.value',
-            'pipeline.stages.s1.when',
-            'pipeline.stages.s1.endTs',
-            'pipeline.stages.s1.identifier',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.endTs',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.identifier',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.executionTarget',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.shell',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.startTs',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.type',
-            'pipeline.stages.s1.startTs',
-            'pipeline.stages.s1.tags',
-            'pipeline.stages.s1.type',
-            'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output.outputVariables'
+            'pipeline.stages.stage1.delegateSelectors',
+            'pipeline.stages.stage1.description',
+            'pipeline.stages.stage1.name',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.description',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.name',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.onDelegate',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.timeout',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.when',
+            'pipeline.stages.stage1.when',
+            'pipeline.stages.stage2.delegateSelectors',
+            'pipeline.stages.stage2.description',
+            'pipeline.stages.stage2.name',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.description',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.name',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.onDelegate',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.timeout',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.when',
+            'pipeline.stages.stage2.when',
+            'pipeline.stages.stage1.endTs',
+            'pipeline.stages.stage1.identifier',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.endTs',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.identifier',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.executionTarget',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.shell',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.startTs',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.type',
+            'pipeline.stages.stage1.startTs',
+            'pipeline.stages.stage1.tags',
+            'pipeline.stages.stage1.type',
+            'pipeline.stages.stage1.variables',
+            'pipeline.stages.stage2.endTs',
+            'pipeline.stages.stage2.identifier',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.endTs',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.identifier',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.executionTarget',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.shell',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.startTs',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.type',
+            'pipeline.stages.stage2.startTs',
+            'pipeline.stages.stage2.tags',
+            'pipeline.stages.stage2.type',
+            'pipeline.stages.stage2.variables',
+            'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output.outputVariables',
+            'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output.outputVariables'
           ]
+        },
+        {
+          value: 'variables',
+          valueTillHere: 'pipeline.variables',
+          children: [
+            {
+              value: 'pipelineVariable',
+              valueTillHere: 'pipeline.variables.pipelineVariable',
+              children: [],
+              childKeys: [],
+              childExpressions: []
+            }
+          ],
+          childKeys: [
+            {
+              key: 'pipelineVariable',
+              value: 'pipeline.variables.pipelineVariable'
+            }
+          ],
+          childExpressions: ['pipeline.variables.pipelineVariable']
         },
         {
           value: 'endTs',
@@ -916,13 +1462,6 @@ export const expressionTrie = {
             }
           ],
           childExpressions: ['pipeline.triggeredBy.email', 'pipeline.triggeredBy.name']
-        },
-        {
-          value: 'variables',
-          valueTillHere: 'pipeline.variables',
-          children: [],
-          childKeys: [],
-          childExpressions: []
         }
       ],
       childKeys: [
@@ -941,6 +1480,10 @@ export const expressionTrie = {
         {
           key: 'stages',
           value: 'pipeline.stages'
+        },
+        {
+          key: 'variables',
+          value: 'pipeline.variables'
         },
         {
           key: 'endTs',
@@ -977,52 +1520,73 @@ export const expressionTrie = {
         {
           key: 'triggeredBy',
           value: 'pipeline.triggeredBy'
-        },
-        {
-          key: 'variables',
-          value: 'pipeline.variables'
         }
       ],
       childExpressions: [
         'pipeline.delegateSelectors',
         'pipeline.description',
         'pipeline.name',
-        'pipeline.stages.s1.delegateSelectors',
-        'pipeline.stages.s1.description',
-        'pipeline.stages.s1.name',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.description',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.name',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.onDelegate',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.timeout',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.when',
-        'pipeline.stages.s1.variables.value',
-        'pipeline.stages.s1.when',
+        'pipeline.stages.stage1.delegateSelectors',
+        'pipeline.stages.stage1.description',
+        'pipeline.stages.stage1.name',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.description',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.name',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.onDelegate',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.timeout',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.when',
+        'pipeline.stages.stage1.when',
+        'pipeline.stages.stage2.delegateSelectors',
+        'pipeline.stages.stage2.description',
+        'pipeline.stages.stage2.name',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.description',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.name',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.onDelegate',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.timeout',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.when',
+        'pipeline.stages.stage2.when',
+        'pipeline.variables.pipelineVariable',
         'pipeline.endTs',
         'pipeline.executionId',
         'pipeline.identifier',
         'pipeline.properties',
         'pipeline.sequenceId',
-        'pipeline.stages.s1.endTs',
-        'pipeline.stages.s1.identifier',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.endTs',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.identifier',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.executionTarget',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.shell',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.startTs',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.type',
-        'pipeline.stages.s1.startTs',
-        'pipeline.stages.s1.tags',
-        'pipeline.stages.s1.type',
+        'pipeline.stages.stage1.endTs',
+        'pipeline.stages.stage1.identifier',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.endTs',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.identifier',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.executionTarget',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.shell',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.startTs',
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.type',
+        'pipeline.stages.stage1.startTs',
+        'pipeline.stages.stage1.tags',
+        'pipeline.stages.stage1.type',
+        'pipeline.stages.stage1.variables',
+        'pipeline.stages.stage2.endTs',
+        'pipeline.stages.stage2.identifier',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.endTs',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.identifier',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.executionTarget',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.shell',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.startTs',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.type',
+        'pipeline.stages.stage2.startTs',
+        'pipeline.stages.stage2.tags',
+        'pipeline.stages.stage2.type',
+        'pipeline.stages.stage2.variables',
         'pipeline.startTs',
         'pipeline.tags',
         'pipeline.triggerType',
         'pipeline.triggeredBy.email',
         'pipeline.triggeredBy.name',
-        'pipeline.variables',
-        'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output.outputVariables'
+        'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output.outputVariables',
+        'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output.outputVariables'
       ]
     }
   ],
@@ -1073,41 +1637,66 @@ export const expressionTrie = {
     'pipeline.delegateSelectors',
     'pipeline.description',
     'pipeline.name',
-    'pipeline.stages.s1.delegateSelectors',
-    'pipeline.stages.s1.description',
-    'pipeline.stages.s1.name',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.description',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.name',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.onDelegate',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.timeout',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.when',
-    'pipeline.stages.s1.variables.value',
-    'pipeline.stages.s1.when',
+    'pipeline.stages.stage1.delegateSelectors',
+    'pipeline.stages.stage1.description',
+    'pipeline.stages.stage1.name',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.description',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.name',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.onDelegate',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.timeout',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.when',
+    'pipeline.stages.stage1.when',
+    'pipeline.stages.stage2.delegateSelectors',
+    'pipeline.stages.stage2.description',
+    'pipeline.stages.stage2.name',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.description',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.name',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.delegateSelectors',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.onDelegate',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.spec.script',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.timeout',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.when',
+    'pipeline.stages.stage2.when',
+    'pipeline.variables.pipelineVariable',
     'pipeline.endTs',
     'pipeline.executionId',
     'pipeline.identifier',
     'pipeline.properties',
     'pipeline.sequenceId',
-    'pipeline.stages.s1.endTs',
-    'pipeline.stages.s1.identifier',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.endTs',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.identifier',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.executionTarget',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.shell',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.spec.source.type',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.startTs',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.type',
-    'pipeline.stages.s1.startTs',
-    'pipeline.stages.s1.tags',
-    'pipeline.stages.s1.type',
+    'pipeline.stages.stage1.endTs',
+    'pipeline.stages.stage1.identifier',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.endTs',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.identifier',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.executionTarget',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.shell',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.spec.source.type',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.startTs',
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.type',
+    'pipeline.stages.stage1.startTs',
+    'pipeline.stages.stage1.tags',
+    'pipeline.stages.stage1.type',
+    'pipeline.stages.stage1.variables',
+    'pipeline.stages.stage2.endTs',
+    'pipeline.stages.stage2.identifier',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.endTs',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.identifier',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.executionTarget',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.shell',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.spec.source.type',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.startTs',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.type',
+    'pipeline.stages.stage2.startTs',
+    'pipeline.stages.stage2.tags',
+    'pipeline.stages.stage2.type',
+    'pipeline.stages.stage2.variables',
     'pipeline.startTs',
     'pipeline.tags',
     'pipeline.triggerType',
     'pipeline.triggeredBy.email',
     'pipeline.triggeredBy.name',
-    'pipeline.variables',
-    'pipeline.stages.s1.spec.execution.steps.ShellScript_1.output.outputVariables'
+    'pipeline.stages.stage1.spec.execution.steps.ShellScript_1.output.outputVariables',
+    'pipeline.stages.stage2.spec.execution.steps.ShellScript_1.output.outputVariables'
   ]
 }
