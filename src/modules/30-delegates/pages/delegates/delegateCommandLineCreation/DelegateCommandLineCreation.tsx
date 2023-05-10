@@ -19,7 +19,11 @@ import { useStrings } from 'framework/strings'
 import {
   GenerateKubernetesYamlQueryParams,
   useGenerateKubernetesYaml,
-  useGetInstallationCommand
+  useGetInstallationCommand,
+  useValidateDockerDelegate,
+  useValidateKubernetesYaml,
+  validateDockerDelegatePromise,
+  ValidateDockerDelegateQueryParams
 } from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -30,6 +34,7 @@ import {
   DelegateNameLengthLimit,
   KubernetesType
 } from '@delegates/constants'
+import { debounce } from 'lodash-es'
 import { useGenerateTerraformModule } from 'services/cd-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
@@ -100,6 +105,38 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       fileFormat: 'text/plain'
     } as GenerateKubernetesYamlQueryParams
   })
+  const { mutate: testKubernetesDelegateName, loading: testKubernetesDelegateNameInProgress } =
+    useValidateKubernetesYaml({
+      queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier }
+    })
+  const { refetch: testDockerDelegateName, loading: testDockerDelegateNameInProgress } = useValidateDockerDelegate({
+    debounce: 800,
+    lazy: true
+  })
+
+  const testDelegateNameExec = async (delegateName: string, delegateType: DelegateCommandLineTypes) => {
+    if (delegateType === DelegateCommandLineTypes.KUBERNETES && kubernetesType) {
+      testKubernetesDelegateName({
+        name: delegateName,
+        delegateType: 'KUBERNETES',
+        size: 'LARGE',
+        tokenName: 'dfdsf',
+        k8sConfigDetails: { k8sPermissionType: 'NAMESPACE_ADMIN', namespace: 'delegateName' }
+      })
+    } else {
+      const data = await validateDockerDelegatePromise({
+        queryParams: {
+          accountId,
+          delegateName,
+          projectIdentifier,
+          orgIdentifier,
+          tokenName: 'something'
+        } as ValidateDockerDelegateQueryParams
+      })
+      console.log({ data })
+    }
+  }
+  const testDelegateName = debounce(testDelegateNameExec, 800)
   const getKubernetesYaml = async () => {
     if (!kubenetesYamlOriginal) {
       const yamlData = await downloadKubernetesYaml({
@@ -285,6 +322,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
         intent={errorDelegateName || errorDelegateNameLength ? Intent.DANGER : Intent.NONE}
         onChange={e => {
           const latestValue = (e.currentTarget as HTMLInputElement).value.trim()
+          testDelegateName(latestValue, delegateType)
           const delegateNameSchema = Yup.object({
             name: Yup.string().trim().matches(delegateNameRegex)
           })
@@ -306,6 +344,9 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       />
     </Layout.Vertical>
   )
+  //useValidateKubernetesYaml
+  //validateDockerDelegatePromise
+  //
   const shouldDisplayDelegateConnection = () =>
     (delegateType === DelegateCommandLineTypes.DOCKER ||
       (delegateType === DelegateCommandLineTypes.KUBERNETES && kubernetesType)) &&

@@ -59,6 +59,7 @@ import { getDelegateStatusSelectOptions } from './utils/DelegateHelper'
 import DelegateListingItem from './DelegateListingItem'
 
 import css from './DelegatesPage.module.scss'
+import useCreateDelegateModal from '@delegates/modals/DelegateModal/useCreateDelegateModal'
 const POLLING_INTERVAL = 10000
 
 interface DelegatesListProps {
@@ -100,7 +101,7 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
   )
   const { mutate: fetchDelegates, loading: isFetchingDelegates } = useGetDelegateGroupsNGV2WithFilter({ queryParams })
   const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal()
-
+  //const { openDelegateModal: openDelegateModalWithCommands } = useCreateDelegateModal()
   useEffect(() => {
     setShowDelegateLoader(true)
     refetchDelegates(queryParams)
@@ -115,7 +116,7 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      type: 'Delegate'
+      type: 'Delegate',
     },
     mock: filtersMockData
   })
