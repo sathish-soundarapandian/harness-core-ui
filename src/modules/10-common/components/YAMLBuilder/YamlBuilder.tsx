@@ -162,13 +162,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   setUpEditor(theme)
   const params = useParams()
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
+  const yamlRef = useRef<string>(currentYaml)
   const [initialSelectionRemoved, setInitialSelectionRemoved] = useState<boolean>(
     !defaultTo(existingYaml, existingJSON)
   )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
 
   const editorRef = useRef<ReactMonacoEditor>(null)
-  const yamlRef = useRef<string | undefined>('')
   const yamlValidationErrorsRef = useRef<Map<number, string>>()
   yamlValidationErrorsRef.current = yamlValidationErrors
   const editorVersionRef = useRef<number>()
@@ -191,7 +191,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const handler = React.useMemo(
     () =>
       ({
-        getLatestYaml: () => yamlRef.current,
+        getLatestYaml: () => currentYaml,
         setLatestYaml: (json: Record<string, any>) => {
           attempt(verifyIncomingJSON, json)
         },
@@ -210,6 +210,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }, [bind, handler])
 
+  useEffect(() => {
+    yamlRef.current = currentYaml
+  }, [currentYaml])
+
   const getEditorCurrentVersion = (): number | undefined => {
     return editorRef.current?.editor?.getModel()?.getAlternativeVersionId()
   }
@@ -221,7 +225,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       let sanitizedYAML = yamlEqOfJSON.replace(': null\n', ': \n')
 
       setCurrentYaml(sanitizedYAML)
-      yamlRef.current = sanitizedYAML
       verifyYAML({
         updatedYaml: sanitizedYAML,
         setYamlValidationErrors,
@@ -231,7 +234,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       })
     } else {
       setCurrentYaml('')
-      yamlRef.current = ''
       setYamlValidationErrors(undefined)
     }
   }
@@ -244,10 +246,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   useEffect(() => {
     if (existingYaml) {
-      setCurrentYaml(existingYaml)
-      yamlRef.current = existingYaml
+      const sanitizedYAML = existingYaml.replace(': null\n', ': \n')
+      setCurrentYaml(sanitizedYAML)
       verifyYAML({
-        updatedYaml: existingYaml,
+        updatedYaml: sanitizedYAML,
         setYamlValidationErrors,
         showError,
         schema,
@@ -276,7 +278,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const onYamlChange = useCallback(
     debounce((updatedYaml: string): void => {
       setCurrentYaml(updatedYaml)
-      yamlRef.current = updatedYaml
       verifyYAML({
         updatedYaml,
         setYamlValidationErrors,
@@ -883,6 +884,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           })
           codeLensRegistrations.current.set(lineNumber, registrationId)
         })
+      } else {
+        codeLensRegistrations.current.clear()
       }
     }
   }, [currentYaml, editorRef.current?.editor, shouldShowPluginsPanel, codeLensRegistrations.current])
@@ -938,7 +941,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const { shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
       if (shouldInsertYAML && cursorPosition && editorRef.current?.editor) {
-        let updatedYAML = currentYaml
+        let updatedYAML = yamlRef.current
         try {
           let closestStageIndex = getArrayIndexClosestToCurrentCursor({
             editor: editorRef.current.editor,
@@ -946,9 +949,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             searchToken: StageMatchRegex
           })
           if (closestStageIndex < 0) {
-            updatedYAML = yamlStringify({ ...parse(currentYaml), stages: [getDefaultStageForModule(module)] })
+            updatedYAML = yamlStringify({ ...parse(updatedYAML), stages: [getDefaultStageForModule(module)] })
             onYamlChange(updatedYAML)
             setCurrentYaml(updatedYAML)
+            yamlRef.current = updatedYAML
             closestStageIndex = 0
           }
           const yamlStepToBeInsertedAt = getStageYAMLPathForStageIndex(closestStageIndex)
@@ -992,6 +996,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           updatedYAML = yamlStringify(set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps))
           onYamlChange(updatedYAML)
           setCurrentYaml(updatedYAML)
+          yamlRef.current = updatedYAML
           setPluginOpnStatus?.(Status.SUCCESS)
           spotLightInsertedYAML({
             noOflinesInserted: countAllKeysInObject(pluginValuesAsStep),
@@ -1005,14 +1010,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
     },
-    [currentCursorPosition, currentYaml, editorRef.current?.editor]
+    [currentCursorPosition, yamlRef.current, editorRef.current?.editor]
   )
 
   const renderEditorControls = useCallback((): React.ReactElement => {
     return (
       <Layout.Horizontal spacing="small">
-        {showCopyIcon && yamlRef.current ? (
-          <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} />
+        {showCopyIcon && currentYaml ? (
+          <CopyToClipboard content={defaultTo(currentYaml, '')} showFeedback={true} />
         ) : null}
         {shouldShowPluginsPanel ? (
           <Icon
@@ -1025,7 +1030,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         ) : null}
       </Layout.Horizontal>
     )
-  }, [yamlRef.current, showCopyIcon, isEditorExpanded, shouldShowPluginsPanel])
+  }, [currentYaml, showCopyIcon, isEditorExpanded, shouldShowPluginsPanel])
 
   return shouldShowPluginsPanel ? (
     <Layout.Horizontal>

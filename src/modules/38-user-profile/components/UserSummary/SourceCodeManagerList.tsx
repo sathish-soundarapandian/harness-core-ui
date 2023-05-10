@@ -11,7 +11,7 @@ import { Text, Layout, Button, Icon, ButtonVariation, useConfirmationDialog } fr
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Color, FontVariation } from '@harness/design-system'
 import { Spinner } from '@blueprintjs/core'
-import AddSCMOAuth, { getRepoProviderLabelKey } from '@common/components/AccessTokenOAuth/AccessTokenOAuth'
+import AccessTokenOAuth, { getRepoProviderLabelKey } from '@common/components/AccessTokenOAuth/AccessTokenOAuth'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useSourceCodeModal } from '@user-profile/modals/SourceCodeManager/useSourceCodeManager'
 import { useStrings } from 'framework/strings'
@@ -281,7 +281,7 @@ const SourceCodeManagerList: React.FC = () => {
     <Layout.Vertical spacing="large">
       {PIE_GITX_OAUTH ? (
         <>
-          <AddSCMOAuth refetch={refetchOauthSCMs} providersWithTokenAvailble={getProvidersWithTokenAvailble()} />
+          <AccessTokenOAuth refetch={refetchOauthSCMs} providersWithTokenAvailble={getProvidersWithTokenAvailble()} />
           <Text font={{ variation: FontVariation.H5 }}>{getString('userProfile.accessTokensForGitProviders')}</Text>
           {getContentV2()}
         </>

@@ -29,6 +29,7 @@ jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: githubConnectorMock }
   }),
+  useSaveUserSourceCodeManager: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetUserSourceCodeManagers: jest
     .fn()
     .mockImplementation(() => ({ data: userAccessTokenMock, refetch: () => refetchUserAccessTokenMock() }))

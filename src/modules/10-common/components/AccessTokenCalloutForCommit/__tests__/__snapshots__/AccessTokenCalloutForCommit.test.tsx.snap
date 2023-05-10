@@ -6,7 +6,7 @@ exports[`AccessTokenCalloutForCommit test suite It should show setUp accessToken
     class="bp3-callout callout calloutWarning"
   >
     <div
-      class="Layout--horizontal StyledProps--main"
+      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
     >
       <p
         class="StyledProps--font StyledProps--main"

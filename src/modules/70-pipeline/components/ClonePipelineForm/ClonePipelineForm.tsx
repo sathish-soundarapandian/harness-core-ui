@@ -36,7 +36,7 @@ import {
   useGetProjectAggregateDTOList,
   useGetSettingValue
 } from 'services/cd-ng'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
@@ -48,6 +48,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import { isSimplifiedYAMLEnabledForCI } from '@pipeline/utils/CIUtils'
 
 import type { Evaluation } from 'services/pm'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
@@ -94,6 +95,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   const [projectsQuery, setProjectsQuery] = React.useState('')
   const [selectedOrg, setSelectedOrg] = React.useState(orgIdentifier)
   const [governanceMetadata, setGovernanceMetadata] = useState<Evaluation | undefined>()
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const { mutate: clonePipeline } = useClonePipeline({})
   const { data: orgData, loading: orgDataLoading } = useGetOrganizationList({
@@ -206,7 +208,9 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
       )
 
       history.push(
-        routes.toPipelineStudio({
+        (isSimplifiedYAMLEnabledForCI(module, CI_YAML_VERSIONING)
+          ? routes.toPipelineStudioV1
+          : routes.toPipelineStudio)({
           module,
           pipelineIdentifier: defaultTo(data.destinationConfig.pipelineIdentifier, ''),
           orgIdentifier: defaultTo(data.destinationConfig.orgIdentifier, ''),

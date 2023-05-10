@@ -6,15 +6,16 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { isEqual, omit } from 'lodash-es'
+import { isEmpty, isEqual, omit } from 'lodash-es'
 import { Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { parse } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { Status } from '@common/utils/Constants'
 import { useStrings } from 'framework/strings'
-import type { EntityValidityDetails, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { EntityValidityDetails } from 'services/pipeline-ng'
+import type { Pipeline as PipelineV1 } from 'services/pipeline-ng/index.v1'
 import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/useEnableEditModes'
 import { usePipelineSchemaV1 } from '../PipelineSchemaContextV1/PipelineSchemaContextV1'
 import { usePipelineContextV1 } from '../PipelineContextV1/PipelineContextV1'
@@ -27,12 +28,7 @@ export const POLL_INTERVAL = 1 /* sec */ * 1000 /* ms */
 let Interval: number | undefined
 function PipelineYAMLViewV1(): React.ReactElement {
   const {
-    state: {
-      pipeline,
-      pipelineView: { isDrawerOpened },
-      pipelineView,
-      entityValidityDetails
-    },
+    state: { pipeline, pipelineView, entityValidityDetails },
     updatePipelineView,
     stepsFactory,
     isReadonly,
@@ -53,19 +49,22 @@ function PipelineYAMLViewV1(): React.ReactElement {
   // setup polling
   React.useEffect(() => {
     try {
-      if (yamlHandler && !isDrawerOpened) {
+      if (yamlHandler) {
+        const { getLatestYaml, getYAMLValidationErrorMap } = yamlHandler
         Interval = window.setInterval(() => {
           try {
-            const pipelineFromYaml = parse<PipelineInfoConfig>(yamlHandler.getLatestYaml())
             // Do not call updatePipeline with undefined, pipelineFromYaml check in below if condition prevents that.
             // This can happen when somebody adds wrong yaml (e.g. connector's yaml) into pipeline yaml that is stored in Git
             // and opens pipeline in harness. At this time above line will evaluate to undefined
+            const sanitizedPipelineYAMLAsJSON = parse<PipelineV1>(getLatestYaml())
             if (
-              pipelineFromYaml &&
-              !isEqual(omit(pipeline, 'repo', 'branch'), pipelineFromYaml) &&
-              yamlHandler.getYAMLValidationErrorMap()?.size === 0 // Don't update for Invalid Yaml
+              sanitizedPipelineYAMLAsJSON &&
+              !isEqual(omit(pipeline, 'repo', 'branch'), sanitizedPipelineYAMLAsJSON) &&
+              isEmpty(getYAMLValidationErrorMap()) // Don't update for Invalid Yaml
             ) {
-              updatePipeline(pipelineFromYaml).then(() => {
+              // eslint-disable-next-line
+              // @ts-ignore
+              updatePipeline(sanitizedPipelineYAMLAsJSON).then(() => {
                 if (entityValidityDetails?.valid === false) {
                   updateEntityValidityDetailsRef.current?.({ ...entityValidityDetails, valid: true, invalidYaml: '' })
                 }
@@ -82,18 +81,13 @@ function PipelineYAMLViewV1(): React.ReactElement {
     } catch (e) {
       // Ignore Error
     }
-  }, [yamlHandler, pipeline, isDrawerOpened])
+  }, [yamlHandler, pipeline])
 
   React.useEffect(() => {
     if (yamlHandler) {
       setYamlHandlerContext(yamlHandler)
     }
   }, [yamlHandler, setYamlHandlerContext])
-
-  const yamlOrJsonProp =
-    entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
-      ? { existingYaml: entityValidityDetails?.invalidYaml }
-      : { existingJSON: pipeline }
 
   React.useEffect(() => {
     updatePipelineView({ ...pipelineView, isYamlEditable: true })
@@ -132,8 +126,8 @@ function PipelineYAMLViewV1(): React.ReactElement {
         schema={pipelineSchema?.data}
         setPlugin={setSelectedEntity}
         setPluginOpnStatus={setEntityAddUpdateOpnStatus}
+        existingYaml={yamlStringify(pipeline)}
         {...yamlEditorCustomHeaderProp}
-        {...yamlOrJsonProp}
       />
       {yamlHandler && isEditorExpanded ? (
         <PluginsPanel

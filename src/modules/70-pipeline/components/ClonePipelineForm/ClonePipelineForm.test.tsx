@@ -549,5 +549,88 @@ describe('<ClonePipelineForm /> tests', () => {
         </div>
       `)
     })
+
+    test('re-routes to V1 pipeline studio route if YAML simplification is enabled for CI', async () => {
+      mockImport('@common/hooks/useFeatureFlag', {
+        useFeatureFlags: () => ({ CI_YAML_VERSIONING: true })
+      })
+      const clonePipeline = jest.fn()
+      ;(useClonePipeline as jest.Mock).mockImplementation().mockReturnValue({
+        mutate: clonePipeline
+      })
+      const { findByTestId } = render(
+        <TestWrapper
+          path={routes.toCIProject({
+            orgIdentifier: ':orgIdentifier',
+            projectIdentifier: ':projectIdentifier',
+            accountId: ':accountId'
+          })}
+          pathParams={PATH_PARAMS as any}
+          defaultAppStoreValues={{ supportingGitSimplification: true }}
+        >
+          <ClonePipelineForm
+            originalPipeline={{
+              ...originalPipeline,
+              storeType: 'REMOTE',
+              connectorRef: 'MyConnector',
+              gitDetails: { filePath: './pipeline.yaml', branch: 'main', repoName: 'MyRepo' }
+            }}
+            onClose={jest.fn()}
+            isOpen
+          />
+          <CurrentLocation />
+        </TestWrapper>
+      )
+
+      const clone = await findByTestId('clone')
+
+      userEvent.click(clone)
+
+      await waitFor(() =>
+        expect(clonePipeline).toHaveBeenLastCalledWith(
+          {
+            cloneConfig: {
+              connectors: false,
+              inputSets: false,
+              templates: false,
+              triggers: false
+            },
+            destinationConfig: {
+              orgIdentifier: 'TEST_ORG1',
+              pipelineIdentifier: 'My_Pipeline_Clone',
+              pipelineName: 'My Pipeline - Clone',
+              projectIdentifier: 'TEST_PROJECT1',
+              description: 'My Pipeline Description',
+              tags: { MyTag1: '', MyTag2: '' }
+            },
+            sourceConfig: {
+              orgIdentifier: 'TEST_ORG1',
+              pipelineIdentifier: 'My_Pipeline',
+              projectIdentifier: 'TEST_PROJECT1'
+            }
+          },
+          {
+            queryParams: {
+              accountIdentifier: 'TEST_ACCOUNT1',
+              branch: 'main',
+              commitMsg: 'Clone pipeline My Pipeline',
+              connectorRef: 'MyConnector',
+              filePath: '.harness/My_Pipeline_Clone.yaml',
+              repoName: 'MyRepo',
+              storeType: 'REMOTE'
+            }
+          }
+        )
+      )
+      const newLocation = await findByTestId('location')
+
+      expect(newLocation).toMatchInlineSnapshot(`
+        <div
+          data-testid="location"
+        >
+          /account/TEST_ACCOUNT1/home/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone/pipeline-studio/?storeType=REMOTE&repoName=MyRepo&branch=main&connectorRef=MyConnector
+        </div>
+      `)
+    })
   })
 })
