@@ -18,17 +18,14 @@ import type { usePipelineContext } from '@pipeline/components/PipelineStudio/Pip
 import type { MultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import type ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
-import type RbacButton from '@rbac/components/Button/Button'
-import type RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import type { usePermission } from '@rbac/hooks/usePermission'
-import type RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import type {
   useGetConnector,
   useGetListOfBranchesByRefConnectorV2,
   useGetListOfReposByRefConnector
 } from 'services/cd-ng'
 import type { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 
 export interface IACMCustomMicroFrontendProps {
   customHooks: {
@@ -53,10 +50,7 @@ export interface IACMCustomMicroFrontendProps {
     SaveTemplateButton: typeof SaveTemplateButton
     MultiTypeConnectorField: typeof MultiTypeConnectorField
     MultiTypeFieldSelector: typeof MultiTypeFieldSelector
-    ExecutionGraph: typeof ExecutionGraph
-    RbacOptionsMenuButton: typeof RbacOptionsMenuButton
-    RbacButton: typeof RbacButton
-    RbacMenuItem: typeof RbacMenuItem
     ConnectorReferenceField: typeof ConnectorReferenceField
+    MultiTypeSecretInput: typeof MultiTypeSecretInput
   }
 }

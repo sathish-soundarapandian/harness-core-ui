@@ -26,7 +26,7 @@ jest.mock('@projects-orgs/components/ProjectSelector/ProjectSelector', () => ({
 const renderComponent = (): RenderResult =>
   render(
     <TestWrapper
-      path={routes.toIACMStacks({
+      path={routes.toIACMWorkspaces({
         ...accountPathProps,
         ...orgPathProps,
         ...pipelineModuleParams,
