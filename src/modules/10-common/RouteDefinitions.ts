@@ -2102,9 +2102,9 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
   ),
-  toIACMStacks: withAccountId(
+  toIACMWorkspaces: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/stacks`
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/workspaces`
   ),
   toIACMSetup: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>

@@ -7,14 +7,20 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Text, Layout } from '@harness/uicore'
+import { Text, Layout, useToaster } from '@harness/uicore'
 import { Callout } from '@blueprintjs/core'
 import cx from 'classnames'
-import { useGetConnector, useGetUserSourceCodeManagers, GetUserSourceCodeManagersQueryParams } from 'services/cd-ng'
+import {
+  useGetConnector,
+  useGetUserSourceCodeManagers,
+  GetUserSourceCodeManagersQueryParams,
+  UserSourceCodeManagerResponseDTO
+} from 'services/cd-ng'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import AccessTokenOAuth from '@common/components/AccessTokenOAuth/AccessTokenOAuth'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import css from './AccessTokenCalloutForCommit.module.scss'
 
@@ -25,6 +31,7 @@ const AccessTokenCalloutForCommit: React.FC<{
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { currentUserInfo } = useAppStore()
+  const { showError } = useToaster()
   const scopeFromSelected = getScopeFromValue(connectorIdWithScope || '')
 
   const { data: connectorData, loading } = useGetConnector({
@@ -52,7 +59,7 @@ const AccessTokenCalloutForCommit: React.FC<{
         queryParams: {
           accountIdentifier: accountId,
           userIdentifier: currentUserInfo.uuid,
-          type: connectorData?.data?.connector?.type as GetUserSourceCodeManagersQueryParams['type']
+          type: connectorData?.data?.connector?.type?.toUpperCase() as GetUserSourceCodeManagersQueryParams['type']
         }
       })
     }
@@ -67,7 +74,7 @@ const AccessTokenCalloutForCommit: React.FC<{
           loading || loadingOauthSCMs || OauthSCMs?.data?.userSourceCodeManagerResponseDTOList?.length === 0
       })}
     >
-      <Layout.Horizontal>
+      <Layout.Horizontal flex={{ alignItems: 'center' }}>
         {loading || loadingOauthSCMs ? (
           <Text icon="loading">{getString('common.oAuth.fetchingUserAccessTokens')}</Text>
         ) : OauthSCMs?.data?.userSourceCodeManagerResponseDTOList?.[0]?.userName ? (
@@ -83,6 +90,13 @@ const AccessTokenCalloutForCommit: React.FC<{
                 type: connectorData?.data?.connector?.type
               })}
             </Text>
+            <AccessTokenOAuth
+              refetch={refetchOauthSCMs}
+              selectedProvider={
+                connectorData?.data?.connector?.type?.toUpperCase() as UserSourceCodeManagerResponseDTO['type']
+              }
+              errorHandler={() => showError(getString('common.OAuthTryAgain'))}
+            />
           </>
         )}
       </Layout.Horizontal>

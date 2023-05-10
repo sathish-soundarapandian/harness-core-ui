@@ -8,7 +8,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Text, Layout, DropDown, getErrorInfoFromErrorObject, useToaster } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorInfoDTO,
@@ -54,7 +54,10 @@ export const supportedProviders = [SourceCodeTypes.GITHUB, SourceCodeTypes.GITLA
 const AccessTokenOAuth: React.FC<{
   refetch: () => Promise<void>
   providersWithTokenAvailble?: Array<UserSourceCodeManagerResponseDTO['type']>
+  selectedProvider?: UserSourceCodeManagerResponseDTO['type']
+  errorHandler?: () => void
 }> = props => {
+  const { refetch, providersWithTokenAvailble, selectedProvider, errorHandler } = props
   const { accountId } = useParams<AccountPathProps>()
   const { currentUserInfo } = useAppStore()
   const { getString } = useStrings()
@@ -62,12 +65,20 @@ const AccessTokenOAuth: React.FC<{
   const [oAuthStatus, setOAuthStatus] = useState<Status>(Status.TO_DO)
   const oAuthSecretIntercepted = useRef<boolean>(false)
   const [forceFailOAuthTimeoutId, setForceFailOAuthTimeoutId] = useState<NodeJS.Timeout>()
-  const [gitProviderType, setGitProviderType] = useState<UserSourceCodeManagerRequestDTO['type']>()
+  const [gitProviderType, setGitProviderType] = useState<UserSourceCodeManagerRequestDTO['type']>(selectedProvider)
   const [showOAuthStatus, setShowOAuthStatus] = useState<boolean>(true)
 
   const supportedProvidersSelectOptions = supportedProviders.map(provider => {
     return { label: getString(getRepoProviderLabelKey(provider)), value: provider }
   })
+
+  const getOAuthError = useCallback((): JSX.Element => {
+    return (
+      <Text icon="circle-cross" iconProps={{ size: 24, color: Color.RED_500 }} color={Color.RED_500}>
+        {getString('common.OAuthTryAgain')}
+      </Text>
+    )
+  }, [getString])
 
   const { loading, mutate: createUserSCM } = useSaveUserSourceCodeManager({})
   // This is handler for event dispatched by the other window
@@ -96,7 +107,7 @@ const AccessTokenOAuth: React.FC<{
           })
             .then(() => {
               showSuccess(getString('common.oAuth.accessTokenCreateSuccess'))
-              props.refetch()
+              refetch()
             })
             .catch(error => {
               setOAuthStatus(Status.TO_DO)
@@ -118,44 +129,53 @@ const AccessTokenOAuth: React.FC<{
 
   return (
     <Layout.Vertical spacing="large">
-      <Text font={{ variation: FontVariation.H5 }}>{getString('common.oAuth.connectToGitProviderLabel')}</Text>
+      {!selectedProvider && (
+        <Text font={{ variation: FontVariation.H5 }}>{getString('common.oAuth.connectToGitProviderLabel')}</Text>
+      )}
       <Layout.Horizontal spacing="medium">
-        <DropDown
-          className={css.oauthDropDown}
-          buttonTestId={'oAuth-provider-select'}
-          value={gitProviderType}
-          onChange={item => {
-            if (props.providersWithTokenAvailble?.includes(item?.value as UserSourceCodeManagerResponseDTO['type'])) {
-              setShowOAuthStatus(false)
-              showSuccess(getString('common.oAuth.accessTokenAlredyAdded'))
-            } else {
-              setShowOAuthStatus(true)
-              setOAuthStatus(Status.TO_DO)
-            }
-            setGitProviderType(item?.value as UserSourceCodeManagerRequestDTO['type'])
-          }}
-          items={supportedProvidersSelectOptions}
-          placeholder={getString('common.oAuth.connectToGitProviderPlaceholder')}
-          usePortal={true}
-          addClearBtn={true}
-          disabled={loading}
-        />
-        {gitProviderType && showOAuthStatus && (
-          <ConnectViaOAuth
-            labelText={getString('common.connect')}
-            isPrivateSecret={true}
-            key={gitProviderType}
-            gitProviderType={gitProviderType as ConnectorInfoDTO['type']}
-            accountId={accountId}
-            status={oAuthStatus}
-            setOAuthStatus={setOAuthStatus}
-            isOAuthAccessRevoked={false}
-            isExistingConnectionHealthy={false}
-            oAuthSecretIntercepted={oAuthSecretIntercepted}
-            forceFailOAuthTimeoutId={forceFailOAuthTimeoutId}
-            setForceFailOAuthTimeoutId={setForceFailOAuthTimeoutId}
-            hideOauthLinkButton={oAuthStatus === Status.SUCCESS || oAuthStatus === Status.IN_PROGRESS}
+        {!selectedProvider && (
+          <DropDown
+            className={css.oauthDropDown}
+            buttonTestId={'oAuth-provider-select'}
+            value={gitProviderType}
+            onChange={item => {
+              if (providersWithTokenAvailble?.includes(item?.value as UserSourceCodeManagerResponseDTO['type'])) {
+                setShowOAuthStatus(false)
+                showSuccess(getString('common.oAuth.accessTokenAlredyAdded'))
+              } else {
+                setShowOAuthStatus(true)
+                setOAuthStatus(Status.TO_DO)
+              }
+              setGitProviderType(item?.value as UserSourceCodeManagerRequestDTO['type'])
+            }}
+            items={supportedProvidersSelectOptions}
+            placeholder={getString('common.oAuth.connectToGitProviderPlaceholder')}
+            usePortal={true}
+            addClearBtn={true}
+            disabled={loading}
           />
+        )}
+        {gitProviderType && showOAuthStatus && (
+          <>
+            <ConnectViaOAuth
+              labelText={getString('common.connect')}
+              showLinkButtonAsMinimal={!!selectedProvider}
+              isPrivateSecret={true}
+              key={gitProviderType}
+              gitProviderType={gitProviderType as ConnectorInfoDTO['type']}
+              accountId={accountId}
+              status={oAuthStatus}
+              setOAuthStatus={setOAuthStatus}
+              isOAuthAccessRevoked={false}
+              isExistingConnectionHealthy={false}
+              oAuthSecretIntercepted={oAuthSecretIntercepted}
+              forceFailOAuthTimeoutId={forceFailOAuthTimeoutId}
+              setForceFailOAuthTimeoutId={setForceFailOAuthTimeoutId}
+              hideOauthLinkButton={oAuthStatus === Status.SUCCESS || oAuthStatus === Status.IN_PROGRESS}
+              hideOauthStatus={oAuthStatus === Status.FAILURE}
+            />
+            {oAuthStatus === Status.FAILURE && (errorHandler ? errorHandler() : getOAuthError())}
+          </>
         )}
       </Layout.Horizontal>
     </Layout.Vertical>

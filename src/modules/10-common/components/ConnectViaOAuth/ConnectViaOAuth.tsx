@@ -29,8 +29,10 @@ export interface ConnectViaOAuthProps {
   orgIdentifier?: string
   projectIdentifier?: string
   labelText?: string | JSX.Element
+  showLinkButtonAsMinimal?: boolean
   isPrivateSecret?: boolean
   hideOauthLinkButton?: boolean
+  hideOauthStatus?: boolean
 }
 
 export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
@@ -48,6 +50,8 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
     projectIdentifier,
     isPrivateSecret,
     labelText,
+    showLinkButtonAsMinimal = false,
+    hideOauthStatus = false,
     hideOauthLinkButton
   } = props
   const { getString } = useStrings()
@@ -171,9 +175,10 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
   return (
     <>
       <Layout.Vertical spacing="xlarge">
-        {renderView()}
+        {!hideOauthStatus && renderView()}
         {!hideOauthLinkButton && (
           <Button
+            minimal={showLinkButtonAsMinimal}
             intent="primary"
             text={
               labelText ||
@@ -185,7 +190,7 @@ export const ConnectViaOAuth: React.FC<ConnectViaOAuthProps> = props => {
               )
             }
             onClick={handleOAuthLinking}
-            variation={ButtonVariation.PRIMARY}
+            variation={showLinkButtonAsMinimal ? undefined : ButtonVariation.PRIMARY}
             className={css.linkToGitBtn}
           />
         )}

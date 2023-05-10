@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly labelClassName: string
   readonly oauthDropDown: string
 }
 export default styles
