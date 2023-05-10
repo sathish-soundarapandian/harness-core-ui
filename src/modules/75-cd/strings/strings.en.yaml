@@ -175,6 +175,8 @@ steps:
   awsSamDeployStep:
     containerConfigurationText: Container Configuration
     awsSamDeployCommandOptions: AWS SAM Deploy Command Options
+  awsSamBuildStep:
+    samBuildDockerRegistryConnectorRef: SAM Build Docker Registry Connector
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'

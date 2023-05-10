@@ -1287,6 +1287,7 @@ stepDescription:
   TerraformCloudRollback: Trigger a rollback of the latest run on your Terraform Cloud Workspace.
   SscaOrchestration: Orchestrate SBOM generation for your artifacts and repository
   AwsSamDeploy: Deploy an AWS SAM function.
+  AwsSamBuild: Build an AWS SAM function.
 
 executionStrategy:
   executionStrategies: Execution Strategies

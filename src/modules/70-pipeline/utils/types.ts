@@ -108,8 +108,28 @@ export interface CloudFunctionTrafficShiftExecutionStepInitialValues extends Ste
 export interface AwsSamDeployStepInitialValues extends StepElementConfig {
   spec: {
     connectorRef: string
-    image: string
+    image?: string
     deployCommandOptions?: string[]
+    stackName?: string
+    privileged?: boolean
+    imagePullPolicy?: string
+    runAsUser?: string
+    envVariables?: { [key: string]: string }[]
+    resources?: {
+      limits?: {
+        memory?: string
+        cpu?: string
+      }
+    }
+  }
+}
+
+export interface AwsSamBuildStepInitialValues extends StepElementConfig {
+  spec: {
+    connectorRef: string
+    samBuildDockerRegistryConnectorRef: string
+    image?: string
+    buildCommandOptions?: string[]
     stackName?: string
     privileged?: boolean
     imagePullPolicy?: string

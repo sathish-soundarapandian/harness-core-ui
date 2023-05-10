@@ -20,18 +20,22 @@ import { MultiTypeMap } from '@common/components/MultiTypeMap/MultiTypeMap'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
+import type { AwsSamDeployStepFormikValues } from './AwsSamDeployStep/AwsSamDeployStepEdit'
+import type { AwsSamBuildStepFormikValues } from './AwsSamBuildStep/AwsSamBuildStepEdit'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+
+export type AwsSamBuildDeployStepFormikVaues = AwsSamDeployStepFormikValues | AwsSamBuildStepFormikValues
 
 interface AwsSamDeployStepOptionalFieldsProps {
   stepViewType?: StepViewType
   allowableTypes: AllowedTypes
   readonly?: boolean
-  formik: FormikProps<AwsSamDeployStepInitialValues>
+  formik: FormikProps<AwsSamBuildDeployStepFormikVaues>
+  isAwsSamBuildStep?: boolean
 }
 
-export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFieldsProps): React.ReactElement {
-  const { readonly, allowableTypes, formik } = props
+export function AwsSamBuildDeployStepOptionalFields(props: AwsSamDeployStepOptionalFieldsProps): React.ReactElement {
+  const { readonly, allowableTypes, formik, isAwsSamBuildStep } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -47,7 +51,7 @@ export function AwsSamDeployStepOptionalFields(props: AwsSamDeployStepOptionalFi
         <Container className={stepCss.formGroup}>
           <Container padding={{ top: 'small', bottom: 'small' }}>
             <MultiTypeExecutionCondition
-              path={'spec.deployCommandOptions'}
+              path={isAwsSamBuildStep ? 'spec.buildCommandOptions' : 'spec.deployCommandOptions'}
               allowableTypes={allowableTypes}
               isInputDisabled={readonly}
               expressions={expressions}

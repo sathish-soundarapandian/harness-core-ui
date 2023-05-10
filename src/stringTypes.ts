@@ -4901,6 +4901,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AppResize': string
   'pipeline.stepDescription.AwsLambdaDeploy': string
   'pipeline.stepDescription.AwsLambdaDeployRollback': string
+  'pipeline.stepDescription.AwsSamBuild': string
   'pipeline.stepDescription.AwsSamDeploy': string
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
@@ -6237,6 +6238,7 @@ export interface StringsMap {
   'cd.steps.awsInfraStep.placeholders.loadBalancer': string
   'cd.steps.awsInfraStep.placeholders.vpcs': string
   'cd.steps.awsInfraStep.regionError': string
+  'cd.steps.awsSamBuildStep.samBuildDockerRegistryConnectorRef': string
   'cd.steps.awsSamDeployStep.awsSamDeployCommandOptions': string
   'cd.steps.awsSamDeployStep.containerConfigurationText': string
   'cd.steps.azureInfraStep.azure': string

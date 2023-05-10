@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import type { FormikProps } from 'formik'
 import {
@@ -34,21 +34,22 @@ import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfi
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
+import type { AwsSamBuildStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
 import {
-  AwsSamBuildDeployStepFormikVaues,
-  AwsSamBuildDeployStepOptionalFields
+  AwsSamBuildDeployStepOptionalFields,
+  AwsSamBuildDeployStepFormikVaues
 } from '../AwsSamBuildDeployStepOptionalFields'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../AwsSamBuildDeployStep.module.scss'
 
-export interface AwsSamDeployStepFormikValues extends StepElementConfig {
+export interface AwsSamBuildStepFormikValues extends StepElementConfig {
   spec: {
     connectorRef: ConnectorRef
+    samBuildDockerRegistryConnectorRef: ConnectorRef
     image?: string
     deployCommandOptions?: string[]
     stackName?: string
@@ -64,19 +65,19 @@ export interface AwsSamDeployStepFormikValues extends StepElementConfig {
     envVariables?: { key: string; value: string }[]
   }
 }
-export interface AwsSamDeployStepProps {
-  initialValues: AwsSamDeployStepInitialValues
-  onUpdate?: (data: AwsSamDeployStepInitialValues) => void
+export interface AwsSamBuildStepProps {
+  initialValues: AwsSamBuildStepInitialValues
+  onUpdate?: (data: AwsSamBuildStepInitialValues) => void
   stepViewType?: StepViewType
-  onChange?: (data: AwsSamDeployStepInitialValues) => void
+  onChange?: (data: AwsSamBuildStepInitialValues) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
 }
 
-const AwsSamDeployStepEdit = (
-  props: AwsSamDeployStepProps,
-  formikRef: StepFormikFowardRef<AwsSamDeployStepFormikValues>
+const AwsSamBuildStepEdit = (
+  props: AwsSamBuildStepProps,
+  formikRef: StepFormikFowardRef<AwsSamBuildStepFormikValues>
 ): React.ReactElement => {
   const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -90,11 +91,16 @@ const AwsSamDeployStepEdit = (
     spec: Yup.object().shape({
       connectorRef: Yup.string().required(
         getString('common.validation.fieldIsRequired', { name: getString('pipelineSteps.connectorLabel') })
+      ),
+      samBuildDockerRegistryConnectorRef: Yup.string().required(
+        getString('common.validation.fieldIsRequired', {
+          name: getString('cd.steps.awsSamBuildStep.samBuildDockerRegistryConnectorRef')
+        })
       )
     })
   })
 
-  const getInitialValues = (): AwsSamDeployStepFormikValues => {
+  const getInitialValues = (): AwsSamBuildStepFormikValues => {
     return {
       ...initialValues,
       spec: {
@@ -111,27 +117,78 @@ const AwsSamDeployStepEdit = (
     }
   }
 
-  const onSubmit = (values: AwsSamDeployStepFormikValues): void => {
-    const modifiedValues: AwsSamDeployStepInitialValues = {
+  const onSubmit = (values: AwsSamBuildStepFormikValues): void => {
+    const modifiedValues: AwsSamBuildStepInitialValues = {
       ...values,
       spec: {
         ...values.spec,
         connectorRef: getConnectorRefValue(values.spec.connectorRef as ConnectorRefFormValueType),
+        samBuildDockerRegistryConnectorRef: getConnectorRefValue(
+          values.spec.samBuildDockerRegistryConnectorRef as ConnectorRefFormValueType
+        ),
         envVariables: values.spec?.envVariables?.map(envVar => ({ [envVar.key]: envVar.value }))
       }
     }
     onUpdate?.(modifiedValues)
   }
 
+  const renderConnectorField = (
+    formik: FormikProps<AwsSamBuildStepFormikValues>,
+    fieldName: string,
+    fieldLabel: string
+  ) => {
+    return (
+      <Container className={stepCss.formGroup}>
+        <FormMultiTypeConnectorField
+          width={510}
+          name={fieldName}
+          label={fieldLabel}
+          placeholder={getString('select')}
+          accountIdentifier={accountId}
+          projectIdentifier={projectIdentifier}
+          orgIdentifier={orgIdentifier}
+          multiTypeProps={{ expressions, allowableTypes }}
+          type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+          enableConfigureOptions={false}
+          selected={get(formik?.values, fieldName) as string}
+          setRefValue
+          disabled={readonly}
+          gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}
+        />
+        {getMultiTypeFromValue(get(formik.values, fieldName)) === MultiTypeInputType.RUNTIME && (
+          <ConnectorConfigureOptions
+            style={{ marginTop: 6 }}
+            value={get(formik.values, fieldName) as string}
+            type="String"
+            variableName={fieldName}
+            showRequiredField={false}
+            showDefaultField={false}
+            onChange={value => formik.setFieldValue(fieldName, value)}
+            isReadonly={readonly}
+            connectorReferenceFieldProps={{
+              accountIdentifier: accountId,
+              projectIdentifier,
+              orgIdentifier,
+              type: [Connectors.GCP, Connectors.AWS, Connectors.DOCKER],
+              label: fieldLabel,
+              disabled: readonly,
+              gitScope: { repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }
+            }}
+          />
+        )}
+      </Container>
+    )
+  }
+
   return (
     <>
-      <Formik<AwsSamDeployStepFormikValues>
+      <Formik<AwsSamBuildStepFormikValues>
         onSubmit={onSubmit}
-        formName="AwsSamDeployStepEdit"
+        formName="AwsSamBuildStepEdit"
         initialValues={getInitialValues()}
         validationSchema={validationSchema}
       >
-        {(formik: FormikProps<AwsSamDeployStepInitialValues>) => {
+        {(formik: FormikProps<AwsSamBuildStepFormikValues>) => {
           setFormikRef(formikRef, formik)
 
           return (
@@ -147,45 +204,13 @@ const AwsSamDeployStepEdit = (
                 {getString('cd.steps.awsSamDeployStep.containerConfigurationText')}
               </Text>
 
-              <Container className={stepCss.formGroup}>
-                <FormMultiTypeConnectorField
-                  width={510}
-                  name="spec.connectorRef"
-                  label={getString('pipelineSteps.connectorLabel')}
-                  placeholder={getString('select')}
-                  accountIdentifier={accountId}
-                  projectIdentifier={projectIdentifier}
-                  orgIdentifier={orgIdentifier}
-                  multiTypeProps={{ expressions, allowableTypes }}
-                  type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
-                  enableConfigureOptions={false}
-                  selected={formik?.values?.spec.connectorRef as string}
-                  setRefValue
-                  disabled={readonly}
-                  gitScope={{ repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }}
-                />
-                {getMultiTypeFromValue(formik.values.spec.connectorRef) === MultiTypeInputType.RUNTIME && (
-                  <ConnectorConfigureOptions
-                    style={{ marginTop: 6 }}
-                    value={formik.values.spec.connectorRef as string}
-                    type="String"
-                    variableName="spec.connectorRef"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    onChange={value => formik.setFieldValue('spec.connectorRef', value)}
-                    isReadonly={readonly}
-                    connectorReferenceFieldProps={{
-                      accountIdentifier: accountId,
-                      projectIdentifier,
-                      orgIdentifier,
-                      type: [Connectors.GCP, Connectors.AWS, Connectors.DOCKER],
-                      label: getString('pipelineSteps.connectorLabel'),
-                      disabled: readonly,
-                      gitScope: { repo: defaultTo(repoIdentifier, repoName), branch, getDefaultFromOtherRepo: true }
-                    }}
-                  />
-                )}
-              </Container>
+              {renderConnectorField(formik, 'spec.connectorRef', getString('pipelineSteps.connectorLabel'))}
+
+              {renderConnectorField(
+                formik,
+                'spec.samBuildDockerRegistryConnectorRef',
+                getString('cd.steps.awsSamBuildStep.samBuildDockerRegistryConnectorRef')
+              )}
 
               <Container className={stepCss.formGroup}>
                 <FormInput.MultiTextInput
@@ -227,6 +252,7 @@ const AwsSamDeployStepEdit = (
                         stepViewType={stepViewType}
                         allowableTypes={allowableTypes}
                         formik={formik as FormikProps<AwsSamBuildDeployStepFormikVaues>}
+                        isAwsSamBuildStep={true}
                       />
                     </Container>
                   }
@@ -240,4 +266,4 @@ const AwsSamDeployStepEdit = (
   )
 }
 
-export const AwsSamDeployStepEditRef = React.forwardRef(AwsSamDeployStepEdit)
+export const AwsSamBuildStepEditRef = React.forwardRef(AwsSamBuildStepEdit)
