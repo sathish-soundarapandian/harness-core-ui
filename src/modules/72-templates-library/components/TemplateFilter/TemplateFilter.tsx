@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useEffect, useRef } from 'react'
 import { Layout, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
@@ -28,8 +35,8 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 
 import {
-  useFilterWithValidFieldsWithMetaInfo,
-  usePipelineListFilterFieldToLabelMapping
+  useFilterWithValidFieldsWithMetaInfoForTemplates,
+  useTemplateListFilterFieldToLabelMapping
 } from '@pipeline/pages/utils/Filters/filters'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_PIPELINE_LIST_TABLE_SORT } from '@pipeline/utils/constants'
 import { TemplateFilterFields } from './TemplateFilterFields'
@@ -107,11 +114,16 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
           filterVisibility: undefined
         } as FilterDTO)
       : null
-  const { name = '', filterVisibility, identifier = '', filterProperties } = appliedFilter || {}
-  const { templateNames, tags: templateTags, description } = (filterProperties as TemplateFilterProperties) || {}
+  const { name = '', filterVisibility = 'OnlyCreator', identifier = '', filterProperties } = appliedFilter || {}
+  const {
+    templateNames,
+    tags: templateTags,
+    description,
+    templateEntityTypes
+  } = (filterProperties as TemplateFilterProperties) || {}
 
-  const fieldToLabelMapping = usePipelineListFilterFieldToLabelMapping()
-  const filterWithValidFieldsWithMetaInfo = useFilterWithValidFieldsWithMetaInfo(
+  const fieldToLabelMapping = useTemplateListFilterFieldToLabelMapping()
+  const filterWithValidFieldsWithMetaInfo = useFilterWithValidFieldsWithMetaInfoForTemplates(
     appliedFilter?.filterProperties,
     fieldToLabelMapping
   )
@@ -148,7 +160,12 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
         page: undefined,
         filterIdentifier: undefined,
         filters:
-          { ...inputFormData, templateNames: [inputFormData.templateNames], tags: { ...templateTagsValid } } || {}
+          {
+            ...inputFormData,
+            templateNames: [inputFormData.templateNames],
+            tags: { ...templateTagsValid },
+            templateEntityTypes: [inputFormData.templateEntityTypes]
+          } || {}
       })
 
       hideFilterDrawer()
@@ -176,7 +193,11 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
           tags: formValues.tags || {},
           description: formValues.description,
           templateNames:
-            formValues.templateNames && formValues.templateNames.length > 0 ? [formValues.templateNames] : null
+            formValues.templateNames && formValues.templateNames?.length > 0 ? [formValues.templateNames] : null,
+          templateEntityTypes:
+            formValues.templateEntityTypes && formValues.templateEntityTypes?.length > 0
+              ? [formValues.templateEntityTypes]
+              : null
         }
       }
 
@@ -218,7 +239,8 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
           formValues: {
             templateNames: isArray(templateNames) ? templateNames[0] : templateNames,
             tags: templateTags,
-            description
+            description,
+            templateEntityTypes: isArray(templateEntityTypes) ? templateEntityTypes[0] : templateEntityTypes
           },
           metadata: { name, filterVisibility, identifier, filterProperties: {} }
         }}

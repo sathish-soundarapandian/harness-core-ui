@@ -29,7 +29,7 @@ createNewModal:
   heading: 'Create New {{ entity }} Template'
   editHeading: 'Edit {{ entity }} Template'
   label: Label
-  nameError: 'Template Name'
+  nameError: '{{ $.common.template.name }}'
   namePlaceholder: 'New {{entity}} Template Name'
   identifierPlaceholder: 'new_{{entity}}_template_name'
   lastPublishedVersion: 'Last published:'

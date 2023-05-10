@@ -1189,10 +1189,12 @@ export interface StringsMap {
   'common.template.deleteTemplate.templateDeleted': string
   'common.template.deleteTemplate.templatesDeleted': string
   'common.template.label': string
+  'common.template.name': string
   'common.template.saveAsNewTemplateHeading': string
   'common.template.saveTemplate.errorWhileSaving': string
   'common.template.saveTemplate.publishTemplate': string
   'common.template.templateIcon': string
+  'common.template.type': string
   'common.template.updateTemplate.errorWhileUpdating': string
   'common.template.updateTemplate.templateUpdated': string
   'common.templateServiceLabel': string

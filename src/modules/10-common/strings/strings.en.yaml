@@ -876,6 +876,8 @@ files: Files
 scriptType: 'Script Type'
 script: 'Script'
 template:
+  name: Template Name
+  type: Template Type
   label: 'Template'
   saveAsNewTemplateHeading: Save as new Template
   saveTemplate:
