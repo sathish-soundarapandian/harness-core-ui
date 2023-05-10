@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { defaultTo, uniqBy } from 'lodash-es'
+import { defaultTo, isUndefined, uniqBy } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { Switch } from '@blueprintjs/core'
 import { AllowedTypes, Formik, FormikForm, FormInput } from '@harness/uicore'
@@ -92,12 +92,13 @@ function StepGroupStepEdit(
   formikRef: StepFormikFowardRef<StepGroupFormikValues>
 ): React.ReactElement {
   const { initialValues, onUpdate, isNewStep = true, readonly, allowableTypes, stepViewType } = props
-  const [isContainerBasedExecutionEnabled, setIsContainerBasedExecutionEnabled] = useState<boolean>(
-    defaultTo(!!initialValues.stepGroupInfra?.type, false)
-  )
 
   const { getString } = useStrings()
   const { CDP_AWS_SAM } = useFeatureFlags()
+
+  const [isContainerBasedExecutionEnabled, setIsContainerBasedExecutionEnabled] = useState<boolean>(
+    defaultTo(CDP_AWS_SAM && !!initialValues.stepGroupInfra?.type, false)
+  )
 
   React.useEffect(() => {
     const formikRefCurrent = (formikRef as React.MutableRefObject<FormikProps<StepGroupFormikValues>>)?.current
@@ -156,10 +157,19 @@ function StepGroupStepEdit(
       namespace: Yup.string().required(
         getString('common.validation.fieldIsRequired', { name: getString('common.namespace') })
       ),
-      runAsUser: Yup.number().required(
+      runAsUser: Yup.string().test(
+        'Must be a number and allows runtimeinput or expression',
         getString('pipeline.stepCommonFields.validation.mustBeANumber', {
           label: getString('pipeline.stepCommonFields.runAsUser')
-        })
+        }) || '',
+        function (runAsUser) {
+          if (isUndefined(runAsUser) || !runAsUser) {
+            return true
+          } else if (runAsUser.startsWith('<+')) {
+            return true
+          }
+          return !isNaN(runAsUser)
+        }
       ),
       volumes: Yup.array()
         .test({
@@ -279,7 +289,10 @@ function StepGroupStepEdit(
       } as StepGroupFormikValues
     }
 
-    return initialValues as StepGroupFormikValues
+    return {
+      identifier: initialValues.identifier,
+      name: initialValues.name
+    }
   }
 
   return (
