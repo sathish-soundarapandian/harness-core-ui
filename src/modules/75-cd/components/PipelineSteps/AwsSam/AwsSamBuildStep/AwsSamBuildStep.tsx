@@ -47,7 +47,7 @@ export interface AwsSamBuildVariableStepProps {
 
 export class AwsSamBuildStep extends PipelineStep<AwsSamBuildStepInitialValues> {
   protected type = StepType.AwsSamBuild
-  protected stepName = 'AWS Lambda Deploy Step'
+  protected stepName = 'AWS SAM Build Step'
   protected stepIcon: IconName = 'aws-lambda-deploy'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsSamBuild'
   protected isHarnessSpecific = false

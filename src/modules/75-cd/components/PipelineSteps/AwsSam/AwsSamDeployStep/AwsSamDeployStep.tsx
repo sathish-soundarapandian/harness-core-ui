@@ -47,7 +47,7 @@ export interface AwsSamDeployVariableStepProps {
 
 export class AwsSamDeployStep extends PipelineStep<AwsSamDeployStepInitialValues> {
   protected type = StepType.AwsSamDeploy
-  protected stepName = 'AWS Lambda Deploy Step'
+  protected stepName = 'AWS SAM Deploy Step'
   protected stepIcon: IconName = 'aws-lambda-deploy'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AwsSamDeploy'
   protected isHarnessSpecific = false

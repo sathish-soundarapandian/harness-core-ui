@@ -29,6 +29,7 @@ import { useQueryParams } from '@common/hooks'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ListValue, MultiTypeListType } from '@common/components/MultiTypeList/MultiTypeList'
 import { Connectors } from '@connectors/constants'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -51,7 +52,7 @@ export interface AwsSamBuildStepFormikValues extends StepElementConfig {
     connectorRef: ConnectorRef
     samBuildDockerRegistryConnectorRef: ConnectorRef
     image?: string
-    deployCommandOptions?: string[]
+    buildCommandOptions?: MultiTypeListType
     stackName?: string
     privileged?: boolean
     imagePullPolicy?: string
@@ -105,6 +106,13 @@ const AwsSamBuildStepEdit = (
       ...initialValues,
       spec: {
         ...initialValues.spec,
+        buildCommandOptions:
+          typeof initialValues.spec.buildCommandOptions === 'string'
+            ? initialValues.spec.buildCommandOptions
+            : initialValues.spec.buildCommandOptions?.map(buildCommandOption => ({
+                id: uuid('', nameSpace()),
+                value: buildCommandOption
+              })),
         envVariables: initialValues.spec?.envVariables?.map(envVar => {
           const objKey = Object.keys(envVar)[0]
           return {
@@ -126,6 +134,12 @@ const AwsSamBuildStepEdit = (
         samBuildDockerRegistryConnectorRef: getConnectorRefValue(
           values.spec.samBuildDockerRegistryConnectorRef as ConnectorRefFormValueType
         ),
+        buildCommandOptions:
+          typeof values.spec.buildCommandOptions === 'string'
+            ? values.spec.buildCommandOptions
+            : (values.spec.buildCommandOptions as ListValue)?.map(
+                (buildCommandOption: { id: string; value: string }) => buildCommandOption.value
+              ),
         envVariables: values.spec?.envVariables?.map(envVar => ({ [envVar.key]: envVar.value }))
       }
     }

@@ -101,8 +101,8 @@ export const MultiTypeList = (props: MultiTypeListProps & ConnectorReferenceProp
             render={({ push, remove }) => (
               <>
                 {Array.isArray(value) &&
-                  value.map(({ id }, index: number) => (
-                    <div className={cx(css.group, css.withoutAligning)} key={id}>
+                  value.map((_currValue, index: number) => (
+                    <div className={cx(css.group, css.withoutAligning)} key={index}>
                       {showConnectorRef ? (
                         connectorRefRenderer?.({
                           name: `${name}[${index}].value`,

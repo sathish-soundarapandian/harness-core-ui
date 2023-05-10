@@ -41,6 +41,7 @@ import type { CommandFlags } from '@pipeline/components/ManifestSelection/Manife
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { usePrevious } from '@common/hooks/usePrevious'
+import type { ListValue } from '@common/components/MultiTypeList/MultiTypeList'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -302,7 +303,34 @@ const processNodeImpl = (
       node.spec = { ...(item as StepElementConfig).spec }
     }
     if (
-      (item as StepElementConfig).type === StepType.EcsRollingDeploy &&
+      (item as StepElementConfig).type === StepType.AwsSamBuild &&
+      !isEmpty((item as StepElementConfig).spec?.buildCommandOptions) &&
+      typeof (item as StepElementConfig).spec?.buildCommandOptions !== 'string'
+    ) {
+      set(
+        node,
+        'spec.buildCommandOptions',
+        ((item as StepElementConfig).spec?.buildCommandOptions as ListValue)?.map(
+          buildCommandOption => buildCommandOption.value
+        )
+      )
+    }
+    if (
+      (item as StepElementConfig).type === StepType.AwsSamDeploy &&
+      !isEmpty((item as StepElementConfig).spec?.deployCommandOptions) &&
+      typeof (item as StepElementConfig).spec?.deployCommandOptions !== 'string'
+    ) {
+      set(
+        node,
+        'spec.deployCommandOptions',
+        ((item as StepElementConfig).spec?.deployCommandOptions as ListValue)?.map(
+          deployCommandOption => deployCommandOption.value
+        )
+      )
+    }
+    if (
+      ((item as StepElementConfig).type === StepType.AwsSamBuild ||
+        (item as StepElementConfig).type === StepType.AwsSamDeploy) &&
       !isEmpty((item as AwsSamDeployStepInitialValues).spec.envVariables)
     ) {
       set(

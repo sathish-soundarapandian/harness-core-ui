@@ -8,16 +8,15 @@
 import React from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { AllowedTypes, Container, FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { AllowedTypes, Container, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { MultiTypeExecutionCondition } from '@common/components/MultiTypeExecutionCondition/MultiTypeExecutionCondition'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { MultiTypeMap } from '@common/components/MultiTypeMap/MultiTypeMap'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { MultiTypeList } from '@common/components/MultiTypeList/MultiTypeList'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { AwsSamDeployStepFormikValues } from './AwsSamDeployStep/AwsSamDeployStepEdit'
@@ -41,24 +40,24 @@ export function AwsSamBuildDeployStepOptionalFields(props: AwsSamDeployStepOptio
 
   return (
     <>
-      <>
-        <Text
-          font={{ variation: FontVariation.FORM_LABEL, weight: 'semi-bold', size: 'normal' }}
-          tooltipProps={{ dataTooltipId: 'awsSamDeployCommandOptions' }}
-        >
-          {getString('optionalField', { name: getString('cd.steps.awsSamDeployStep.awsSamDeployCommandOptions') })}
-        </Text>
-        <Container className={stepCss.formGroup}>
-          <Container padding={{ top: 'small', bottom: 'small' }}>
-            <MultiTypeExecutionCondition
-              path={isAwsSamBuildStep ? 'spec.buildCommandOptions' : 'spec.deployCommandOptions'}
-              allowableTypes={allowableTypes}
-              isInputDisabled={readonly}
-              expressions={expressions}
-            />
-          </Container>
-        </Container>
-      </>
+      <Container className={cx(stepCss.formGroup)}>
+        <MultiTypeList
+          formik={formik}
+          name={isAwsSamBuildStep ? 'spec.buildCommandOptions' : 'spec.deployCommandOptions'}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+          }}
+          multiTypeFieldSelectorProps={{
+            label: getString('optionalField', {
+              name: getString('cd.steps.awsSamDeployStep.awsSamDeployCommandOptions')
+            }),
+            allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+          }}
+          disabled={readonly}
+          configureOptionsProps={{ hideExecutionTimeField: true }}
+        />
+      </Container>
 
       <Container className={stepCss.formGroup}>
         <FormInput.MultiTextInput

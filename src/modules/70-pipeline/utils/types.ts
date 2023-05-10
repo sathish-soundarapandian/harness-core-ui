@@ -109,7 +109,7 @@ export interface AwsSamDeployStepInitialValues extends StepElementConfig {
   spec: {
     connectorRef: string
     image?: string
-    deployCommandOptions?: string[]
+    deployCommandOptions?: string | string[]
     stackName?: string
     privileged?: boolean
     imagePullPolicy?: string
@@ -129,7 +129,7 @@ export interface AwsSamBuildStepInitialValues extends StepElementConfig {
     connectorRef: string
     samBuildDockerRegistryConnectorRef: string
     image?: string
-    buildCommandOptions?: string[]
+    buildCommandOptions?: string | string[]
     stackName?: string
     privileged?: boolean
     imagePullPolicy?: string

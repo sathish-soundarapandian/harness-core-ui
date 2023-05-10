@@ -29,6 +29,7 @@ import { useQueryParams } from '@common/hooks'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ListValue, MultiTypeListType } from '@common/components/MultiTypeList/MultiTypeList'
 import { Connectors } from '@connectors/constants'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -50,7 +51,7 @@ export interface AwsSamDeployStepFormikValues extends StepElementConfig {
   spec: {
     connectorRef: ConnectorRef
     image?: string
-    deployCommandOptions?: string[]
+    deployCommandOptions?: MultiTypeListType
     stackName?: string
     privileged?: boolean
     imagePullPolicy?: string
@@ -99,6 +100,13 @@ const AwsSamDeployStepEdit = (
       ...initialValues,
       spec: {
         ...initialValues.spec,
+        deployCommandOptions:
+          typeof initialValues.spec.deployCommandOptions === 'string'
+            ? initialValues.spec.deployCommandOptions
+            : initialValues.spec.deployCommandOptions?.map(deployCommandOption => ({
+                id: uuid('', nameSpace()),
+                value: deployCommandOption
+              })),
         envVariables: initialValues.spec?.envVariables?.map(envVar => {
           const objKey = Object.keys(envVar)[0]
           return {
@@ -117,6 +125,12 @@ const AwsSamDeployStepEdit = (
       spec: {
         ...values.spec,
         connectorRef: getConnectorRefValue(values.spec.connectorRef as ConnectorRefFormValueType),
+        deployCommandOptions:
+          typeof values.spec.deployCommandOptions === 'string'
+            ? values.spec.deployCommandOptions
+            : (values.spec.deployCommandOptions as ListValue)?.map(
+                (deployCommandOption: { id: string; value: string }) => deployCommandOption.value
+              ),
         envVariables: values.spec?.envVariables?.map(envVar => ({ [envVar.key]: envVar.value }))
       }
     }
