@@ -988,3 +988,6 @@ noInfraInputsWhenDeployingToAllInfra: No infrastructure inputs are required when
 changingTaskDefinitionTypeWarningTitle: 'Changing Task Definition Type?'
 changeTaskDefinitionTypeWarning: If you move to {{nextSection}} section, you will loose your {{currentSection}} value. Do you still want to continue?
 identifiersDoNotExist: The following {{ entity }} identifier(s) do not exist - {{ nonExistingIdentifiers }}. Please remove them from the yaml before proceeding.
+infraDefinitionDiffTitle: infrastructureDefinition.yaml (saved) ↔ infrastructureDefinition.yaml (updated)
+closeInfrastructureDetails: Close Infrastructure Details?
+closeInfrastructureDetailsContent: Changes to your infrastructure will be lost if you do not apply your changes.

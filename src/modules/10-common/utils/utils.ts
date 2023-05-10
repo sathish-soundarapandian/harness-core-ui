@@ -301,3 +301,13 @@ export const useGetFreeOrCommunityCD = (): boolean => {
   // Visible at projects and cd all empty state pages
   return (module === 'cd' || isUndefined(module)) && (isFree || isCommunity)
 }
+
+export const convertStringBooleanToBoolean = (value: string): boolean | string => {
+  if (value === 'true') {
+    return true
+  }
+  if (value === 'false') {
+    return false
+  }
+  return value
+}

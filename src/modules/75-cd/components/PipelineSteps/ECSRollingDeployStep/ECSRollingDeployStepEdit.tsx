@@ -9,23 +9,24 @@ import React from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { AllowedTypes, Formik, FormikForm, FormInput, Layout } from '@harness/uicore'
+import { AllowedTypes, Formik, FormikForm, Layout } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { StepElementConfig } from 'services/cd-ng'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { FormMultiTypeCheckboxField } from '@common/components'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import type { ECSRollingDeployStepElementConfig } from '@pipeline/utils/types'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import css from './ECSRollingDeployStep.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface ECSRollingDeployStepProps {
-  initialValues: ECSRollingDeployStepInitialValues
-  onUpdate?: (data: StepElementConfig) => void
+  initialValues: ECSRollingDeployStepElementConfig
+  onUpdate?: (data: ECSRollingDeployStepElementConfig) => void
   stepViewType?: StepViewType
-  onChange?: (data: StepElementConfig) => void
+  onChange?: (data: ECSRollingDeployStepElementConfig) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
@@ -33,17 +34,20 @@ export interface ECSRollingDeployStepProps {
 
 const ECSRollingDeployStepEdit = (
   props: ECSRollingDeployStepProps,
-  formikRef: StepFormikFowardRef<ECSRollingDeployStepInitialValues>
+  formikRef: StepFormikFowardRef<ECSRollingDeployStepElementConfig>
 ): React.ReactElement => {
   const { initialValues, onUpdate, isNewStep = true, readonly, onChange, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
+
+  const onSubmit = (values: ECSRollingDeployStepElementConfig) => {
+    onUpdate?.(values)
+  }
 
   return (
     <>
-      <Formik<ECSRollingDeployStepInitialValues>
-        onSubmit={(values: ECSRollingDeployStepInitialValues) => {
-          onUpdate?.(values)
-        }}
+      <Formik<ECSRollingDeployStepElementConfig>
+        onSubmit={onSubmit}
         formName="ecsRollingDeployStepEdit"
         initialValues={initialValues}
         validate={data => {
@@ -54,7 +58,7 @@ const ECSRollingDeployStepEdit = (
           timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
         })}
       >
-        {(formik: FormikProps<ECSRollingDeployStepInitialValues>) => {
+        {(formik: FormikProps<ECSRollingDeployStepElementConfig>) => {
           setFormikRef(formikRef, formik)
 
           return (
@@ -71,22 +75,34 @@ const ECSRollingDeployStepEdit = (
                 className={cx(stepCss.formGroup, stepCss.lg)}
                 margin={{ top: 'medium' }}
               >
-                <FormInput.CheckBox
+                <FormMultiTypeCheckboxField
+                  className={css.checkbox}
                   name="spec.sameAsAlreadyRunningInstances"
                   label={getString('cd.ecsRollingDeployStep.sameAsAlreadyRunningInstances')}
-                  className={css.checkbox}
+                  disabled={readonly}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes,
+                    defaultValueToReset: false
+                  }}
                 />
               </Layout.Horizontal>
 
               <Layout.Horizontal
                 flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
                 className={cx(stepCss.formGroup, stepCss.lg)}
-                margin={{ top: 'small' }}
+                margin={{ top: 'medium' }}
               >
-                <FormInput.CheckBox
+                <FormMultiTypeCheckboxField
+                  className={css.checkbox}
                   name="spec.forceNewDeployment"
                   label={getString('cd.ecsRollingDeployStep.forceNewDeployment')}
-                  className={css.checkbox}
+                  disabled={readonly}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes,
+                    defaultValueToReset: false
+                  }}
                 />
               </Layout.Horizontal>
             </FormikForm>

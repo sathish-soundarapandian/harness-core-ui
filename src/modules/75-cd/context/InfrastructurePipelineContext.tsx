@@ -23,6 +23,7 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import { useStrings } from 'framework/strings'
 import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
+import type { InfrastructureConfig, DeploymentStageConfig, InfrastructureDefinitionConfig } from 'services/cd-ng'
 import {
   getStageFromPipeline as _getStageFromPipeline,
   getStagePathFromPipeline as _getStagePathFromPipeline
@@ -41,13 +42,15 @@ export interface InfrastructurePipelineProviderProps {
   queryParams: GetPipelineQueryParams
   initialValue: PipelineInfoConfig
   isReadOnly: boolean
+  handleInfrastructureUpdate?: (updatedInfrastructure: InfrastructureConfig) => void
 }
 
 export function InfrastructurePipelineProvider({
   queryParams,
   initialValue,
   isReadOnly,
-  children
+  children,
+  handleInfrastructureUpdate
 }: React.PropsWithChildren<InfrastructurePipelineProviderProps>): React.ReactElement {
   const allowableTypes: AllowedTypesWithRunTime[] = [
     MultiTypeInputType.FIXED,
@@ -83,6 +86,16 @@ export function InfrastructurePipelineProvider({
         pipeline = {} as PipelineInfoConfig
       }
     }
+    const stageConfig = (pipeline as PipelineInfoConfig).stages?.[0]?.stage?.spec as DeploymentStageConfig
+    const infraDefinition = {
+      deploymentType: stageConfig?.serviceConfig?.serviceDefinition?.type,
+      type: stageConfig?.infrastructure?.infrastructureDefinition?.type,
+      spec: stageConfig?.infrastructure?.infrastructureDefinition?.spec,
+      allowSimultaneousDeployments: stageConfig?.infrastructure?.allowSimultaneousDeployments
+    } as Partial<InfrastructureDefinitionConfig>
+
+    handleInfrastructureUpdate?.({ infrastructureDefinition: infraDefinition } as InfrastructureConfig)
+
     const isUpdated = !isEqual(state.originalPipeline, pipeline)
     await dispatch(PipelineContextActions.success({ error: '', pipeline: pipeline as PipelineInfoConfig, isUpdated }))
   }

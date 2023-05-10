@@ -10,33 +10,33 @@ import type { FormikErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
 import type { IconName } from '@harness/uicore'
 
-import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { ECSRollingDeployStepElementConfig } from '@pipeline/utils/types'
 import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
 import { ECSRollingDeployStepEditRef } from './ECSRollingDeployStepEdit'
-import { GenericExecutionStepInputSet } from '../Common/GenericExecutionStep/GenericExecutionStepInputSet'
+import { ECSRollingDeployStepInputSetMode } from './ECSRollingDeployStepInputSet'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 interface ECSRollingDeployVariableStepProps {
-  initialValues: StepElementConfig
+  initialValues: ECSRollingDeployStepElementConfig
   stageIdentifier: string
-  onUpdate?(data: StepElementConfig): void
+  onUpdate?(data: ECSRollingDeployStepElementConfig): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: StepElementConfig
+  variablesData: ECSRollingDeployStepElementConfig
 }
 
-export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
+export class ECSRollingDeployStep extends PipelineStep<ECSRollingDeployStepElementConfig> {
   protected type = StepType.EcsRollingDeploy
   protected stepName = 'ECS Rolling Deploy'
   protected stepIcon: IconName = 'rolling'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ECSRollingDeploy'
   protected isHarnessSpecific = false
-  protected defaultValues: StepElementConfig = {
+  protected defaultValues: ECSRollingDeployStepElementConfig = {
     identifier: '',
     name: '',
     type: StepType.EcsRollingDeploy,
@@ -53,7 +53,7 @@ export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
     this._hasDelegateSelectionVisible = true
   }
 
-  renderStep(props: StepProps<StepElementConfig>): JSX.Element {
+  renderStep(props: StepProps<ECSRollingDeployStepElementConfig>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -69,10 +69,9 @@ export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <GenericExecutionStepInputSet
+        <ECSRollingDeployStepInputSetMode
           allowableTypes={allowableTypes}
-          inputSetData={inputSetData as InputSetData<StepElementConfig>}
-          stepViewType={stepViewType}
+          inputSetData={inputSetData as InputSetData<ECSRollingDeployStepElementConfig>}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
@@ -106,13 +105,13 @@ export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<StepElementConfig>): FormikErrors<StepElementConfig> {
+  }: ValidateInputSetProps<ECSRollingDeployStepElementConfig>): FormikErrors<ECSRollingDeployStepElementConfig> {
     const errors = validateGenericFields({
       data,
       template,
       getString,
       viewType
-    })
+    }) as FormikErrors<ECSRollingDeployStepElementConfig>
 
     if (isEmpty(errors.spec)) {
       delete errors.spec

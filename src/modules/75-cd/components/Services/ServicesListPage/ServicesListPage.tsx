@@ -16,7 +16,8 @@ import {
   GridListToggle,
   useToaster,
   Heading,
-  ButtonVariation
+  ButtonVariation,
+  ExpandingSearchInput
 } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
@@ -79,7 +80,7 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
   const { page, size } = queryParams
 
   const [sort, setSort] = useState<[SortFields, Sort]>(savedSortOption ?? queryParams.sort)
-
+  const [searchTerm, setSearchTerm] = useState('')
   const [view, setView] = useState(Views.LIST)
   const [mode, setMode] = useState<SelectedView>(SelectedView.VISUAL)
   const [isEdit, setIsEdit] = useState(false)
@@ -211,8 +212,11 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
       size,
       page,
       sort,
+      searchTerm,
+
       includeVersionInfo: isCdsV1EOLEnabled
     },
+    debounce: 500,
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
@@ -259,6 +263,14 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
             }}
           />
           <Layout.Horizontal className={css.sortClass}>
+            <ExpandingSearchInput
+              placeholder={getString('search')}
+              throttle={200}
+              onChange={(val: string) => {
+                setSearchTerm(val.trim())
+              }}
+              alwaysExpanded={true}
+            />
             <SortOption
               setSort={setSort}
               sort={sort}

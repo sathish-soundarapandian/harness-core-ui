@@ -41,10 +41,11 @@ export interface StepDetailsProps {
   progressData?: {
     [key: string]: string
   }
+  ticketStatus?: string
 }
 
 export function StepDetails(props: StepDetailsProps): React.ReactElement {
-  const { step, executionMetadata, labels = [], progressData } = props
+  const { step, executionMetadata, labels = [], progressData, ticketStatus } = props
   const { getString } = useStrings()
   const { orgIdentifier, projectIdentifier, accountId } = defaultTo(executionMetadata, {})
   //TODO - types will modified when the backend swagger docs are updated
@@ -108,6 +109,12 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
           <tr>
             <th>{`${getString('pipelineSteps.timeoutLabel')}:`}</th>
             <td>{timeout}</td>
+          </tr>
+        )}
+        {ticketStatus && (
+          <tr>
+            <th>{`${getString('pipeline.ticketStatus')}:`}</th>
+            <td>{ticketStatus}</td>
           </tr>
         )}
         {labels.map((label, index) => (

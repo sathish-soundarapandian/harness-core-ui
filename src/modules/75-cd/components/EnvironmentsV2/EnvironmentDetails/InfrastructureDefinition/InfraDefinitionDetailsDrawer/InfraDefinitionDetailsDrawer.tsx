@@ -6,10 +6,10 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
-import { Drawer, Position } from '@blueprintjs/core'
+import { Drawer, Intent, Position } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import { defaultTo } from 'lodash-es'
-import { Button, Container, Tab, Tabs } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, Tab, Tabs, useConfirmationDialog } from '@harness/uicore'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { useStrings } from 'framework/strings'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
@@ -40,6 +40,10 @@ interface Props {
   getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
   setInfraSaveInProgress?: (data: boolean) => void
   infraSaveInProgress?: boolean
+  isInfraUpdated?: boolean
+  openUnsavedChangesDiffModal: () => void
+  handleInfrastructureUpdate?: (updatedInfrastructure: InfrastructureConfig) => void
+  updatedInfra?: InfrastructureConfig
 }
 
 export enum InfraDefinitionTabs {
@@ -57,7 +61,11 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
     getTemplate,
     selectedInfrastructure,
     setInfraSaveInProgress,
-    infraSaveInProgress
+    infraSaveInProgress,
+    isInfraUpdated,
+    openUnsavedChangesDiffModal,
+    handleInfrastructureUpdate,
+    updatedInfra
   } = props
 
   const { infraDetailsTab } = useQueryParams<EnvironmentQueryParams>()
@@ -86,6 +94,47 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
   const handleDrawerClose = () => {
     resetQueryParams()
     onCloseDrawer()
+  }
+
+  const { openDialog: openActionConfirmationDialog, closeDialog: closeActionConfirmationDialog } =
+    useConfirmationDialog({
+      contentText: getString('cd.closeInfrastructureDetailsContent'),
+      titleText: getString('cd.closeInfrastructureDetails'),
+      confirmButtonText: getString('applyChanges'),
+      customButtons: (
+        <Container flex={{ justifyContent: 'space-between' }} width={'70%'}>
+          <Button
+            text={getString('common.discard')}
+            variation={ButtonVariation.SECONDARY}
+            size={ButtonSize.MEDIUM}
+            onClick={() => {
+              handleDrawerClose()
+            }}
+          />
+          <Button
+            text={getString('cancel')}
+            variation={ButtonVariation.TERTIARY}
+            size={ButtonSize.MEDIUM}
+            onClick={() => closeActionConfirmationDialog()}
+          />
+        </Container>
+      ),
+      intent: Intent.WARNING,
+      showCloseButton: false,
+      onCloseDialog: isConfirmed => {
+        if (isConfirmed) {
+          handleApplyChanges()
+        }
+      },
+      className: css.actionConfirmationDialogWrapper
+    })
+
+  const handleManualClose = () => {
+    if (isInfraUpdated) {
+      openActionConfirmationDialog()
+    } else {
+      handleDrawerClose()
+    }
   }
 
   useEffect(() => {
@@ -121,6 +170,8 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
           environmentIdentifier={environmentIdentifier}
           infraSaveInProgress={infraSaveInProgress}
           shouldShowActionButtons={selectedTab === InfraDefinitionTabs.CONFIGURATION}
+          isInfraUpdated={isInfraUpdated}
+          openUnsavedChangesDiffModal={openUnsavedChangesDiffModal}
         />
       }
       data-type={DrawerTypes.StepConfig}
@@ -128,7 +179,7 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
       isCloseButtonShown={false}
       portalClassName={'infra-definition-details--drawer'}
     >
-      <Button minimal className={css.closeButton} icon="cross" withoutBoxShadow onClick={handleDrawerClose} />
+      <Button minimal className={css.closeButton} icon="cross" withoutBoxShadow onClick={() => handleManualClose()} />
 
       <Container>
         <Tabs
@@ -152,6 +203,8 @@ export function InfraDefinitionDetailsDrawer(props: Props) {
                 isDrawerView={true}
                 ref={infraDefinitionFormRef}
                 setInfraSaveInProgress={setInfraSaveInProgress}
+                handleInfrastructureUpdate={handleInfrastructureUpdate}
+                updatedInfra={updatedInfra}
               />
             }
           />

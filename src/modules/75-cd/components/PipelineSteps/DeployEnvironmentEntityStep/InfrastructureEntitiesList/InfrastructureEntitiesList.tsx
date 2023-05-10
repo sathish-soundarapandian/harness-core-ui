@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Intent, Spinner } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
 
@@ -15,7 +15,7 @@ import { useStrings } from 'framework/strings'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 import type { ButtonProps } from '@rbac/components/Button/Button'
-
+import { useInfrastructureUnsavedChanges } from '@cd/hooks/useInfrastructureUnsavedChanges'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
@@ -54,6 +54,15 @@ export default function InfrastructureEntitiesList({
 
   const [infrastructureToEdit, setInfrastructureToEdit] = React.useState<InfrastructureData | null>(null)
   const [infrastructureToDelete, setInfrastructureToDelete] = React.useState<InfrastructureData | null>(null)
+
+  const selectedInfrastructure = useMemo(
+    () => defaultTo(infrastructureToEdit?.infrastructureDefinition?.yaml, '{}'),
+    [infrastructureToEdit]
+  )
+
+  const { isInfraUpdated, handleInfrastructureUpdate, updatedInfrastructure } = useInfrastructureUnsavedChanges({
+    selectedInfrastructure
+  })
 
   const {
     isOpen: isDeleteConfirmationOpen,
@@ -125,11 +134,14 @@ export default function InfrastructureEntitiesList({
           hideModal={closeEditModal}
           refetch={handleInfrastructureEntityUpdate}
           environmentIdentifier={environmentIdentifier}
-          selectedInfrastructure={defaultTo(infrastructureToEdit?.infrastructureDefinition?.yaml, '{}')}
+          selectedInfrastructure={selectedInfrastructure}
           stageDeploymentType={infrastructureToEdit?.infrastructureDefinition.deploymentType as ServiceDeploymentType}
           stageCustomDeploymentData={customDeploymentRef}
           getTemplate={getTemplate}
           scope={getScopeFromValue(environmentIdentifier)}
+          isInfraUpdated={isInfraUpdated}
+          handleInfrastructureUpdate={handleInfrastructureUpdate}
+          updatedInfra={updatedInfrastructure}
         />
       </ModalDialog>
 

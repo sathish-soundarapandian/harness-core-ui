@@ -36,7 +36,6 @@ import type { ExecutionWrapperConfig, TemplateStepNode } from 'services/pipeline
 import type { StringsMap } from 'stringTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
-import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
@@ -175,13 +174,6 @@ const addReplace = (item: Partial<Values>, node: any): void => {
   if (item.when && item.tab === TabTypes.Advanced) node.when = item.when
   if ((item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced)
     node.timeout = (item as StepElementConfig).timeout
-  // For ECS
-  if ((item as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances && item.tab !== TabTypes.Advanced) {
-    node.sameAsAlreadyRunningInstances = (item as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances
-  }
-  if ((item as ECSRollingDeployStepInitialValues).forceNewDeployment && item.tab !== TabTypes.Advanced) {
-    node.forceNewDeployment = (item as ECSRollingDeployStepInitialValues).forceNewDeployment
-  }
 }
 
 const processNodeImpl = (
@@ -211,6 +203,7 @@ const processNodeImpl = (
             trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
         }
       }
+
       if (!data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
         set(node, 'spec.delegateSelectors', item.delegateSelectors)
       } else if (data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
@@ -249,20 +242,7 @@ const processNodeImpl = (
       if (node.timeout && !(item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced) delete node.timeout
       if (node.description && !(item as StepElementConfig).description && item.tab !== TabTypes.Advanced)
         delete node.description
-      if (
-        (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
-        !(item as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
-        item.tab !== TabTypes.Advanced
-      ) {
-        delete (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances
-      }
-      if (
-        (node as ECSRollingDeployStepInitialValues).forceNewDeployment &&
-        !(item as ECSRollingDeployStepInitialValues).forceNewDeployment &&
-        item.tab !== TabTypes.Advanced
-      ) {
-        delete (node as ECSRollingDeployStepInitialValues).forceNewDeployment
-      }
+
       if (node.failureStrategies && !item.failureStrategies && item.tab === TabTypes.Advanced)
         delete node.failureStrategies
       if (

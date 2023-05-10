@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly actionConfirmationDialogWrapper: string
   readonly body: string
   readonly buttonWrapper: string
   readonly closeButton: string
@@ -17,6 +18,7 @@ declare const styles: {
   readonly modalFooter: string
   readonly nameIdCard: string
   readonly referenceByPageBody: string
+  readonly tagRender: string
   readonly tagsPopover: string
   readonly yamlBuilder: string
 }

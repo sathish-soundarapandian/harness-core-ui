@@ -12,6 +12,10 @@ import * as dbHook from '@cv/hooks/IndexedDBHook/IndexedDBHook'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import * as cvServices from 'services/cv'
+import {
+  TemplateContext,
+  TemplateContextInterface
+} from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { yamlResponse } from '@cv/pages/monitored-service/CVMonitoredService/__test__/CVMonitoredService.mock'
 import { MonitoredServiceContext } from '@cv/pages/monitored-service/MonitoredServiceContext'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
@@ -299,22 +303,26 @@ describe('Unit tests for Configuration', () => {
     const updateTemplate = jest.fn()
     render(
       <TestWrapper>
-        <MonitoredServiceContext.Provider value={{ isTemplate: true }}>
-          <ConfigurationsWithRef
-            updateTemplate={updateTemplate}
-            templateValue={{
-              identifier: '',
-              orgIdentifier: 'orgIdentifier',
-              projectIdentifier: 'projectIdentifier',
-              name: 'tempalteMS',
-              type: 'MonitoredService',
-              versionLabel: ' -1',
-              spec: {
-                sources: { changeSources: [], healthSources: [] }
-              }
-            }}
-          />
-        </MonitoredServiceContext.Provider>
+        <TemplateContext.Provider
+          value={{ state: { storeMetadata: { storeType: 'INLINE' } } } as TemplateContextInterface}
+        >
+          <MonitoredServiceContext.Provider value={{ isTemplate: true }}>
+            <ConfigurationsWithRef
+              updateTemplate={updateTemplate}
+              templateValue={{
+                identifier: '',
+                orgIdentifier: 'orgIdentifier',
+                projectIdentifier: 'projectIdentifier',
+                name: 'tempalteMS',
+                type: 'MonitoredService',
+                versionLabel: ' -1',
+                spec: {
+                  sources: { changeSources: [], healthSources: [] }
+                }
+              }}
+            />
+          </MonitoredServiceContext.Provider>
+        </TemplateContext.Provider>
       </TestWrapper>
     )
     await waitFor(() => expect(updateTemplate).toHaveBeenCalled())

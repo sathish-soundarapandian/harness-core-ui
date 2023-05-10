@@ -11,7 +11,7 @@ import { Page } from '@harness/uicore'
 import type { ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { ExecutionList } from '@pipeline/pages/execution-list/ExecutionList'
 import OpenTasks from './OpenTasks'
-import { ServiceDetailsEnvView } from './ServiceDetailsEnvView'
+import { ServiceDetailsCardView } from './ServiceDetailsCardView'
 import css from '@cd/components/ServiceDetails/ServiceDetailsContent/ServicesDetailsContent.module.scss'
 
 export default function ServiceDetailsSummaryV2(): JSX.Element {
@@ -33,7 +33,7 @@ export default function ServiceDetailsSummaryV2(): JSX.Element {
   return (
     <Page.Body className={css.pageStyles}>
       <OpenTasks />
-      <ServiceDetailsEnvView setEnvId={setEnvIdFilter} setArtifactName={setArtifactNameFilter} />
+      <ServiceDetailsCardView setEnvId={setEnvIdFilter} setArtifactName={setArtifactNameFilter} />
       <ExecutionList isExecutionPage={false} filters={executionListFilter} />
     </Page.Body>
   )

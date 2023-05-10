@@ -230,7 +230,13 @@ describe('Service Detail Summary - ', () => {
     // card click
     const envName = getByText(container, 'demo-env-Test-pdc')
     expect(envName).toBeInTheDocument()
-    userEvent.click(envName)
+
+    const envTitle = envName.parentElement
+    expect(envTitle?.parentElement).not.toHaveClass('Card--selected')
+    userEvent.click(envTitle?.parentElement!)
+    expect(envTitle?.parentElement).toHaveClass('Card--selected')
+    userEvent.click(envTitle?.parentElement!)
+    expect(envTitle?.parentElement).not.toHaveClass('Card--selected')
 
     //open table with env filter
     const viewTableEnvFilter = getByText(container, '4 Pipeline.execution.instances')
@@ -261,6 +267,9 @@ describe('Service Detail Summary - ', () => {
     expect(artifactName.parentElement).not.toHaveClass('Card--selected')
     userEvent.click(artifactName.parentElement!)
     expect(artifactName.parentElement).toHaveClass('Card--selected')
+
+    userEvent.click(artifactName.parentElement!)
+    expect(artifactName.parentElement).not.toHaveClass('Card--selected')
   })
 
   test('Test ServiceDetailsArtifactTable', async () => {
@@ -320,7 +329,7 @@ describe('Service Detail Summary - ', () => {
     expect(window.open).toBeCalledWith(expect.stringContaining('/account/undefined/environments/sampleEnv31/details'))
   })
 
-  test('Test ServiceDetail Env Cards and drift test', async () => {
+  test('Test ServiceDetail Artifact Cards and drift test', async () => {
     window.open = jest.fn()
     const { container } = render(
       <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
@@ -456,7 +465,7 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     expect(fullTableDialog!.querySelector('[data-test="ServiceEnvTableLoading"]')).toBeTruthy()
   })
 
-  test('Test ServiceDetailsEnvView - error states', () => {
+  test('Test ServiceDetailsCardView - error states', () => {
     jest.spyOn(commonHooks, 'useMutateAsGet').mockImplementation(() => {
       return { loading: false, error: 'Some error occurred', data: undefined, refetch: jest.fn() } as any
     })
@@ -471,7 +480,7 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     expect(container.querySelector('[data-test="ServiceDetailsEnvCardError"]')).toBeTruthy()
   })
 
-  test('Test ServiceDetailsEnvView - loading states', () => {
+  test('Test ServiceDetailsCardView - loading states', () => {
     jest.spyOn(commonHooks, 'useMutateAsGet').mockImplementation(() => {
       return { loading: true, error: false, data: undefined, refetch: jest.fn() } as any
     })
@@ -484,7 +493,7 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     expect(container.querySelector('[data-test="ServiceDetailsEnvCardLoading"]')).toBeTruthy()
   })
 
-  test('Test ServiceDetailsEnvView - empty states', () => {
+  test('Test ServiceDetailsCardView - empty states', () => {
     jest.spyOn(commonHooks, 'useMutateAsGet').mockImplementation(() => {
       return { loading: false, error: false, data: undefined, refetch: jest.fn() } as any
     })

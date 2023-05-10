@@ -627,6 +627,44 @@ exports[`Service Detail Summary -  Initial render - basic snapshot 1`] = `
                   </span>
                 </div>
               </div>
+              <div
+                class="bp3-card bp3-elevation-0 Card--card envCards cursor"
+              >
+                <div
+                  class="envCardTitle"
+                >
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-form-sub-section StyledProps--color StyledProps--color-grey600"
+                    style="--text-line-clamp: 1;"
+                  >
+                    --
+                  </p>
+                </div>
+                <div />
+                <div
+                  class="StyledProps--font StyledProps--main StyledProps--flex"
+                >
+                  <span
+                    class="bp3-popover-wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                        tabindex="0"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-card-title StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800 StyledProps--margin-left-small"
+                          style="--text-line-clamp: 1;"
+                        >
+                          -
+                        </p>
+                      </div>
+                    </span>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
           <span>
