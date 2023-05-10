@@ -29,7 +29,7 @@ export const TemplateFilterFields = (): React.ReactElement => {
     <>
       <FormInput.Text
         name={'templateNames'}
-        label={getString('templatesLibrary.createNewModal.nameError')}
+        label={getString('common.template.name')}
         key={'templateNames'}
         placeholder={getString('common.template.name')}
       />
