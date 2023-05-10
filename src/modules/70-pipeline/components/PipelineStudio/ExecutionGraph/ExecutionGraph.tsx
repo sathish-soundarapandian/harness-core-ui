@@ -37,8 +37,8 @@ import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/Pipel
 import PipelineStepNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStepNode/PipelineStepNode'
 import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
 import CreateNodeStep from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStep'
-import EndNodeStep from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStep'
-import StartNodeStep from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStep'
+import EndNode from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNode'
+import StartNode from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNode'
 import { CIDependencyNode } from '@pipeline/components/PipelineDiagram/Nodes/StepGroupNode/CIDependencyNode'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
@@ -82,8 +82,8 @@ const diagram = new DiagramFactory('graph')
 
 diagram.registerNode('ShellScript', PipelineStepNode as React.FC<BaseReactComponentProps>, true)
 diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<BaseReactComponentProps>)
-diagram.registerNode(NodeType.EndNode, EndNodeStep)
-diagram.registerNode(NodeType.StartNode, StartNodeStep)
+diagram.registerNode(NodeType.EndNode, EndNode)
+diagram.registerNode(NodeType.StartNode, StartNode)
 diagram.registerNode('StepGroup', DiagramNodes[NodeType.StepGroupNode])
 diagram.registerNode('Approval', DiamondNodeWidget)
 diagram.registerNode('JiraApproval', DiamondNodeWidget)

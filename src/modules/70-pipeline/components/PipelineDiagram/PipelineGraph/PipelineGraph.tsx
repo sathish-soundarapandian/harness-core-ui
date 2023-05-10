@@ -17,7 +17,8 @@ import {
   getSVGLinksFromPipeline,
   getTerminalNodeLinks,
   INITIAL_ZOOM_LEVEL,
-  scrollZoom
+  scrollZoom,
+  ZOOM_INC_DEC_LEVEL
 } from './PipelineGraphUtils'
 import GraphActions from '../GraphActions/GraphActions'
 import { PipelineGraphRecursive } from './PipelineGraphNode'
@@ -66,7 +67,7 @@ function PipelineGraph({
   readonly,
   loaderComponent,
   parentSelector,
-  panZoom = true,
+  panZoom = false,
   createNodeTitle,
   showEndNode = true,
   graphActionsLayout = 'vertical',
@@ -81,6 +82,7 @@ function PipelineGraph({
   const [graphScale, setGraphScale] = useState(INITIAL_ZOOM_LEVEL)
   const [position, setPosition] = useState<Position>(DEFAULT_POSITION)
   const [isDragging, setDragging] = useState(false)
+  const [overflow, setOverflow] = React.useState<string>('scroll')
   const draggableParentRef = useRef<HTMLDivElement | null>(null)
   const graphRef = useRef<HTMLDivElement | null>(null)
   const overlayRef = useRef<HTMLDivElement | null>(null)
@@ -227,7 +229,7 @@ function PipelineGraph({
         graphLinkClassname
       }}
     >
-      <div id="draggable-parent" className={css.draggableParent} ref={draggableParentRefCallback}>
+      <div id="draggable-parent" className={css.draggableParent} ref={draggableParentRefCallback} style={{ overflow }}>
         <Draggable position={position} onStart={onStart} onStop={onStop} onDrag={onDrag} offsetParent={document.body}>
           <div
             id="overlay"
@@ -238,7 +240,25 @@ function PipelineGraph({
             className={css.overlay}
             ref={overlayRefCallback}
           >
-            <div className={css.graphMain} ref={graphRef} style={{ transform: `scale(${graphScale})` }}>
+            <div
+              className={css.graphMain}
+              ref={graphRef}
+              style={{ transform: `scale(${graphScale})` }}
+              {...(panZoom && {
+                onWheel: e => {
+                  if (e.deltaY > 0) {
+                    if (graphScale === 1) {
+                      setOverflow('hidden')
+                    }
+                    if (graphScale > 1) {
+                      setGraphScale(graphScale - ZOOM_INC_DEC_LEVEL)
+                    }
+                  } else {
+                    setGraphScale(graphScale + ZOOM_INC_DEC_LEVEL)
+                  }
+                }
+              })}
+            >
               <SVGComponent svgPath={svgPath} className={graphLinkClassname} />
               <PipelineGraphRecursive
                 key="PipelineGraphRecursive"

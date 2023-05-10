@@ -11,8 +11,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import CreateNode from '../CreateNode/CreateNode'
 import CreateNodeStage from '../CreateNode/CreateNodeStage'
 import CreateNodeStep from '../CreateNode/CreateNodeStep'
-import EndNodeStage from '../EndNode/EndNodeStage'
-import EndNodeStep from '../EndNode/EndNodeStep'
+import EndNode from '../EndNode/EndNode'
 
 const callback = jest.fn()
 const genericProps = { identifier: 'identifier', name: 'create-node', className: 'sampleClass', id: 'id' }
@@ -84,7 +83,7 @@ describe('Rendering nodes', () => {
   test('should render End Stage Node', () => {
     const { container } = render(
       <TestWrapper>
-        <EndNodeStage {...genericProps} />
+        <EndNode {...genericProps} />
       </TestWrapper>
     )
     expect(container.getElementsByClassName('sampleClass')[0]).toBeInTheDocument()
@@ -93,7 +92,7 @@ describe('Rendering nodes', () => {
   test('should render End Step Node', () => {
     const { container } = render(
       <TestWrapper>
-        <EndNodeStep {...genericProps} />
+        <EndNode {...genericProps} />
       </TestWrapper>
     )
     expect(container.getElementsByClassName('sampleClass')[0]).toBeInTheDocument()

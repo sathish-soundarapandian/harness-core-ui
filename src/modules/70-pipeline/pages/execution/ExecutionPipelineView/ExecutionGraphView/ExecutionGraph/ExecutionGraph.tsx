@@ -36,8 +36,8 @@ import {
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
 import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStage'
-import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
-import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
+import EndNode from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNode'
+import StartNode from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNode'
 import { getExecutionStageDiagramListeners } from '@pipeline/utils/execUtils'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { MatrixNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixNode/MatrixNode'
@@ -49,8 +49,8 @@ import css from './ExecutionGraph.module.scss'
 const diagram = new DiagramFactory('graph')
 diagram.registerNode(['Deployment', 'CI'], PipelineStageNode as unknown as React.FC<BaseReactComponentProps>, true)
 diagram.registerNode(DiagramNodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
-diagram.registerNode(DiagramNodeType.EndNode, EndNodeStage)
-diagram.registerNode(DiagramNodeType.StartNode, StartNodeStage)
+diagram.registerNode(DiagramNodeType.EndNode, EndNode)
+diagram.registerNode(DiagramNodeType.StartNode, StartNode)
 diagram.registerNode(['Pipeline', 'PipelineRollback'], DiagramNodes[DiagramNodeType.StepGroupNode])
 diagram.registerNode([DiagramNodeType.MatrixNode, DiagramNodeType.LoopNode, DiagramNodeType.PARALLELISM], MatrixNode)
 diagram.registerNode(['Approval', 'JiraApproval', 'HarnessApproval', 'default-diamond'], DiamondNodeWidget)

@@ -36,8 +36,8 @@ import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/Di
 import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
 import { DiagramFactory, NodeType, BaseReactComponentProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStage'
-import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
-import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
+import EndNode from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNode'
+import StartNode from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNode'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
@@ -74,8 +74,8 @@ diagram.registerNode('IACM', PipelineStageNode as unknown as React.FC<BaseReactC
 diagram.registerNode('Approval', DiamondNodeWidget)
 diagram.registerNode('Barrier', IconNode)
 diagram.registerNode(NodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
-diagram.registerNode(NodeType.EndNode, EndNodeStage)
-diagram.registerNode(NodeType.StartNode, StartNodeStage)
+diagram.registerNode(NodeType.EndNode, EndNode)
+diagram.registerNode(NodeType.StartNode, StartNode)
 
 const CDPipelineStudioNew = diagram.render()
 export type StageStateMap = Map<string, StageState>

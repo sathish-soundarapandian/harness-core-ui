@@ -179,7 +179,7 @@ const PipelineGraphNodeWithoutCollapse = React.forwardRef(
           css.node
         )}
       >
-        <>
+        <div className={css.parentOfChildContainer}>
           <div id={`ref_${data?.identifier}`} ref={refValue} key={data?.identifier} data-index={0}>
             {isFirstNodeAGroupNode(intersectingIndex, collapseOnIntersect, data?.children?.length) ? (
               <GroupNode
@@ -298,7 +298,7 @@ const PipelineGraphNodeWithoutCollapse = React.forwardRef(
               </div>
             )
           })}
-        </>
+        </div>
       </div>
     )
   }

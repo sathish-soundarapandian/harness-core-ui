@@ -9,7 +9,7 @@ import React from 'react'
 import { ButtonVariation, ButtonGroup, Button, Layout } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
-import { ZOOM_INC_DEC_LEVEL } from './constants'
+import { ZOOM_INC_DEC_LEVEL } from '../PipelineGraph/PipelineGraphUtils'
 import css from './GraphActions.module.scss'
 
 export enum CanvasButtonsActions {

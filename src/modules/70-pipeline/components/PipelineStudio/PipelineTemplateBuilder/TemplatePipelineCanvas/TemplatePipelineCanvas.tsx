@@ -27,8 +27,8 @@ import { BaseReactComponentProps, DiagramFactory, NodeType } from '@pipeline/com
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
 import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
-import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
-import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
+import EndNode from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNode'
+import StartNode from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNode'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import css from './TemplatePipelineCanvas.module.scss'
 
@@ -50,8 +50,8 @@ export function TemplatePipelineCanvas(): React.ReactElement {
   const CDPipelineStudioNew = diagram.render()
   diagram.registerNode('Deployment', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>, true)
   diagram.registerNode('Approval', DiamondNodeWidget)
-  diagram.registerNode(NodeType.EndNode, EndNodeStage)
-  diagram.registerNode(NodeType.StartNode, StartNodeStage)
+  diagram.registerNode(NodeType.EndNode, EndNode)
+  diagram.registerNode(NodeType.StartNode, StartNode)
 
   if (diagram) diagram.registerListeners({})
 

@@ -19,6 +19,7 @@ declare const styles: {
   readonly nodeRightPadding: string
   readonly overlay: string
   readonly parallel: string
+  readonly parentOfChildContainer: string
   readonly pathExecute: string
   readonly svgArrow: string
 }

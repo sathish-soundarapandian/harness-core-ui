@@ -18,7 +18,6 @@
 }
 
 .draggableParent {
-  overflow: hidden;
   cursor: move !important;
 }
 
@@ -120,4 +119,12 @@
 .node {
   height: fit-content;
   width: fit-content;
+}
+
+.parentOfChildContainer {
+  display: flex;
+  flex-direction: column;
+}
+.parentOfChildContainer > *:not(:last-child) {
+  margin-bottom: 70px;
 }

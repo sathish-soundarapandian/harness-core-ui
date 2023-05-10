@@ -35,8 +35,8 @@ import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/Di
 import PipelineStepNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStepNode/PipelineStepNode'
 import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
 import CreateNodeStep from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStep'
-import EndNodeStep from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStep'
-import StartNodeStep from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStep'
+import EndNode from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNode'
+import StartNode from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNode'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { MatrixStepNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixStepNode/MatrixStepNode'
 import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
@@ -50,8 +50,8 @@ const diagram = new DiagramFactory('graph')
 
 diagram.registerNode('Deployment', PipelineStepNode as unknown as React.FC<BaseReactComponentProps>, true)
 diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<BaseReactComponentProps>)
-diagram.registerNode(NodeType.EndNode, EndNodeStep)
-diagram.registerNode(NodeType.StartNode, StartNodeStep)
+diagram.registerNode(NodeType.EndNode, EndNode)
+diagram.registerNode(NodeType.StartNode, StartNode)
 diagram.registerNode('STEP_GROUP', DiagramNodes[NodeType.StepGroupNode])
 diagram.registerNode('GROUP', DiagramNodes[NodeType.StepGroupNode])
 diagram.registerNode([NodeType.MatrixNode, NodeType.LoopNode, NodeType.PARALLELISM], MatrixStepNode)
