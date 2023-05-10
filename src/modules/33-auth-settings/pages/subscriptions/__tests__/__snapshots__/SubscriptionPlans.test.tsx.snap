@@ -503,7 +503,7 @@ exports[`Subscription Plans should expand feature comparison when click on arrow
         </div>
       </div>
       <a
-        href="https://next.harness.io/pricing?module=cd"
+        href="https://www.harness.io/pricing?module=cd#"
         rel="noreferrer"
         target="_blank"
       >
