@@ -457,38 +457,36 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   }, [triggerResponse?.data?.enabled])
 
   useEffect(() => {
-    if (originalPipeline) {
-      if (triggerResponse?.data?.yaml && triggerResponse.data.type === TriggerTypes.WEBHOOK) {
-        const newOnEditInitialValues = getWebhookTriggerValues({
-          triggerResponseYaml: triggerResponse.data.yaml
-        })
+    if (triggerResponse?.data?.yaml && triggerResponse.data.type === TriggerTypes.WEBHOOK) {
+      const newOnEditInitialValues = getWebhookTriggerValues({
+        triggerResponseYaml: triggerResponse.data.yaml
+      })
 
-        setOnEditInitialValues({
-          ...onEditInitialValues,
-          ...newOnEditInitialValues
-        })
-      } else if (triggerResponse?.data?.yaml && triggerResponse.data.type === TriggerTypes.SCHEDULE) {
-        const newOnEditInitialValues = getScheduleTriggerValues({
-          triggerResponseYaml: triggerResponse.data.yaml
-        })
-        setOnEditInitialValues({
-          ...onEditInitialValues,
-          ...newOnEditInitialValues
-        })
-      } else if (
-        triggerResponse?.data?.yaml &&
-        (triggerResponse.data.type === TriggerTypes.MANIFEST || triggerResponse.data.type === TriggerTypes.ARTIFACT)
-      ) {
-        const newOnEditInitialValues = getArtifactTriggerValues({
-          triggerResponseYaml: triggerResponse?.data?.yaml
-        })
-        setOnEditInitialValues({
-          ...onEditInitialValues,
-          ...newOnEditInitialValues
-        })
-      }
+      setOnEditInitialValues({
+        ...onEditInitialValues,
+        ...newOnEditInitialValues
+      })
+    } else if (triggerResponse?.data?.yaml && triggerResponse.data.type === TriggerTypes.SCHEDULE) {
+      const newOnEditInitialValues = getScheduleTriggerValues({
+        triggerResponseYaml: triggerResponse.data.yaml
+      })
+      setOnEditInitialValues({
+        ...onEditInitialValues,
+        ...newOnEditInitialValues
+      })
+    } else if (
+      triggerResponse?.data?.yaml &&
+      (triggerResponse.data.type === TriggerTypes.MANIFEST || triggerResponse.data.type === TriggerTypes.ARTIFACT)
+    ) {
+      const newOnEditInitialValues = getArtifactTriggerValues({
+        triggerResponseYaml: triggerResponse?.data?.yaml
+      })
+      setOnEditInitialValues({
+        ...onEditInitialValues,
+        ...newOnEditInitialValues
+      })
     }
-  }, [triggerIdentifier, triggerResponse, template, originalPipeline])
+  }, [triggerIdentifier, triggerResponse, template])
 
   const returnToTriggersPage = (): void => {
     history.push(
@@ -559,6 +557,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       pipeline: clearNullUndefined(pipelineRuntimeInput)
     })
 
+    const execStages = val?.resolvedPipeline?.allowStageExecutions ? stagesToExecute : []
+
     if (formikValueSourceRepo !== GitSourceProviders.CUSTOM.value) {
       if (
         ((targetBranchOperator && targetBranchValue?.trim()) ||
@@ -610,7 +610,6 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         })
       }
 
-      const execStages = val?.resolvedPipeline?.allowStageExecutions ? stagesToExecute : []
       // actions will be required thru validation
       const actionsValues = (actions as unknown as SelectOption[])?.map(action => action.value)
       const triggerYaml: NGTriggerConfigV2 = {
@@ -669,8 +668,6 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       }
       return clearNullUndefined(triggerYaml)
     } else {
-      const execStages = originalPipeline?.allowStageExecutions ? stagesToExecute : []
-
       const triggerYaml: NGTriggerConfigV2 = {
         name,
         identifier,
@@ -1169,7 +1166,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     const stringifyPipelineRuntimeInput = yamlStringify({
       pipeline: clearNullUndefined(pipelineRuntimeInput)
     })
-    const execStages = originalPipeline?.allowStageExecutions ? stagesToExecute : []
+    const execStages = val?.resolvedPipeline?.allowStageExecutions ? stagesToExecute : []
 
     return clearNullUndefined({
       name,

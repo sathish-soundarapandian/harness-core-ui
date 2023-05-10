@@ -2495,6 +2495,164 @@
         "executionInputConfigured": false,
         "allowStageExecutions": false,
         "stagesExecution": false
+      },
+      {
+        "pipelineIdentifier": "testK8sSvc",
+        "planExecutionId": "ysUAbpBkRXiZ_9OaUi5d-A",
+        "name": "testK8sSvc",
+        "status": "AbortedByFreeze",
+        "tags": [],
+        "executionTriggerInfo": {
+          "triggerType": "MANUAL",
+          "triggeredBy": {
+            "uuid": "PUiX-k8WSVKcI2dzFmqQKA",
+            "identifier": "Sagar Rajput",
+            "extraInfo": {
+              "email": "sagar.rajput+test+1@harness.io"
+            }
+          },
+          "isRerun": true,
+          "rerunInfo": {
+            "rootExecutionId": "mJTjZW1bRXOUJ4OsdGHuNw",
+            "rootTriggerType": "MANUAL",
+            "prevExecutionId": "mJTjZW1bRXOUJ4OsdGHuNw",
+            "prevTriggerType": "MANUAL"
+          }
+        },
+        "moduleInfo": {
+          "cd": {
+            "__recast": "io.harness.cdng.pipeline.executions.beans.CDPipelineModuleInfo",
+            "artifactDisplayNames": [],
+            "envGroupIdentifiers": [],
+            "envIdentifiers": [],
+            "environmentTypes": [],
+            "freezeIdentifiers": ["account._GLOBAL_", "testBfreeze", "testSVC3freeze"],
+            "infrastructureIdentifiers": [],
+            "infrastructureNames": [],
+            "infrastructureTypes": [],
+            "serviceDefinitionTypes": ["Kubernetes"],
+            "serviceIdentifiers": ["svc3"]
+          }
+        },
+        "layoutNodeMap": {
+          "vtJxsNaqS9az5iKThXo9Pg": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "testK8s",
+            "name": "testK8s",
+            "nodeUuid": "vtJxsNaqS9az5iKThXo9Pg",
+            "status": "AbortedByFreeze",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "freezeExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.FreezeExecutionSummary",
+                  "freezeExecutionInfoList": [
+                    {
+                      "__recast": "io.harness.cdng.pipeline.executions.beans.FreezeExecutionInfo",
+                      "identifier": "_GLOBAL_",
+                      "yaml": "freeze:\n  identifier: _GLOBAL_\n  name: Global Freeze\n  status: Enabled\n  windows:\n    - timeZone: Asia/Calcutta\n      startTime: 2023-03-22 02:06 PM\n      duration: 30m\n",
+                      "name": "Global Freeze",
+                      "freezeType": "GLOBAL"
+                    },
+                    {
+                      "__recast": "io.harness.cdng.pipeline.executions.beans.FreezeExecutionInfo",
+                      "identifier": "testBfreeze",
+                      "orgIdentifier": "Ng_Pipelines_K8s_Organisations",
+                      "projectIdentifier": "Mayank",
+                      "yaml": "freeze:\n  name: test-B-freeze\n  identifier: testBfreeze\n  entityConfigs:\n    - name: testSvc3Freeze\n      entities:\n        - type: Service\n          filterType: Equals\n          entityRefs:\n            - svc3\n        - type: Environment\n          filterType: All\n        - type: EnvType\n          filterType: All\n  status: Enabled\n  orgIdentifier: Ng_Pipelines_K8s_Organisations\n  projectIdentifier: Mayank\n  windows:\n    - timeZone: Asia/Calcutta\n      startTime: 2023-03-21 11:04 PM\n      recurrence:\n        type: Weekly\n      endTime: 2023-03-31 11:34 PM\n  description: B - as in Alphabet\n  tags:\n    b: \"\"\n    bc: \"\"\n",
+                      "name": "test-B-freeze",
+                      "freezeType": "MANUAL"
+                    },
+                    {
+                      "__recast": "io.harness.cdng.pipeline.executions.beans.FreezeExecutionInfo",
+                      "identifier": "testSVC3freeze",
+                      "orgIdentifier": "Ng_Pipelines_K8s_Organisations",
+                      "projectIdentifier": "Mayank",
+                      "yaml": "freeze:\n  name: test-F-freeze\n  identifier: testSVC3freeze\n  entityConfigs:\n    - name: testSvc3Freeze\n      entities:\n        - type: Service\n          filterType: Equals\n          entityRefs:\n            - svc3\n        - type: Environment\n          filterType: All\n        - type: EnvType\n          filterType: All\n  status: Enabled\n  orgIdentifier: Ng_Pipelines_K8s_Organisations\n  projectIdentifier: Mayank\n  windows:\n    - timeZone: Asia/Calcutta\n      startTime: 2023-03-21 11:04 PM\n      endTime: 2023-03-22 11:34 PM\n  description: \"\"\n",
+                      "name": "test-F-freeze",
+                      "freezeType": "MANUAL"
+                    }
+                  ]
+                },
+                "rollbackDuration": 0,
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "svc3",
+                  "displayName": "svc3",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "sidecars": []
+                  }
+                }
+              }
+            },
+            "startTs": 1679474194879,
+            "endTs": 1679474196306,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": ""
+            },
+            "failureInfoDTO": {
+              "message": "",
+              "failureTypeList": [],
+              "responseMessages": [
+                {
+                  "code": "FREEZE_EXCEPTION",
+                  "level": "ERROR",
+                  "message": "Pipeline Aborted due to freeze",
+                  "exception": null,
+                  "failureTypes": ["APPLICATION_ERROR"]
+                }
+              ]
+            },
+            "nodeExecutionId": "LtOG_ZdrT2GA6MoAP_7BKA",
+            "executionInputConfigured": false,
+            "isRollbackStageNode": false
+          }
+        },
+        "modules": ["cd"],
+        "startingNodeId": "vtJxsNaqS9az5iKThXo9Pg",
+        "startTs": 1679474194414,
+        "endTs": 1679474196558,
+        "createdAt": 1679474194440,
+        "canRetry": true,
+        "showRetryHistory": false,
+        "runSequence": 9,
+        "successfulStagesCount": 0,
+        "runningStagesCount": 0,
+        "failedStagesCount": 0,
+        "totalStagesCount": 1,
+        "storeType": "INLINE",
+        "executionInputConfigured": false,
+        "parentStageInfo": {
+          "hasparentpipeline": false,
+          "stagenodeid": "",
+          "executionid": "",
+          "identifier": "",
+          "projectid": "",
+          "orgid": "",
+          "runsequence": 0
+        },
+        "allowStageExecutions": false,
+        "stagesExecution": false
       }
     ],
     "pageable": {

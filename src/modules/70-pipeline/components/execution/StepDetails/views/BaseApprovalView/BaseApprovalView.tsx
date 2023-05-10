@@ -19,6 +19,8 @@ import {
   isExecutionWaitingForInput,
   isExecutionWaitingForIntervention
 } from '@pipeline/utils/statusHelpers'
+import { usePolling } from '@common/hooks/usePolling'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
 import { StageType } from '@pipeline/utils/stageHelpers'
@@ -31,6 +33,8 @@ import { PolicyEvaluationContent } from '../../common/ExecutionContent/PolicyEva
 import tabCss from '../DefaultView/DefaultView.module.scss'
 
 export const REFRESH_APPROVAL = 'REFRESH_APPROVAL'
+
+const POLL_INTERVAL = 60 * 1000 // 1 min
 
 enum ApprovalStepTab {
   APPROVAL = 'APPROVAL',
@@ -85,6 +89,8 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
   const isStepExecutionFailed = isExecutionFailed(step.status)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
+  const shouldPollForTicketStatus =
+    step?.stepType === StepType.JiraApproval || step?.stepType === StepType.ServiceNowApproval
   const shouldShowExecutionInputs = !!step.executionInputConfigured
   const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
   const { message, responseMessages } = step.failureInfo || {}
@@ -105,7 +111,7 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
     data,
     loading: loadingApprovalData,
     error,
-    refetch
+    refetch: fetchApprovalInstanceData
   } = useGetApprovalInstance({
     approvalInstanceId,
     mock,
@@ -118,14 +124,19 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
     if (shouldFetchData) {
       if (mounted.current) {
         window.setTimeout(() => {
-          refetch()
+          fetchApprovalInstanceData()
         }, 3000)
       } else {
-        refetch()
+        fetchApprovalInstanceData()
       }
       mounted.current = true
     }
   }, [shouldFetchData, step.status])
+
+  usePolling(fetchApprovalInstanceData, {
+    pollingInterval: POLL_INTERVAL,
+    startPolling: !loadingApprovalData && !!data && shouldFetchData && shouldPollForTicketStatus
+  })
 
   React.useEffect(() => {
     if (!manuallySelected.current) {
@@ -243,7 +254,7 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
         icon="refresh"
         iconProps={{ size: 12, style: { marginRight: 'var(--spacing-2)' } }}
         style={{ transform: 'translateY(-5px)' }}
-        onClick={() => refetch()}
+        onClick={() => fetchApprovalInstanceData()}
       >
         {getString('common.refresh')}
       </Button>

@@ -386,7 +386,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         ...newOnEditInitialValues
       })
     }
-  }, [triggerIdentifier, triggerResponse, template, originalPipeline])
+  }, [triggerIdentifier, triggerResponse, template])
 
   const returnToTriggersPage = (): void => {
     history.push(

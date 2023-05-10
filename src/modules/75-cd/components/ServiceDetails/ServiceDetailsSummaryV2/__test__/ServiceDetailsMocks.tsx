@@ -105,6 +105,11 @@ export const envInstanceDetailsMock: ResponseEnvironmentGroupInstanceDetails = {
             pipelineId: 'testpipeline'
           }
         ]
+      },
+      {
+        id: 'undefinedCase',
+        isDrift: false,
+        isEnvGroup: false
       }
     ]
   },
@@ -349,6 +354,12 @@ export const artifactInstanceDetailsMock: ResponseArtifactInstanceDetails = {
               ]
             }
           ]
+        }
+      },
+      {
+        artifact: undefined,
+        environmentGroupInstanceDetails: {
+          environmentGroupInstanceDetails: []
         }
       }
     ]

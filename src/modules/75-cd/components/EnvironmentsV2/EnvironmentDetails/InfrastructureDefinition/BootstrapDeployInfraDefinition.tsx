@@ -20,7 +20,7 @@ import {
   VisualYamlToggle,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
-import { defaultTo, get, isBoolean, isEmpty, noop, omit, set } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty, isEqual, noop, omit, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import produce from 'immer'
@@ -34,6 +34,7 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import {
   CustomDeploymentConnectorNGVariable,
   DeploymentStageConfig,
+  InfrastructureConfig,
   InfrastructureDefinitionConfig,
   useCreateInfrastructure,
   useGetYamlSchema,
@@ -56,7 +57,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import { useDeepCompareEffect } from '@common/hooks'
-import type { StageElementConfig, TemplateLinkConfig } from 'services/pipeline-ng'
+import type { PipelineInfoConfig, StageElementConfig, TemplateLinkConfig } from 'services/pipeline-ng'
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import ReconcileInfraDialogWrapper from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/ReconcileHandler/ReconcileInfraDialogWrapper'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
@@ -89,6 +90,9 @@ interface BootstrapDeployInfraDefinitionProps {
   getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
   isDrawerView?: boolean
   setInfraSaveInProgress?: (data: boolean) => void
+  handleInfrastructureUpdate?: (updatedInfrastructure: InfrastructureConfig) => void
+  isInfraUpdated?: boolean
+  updatedInfra?: InfrastructureConfig
 }
 
 interface CustomDeploymentMetaData {
@@ -108,6 +112,30 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   }
 }
 
+export interface GetInfraDefinitionConfigParams {
+  formikValues?: Partial<InfrastructureDefinitionConfig>
+  scope: Scope
+  environmentIdentifier: string
+  pipeline: PipelineInfoConfig
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export const getInfraDefinitionConfig = (params: GetInfraDefinitionConfigParams) => {
+  const { formikValues = {}, scope, environmentIdentifier, pipeline, orgIdentifier, projectIdentifier } = params
+  return {
+    ...formikValues,
+    orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
+    projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
+    environmentRef: getIdentifierFromScopedRef(environmentIdentifier),
+    deploymentType: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.serviceConfig?.serviceDefinition?.type,
+    type: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition?.type,
+    spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition?.spec,
+    allowSimultaneousDeployments: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
+      ?.allowSimultaneousDeployments
+  } as InfrastructureDefinitionConfig
+}
+
 function BootstrapDeployInfraDefinition(
   {
     closeInfraDefinitionDetails,
@@ -121,7 +149,10 @@ function BootstrapDeployInfraDefinition(
     selectedInfrastructure,
     getTemplate,
     isDrawerView = false,
-    setInfraSaveInProgress
+    setInfraSaveInProgress,
+    handleInfrastructureUpdate,
+    isInfraUpdated,
+    updatedInfra
   }: BootstrapDeployInfraDefinitionProps,
   infraDefinitionFormRef: React.ForwardedRef<InfraDefinitionWrapperRef>
 ): JSX.Element {
@@ -321,6 +352,22 @@ function BootstrapDeployInfraDefinition(
         variables: templateJSON?.spec?.infrastructure?.variables
       })
       setDeployInfraRemountCount(deployInfraRemountCount + 1)
+    }
+  }
+
+  const handleYamlChange = () => {
+    if (!isEmpty(infrastructureDefinition) && yamlHandler) {
+      const infraDefinitionConfigFromYaml = parse(defaultTo(yamlHandler.getLatestYaml(), '{}'))
+        .infrastructureDefinition as InfrastructureDefinitionConfig
+      const schemaValidationErrorMap = yamlHandler.getYAMLValidationErrorMap()
+      const areSchemaValidationErrorsAbsent = !(schemaValidationErrorMap && schemaValidationErrorMap.size > 0)
+      if (
+        !isEmpty(infraDefinitionConfigFromYaml) &&
+        !isEqual(updatedInfra?.infrastructureDefinition, infraDefinitionConfigFromYaml) &&
+        areSchemaValidationErrorsAbsent // Don't update for Invalid Yaml
+      ) {
+        handleInfrastructureUpdate?.({ infrastructureDefinition: infraDefinitionConfigFromYaml })
+      }
     }
   }
 
@@ -562,6 +609,18 @@ function BootstrapDeployInfraDefinition(
 
   const refreshYAMLBuilder = React.useMemo(() => JSON.stringify({ ...stage, isYamlEditable }), [stage, isYamlEditable])
 
+  const handleFormOnChange = (latestFormValues: Partial<InfrastructureDefinitionConfig>) => {
+    const updatedInfradefinitionConfig = getInfraDefinitionConfig({
+      formikValues: latestFormValues,
+      scope,
+      environmentIdentifier,
+      orgIdentifier,
+      projectIdentifier,
+      pipeline
+    })
+    handleInfrastructureUpdate?.({ infrastructureDefinition: updatedInfradefinitionConfig })
+  }
+
   const handleSaveInfrastructure = () => {
     if (selectedView === SelectedView.YAML) {
       if (yamlHandler?.getYAMLValidationErrorMap()?.size) {
@@ -574,20 +633,16 @@ function BootstrapDeployInfraDefinition(
     } else {
       checkForErrors()
         .then(() => {
-          onSubmit({
-            ...formikRef.current?.values,
-            orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
-            projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-            environmentRef: getIdentifierFromScopedRef(environmentIdentifier),
-            deploymentType: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.serviceConfig
-              ?.serviceDefinition?.type,
-            type: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition
-              ?.type,
-            spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure?.infrastructureDefinition
-              ?.spec,
-            allowSimultaneousDeployments: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
-              ?.allowSimultaneousDeployments
-          } as InfrastructureDefinitionConfig)
+          onSubmit(
+            getInfraDefinitionConfig({
+              formikValues: formikRef.current?.values,
+              scope,
+              environmentIdentifier,
+              orgIdentifier,
+              projectIdentifier,
+              pipeline
+            }) as InfrastructureDefinitionConfig
+          )
         })
         .catch(noop)
     }
@@ -601,6 +656,11 @@ function BootstrapDeployInfraDefinition(
       handleSaveInfrastructure()
     }
   }))
+
+  // Save button is to be disabled when -
+  // 1. infra save is in progress
+  // 2. Infrastructure has not been updated in case of edit.
+  const isSaveDisabled = isSavingInfrastructure || (!!infrastructureDefinition && !isInfraUpdated)
 
   return (
     <>
@@ -633,6 +693,7 @@ function BootstrapDeployInfraDefinition(
                   }}
                   formName={'infrastructure-modal'}
                   onSubmit={noop}
+                  validate={values => handleFormOnChange(values)}
                   validationSchema={Yup.object().shape({
                     name: NameSchema(getString, { requiredErrorMsg: getString('fieldRequired', { field: 'Name' }) }),
                     identifier: IdentifierSchema(getString)
@@ -677,22 +738,17 @@ function BootstrapDeployInfraDefinition(
               <YamlBuilderMemo
                 {...yamlBuilderReadOnlyModeProps}
                 existingJSON={{
-                  infrastructureDefinition: {
-                    ...formikRef.current?.values,
-                    orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
-                    projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-                    environmentRef: getIdentifierFromScopedRef(environmentIdentifier),
-                    deploymentType: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.serviceConfig
-                      ?.serviceDefinition?.type,
-                    type: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
-                      ?.infrastructureDefinition?.type,
-                    spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
-                      ?.infrastructureDefinition?.spec,
-                    allowSimultaneousDeployments: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)
-                      ?.infrastructure?.allowSimultaneousDeployments
-                  } as InfrastructureDefinitionConfig
+                  infrastructureDefinition: getInfraDefinitionConfig({
+                    formikValues: formikRef.current?.values,
+                    scope,
+                    environmentIdentifier,
+                    orgIdentifier,
+                    projectIdentifier,
+                    pipeline
+                  }) as InfrastructureDefinitionConfig
                 }}
                 key={refreshYAMLBuilder}
+                onChange={handleYamlChange}
                 schema={infrastructureDefinitionSchema?.data}
                 bind={setYamlHandler}
                 isReadOnlyMode={!isYamlEditable}
@@ -724,7 +780,7 @@ function BootstrapDeployInfraDefinition(
             text={getString('save')}
             variation={ButtonVariation.PRIMARY}
             onClick={handleSaveInfrastructure}
-            disabled={isSavingInfrastructure}
+            disabled={isSaveDisabled}
             loading={isSavingInfrastructure}
             permission={environmentEditPermissions}
           />

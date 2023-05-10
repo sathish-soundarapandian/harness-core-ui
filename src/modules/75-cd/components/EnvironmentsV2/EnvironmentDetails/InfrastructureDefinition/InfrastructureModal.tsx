@@ -14,6 +14,7 @@ import type {
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { BootstrapDeployInfraDefinitionWrapper } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/BootstrapDeployInfraDefinitionWrapper'
+import type { InfrastructureConfig } from 'services/cd-ng'
 
 export default function InfrastructureModal({
   hideModal,
@@ -23,7 +24,10 @@ export default function InfrastructureModal({
   stageDeploymentType,
   stageCustomDeploymentData,
   getTemplate,
-  scope
+  scope,
+  isInfraUpdated,
+  handleInfrastructureUpdate,
+  updatedInfra
 }: {
   hideModal: () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,6 +38,9 @@ export default function InfrastructureModal({
   stageDeploymentType?: ServiceDeploymentType
   stageCustomDeploymentData?: TemplateLinkConfig
   getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
+  isInfraUpdated?: boolean
+  handleInfrastructureUpdate?: (updatedInfrastructure: InfrastructureConfig) => void
+  updatedInfra?: InfrastructureConfig
 }): React.ReactElement {
   return (
     <BootstrapDeployInfraDefinitionWrapper
@@ -45,6 +52,9 @@ export default function InfrastructureModal({
       stageDeploymentType={stageDeploymentType}
       stageCustomDeploymentData={stageCustomDeploymentData}
       getTemplate={getTemplate}
+      handleInfrastructureUpdate={handleInfrastructureUpdate}
+      updatedInfra={updatedInfra}
+      isInfraUpdated={isInfraUpdated}
     />
   )
 }

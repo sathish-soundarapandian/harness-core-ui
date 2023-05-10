@@ -43,9 +43,6 @@ export const isAllowedBambooArtifactDeploymentTypes = (deploymentType: ServiceDe
     ServiceDeploymentType.TAS
   ].includes(deploymentType as ServiceDeploymentType)
 
-export const isAllowedAMIDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
-  deploymentType === ServiceDeploymentType.CustomDeployment
-
 export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
   return (
     !isReadOnly &&
@@ -266,7 +263,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr,
     ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
     ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
-    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
+    ENABLED_ARTIFACT_TYPES.AmazonMachineImage
   ],
   TAS: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,

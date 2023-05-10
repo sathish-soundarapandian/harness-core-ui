@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
@@ -16,10 +23,20 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
   scope: Scope
   environmentIdentifier: string
   infraSaveInProgress?: boolean
+  isInfraUpdated?: boolean
   shouldShowActionButtons: boolean
+  openUnsavedChangesDiffModal: () => void
 }): JSX.Element {
-  const { discardChanges, applyChanges, scope, environmentIdentifier, infraSaveInProgress, shouldShowActionButtons } =
-    props
+  const {
+    discardChanges,
+    applyChanges,
+    scope,
+    environmentIdentifier,
+    infraSaveInProgress,
+    shouldShowActionButtons,
+    isInfraUpdated,
+    openUnsavedChangesDiffModal
+  } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const environmentEditPermissions: ButtonProps['permission'] = {
     resource: {
@@ -46,16 +63,26 @@ export function InfraDefinitionDetailsDrawerTitle(props: {
             padding={{ top: 'xlarge', left: 'huge', bottom: 'large' }}
             className={css.modalFooter}
           >
+            {isInfraUpdated && (
+              <Button
+                variation={ButtonVariation.LINK}
+                intent="warning"
+                className={css.tagRender}
+                onClick={openUnsavedChangesDiffModal}
+              >
+                {getString('unsavedChanges')}
+              </Button>
+            )}
             <RbacButton
               text={getString('save')}
               variation={ButtonVariation.PRIMARY}
               onClick={applyChanges}
-              disabled={infraSaveInProgress}
+              disabled={infraSaveInProgress || !isInfraUpdated}
               loading={infraSaveInProgress}
               permission={environmentEditPermissions}
             />
             <Button
-              text={getString('cancel')}
+              text={getString('common.discard')}
               variation={ButtonVariation.SECONDARY}
               onClick={discardChanges}
               disabled={infraSaveInProgress}

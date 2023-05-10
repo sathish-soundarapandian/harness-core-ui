@@ -84,6 +84,10 @@ describe('ECSRollingDeployStep tests', () => {
           identifier: 'Step_1',
           name: 'Step 1',
           timeout: '',
+          spec: {
+            sameAsAlreadyRunningInstances: false,
+            forceNewDeployment: false
+          },
           type: StepType.EcsRollingDeploy
         }}
         template={{
@@ -113,7 +117,11 @@ describe('ECSRollingDeployStep tests', () => {
       identifier: 'Step_1',
       name: 'Step 1',
       timeout: '20m',
-      type: StepType.EcsRollingDeploy
+      type: StepType.EcsRollingDeploy,
+      spec: {
+        sameAsAlreadyRunningInstances: false,
+        forceNewDeployment: false
+      }
     })
   })
 

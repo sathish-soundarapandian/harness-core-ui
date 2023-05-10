@@ -82,7 +82,6 @@ import {
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES,
   getInitialSelectedArtifactValue,
-  isAllowedAMIDeploymentTypes,
   isAllowedAzureArtifactDeploymentTypes,
   isAllowedBambooArtifactDeploymentTypes,
   isAllowedCustomArtifactDeploymentTypes,
@@ -170,7 +169,6 @@ export default function ServiceV2ArtifactsSelection({
   const {
     CUSTOM_ARTIFACT_NG,
     AZURE_ARTIFACTS_NG,
-    CD_AMI_ARTIFACTS_NG,
     AZURE_WEBAPP_NG_JENKINS_ARTIFACTS,
     CDS_SERVICE_CONFIG_LAST_STEP,
     BAMBOO_ARTIFACT_NG
@@ -191,13 +189,6 @@ export default function ServiceV2ArtifactsSelection({
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
-    }
-    if (
-      isAllowedAMIDeploymentTypes(deploymentType) &&
-      CD_AMI_ARTIFACTS_NG &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
     }
     if (
       [ServiceDeploymentType.AzureWebApp, ServiceDeploymentType.TAS].includes(

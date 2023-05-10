@@ -725,6 +725,7 @@ conditionalExecution:
   belowExpression: below expression is true
 startTime: Start time
 duration: Duration
+ticketStatus: Current status
 and: '{{ $.common.andCaps }}'
 gitDetails: git details
 runtimeInputs: Runtime Inputs

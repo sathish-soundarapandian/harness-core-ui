@@ -109,3 +109,34 @@
   min-height: unset !important;
   height: calc(100vh - 200px) !important;
 }
+
+.tagRender {
+  & > :global(.bp3-button-text) {
+    color: var(--orange-600) !important;
+    font-size: var(--font-size-small) !important;
+  }
+
+  margin-right: var(--spacing-5);
+  line-height: 15px;
+  padding: 0 !important;
+
+  &::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background: var(--orange-600);
+    display: inline-block;
+    margin: 0 4px;
+  }
+}
+
+.actionConfirmationDialogWrapper {
+  padding-top: var(--spacing-xxlarge) !important;
+  p {
+    word-break: break-word;
+  }
+  :global(.bp3-button-text) {
+    flex-shrink: 0 !important;
+  }
+}

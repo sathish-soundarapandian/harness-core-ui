@@ -7,6 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
+import { get } from 'lodash-es'
 import { Container } from '@harness/uicore'
 import type { ApprovalInstanceResponse, ExecutionGraph, JiraApprovalInstanceDetails } from 'services/pipeline-ng'
 import { Duration } from '@common/exports'
@@ -110,6 +111,7 @@ export function JiraApprovalTab(props: JiraApprovalTabProps): React.ReactElement
           step={{ startTs, endTs, stepParameters }}
           executionMetadata={executionMetadata}
           progressData={progressData}
+          ticketStatus={get(approvalData, 'details.issue.ticketFields.Status')}
         />
       </Container>
 

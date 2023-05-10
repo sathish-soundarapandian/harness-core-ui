@@ -421,4 +421,11 @@ describe('Execution List', () => {
 
     expect(await screen.findByText('filters.invalidCriteria')).toBeInTheDocument()
   })
+
+  test('should show aborted by freeze status executions', async () => {
+    renderExecutionPage()
+    const rows = await screen.findAllByRole('row')
+    const cdAbortedByFreezeRow = rows[7]
+    expect(within(cdAbortedByFreezeRow).getByText('pipeline.executionStatus.AbortedByFreeze')).toBeDefined()
+  })
 })

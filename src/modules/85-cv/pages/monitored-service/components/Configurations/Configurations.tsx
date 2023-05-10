@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react'
+import React, { useEffect, useContext, useMemo, useState, useCallback, useRef } from 'react'
 import { Container, Tab, Tabs, PageError, Views } from '@harness/uicore'
 import { useHistory, useParams, matchPath } from 'react-router-dom'
 import { clone, defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
@@ -35,6 +35,7 @@ import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServi
 import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
+import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { SLODetailsPageTabIds } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
 import Service, { ServiceWithRef } from './components/Service/Service'
 import Dependency from './components/Dependency/Dependency'
@@ -56,6 +57,10 @@ export default function Configurations(
   const { getString } = useStrings()
 
   useDocumentTitle([getString('cv.srmTitle'), getString('cv.monitoredServices.title')])
+
+  const {
+    state: { storeMetadata }
+  } = useContext(TemplateContext)
 
   const { showWarning, showError, showSuccess } = useToaster()
   const history = useHistory()
@@ -164,18 +169,14 @@ export default function Configurations(
   const [hasTemplateChangeSourceSet, sethasTemplateChangeSourceSet] = useState(false)
   useEffect(() => {
     const cloneTemplateValue = clone(templateValue)
-    if (
-      isTemplate &&
-      !hasTemplateChangeSourceSet &&
-      cloneTemplateValue?.name &&
-      cloneTemplateValue?.spec?.sources &&
-      isEmpty(cloneTemplateValue?.spec?.sources?.changeSources)
-    ) {
-      cloneTemplateValue.spec.sources['changeSources'] = defaultMonitoredService?.sources?.changeSources
+    if (isTemplate && cloneTemplateValue?.name && cloneTemplateValue?.spec?.sources && storeMetadata?.storeType) {
+      if (!identifier && isEmpty(cloneTemplateValue?.spec?.sources?.changeSources) && !hasTemplateChangeSourceSet) {
+        cloneTemplateValue.spec.sources['changeSources'] = defaultMonitoredService?.sources?.changeSources
+        sethasTemplateChangeSourceSet(true)
+      }
       updateTemplate?.(cloneTemplateValue?.spec as MonitoredServiceForm)
-      sethasTemplateChangeSourceSet(true)
     }
-  }, [templateValue?.name, defaultMonitoredService])
+  }, [storeMetadata?.storeType, templateValue?.name, defaultMonitoredService])
 
   useEffect(() => {
     if (yamlMonitoredService && yamlMonitoredService?.resource) {

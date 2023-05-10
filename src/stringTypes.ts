@@ -5122,6 +5122,7 @@ export interface StringsMap {
   'pipeline.testsReports.updatedTests': string
   'pipeline.testsReports.viewCallgraph': string
   'pipeline.testsReports.willBeDisplayedIfAvailable': string
+  'pipeline.ticketStatus': string
   'pipeline.timeRemainingSuffix': string
   'pipeline.totalCount': string
   'pipeline.traffic': string
@@ -5586,6 +5587,8 @@ export interface StringsMap {
   'cd.changingTaskDefinitionTypeWarningTitle': string
   'cd.checkCluster': string
   'cd.chooseProvisionerText': string
+  'cd.closeInfrastructureDetails': string
+  'cd.closeInfrastructureDetailsContent': string
   'cd.cloudFormation.awsURL': string
   'cd.cloudFormation.cfTemplateFile': string
   'cd.cloudFormation.continueStatus': string
@@ -5910,6 +5913,7 @@ export interface StringsMap {
   'cd.identifiersDoNotExist': string
   'cd.ignoreReleaseHistFailStatus': string
   'cd.infra': string
+  'cd.infraDefinitionDiffTitle': string
   'cd.infrastructure.createNew': string
   'cd.infrastructure.created': string
   'cd.infrastructure.delete': string

@@ -90,8 +90,26 @@ export function Nexus2Artifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
-  const [groupIds, setGroupIds] = useState<SelectOption[]>([])
-  const [artifactIds, setArtifactIds] = useState<SelectOption[]>([])
+  const [groupIds, setGroupIds] = useState<SelectOption[]>([
+    {
+      label: getString('common.loadingFieldOptions', {
+        fieldName: getString('pipeline.artifactsSelection.groupId')
+      }),
+      value: getString('common.loadingFieldOptions', {
+        fieldName: getString('pipeline.artifactsSelection.groupId')
+      })
+    }
+  ])
+  const [artifactIds, setArtifactIds] = useState<SelectOption[]>([
+    {
+      label: getString('common.loadingFieldOptions', {
+        fieldName: getString('pipeline.artifactsSelection.artifactId')
+      }),
+      value: getString('common.loadingFieldOptions', {
+        fieldName: getString('pipeline.artifactsSelection.artifactId')
+      })
+    }
+  ])
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
 
@@ -577,13 +595,7 @@ export function Nexus2Artifact({
                             useValue
                             label={getString('pipeline.artifactsSelection.groupId')}
                             name="spec.groupId"
-                            placeholder={
-                              fetchingGroupIds
-                                ? getString('common.loadingFieldOptions', {
-                                    fieldName: getString('pipeline.artifactsSelection.groupId')
-                                  })
-                                : getString('pipeline.artifactsSelection.groupIdPlaceholder')
-                            }
+                            placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
                             multiTypeInputProps={{
                               expressions,
                               allowableTypes,
@@ -591,19 +603,14 @@ export function Nexus2Artifact({
                                 allowCreatingNewItems: true,
                                 itemRenderer: (item, props) => itemRenderer(item, props, fetchingGroupIds),
                                 items: groupIds,
-                                loadingItems: fetchingGroupIds,
 
-                                noResults: !fetchingGroupIds ? (
+                                noResults: (
                                   <NoTagResults
                                     tagError={groupIdError}
                                     isServerlessDeploymentTypeSelected={false}
-                                    defaultErrorText={
-                                      fetchingGroupIds
-                                        ? getString('loading')
-                                        : getString('common.filters.noResultsFound')
-                                    }
+                                    defaultErrorText={getString('common.filters.noResultsFound')}
                                   />
-                                ) : null
+                                )
                               },
                               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                                 if (
@@ -614,6 +621,17 @@ export function Nexus2Artifact({
                                 ) {
                                   return
                                 }
+
+                                setGroupIds([
+                                  {
+                                    label: getString('common.loadingFieldOptions', {
+                                      fieldName: getString('pipeline.artifactsSelection.groupId')
+                                    }),
+                                    value: getString('common.loadingFieldOptions', {
+                                      fieldName: getString('pipeline.artifactsSelection.groupId')
+                                    })
+                                  }
+                                ])
 
                                 refetchGroupIds({
                                   queryParams: {
@@ -679,18 +697,12 @@ export function Nexus2Artifact({
                             useValue
                             label={getString('pipeline.artifactsSelection.artifactId')}
                             name="spec.artifactId"
-                            placeholder={
-                              fetchingArtifactIds
-                                ? getString('common.loadingFieldOptions', {
-                                    fieldName: getString('pipeline.artifactsSelection.artifactId')
-                                  })
-                                : getString('pipeline.artifactsSelection.artifactIdPlaceholder')
-                            }
+                            placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
                             multiTypeInputProps={{
                               expressions,
                               allowableTypes,
                               selectProps: {
-                                noResults: !fetchingArtifactIds ? (
+                                noResults: (
                                   <NoTagResults
                                     tagError={artifactIdError}
                                     defaultErrorText={
@@ -699,10 +711,9 @@ export function Nexus2Artifact({
                                         : getString('common.filters.noResultsFound')
                                     }
                                   />
-                                ) : null,
+                                ),
                                 itemRenderer: (item, props) => itemRenderer(item, props, fetchingArtifactIds),
                                 items: artifactIds,
-                                loadingItems: fetchingArtifactIds,
                                 allowCreatingNewItems: true
                               },
                               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
@@ -714,6 +725,17 @@ export function Nexus2Artifact({
                                 ) {
                                   return
                                 }
+
+                                setArtifactIds([
+                                  {
+                                    label: getString('common.loadingFieldOptions', {
+                                      fieldName: getString('pipeline.artifactsSelection.artifactId')
+                                    }),
+                                    value: getString('common.loadingFieldOptions', {
+                                      fieldName: getString('pipeline.artifactsSelection.artifactId')
+                                    })
+                                  }
+                                ])
 
                                 refetchArtifactIds({
                                   queryParams: {

@@ -8,6 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { Container } from '@harness/uicore'
+import { get } from 'lodash-es'
 import type { ApprovalInstanceResponse, ExecutionGraph, ServiceNowApprovalInstanceDetails } from 'services/pipeline-ng'
 import { Duration } from '@common/exports'
 import { ApprovalStatus } from '@pipeline/utils/approvalUtils'
@@ -111,6 +112,7 @@ export function ServiceNowApprovalTab(props: ServiceNowApprovalTabProps): React.
           step={{ startTs, endTs, stepParameters }}
           executionMetadata={executionMetadata}
           progressData={progressData}
+          ticketStatus={get(approvalData, 'details.ticket.ticketFields.state')}
         />
       </Container>
       <div className={cx(css.serviceNowApproval, css.applyTopPadding)}>

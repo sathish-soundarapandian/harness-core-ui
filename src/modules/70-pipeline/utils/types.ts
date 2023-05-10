@@ -81,9 +81,11 @@ export interface InputSet {
   inputSet: InputSetDTO
 }
 
-export interface ECSRollingDeployStepInitialValues extends StepElementConfig {
-  sameAsAlreadyRunningInstances?: boolean | string
-  forceNewDeployment?: boolean | string
+export interface ECSRollingDeployStepElementConfig extends StepElementConfig {
+  spec: {
+    sameAsAlreadyRunningInstances: boolean | string
+    forceNewDeployment: boolean | string
+  }
 }
 
 export type TemplateIcons = { [K: string]: string | undefined | TemplateIcons }

@@ -359,14 +359,14 @@ const getBambooSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowI
     },
     {
       label: 'credType',
-      value: 'Password'
+      value: getLabelForAuthType(connector?.spec?.auth?.type)
     },
     {
       label: 'username',
       value: connector?.spec?.auth?.spec?.username || connector?.spec?.auth?.spec?.usernameRef
     },
     {
-      label: 'connectors.jenkins.passwordAPIToken',
+      label: 'password',
       value: connector?.spec?.auth?.spec?.passwordRef
     }
   ]

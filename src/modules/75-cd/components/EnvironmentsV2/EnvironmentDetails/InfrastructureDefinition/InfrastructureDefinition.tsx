@@ -10,20 +10,19 @@ import { useParams } from 'react-router-dom'
 import { find, get } from 'lodash-es'
 
 import { ButtonSize, ButtonVariation, Container, ModalDialog, Page, useToggleOpen } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 
 import { InfrastructureResponse, useGetInfrastructureList } from 'services/cd-ng'
-import { useStrings } from 'framework/strings'
 
 import type { EnvironmentPathProps, ProjectPathProps, EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams } from '@common/hooks'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import { InfraDefinitionDetailsDrawer } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
-
+import { useInfrastructureUnsavedChanges } from '@cd/hooks/useInfrastructureUnsavedChanges'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import InfrastructureList from './InfrastructureList/InfrastructureList'
@@ -38,6 +37,10 @@ export default function InfrastructureDefinition(): JSX.Element {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const [selectedInfrastructure, setSelectedInfrastructure] = useState<string>('')
+
+  const { isInfraUpdated, updatedInfrastructure, handleInfrastructureUpdate, openUnsavedChangesDiffModal } =
+    useInfrastructureUnsavedChanges({ selectedInfrastructure })
+
   const [infraSaveInProgress, setInfraSaveInProgress] = useState<boolean>(false)
   const {
     isOpen: isInfraDefinitionDetailsOpen,
@@ -81,7 +84,7 @@ export default function InfrastructureDefinition(): JSX.Element {
     if (selectedInfrastructure) {
       openInfraDefinitionDetails()
     }
-  }, [selectedInfrastructure, openInfraDefinitionDetails])
+  }, [selectedInfrastructure, openInfraDefinitionDetails, handleInfrastructureUpdate])
 
   return (
     <>
@@ -131,6 +134,10 @@ export default function InfrastructureDefinition(): JSX.Element {
             getTemplate={getTemplate}
             setInfraSaveInProgress={setInfraSaveInProgress}
             infraSaveInProgress={infraSaveInProgress}
+            isInfraUpdated={isInfraUpdated}
+            openUnsavedChangesDiffModal={openUnsavedChangesDiffModal}
+            handleInfrastructureUpdate={handleInfrastructureUpdate}
+            updatedInfra={updatedInfrastructure}
           />
         ) : (
           <ModalDialog
