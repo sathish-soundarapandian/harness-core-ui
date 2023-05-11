@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import {
   ButtonSize,
   ButtonVariation,
@@ -72,6 +72,8 @@ export interface BaseDeployServiceEntityProps extends DeployServiceEntityCustomP
   setIsFetchingMergeServiceInputs: any
   loading: any
   useGetServicesDataReturn: UseGetServicesDataReturn
+  allServices: any
+  setAllServices: any
 }
 
 const DIALOG_PROPS: Omit<ModalDialogProps, 'isOpen'> = {
@@ -100,7 +102,9 @@ export default function BaseDeployServiceEntity({
   setServiceInputType,
   setIsFetchingMergeServiceInputs,
   loading,
-  useGetServicesDataReturn
+  useGetServicesDataReturn,
+  allServices,
+  setAllServices
 }: BaseDeployServiceEntityProps): React.ReactElement {
   const { values, setValues, setTouched } = useFormikContext<FormState>()
   const { prependServiceToServiceList, updatingData, servicesList, servicesData, updateServiceInputsData } =
@@ -129,9 +133,6 @@ export default function BaseDeployServiceEntity({
     open: openSwitchToSingleSvcDialog,
     close: closeSwitchToSingleSvcDialog
   } = useToggleOpen()
-  const [allServices, setAllServices] = useState(
-    setupModeType === setupMode.DIFFERENT ? getAllFixedServices(initialValues) : ['']
-  )
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
 
@@ -380,6 +381,7 @@ export default function BaseDeployServiceEntity({
   }
 
   const isMultiSvc = !isNil(values.services)
+  console.log(serviceInputType, isMultiSvc)
   const isFixed = isMultiSvc ? Array.isArray(values.services) : serviceInputType === MultiTypeInputType.FIXED
   let placeHolderForServices =
     Array.isArray(values.services) && !isEmpty(values.services)

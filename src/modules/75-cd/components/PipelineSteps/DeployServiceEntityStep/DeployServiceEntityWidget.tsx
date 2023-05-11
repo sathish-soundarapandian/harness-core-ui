@@ -228,6 +228,8 @@ export default function DeployServiceEntityWidget({
               setIsFetchingMergeServiceInputs={setIsFetchingMergeServiceInputs}
               loading={loading}
               useGetServicesDataReturn={useGetServicesDataReturn}
+              allServices={allServices}
+              setAllServices={setAllServices}
             />
           )
         }}
