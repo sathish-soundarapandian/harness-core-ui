@@ -261,6 +261,8 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           orgIdentifier: editFlag ? propsSecret?.orgIdentifier : orgIdentifier,
           projectIdentifier: editFlag ? propsSecret?.projectIdentifier : projectIdentifier,
           spec: {
+            ...(get(data, 'expiresOn') &&
+              data.valueType === 'Inline' && { additionalMetadata: { values: { expiresOn: get(data, 'expiresOn') } } }),
             ...(get(data, 'regions') &&
               get(data, 'configureRegions') && {
                 additionalMetadata: {
@@ -289,6 +291,8 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
         orgIdentifier: editFlag ? propsSecret?.orgIdentifier : orgIdentifier,
         projectIdentifier: editFlag ? propsSecret?.projectIdentifier : projectIdentifier,
         spec: {
+          ...(get(data, 'expiresOn') &&
+            data.valueType === 'Inline' && { additionalMetadata: { values: { expiresOn: get(data, 'expiresOn') } } }),
           ...(((get(data, 'regions') && get(data, 'configureRegions')) || get(data, 'version')) && {
             additionalMetadata: {
               values: {
@@ -463,7 +467,7 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               }),
             ...(editing &&
               secret &&
-              pick((secret?.spec as SecretTextSpecDTO)?.additionalMetadata?.values, ['version'])),
+              pick((secret?.spec as SecretTextSpecDTO)?.additionalMetadata?.values, ['version', 'expiresOn'])),
             ...(editing &&
               get(secret, 'spec.additionalMetadata.values.regions') && {
                 configureRegions: !!get(secret, 'spec.additionalMetadata.values.regions')

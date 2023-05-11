@@ -58,13 +58,26 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
   } = props
   const { getString } = useStrings()
 
-  const getSecretDetailsRow = (): ActivityDetailsRowInterface[] => {
-    return [
+  const getSecretDetailsRows = (): ActivityDetailsRowInterface[] => {
+    const rows = [
       { label: getString('name'), value: secret.name },
       { label: getString('description'), value: secret.description },
       { label: getString('identifier'), value: secret.identifier },
       { label: getString('tagsLabel'), value: secret.tags }
     ]
+
+    // converting expiresOn to Date may not be foolproof, hence try-catch
+    try {
+      const secretTextSpec = secret.spec as SecretTextSpecDTO
+      const expiresOn = get(secretTextSpec, 'additionalMetadata.values.expiresOn')
+      if (expiresOn) {
+        rows.push({ label: getString('common.expiresOn'), value: new Date(Number(expiresOn)).toString() })
+      }
+    } catch (e) {
+      // do nothing
+    }
+
+    return rows
   }
 
   const getSecretCredentialsRow = (): ActivityDetailsRowInterface[] => {
@@ -277,7 +290,7 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
         <Layout.Horizontal spacing="medium">
           <RenderDetailsTable
             title={getString('overview')}
-            data={getSecretDetailsRow()}
+            data={getSecretDetailsRows()}
             className={css.renderDetails}
           />
           <RenderDetailsTable title={'Credentials'} data={getSecretCredentialsRow()} className={css.renderDetails} />

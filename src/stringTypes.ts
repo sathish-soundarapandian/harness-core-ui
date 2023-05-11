@@ -321,6 +321,7 @@ export interface StringsMap {
   'common.executionTab.stepsCount': string
   'common.expand': string
   'common.expiration': string
+  'common.expiresOn': string
   'common.expiryDate': string
   'common.expiryDateCredit': string
   'common.exploreAllPlans': string
