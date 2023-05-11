@@ -75,7 +75,7 @@ const ECSRollingDeployStepInputSet = (props: ECSRollingDeployStepInputSetProps):
         </Layout.Horizontal>
       )}
 
-      {getMultiTypeFromValue(template?.spec?.sameAsAlreadyRunningInstances) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(template?.spec?.forceNewDeployment) === MultiTypeInputType.RUNTIME && (
         <Layout.Horizontal
           flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
           className={cx(stepCss.formGroup, stepCss.md)}
