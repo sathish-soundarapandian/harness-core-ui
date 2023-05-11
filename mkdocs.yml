@@ -1,0 +1,7 @@
+site_name: 'harness-core-ui'
+
+nav:
+  - Home: README.md
+  
+plugins:
+  - techdocs-core
