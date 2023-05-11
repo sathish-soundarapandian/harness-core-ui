@@ -168,8 +168,7 @@ export function StageInputSetFormInternal({
     deploymentStageTemplateInfraKeys.includes(field)
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
-  const { CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, CDS_OrgAccountLevelServiceEnvEnvGroup, IACM_ENABLED } =
-    useFeatureFlags()
+  const { CIE_HOSTED_VMS_MAC, CDS_OrgAccountLevelServiceEnvEnvGroup, IACM_ENABLED } = useFeatureFlags()
   const iacmRequired = some(formik?.values?.stages, stages => stages?.stage?.type === StageType.IACM)
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
@@ -491,12 +490,11 @@ export function StageInputSetFormInternal({
       value: OsTypes.MacOS
     })
   }
-  if (CIE_HOSTED_VMS_WINDOWS) {
-    buildInfraSelectOptions.push({
-      label: getString('pipeline.infraSpecifications.osTypes.windows'),
-      value: OsTypes.Windows
-    })
-  }
+
+  buildInfraSelectOptions.push({
+    label: getString('pipeline.infraSpecifications.osTypes.windows'),
+    value: OsTypes.Windows
+  })
 
   return (
     <>
