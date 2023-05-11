@@ -114,6 +114,7 @@ triggerOverviewPanel:
   title: 'Trigger Overview'
 schedulePanel:
   currentUTCTime: 'The Cron expression will be evaluated against UTC time. {{$.common.currentUTCTime}}'
+  currentTime: 'Your local time: '
   monthlyTabTitle: '{{$.common.monthly}}'
   yearlyTabTitle: '{{$.common.yearly}}'
   hourlyTabTitle: '{{$.common.hourly}}'

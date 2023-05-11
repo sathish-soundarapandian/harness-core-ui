@@ -13,18 +13,21 @@ import {
   ButtonVariation,
   Container
 } from '@harness/uicore'
-import { cloneDeep, defaultTo, isEmpty, isEqual, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isEqual, set } from 'lodash-es'
 import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import produce from 'immer'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
-import { NGServiceConfig, useGetEntityYamlSchema } from 'services/cd-ng'
+import { NGServiceConfig, ResponseValidateTemplateInputsResponseDTO, useGetEntityYamlSchema } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import DeployServiceDefinition from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceDefinition/DeployServiceDefinition'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
+import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -40,6 +43,10 @@ import css from './ServiceConfiguration.module.scss'
 interface ServiceConfigurationProps {
   serviceData: NGServiceConfig
   setHasYamlValidationErrors: (hasErrors: boolean) => void
+  shouldShowOutOfSyncError?: boolean
+  setShouldShowOutOfSyncError?: (value: boolean) => void
+  validateTemplateInputsResponse?: ResponseValidateTemplateInputsResponseDTO
+  updateServicePostReconcile?: (entityYaml: string) => Promise<void>
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -55,20 +62,28 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
 
 function ServiceConfiguration({
   serviceData,
-  setHasYamlValidationErrors
+  setHasYamlValidationErrors,
+  shouldShowOutOfSyncError,
+  validateTemplateInputsResponse,
+  setShouldShowOutOfSyncError,
+  updateServicePostReconcile
 }: ServiceConfigurationProps): React.ReactElement | null {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const {
     state: {
       pipeline: service,
+      originalPipeline: originalServicePipeline,
       pipelineView: { isYamlEditable },
       pipelineView,
-      isUpdated
+      isUpdated,
+      gitDetails,
+      storeMetadata
     },
     updatePipeline,
     updatePipelineView,
     setView,
-    isReadonly
+    isReadonly,
+    fetchPipeline
   } = usePipelineContext()
   const { isServiceCreateModalView, isServiceEntityModalView } = useServiceContext()
   const { getString } = useStrings()
@@ -160,13 +175,30 @@ function ServiceConfiguration({
     return false
   }, [yamlHandler])
 
+  const templateInputsErrorNodeSummary = React.useMemo(() => {
+    if (
+      validateTemplateInputsResponse?.data?.validYaml === false &&
+      validateTemplateInputsResponse?.data.errorNodeSummary
+    ) {
+      return validateTemplateInputsResponse?.data.errorNodeSummary
+    }
+  }, [validateTemplateInputsResponse?.data])
+
+  const originalServiceData = React.useMemo(() => {
+    const serviceDefinitionData = get(originalServicePipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
+    return produce(serviceData, draft => {
+      setNameIDDescription(draft.service as PipelineInfoConfig, originalServicePipeline)
+      set(draft, 'service.serviceDefinition', serviceDefinitionData)
+    })
+  }, [originalServicePipeline, serviceData])
+
   const invalidYaml = isInvalidYaml()
 
   if (service.identifier === DefaultNewPipelineId && !isServiceCreateModalView) {
     return null
   }
   return (
-    <Container className={css.serviceEntity} padding={{ left: isServiceEntityModalView ? 'xsmall' : 'xxlarge' }}>
+    <Container>
       <NavigationCheck
         when={isUpdated}
         shouldBlockNavigation={nextLocation => {
@@ -189,58 +221,75 @@ function ServiceConfiguration({
           history.push(newPath)
         }}
       />
-      <div className={css.optionBtns}>
-        <VisualYamlToggle
-          selectedView={selectedView}
-          onChange={nextMode => {
-            handleModeSwitch(nextMode)
+      {shouldShowOutOfSyncError && templateInputsErrorNodeSummary && (
+        <OutOfSyncErrorStrip
+          errorNodeSummary={templateInputsErrorNodeSummary}
+          entity={TemplateErrorEntity.SERVICE}
+          originalYaml={yamlStringify(defaultTo(originalServiceData, {}))}
+          isReadOnly={isReadonly}
+          onRefreshEntity={() => {
+            fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
+            setShouldShowOutOfSyncError?.(false)
           }}
-          //   disableToggle={!inputSetTemplateYaml}
+          updateRootEntity={updateServicePostReconcile as (entityYaml: string) => Promise<void>}
+          gitDetails={gitDetails}
+          storeMetadata={storeMetadata}
         />
-      </div>
-      {selectedView === SelectedView.VISUAL ? (
-        <>
-          <ServiceStepBasicInfo />
-          <DeployServiceDefinition />
-        </>
-      ) : (
-        <div className={css.yamlBuilder}>
-          <YamlBuilderMemo
-            {...yamlBuilderReadOnlyModeProps}
-            fileName={`${serviceData.service?.name}.yaml`}
-            key={isYamlEditable.toString()}
-            isReadOnlyMode={isReadonly || !isYamlEditable}
-            onChange={onYamlChange}
-            onEnableEditMode={() => {
-              updatePipelineView({ ...pipelineView, isYamlEditable: true })
-            }}
-            isEditModeSupported={!isReadonly}
-            existingJSON={serviceData}
-            bind={setYamlHandler}
-            schema={serviceSchema?.data}
-            height={isServiceEntityModalView ? 540 : 700}
-          />
-          {isReadonly || !isYamlEditable ? (
-            <div className={css.buttonsWrapper}>
-              <Tag>{getString('common.readOnly')}</Tag>
-              <RbacButton
-                permission={{
-                  resource: {
-                    resourceType: ResourceType.SERVICE,
-                    resourceIdentifier: defaultTo(serviceId, '')
-                  },
-                  permission: PermissionIdentifier.EDIT_SERVICE
-                }}
-                variation={ButtonVariation.SECONDARY}
-                text={getString('common.editYaml')}
-                onClick={() => {
-                  updatePipelineView({ ...pipelineView, isYamlEditable: true })
-                }}
-              />
-            </div>
-          ) : null}
-        </div>
       )}
+      <Container className={css.serviceEntity} padding={{ left: isServiceEntityModalView ? 'xsmall' : 'xxlarge' }}>
+        <div className={css.optionBtns}>
+          <VisualYamlToggle
+            selectedView={selectedView}
+            onChange={nextMode => {
+              handleModeSwitch(nextMode)
+            }}
+            //   disableToggle={!inputSetTemplateYaml}
+          />
+        </div>
+        {selectedView === SelectedView.VISUAL ? (
+          <>
+            <ServiceStepBasicInfo />
+            <DeployServiceDefinition />
+          </>
+        ) : (
+          <div className={css.yamlBuilder}>
+            <YamlBuilderMemo
+              {...yamlBuilderReadOnlyModeProps}
+              fileName={`${serviceData.service?.name}.yaml`}
+              key={isYamlEditable.toString()}
+              isReadOnlyMode={isReadonly || !isYamlEditable}
+              onChange={onYamlChange}
+              onEnableEditMode={() => {
+                updatePipelineView({ ...pipelineView, isYamlEditable: true })
+              }}
+              isEditModeSupported={!isReadonly}
+              existingJSON={serviceData}
+              bind={setYamlHandler}
+              schema={serviceSchema?.data}
+              height={isServiceEntityModalView ? 540 : 700}
+            />
+            {isReadonly || !isYamlEditable ? (
+              <div className={css.buttonsWrapper}>
+                <Tag>{getString('common.readOnly')}</Tag>
+                <RbacButton
+                  permission={{
+                    resource: {
+                      resourceType: ResourceType.SERVICE,
+                      resourceIdentifier: defaultTo(serviceId, '')
+                    },
+                    permission: PermissionIdentifier.EDIT_SERVICE
+                  }}
+                  variation={ButtonVariation.SECONDARY}
+                  text={getString('common.editYaml')}
+                  onClick={() => {
+                    updatePipelineView({ ...pipelineView, isYamlEditable: true })
+                  }}
+                />
+              </div>
+            ) : null}
+          </div>
+        )}
+      </Container>
     </Container>
   )
 }

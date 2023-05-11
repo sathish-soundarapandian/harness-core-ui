@@ -1289,6 +1289,7 @@ stepDescription:
   SscaOrchestration: Orchestrate SBOM generation for your artifacts and repository
   AwsSamDeploy: Deploy an AWS SAM function.
   AwsSamBuild: Build an AWS SAM function.
+  SscaEnforcement: Enforce policies based on your SBOM by Allow list/Deny list
 
 executionStrategy:
   executionStrategies: Execution Strategies

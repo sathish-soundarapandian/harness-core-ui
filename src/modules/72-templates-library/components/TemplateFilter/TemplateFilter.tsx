@@ -155,7 +155,11 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
         page: undefined,
         filterIdentifier: undefined,
         filters:
-          { ...inputFormData, templateNames: [inputFormData.templateNames], tags: { ...templateTagsValid } } || {}
+          {
+            ...inputFormData,
+            templateNames: inputFormData.templateNames ? [inputFormData.templateNames] : null,
+            tags: { ...templateTagsValid }
+          } || {}
       })
 
       hideFilterDrawer()
@@ -182,8 +186,7 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
           filterType: 'Template',
           tags: formValues.tags || {},
           description: formValues.description,
-          templateNames:
-            formValues.templateNames && formValues.templateNames.length > 0 ? [formValues.templateNames] : null
+          templateNames: formValues.templateNames ? [formValues.templateNames] : []
         }
       }
 

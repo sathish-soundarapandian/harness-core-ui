@@ -7,8 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly expiresOnLabel: string
-  readonly hoverMsg: string
-  readonly hoverMsgTarget: string
+  readonly fileStoreLabel: string
+  readonly formLabel: string
+  readonly stepContainer: string
 }
 export default styles

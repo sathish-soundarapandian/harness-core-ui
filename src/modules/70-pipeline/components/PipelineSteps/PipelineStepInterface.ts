@@ -193,6 +193,7 @@ export enum StepType {
   TerraformCloudRollback = 'TerraformCloudRollback',
   SscaOrchestration = 'SscaOrchestration',
   CdSscaOrchestration = 'CdSscaOrchestration',
+  SscaEnforcement = 'SscaEnforcement',
   CustomIngest = 'CustomIngest',
   AWSSecurityHub = 'AWSSecurityHub',
   AWSECR = 'AWSECR',

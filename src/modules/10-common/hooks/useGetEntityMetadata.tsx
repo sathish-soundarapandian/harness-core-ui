@@ -8,7 +8,7 @@
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { StoreType } from '@common/constants/GitSyncTypes'
-import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { Module, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import type { EntityDetail, EntityReference } from 'services/cd-ng'
 import { getPipelineSummaryPromise, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
@@ -23,7 +23,7 @@ export interface EntityScope {
 }
 
 export interface UseGetEntityUrlProp {
-  entityInfo?: EntityDetail & { entityRef?: EntityReference & { envIdentifier?: string } }
+  entityInfo?: EntityDetail & { entityRef?: EntityReference & { envIdentifier?: string; pipelineIdentifier?: string } }
 }
 
 export const getPipelineMetadataByIdentifier = (
@@ -121,6 +121,64 @@ const getPipelineUrl = async (scope: EntityScope, identifier: string): Promise<s
   }
 }
 
+const getTriggerUrl = async (
+  scope: EntityScope & { pipelineIdentifier?: string; module?: Module },
+  triggerIdentifier: string
+): Promise<string> => {
+  const {
+    accountIdentifier = '',
+    orgIdentifier = '',
+    projectIdentifier = '',
+    branch = '',
+    pipelineIdentifier = '',
+    module
+  } = scope
+  const pipelineMetadataResponse = await getPipelineMetadataByIdentifier(scope, pipelineIdentifier)
+  const pipelineMetadata = pipelineMetadataResponse?.data
+  const inlineTriggerUrl = `${routes.toTriggersDetailPage({
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    triggerIdentifier,
+    accountId: accountIdentifier,
+    module,
+    storeType: StoreType.INLINE
+  })}`
+
+  const triggerListUrl = routes.toTriggersPage({
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    accountId: accountIdentifier,
+    module
+  })
+
+  if (pipelineMetadataResponse?.status !== 'SUCCESS') {
+    // Without metadata can not open triggers page so redirecting to triggers list
+    return Promise.resolve(triggerListUrl)
+  } else if (pipelineMetadata?.storeType === StoreType.REMOTE) {
+    return Promise.resolve(
+      routes.toTriggersDetailPage({
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
+        triggerIdentifier: triggerIdentifier,
+        accountId: accountIdentifier,
+        module,
+        storeType: pipelineMetadata?.storeType,
+        connectorRef: pipelineMetadata?.connectorRef,
+        repoName: pipelineMetadata?.gitDetails?.repoName,
+        ...(branch ? { branch } : {})
+      })
+    )
+  } else if (pipelineMetadata?.storeType === StoreType.INLINE) {
+    return Promise.resolve(inlineTriggerUrl)
+  } else {
+    // Handling oldGitsync and old DB pipelines which do not have StoreType
+    return Promise.resolve(triggerListUrl)
+  }
+}
+
 const getTemplateUrl = async (scope: EntityScope, identifier: string): Promise<string> => {
   const { accountIdentifier = '', orgIdentifier = '', projectIdentifier = '', versionLabel = '', branch = '' } = scope
 
@@ -155,9 +213,15 @@ const getTemplateUrl = async (scope: EntityScope, identifier: string): Promise<s
 
 export const useGetEntityMetadata = (prop: UseGetEntityUrlProp): { getEntityURL: () => Promise<string> } => {
   const entityInfo = prop.entityInfo
-  const { accountIdentifier = '', orgIdentifier = '', projectIdentifier = '' } = entityInfo?.entityRef || {}
+  const {
+    accountIdentifier = '',
+    orgIdentifier = '',
+    projectIdentifier = '',
+    identifier = '',
+    pipelineIdentifier,
+    branch
+  } = entityInfo?.entityRef || {}
   const entityType = entityInfo?.type
-  const identifier = defaultTo(entityInfo?.entityRef?.identifier, '')
   const { module } = useParams<ModulePathParams>()
 
   const getEntityURL = async (): Promise<string> => {
@@ -187,7 +251,7 @@ export const useGetEntityMetadata = (prop: UseGetEntityUrlProp): { getEntityURL:
               accountIdentifier,
               orgIdentifier,
               projectIdentifier,
-              branch: entityInfo?.entityRef?.branch,
+              branch,
               versionLabel: (entityInfo?.entityRef as any)?.versionLabel
             },
             identifier
@@ -202,7 +266,7 @@ export const useGetEntityMetadata = (prop: UseGetEntityUrlProp): { getEntityURL:
               accountIdentifier,
               orgIdentifier,
               projectIdentifier,
-              branch: entityInfo?.entityRef?.branch
+              branch
             },
             identifier
           )
@@ -242,6 +306,19 @@ export const useGetEntityMetadata = (prop: UseGetEntityUrlProp): { getEntityURL:
           environmentIdentifier: defaultTo(entityInfo?.entityRef?.envIdentifier, ''),
           module
         })}?sectionId=INFRASTRUCTURE&infrastructureId=${identifier}`
+        break
+      case 'Triggers':
+        entityUrl = await getTriggerUrl(
+          {
+            orgIdentifier,
+            projectIdentifier,
+            pipelineIdentifier,
+            accountIdentifier,
+            module,
+            branch
+          },
+          identifier
+        )
         break
       default:
         entityUrl = routes.toLandingDashboard({ accountId: accountIdentifier })

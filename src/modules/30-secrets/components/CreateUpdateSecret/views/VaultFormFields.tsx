@@ -6,7 +6,7 @@
  */
 
 import React, { FormEvent } from 'react'
-import { FormInput, SelectOption, useToaster, Popover, Text } from '@harness/uicore'
+import { FormInput, SelectOption, useToaster, Popover, Text, DateInput, Label } from '@harness/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import type { FormikContextType } from 'formik'
 import { ConnectorInfoDTO, SecretDTOV2, useGetGcpRegions } from 'services/cd-ng'
@@ -21,7 +21,7 @@ interface VaultFormFieldsProps {
 }
 
 interface FormikContextProps<T> {
-  formik?: FormikContextType<T>
+  formik: FormikContextType<T>
 }
 
 const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> = ({
@@ -54,6 +54,11 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
       refetch()
     }
   }, [secretManagerType])
+
+  const showExpiresOn =
+    ((type === 'SecretText' && formik.values['valueType'] === 'Inline') || type === 'SecretFile') &&
+    secretManagerType === 'AzureKeyVault'
+
   return (
     <>
       {type === 'SecretText' ? (
@@ -70,15 +75,15 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
               disabled={gcpSmInEditMode()}
               inline={true}
               onChange={(event: FormEvent<HTMLInputElement>) => {
-                formik?.setFieldValue('valueType', event.currentTarget.value)
+                formik.setFieldValue('valueType', event.currentTarget.value)
               }}
-              selectedValue={formik?.values['valueType']}
+              selectedValue={formik.values['valueType']}
             >
               <Radio label={getString('secrets.secret.inlineSecret')} value="Inline" disabled={readonly} />
               <Radio label={getString('secrets.secret.referenceSecret')} value="Reference" />
             </RadioGroup>
           </Popover>
-          {formik?.values['valueType'] === 'Inline' ? (
+          {formik.values['valueType'] === 'Inline' ? (
             <FormInput.Text
               name="value"
               label={getString('secrets.labelValue')}
@@ -89,7 +94,7 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
               }}
             />
           ) : null}
-          {formik?.values['valueType'] === 'Reference' ? (
+          {formik.values['valueType'] === 'Reference' ? (
             <FormInput.Text
               name="reference"
               label={getString('secrets.secret.referenceSecret')}
@@ -102,7 +107,7 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
         <FormInput.FileInput name="file" label={getString('secrets.secret.labelSecretFile')} multiple />
       ) : null}
       {secretManagerType === 'GcpSecretManager' &&
-        (formik?.values['valueType'] === 'Reference' ? (
+        (formik.values['valueType'] === 'Reference' ? (
           <>
             <FormInput.Text name="version" label={getString('version')} />
           </>
@@ -122,7 +127,7 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
                 disabled={gcpSmInEditMode()}
               />
 
-              {formik?.values['configureRegions'] ? (
+              {formik.values['configureRegions'] ? (
                 <FormInput.MultiSelect
                   name="regions"
                   label={getString('secrets.secret.region')}
@@ -133,6 +138,22 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
             </>
           </Popover>
         ))}
+      {showExpiresOn && (
+        <>
+          <Label className={css.expiresOnLabel}>
+            {getString('common.headerWithOptionalText', { header: getString('common.expiresOn') })}
+          </Label>
+          <DateInput
+            timePrecision="minute"
+            value={formik.values.expiresOn}
+            onChange={(value: string | undefined, _err?: string) => {
+              formik.setFieldValue('expiresOn', value)
+            }}
+            data-testid="expiresOn"
+          />
+        </>
+      )}
+
       <FormInput.TextArea name="description" isOptional={true} label={getString('description')} />
       <FormInput.KVTagInput name="tags" isOptional={true} label={getString('tagsLabel')} />
     </>

@@ -1520,6 +1520,7 @@ export type AwsSamDeployStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   settings: ParameterFieldMapStringJsonNode
+  stackName?: string
 }
 
 export type AwsSamDirectoryManifest = ManifestAttributes & {
@@ -1590,7 +1591,7 @@ export type AzureArtifactsConfig = ArtifactConfig & {
   connectorRef: string
   feed: string
   package: string
-  packageType: 'maven' | 'nuget'
+  packageType: 'maven' | 'nuget' | 'upack'
   project?: string
   scope: 'project' | 'org'
   version?: string
@@ -4239,6 +4240,7 @@ export interface EntityDetail {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
 }
 
 export interface EntityDetailProtoDTO {
@@ -6566,7 +6568,8 @@ export interface GcpResponseDTO {
 }
 
 export type GcpSecretManager = ConnectorConfigDTO & {
-  credentialsRef: string
+  assumeCredentialsOnDelegate?: boolean
+  credentialsRef?: string
   default?: boolean
   delegateSelectors?: string[]
 }
@@ -6880,6 +6883,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   )[]
   moduleType?:
     | 'CD'
@@ -7114,6 +7118,7 @@ export interface GitEntityFilterProperties {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7425,6 +7430,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -7651,6 +7657,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7998,6 +8005,7 @@ export interface GitSyncEntityDTO {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -8218,6 +8226,7 @@ export interface GitSyncEntityListDTO {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -8455,6 +8464,7 @@ export interface GitSyncErrorDTO {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -10049,7 +10059,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -10057,6 +10067,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -10803,9 +10814,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -12167,6 +12179,7 @@ export interface ReferencedByDTO {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
 }
 
 export interface RefreshResponse {
@@ -13549,6 +13562,7 @@ export interface ResponseListEntityType {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -15541,6 +15555,7 @@ export type S3UrlStoreConfig = StoreConfig & {
 }
 
 export type SAMLSettings = NGAuthSettings & {
+  authenticationEnabled?: boolean
   authorizationEnabled?: boolean
   clientId?: string
   clientSecret?: string
@@ -15607,9 +15622,12 @@ export interface SSOConfig {
 }
 
 export interface SSORequest {
+  friendlySamlName?: string
   idpRedirectUrl?: string
   oauthProviderType?: 'AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN'
   oauthProviderTypes?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
+  samlProviderType?: 'AZURE' | 'OKTA' | 'ONELOGIN' | 'OTHER'
+  ssoId?: string
 }
 
 export interface SSOSettings {
@@ -15645,9 +15663,11 @@ export interface SamlLinkGroupRequest {
 
 export type SamlSettings = SSOSettings & {
   accountId: string
+  authenticationEnabled?: boolean
   authorizationEnabled?: boolean
   clientId?: string
   clientSecret?: string[]
+  configuredFromNG?: boolean
   encryptedClientSecret?: string
   entityIdentifier?: string
   friendlySamlName?: string
@@ -17999,6 +18019,11 @@ export interface TriggerFullSyncResponseDTO {
   isFullSyncTriggered?: boolean
 }
 
+export type TriggerReference = EntityReference & {
+  isDefault?: boolean
+  pipelineIdentifier?: string
+}
+
 export interface TwoFactorAdminOverrideSettings {
   adminOverrideTwoFactorEnabled?: boolean
 }
@@ -18745,13 +18770,15 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
 
+export type UpdateFreezeStatusBodyRequestBody = string[]
+
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
+
+export type UploadSamlMetaDataRequestBody = void
 
 export interface GetAccountSettingQueryParams {
   accountIdentifier: string
@@ -19588,6 +19615,7 @@ export interface ListActivitiesQueryParams {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -19800,6 +19828,7 @@ export interface ListActivitiesQueryParams {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -20116,6 +20145,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -20328,6 +20358,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -29367,12 +29398,75 @@ export const getSamlLoginTestPromise = (
     signal
   )
 
+export interface GetSamlLoginTestV2QueryParams {
+  accountIdentifier: string
+}
+
+export interface GetSamlLoginTestV2PathParams {
+  samlSSOId: string
+}
+
+export type GetSamlLoginTestV2Props = Omit<
+  GetProps<RestResponseLoginTypeResponse, unknown, GetSamlLoginTestV2QueryParams, GetSamlLoginTestV2PathParams>,
+  'path'
+> &
+  GetSamlLoginTestV2PathParams
+
+/**
+ * Get SAML Login Test
+ */
+export const GetSamlLoginTestV2 = ({ samlSSOId, ...props }: GetSamlLoginTestV2Props) => (
+  <Get<RestResponseLoginTypeResponse, unknown, GetSamlLoginTestV2QueryParams, GetSamlLoginTestV2PathParams>
+    path={`/authentication-settings/saml-login-test/${samlSSOId}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetSamlLoginTestV2Props = Omit<
+  UseGetProps<RestResponseLoginTypeResponse, unknown, GetSamlLoginTestV2QueryParams, GetSamlLoginTestV2PathParams>,
+  'path'
+> &
+  GetSamlLoginTestV2PathParams
+
+/**
+ * Get SAML Login Test
+ */
+export const useGetSamlLoginTestV2 = ({ samlSSOId, ...props }: UseGetSamlLoginTestV2Props) =>
+  useGet<RestResponseLoginTypeResponse, unknown, GetSamlLoginTestV2QueryParams, GetSamlLoginTestV2PathParams>(
+    (paramsInPath: GetSamlLoginTestV2PathParams) =>
+      `/authentication-settings/saml-login-test/${paramsInPath.samlSSOId}`,
+    { base: getConfig('ng/api'), pathParams: { samlSSOId }, ...props }
+  )
+
+/**
+ * Get SAML Login Test
+ */
+export const getSamlLoginTestV2Promise = (
+  {
+    samlSSOId,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseLoginTypeResponse,
+    unknown,
+    GetSamlLoginTestV2QueryParams,
+    GetSamlLoginTestV2PathParams
+  > & { samlSSOId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseLoginTypeResponse, unknown, GetSamlLoginTestV2QueryParams, GetSamlLoginTestV2PathParams>(
+    getConfig('ng/api'),
+    `/authentication-settings/saml-login-test/${samlSSOId}`,
+    props,
+    signal
+  )
+
 export interface UploadSamlMetaDataQueryParams {
   accountId: string
 }
 
 export type UploadSamlMetaDataProps = Omit<
-  MutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>,
+  MutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -29380,7 +29474,7 @@ export type UploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
-  <Mutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>
+  <Mutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>
     verb="POST"
     path={`/authentication-settings/saml-metadata-upload`}
     base={getConfig('ng/api')}
@@ -29389,7 +29483,7 @@ export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
 )
 
 export type UseUploadSamlMetaDataProps = Omit<
-  UseMutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>,
+  UseMutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -29397,7 +29491,7 @@ export type UseUploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const useUploadSamlMetaData = (props: UseUploadSamlMetaDataProps) =>
-  useMutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>(
+  useMutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
     'POST',
     `/authentication-settings/saml-metadata-upload`,
     { base: getConfig('ng/api'), ...props }
@@ -29407,10 +29501,16 @@ export const useUploadSamlMetaData = (props: UseUploadSamlMetaDataProps) =>
  * Create SAML Config
  */
 export const uploadSamlMetaDataPromise = (
-  props: MutateUsingFetchProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>,
+  props: MutateUsingFetchProps<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UploadSamlMetaDataRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, void, void>(
+  mutateUsingFetch<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
     'POST',
     getConfig('ng/api'),
     `/authentication-settings/saml-metadata-upload`,
@@ -29468,6 +29568,292 @@ export const updateSamlMetaDataPromise = (
     props,
     signal
   )
+
+export interface UpdateSamlMetaDataForSamlSSOIdQueryParams {
+  accountIdentifier: string
+}
+
+export interface UpdateSamlMetaDataForSamlSSOIdPathParams {
+  samlSSOId: string
+}
+
+export type UpdateSamlMetaDataForSamlSSOIdProps = Omit<
+  MutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateSamlMetaDataForSamlSSOIdPathParams
+
+/**
+ * Edit SAML Config for a given SAML SSO Id
+ */
+export const UpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UpdateSamlMetaDataForSamlSSOIdProps) => (
+  <Mutate<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  >
+    verb="PUT"
+    path={`/authentication-settings/saml-metadata-upload/${samlSSOId}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateSamlMetaDataForSamlSSOIdProps = Omit<
+  UseMutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateSamlMetaDataForSamlSSOIdPathParams
+
+/**
+ * Edit SAML Config for a given SAML SSO Id
+ */
+export const useUpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UseUpdateSamlMetaDataForSamlSSOIdProps) =>
+  useMutate<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  >(
+    'PUT',
+    (paramsInPath: UpdateSamlMetaDataForSamlSSOIdPathParams) =>
+      `/authentication-settings/saml-metadata-upload/${paramsInPath.samlSSOId}`,
+    { base: getConfig('ng/api'), pathParams: { samlSSOId }, ...props }
+  )
+
+/**
+ * Edit SAML Config for a given SAML SSO Id
+ */
+export const updateSamlMetaDataForSamlSSOIdPromise = (
+  {
+    samlSSOId,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  > & { samlSSOId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseSSOConfig,
+    unknown,
+    UpdateSamlMetaDataForSamlSSOIdQueryParams,
+    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdPathParams
+  >('PUT', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload/${samlSSOId}`, props, signal)
+
+export interface EnableDisableAuthenticationForSAMLSettingQueryParams {
+  accountIdentifier: string
+  enable: boolean
+}
+
+export interface EnableDisableAuthenticationForSAMLSettingPathParams {
+  samlSSOId: string
+}
+
+export type EnableDisableAuthenticationForSAMLSettingProps = Omit<
+  MutateProps<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  >,
+  'path' | 'verb'
+> &
+  EnableDisableAuthenticationForSAMLSettingPathParams
+
+/**
+ * Enables or disables authentication for the given SAML sso id
+ */
+export const EnableDisableAuthenticationForSAMLSetting = ({
+  samlSSOId,
+  ...props
+}: EnableDisableAuthenticationForSAMLSettingProps) => (
+  <Mutate<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  >
+    verb="PUT"
+    path={`/authentication-settings/saml-metadata-upload/${samlSSOId}/authentication`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseEnableDisableAuthenticationForSAMLSettingProps = Omit<
+  UseMutateProps<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  >,
+  'path' | 'verb'
+> &
+  EnableDisableAuthenticationForSAMLSettingPathParams
+
+/**
+ * Enables or disables authentication for the given SAML sso id
+ */
+export const useEnableDisableAuthenticationForSAMLSetting = ({
+  samlSSOId,
+  ...props
+}: UseEnableDisableAuthenticationForSAMLSettingProps) =>
+  useMutate<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  >(
+    'PUT',
+    (paramsInPath: EnableDisableAuthenticationForSAMLSettingPathParams) =>
+      `/authentication-settings/saml-metadata-upload/${paramsInPath.samlSSOId}/authentication`,
+    { base: getConfig('ng/api'), pathParams: { samlSSOId }, ...props }
+  )
+
+/**
+ * Enables or disables authentication for the given SAML sso id
+ */
+export const enableDisableAuthenticationForSAMLSettingPromise = (
+  {
+    samlSSOId,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  > & { samlSSOId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseBoolean,
+    unknown,
+    EnableDisableAuthenticationForSAMLSettingQueryParams,
+    void,
+    EnableDisableAuthenticationForSAMLSettingPathParams
+  >(
+    'PUT',
+    getConfig('ng/api'),
+    `/authentication-settings/saml-metadata-upload/${samlSSOId}/authentication`,
+    props,
+    signal
+  )
+
+export interface DeleteSamlMetaDataForSamlSSOIdQueryParams {
+  accountIdentifier: string
+}
+
+export interface DeleteSamlMetaDataForSamlSSOIdPathParams {
+  samlSSOId: string
+}
+
+export type DeleteSamlMetaDataForSamlSSOIdProps = Omit<
+  MutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  >,
+  'path' | 'verb'
+> &
+  DeleteSamlMetaDataForSamlSSOIdPathParams
+
+/**
+ * Delete SAML Config for given SAML sso id
+ */
+export const DeleteSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: DeleteSamlMetaDataForSamlSSOIdProps) => (
+  <Mutate<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  >
+    verb="DELETE"
+    path={`/authentication-settings/saml-metadata/${samlSSOId}/delete`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteSamlMetaDataForSamlSSOIdProps = Omit<
+  UseMutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  >,
+  'path' | 'verb'
+> &
+  DeleteSamlMetaDataForSamlSSOIdPathParams
+
+/**
+ * Delete SAML Config for given SAML sso id
+ */
+export const useDeleteSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UseDeleteSamlMetaDataForSamlSSOIdProps) =>
+  useMutate<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  >(
+    'DELETE',
+    (paramsInPath: DeleteSamlMetaDataForSamlSSOIdPathParams) =>
+      `/authentication-settings/saml-metadata/${paramsInPath.samlSSOId}/delete`,
+    { base: getConfig('ng/api'), pathParams: { samlSSOId }, ...props }
+  )
+
+/**
+ * Delete SAML Config for given SAML sso id
+ */
+export const deleteSamlMetaDataForSamlSSOIdPromise = (
+  {
+    samlSSOId,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  > & { samlSSOId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseSSOConfig,
+    unknown,
+    DeleteSamlMetaDataForSamlSSOIdQueryParams,
+    void,
+    DeleteSamlMetaDataForSamlSSOIdPathParams
+  >('DELETE', getConfig('ng/api'), `/authentication-settings/saml-metadata/${samlSSOId}/delete`, props, signal)
 
 export interface SetSessionTimeoutAtAccountLevelQueryParams {
   accountIdentifier: string
@@ -38199,6 +38585,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -38472,6 +38859,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   searchTerm?: string
 }
 
@@ -41956,6 +42344,7 @@ export interface GetReferencedByQueryParams {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   searchTerm?: string
 }
 
@@ -42412,7 +42801,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -42426,7 +42815,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -42441,7 +42830,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -42455,7 +42844,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -42467,7 +42856,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -42476,7 +42865,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -43039,7 +43428,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -43053,7 +43442,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -43068,7 +43457,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -43082,7 +43471,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -43094,7 +43483,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -43103,7 +43492,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -44643,6 +45032,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -44923,6 +45313,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'RollbackCloudFunctionGenOne'
       | 'K8sBlueGreenStageScaleDown'
       | 'AwsSamBuild'
+      | 'Semgrep'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -51371,6 +51762,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   yamlGroup?: string
 }
 
@@ -51711,6 +52103,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -66661,6 +67054,7 @@ export interface GetYamlSchemaQueryParams {
     | 'RollbackCloudFunctionGenOne'
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
+    | 'Semgrep'
   subtype?:
     | 'K8sCluster'
     | 'Git'

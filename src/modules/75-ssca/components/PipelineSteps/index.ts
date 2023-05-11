@@ -8,6 +8,8 @@
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { CdSscaOrchestrationStep } from './CdSscaOrchestrationStep/CdSscaOrchestrationStep'
 import { SscaOrchestrationStep } from './SscaOrchestrationStep/SscaOrchestrationStep'
+import { SscaEnforcementStep } from './SscaEnforcementStep/SscaEnforcementStep'
 
 factory.registerStep(new SscaOrchestrationStep())
 factory.registerStep(new CdSscaOrchestrationStep())
+factory.registerStep(new SscaEnforcementStep())

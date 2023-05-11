@@ -35,8 +35,8 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
-import { getIdentifierFromName } from '@common/utils/StringUtils'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { getIdentifierFromScopedRef } from '@common/utils/utils'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
@@ -73,7 +73,7 @@ const getScopedRefUsingIdentifier = (
     return envRef
   }
   return get(values, 'environments', []).find(
-    (env: SelectOption) => getIdentifierFromName(env.label) === environment?.identifier
+    (env: SelectOption) => getIdentifierFromScopedRef(env.value as string) === environment?.identifier
   )?.value as string
 }
 

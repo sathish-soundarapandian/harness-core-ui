@@ -65,6 +65,7 @@ import {
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { NameIdentifierSchema } from '@common/utils/Validation'
 import type { TriggerType } from '../TriggerInterface'
+import { DEFAULT_TRIGGER_BRANCH } from '../utils'
 export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
 export const AwsCodeCommit = 'AwsCodeCommit'
@@ -1652,7 +1653,7 @@ export const getOrderedPipelineVariableValues = ({
   if (
     runtimeVariables &&
     currentPipelineVariables.some(
-      (variable: NGVariable, index: number) => variable.name !== runtimeVariables[index].name
+      (variable: NGVariable, index: number) => variable.name !== runtimeVariables[index]?.name
     )
   ) {
     return runtimeVariables.map(
@@ -1715,8 +1716,6 @@ export const getModifiedTemplateValues = (
   }
   return returnInitialValuesForEdit
 }
-
-export const DEFAULT_TRIGGER_BRANCH = '<+trigger.branch>'
 
 /**
  * Get proper branch to fetch Trigger InputSets
@@ -1876,7 +1875,7 @@ export const getDefaultPipelineReferenceBranch = (triggerType = '', event = ''):
       case TriggerGitEvent.ISSUE_COMMENT:
       case TriggerGitEvent.PULL_REQUEST:
       default:
-        return ciCodebaseBuild.spec.branch
+        return DEFAULT_TRIGGER_BRANCH
     }
   }
 

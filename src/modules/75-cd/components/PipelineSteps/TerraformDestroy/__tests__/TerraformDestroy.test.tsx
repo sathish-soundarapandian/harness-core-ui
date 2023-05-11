@@ -464,4 +464,73 @@ describe('Test TerraformDestroy', () => {
     )
     expect(container).toMatchSnapshot()
   })
+
+  test('renders remote backend config when CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG is on for TerraformDestroy', async () => {
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={{
+          type: 'TerraformDestroy',
+          name: 'Test A',
+          identifier: 'Test_A',
+          timeout: '10m',
+          spec: {
+            provisionerIdentifier: '<+service.test.id>',
+            configuration: {
+              type: 'Inline',
+              spec: {
+                configFiles: {
+                  store: {
+                    spec: {
+                      folderPath: 'test',
+                      connectorRef: {
+                        label: 'test',
+                        value: 'test',
+                        scope: 'account',
+
+                        connector: { type: 'Git' }
+                      }
+                    }
+                  }
+                },
+                varFiles: [
+                  {
+                    varFile: {
+                      type: 'Inline',
+                      content: 'test'
+                    }
+                  }
+                ],
+                backendConfig: {
+                  type: 'Remote',
+                  spec: {
+                    store: {
+                      type: 'Github',
+                      spec: {
+                        gitFetchType: 'Branch',
+                        repoName: '',
+                        branch: 'master',
+                        folderPath: ['test-path'],
+                        connectorRef: 'jelenaterraformtest'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }}
+        type={StepType.TerraformDestroy}
+        stepViewType={StepViewType.Edit}
+        testWrapperProps={{
+          defaultAppStoreValues: {
+            featureFlags: { CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG: true }
+          }
+        }}
+      />
+    )
+
+    fireEvent.click(getByText('common.optionalConfig')!)
+
+    expect(getByText('cd.backendConfigurationFile')!).toBeInTheDocument()
+  })
 })

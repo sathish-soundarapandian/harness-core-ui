@@ -32,6 +32,7 @@ import {
   PipelineInfoConfig,
   ResponseNGTriggerResponse,
   useCreateTrigger,
+  useGetMergeInputSetFromPipelineTemplateWithListInput,
   useGetPipeline,
   useGetSchemaYaml,
   useGetTemplateFromPipeline,
@@ -258,6 +259,23 @@ export default function WebhookTriggerWizard(
     triggerIdentifier,
     queryParams: createUpdateTriggerQueryParams,
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
+  })
+
+  const {
+    data: mergeInputSetResponse,
+    refetch: refetchMergeInputSet,
+    loading: loadingMergeInputSet
+  } = useMutateAsGet(useGetMergeInputSetFromPipelineTemplateWithListInput, {
+    queryParams: {
+      accountIdentifier,
+      projectIdentifier,
+      orgIdentifier,
+      pipelineIdentifier,
+      branch: branch,
+      parentEntityConnectorRef: pipelineConnectorRef,
+      parentEntityRepoName: pipelineRepoName
+    },
+    lazy: true
   })
 
   const { openDialog, closeDialog } = useConfirmationDialog({
@@ -798,6 +816,38 @@ export default function WebhookTriggerWizard(
 
     return triggerValues
   }
+
+  useEffect(() => {
+    if (triggerData?.yaml) {
+      try {
+        const triggerResponseJson = parse(triggerData.yaml)
+        if (triggerResponseJson.trigger.inputYaml) {
+          refetchMergeInputSet({
+            body: {
+              lastYamlToMerge: triggerResponseJson.trigger.inputYaml,
+              withMergedPipelineYaml: true
+            }
+          })
+        }
+      } catch (e) {
+        showError(getString('triggers.cannotParseTriggersData'))
+      }
+    }
+  }, [triggerData?.yaml])
+
+  useEffect(() => {
+    if (mergeInputSetResponse?.data?.pipelineYaml) {
+      try {
+        const pipeline = parse(mergeInputSetResponse.data.pipelineYaml)?.pipeline
+        setOnEditInitialValues(oldOnEditInitialValues => ({
+          ...oldOnEditInitialValues,
+          pipeline: clearRuntimeInput(pipeline)
+        }))
+      } catch (error) {
+        showError(getString('triggers.cannotParseTriggersData'))
+      }
+    }
+  }, [mergeInputSetResponse?.data?.pipelineYaml])
 
   useEffect(() => {
     if (triggerData?.yaml && triggerData.type === TriggerBaseType.WEBHOOK) {
@@ -1451,7 +1501,13 @@ export default function WebhookTriggerWizard(
       tabWidth="200px"
       onHide={returnToTriggersPage}
       submitLabel={!isNewTrigger ? getString('triggers.updateTrigger') : getString('triggers.createTrigger')}
-      disableSubmit={createTriggerLoading || updateTriggerLoading || isTriggerRbacDisabled || fetchingTemplate}
+      disableSubmit={
+        createTriggerLoading ||
+        updateTriggerLoading ||
+        isTriggerRbacDisabled ||
+        fetchingTemplate ||
+        loadingMergeInputSet
+      }
       isEdit={!isNewTrigger}
       visualYamlProps={{
         handleModeSwitch,
