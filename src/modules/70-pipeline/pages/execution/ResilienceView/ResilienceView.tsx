@@ -16,10 +16,7 @@ import type { ExecutionGraph } from 'services/pipeline-ng'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { ModuleName } from 'framework/types/ModuleName'
-import { useStartFreeLicense } from 'services/cd-ng'
-import { getGaClientID, getSavedRefererURL, isSimplifiedYAMLEnabled } from '@common/utils/utils'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 // eslint-disable-next-line import/no-unresolved
@@ -37,8 +34,6 @@ export interface ResilienceViewContentProps {
 }
 
 export interface ResilienceViewCTAProps {
-  isSubscriptionAvailable: boolean
-  startFreePlan: () => void
   addResilienceStep: () => void
 }
 
@@ -63,7 +58,6 @@ export const MemoizedResilienceViewCTA = React.memo(function ResilienceViewTabCT
 })
 
 export default function ResilienceView(): React.ReactElement | null {
-  const { licenseInformation } = useLicenseStore()
   const history = useHistory()
   const params = useParams<PipelineType<ExecutionPathProps>>()
   const query = useQueryParams<PipelineType<ExecutionPathProps>>()
@@ -82,23 +76,6 @@ export default function ResilienceView(): React.ReactElement | null {
   })
   const chaosStepNotifyIDs = getChaosStepNotifyIDs(executionGraph)
 
-  const moduleType = 'CHAOS'
-  const refererURL = getSavedRefererURL()
-  const gaClientID = getGaClientID()
-
-  const { mutate: startFreePlan } = useStartFreeLicense({
-    queryParams: {
-      accountIdentifier: params.accountId,
-      moduleType,
-      ...(refererURL ? { referer: refererURL } : {}),
-      ...(gaClientID ? { gaClientId: gaClientID } : {})
-    },
-    requestOptions: {
-      headers: {
-        'content-type': 'application/json'
-      }
-    }
-  })
   const { CI_YAML_VERSIONING } = useFeatureFlags()
   const {
     branch: branchQueryParam,
@@ -130,30 +107,10 @@ export default function ResilienceView(): React.ReactElement | null {
     ? routes.toPipelineStudioV1(commonRouteProps)
     : routes.toPipelineStudio(commonRouteProps)
 
-  const isSubscriptionAvailable = licenseInformation[ModuleName.CHAOS]
-    ? licenseInformation[ModuleName.CHAOS]?.status === 'ACTIVE'
-    : false
-
   const isChaosStepPresent = pipelineExecutionDetail && chaosStepNotifyIDs.length > 0
-  if (!isSubscriptionAvailable || !isChaosStepPresent) {
-    return (
-      <MemoizedResilienceViewCTA
-        isSubscriptionAvailable={isSubscriptionAvailable}
-        startFreePlan={() => {
-          startFreePlan().then(() => {
-            history.push(
-              routes.toProjectOverview({
-                projectIdentifier: params.projectIdentifier,
-                orgIdentifier: params.orgIdentifier || /* istanbul ignore next */ '',
-                accountId: params.accountId,
-                module: 'chaos'
-              })
-            )
-          })
-        }}
-        addResilienceStep={() => history.push(pipelineDetailsView)}
-      />
-    )
+
+  if (!isChaosStepPresent) {
+    return <MemoizedResilienceViewCTA addResilienceStep={() => history.push(pipelineDetailsView)} />
   }
 
   return (

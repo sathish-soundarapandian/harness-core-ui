@@ -20,11 +20,7 @@ import { mockEmptyPipelineContext, mockPipelineContextWithChaosStep } from './mo
 // eslint-disable-next-line react/display-name
 jest.mock('microfrontends/ChildAppMounter', () => (props: ResilienceViewContentProps | ResilienceViewCTAProps) => {
   const resCTAProps = props as ResilienceViewCTAProps
-  if (resCTAProps.isSubscriptionAvailable) {
-    resCTAProps.addResilienceStep && resCTAProps.addResilienceStep()
-  } else {
-    resCTAProps.startFreePlan && resCTAProps.startFreePlan()
-  }
+  resCTAProps.addResilienceStep && resCTAProps.addResilienceStep()
 
   const resProps = props as ResilienceViewContentProps
   resProps.onStageSelectionChange && resProps.onStageSelectionChange('stageID2')
@@ -129,37 +125,12 @@ describe('<MemoizedResilienceViewContent /> tests', () => {
 })
 
 describe('<MemoizedResilienceViewCTA /> tests', () => {
-  test('Should render MemoizedResilienceViewCTA when chaos license is not present', () => {
-    const mockStartFreePlan = jest.fn()
-    const mockAddResilienceStep = jest.fn()
-    const mockIsSubscriptionAvailable = false
-
-    const { container } = render(
-      <TestWrapper>
-        <MemoizedResilienceViewCTA
-          isSubscriptionAvailable={mockIsSubscriptionAvailable}
-          startFreePlan={mockStartFreePlan}
-          addResilienceStep={mockAddResilienceStep}
-        />
-      </TestWrapper>
-    )
-
-    expect(container).toMatchSnapshot()
-    expect(mockStartFreePlan).toHaveBeenCalledTimes(1)
-  })
-
   test('Should render MemoizedResilienceViewCTA when chaos step is not present', () => {
-    const mockStartFreePlan = jest.fn()
     const mockAddResilienceStep = jest.fn()
-    const mockIsSubscriptionAvailable = true
 
     const { container } = render(
       <TestWrapper>
-        <MemoizedResilienceViewCTA
-          isSubscriptionAvailable={mockIsSubscriptionAvailable}
-          startFreePlan={mockStartFreePlan}
-          addResilienceStep={mockAddResilienceStep}
-        />
+        <MemoizedResilienceViewCTA addResilienceStep={mockAddResilienceStep} />
       </TestWrapper>
     )
 
