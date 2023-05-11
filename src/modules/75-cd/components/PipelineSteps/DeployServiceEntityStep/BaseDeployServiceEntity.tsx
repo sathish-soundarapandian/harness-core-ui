@@ -17,28 +17,28 @@ import {
   AllowedTypes,
   Toggle,
   useToggleOpen,
+  ConfirmationDialog,
+  RUNTIME_INPUT_VALUE,
   SelectOption,
-  ModalDialog,
-  useToaster
+  ModalDialog
 } from '@harness/uicore'
 import type { ModalDialogProps } from '@harness/uicore/dist/components/ModalDialog/ModalDialog'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { useFormikContext } from 'formik'
+import { Intent } from '@blueprintjs/core'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
-import { JsonNode, mergeServiceInputsPromise, ServiceDefinition, ServiceYaml, TemplateLinkConfig } from 'services/cd-ng'
+import { JsonNode, mergeServiceInputsPromise, ServiceYaml } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import ServiceEntityEditModal from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
-import { isMultiTypeExpression } from '@common/utils/utils'
+import { isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
@@ -57,18 +57,21 @@ import {
   ServicesWithInputs
 } from './DeployServiceEntityUtils'
 import { ServiceEntitiesList } from './ServiceEntitiesList/ServiceEntitiesList'
-import { useGetServicesData } from './useGetServicesData'
 import { setupMode } from '../PipelineStepsUtil'
+import type { UseGetServicesDataReturn } from './useGetServicesData'
 import css from './DeployServiceEntityStep.module.scss'
 
-export interface DeployServiceEntityWidgetProps extends DeployServiceEntityCustomProps {
+export interface BaseDeployServiceEntityProps extends DeployServiceEntityCustomProps {
   initialValues: DeployServiceEntityData
   readonly: boolean
   allowableTypes: AllowedTypes
   customStepProps?: DeployServiceEntityCustomProps
   serviceLabel?: string
-  onUpdate?(data: DeployServiceEntityData): void
-  getMultiSvcToggleHandler(values: FormState): (checked: boolean) => void
+  serviceInputType: any
+  setServiceInputType: any
+  setIsFetchingMergeServiceInputs: any
+  loading: any
+  useGetServicesDataReturn: UseGetServicesDataReturn
 }
 
 const DIALOG_PROPS: Omit<ModalDialogProps, 'isOpen'> = {
@@ -87,78 +90,56 @@ export default function BaseDeployServiceEntity({
   initialValues,
   readonly,
   allowableTypes,
+  setupModeType,
   serviceLabel,
+  stageIdentifier,
   deploymentType,
   gitOpsEnabled,
   deploymentMetadata,
-  stageIdentifier,
-  setupModeType,
-  getMultiSvcToggleHandler
-}: DeployServiceEntityWidgetProps): React.ReactElement {
-  const [isFetchingMergeServiceInputs, setIsFetchingMergeServiceInputs] = React.useState<boolean>(false)
+  serviceInputType,
+  setServiceInputType,
+  setIsFetchingMergeServiceInputs,
+  loading,
+  useGetServicesDataReturn
+}: BaseDeployServiceEntityProps): React.ReactElement {
+  const { values, setValues, setTouched } = useFormikContext<FormState>()
+  const { prependServiceToServiceList, updatingData, servicesList, servicesData, updateServiceInputsData } =
+    useGetServicesDataReturn
+
+  // ----------
 
   const { getString } = useStrings()
-  const { showWarning } = useToaster()
-  const { values, setValues, setTouched } = useFormikContext<FormState>()
 
   const { expressions } = useVariablesExpression()
   const { refetchPipelineVariable } = usePipelineVariables()
 
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
+  const {
+    isOpen: isSwitchToMultiSvcDialogOpen,
+    open: openSwitchToMultiSvcDialog,
+    close: closeSwitchToMultiSvcDialog
+  } = useToggleOpen()
+  const {
+    isOpen: isSwitchToMultiSvcClearDialogOpen,
+    open: openSwitchToMultiSvcClearDialog,
+    close: closeSwitchToMultiSvcClearDialog
+  } = useToggleOpen()
+  const {
+    isOpen: isSwitchToSingleSvcDialogOpen,
+    open: openSwitchToSingleSvcDialog,
+    close: closeSwitchToSingleSvcDialog
+  } = useToggleOpen()
   const [allServices, setAllServices] = useState(
     setupModeType === setupMode.DIFFERENT ? getAllFixedServices(initialValues) : ['']
   )
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
-  const {
-    state: {
-      selectionState: { selectedStageId }
-    },
-    getStageFromPipeline
-  } = usePipelineContext()
-  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
-  const { templateRef: deploymentTemplateIdentifier, versionLabel } =
-    (get(stage, 'stage.spec.customDeploymentRef') as TemplateLinkConfig) || {}
-  const shouldAddCustomDeploymentData =
-    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier
-
-  const [serviceInputType, setServiceInputType] = React.useState<MultiTypeInputType>(
-    getMultiTypeFromValue(initialValues?.service?.serviceRef)
-  )
-  const {
-    servicesData,
-    servicesList,
-    loadingServicesData,
-    loadingServicesList,
-    updatingData,
-    prependServiceToServiceList,
-    updateServiceInputsData,
-    nonExistingServiceIdentifiers
-  } = useGetServicesData({
-    gitOpsEnabled,
-    deploymentMetadata,
-    serviceIdentifiers: allServices,
-    deploymentType: deploymentType as ServiceDefinition['type'],
-    ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {}),
-    lazyService: isMultiTypeExpression(serviceInputType)
-  })
 
   useDeepCompareEffect(() => {
     if (setupModeType === setupMode.PROPAGATE) {
       setAllServices(getAllFixedServices(initialValues))
     }
   }, [initialValues, setupModeType])
-
-  useDeepCompareEffect(() => {
-    if (nonExistingServiceIdentifiers.length) {
-      showWarning(
-        getString('cd.identifiersDoNotExist', {
-          entity: getString('service'),
-          nonExistingIdentifiers: nonExistingServiceIdentifiers.join(', ')
-        })
-      )
-    }
-  }, [nonExistingServiceIdentifiers])
 
   const selectOptions = useMemo(() => {
     /* istanbul ignore else */
@@ -168,8 +149,6 @@ export default function BaseDeployServiceEntity({
 
     return []
   }, [servicesList])
-
-  const loading = loadingServicesList || loadingServicesData || isFetchingMergeServiceInputs
 
   const updateServiceInputsForServices = React.useCallback(
     (serviceOrServices: Pick<FormState, 'service' | 'services'>): void => {
@@ -214,7 +193,6 @@ export default function BaseDeployServiceEntity({
         }
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [servicesData]
   )
 
@@ -308,6 +286,63 @@ export default function BaseDeployServiceEntity({
     setIsFetchingMergeServiceInputs(false)
   }
 
+  function updateValuesInFormikAndPropagate(newValues: FormState): void {
+    /* istanbul ignore else */
+    setTouched({ service: true, services: true })
+    setValues(newValues)
+  }
+
+  function handleSwitchToMultiSvcConfirmation(confirmed: boolean): void {
+    /* istanbul ignore else */
+    if (confirmed) {
+      const singleSvcId = values.service
+      const singleSvc = servicesList.find(svc => svc.identifier === singleSvcId)
+      const newValues = produce(values, draft => {
+        draft.services = singleSvc
+          ? [{ label: singleSvc.name, value: singleSvc.identifier }]
+          : isValueRuntimeInput(singleSvcId)
+          ? (RUNTIME_INPUT_VALUE as any)
+          : []
+        delete draft.service
+      })
+
+      setServiceInputType(getMultiTypeFromValue(singleSvcId))
+      updateValuesInFormikAndPropagate(newValues)
+    }
+
+    closeSwitchToMultiSvcDialog()
+  }
+
+  function handleSwitchToMultiSvcClearConfirmation(confirmed: boolean): void {
+    /* istanbul ignore else */
+    if (confirmed) {
+      const newValues = produce(values, draft => {
+        draft.parallel = true
+        draft.services = []
+        draft.serviceInputs = {}
+        delete draft.service
+      })
+
+      setServiceInputType(MultiTypeInputType.FIXED)
+      updateValuesInFormikAndPropagate(newValues)
+    }
+
+    closeSwitchToMultiSvcClearDialog()
+  }
+
+  function handleSwitchToSingleSvcConfirmation(confirmed: boolean): void {
+    /* istanbul ignore else */
+    if (confirmed) {
+      const newValues = produce(values, draft => {
+        draft.service = ''
+        delete draft.services
+      })
+      updateValuesInFormikAndPropagate(newValues)
+    }
+
+    closeSwitchToSingleSvcDialog()
+  }
+
   function removeSvcfromList(toDelete: string): void {
     /* istanbul ignore else */
     const newValues = produce(values, draft => {
@@ -319,8 +354,29 @@ export default function BaseDeployServiceEntity({
         delete draft.service
       }
     })
-    setTouched({ service: true, services: true })
-    setValues(newValues)
+    updateValuesInFormikAndPropagate(newValues)
+  }
+
+  function getMultiSvcToggleHandler(checked: boolean): void {
+    if (checked) {
+      // open confirmation dialog only if a service is populated
+      if (values.service) {
+        if (isValueExpression(values.service)) {
+          openSwitchToMultiSvcClearDialog()
+        } else {
+          openSwitchToMultiSvcDialog()
+        }
+      } else {
+        handleSwitchToMultiSvcConfirmation(true)
+      }
+    } else {
+      // open confirmation dialog only if atleast one service is populated
+      if (isEmpty(values.services)) {
+        handleSwitchToSingleSvcConfirmation(true)
+      } else {
+        openSwitchToSingleSvcDialog()
+      }
+    }
   }
 
   const isMultiSvc = !isNil(values.services)
@@ -455,7 +511,7 @@ export default function BaseDeployServiceEntity({
               <Toggle
                 className={css.serviceActionWrapper}
                 checked={isMultiSvc}
-                onToggle={getMultiSvcToggleHandler(values)}
+                onToggle={getMultiSvcToggleHandler}
                 label={getString('cd.pipelineSteps.serviceTab.multiServicesText')}
                 tooltipId={'multiServiceToggle'}
               />
@@ -487,6 +543,7 @@ export default function BaseDeployServiceEntity({
           />
         ) : null}
       </FormikForm>
+
       <ModalDialog
         isOpen={isAddNewModalOpen}
         onClose={closeAddNewModal}
@@ -502,6 +559,33 @@ export default function BaseDeployServiceEntity({
           isServiceCreateModalView={true}
         />
       </ModalDialog>
+      <ConfirmationDialog
+        isOpen={isSwitchToMultiSvcDialogOpen}
+        titleText={getString('cd.pipelineSteps.serviceTab.multiServicesTitleText')}
+        contentText={getString('cd.pipelineSteps.serviceTab.multiServicesConfirmationText')}
+        confirmButtonText={getString('applyChanges')}
+        cancelButtonText={getString('cancel')}
+        onClose={handleSwitchToMultiSvcConfirmation}
+        intent={Intent.WARNING}
+      />
+      <ConfirmationDialog
+        isOpen={isSwitchToMultiSvcClearDialogOpen}
+        titleText={getString('cd.pipelineSteps.serviceTab.multiServicesTitleText')}
+        contentText={getString('cd.pipelineSteps.serviceTab.multiServicesClearConfirmationText')}
+        confirmButtonText={getString('applyChanges')}
+        cancelButtonText={getString('cancel')}
+        onClose={handleSwitchToMultiSvcClearConfirmation}
+        intent={Intent.WARNING}
+      />
+      <ConfirmationDialog
+        isOpen={isSwitchToSingleSvcDialogOpen}
+        titleText={getString('cd.pipelineSteps.serviceTab.singleServicesTitleText')}
+        contentText={getString('cd.pipelineSteps.serviceTab.singleServicesConfirmationText')}
+        confirmButtonText={getString('applyChanges')}
+        cancelButtonText={getString('cancel')}
+        onClose={handleSwitchToSingleSvcConfirmation}
+        intent={Intent.WARNING}
+      />
     </>
   )
 }

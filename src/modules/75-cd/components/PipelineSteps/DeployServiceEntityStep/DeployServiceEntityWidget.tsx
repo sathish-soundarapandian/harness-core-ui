@@ -11,22 +11,20 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   AllowedTypes,
-  useToggleOpen,
-  ConfirmationDialog,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  useToaster
 } from '@harness/uicore'
-import { defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
+import { defaultTo, get, isNil, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { Intent } from '@blueprintjs/core'
-import produce from 'immer'
 import type { ServiceDefinition, ServiceYamlV2, TemplateLinkConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { isMultiTypeExpression, isMultiTypeRuntime, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { isMultiTypeExpression, isMultiTypeRuntime, isValueExpression } from '@common/utils/utils'
+import { useDeepCompareEffect } from '@common/hooks'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -96,25 +94,13 @@ export default function DeployServiceEntityWidget({
   stageIdentifier,
   setupModeType
 }: DeployServiceEntityWidgetProps): React.ReactElement {
+  const [isFetchingMergeServiceInputs, setIsFetchingMergeServiceInputs] = React.useState<boolean>(false)
+
   const { getString } = useStrings()
+  const { showWarning } = useToaster()
 
   const { subscribeForm, unSubscribeForm } = useStageErrorContext<FormState>()
   const formikRef = React.useRef<FormikProps<FormState> | null>(null)
-  const {
-    isOpen: isSwitchToMultiSvcDialogOpen,
-    open: openSwitchToMultiSvcDialog,
-    close: closeSwitchToMultiSvcDialog
-  } = useToggleOpen()
-  const {
-    isOpen: isSwitchToMultiSvcClearDialogOpen,
-    open: openSwitchToMultiSvcClearDialog,
-    close: closeSwitchToMultiSvcClearDialog
-  } = useToggleOpen()
-  const {
-    isOpen: isSwitchToSingleSvcDialogOpen,
-    open: openSwitchToSingleSvcDialog,
-    close: closeSwitchToSingleSvcDialog
-  } = useToggleOpen()
   const [allServices, setAllServices] = useState(
     setupModeType === setupMode.DIFFERENT ? getAllFixedServices(initialValues) : ['']
   )
@@ -133,7 +119,7 @@ export default function DeployServiceEntityWidget({
   const [serviceInputType, setServiceInputType] = React.useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues?.service?.serviceRef)
   )
-  const { servicesList } = useGetServicesData({
+  const useGetServicesDataReturn = useGetServicesData({
     gitOpsEnabled,
     deploymentMetadata,
     serviceIdentifiers: allServices,
@@ -142,19 +128,32 @@ export default function DeployServiceEntityWidget({
     lazyService: isMultiTypeExpression(serviceInputType)
   })
 
+  const { nonExistingServiceIdentifiers, loadingServicesList, loadingServicesData } = useGetServicesDataReturn
+
   useEffect(() => {
     subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
     return () => unSubscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  function updateValuesInFormikAndPropagate(values: FormState): void {
-    /* istanbul ignore else */
-    if (formikRef.current) {
-      formikRef.current.setTouched({ service: true, services: true })
-      formikRef.current.setValues(values)
+  useDeepCompareEffect(() => {
+    if (setupModeType === setupMode.PROPAGATE) {
+      setAllServices(getAllFixedServices(initialValues))
     }
-  }
+  }, [initialValues, setupModeType])
+
+  useDeepCompareEffect(() => {
+    if (nonExistingServiceIdentifiers.length) {
+      showWarning(
+        getString('cd.identifiersDoNotExist', {
+          entity: getString('service'),
+          nonExistingIdentifiers: nonExistingServiceIdentifiers.join(', ')
+        })
+      )
+    }
+  }, [nonExistingServiceIdentifiers])
+
+  const loading = loadingServicesList || loadingServicesData || isFetchingMergeServiceInputs
 
   function handleUpdate(values: FormState): void {
     if (setupModeType === setupMode.PROPAGATE) {
@@ -200,81 +199,6 @@ export default function DeployServiceEntityWidget({
     setAllServices(getAllFixedServicesFromValues(values))
   }
 
-  function handleSwitchToMultiSvcConfirmation(confirmed: boolean): void {
-    /* istanbul ignore else */
-    if (formikRef.current && confirmed) {
-      const singleSvcId = formikRef.current.values.service
-      const singleSvc = servicesList.find(svc => svc.identifier === singleSvcId)
-      const newValues = produce(formikRef.current.values, draft => {
-        draft.services = singleSvc
-          ? [{ label: singleSvc.name, value: singleSvc.identifier }]
-          : isValueRuntimeInput(singleSvcId)
-          ? (RUNTIME_INPUT_VALUE as any)
-          : []
-        delete draft.service
-      })
-
-      setServiceInputType(getMultiTypeFromValue(singleSvcId))
-      updateValuesInFormikAndPropagate(newValues)
-    }
-
-    closeSwitchToMultiSvcDialog()
-  }
-
-  function handleSwitchToMultiSvcClearConfirmation(confirmed: boolean): void {
-    /* istanbul ignore else */
-    if (formikRef.current && confirmed) {
-      const newValues = produce(formikRef.current.values, draft => {
-        draft.parallel = true
-        draft.services = []
-        draft.serviceInputs = {}
-        delete draft.service
-      })
-
-      setServiceInputType(MultiTypeInputType.FIXED)
-      updateValuesInFormikAndPropagate(newValues)
-    }
-
-    closeSwitchToMultiSvcClearDialog()
-  }
-
-  function handleSwitchToSingleSvcConfirmation(confirmed: boolean): void {
-    /* istanbul ignore else */
-    if (formikRef.current && confirmed) {
-      const newValues = produce(formikRef.current.values, draft => {
-        draft.service = ''
-        delete draft.services
-      })
-      updateValuesInFormikAndPropagate(newValues)
-    }
-
-    closeSwitchToSingleSvcDialog()
-  }
-
-  function getMultiSvcToggleHandler(values: FormState) {
-    return (checked: boolean): void => {
-      if (checked) {
-        // open confirmation dialog only if a service is populated
-        if (values.service) {
-          if (isValueExpression(values.service)) {
-            openSwitchToMultiSvcClearDialog()
-          } else {
-            openSwitchToMultiSvcDialog()
-          }
-        } else {
-          handleSwitchToMultiSvcConfirmation(true)
-        }
-      } else {
-        // open confirmation dialog only if atleast one service is populated
-        if (isEmpty(values.services)) {
-          handleSwitchToSingleSvcConfirmation(true)
-        } else {
-          openSwitchToSingleSvcDialog()
-        }
-      }
-    }
-  }
-
   return (
     <>
       <Formik<FormState>
@@ -293,42 +217,21 @@ export default function DeployServiceEntityWidget({
               initialValues={initialValues}
               readonly={readonly}
               allowableTypes={allowableTypes}
-              onUpdate={onUpdate}
-              stageIdentifier={stageIdentifier}
               setupModeType={setupModeType}
               serviceLabel={serviceLabel}
-              getMultiSvcToggleHandler={getMultiSvcToggleHandler}
+              stageIdentifier={stageIdentifier}
+              deploymentType={deploymentType}
+              gitOpsEnabled={gitOpsEnabled}
+              deploymentMetadata={deploymentMetadata}
+              serviceInputType={serviceInputType}
+              setServiceInputType={setServiceInputType}
+              setIsFetchingMergeServiceInputs={setIsFetchingMergeServiceInputs}
+              loading={loading}
+              useGetServicesDataReturn={useGetServicesDataReturn}
             />
           )
         }}
       </Formik>
-      <ConfirmationDialog
-        isOpen={isSwitchToMultiSvcDialogOpen}
-        titleText={getString('cd.pipelineSteps.serviceTab.multiServicesTitleText')}
-        contentText={getString('cd.pipelineSteps.serviceTab.multiServicesConfirmationText')}
-        confirmButtonText={getString('applyChanges')}
-        cancelButtonText={getString('cancel')}
-        onClose={handleSwitchToMultiSvcConfirmation}
-        intent={Intent.WARNING}
-      />
-      <ConfirmationDialog
-        isOpen={isSwitchToMultiSvcClearDialogOpen}
-        titleText={getString('cd.pipelineSteps.serviceTab.multiServicesTitleText')}
-        contentText={getString('cd.pipelineSteps.serviceTab.multiServicesClearConfirmationText')}
-        confirmButtonText={getString('applyChanges')}
-        cancelButtonText={getString('cancel')}
-        onClose={handleSwitchToMultiSvcClearConfirmation}
-        intent={Intent.WARNING}
-      />
-      <ConfirmationDialog
-        isOpen={isSwitchToSingleSvcDialogOpen}
-        titleText={getString('cd.pipelineSteps.serviceTab.singleServicesTitleText')}
-        contentText={getString('cd.pipelineSteps.serviceTab.singleServicesConfirmationText')}
-        confirmButtonText={getString('applyChanges')}
-        cancelButtonText={getString('cancel')}
-        onClose={handleSwitchToSingleSvcConfirmation}
-        intent={Intent.WARNING}
-      />
     </>
   )
 }
