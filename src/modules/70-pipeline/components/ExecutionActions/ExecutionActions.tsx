@@ -16,7 +16,8 @@ import {
   ButtonSize,
   ButtonVariation
 } from '@harness/uicore'
-import { Classes, Intent, Menu, MenuItem, Position } from '@blueprintjs/core'
+import { useModalHook } from '@harness/use-modal'
+import { Classes, Dialog, IDialogProps, Intent, Menu, MenuItem, Position } from '@blueprintjs/core'
 import { Link } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
@@ -38,14 +39,13 @@ import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV
 import type { StringKeys } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import RbacButton from '@rbac/components/Button/Button'
 import { killEvent } from '@common/utils/eventUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
-import { PipelineExecutionActions } from '@common/constants/TrackingConstants'
-import { useTelemetry } from '@common/hooks/useTelemetry'
+import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
-import { useOpenRetryPipelineModal } from './useOpenRetryPipelineModal'
 import css from './ExecutionActions.module.scss'
 
 const commonButtonProps: ButtonProps = {
@@ -84,7 +84,7 @@ export interface ExecutionActionsProps {
   isExecutionListView?: boolean
 }
 
-export function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
+function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
   return {
     canAbort: isExecutionActive(executionStatus) && canExecute,
     canRollback: isExecutionActive(executionStatus) && canExecute,
@@ -195,7 +195,6 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { isCompareMode } = useExecutionCompareContext()
-  const { trackEvent } = useTelemetry()
 
   const { openDialog: openAbortDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
@@ -286,18 +285,47 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   }
 
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
-  const { openRetryPipelineModal } = useOpenRetryPipelineModal({ modules, params })
   const retryPipeline = (): void => {
-    trackEvent(PipelineExecutionActions.RetryPipeline, { triggered_from: 'kebab-menu' })
-    openRetryPipelineModal()
+    showRetryPipelineModal()
   }
   const showRetryPipelineOption = isRetryPipelineAllowed(executionStatus) && canRetry
+
+  const DIALOG_PROPS: IDialogProps = {
+    isOpen: true,
+    usePortal: true,
+    autoFocus: true,
+    canEscapeKeyClose: false,
+    canOutsideClickClose: false,
+    enforceFocus: false,
+    className: css.runPipelineDialog,
+    style: { width: 872, height: 'fit-content', overflow: 'auto' }
+  }
+
+  const [showRetryPipelineModal, hideRetryPipelineModal] = useModalHook(() => {
+    const onClose = (): void => {
+      hideRetryPipelineModal()
+    }
+
+    return (
+      <Dialog onClose={onClose} {...DIALOG_PROPS}>
+        <div className={css.modalContent}>
+          <RetryPipeline
+            onClose={onClose}
+            executionIdentifier={executionIdentifier}
+            pipelineIdentifier={pipelineIdentifier}
+            modules={modules}
+            params={params}
+          />
+          <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
+        </div>
+      </Dialog>
+    )
+  }, [pipelineIdentifier, executionIdentifier, params])
 
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/
   const reRunPipeline = (): void => {
-    trackEvent(PipelineExecutionActions.ReRunPipeline, { triggered_from: 'kebab-menu' })
     isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? openRunPipelineModalV1() : openRunPipelineModal()
   }
 
@@ -333,6 +361,17 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               onClick={resumePipeline}
               {...commonButtonProps}
               disabled={!canExecute}
+            />
+          )}
+
+          {!stageId && canRerun && (
+            <RbacButton
+              icon="repeat"
+              tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : getString(rerunText)}
+              onClick={reRunPipeline}
+              {...commonButtonProps}
+              disabled={!canExecute || isPipelineInvalid}
+              featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
             />
           )}
 
