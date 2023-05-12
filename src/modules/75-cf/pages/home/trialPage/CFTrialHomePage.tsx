@@ -10,15 +10,8 @@ import { Heading, Layout, Container } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import {
-  ResponseModuleLicenseDTO,
-  StartFreeLicenseQueryParams,
-  StartTrialDTORequestBody,
-  useStartFreeLicense,
-  useStartTrialLicense
-} from 'services/cd-ng'
+import { ResponseModuleLicenseDTO, StartFreeLicenseQueryParams, useStartFreeLicense } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { Editions } from '@common/constants/SubscriptionTypes'
 import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import bgImageURL from '../ff.svg'
 import CFTrialPanel from './CFTrialPanel'
@@ -30,18 +23,6 @@ const CFTrialHomePage: React.FC = () => {
   const isFreeEnabled = !isOnPrem()
   const refererURL = getSavedRefererURL()
   const gaClientID = getGaClientID()
-
-  const startTrialRequestBody: StartTrialDTORequestBody = {
-    moduleType: 'CF',
-    edition: Editions.ENTERPRISE
-  }
-
-  const { mutate: startTrial, loading: startingTrial } = useStartTrialLicense({
-    queryParams: {
-      accountIdentifier: accountId,
-      ...(refererURL ? { referer: refererURL } : {})
-    }
-  })
   const { mutate: startFreePlan, loading: startingFree } = useStartFreeLicense({
     queryParams: {
       accountIdentifier: accountId,
@@ -57,7 +38,7 @@ const CFTrialHomePage: React.FC = () => {
   })
 
   function handleStartTrial(): Promise<ResponseModuleLicenseDTO> {
-    return isFreeEnabled ? startFreePlan() : startTrial(startTrialRequestBody)
+    return startFreePlan()
   }
 
   const startTrialProps = {
@@ -67,7 +48,7 @@ const CFTrialHomePage: React.FC = () => {
       url: 'https://docs.harness.io/article/0a2u2ppp8s-getting-started-with-continuous-features'
     },
     startBtn: {
-      description: !isOnPrem()
+      description: isFreeEnabled
         ? getString('cf.cfTrialHomePage.startFreePlanBtn')
         : getString('cf.cfTrialHomePage.startTrial.startBtn.description')
     }
@@ -79,7 +60,7 @@ const CFTrialHomePage: React.FC = () => {
         <Heading className={css.heading} font={{ variation: FontVariation.H1 }} color={Color.BLACK_100}>
           {getString('cf.cfTrialHomePage.featureFlagsDescription')}
         </Heading>
-        <CFTrialPanel {...startTrialProps} startTrial={handleStartTrial} loading={startingTrial || startingFree} />
+        <CFTrialPanel {...startTrialProps} startTrial={handleStartTrial} loading={startingFree} />
       </Layout.Vertical>
     </Container>
   )

@@ -14,8 +14,8 @@ import { useStrings } from 'framework/strings'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useQueryParams } from '@common/hooks'
-import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { ResponseModuleLicenseDTO, useStartFreeLicense, useStartTrialLicense } from 'services/cd-ng'
+import { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { ResponseModuleLicenseDTO, useStartFreeLicense } from 'services/cd-ng'
 import useChaosModal from '@chaos/modals/ChaosTrialModal/useChaosTrialModal'
 import routes from '@common/RouteDefinitions'
 import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
@@ -32,12 +32,6 @@ const ChaosTrialHomePage: React.FC = () => {
   const moduleType = 'CHAOS'
   const refererURL = getSavedRefererURL()
   const gaClientID = getGaClientID()
-
-  const { mutate: startTrial } = useStartTrialLicense({
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  })
 
   const { mutate: startFreePlan } = useStartFreeLicense({
     queryParams: {
@@ -75,10 +69,10 @@ const ChaosTrialHomePage: React.FC = () => {
   const { showError } = useToaster()
 
   function startPlan(): Promise<ResponseModuleLicenseDTO> {
-    return isFreeEnabled ? startFreePlan() : startTrial({ moduleType, edition: Editions.ENTERPRISE })
+    return startFreePlan()
   }
 
-  const handleStartTrial = async (): Promise<void> => {
+  const handleStartPlan = async (): Promise<void> => {
     try {
       const data = await startPlan()
 
@@ -99,7 +93,7 @@ const ChaosTrialHomePage: React.FC = () => {
 
   const startBtnDescription = isFreeEnabled
     ? getString('common.startFreePlan', { module: moduleType })
-    : getString('chaos.chaosTrialHomePage.description')
+    : getString('common.requestFreeTrial')
 
   const startTrialProps = {
     description: getString('chaos.homepage.slogan'),
@@ -109,7 +103,7 @@ const ChaosTrialHomePage: React.FC = () => {
     },
     startBtn: {
       description: startBtnDescription,
-      onClick: handleStartTrial
+      onClick: handleStartPlan
     }
   }
 

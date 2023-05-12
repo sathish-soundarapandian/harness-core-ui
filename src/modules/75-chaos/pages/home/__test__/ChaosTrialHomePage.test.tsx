@@ -57,12 +57,12 @@ describe('ChaosTrialHomePage snapshot test', () => {
 
   test('it should render properly for ON_PREM', async () => {
     window.deploymentType = 'ON_PREM'
-    const { getByText } = render(
+    render(
       <TestWrapper>
         <ChaosTrialHomePage />
       </TestWrapper>
     )
-    fireEvent.click(getByText('chaos.chaosTrialHomePage.description'))
+
     await waitFor(() => expect('chaos.homepage.slogan'))
   })
 
@@ -94,7 +94,7 @@ describe('ChaosTrialHomePage snapshot test', () => {
     await waitFor(() => expect(handleStartButtonClick).toHaveBeenCalled())
   })
 
-  test('it should start trial when Start 14 day Chaos Enterprise trial is clicked', async () => {
+  test('it should not start trial when Start 14 day Chaos Enterprise trial is clicked', async () => {
     const handleEnterpriseButtonClick = jest.fn()
     window.deploymentType = 'ON_PREM'
     jest.spyOn(cdServices, 'useStartTrialLicense').mockReturnValue({
@@ -105,9 +105,7 @@ describe('ChaosTrialHomePage snapshot test', () => {
     renderComponent()
 
     expect(handleEnterpriseButtonClick).not.toHaveBeenCalled()
-
-    userEvent.click(screen.getByText('chaos.chaosTrialHomePage.description'))
-
-    await waitFor(() => expect(handleEnterpriseButtonClick).toHaveBeenCalled())
+    const text = screen.queryByText('chaos.chaosTrialHomePage.description')
+    expect(text).not.toBeInTheDocument()
   })
 })

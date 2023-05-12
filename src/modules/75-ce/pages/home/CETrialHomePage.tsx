@@ -11,7 +11,7 @@ import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
-import { useStartTrialLicense, useStartFreeLicense, ResponseModuleLicenseDTO } from 'services/cd-ng'
+import { useStartFreeLicense, ResponseModuleLicenseDTO } from 'services/cd-ng'
 import useCreateConnector from '@ce/components/CreateConnector/CreateConnector'
 import useCETrialModal from '@ce/modals/CETrialModal/useCETrialModal'
 import { useToaster } from '@common/components'
@@ -19,7 +19,7 @@ import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStor
 import type { Module } from 'framework/types/ModuleName'
 import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUtil'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -46,11 +46,6 @@ const CETrialHomePage: React.FC = () => {
     }
   })
 
-  const { mutate: startTrial } = useStartTrialLicense({
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  })
   const refererURL = getSavedRefererURL()
   const gaClientID = getGaClientID()
   const { mutate: startFreePlan } = useStartFreeLicense({
@@ -85,7 +80,7 @@ const CETrialHomePage: React.FC = () => {
   const { showError } = useToaster()
 
   function startPlan(): Promise<ResponseModuleLicenseDTO> {
-    return isFreeEnabled ? handleStartFree() : startTrial({ moduleType, edition: Editions.ENTERPRISE })
+    return handleStartFree()
   }
 
   const handleStartFree = async (): Promise<ResponseModuleLicenseDTO> => {

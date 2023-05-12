@@ -119,6 +119,7 @@ export interface StringsMap {
   'common.banners.trial.expired.contactSales': string
   'common.banners.trial.expired.description': string
   'common.banners.trial.expired.extendTrial': string
+  'common.banners.trial.expired.extendTrialSales': string
   'common.banners.trial.feedbackSuccess': string
   'common.banners.trial.provideFeedback': string
   'common.banners.trial.success': string
@@ -894,6 +895,7 @@ export interface StringsMap {
   'common.repositoryFormat': string
   'common.repositoryName': string
   'common.request': string
+  'common.requestFreeTrial': string
   'common.resolveConflict': string
   'common.resourceCenter.bottomlayout.apiDocs': string
   'common.resourceCenter.bottomlayout.desc': string

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useStartTrialLicense, useStartFreeLicense } from 'services/cd-ng'
 import CETrialHomePage from '../CETrialHomePage'
@@ -49,12 +49,11 @@ describe('CETrialHomePage snapshot test', () => {
 
   test('it should render properly', async () => {
     window.deploymentType = 'ON_PREM'
-    const { getByText } = render(
+    const container = render(
       <TestWrapper>
         <CETrialHomePage />
       </TestWrapper>
     )
-    fireEvent.click(getByText('ce.ceTrialHomePage.startTrial.startBtn.description'))
-    await waitFor(() => expect('ce.ceTrialHomePage.modal.welcome'))
+    expect(container).toMatchSnapshot()
   })
 })

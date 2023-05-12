@@ -29,7 +29,7 @@ interface SubscriptionOverviewProps {
 }
 
 const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
-  const { accountName, licenseData, module, trialInformation, refetchGetLicense } = props
+  const { accountName, licenseData, module, trialInformation } = props
   const enabled = useFeatureFlag(FeatureFlag.VIEW_USAGE_ENABLED)
   const buildCreditsView = useFeatureFlag(FeatureFlag.BUILD_CREDITS_VIEW)
   const { accountId } = useParams<AccountPathProps>()
@@ -43,7 +43,6 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         module={module}
         licenseData={licenseData}
         trialInformation={trialInformation}
-        refetchGetLicense={refetchGetLicense}
       />
       {enabled && licenseData && module !== ModuleName.CHAOS && (
         <SubscriptionUsageCard module={module} licenseData={licenseData} creditsData={creditsData?.data} />

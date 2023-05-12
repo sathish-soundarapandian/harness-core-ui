@@ -26,6 +26,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { isOnPrem } from '@common/utils/utils'
 import { FeatureFlag } from '@common/featureFlags'
 import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUtil'
+import { useContactSalesMktoModal } from '@common/modals/ContactSales/useContactSalesMktoModal'
 import css from './CFTrialPage.module.scss'
 
 interface CFTrialProps {
@@ -69,6 +70,8 @@ const CFTrialPanel: React.FC<CFTrialProps> = cfTrialProps => {
   const isDefaultProjectCreated = useFeatureFlag(FeatureFlag.CREATE_DEFAULT_PROJECT)
   const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const history = useHistory()
+
+  const { openMarketoContactSales, loading: loadingContactSales } = useContactSalesMktoModal({})
   const { trackEvent } = useTelemetry()
   const { showError } = useToaster()
   const { getString } = useStrings()
@@ -156,15 +159,29 @@ const CFTrialPanel: React.FC<CFTrialProps> = cfTrialProps => {
           ]}
         />
 
-        <Button
-          className={css.startFreePlanBtn}
-          width={300}
-          height={50}
-          variation={ButtonVariation.PRIMARY}
-          text={startBtn.description}
-          onClick={startBtn.onClick ? startBtn.onClick : handleStartButtonClick}
-          disabled={loading}
-        />
+        {FREE_PLAN_ENABLED ? (
+          <Button
+            className={css.startFreePlanBtn}
+            width={300}
+            height={50}
+            variation={ButtonVariation.PRIMARY}
+            text={startBtn.description}
+            onClick={startBtn.onClick ? startBtn.onClick : handleStartButtonClick}
+            disabled={loading}
+          />
+        ) : (
+          <Button
+            className={css.startFreePlanBtn}
+            width={300}
+            height={50}
+            font={{ size: 'small' }}
+            onClick={openMarketoContactSales}
+            loading={loadingContactSales}
+            variation={ButtonVariation.SECONDARY}
+          >
+            {getString('common.requestFreeTrial')}
+          </Button>
+        )}
       </article>
 
       {/* Don't Code Panel */}

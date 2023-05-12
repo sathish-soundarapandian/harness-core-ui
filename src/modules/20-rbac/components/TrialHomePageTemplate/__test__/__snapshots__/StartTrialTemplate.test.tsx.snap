@@ -43,27 +43,7 @@ exports[`StartTrialTemplate snapshot test should call prop onClick when there is
             Continue
           </span>
         </button>
-        <a
-          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
-        >
-          common.exploreAllPlans
-        </a>
       </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`StartTrialTemplate snapshot test should call start trial api when click Start Trial 1`] = `
-<div>
-  <div>
-    <h1>
-      Not Found
-    </h1>
-    <div
-      data-testid="location"
-    >
-      /account/undefined/ci/home?modal=FREE&experience=FREE
     </div>
   </div>
 </div>
@@ -112,18 +92,13 @@ exports[`StartTrialTemplate snapshot test should call the start button click han
             Start A Trial
           </span>
         </button>
-        <a
-          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
-        >
-          common.exploreAllPlans
-        </a>
       </div>
     </div>
   </div>
 </div>
 `;
 
-exports[`StartTrialTemplate snapshot test should display error msg when api call fails 1`] = `
+exports[`StartTrialTemplate snapshot test should not render start a trial by default 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main body"
@@ -166,114 +141,6 @@ exports[`StartTrialTemplate snapshot test should display error msg when api call
             Start A Trial
           </span>
         </button>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`StartTrialTemplate snapshot test should open the modal when a button is clicked and shouldShowStartTrialModal is true 1`] = `
-<div>
-  <div
-    class="StyledProps--font StyledProps--main body"
-    style="background: transparent url() no-repeat;"
-  >
-    <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
-    >
-      <h1
-        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--color StyledProps--color-black100"
-      >
-        Continuous Integration
-      </h1>
-      <div
-        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--padding-bottom-xxlarge"
-          style="width: 500px;"
-        >
-          start trial description
-        </p>
-        <a
-          class="learnMore"
-          href=""
-          rel="noreferrer"
-          target="_blank"
-        >
-          learn more description
-        </a>
-        <button
-          aria-label="Start A Trial"
-          class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
-          style="width: 300px; height: 45px;"
-          type="button"
-        >
-          <span
-            class="bp3-button-text"
-          >
-            Start A Trial
-          </span>
-        </button>
-        <a
-          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
-        >
-          common.exploreAllPlans
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`StartTrialTemplate snapshot test should render start a trial by default 1`] = `
-<div>
-  <div
-    class="StyledProps--font StyledProps--main body"
-    style="background: transparent url() no-repeat;"
-  >
-    <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
-    >
-      <h1
-        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--color StyledProps--color-black100"
-      >
-        Continuous Integration
-      </h1>
-      <div
-        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--padding-bottom-xxlarge"
-          style="width: 500px;"
-        >
-          start trial description
-        </p>
-        <a
-          class="learnMore"
-          href=""
-          rel="noreferrer"
-          target="_blank"
-        >
-          learn more description
-        </a>
-        <button
-          aria-label="Start A Trial"
-          class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
-          style="width: 300px; height: 45px;"
-          type="button"
-        >
-          <span
-            class="bp3-button-text"
-          >
-            Start A Trial
-          </span>
-        </button>
-        <a
-          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
-        >
-          common.exploreAllPlans
-        </a>
       </div>
     </div>
   </div>
