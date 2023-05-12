@@ -44,39 +44,41 @@ export const addLegendColorToRow = (data: QlceViewEntityStatsDataPoint[], column
   let idx = 0
   const colors = new Map()
 
-  return data.map(({ name, id, clusterData = {}, storageDetails = {}, instanceDetails = {}, ...rest }) => {
-    const key = id
-    const isAlreadyInChart = columnSequence?.includes(name || '')
-    const indexInChart = Number(columnSequence?.indexOf(name || ''))
+  return data.map(
+    ({ name: entityName, id: entityId, clusterData = {}, storageDetails = {}, instanceDetails = {}, ...rest }) => {
+      const key = entityId
+      const isAlreadyInChart = columnSequence?.includes(entityName || '')
+      const indexInChart = Number(columnSequence?.indexOf(entityName || ''))
 
-    if (!colors.has(key)) {
-      switch (name) {
-        case 'Others':
-          colors.set(key, 'var(--blue-100)')
-          break
-        case 'Unallocated':
-          colors.set(key, 'var(--primary-2)')
-          break
-        default:
-          if (isAlreadyInChart) {
-            colors.set(key, CE_COLOR_CONST[indexInChart % CE_COLOR_CONST.length])
-          } else {
-            colors.set(key, CE_COLOR_CONST[idx % CE_COLOR_CONST.length])
-          }
-          idx++
+      if (!colors.has(key)) {
+        switch (entityName) {
+          case 'Others':
+            colors.set(key, 'var(--blue-100)')
+            break
+          case 'Unallocated':
+            colors.set(key, 'var(--primary-2)')
+            break
+          default:
+            if (isAlreadyInChart) {
+              colors.set(key, CE_COLOR_CONST[indexInChart % CE_COLOR_CONST.length])
+            } else {
+              colors.set(key, CE_COLOR_CONST[idx % CE_COLOR_CONST.length])
+            }
+            idx++
+        }
+      }
+
+      return {
+        entityName,
+        entityId,
+        legendColor: colors.get(key),
+        ...(clusterData as ClusterData),
+        ...(storageDetails as StorageDetails),
+        ...(instanceDetails as InstanceDetails),
+        ...rest
       }
     }
-
-    return {
-      name,
-      id,
-      legendColor: colors.get(key),
-      ...(clusterData as ClusterData),
-      ...(storageDetails as StorageDetails),
-      ...(instanceDetails as InstanceDetails),
-      ...rest
-    }
-  })
+  )
 }
 
 const SUM = QlceViewAggregateOperation.Sum

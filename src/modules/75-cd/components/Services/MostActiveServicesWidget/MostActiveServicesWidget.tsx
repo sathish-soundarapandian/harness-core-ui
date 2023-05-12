@@ -12,7 +12,6 @@ import { Card, Container, LabelPosition, Layout, Text, WeightedStack, PageError 
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-// import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticker'
 import { DeploymentsTimeRangeContext, getFixed } from '@cd/components/Services/common'
 import {
   ChangeRate,
@@ -85,7 +84,10 @@ export const MostActiveServicesWidget = (
   const { getString } = useStrings()
 
   const defaultParseByType = useCallback(
-    (dataInfo: DashboardWorkloadDeploymentV2 | [], selectedTypeInfo: string): MostActiveServicesWidgetData[] => {
+    (
+      dataInfo: DashboardWorkloadDeploymentV2 | [],
+      selectedTypeInfo: DEFAULT_TYPES_ENUM
+    ): MostActiveServicesWidgetData[] => {
       const items = ((dataInfo as DashboardWorkloadDeploymentV2)?.workloadDeploymentInfoList || []).map(
         (workloadDeploymentInfo: WorkloadDeploymentInfoV2) => {
           const {
@@ -161,7 +163,7 @@ export const MostActiveServicesWidget = (
   } = useGetWorkloadsV2({ queryParams })
 
   const data = useMemo(
-    () => parseByType(workloadsInfo?.data || [], selectedType),
+    () => parseByType(workloadsInfo?.data || [], selectedType as DEFAULT_TYPES_ENUM),
     [workloadsInfo?.data, selectedType, parseByType]
   )
 
@@ -247,7 +249,7 @@ export const MostActiveServicesWidget = (
             font={{ size: 'xsmall', weight: 'semi-bold' }}
             color={typeKey === selectedType ? Color.WHITE : Color.BLACK}
           >
-            {types[typeKey].label}
+            {types[typeKey as DEFAULT_TYPES_ENUM].label}
           </Text>
         </div>
       )),

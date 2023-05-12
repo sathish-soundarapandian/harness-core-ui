@@ -319,9 +319,9 @@ const getFormattedNumber = (givenNumber?: number | string): string => {
   if (givenNumber) {
     if (givenNumber === 'Infinity') {
       return givenNumber
-    } else if (givenNumber > 1000) {
+    } else if ((givenNumber as number) > 1000) {
       return Math.round(Number(givenNumber) / 1000) + 'K'
-    } else if (givenNumber > 1000000) {
+    } else if ((givenNumber as number) > 1000000) {
       return Math.round(Number(givenNumber) / 1000000) + 'M'
     }
     return Math.round(Number(givenNumber)).toString()

@@ -234,7 +234,11 @@ export function useGitDiffEditorDialog<T>(props: UseGitDiffEditorDialogProps<T>)
       try {
         setEntityAsYaml(
           yamlStringify(
-            sanitize(_entity, { removeEmptyString: false, removeEmptyArray: false, removeEmptyObject: false }),
+            sanitize(_entity as Record<string, any>, {
+              removeEmptyString: false,
+              removeEmptyArray: false,
+              removeEmptyObject: false
+            }),
             FORMATTING_OPTIONS
           )
         )

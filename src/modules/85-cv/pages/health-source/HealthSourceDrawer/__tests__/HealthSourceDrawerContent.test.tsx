@@ -11,6 +11,7 @@ import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import HealthSourceDrawerContent from '../HealthSourceDrawerContent'
+import type { HealthSourceDrawerInterface } from '../HealthSourceDrawerContent.types'
 
 jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
   useIndexedDBHook: jest.fn().mockReturnValue({
@@ -123,7 +124,7 @@ describe('HealthSource table', () => {
     }
     const { container, getByRole, getAllByText } = render(
       <TestWrapper {...testWrapperProps}>
-        <HealthSourceDrawerContent {...props} />
+        <HealthSourceDrawerContent {...(props as HealthSourceDrawerInterface)} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -212,7 +213,7 @@ describe('HealthSource table', () => {
     }
     const { container, getByRole, getAllByText } = render(
       <TestWrapper {...testWrapperProps}>
-        <HealthSourceDrawerContent {...props} />
+        <HealthSourceDrawerContent {...(props as HealthSourceDrawerInterface)} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

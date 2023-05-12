@@ -26,7 +26,7 @@ export interface FormikEffectOnChangeParams {
 }
 
 export interface FormikEffectProps {
-  onChange: ({ prevValues: prevValue, nextValues: nextValue, formik }: FormikEffectOnChangeParams) => void
+  onChange: ({ prevValues, nextValues, formik }: FormikEffectOnChangeParams) => void
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formik: FormikContextType<any>

@@ -224,7 +224,11 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
                   const previousIndex = currentIndex - 1
                   if (currentIndex === 0 && phases[0].type === InstanceTypes.Instances) return true
 
-                  if (phases[0].type === InstanceTypes.Percentage && phase?.spec?.percentage) {
+                  if (
+                    phases[0].type === InstanceTypes.Percentage &&
+                    phase?.spec?.percentage &&
+                    typeof phase?.spec?.percentage === 'number'
+                  ) {
                     if (currentIndex === 0 && phase?.spec?.percentage <= 100) {
                       return true
                     }

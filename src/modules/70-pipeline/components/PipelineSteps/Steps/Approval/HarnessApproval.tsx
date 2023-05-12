@@ -180,7 +180,7 @@ export class HarnessApproval extends PipelineStep<HarnessApprovalData> {
             minimumCount: getString?.('pipeline.approvalStep.validation.minimumCountRequired')
           }
         }
-      } else if (data?.spec?.approvers.minimumCount < 1) {
+      } else if (typeof data?.spec?.approvers.minimumCount === 'number' && data?.spec?.approvers.minimumCount < 1) {
         errors.spec = {
           ...errors.spec,
           approvers: {

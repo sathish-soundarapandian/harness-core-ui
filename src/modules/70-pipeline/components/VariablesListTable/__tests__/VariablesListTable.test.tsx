@@ -10,7 +10,7 @@ import { flatMap } from 'lodash-es'
 import { render } from '@testing-library/react'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
-const getEntries = function <T>(object: T, prefix = ''): Array<any> {
+const getEntries = function (object: Record<string, any>, prefix = ''): Array<any> {
   return flatMap(Object.entries(object), ([k, v]: { k: string; v: any }[]) =>
     Object(v) === v ? getEntries(v, `${prefix}${k}.`) : [[`${prefix}${k}`, v]]
   )
