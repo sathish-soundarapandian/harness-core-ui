@@ -21,7 +21,8 @@ import {
   ButtonVariation,
   Container,
   Popover,
-  useToaster
+  useToaster,
+  SortMethod
 } from '@harness/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
@@ -478,50 +479,29 @@ export function getReferenceFieldProps({
               getDefaultFromOtherRepo: gitScope.getDefaultFromOtherRepo ?? true
             }
           : {}
-      const request =
-        Array.isArray(type) || !isEmpty(connectorFilterProperties)
-          ? getConnectorListV2Promise(
-              {
-                queryParams: {
-                  accountIdentifier,
-                  searchTerm: search || '',
-                  ...additionalParams,
-                  ...gitFilterParams,
-                  pageIndex: page || 0,
-                  pageSize: 10
-                },
-                body: merge(
-                  {
-                    ...(!category && { types: type }),
-                    category,
-                    filterType: 'Connector',
-                    projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
-                    orgIdentifier:
-                      scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
-                  },
-                  connectorFilterProperties
-                ) as ConnectorFilterProperties
-              },
-              signal
-            )
-          : getConnectorListPromise(
-              {
-                queryParams: {
-                  accountIdentifier,
-                  // If we also pass "type" along with "category", "category" will be ignored
-                  ...(!category && { type }),
-                  ...gitFilterParams,
-                  category,
-                  searchTerm: search,
-                  pageIndex: page,
-                  pageSize: 10,
-                  projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-                  orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined,
-                  ...(version && { version })
-                }
-              },
-              signal
-            )
+      const request = getConnectorListV2Promise(
+        {
+          queryParams: {
+            accountIdentifier,
+            searchTerm: search || '',
+            ...additionalParams,
+            ...gitFilterParams,
+            pageIndex: page || 0,
+            pageSize: 10
+          },
+          body: merge(
+            {
+              ...(!category && { types: Array.isArray(type) ? type : [type] }),
+              category,
+              filterType: 'Connector',
+              projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
+              orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
+            },
+            connectorFilterProperties
+          ) as ConnectorFilterProperties
+        },
+        signal
+      )
 
       return request
         .then(responseData => {
@@ -848,6 +828,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
   const tooltipContext = React.useContext(FormikTooltipContext)
   const dataTooltipId =
     props.tooltipProps?.dataTooltipId || (tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : '')
+
   const getReferenceFieldPropsValues = getReferenceFieldProps({
     defaultScope,
     gitScope,
@@ -870,6 +851,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     isRecordDisabled,
     renderRecordDisabledWarning
   })
+
   return (
     <FormGroup
       {...rest}

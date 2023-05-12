@@ -94,7 +94,6 @@ export interface MultiTypeConnectorFieldProps extends Omit<ConnectorReferenceFie
     isTemplatizedView: true
     templateValue: string | SelectOption | undefined
   }
-  version?: string
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
 }
