@@ -13,6 +13,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
 import ReleaseRepoListView from '../ReleaseRepoListView'
+import type { ReleaseRepoListViewProps } from '../../ReleaseRepoInterface'
 
 const props = {
   isPropagating: false,
@@ -188,7 +189,7 @@ describe('Release repo list view ', () => {
   test('render with no manifests', () => {
     const { container } = render(
       <TestWrapper>
-        <ReleaseRepoListView {...editProps} />
+        <ReleaseRepoListView {...(editProps as ReleaseRepoListViewProps)} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -197,7 +198,7 @@ describe('Release repo list view ', () => {
   test('click on release repo manifest btn', async () => {
     const { container } = render(
       <TestWrapper>
-        <ReleaseRepoListView {...editProps} />
+        <ReleaseRepoListView {...(editProps as ReleaseRepoListViewProps)} />
       </TestWrapper>
     )
 

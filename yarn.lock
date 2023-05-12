@@ -1729,12 +1729,12 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.0.tgz#0eee6373e11418bfe0b5638f654df7a4ca6a3950"
   integrity sha512-wYn6r8zVZyQJ6rQaALBEln5B1pzxb9shV5Ef97kTvn6yVGrqyXVnDqnU24MXnFubR+rZjBY9NWuxX3FB2sTsjg==
 
-"@harness/css-types-loader@3.1.0":
-  version "3.1.0"
-  resolved "https://npm.pkg.github.com/download/@harness/css-types-loader/3.1.0/052240fedc7f5d81fae590816a9cf1ec5aa7338d8708b6ea2d1c16ad06863ef9#4c26fe5c04d161b904e55577eee170156854b073"
-  integrity sha512-gBggWrCje5pbU3MWqRYT0x1APpmNZYm5R6JodxS5/6Hn6y4tFzUslV0LGTErqFJigvZCiEf2QDEqx+26ruy1LQ==
+"@harness/css-types-loader@4.0.0":
+  version "4.0.0"
+  resolved "https://npm.pkg.github.com/download/@harness/css-types-loader/4.0.0/565b7b150c0248c2828801a8a4ada917f0aafeeb#565b7b150c0248c2828801a8a4ada917f0aafeeb"
+  integrity sha512-uqMcGXN+7gnQdaNEOb6Yhb4wWqsY9A5ILBkD0016JABrtdk1o/36RHmP9/SxIGzBwtAsp+U0khYdy6oSf/EUEw==
   dependencies:
-    loader-utils "^2.0.0"
+    loader-utils "^2.0.4"
 
 "@harness/design-system@1.0.0":
   version "1.0.0"
@@ -7891,15 +7891,10 @@ ev-emitter@^1.0.0:
   resolved "https://registry.yarnpkg.com/ev-emitter/-/ev-emitter-1.1.1.tgz#8f18b0ce5c76a5d18017f71c0a795c65b9138f2a"
   integrity "sha1-jxiwzlx2pdGAF/ccCnlcZbkTjyo= sha512-ipiDYhdQSCZ4hSbX4rMW+XzNKMD1prg/sTvoVmSLkuQ1MVlwjJQQA+sW8tMYR3BLUr9KjodFV4pvzunvRhd33Q=="
 
-event-source-polyfill@1.0.31:
+event-source-polyfill@1.0.31, event-source-polyfill@^1.0.22:
   version "1.0.31"
   resolved "https://registry.yarnpkg.com/event-source-polyfill/-/event-source-polyfill-1.0.31.tgz#45fb0a6fc1375b2ba597361ba4287ffec5bf2e0c"
   integrity sha512-4IJSItgS/41IxN5UVAVuAyczwZF7ZIEsM1XAoUzIHA6A+xzusEZUutdXz2Nr+MQPLxfTiCvqE79/C8HT8fKFvA==
-
-event-source-polyfill@^1.0.22:
-  version "1.0.22"
-  resolved "https://registry.yarnpkg.com/event-source-polyfill/-/event-source-polyfill-1.0.22.tgz#cb381d6c4409097095da53e01852c1a8fbb6d7fc"
-  integrity "sha1-yzgdbEQJCXCV2lPgGFLBqPu21/w= sha512-Fnk9E2p4rkZ3eJGBn2HDeZoBTpyjPxj8RX/whdr4Pm5622xYgYo1k48SUD649Xlo6nnoKRr2WwcUlneil/AZ8g=="
 
 event-stream@=3.3.4:
   version "3.3.4"
@@ -11714,6 +11709,15 @@ loader-utils@^1.2.3, loader-utils@^1.4.0:
     big.js "^5.2.2"
     emojis-list "^3.0.0"
     json5 "^1.0.1"
+
+loader-utils@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-2.0.4.tgz#8b5cb38b5c34a9a018ee1fc0e6a066d1dfcc528c"
+  integrity sha512-xXqpXoINfFhgua9xiqD8fPFHgkoq1mmmpE92WlDbm9rNRd/EbRb+Gqf908T2DMfuHjjJlksiK2RbHVOdD/MqSw==
+  dependencies:
+    big.js "^5.2.2"
+    emojis-list "^3.0.0"
+    json5 "^2.1.2"
 
 locate-path@^2.0.0:
   version "2.0.0"
@@ -17106,10 +17110,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.2.4:
-  version "4.2.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
-  integrity "sha1-hhC1l0feAo/aiYqK7w4QPxVtCWE= sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg=="
+typescript@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
+  integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
 
 typeson-registry@^1.0.0-alpha.20:
   version "1.0.0-alpha.38"

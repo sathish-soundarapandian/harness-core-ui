@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React, { useCallback, ComponentType } from 'react'
 import { render } from 'mustache'
 import { get } from 'lodash-es'
 
@@ -41,12 +41,19 @@ export function useStrings(): UseStringsReturn {
   }
 }
 
+type TagProps = {
+  dangerouslySetInnerHTML?: {
+    __html: string
+  }
+  style?: React.CSSProperties
+}
+
 export interface StringProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
   stringID: StringKeys
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   vars?: Record<string, any>
   useRichText?: boolean
-  tagName: keyof JSX.IntrinsicElements
+  tagName: ComponentType<TagProps> | string
 }
 
 export function String(props: StringProps): React.ReactElement | null {
@@ -57,9 +64,9 @@ export function String(props: StringProps): React.ReactElement | null {
     const text = getString(stringID, vars)
 
     return useRichText ? (
-      <Tag {...(rest as unknown)} dangerouslySetInnerHTML={{ __html: text }} />
+      <Tag {...(typeof rest === 'object' ? rest : {})} dangerouslySetInnerHTML={{ __html: text }} />
     ) : (
-      <Tag {...(rest as unknown)}>{text}</Tag>
+      <Tag {...rest}>{text}</Tag>
     )
   } catch (e) {
     if (process.env.NODE_ENV !== 'production') {

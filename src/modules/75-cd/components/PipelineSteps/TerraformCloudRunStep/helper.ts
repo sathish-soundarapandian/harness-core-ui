@@ -24,7 +24,7 @@ export const organizationLabel = 'orgLabel'
 export const workspaceLabel = 'pipeline.terraformStep.workspaceName'
 export const errorMessage = 'data.message'
 
-const getEntries = function <T>(object: T, prefix = ''): Array<any> {
+const getEntries = function (object: Record<string, any>, prefix = ''): Array<any> {
   return flatMap(Object.entries(object), ([k, v]: { k: string; v: any }[]) =>
     Object(v) === v ? getEntries(v, `${prefix}${k}.`) : [[`${prefix}${k}`, v]]
   )

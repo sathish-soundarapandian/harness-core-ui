@@ -80,7 +80,7 @@ const renderComponent = (
   }
   return render(
     <TestWrapper defaultFeatureFlagValues={featureFlags}>
-      <ConfigFilesListView {...commonProps} />
+      <ConfigFilesListView {...(commonProps as ConfigFilesListViewProps)} />
     </TestWrapper>
   )
 }

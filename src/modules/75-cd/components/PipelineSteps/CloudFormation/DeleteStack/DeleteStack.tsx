@@ -27,7 +27,7 @@ import DeleteStackInputStep from './DeleteStackInputSteps'
 import { DeleteStackVariableStep } from './DeleteStackVariableView'
 const DeleteStackWithRef = forwardRef(CloudFormationDeleteStack)
 
-export class CFDeleteStack extends PipelineStep<CFDeleteStackStepInfo> {
+export class CFDeleteStack extends PipelineStep<DeleteStackData> {
   constructor() {
     super()
     this._hasStepVariables = true
@@ -41,7 +41,7 @@ export class CFDeleteStack extends PipelineStep<CFDeleteStackStepInfo> {
   protected stepIconSize = 32
   protected referenceId = 'cloudFormationDeleteStep'
 
-  protected defaultValues = {
+  protected defaultValues: DeleteStackData = {
     type: StepType.CloudFormationDeleteStack,
     name: '',
     identifier: '',
@@ -110,7 +110,7 @@ export class CFDeleteStack extends PipelineStep<CFDeleteStackStepInfo> {
     return errors
   }
 
-  processFormData(data: DeleteStackData): CFDeleteStackStepInfo {
+  processFormData(data: DeleteStackData): DeleteStackData {
     /* istanbul ignore next */
     if (data?.spec?.configuration?.type === DeleteStackTypes.Inherited) {
       unset(data?.spec?.configuration?.spec, 'connectorRef')

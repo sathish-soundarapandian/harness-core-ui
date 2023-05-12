@@ -86,10 +86,10 @@ export function useLogsContent(): UseLogsContentReturn {
       closeStream()
       actions.updateSectionData({ data: '', id: props.key })
 
-      const currentEventSource: EventSource = new EventSourcePolyfill(
+      const currentEventSource = new EventSourcePolyfill(
         `${STREAM_ENDPOINT}?accountID=${props.queryParams.accountId}&key=${props.queryParams.key}`,
         { headers: props.headers }
-      )
+      ) as EventSource
 
       eventSource.current = currentEventSource
 

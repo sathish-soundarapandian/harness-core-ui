@@ -98,7 +98,7 @@ export function useEventSourceListener<T = unknown>({
         new EventSourcePolyfill(`${url}${getQueryParams(queryParams)}`, {
           headers,
           ...rest
-        })
+        }) as EventSource
       )
     }
   }, [url, token, queryParams, accountId, customHeaders])

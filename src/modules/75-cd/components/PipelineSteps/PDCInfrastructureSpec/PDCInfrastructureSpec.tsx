@@ -1111,7 +1111,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
           onUpdate={onUpdate}
           stepViewType={stepViewType}
           readonly={readonly}
-          template={inputSetData?.template as PdcInfraTemplate}
+          template={inputSetData?.template as unknown as PdcInfraTemplate}
           allValues={inputSetData?.allValues}
           allowableTypes={allowableTypes}
           path={inputSetData?.path || ''}
@@ -1122,7 +1122,7 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
         <PDCInfrastructureSpecVariablesForm
           onUpdate={onUpdate}
           stepViewType={stepViewType}
-          template={inputSetData?.template as PdcInfraTemplate}
+          template={inputSetData?.template as unknown as PdcInfraTemplate}
           {...(customStepProps as PDCInfrastructureSpecEditableProps)}
           initialValues={initialValues}
         />
