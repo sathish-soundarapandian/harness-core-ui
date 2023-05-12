@@ -34,7 +34,7 @@ import { ManifestDataType } from '../Manifesthelper'
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorsData.data.content[1], refetch: fetchConnectors, loading: false }

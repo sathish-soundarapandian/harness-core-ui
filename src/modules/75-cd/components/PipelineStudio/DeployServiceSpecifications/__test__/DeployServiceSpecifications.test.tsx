@@ -58,7 +58,7 @@ jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', ()
 }))
 
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: () => Promise.resolve(connectorListJSON),
+  getConnectorListV2Promise: () => Promise.resolve(connectorListJSON),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({
     loading: false,
     data: connectorListJSON,

@@ -39,7 +39,6 @@ const fetchBuckets = jest.fn().mockReturnValue(bucketListData)
 
 jest.mock('services/cd-ng', () => ({
   getConnectorListV2: () => Promise.resolve(connectorsData),
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectorList })),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorData, refetch: fetchConnector, loading: false }

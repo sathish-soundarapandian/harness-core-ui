@@ -30,7 +30,7 @@ const onPrevious = jest.fn().mockResolvedValue(jest.fn())
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn().mockImplementation(() => ({ data: {}, refetch: jest.fn() })),
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve({})),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve({})),
   getListOfBranchesByConnectorPromise: jest
     .fn()
     .mockResolvedValue({ data: ['master', 'devBranch'], status: 'SUCCESS' }),

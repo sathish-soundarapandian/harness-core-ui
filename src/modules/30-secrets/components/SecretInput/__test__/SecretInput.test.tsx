@@ -27,7 +27,7 @@ jest.mock('services/cd-ng', () => ({
       refetch: jest.fn()
     }
   },
-  getConnectorListPromise: jest.fn().mockImplementation(() => {
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => {
     return new Promise(resolve => {
       resolve({ data: {}, refetch: jest.fn(), error: null, loading: false })
     })
