@@ -66,6 +66,9 @@ jest.mock('services/cd-ng', () => ({
   useGetAuthenticationSettings: jest.fn().mockImplementation(() => {
     return mockSSOSettings
   }),
+  useGetAuthenticationSettingsV2: jest.fn().mockImplementation(() => {
+    return mockSSOSettings
+  }),
   usePutUserGroup: jest.fn().mockImplementation(() => {
     return { mutate: updateUGMock }
   }),

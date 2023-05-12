@@ -2187,6 +2187,39 @@ export interface StringsMap {
   'authSettings.haveOneUppercase': string
   'authSettings.identityProvider': string
   'authSettings.identityProviderLabel': string
+  'authSettings.ipAddress.aPartOfAllowlist': string
+  'authSettings.ipAddress.addIpAddresses': string
+  'authSettings.ipAddress.allowedAsAPartOf': string
+  'authSettings.ipAddress.applicableFor': string
+  'authSettings.ipAddress.check': string
+  'authSettings.ipAddress.checkAnotherIP': string
+  'authSettings.ipAddress.checkIPForAllowlist': string
+  'authSettings.ipAddress.defineRange': string
+  'authSettings.ipAddress.deleteIpAddressDialogContent': string
+  'authSettings.ipAddress.deleteIpAddressDialogTitle': string
+  'authSettings.ipAddress.deleteSuccessful': string
+  'authSettings.ipAddress.duplicateIdError': string
+  'authSettings.ipAddress.errorWhileCreating': string
+  'authSettings.ipAddress.errorWhileDeleting': string
+  'authSettings.ipAddress.errorWhileUpdating': string
+  'authSettings.ipAddress.errorWhileValidating': string
+  'authSettings.ipAddress.inRange': string
+  'authSettings.ipAddress.invalid': string
+  'authSettings.ipAddress.ipAddressCIDR': string
+  'authSettings.ipAddress.ipAllowlistCreated': string
+  'authSettings.ipAddress.ipAllowlistUpdated': string
+  'authSettings.ipAddress.ipInvalid': string
+  'authSettings.ipAddress.ipRequired': string
+  'authSettings.ipAddress.noIPsAllowlisted': string
+  'authSettings.ipAddress.notAPartOfAllowlist': string
+  'authSettings.ipAddress.notInRange': string
+  'authSettings.ipAddress.required': string
+  'authSettings.ipAddress.testIP': string
+  'authSettings.ipAddress.testIPIfInRange': string
+  'authSettings.ipAddress.testIPIfPartOfAllowlist': string
+  'authSettings.ipAddress.useMyCurrentIP': string
+  'authSettings.ipAddress.validateUniqueIdentifierError': string
+  'authSettings.ipAllowlist': string
   'authSettings.keepAtLeastOneProviderEnabled': string
   'authSettings.ldap.addGroupQueryDescription': string
   'authSettings.ldap.addGroupQueryHeading': string

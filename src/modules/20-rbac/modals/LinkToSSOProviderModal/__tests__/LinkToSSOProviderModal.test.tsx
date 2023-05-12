@@ -60,6 +60,9 @@ jest.mock('services/cd-ng', () => ({
   useGetAuthenticationSettings: jest.fn().mockImplementation(() => {
     return { data: mockAuthResponse, loading: false, refetch: jest.fn().mockReturnValue(mockAuthResponse), error: null }
   }),
+  useGetAuthenticationSettingsV2: jest.fn().mockImplementation(() => {
+    return { data: mockAuthResponse, loading: false, refetch: jest.fn().mockReturnValue(mockAuthResponse), error: null }
+  }),
   useLinkToSamlGroup: jest.fn().mockImplementation(() => {
     return { mutate: () => Promise.resolve(mockSuccessResponse) }
   }),
