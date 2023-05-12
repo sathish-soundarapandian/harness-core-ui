@@ -80,7 +80,10 @@ function DeployServiceWidget({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      page: 0,
+      // Until service V1 is migrated, adding pageSize:200 as temporary fix to list services ( default capped to 100 from BE )
+      size: 200
     }
   })
 
