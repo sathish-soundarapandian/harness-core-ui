@@ -77,7 +77,7 @@ const RedirectToIACMProject = (): React.ReactElement => {
   if (selectedProject) {
     return (
       <Redirect
-        to={routes.toIACMStacks({
+        to={routes.toIACMWorkspaces({
           accountId,
           orgIdentifier: selectedProject.orgIdentifier || '',
           projectIdentifier: selectedProject.identifier

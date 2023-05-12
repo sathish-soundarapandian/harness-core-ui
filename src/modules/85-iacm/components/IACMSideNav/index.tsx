@@ -29,7 +29,7 @@ export default function IACMSideNav(): React.ReactElement {
         onSelect={data => {
           updateAppStore({ selectedProject: data })
           history.push(
-            routes.toIACMStacks({
+            routes.toIACMWorkspaces({
               projectIdentifier: data.identifier,
               orgIdentifier: data.orgIdentifier,
               accountId
@@ -39,7 +39,7 @@ export default function IACMSideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier && (
         <>
-          <SidebarLink label={getString('iacm.workspaces')} to={routes.toIACMStacks({ ...params })} />
+          <SidebarLink label={getString('iacm.workspaces')} to={routes.toIACMWorkspaces({ ...params })} />
           <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module: 'iacm' })} />
           <ProjectSetupMenu module="iacm" />
         </>
