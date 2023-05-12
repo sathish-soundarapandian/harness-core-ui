@@ -695,6 +695,7 @@ account:
     description: to add and manage your subscriptions
 valuePlaceholder: Enter Value(s)
 namePlaceholder: Enter Name
+friendlyNamePlaceholder: Enter Friendly Name
 descriptionPlaceholder: Enter Description
 seconds: Seconds
 move: Move
@@ -1497,3 +1498,4 @@ noCreditInfoData: No Credit Information Found
 readOnlyConnectorWarning: Read-only Vault connector is not allowed for Terraform/Terragrunt Plan steps.
 enabledFlags: ENABLED FLAGS
 expiresOn: Expires on
+friendlyName: Friendly Name

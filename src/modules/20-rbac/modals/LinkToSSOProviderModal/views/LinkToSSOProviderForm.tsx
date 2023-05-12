@@ -36,9 +36,11 @@ import {
   useGetAuthenticationSettings,
   useLinkToSamlGroup,
   useLinkToLdapGroup,
-  SSOSettings
+  SSOSettings,
+  useGetAuthenticationSettingsV2
 } from 'services/cd-ng'
 import { AuthenticationMechanisms } from '@rbac/utils/utils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import LinkToLDAPProviderForm from './LinkToLDAPProviderForm'
 import css from '../useLinkToSSOProviderModal.module.scss'
 
@@ -74,6 +76,7 @@ const getSelectPlaceholder = (
 const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
   const { onSubmit, userGroupData } = props
   const { getRBACErrorMessage } = useRBACError()
+  const { PL_ENABLE_MULTIPLE_IDP_SUPPORT } = useFeatureFlags()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
@@ -81,15 +84,33 @@ const LinkToSSOProviderForm: React.FC<LinkToSSOProviderModalData> = props => {
 
   let fetching = false
   const {
-    data: authDataResponse,
-    loading: authLoading,
-    error,
-    refetch
+    data: authDataResponseV1,
+    loading: authLoadingV1,
+    error: authErrorV1,
+    refetch: authRefetchV1
   } = useGetAuthenticationSettings({
     queryParams: {
       accountIdentifier: accountId
-    }
+    },
+    lazy: PL_ENABLE_MULTIPLE_IDP_SUPPORT
   })
+
+  const {
+    data: authDataResponseV2,
+    loading: authLoadingV2,
+    error: authErrorV2,
+    refetch: authRefetchV2
+  } = useGetAuthenticationSettingsV2({
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: !PL_ENABLE_MULTIPLE_IDP_SUPPORT
+  })
+
+  const authDataResponse = PL_ENABLE_MULTIPLE_IDP_SUPPORT ? authDataResponseV2 : authDataResponseV1
+  const authLoading = PL_ENABLE_MULTIPLE_IDP_SUPPORT ? authLoadingV2 : authLoadingV1
+  const error = PL_ENABLE_MULTIPLE_IDP_SUPPORT ? authErrorV2 : authErrorV1
+  const refetch = PL_ENABLE_MULTIPLE_IDP_SUPPORT ? authRefetchV2 : authRefetchV1
 
   const authSettingsData = authDataResponse?.resource?.ngAuthSettings as SAMLSettings[]
 

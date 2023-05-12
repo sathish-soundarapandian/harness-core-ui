@@ -342,3 +342,9 @@ ipAddress:
   notInRange: This IP Address does not fall in the defined range
   aPartOfAllowlist: This IP address is a part of allowlist
   notAPartOfAllowlist: This IP address is not a part of allowlist
+samlProviderOverview: SAML Provider Overview
+selectProvider: Select Provider
+urlIdentityProvider: URL and Identity Provider
+newSamlProvider: New SAML Provider
+identityProviderLabel: Identity Provider
+additionalFunctions: Additional Functions
