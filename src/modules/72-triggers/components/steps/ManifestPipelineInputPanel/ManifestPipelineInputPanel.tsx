@@ -41,19 +41,21 @@ import { memoizedParse } from '@common/utils/YamlHelperMethods'
 import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import NewInputSetModal from '@pipeline/components/InputSetForm/NewInputSetModal'
 import {
-  ciCodebaseBuild,
-  ciCodebaseBuildPullRequest,
   TriggerTypes,
-  getTriggerInputSetsBranchQueryParameter,
   getErrorMessage,
   TriggerGitEventTypes,
-  TriggerGitEvent,
-  ciCodebaseBuildIssueComment
+  TriggerGitEvent
 } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import { getPipelineWithInjectedWithCloneCodebase } from '@triggers/components/Triggers/WebhookTrigger/utils'
 import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import {
+  ciCodebaseBuild,
+  ciCodebaseBuildPullRequest,
+  ciCodebaseBuildIssueComment,
+  getTriggerInputSetsBranchQueryParameter
+} from '@triggers/components/Triggers/utils'
 import css from '@triggers/pages/triggers/views/WebhookPipelineInputPanel.module.scss'
 
 interface ManifestTriggerInputPanelFormProps {

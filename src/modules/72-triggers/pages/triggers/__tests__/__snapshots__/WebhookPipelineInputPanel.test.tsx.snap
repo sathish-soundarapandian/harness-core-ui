@@ -203,7 +203,7 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                                           name="pipeline.properties.ci.codebase.build.spec.branch"
                                           placeholder="<+expression>"
                                           type="text"
-                                          value="<+trigger.branch>"
+                                          value="<+trigger.payload.branch>"
                                         />
                                       </div>
                                     </div>

@@ -48,14 +48,16 @@ import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineV
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
+  ciCodebaseBuildIssueComment,
+  getTriggerInputSetsBranchQueryParameter
+} from '@triggers/components/Triggers/utils'
+import {
   filterArtifactIndex,
   getFilteredStage,
   TriggerTypes,
-  getTriggerInputSetsBranchQueryParameter,
   getErrorMessage,
   TriggerGitEventTypes,
-  TriggerGitEvent,
-  ciCodebaseBuildIssueComment
+  TriggerGitEvent
 } from '../utils/TriggersWizardPageUtils'
 import css from './WebhookPipelineInputPanel.module.scss'
 

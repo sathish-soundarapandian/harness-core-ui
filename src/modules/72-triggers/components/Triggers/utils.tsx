@@ -42,6 +42,7 @@ export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
 export const AwsCodeCommit = 'AwsCodeCommit'
 export const PRIMARY_ARTIFACT = 'primary'
 export const AZURE_REPO = 'AZURE_REPO'
+export const DEFAULT_TRIGGER_BRANCH = '<+trigger.payload.branch>'
 
 export const PayloadConditionTypes = {
   TARGET_BRANCH: 'targetBranch',
@@ -68,7 +69,7 @@ export const isRowFilled = (payloadCondition: AddConditionInterface): boolean =>
 export const ciCodebaseBuild = {
   type: 'branch',
   spec: {
-    branch: '<+trigger.branch>'
+    branch: DEFAULT_TRIGGER_BRANCH
   }
 }
 
@@ -175,8 +176,6 @@ export const getOrderedPipelineVariableValues = ({
   }
   return currentPipelineVariables
 }
-
-export const DEFAULT_TRIGGER_BRANCH = '<+trigger.payload.branch>'
 
 /**
  * Get proper branch to fetch Trigger InputSets
