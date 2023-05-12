@@ -123,8 +123,21 @@ const useOpenApiClients = (
     urlInterceptor: (url: string) => {
       return window.getApiBaseUrl(url)
     },
-    getRequestHeaders: () => {
-      return { token: SessionToken.getToken(), 'Harness-Account': accountId }
+    requestInterceptor: (request: Request) => {
+      const oldRequest = request.clone()
+      const headers = new Headers()
+      for (const key of oldRequest.headers.keys()) {
+        const value = oldRequest.headers.get(key) as string
+        if (key.toLowerCase() !== 'authorization') {
+          headers.append(key, value)
+        }
+      }
+      if (!window.noAuthHeader) {
+        headers.append('Authorization', `Bearer ${SessionToken.getToken()}`)
+      }
+      headers.append('Harness-Account', accountId)
+      const newRequest = new Request(oldRequest, { headers })
+      return newRequest
     }
   }
 
@@ -199,8 +212,8 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       }
     }
   }
-  const { auditServiceClientRef, idpServiceClientRef, pipelineServiceClientRef, ngManagerServiceClientRef } =
-    useOpenApiClients(globalResponseHandler, accountId)
+
+  useOpenApiClients(globalResponseHandler, accountId)
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -232,7 +245,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     if (refreshTokenResponse?.resource) {
       SecureStorage.set('token', refreshTokenResponse.resource)
       SecureStorage.set('lastTokenSetTime', Date.now())
-      updateHeadersForOpenApiClients({ token: refreshTokenResponse.resource })
     }
   }, [refreshTokenResponse])
 
@@ -270,13 +282,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       globalResponseHandler(detail.response)
     }
   })
-
-  const updateHeadersForOpenApiClients = (headers: Record<string, any>): void => {
-    auditServiceClientRef.current?.updateHeaders(headers)
-    idpServiceClientRef.current?.updateHeaders(headers)
-    pipelineServiceClientRef.current?.updateHeaders(headers)
-    ngManagerServiceClientRef.current?.updateHeaders(headers)
-  }
 
   return (
     <RestfulProvider
