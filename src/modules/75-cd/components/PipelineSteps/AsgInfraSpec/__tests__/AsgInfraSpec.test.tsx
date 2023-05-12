@@ -221,6 +221,7 @@ describe('getConnectorsListForYaml test', () => {
     const step = new AsgInfraSpec() as any
     const list: CompletionItemInterface[] = await step.getConnectorsListForYaml('invalid path', getYaml(), params)
     expect(list).toHaveLength(0)
+    expect(true).toBe(false)
   })
 
   test('when connectorRefPath is valid and yaml is invalid valid', async () => {
