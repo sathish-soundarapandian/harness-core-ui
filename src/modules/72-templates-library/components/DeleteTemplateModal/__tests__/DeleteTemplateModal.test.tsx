@@ -20,7 +20,7 @@ import * as templateServices from 'services/template-ng'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import * as cdNgServices from 'services/cd-ng'
-import { DeleteTemplateModal } from '../DeleteTemplateModal'
+import { DeleteTemplateModal, DeleteTemplateProps } from '../DeleteTemplateModal'
 
 const mockTemplatesSuccessResponseUpdated = {
   ...mockTemplatesSuccessResponse,
@@ -63,7 +63,7 @@ describe('<DeleteTemplateModal /> tests', () => {
   test('should match snapshot', async () => {
     const { container } = render(
       <TestWrapper>
-        <DeleteTemplateModal {...baseProps} />
+        <DeleteTemplateModal {...(baseProps as DeleteTemplateProps)} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -72,7 +72,7 @@ describe('<DeleteTemplateModal /> tests', () => {
   test('should call onClose when cancel button is clicked', async () => {
     const { getByRole } = render(
       <TestWrapper>
-        <DeleteTemplateModal {...baseProps} />
+        <DeleteTemplateModal {...(baseProps as DeleteTemplateProps)} />
       </TestWrapper>
     )
     const cancelBtn = getByRole('button', { name: 'cancel' })
@@ -85,7 +85,7 @@ describe('<DeleteTemplateModal /> tests', () => {
   test('should have delete button disabled by default', async () => {
     const { getByRole } = render(
       <TestWrapper>
-        <DeleteTemplateModal {...baseProps} />
+        <DeleteTemplateModal {...(baseProps as DeleteTemplateProps)} />
       </TestWrapper>
     )
 
@@ -96,7 +96,7 @@ describe('<DeleteTemplateModal /> tests', () => {
   test('should call onSuccess when select all is checked and deleted successfully', async () => {
     const { getByRole } = render(
       <TestWrapper>
-        <DeleteTemplateModal {...baseProps} />
+        <DeleteTemplateModal {...(baseProps as DeleteTemplateProps)} />
       </TestWrapper>
     )
 
@@ -133,7 +133,7 @@ describe('<DeleteTemplateModal /> tests', () => {
 
     const { container, getByRole } = render(
       <TestWrapper>
-        <DeleteTemplateModal {...baseProps} />
+        <DeleteTemplateModal {...(baseProps as DeleteTemplateProps)} />
       </TestWrapper>
     )
 
@@ -168,7 +168,7 @@ describe('<DeleteTemplateModal /> tests', () => {
 
     const { container, getByRole } = render(
       <TestWrapper>
-        <DeleteTemplateModal {...baseProps} />
+        <DeleteTemplateModal {...(baseProps as DeleteTemplateProps)} />
       </TestWrapper>
     )
 
@@ -197,7 +197,7 @@ describe('<DeleteTemplateModal /> tests', () => {
 
     const { container } = render(
       <TestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true }}>
-        <DeleteTemplateModal {...baseProps} />
+        <DeleteTemplateModal {...(baseProps as DeleteTemplateProps)} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -210,7 +210,7 @@ describe('<DeleteTemplateModal /> tests', () => {
 
     const { container } = render(
       <TestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true, supportingTemplatesGitx: true }}>
-        <DeleteTemplateModal {...baseProps} />
+        <DeleteTemplateModal {...(baseProps as DeleteTemplateProps)} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -223,7 +223,7 @@ describe('<DeleteTemplateModal /> tests', () => {
 
     const { container } = render(
       <TestWrapper>
-        <DeleteTemplateModal {...baseProps} />
+        <DeleteTemplateModal {...(baseProps as DeleteTemplateProps)} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

@@ -39,8 +39,8 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { InputSetDTO } from '@pipeline/utils/types'
 
-function clearNullUndefined<T>(data: T): T {
-  return omitBy(omitBy(data, isUndefined), isNull) as T
+function clearNullUndefined(data: InputSetDTO): InputSetDTO {
+  return omitBy(omitBy(data, isUndefined), isNull)
 }
 
 interface UseCreateUpdateInputSetReturnType {
