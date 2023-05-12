@@ -129,7 +129,6 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     mini,
     isDrawerMode = false,
     templateProps,
-    version,
     isRecordDisabled,
     renderRecordDisabledWarning,
     ...restProps
@@ -423,7 +422,6 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         types: Array.isArray(type) ? type : [type]
       }
     }),
-    version,
     getString,
     openConnectorModal,
     setPagedConnectorData,

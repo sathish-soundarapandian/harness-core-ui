@@ -21,8 +21,7 @@ import {
   ButtonVariation,
   Container,
   Popover,
-  useToaster,
-  SortMethod
+  useToaster
 } from '@harness/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
@@ -30,7 +29,6 @@ import { isEmpty, merge } from 'lodash-es'
 import {
   Failure,
   ConnectorInfoDTO,
-  getConnectorListPromise,
   ConnectorConfigDTO,
   GetConnectorListQueryParams,
   ConnectorResponse,
@@ -250,7 +248,6 @@ interface GetReferenceFieldMethodProps extends ConnectorReferenceFieldProps {
   openConnectorModal: UseCreateConnectorModalReturn['openConnectorModal']
   type: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
   setPagedConnectorData: (data: ResponsePageConnectorResponse) => void
-  version?: string
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
 }
@@ -451,7 +448,6 @@ export function getReferenceFieldProps({
   setPagedConnectorData,
   connectorFilterProperties,
   isMultiSelect,
-  version,
   selectedConnectors,
   isRecordDisabled,
   renderRecordDisabledWarning
