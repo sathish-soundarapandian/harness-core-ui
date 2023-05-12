@@ -44,8 +44,6 @@ import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useOpenRetryPipelineModal } from '@pipeline/components/ExecutionActions/useOpenRetryPipelineModal'
-import { useTelemetry } from '@common/hooks/useTelemetry'
-import { PipelineExecutionActions } from '@common/constants/TrackingConstants'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {
@@ -95,7 +93,6 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
   const { CI_REMOTE_DEBUG } = useFeatureFlags()
-  const { trackEvent } = useTelemetry()
 
   const [canView, canEdit, canExecute] = usePermission(
     {
@@ -197,16 +194,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
   const showRetryPipelineOption = isRetryPipelineAllowed(status as ExecutionStatus) && canRetry
   const { openRetryPipelineModal } = useOpenRetryPipelineModal({ modules, params })
   const reRunPipeline = (): void => {
-    trackEvent(PipelineExecutionActions.ReRunPipeline, { triggered_from: 'button' })
     isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? openRunPipelineModalV1() : openRunPipelineModal()
-  }
-
-  const retryPipeline = (fromLastStage?: boolean): void => {
-    trackEvent(PipelineExecutionActions.RetryPipeline, {
-      triggered_from: 'button',
-      type: fromLastStage ? 'last_failed_stage' : 'selected_stage'
-    })
-    openRetryPipelineModal(fromLastStage)
   }
 
   let moduleLabel = getString('common.pipelineExecution')
@@ -314,13 +302,13 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
                 <>
                   <SplitButtonOption
                     data-test-id="retry-failed-pipeline"
-                    onClick={() => retryPipeline(true)}
+                    onClick={() => openRetryPipelineModal(true)}
                     text={getString('pipeline.execution.actions.reRunLastFailedStage')}
                     disabled={isPipelineInvalid}
                   />
                   <SplitButtonOption
                     data-test-id="retry-failed-pipeline-specific-stage"
-                    onClick={() => retryPipeline()}
+                    onClick={() => openRetryPipelineModal()}
                     text={getString('pipeline.execution.actions.reRunSelectedStage')}
                     disabled={isPipelineInvalid}
                   />
