@@ -12,6 +12,7 @@ import { putPipelinePromise, createPipelineV2Promise, PipelineInfoConfig } from 
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { useMutateAsGet } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
+import * as cdngServices from 'services/cd-ng'
 import { PipelineCanvas, PipelineCanvasProps } from '../PipelineCanvas'
 import { PipelineContext } from '../../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../../PipelineContext/PipelineActions'
@@ -29,6 +30,9 @@ const getProps = (): PipelineCanvasProps => ({
 })
 
 /* Mocks */
+jest.spyOn(cdngServices, 'useGetSettingValue').mockImplementation(() => {
+  return { data: { data: { value: 'false' } } } as any
+})
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({
   validateJSONWithSchema: jest.fn().mockReturnValue({ error: { size: 2 } })

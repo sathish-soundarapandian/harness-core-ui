@@ -155,9 +155,11 @@ const StepHelmAuthentication: React.FC<StepProps<StepHelmRepoAuthenticationProps
         }}
         formName="helmRepoAuthForm"
         validationSchema={Yup.object().shape({
-          helmRepoUrl: Yup.string()
-            .matches(OCI_CONNECTOR_URL_REGEX, getString('connectors.httpHelm.helmRepoURLValidation'))
-            .required(getString('validation.helmRepoUrl')),
+          helmRepoUrl: isOCIHelm
+            ? Yup.string()
+                .matches(OCI_CONNECTOR_URL_REGEX, getString('connectors.httpHelm.helmRepoURLValidation'))
+                .required(getString('validation.helmRepoUrl'))
+            : Yup.string().trim().required(getString('validation.helmRepoUrl')),
           authType: Yup.string().trim().required(getString('validation.authType')),
           username: Yup.string().when('authType', {
             is: val => val === AuthTypes.USER_PASSWORD,

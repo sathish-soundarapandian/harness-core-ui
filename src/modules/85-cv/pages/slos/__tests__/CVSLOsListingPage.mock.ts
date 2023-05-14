@@ -211,7 +211,12 @@ export const mockSLODashboardWidgetsData = {
         sloTargetPercentage: 97.0,
         noOfActiveAlerts: 12,
         errorBudgetRisk: 'HEALTHY',
-        sloType: 'Composite'
+        sloType: 'Composite',
+        sloError: {
+          failedState: true,
+          sloErrorType: 'DataCollectionFailure',
+          errorMessage: 'Contributing SLO contain errors and needs to be addressed manually.'
+        }
       },
       {
         sloIdentifier: 'SLO5',
@@ -241,6 +246,11 @@ export const mockSLODashboardWidgetsData = {
           status: 'Active',
           startTime: 1680262730,
           endTime: 1680348600
+        },
+        sloError: {
+          failedState: true,
+          sloErrorType: 'DataCollectionFailure',
+          errorMessage: 'The SLO is experiencing issues and is unable to collect data.'
         }
       }
     ],

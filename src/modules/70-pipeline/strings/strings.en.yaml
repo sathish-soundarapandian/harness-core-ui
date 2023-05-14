@@ -686,6 +686,7 @@ executionStatus:
   Expired: EXPIRED
   Suspended: SUSPENDED
   NotStarted: NOT STARTED
+  Started: STARTED
   ApprovalRejected: REJECTED
   QueuedLicenseLimitReached: QUEUED LICENSE LIMIT REACHED
   QueuedExecutionConcurrencyReached: QUEUED EXECUTION CONCURRENCY REACHED

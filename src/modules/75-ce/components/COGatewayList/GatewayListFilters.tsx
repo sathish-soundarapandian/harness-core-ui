@@ -459,8 +459,10 @@ const GatewayListFilters: React.FC<GatewayListFiltersProps> = ({ applyFilter, ap
       if (usedFilter) {
         setSelectedFilter(usedFilter)
       }
+    } else if (appliedFilter?.identifier === unsavedFilter.identifier && !isEmpty(selectedFilter.data)) {
+      setSelectedFilter(appliedFilter)
     }
-  }, [savedFilters])
+  }, [savedFilters, appliedFilter])
 
   const fetchAndSetUsers = async () => {
     try {

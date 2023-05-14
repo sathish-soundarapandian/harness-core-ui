@@ -68,6 +68,12 @@ export function StepGroupNode(props: any): JSX.Element {
   const isNestedStepGroup = Boolean(
     get(props, 'data.step.data.isNestedGroup') || (get(props, 'data.isNestedGroup') && props?.parentIdentifier)
   )
+  const defaultNodeIcon =
+    props?.type === StageType.PIPELINE_ROLLBACK
+      ? 'rollback-pipeline'
+      : props?.type === StageType.PIPELINE
+      ? 'chained-pipeline'
+      : 'step-group'
 
   React.useEffect(() => {
     if (
@@ -177,7 +183,7 @@ export function StepGroupNode(props: any): JSX.Element {
           }}
           {...props}
           isNodeCollapsed={true}
-          icon={stageGroupTypes.includes(props?.type) ? 'chained-pipeline' : 'step-group'}
+          icon={defaultNodeIcon}
           selectedNodeId={stageGroupTypes.includes(props?.type) ? selectedStageId : props?.selectedNodeId} // In order to apply selected node background color on collapsing the node after execution is completed
         />
       ) : (

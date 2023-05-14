@@ -597,6 +597,7 @@ banners:
       description: Your trial expired {{ expiredDays }} days ago. Contact Sales or extend trial to continue using {{ moduleDescription }}
       contactSales: Your trial expired {{ expiredDays }} days ago. Contact Sales to continue using {{ moduleDescription }}
       extendTrial: Extend Trial
+      extendTrialSales: Contact Sales to Extend Trial
     contactSales: Contact Sales
     contactSalesForm:
       success: Thank you for contacting us. We'll get back to you as soon as possible
@@ -694,6 +695,7 @@ account:
     description: to add and manage your subscriptions
 valuePlaceholder: Enter Value(s)
 namePlaceholder: Enter Name
+friendlyNamePlaceholder: Enter Friendly Name
 descriptionPlaceholder: Enter Description
 seconds: Seconds
 move: Move
@@ -876,6 +878,8 @@ files: Files
 scriptType: 'Script Type'
 script: 'Script'
 template:
+  name: Template Name
+  type: Template Type
   label: 'Template'
   saveAsNewTemplateHeading: Save as new Template
   saveTemplate:
@@ -902,6 +906,7 @@ start14dayTrial: Start 14 day trial
 upgrade: Upgrade
 contactSupport: Contact Support
 or: Or
+requestFreeTrial: Contact Sales for Free Trial
 startFreePlan: Start {{module}} Free Plan
 scriptRequired: Script is a required field
 exploreAllPlans: Explore all plans
@@ -1494,3 +1499,4 @@ readOnlyConnectorWarning: Read-only Vault connector is not allowed for Terraform
 enabledFlags: ENABLED FLAGS
 enterPlaceholder: Enter {{name}}
 expiresOn: Expires on
+friendlyName: Friendly Name

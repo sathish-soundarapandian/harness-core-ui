@@ -8,6 +8,7 @@
 import { useState, useEffect } from 'react'
 import cx from 'classnames'
 import { useToaster } from '@harness/uicore'
+import { debounce } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -98,7 +99,7 @@ export const useContactSalesMktoModal = ({ onSubmit }: UseContactSalesModalProps
     }
   }, [])
 
-  function openMarketoContactSales(): void {
+  const openMarketoContactSales = debounce(function openMarketoContactSales(): void {
     setLoading(true)
     window?.MktoForms2.loadForm('//go.harness.io', '924-CQO-224', 1249, function (form: any) {
       window?.MktoForms2.lightbox(form).show()
@@ -127,6 +128,6 @@ export const useContactSalesMktoModal = ({ onSubmit }: UseContactSalesModalProps
       form.getFormElem()?.[0]?.setAttribute('data-mkto-ready', 'true')
       setLoading(false)
     })
-  }
+  }, 200)
   return { openMarketoContactSales, loading }
 }

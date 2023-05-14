@@ -37,8 +37,6 @@ import { useQueryParams } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import RbacButton from '@rbac/components/Button/Button'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import routes from '@common/RouteDefinitions'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -146,11 +144,10 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })
 
-  const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const { data: allowDifferentRepoSettings, error: allowDifferentRepoSettingsError } = useGetSettingValue({
     identifier: SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS,
     queryParams: { accountIdentifier: accountId },
-    lazy: !isSettingEnabled
+    lazy: false
   })
 
   React.useEffect(() => {

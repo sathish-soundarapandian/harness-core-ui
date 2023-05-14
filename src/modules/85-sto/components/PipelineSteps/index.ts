@@ -28,11 +28,13 @@ import { OWASPStep } from './OWASPStep/OWASPStep'
 import { ProwlerStep } from './ProwlerStep/ProwlerStep'
 import { MetasploitStep } from './MetasploitStep/MetasploitStep'
 import { BrakemanStep } from './BrakemanStep/BrakemanStep'
+import { BurpStep } from './BurpStep/BurpStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new AquatrivyStep())
 factory.registerStep(new BlackduckStep())
 factory.registerStep(new BanditStep())
+factory.registerStep(new BurpStep())
 factory.registerStep(new GrypeStep())
 factory.registerStep(new GitleaksStep())
 factory.registerStep(new SnykStep())

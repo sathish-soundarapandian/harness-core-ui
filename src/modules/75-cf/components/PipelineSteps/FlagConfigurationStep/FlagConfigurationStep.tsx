@@ -80,7 +80,8 @@ export class FlagConfigurationStep extends PipelineStep<FlagConfigurationStepDat
     stepViewType,
     isNewStep,
     readonly,
-    formikRef
+    formikRef,
+    allowableTypes
   }: StepProps<FlagConfigurationStepData>): ReactElement {
     return (
       <FlagConfigurationStepWidget
@@ -90,6 +91,7 @@ export class FlagConfigurationStep extends PipelineStep<FlagConfigurationStepDat
         isNewStep={isNewStep}
         readonly={readonly}
         ref={formikRef}
+        allowableTypes={allowableTypes}
       />
     )
   }

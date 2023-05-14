@@ -7,7 +7,7 @@ import {
 
 describe('RightDrawer test', () => {
   const saveTemplateCallWithNewTemplateParam =
-    '/template/api/templates?accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&isNewTemplate=true'
+    '/template/api/templates?accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&isNewTemplate=true&storeType=INLINE'
   const visitExecutionStageWithAssertion = (): void => {
     cy.visit(pipelineStudioRoute, {
       timeout: 30000

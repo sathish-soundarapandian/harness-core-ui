@@ -31,14 +31,16 @@ import css from './FlagChanges.module.scss'
 const allowedTypes: AllowedTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
 
 export interface FlagChangesProps {
-  selectedFeature?: Feature | typeof RUNTIME_INPUT_VALUE
-  selectedEnvironmentId?: string
+  selectedFeature?: Feature | typeof RUNTIME_INPUT_VALUE | string
+  selectedEnvironmentId?: string | typeof RUNTIME_INPUT_VALUE
   initialInstructions?: FeatureFlagConfigurationInstruction[] | typeof RUNTIME_INPUT_VALUE
   clearField: (fieldName: string) => void
   setField: (fieldName: string, value: unknown) => void
   fieldValues: FlagConfigurationStepFormDataValues
   showRuntimeFixedSelector?: boolean
   pathPrefix?: string
+  envType?: MultiTypeInputType
+  flagType?: MultiTypeInputType
 }
 
 const FlagChanges: FC<FlagChangesProps> = ({
@@ -49,7 +51,9 @@ const FlagChanges: FC<FlagChangesProps> = ({
   clearField,
   setField,
   showRuntimeFixedSelector = false,
-  pathPrefix = ''
+  pathPrefix = '',
+  envType = MultiTypeInputType.FIXED,
+  flagType = MultiTypeInputType.FIXED
 }) => {
   const { getString } = useStrings()
 
@@ -57,14 +61,15 @@ const FlagChanges: FC<FlagChangesProps> = ({
     path => (pathPrefix ? `${pathPrefix}.${path}` : path),
     [pathPrefix]
   )
-
   const instructionsPath = useMemo<string>(() => prefix('spec.instructions'), [prefix])
 
+  const flagOrEnvNotFixed = envType !== MultiTypeInputType.FIXED || flagType !== MultiTypeInputType.FIXED
+
   useEffect(() => {
-    if (selectedFeature === RUNTIME_INPUT_VALUE) {
+    if (flagOrEnvNotFixed) {
       setField(instructionsPath, RUNTIME_INPUT_VALUE)
     }
-  }, [selectedFeature, instructionsPath])
+  }, [flagOrEnvNotFixed, instructionsPath])
 
   const subsectionsDisabled = showRuntimeFixedSelector && get(fieldValues, instructionsPath) === RUNTIME_INPUT_VALUE
 
@@ -84,6 +89,7 @@ const FlagChanges: FC<FlagChangesProps> = ({
     }
 
     return UI_STATE.DISPLAY_FORM
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subsectionsDisabled, selectedFeature, selectedEnvironmentId])
 
   return (
@@ -98,7 +104,7 @@ const FlagChanges: FC<FlagChangesProps> = ({
             allowedTypes={allowedTypes}
             onChange={type => setField(instructionsPath, isMultiTypeRuntime(type) ? RUNTIME_INPUT_VALUE : undefined)}
             data-testid="runtime-fixed-selector-button"
-            disabled={selectedFeature === RUNTIME_INPUT_VALUE}
+            disabled={flagOrEnvNotFixed}
           />
         )}
       </Layout.Horizontal>

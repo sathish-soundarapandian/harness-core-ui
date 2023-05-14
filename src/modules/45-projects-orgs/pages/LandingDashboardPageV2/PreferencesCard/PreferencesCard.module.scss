@@ -21,6 +21,10 @@
     margin-top: calc(var(--margin-form-field) * -1);
     max-height: 150px;
     overflow: scroll;
+
+    div[class*='TableV2--row']:last-child {
+      border-bottom: none;
+    }
   }
   .tableProjectsHeader {
     text-transform: none;

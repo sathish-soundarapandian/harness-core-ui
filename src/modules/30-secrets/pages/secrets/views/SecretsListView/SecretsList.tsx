@@ -328,11 +328,11 @@ const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch }) => {
   const { pathname } = useLocation()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS, PL_NEW_PAGE_SIZE } = useFeatureFlags()
+  const { PL_FORCE_DELETE_CONNECTOR_SECRET, PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
-    lazy: !NG_SETTINGS
+    lazy: false
   })
 
   useEffect(() => {

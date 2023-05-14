@@ -1367,3 +1367,5 @@ governance:
   rules: Cloud Asset Governance Rules
 currencyPreferences:
   sideNavText: Currency Preferences
+msp:
+  sideNavText: Margin Obfuscation

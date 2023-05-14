@@ -10,5 +10,6 @@ declare const styles: {
   readonly actionIcons: string
   readonly actions: string
   readonly downtimeIcon: string
+  readonly sloErrorIcon: string
 }
 export default styles

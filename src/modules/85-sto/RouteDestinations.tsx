@@ -19,7 +19,6 @@ import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { UserLabel } from '@common/components'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { MinimalLayout } from '@common/layouts'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import routes from '@common/RouteDefinitions'
@@ -280,8 +279,6 @@ const RedirectToProjectOverviewPage = (): React.ReactElement => {
 const RemoteSTOApp = lazy(() => import(`stoV2/App`))
 
 const RouteDestinations: React.FC = () => {
-  const { NG_SETTINGS } = useFeatureFlags()
-
   return (
     <>
       <RouteWithLayout exact licenseRedirectData={licenseRedirectData} path={routes.toSTO({ ...accountPathProps })}>
@@ -381,13 +378,11 @@ const RouteDestinations: React.FC = () => {
           licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
-        {NG_SETTINGS && (
-          <DefaultSettingsRouteDestinations
-            moduleParams={moduleParams}
-            licenseRedirectData={licenseRedirectData}
-            sidebarProps={STOSideNavProps}
-          />
-        )}
+        <DefaultSettingsRouteDestinations
+          moduleParams={moduleParams}
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={STOSideNavProps}
+        />
         <SecretRouteDestinations
           moduleParams={moduleParams}
           licenseRedirectData={licenseRedirectData}

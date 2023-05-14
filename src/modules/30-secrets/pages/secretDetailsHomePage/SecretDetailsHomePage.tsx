@@ -65,11 +65,11 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
   const { showError } = useToaster()
   const { selectedProject } = useAppStore()
   const { getRBACErrorMessage } = useRBACError()
-  const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS } = useFeatureFlags()
+  const { PL_FORCE_DELETE_CONNECTOR_SECRET } = useFeatureFlags()
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
-    lazy: !NG_SETTINGS
+    lazy: false
   })
 
   useEffect(() => {

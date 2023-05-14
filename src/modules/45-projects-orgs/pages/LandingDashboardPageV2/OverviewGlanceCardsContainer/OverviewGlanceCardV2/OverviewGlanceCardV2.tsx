@@ -57,7 +57,7 @@ export const Delta: React.FC<DeltaProps> = ({ countChangeInfo }) => {
 }
 
 const OverviewGlanceCardV2: React.FC<OverviewGlanceCardV2Props> = props => {
-  const { count, label, loading, className, countChangeInfo, redirectUrl } = props
+  const { count = 0, label, loading, className, countChangeInfo, redirectUrl } = props
   const { getString } = useStrings()
   const history = useHistory()
 

@@ -65,6 +65,7 @@ export default function SLOActions(props: SLOActionsProps): JSX.Element {
       {sloError?.failedState && (
         <Text
           flex
+          data-testid={'SLOErrorIcon'}
           tooltip={<DataCollectionFailureTooltip sloError={sloError} />}
           tooltipProps={{
             isDark: true,
@@ -73,7 +74,7 @@ export default function SLOActions(props: SLOActionsProps): JSX.Element {
             usePortal: false
           }}
         >
-          <img className={css.downtimeIcon} src={dataCollectionFailure} />
+          <img className={css.sloErrorIcon} src={dataCollectionFailure} />
         </Text>
       )}
       <Icon

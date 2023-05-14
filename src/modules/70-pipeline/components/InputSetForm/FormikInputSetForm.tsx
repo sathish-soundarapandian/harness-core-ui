@@ -58,8 +58,6 @@ import {
   getInputSetGitDetails,
   shouldDisableGitDetailsFields
 } from '@pipeline/utils/inputSetUtils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { SettingType } from '@common/constants/Utils'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
@@ -275,11 +273,10 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     }
   }, [inputSet?.outdated])
 
-  const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const { data: allowDifferentRepoSettings, error: allowDifferentRepoSettingsError } = useGetSettingValue({
     identifier: SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS,
     queryParams: { accountIdentifier: accountId },
-    lazy: !isSettingEnabled
+    lazy: false
   })
 
   React.useEffect(() => {

@@ -80,7 +80,7 @@ const showMoveToGitOption = (
   pipelineStoreType: StoreMetadata['storeType'],
   inputSetStoreType: StoreMetadata['storeType']
 ): boolean => {
-  return pipelineStoreType === StoreType.REMOTE && inputSetStoreType === StoreType.INLINE
+  return pipelineStoreType === StoreType.REMOTE && (inputSetStoreType === StoreType.INLINE || !inputSetStoreType)
 }
 
 // eslint-disable-next-line react/function-component-definition

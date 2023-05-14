@@ -562,7 +562,6 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
   const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
-  const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const history = useHistory()
 
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
@@ -570,7 +569,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: !isSettingsEnabled
+    lazy: false
   })
 
   React.useEffect(() => {

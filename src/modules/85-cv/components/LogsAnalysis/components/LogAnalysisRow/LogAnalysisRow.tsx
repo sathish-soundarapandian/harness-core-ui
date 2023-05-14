@@ -39,10 +39,6 @@ function ColumnHeaderRow(): JSX.Element {
     <Container className={cx(css.mainRow, css.columnHeader)}>
       <Text padding={{ left: 'small' }}>{getString('pipeline.verification.logs.eventType')}</Text>
       <Text>{getString('cv.sampleMessage')}</Text>
-      {/* <Container>
-        <Text>{getString('common.frequency')}</Text>
-        <Text className={css.secondaryText}>({getString('pipeline.verification.logs.countPerMin')})</Text>
-      </Container> */}
 
       {/* BELOW TWO COLUMNS HAS NO TITLE */}
       {/* LOG UPDATED INFO */}
@@ -56,10 +52,7 @@ function ColumnHeaderRow(): JSX.Element {
 
 function DataRow(props: LogAnalysisDataRowProps): JSX.Element {
   const { rowData, isErrorTracking, onDrawOpen, index } = props
-  // const chartOptions = useMemo(
-  //   () => getLogAnalysisLineChartOptions(rowData?.messageFrequency || []),
-  //   [rowData?.messageFrequency]
-  // )
+
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const onShowRiskEditModalCallback = useCallback(() => {
@@ -95,9 +88,7 @@ function DataRow(props: LogAnalysisDataRowProps): JSX.Element {
           {isErrorTracking ? rowData.message.split('|').slice(0, 4).join('|') : rowData.message}
         </p>
       </Container>
-      {/* <Container className={cx(css.lineChartContainer)}>
-        <HighchartsReact highchart={Highcharts} options={chartOptions} />
-      </Container> */}
+
       <span />
       <Layout.Horizontal margin={{ top: 'xsmall' }} style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
         <Icon name="description" size={24} />

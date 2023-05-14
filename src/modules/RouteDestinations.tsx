@@ -57,7 +57,6 @@ export default function RouteDestinations(): React.ReactElement {
     CENG_ENABLED,
     CFNG_ENABLED,
     CHAOS_ENABLED,
-    NG_SETTINGS,
     CODE_ENABLED,
     IACM_ENABLED,
     SSCA_ENABLED,
@@ -78,7 +77,7 @@ export default function RouteDestinations(): React.ReactElement {
       {variableRoutes.props.children}
       {auditTrailRoutes.props.children}
       {RbacRoutes().props.children}
-      {NG_SETTINGS ? DefaultSettingsRoutes().props.children : null}
+      {DefaultSettingsRoutes().props.children}
       {delegatesRoutes.props.children}
       {fileStoreRoutes.props.children}
       {projectsOrgsRoutes.props.children}

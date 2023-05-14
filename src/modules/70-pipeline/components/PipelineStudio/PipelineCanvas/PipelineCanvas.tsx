@@ -41,8 +41,6 @@ import type {
   RunPipelineQueryParams
 } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
@@ -175,7 +173,6 @@ export function PipelineCanvas({
     PipelineType<PipelinePathProps> & GitQueryParams
   >()
   const history = useHistory()
-  const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
 
   // For remote pipeline queryParam will always as branch as selected branch except coming from list view
   // While opeining studio from list view, selected branch can be any branch as in pipeline response
@@ -278,7 +275,7 @@ export function PipelineCanvas({
       orgIdentifier,
       projectIdentifier
     },
-    lazy: isGitSyncEnabled || !isSettingEnabled || pipelineIdentifier !== DefaultNewPipelineId
+    lazy: isGitSyncEnabled || pipelineIdentifier !== DefaultNewPipelineId
   })
 
   const getPipelineStoreType = (): StoreMetadata['storeType'] => {

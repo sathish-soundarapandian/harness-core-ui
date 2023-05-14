@@ -49,7 +49,7 @@ const OverviewGlanceCardsV2: React.FC<OverviewGlanceCardsV2Props> = ({ timeRange
     }
   })
 
-  const { projectsCountDetail, envCountDetail, servicesCountDetail, pipelinesCountDetail } =
+  const { projectsCountDetail, envCountDetail, servicesCountDetail, pipelinesCountDetail, usersCountDetail } =
     countResponse?.data?.response || {}
 
   const GLANCE_CARDS: GlanceCard[] = [
@@ -81,8 +81,8 @@ const OverviewGlanceCardsV2: React.FC<OverviewGlanceCardsV2Props> = ({ timeRange
     {
       type: OverviewGalanceCardV2.USERS,
       label: 'users',
-      count: pipelinesCountDetail?.count,
-      countChangeInfo: pipelinesCountDetail?.countChangeAndCountChangeRateInfo
+      count: usersCountDetail?.count,
+      countChangeInfo: usersCountDetail?.countChangeAndCountChangeRateInfo
     }
   ]
 

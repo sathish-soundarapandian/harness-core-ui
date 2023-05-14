@@ -6,9 +6,9 @@
  */
 
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
-import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import type { InstanceGroupedByArtifact, ServiceDefinition } from 'services/cd-ng'
 
+export type PostProdRollbackStatusType = InstanceGroupedByArtifact['rollbackStatus']
 export interface PostProdTableData {
   artifact?: string
   envId?: string
@@ -26,7 +26,7 @@ export interface PostProdTableData {
   planexecutionId?: string
   stageExecutionId?: string
   stageId?: string
-  rollbackStatus?: ExecutionStatus
+  rollbackStatus?: PostProdRollbackStatusType
   infrastructureMappingId?: string
   instanceKey?: string
 }
@@ -81,18 +81,16 @@ export const columnWidth = {
 }
 
 export const getRollbackStatusFromResponse = (
-  status: InstanceGroupedByArtifact['rollbackStatus']
-): ExecutionStatus | undefined => {
+  status: PostProdRollbackStatusType
+): PostProdRollbackStatusType | undefined => {
   switch (status) {
     case 'NOT_STARTED':
-      return ExecutionStatusEnum.NotStarted
+      return 'NOT_STARTED'
     case 'FAILURE':
-      return ExecutionStatusEnum.Failed
     case 'STARTED':
-      return ExecutionStatusEnum.Running
     case 'SUCCESS':
-      return ExecutionStatusEnum.Success
-    case 'UNAVAILABLE':
+      return 'STARTED'
+    default:
       return undefined
   }
 }

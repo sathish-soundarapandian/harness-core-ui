@@ -36,11 +36,11 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
 
   const {
     CVNG_TEMPLATE_MONITORED_SERVICE,
-    NG_SETTINGS,
     SRM_ET_EXPERIMENTAL,
     NEW_LEFT_NAVBAR_SETTINGS,
     SRM_DOWNTIME,
-    STO_JIRA_INTEGRATION
+    STO_JIRA_INTEGRATION,
+    USE_OLD_GIT_SYNC
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
@@ -70,10 +70,11 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   const showDeploymentFreeze = isEnterpriseEdition && isCD
 
   const canUsePolicyEngine = useAnyEnterpriseLicense()
-  // Supporting GIT_SIMPLIFICATION by default, old GitSync will be enabled only for already enabled projects
-  // isGitSimplificationEnabled will true if Git SImplification is enabled using API
+  // Supporting GIT_SIMPLIFICATION by default, old GitSync will be selected only for selected accounts
+  // isGitSimplificationEnabled will true if any customers using old GitSync enabled Git SImplification using API
   const isGitSyncSupported =
-    isGitSyncEnabled && !gitSyncEnabledOnlyForFF && (isCIorCDorSTO || !module) && !isGitSimplificationEnabled
+    (isGitSyncEnabled && !gitSyncEnabledOnlyForFF) ||
+    (USE_OLD_GIT_SYNC && (isCIorCDorSTO || !module) && !isGitSimplificationEnabled)
 
   const showTemplates = isCIorCDorSTO || (!module && NEW_LEFT_NAVBAR_SETTINGS)
   const showFileStore = isCIorCD || !module
@@ -90,10 +91,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         <SidebarLink label={getString('common.variables')} to={routes.toVariables(params)} />
         <SidebarLink to={routes.toAccessControl(params)} label={getString('accessControl')} />
         <SidebarLink label={getString('delegate.delegates')} to={routes.toDelegates(params)} />
+        <SidebarLink label={getString('common.defaultSettings')} to={routes.toDefaultSettings(params)} />
 
-        {NG_SETTINGS && (
-          <SidebarLink label={getString('common.defaultSettings')} to={routes.toDefaultSettings(params)} />
-        )}
         {isGitSyncSupported ? (
           <SidebarLink
             label={getString('gitManagement')}

@@ -25,7 +25,7 @@ import { EvaluationType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.typ
 import { TWENTY_FOUR_HOURS } from './DetailsPanel.constants'
 import DowntimeBanner from './views/DowntimeBanner'
 import SLOErrorBanner from './views/SLOErrorBanner'
-import { getDownTimeStartTimeAndEndTime } from './DetailsPanel.utils'
+import { getDownTimeStartTimeAndEndTime, shouldShowDowntimeBanner } from './DetailsPanel.utils'
 import css from './DetailsPanel.module.scss'
 
 const DetailsPanel: React.FC<DetailsPanelProps> = ({
@@ -88,20 +88,19 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
     refetch: fetchSecondaryEvents
   } = useGetSecondaryEvents({
     identifier,
+    queryParams: {
+      startTime: downtimeStartTime,
+      endTime: new Date(downtimeEndTime + TWENTY_FOUR_HOURS).getTime(),
+      accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
     lazy: true
   })
 
   useEffect(() => {
     if (identifier && sloDashboardWidget) {
-      fetchSecondaryEvents({
-        queryParams: {
-          startTime: downtimeStartTime,
-          endTime: new Date(downtimeEndTime + TWENTY_FOUR_HOURS).getTime(),
-          accountId,
-          orgIdentifier,
-          projectIdentifier
-        }
-      })
+      fetchSecondaryEvents()
     }
   }, [identifier, downtimeEndTime, downtimeStartTime, sloDashboardWidget])
 
@@ -110,7 +109,10 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
     [sloWidgetsData, downtimeEndTime]
   )
 
-  const shouldRenderDowntimeBanner = showDowntimeBanner && !calculatingSLI && !recalculatingSLI
+  const shouldRenderDowntimeBanner = useMemo(
+    () => shouldShowDowntimeBanner(showDowntimeBanner, calculatingSLI, recalculatingSLI, sloType),
+    [showDowntimeBanner, calculatingSLI, recalculatingSLI, sloType]
+  )
   const shouldRenderSLOErrorBanner = sloDashboardWidget?.sloError?.failedState
 
   return (

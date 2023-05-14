@@ -175,15 +175,22 @@ describe('GitSyncActions', () => {
     expect(handleGitPauseMock).toBeCalledWith(false)
   })
 
-  test('it should render the button to Setup Git Sync when isGitSyncActionsEnabled is FALSE', async () => {
-    renderComponent({ isGitSyncEnabled: false, isGitSyncActionsEnabled: false })
+  test('it should render the button to Setup Git Sync when there is no Git repo', async () => {
+    renderComponent({ gitRepoDetails: undefined })
 
     expect(screen.getByRole('button', { name: 'cf.featureFlags.setupGitSync' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'test branch settings' })).not.toBeInTheDocument()
   })
 
-  test('it should render the button to Setup Git Sync when isGitSyncEnabled is FALSE and isGitSyncActionsEnabled is TRUE', async () => {
-    renderComponent({ isGitSyncEnabled: true, isGitSyncActionsEnabled: true })
+  test('it should not render the button to Setup Git Sync when there is a Git repo', async () => {
+    renderComponent()
+
+    expect(screen.queryByRole('button', { name: 'cf.featureFlags.setupGitSync' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'test branch settings' })).toBeInTheDocument()
+  })
+
+  test('it should not render the button to Setup Git Sync when there is a Git repo and Git Sync is paused', async () => {
+    renderComponent({ isGitSyncEnabled: false, isGitSyncPaused: true })
 
     expect(screen.queryByRole('button', { name: 'cf.featureFlags.setupGitSync' })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'test branch settings' })).toBeInTheDocument()

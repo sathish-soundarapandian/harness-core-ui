@@ -135,7 +135,8 @@ const SideNavItems = () => {
     CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI,
     CCM_COMMORCH: showCO,
     CCM_CURRENCY_PREFERENCES: currencyPreferencesEnabled,
-    CCM_CLUSTER_ORCH
+    CCM_CLUSTER_ORCH,
+    CCM_MSP
   } = useFeatureFlags()
 
   return (
@@ -219,6 +220,17 @@ const SideNavItems = () => {
             onClick={() => {
               trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, {
                 feature_name: featureNames.CLUSTER_ORCHESTRATOR_FEATURE
+              })
+            }}
+          />
+        )}
+        {CCM_MSP && (
+          <SidebarLink
+            label={getString('ce.msp.sideNavText')}
+            to={routes.toCEManagedServiceProvider({ accountId })}
+            onClick={() => {
+              trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, {
+                feature_name: featureNames.MSP
               })
             }}
           />

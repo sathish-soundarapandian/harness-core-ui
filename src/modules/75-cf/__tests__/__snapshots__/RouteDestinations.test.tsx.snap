@@ -398,6 +398,27 @@ Array [
         }
       }
     />
+    <DefaultSettingsRouteDestinations
+      licenseRedirectData={
+        Object {
+          "expiredTrialRedirect": [Function],
+          "licenseStateName": "FF_LICENSE_STATE",
+          "startTrialRedirect": [Function],
+        }
+      }
+      moduleParams={
+        Object {
+          "module": ":module(cf)",
+        }
+      }
+      sidebarProps={
+        Object {
+          "icon": "cf-main",
+          "navComponent": [Function],
+          "title": "Feature Flags",
+        }
+      }
+    />
     <SecretRouteDestinations
       licenseRedirectData={
         Object {

@@ -26,7 +26,7 @@ exports[`landing dashboard page tests time range update 1`] = `
     data-testid="page-body"
   >
     <div
-      class="Layout--horizontal StyledProps--main container StyledProps--padding-top-huge StyledProps--padding-bottom-huge StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-flex-start"
+      class="Layout--horizontal StyledProps--main container StyledProps--padding-huge StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-flex-start"
     >
       <div
         class="Layout--vertical StyledProps--main left"

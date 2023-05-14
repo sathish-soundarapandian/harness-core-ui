@@ -39,7 +39,6 @@ interface GetBtnPropsProps {
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
   handleStartPlan: (planEdition: Editions) => Promise<void> | void
   handleContactSales: () => void
-  handleExtendTrial: (edition: Editions) => Promise<void>
   handleManageSubscription: () => void
   handleUpgrade: () => void
   btnLoading: boolean
@@ -54,7 +53,6 @@ export function getBtnProps({
   getString,
   handleStartPlan,
   handleContactSales,
-  handleExtendTrial,
   handleManageSubscription,
   handleUpgrade,
   btnLoading,
@@ -81,13 +79,8 @@ export function getBtnProps({
       action.action && PLAN_BTN_ACTIONS[action.action] && getString(PLAN_BTN_ACTIONS[action.action] as keyof StringsMap)
     switch (action.action) {
       case 'START_FREE':
-      case 'START_TRIAL':
         order = 0
         onClick = () => planEdition && handleStartPlan(planEdition)
-        break
-      case 'EXTEND_TRIAL':
-        order = 0
-        onClick = () => planEdition && handleExtendTrial(planEdition)
         break
       case 'MANAGE':
         order = 0
@@ -129,8 +122,6 @@ export function getBtnProps({
 
 export const PLAN_BTN_ACTIONS: { [key in NonNullable<EditionActionDTO['action']>]?: string } = {
   START_FREE: 'common.startFree',
-  START_TRIAL: 'common.start14dayTrial',
-  EXTEND_TRIAL: 'common.banners.trial.expired.extendTrial',
   SUBSCRIBE: 'common.subscriptions.overview.subscribe',
   UPGRADE: 'common.upgrade',
   CONTACT_SALES: 'common.banners.trial.contactSales',
@@ -156,46 +147,46 @@ export function getBtns({ isPlanDisabled, btnProps, getString }: GetBtnsProps): 
     // contact sales|support displays as link when there are other buttons
     if ((isContactSales || isContactSupport) && length > 1) {
       btns.push(
-        <Layout.Horizontal spacing="small" flex={{ alignItems: 'baseline', justifyContent: 'center' }}>
-          <Text>{getString('common.or')}</Text>
+        <Layout.Vertical spacing="small" flex={{ alignItems: 'center', justifyContent: 'center' }}>
           <Button
             font={{ size: 'small' }}
             key={buttonText}
             onClick={onClick}
             loading={btnLoading}
-            variation={ButtonVariation.LINK}
-            className={css.noPadding}
+            variation={ButtonVariation.SECONDARY}
           >
             {buttonText}
           </Button>
-        </Layout.Horizontal>
+          <Text font={{ size: 'small' }}>{getString('common.requestFreeTrial')}</Text>
+        </Layout.Vertical>
       )
       return
     }
 
     // or else, just a button
-    btns.push(
-      buttonText === 'Upgrade' ? (
-        <RbacButton
-          permission={{
-            permission: PermissionIdentifier.EDIT_LICENSE,
-            resource: {
-              resourceType: ResourceType.LICENSE
-            }
-          }}
-          key={buttonText}
-          onClick={onClick}
-          loading={btnLoading}
-          variation={ButtonVariation.PRIMARY}
-        >
-          {buttonText}
-        </RbacButton>
-      ) : (
-        <Button key={buttonText} onClick={onClick} loading={btnLoading} variation={ButtonVariation.PRIMARY}>
-          {buttonText}
-        </Button>
+    buttonText &&
+      btns.push(
+        buttonText === 'Upgrade' ? (
+          <RbacButton
+            permission={{
+              permission: PermissionIdentifier.EDIT_LICENSE,
+              resource: {
+                resourceType: ResourceType.LICENSE
+              }
+            }}
+            key={buttonText}
+            onClick={onClick}
+            loading={btnLoading}
+            variation={ButtonVariation.PRIMARY}
+          >
+            {buttonText}
+          </RbacButton>
+        ) : (
+          <Button key={buttonText} onClick={onClick} loading={btnLoading} variation={ButtonVariation.PRIMARY}>
+            {buttonText}
+          </Button>
+        )
       )
-    )
   })
 
   return <Layout.Vertical spacing={'small'}>{btns}</Layout.Vertical>

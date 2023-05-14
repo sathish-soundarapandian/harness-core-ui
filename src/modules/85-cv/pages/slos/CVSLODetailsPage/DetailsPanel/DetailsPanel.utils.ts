@@ -9,6 +9,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { SLODashboardWidget } from 'services/cv'
 import { SLITypeEnum } from '../../common/SLI/SLI.constants'
 import { EvaluationType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.types'
+import { SLOType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.constants'
 
 export const getEvaluationTitleAndValue = (
   getString: UseStringsReturn['getString'],
@@ -30,6 +31,13 @@ export const getEvaluationTitleAndValue = (
         )
   }
 }
+
+export const shouldShowDowntimeBanner = (
+  showDowntimeBanner: boolean,
+  calculatingSLI?: boolean,
+  recalculatingSLI?: boolean,
+  sloType?: string
+): boolean => showDowntimeBanner && !calculatingSLI && !recalculatingSLI && sloType === SLOType.SIMPLE
 
 export const getDownTimeStartTimeAndEndTime = (
   chartTimeRange?: { startTime: number; endTime: number },

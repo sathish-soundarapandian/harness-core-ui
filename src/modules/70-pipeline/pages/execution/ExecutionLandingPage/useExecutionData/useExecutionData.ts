@@ -21,6 +21,7 @@ import {
 } from 'services/pipeline-ng'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { isExecutionCompletedWithBadState } from '@pipeline/utils/statusHelpers'
 import { getActiveStageForPipeline } from './getActiveStageForPipeline'
 import { getActiveStepForStage } from './getActiveStepForStage'
 
@@ -105,7 +106,7 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
     if (!queryParams.stage && !queryParams.collapsedNode) {
       stageId = _stageId
       const parentRollbackStageId = get(rollbackGraph?.pipelineExecutionSummary, ['parentStageInfo', 'stagenodeid'], '')
-      if (!isEmpty(parentRollbackStageId)) {
+      if (!isEmpty(parentRollbackStageId) && !isExecutionCompletedWithBadState(pipelineExecutionSummary?.status)) {
         stageId = parentRollbackStageId
         _stageId = parentRollbackStageId
         _executionId = ''
@@ -133,10 +134,14 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
     if (
       !queryParams.stageExecId && // does not have stageExecId in query params
       (_executionId || _childExecutionId) && // has _executionId or _childExecutionId
-      (_stageId === stageId || (_childStageId === childStageId && !isEmpty(childStageId))) && // auto selected stage is same as current stage
       !queryParams.collapsedNode //  does not have collapsedNode in query params
     ) {
-      executionId = _childExecutionId || _executionId
+      executionId =
+        _childStageId === childStageId && !isEmpty(childStageId) // auto selected stage is same as current stage
+          ? _childExecutionId
+          : _stageId === stageId
+          ? _executionId
+          : ''
     } else if (queryParams.stageExecId) {
       // remove executionId
       // if stageId/childStageId is not equal to stageId/childStageId of queryParams.stageExecId

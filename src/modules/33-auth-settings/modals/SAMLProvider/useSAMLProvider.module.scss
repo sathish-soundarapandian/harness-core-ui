@@ -16,3 +16,39 @@
 .copy {
   padding: var(--spacing-xsmall) var(--spacing-medium);
 }
+
+.container {
+  display: flex;
+  flex-grow: 1;
+  background: var(--form-bg) !important;
+  [class*='StepWizard-'] {
+    width: 100%;
+  }
+}
+
+.crossIcon {
+  position: absolute;
+  right: var(--spacing-small);
+  top: var(--spacing-small);
+}
+
+.stepDetailsContainer {
+  padding-top: var(--spacing-xlarge);
+}
+
+.form {
+  display: flex;
+  height: 100%;
+  padding-right: var(--spacing-huge);
+  > div > div {
+    display: flex;
+    height: 100%;
+  }
+}
+.flex {
+  flex: 1;
+}
+.helpTextContainer {
+  position: relative;
+  left: var(--spacing-xxxlarge);
+}

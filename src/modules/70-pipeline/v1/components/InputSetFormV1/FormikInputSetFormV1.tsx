@@ -41,8 +41,6 @@ import {
   getInputSetGitDetails,
   shouldDisableGitDetailsFields
 } from '@pipeline/utils/inputSetUtils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { PipelineInputSetFormV1 } from '../RunPipelineModalV1/PipelineInputSetFormV1'
@@ -109,12 +107,10 @@ export default function FormikInputSetFormV1(props: FormikInputSetFormV1Props): 
 
   const inputSetStoreType = isGitSyncEnabled ? undefined : inputSet.storeType
   const history = useHistory()
-
-  const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const { data: allowDifferentRepoSettings, error: allowDifferentRepoSettingsError } = useGetSettingValue({
     identifier: SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS,
     queryParams: { accountIdentifier: accountId },
-    lazy: !isSettingEnabled
+    lazy: false
   })
 
   React.useEffect(() => {

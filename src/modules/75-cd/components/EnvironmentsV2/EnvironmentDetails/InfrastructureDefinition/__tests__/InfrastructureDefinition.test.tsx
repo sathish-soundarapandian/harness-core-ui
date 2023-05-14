@@ -50,6 +50,9 @@ jest.mock('@harness/uicore', () => ({
     showError: showErrorMock
   })
 }))
+jest.spyOn(cdNgServices, 'useGetSettingValue').mockImplementation(() => {
+  return { data: { data: { value: 'false' } } } as any
+})
 
 describe('Infrastructure Definition tests', () => {
   test('renders loading spinner', async () => {

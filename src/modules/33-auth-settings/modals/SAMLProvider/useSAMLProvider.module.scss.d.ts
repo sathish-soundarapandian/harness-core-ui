@@ -7,8 +7,14 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly container: string
   readonly copy: string
+  readonly crossIcon: string
   readonly dialog: string
+  readonly flex: string
+  readonly form: string
+  readonly helpTextContainer: string
   readonly notes: string
+  readonly stepDetailsContainer: string
 }
 export default styles

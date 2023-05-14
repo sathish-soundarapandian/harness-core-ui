@@ -15,7 +15,6 @@ import type { GitRepo } from 'services/cf'
 import { useGitSync } from '../useGitSync'
 
 jest.mock('services/cf')
-jest.mock('@common/hooks/useFeatureFlag')
 jest.mock('react-router-dom', () => ({
   useParams: () => jest.fn()
 }))
@@ -157,15 +156,17 @@ describe('useGitSync', () => {
   })
 
   test.each([
-    [true, true, true, true],
-    [false, true, false, true],
-    [false, true, true, false]
+    [true, true, true, true, true],
+    [false, true, true, false, true],
+    [false, true, true, true, false]
   ])(
     'it should return %p for isAutoCommitEnabled if FF_GITSYNC = %p, repoSet = %p, autoCommit = %p',
-    async (expectedResult, ffGitSync, repoSet, autoCommit) => {
+    async (expectedResult, ffGitSync, ffGitEx, repoSet, autoCommit) => {
       setUseGitRepoMock({ autoCommit: autoCommit }, repoSet)
 
-      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(ffGitSync)
+      jest
+        .spyOn(useFeatureFlagMock, 'useFeatureFlags')
+        .mockImplementation(() => ({ FF_GITSYNC: ffGitSync, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: ffGitEx }))
 
       const { result } = renderHookUnderTest()
 
@@ -174,15 +175,17 @@ describe('useGitSync', () => {
   )
 
   test.each([
-    [true, true, true],
-    [false, true, false],
-    [false, false, false]
+    [true, true, true, true],
+    [false, true, true, false],
+    [false, false, false, false]
   ])(
     'it should return %p for isGitSyncEnabled if FF_GITSYNC = %p, repoSet = %p',
-    async (expectedResult, ffGitSync, repoSet) => {
+    async (expectedResult, ffGitSync, ffGitEx, repoSet) => {
       setUseGitRepoMock({}, repoSet)
 
-      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(ffGitSync)
+      jest
+        .spyOn(useFeatureFlagMock, 'useFeatureFlags')
+        .mockImplementation(() => ({ FF_GITSYNC: ffGitSync, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: ffGitEx }))
 
       const { result } = renderHookUnderTest()
 

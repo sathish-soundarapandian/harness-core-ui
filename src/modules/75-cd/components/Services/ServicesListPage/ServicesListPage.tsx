@@ -57,11 +57,7 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
   const isCommunity = useGetCommunity()
   // const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   // const isCdsV1EOLEnabled = useFeatureFlag(FeatureFlag.CDS_V1_EOL_BANNER)
-  const {
-    NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled,
-    CDS_V1_EOL_BANNER: isCdsV1EOLEnabled,
-    NG_SETTINGS: isSettingsEnabled
-  } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled, CDS_V1_EOL_BANNER: isCdsV1EOLEnabled } = useFeatureFlags()
 
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -104,7 +100,7 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: !isSettingsEnabled
+    lazy: false
   })
 
   useEffect(() => {

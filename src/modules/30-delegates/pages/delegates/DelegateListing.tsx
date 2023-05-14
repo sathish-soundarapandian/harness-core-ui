@@ -19,7 +19,12 @@ import {
   FormInput,
   MultiSelectOption,
   PageError,
-  shouldShowError
+  shouldShowError,
+  ListHeader,
+  sortByName,
+  SortMethod,
+  sortByStatus,
+  sortByVersion
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
@@ -55,6 +60,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import useCreateDelegateViaCommandsModal from '@delegates/pages/delegates/delegateCommandLineCreation/components/useCreateDelegateViaCommandsModal'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { getDelegateStatusSelectOptions } from './utils/DelegateHelper'
 import DelegateListingItem from './DelegateListingItem'
 
@@ -70,6 +77,9 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<Record<string, string>>()
   const [searchTerm, setSearchTerm] = useState('')
+  const { preference: sortPreference = SortMethod.StatusAsc, setPreference: setSortPreference } = usePreferenceStore<
+    SortMethod | undefined
+  >(PreferenceScope.USER, `sort-${PAGE_NAME.DelegateListing}`)
   const [showDelegateLoader, setShowDelegateLoader] = useState<boolean>(true)
   const [page, setPage] = useState(0)
   const [filters, setFilters] = useState<FilterDTO[]>()
@@ -94,11 +104,15 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
         module,
         pageIndex: page,
         pageSize: 10,
-        searchTerm: ''
+        searchTerm: '',
+        sortOrders: [sortPreference]
       } as GetDelegateGroupsNGV2WithFilterQueryParams),
-    [accountId, module, orgIdentifier, projectIdentifier, page]
+    [accountId, module, orgIdentifier, projectIdentifier, page, sortPreference]
   )
-  const { mutate: fetchDelegates, loading: isFetchingDelegates } = useGetDelegateGroupsNGV2WithFilter({ queryParams })
+  const { mutate: fetchDelegates, loading: isFetchingDelegates } = useGetDelegateGroupsNGV2WithFilter({
+    queryParams,
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
+  })
   const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal()
 
   useEffect(() => {
@@ -531,9 +545,20 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
         ) : (
           <Container className={css.delegateListContainer}>
             {delegateGroups.length ? (
-              <Container width="100%">
-                <DelegateListingItem data={delegateGroups} />
-              </Container>
+              <Layout.Vertical width="100%">
+                <ListHeader
+                  sortOptions={[...sortByName, ...sortByStatus, ...sortByVersion]}
+                  totalCount={delegateGroups.length}
+                  selectedSortMethod={sortPreference}
+                  onSortMethodChange={option => {
+                    setSortPreference(option.value as SortMethod)
+                  }}
+                  className={css.delegateListHeader}
+                />
+                <Container width="100%">
+                  <DelegateListingItem data={delegateGroups} />
+                </Container>
+              </Layout.Vertical>
             ) : (
               <div className={css.emptyStateContainer}>
                 <img src={DelegatesEmptyState} />

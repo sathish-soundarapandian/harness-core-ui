@@ -19,6 +19,7 @@ import * as commonHooks from '@common/hooks'
 import * as templateServices from 'services/template-ng'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
+import * as cdNgServices from 'services/cd-ng'
 import { DeleteTemplateModal } from '../DeleteTemplateModal'
 
 const mockTemplatesSuccessResponseUpdated = {
@@ -33,6 +34,9 @@ jest.mock('@common/hooks', () => ({
   useMutateAsGet: jest.fn().mockImplementation(() => mockTemplatesSuccessResponse)
 }))
 
+jest.spyOn(cdNgServices, 'useGetSettingValue').mockImplementation(() => {
+  return { data: { data: { value: 'false' } } } as any
+})
 jest.mock('services/template-ng', () => ({
   ...(jest.requireActual('services/template-ng') as any),
   useDeleteTemplateVersionsOfIdentifier: jest.fn().mockImplementation(() => ({

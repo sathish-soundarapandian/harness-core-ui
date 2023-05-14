@@ -132,11 +132,11 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const history = useHistory()
   useDocumentTitle(getString('connectorsLabel'))
   const { trackEvent } = useTelemetry()
-  const { PL_FORCE_DELETE_CONNECTOR_SECRET, NG_SETTINGS } = useFeatureFlags()
+  const { PL_FORCE_DELETE_CONNECTOR_SECRET } = useFeatureFlags()
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
-    lazy: !NG_SETTINGS
+    lazy: false
   })
 
   useEffect(() => {

@@ -77,7 +77,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
         width: window.innerWidth
       })
     )
-    const file = (data as any)?.['fileData']?.[0]
+    const file = (data as any)?.['fileData']
     file && formData.set('file', file)
     return formData
   }

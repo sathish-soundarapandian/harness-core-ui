@@ -12,6 +12,7 @@ import { Container, FormInput, PageError, RUNTIME_INPUT_VALUE, SelectOption } fr
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { Feature, useGetAllFeatures } from 'services/cf'
+import { GetEnvironmentListQueryParams, useGetEnvironmentList } from 'services/cd-ng'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import type { FlagConfigurationStepData } from './types'
@@ -39,7 +40,6 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
       accountIdentifier,
       orgIdentifier,
       projectIdentifier,
-      environmentIdentifier: existingValues?.spec.environment || '',
       pageSize: 1000
     }
 
@@ -54,10 +54,41 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
       [featuresData?.features]
     )
 
+    const envQueryParams: GetEnvironmentListQueryParams = {
+      accountIdentifier,
+      orgIdentifier,
+      projectIdentifier
+    }
+
+    const {
+      data: environmentsData,
+      error: errorEnvironments,
+      refetch: refetchEnvironments
+    } = useGetEnvironmentList({
+      queryParams: envQueryParams,
+      debounce: 250
+    })
+
+    const environmentItems = useMemo<SelectOption[]>(() => {
+      if (!environmentsData?.data?.content?.length) {
+        return []
+      }
+
+      return environmentsData.data.content.map(({ environment }) => ({
+        label: environment?.name,
+        value: environment?.identifier
+      })) as SelectOption[]
+    }, [environmentsData?.data?.content])
+
     let selectedFeatureId = get(formik.values, prefix('spec.feature'))
+    let selectedEnvironmentId = get(formik.values, prefix('spec.environment'))
 
     if (existingValues?.spec?.feature && existingValues.spec.feature !== RUNTIME_INPUT_VALUE) {
       selectedFeatureId = existingValues.spec.feature
+    }
+
+    if (existingValues?.spec?.environment && existingValues.spec.environment !== RUNTIME_INPUT_VALUE) {
+      selectedEnvironmentId = existingValues.spec.environment
     }
 
     const selectedFeature = useMemo<Feature | undefined>(
@@ -65,14 +96,15 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
       [featuresData?.features, selectedFeatureId]
     )
 
-    if (errorFeatures) {
+    if (errorFeatures || errorEnvironments) {
       return (
         <Container padding={{ top: 'huge' }}>
           <PageError
-            message={getErrorMessage(errorFeatures)}
+            message={getErrorMessage(errorFeatures || errorEnvironments)}
             width={450}
             onClick={() => {
               refetchFeatures()
+              refetchEnvironments()
             }}
           />
         </Container>
@@ -81,6 +113,16 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
 
     return (
       <>
+        {template?.spec?.environment === RUNTIME_INPUT_VALUE && (
+          <FormInput.Select
+            label={getString('cf.pipeline.flagConfiguration.selectEnvironment')}
+            name={prefix('spec.environment')}
+            items={environmentItems}
+            disabled={readonly}
+            onQueryChange={searchTerm => refetchEnvironments({ queryParams: { ...envQueryParams, searchTerm } })}
+          />
+        )}
+
         {template?.spec?.feature === RUNTIME_INPUT_VALUE && (
           <FormInput.Select
             label={getString('cf.pipeline.flagConfiguration.selectFlag')}
@@ -94,7 +136,7 @@ const FlagConfigurationInputSetStep = connect<FlagConfigurationInputSetStepProps
         {template?.spec?.instructions === RUNTIME_INPUT_VALUE && (
           <FlagChanges
             selectedFeature={selectedFeature}
-            selectedEnvironmentId={existingValues?.spec.environment}
+            selectedEnvironmentId={selectedEnvironmentId}
             initialInstructions={existingValues?.spec?.instructions}
             clearField={fieldName => formik?.setFieldValue(prefix(fieldName), undefined)}
             setField={(fieldName, value) => formik?.setFieldValue(prefix(fieldName), value)}

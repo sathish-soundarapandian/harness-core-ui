@@ -537,13 +537,14 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
 
   const RenderSLOActions: Renderer<CellProps<any>> = ({ row }) => {
     const slo = row?.original
-    const { sloIdentifier = '', name = '', sloType = '', downtimeStatusDetails = {} } = slo || {}
+    const { sloIdentifier = '', name = '', sloType = '', downtimeStatusDetails = {}, sloError = {} } = slo || {}
     return (
       <SLOActions
         sloIdentifier={sloIdentifier}
         title={name}
         onDelete={onDelete}
         sloType={sloType}
+        sloError={sloError}
         downtimeStatusDetails={downtimeStatusDetails}
         onEdit={(id: string) => onEdit(id, sloType)}
       />

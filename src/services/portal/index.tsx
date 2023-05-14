@@ -282,6 +282,7 @@ export interface Account {
   ringName?: string
   serviceAccountConfig?: ServiceAccountConfig
   serviceGuardLimit?: number
+  sessionTimeOutInMinutes?: number
   smpAccount?: boolean
   subdomainUrl?: string
   techStacks?: TechStack[]
@@ -1964,6 +1965,7 @@ export type AwsCodeCommitSecretKeyAccessKeyDTO = AwsCodeCommitHttpsCredentialsSp
 }
 
 export type AwsConnector = ConnectorConfigDTO & {
+  awsSdkClientBackOffStrategyOverride?: AwsSdkClientBackoffStrategy
   credential: AwsCredential
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
@@ -2014,6 +2016,23 @@ export interface AwsElbListenerRuleData {
   ruleArn?: string
   rulePriority?: string
   ruleTargetGroupArn?: string
+}
+
+export type AwsEqualJitterBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  baseDelay?: number
+  maxBackoffTime?: number
+  retryCount?: number
+}
+
+export type AwsFixedDelayBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  fixedBackoff?: number
+  retryCount?: number
+}
+
+export type AwsFullJitterBackoffStrategy = AwsSdkClientBackOffStrategySpec & {
+  baseDelay?: number
+  maxBackoffTime?: number
+  retryCount?: number
 }
 
 export interface AwsInstanceFilter {
@@ -2125,6 +2144,15 @@ export type AwsSMCredentialSpecAssumeSTS = AwsSecretManagerCredentialSpec & {
 export type AwsSMCredentialSpecManualConfig = AwsSecretManagerCredentialSpec & {
   accessKey: string
   secretKey: string
+}
+
+export interface AwsSdkClientBackOffStrategySpec {
+  [key: string]: any
+}
+
+export interface AwsSdkClientBackoffStrategy {
+  spec?: AwsSdkClientBackOffStrategySpec
+  type: 'FixedDelayBackoffStrategy' | 'EqualJitterBackoffStrategy' | 'FullJitterBackoffStrategy'
 }
 
 export interface AwsSecretManagerCredential {
@@ -2326,12 +2354,15 @@ export type AzureInstanceInfrastructure = InfraMappingInfrastructureProvider & {
 
 export type AzureKeyVaultConnectorDTO = ConnectorConfigDTO & {
   azureEnvironmentType?: 'AZURE' | 'AZURE_US_GOVERNMENT'
-  clientId: string
+  azureManagedIdentityType?: 'SystemAssignedManagedIdentity' | 'UserAssignedManagedIdentity'
+  clientId?: string
   default?: boolean
   delegateSelectors?: string[]
-  secretKey: string
+  managedClientId?: string
+  secretKey?: string
   subscription: string
-  tenantId: string
+  tenantId?: string
+  useManagedIdentity?: boolean
   vaultName: string
 }
 
@@ -2446,6 +2477,7 @@ export type AzureVMSSInfra = InfraMappingInfrastructureProvider & {
 export interface AzureVaultConfig {
   accountId?: string
   azureEnvironmentType?: 'AZURE' | 'AZURE_US_GOVERNMENT'
+  azureManagedIdentityType?: 'SystemAssignedManagedIdentity' | 'UserAssignedManagedIdentity'
   clientId?: string
   createdAt?: number
   createdBy?: EmbeddedUser
@@ -2465,6 +2497,7 @@ export interface AzureVaultConfig {
     | 'CUSTOM_NG'
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
+  managedClientId?: string
   manuallyEnteredSecretEngineMigrationIteration?: number
   name?: string
   nextTokenRenewIteration?: number
@@ -2476,6 +2509,7 @@ export interface AzureVaultConfig {
   templatizedFields?: string[]
   tenantId?: string
   usageRestrictions?: UsageRestrictions
+  useManagedIdentity?: boolean
   uuid: string
   vaultName?: string
 }
@@ -2552,7 +2586,7 @@ export interface BillingExportSpec {
 
 export interface BitbucketApiAccess {
   spec: BitbucketApiAccessSpecDTO
-  type: 'UsernameToken'
+  type: 'UsernameToken' | 'OAuth'
 }
 
 export interface BitbucketApiAccessSpecDTO {
@@ -2585,6 +2619,11 @@ export type BitbucketHttpCredentials = BitbucketCredentialsDTO & {
 
 export interface BitbucketHttpCredentialsSpecDTO {
   [key: string]: any
+}
+
+export type BitbucketOauth = BitbucketApiAccessSpecDTO & {
+  refreshTokenRef: string
+  tokenRef: string
 }
 
 export type BitbucketSshCredentials = BitbucketCredentialsDTO & {
@@ -2915,13 +2954,27 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   subscriptionId: string
   tenantId: string
 }
@@ -2952,7 +3005,14 @@ export interface CEDelegateStatus {
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
 }
 
 export type CEModuleLicenseDTO = ModuleLicenseDTO & {
@@ -2984,6 +3044,10 @@ export interface CESlackWebhook {
   sendCostReport?: boolean
   uuid?: string
   webhookUrl?: string
+}
+
+export type CETModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfAgents?: number
 }
 
 export interface CEView {
@@ -5342,6 +5406,7 @@ export interface DelegateFile {
     | 'EXPORT_EXECUTIONS'
     | 'TERRAFORM_HUMAN_READABLE_PLAN'
     | 'FILE_STORE'
+    | 'TERRAFORM_CLOUD_POLICY_CHECKS'
   checksum?: string
   checksumType?: 'MD5' | 'SHA1' | 'SHA256'
   delegateId?: string
@@ -5843,6 +5908,7 @@ export interface DelegateTaskLoggingV2 {
 
 export interface DelegateTaskPackage {
   accountId?: string
+  baseLogKey?: string
   data?: TaskData
   delegateCallbackToken?: string
   delegateId?: string
@@ -5860,6 +5926,7 @@ export interface DelegateTaskPackage {
     [key: string]: SecretDetail
   }
   secrets?: string[]
+  shouldSkipOpenStream?: boolean
   taskDataV2?: TaskDataV2
 }
 
@@ -6307,6 +6374,23 @@ export interface DelegateTaskPackageV2 {
     | 'BAMBOO_ARTIFACT_TASK_NG'
     | 'AWS_LAMBDA_PREPARE_ROLLBACK_COMMAND_TASK_NG'
     | 'AWS_LAMBDA_ROLLBACK_COMMAND_TASK_NG'
+    | 'TERRAFORM_TASK_NG_V3'
+    | 'BAMBOO_TRIGGER_JOB'
+    | 'TERRAFORM_TASK_NG_V4'
+    | 'TERRAFORM_CLOUD_CLEANUP_TASK_NG'
+    | 'OCI_HELM_DOCKER_API_LIST_TAGS_TASK_NG'
+    | 'TAS_ROUTE_MAPPING'
+    | 'AWS_EKS_LIST_CLUSTERS_TASK'
+    | 'TERRAFORM_TASK_NG_V5'
+    | 'GOOGLE_FUNCTION_GEN_ONE_DEPLOY_TASK'
+    | 'GOOGLE_FUNCTION_GEN_ONE_ROLLBACK_TASK'
+    | 'GOOGLE_FUNCTION_GEN_ONE_PREPARE_ROLLBACK_TASK'
+    | 'TERRAFORM_TASK_NG_V6'
+    | 'K8S_COMMAND_TASK_NG_V2'
+    | 'HELM_COMMAND_TASK_NG_V2'
+    | 'INSTANCE_SYNC_V2_CG_SUPPORT'
+    | 'PT_SERIALIZATION_SUPPORT'
+    | 'COMMAND_TASK_NG_WITH_GIT_CONFIGS'
 }
 
 export interface DelegateTaskResponse {
@@ -6743,6 +6827,24 @@ export interface DelegateTaskResponse {
     | 'BAMBOO_ARTIFACT_TASK_NG'
     | 'AWS_LAMBDA_PREPARE_ROLLBACK_COMMAND_TASK_NG'
     | 'AWS_LAMBDA_ROLLBACK_COMMAND_TASK_NG'
+    | 'TERRAFORM_TASK_NG_V3'
+    | 'BAMBOO_TRIGGER_JOB'
+    | 'TERRAFORM_TASK_NG_V4'
+    | 'TERRAFORM_CLOUD_CLEANUP_TASK_NG'
+    | 'OCI_HELM_DOCKER_API_LIST_TAGS_TASK_NG'
+    | 'TAS_ROUTE_MAPPING'
+    | 'AWS_EKS_LIST_CLUSTERS_TASK'
+    | 'TERRAFORM_TASK_NG_V5'
+    | 'GOOGLE_FUNCTION_GEN_ONE_DEPLOY_TASK'
+    | 'GOOGLE_FUNCTION_GEN_ONE_ROLLBACK_TASK'
+    | 'GOOGLE_FUNCTION_GEN_ONE_PREPARE_ROLLBACK_TASK'
+    | 'TERRAFORM_TASK_NG_V6'
+    | 'K8S_COMMAND_TASK_NG_V2'
+    | 'HELM_COMMAND_TASK_NG_V2'
+    | 'INSTANCE_SYNC_V2_CG_SUPPORT'
+    | 'PT_SERIALIZATION_SUPPORT'
+    | 'COMMAND_TASK_NG_WITH_GIT_CONFIGS'
+  taskTypeName?: string
 }
 
 export interface DelegateTaskResponseV2 {
@@ -7178,6 +7280,23 @@ export interface DelegateTaskResponseV2 {
     | 'BAMBOO_ARTIFACT_TASK_NG'
     | 'AWS_LAMBDA_PREPARE_ROLLBACK_COMMAND_TASK_NG'
     | 'AWS_LAMBDA_ROLLBACK_COMMAND_TASK_NG'
+    | 'TERRAFORM_TASK_NG_V3'
+    | 'BAMBOO_TRIGGER_JOB'
+    | 'TERRAFORM_TASK_NG_V4'
+    | 'TERRAFORM_CLOUD_CLEANUP_TASK_NG'
+    | 'OCI_HELM_DOCKER_API_LIST_TAGS_TASK_NG'
+    | 'TAS_ROUTE_MAPPING'
+    | 'AWS_EKS_LIST_CLUSTERS_TASK'
+    | 'TERRAFORM_TASK_NG_V5'
+    | 'GOOGLE_FUNCTION_GEN_ONE_DEPLOY_TASK'
+    | 'GOOGLE_FUNCTION_GEN_ONE_ROLLBACK_TASK'
+    | 'GOOGLE_FUNCTION_GEN_ONE_PREPARE_ROLLBACK_TASK'
+    | 'TERRAFORM_TASK_NG_V6'
+    | 'K8S_COMMAND_TASK_NG_V2'
+    | 'HELM_COMMAND_TASK_NG_V2'
+    | 'INSTANCE_SYNC_V2_CG_SUPPORT'
+    | 'PT_SERIALIZATION_SUPPORT'
+    | 'COMMAND_TASK_NG_WITH_GIT_CONFIGS'
 }
 
 export interface DelegateTokenDetails {
@@ -9255,6 +9374,7 @@ export interface FailureStrategy {
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'DELEGATE_RESTART'
+    | 'USER_MARKED_FAILURE'
   )[]
   manualInterventionTimeout?: number
   repairActionCode?:
@@ -9504,7 +9624,14 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -9551,7 +9678,8 @@ export interface GcpOrganization {
 }
 
 export type GcpSecretManager = ConnectorConfigDTO & {
-  credentialsRef: string
+  assumeCredentialsOnDelegate?: boolean
+  credentialsRef?: string
   default?: boolean
   delegateSelectors?: string[]
 }
@@ -9846,8 +9974,10 @@ export interface GithubApiAccessSpecDTO {
 }
 
 export type GithubAppSpec = GithubApiAccessSpecDTO & {
-  applicationId: string
-  installationId: string
+  applicationId?: string
+  applicationIdRef?: string
+  installationId?: string
+  installationIdRef?: string
   privateKeyRef: string
 }
 
@@ -9954,6 +10084,7 @@ export type GitlabSshCredentials = GitlabCredentialsDTO & {
 }
 
 export type GitlabTokenSpec = GitlabApiAccessSpecDTO & {
+  apiUrl?: string
   tokenRef: string
 }
 
@@ -10368,6 +10499,7 @@ export interface HelmChartConfig {
 export interface HelmChartInfo {
   name?: string
   repoUrl?: string
+  subChartPath?: string
   version?: string
 }
 
@@ -10548,6 +10680,10 @@ export type HttpTemplate = BaseTemplate & {
   method?: string
   timeoutMillis?: number
   url?: string
+}
+
+export type IACMModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfDevelopers?: number
 }
 
 export interface IamInstanceProfile {
@@ -11575,6 +11711,7 @@ export interface InstanceExecutionHistory {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -11602,6 +11739,7 @@ export interface InstanceExecutionHistory {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -11653,6 +11791,18 @@ export interface InstanceExecutionHistory {
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   executionInterruptType?:
     | 'ABORT'
     | 'ABORT_ALL'
@@ -11888,6 +12038,62 @@ export interface InstanceSyncDataOrBuilder {
   unknownFields?: UnknownFieldSet
 }
 
+export interface InstanceSyncResponseV2 {
+  accountId?: string
+  accountIdBytes?: ByteString
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: InstanceSyncResponseV2
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  instanceDataCount?: number
+  instanceDataList?: InstanceSyncData[]
+  instanceDataOrBuilderList?: InstanceSyncDataOrBuilder[]
+  parserForType?: ParserInstanceSyncResponseV2
+  perpetualTaskId?: string
+  perpetualTaskIdBytes?: ByteString
+  serializedSize?: number
+  status?: InstanceSyncStatus
+  statusOrBuilder?: InstanceSyncStatusOrBuilder
+  unknownFields?: UnknownFieldSet
+}
+
+export interface InstanceSyncStatus {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: InstanceSyncStatus
+  descriptorForType?: Descriptor
+  errorMessage?: string
+  errorMessageBytes?: ByteString
+  executionStatus?: string
+  executionStatusBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  isSuccessful?: boolean
+  parserForType?: ParserInstanceSyncStatus
+  serializedSize?: number
+  unknownFields?: UnknownFieldSet
+}
+
+export interface InstanceSyncStatusOrBuilder {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Message
+  descriptorForType?: Descriptor
+  errorMessage?: string
+  errorMessageBytes?: ByteString
+  executionStatus?: string
+  executionStatusBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  isSuccessful?: boolean
+  unknownFields?: UnknownFieldSet
+}
+
 export interface InstanceTimeline {
   localPercentile?: {
     [key: string]: { [key: string]: any }
@@ -11933,7 +12139,7 @@ export interface JiraAuthCredentialsDTO {
 
 export interface JiraAuthenticationDTO {
   spec: JiraAuthCredentialsDTO
-  type: 'UsernamePassword'
+  type: 'UsernamePassword' | 'PersonalAccessToken'
 }
 
 export interface JiraConfig {
@@ -12037,6 +12243,10 @@ export type JiraConnector = ConnectorConfigDTO & {
 export interface JiraCustomFieldValue {
   fieldType?: string
   fieldValue?: string
+}
+
+export type JiraPATDTO = JiraAuthCredentialsDTO & {
+  patRef: string
 }
 
 export interface JiraTaskParameters {
@@ -13354,12 +13564,14 @@ export interface ModuleLicenseDTO {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'IACM'
+    | 'IDP'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number
@@ -14357,6 +14569,14 @@ export interface ParserInstanceSyncData {
   [key: string]: any
 }
 
+export interface ParserInstanceSyncResponseV2 {
+  [key: string]: any
+}
+
+export interface ParserInstanceSyncStatus {
+  [key: string]: any
+}
+
 export interface ParserMessage {
   [key: string]: any
 }
@@ -14672,6 +14892,7 @@ export interface PerpetualTaskRecord {
   lastUpdatedAt?: number
   perpetualTaskType?: string
   rebalanceIteration?: number
+  referenceFalseKryoSerializer?: boolean
   state?:
     | 'TASK_UNASSIGNED'
     | 'TASK_TO_REBALANCE'
@@ -15055,6 +15276,7 @@ export interface Preference {
   lastUpdatedBy?: EmbeddedUser
   name?: string
   preferenceType?: string
+  userGroupsIdToShare?: string[]
   userId?: string
   uuid: string
 }
@@ -15722,6 +15944,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -15749,6 +15972,7 @@ export interface ResponseMessage {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -15800,6 +16024,18 @@ export interface ResponseMessage {
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -15814,6 +16050,7 @@ export interface ResponseMessage {
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'DELEGATE_RESTART'
+    | 'USER_MARKED_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -22647,11 +22884,21 @@ export interface User {
   twoFactorAuthenticationEnabled?: boolean
   twoFactorAuthenticationMechanism?: 'TOTP'
   twoFactorJwtToken?: string
+  userAccountLevelDataMap?: {
+    [key: string]: UserAccountLevelData
+  }
   userGroups?: UserGroup[]
   userLocked?: boolean
   userLockoutInfo?: UserLockoutInfo
   utmInfo?: UtmInfo
   uuid: string
+}
+
+export interface UserAccountLevelData {
+  sourceOfProvisioning?: {
+    [key: string]: 'MANUAL' | 'LDAP' | 'SCIM'
+  }
+  userProvisionedTo?: ('CG' | 'NG')[]
 }
 
 export interface UserDataSpecification {
@@ -22742,10 +22989,12 @@ export interface UserInvite {
 export interface UserInviteDTO {
   accountId: string
   email: string
+  externalId?: string
   familyName?: string
   givenName?: string
   name: string
   token: string
+  userSource?: 'MANUAL' | 'LDAP' | 'SCIM'
 }
 
 export interface UserInviteSource {
@@ -23826,7 +24075,11 @@ export type CVFeedbackRecordRequestBody = CVFeedbackRecord
 
 export type CgEventConfigRequestBody = CgEventConfig
 
+export type CgInstanceSyncResponseRequestBody = void
+
 export type CloneMetadataRequestBody = CloneMetadata
+
+export type ConnectorHeartbeatDelegateResponseRequestBody = ConnectorHeartbeatDelegateResponse
 
 export type ContainerTaskRequestBody = ContainerTask
 
@@ -23876,8 +24129,6 @@ export type GcpBillingAccountRequestBody = GcpBillingAccount
 
 export type GcpOrganizationRequestBody = GcpOrganization
 
-export type GraphQLQueryRequestBody = GraphQLQuery
-
 export type HarnessTagRequestBody = HarnessTag
 
 export type HarnessTagLinkRequestBody = HarnessTagLink
@@ -23891,6 +24142,8 @@ export type InfrastructureDefinitionRequestBody = InfrastructureDefinition
 export type InfrastructureMappingRequestBody = InfrastructureMapping
 
 export type InfrastructureProvisionerRequestBody = InfrastructureProvisioner
+
+export type InstanceSyncResponseV2RequestBody = InstanceSyncResponseV2
 
 export type K8sEventCollectionBundleRequestBody = K8sEventCollectionBundle
 
@@ -23996,13 +24249,13 @@ export type YamlPayloadRequestBody = YamlPayload
 
 export type GcpSignUpRequestBody = void
 
-export type GetDelegatePropertiesBodyRequestBody = string[]
-
 export type ImportAccountDataRequestBody = void
 
-export type SaveGcpSecretsManagerConfig1RequestBody = void
+export type SaveApiCallLogsBodyRequestBody = string[]
 
-export type SaveGlobalKmsConfigRequestBody = void
+export type SaveGcpSecretsManagerConfigRequestBody = void
+
+export type SaveGcpSecretsManagerConfig1RequestBody = void
 
 export interface SaveMessageComparisonListBodyRequestBody {
   [key: string]: string
@@ -25385,10 +25638,10 @@ export interface GetDelegateGroupsNGV2WithFilterQueryParams {
   projectId?: string
   filterIdentifier?: string
   searchTerm?: string
-  offset?: string
-  limit?: string
-  fieldsIncluded?: string[]
-  fieldsExcluded?: string[]
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetDelegateGroupsNGV2WithFilterProps = Omit<

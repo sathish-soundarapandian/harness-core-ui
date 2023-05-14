@@ -15,7 +15,6 @@ import { LogAnalysisContent } from '@cv/components/LogsAnalysis/LogAnalysis'
 import { useLogContentHook } from '@cv/hooks/useLogContentHook/useLogContentHook'
 import { LogTypes } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
 import type { MetricsAndLogsProps } from './MetricsAndLogs.types'
-import ErrorTracking from '../ErrorTracking/ErrorTracking'
 import MetricsAnalysisContainer from './components/MetricsAnalysisContainer/MetricsAnalysisContainer'
 import css from './MetricsAndLogs.module.scss'
 
@@ -28,8 +27,7 @@ const MetricsAndLogs: React.FC<MetricsAndLogsProps> = props => {
     showTimelineSlider,
     monitoredServiceIdentifier,
     serviceIdentifier,
-    environmentIdentifier,
-    isErrorTrackingEnabled
+    environmentIdentifier
   } = props
 
   const { openLogContentHook } = useLogContentHook({
@@ -84,23 +82,6 @@ const MetricsAndLogs: React.FC<MetricsAndLogsProps> = props => {
             </Container>
           }
         />
-        {isErrorTrackingEnabled && (
-          <Tab
-            id={getString('errors')}
-            title={getString('errors')}
-            panelClassName={css.mainTabPanel}
-            panel={
-              <ErrorTracking
-                monitoredServiceIdentifier={monitoredServiceIdentifier}
-                serviceIdentifier={serviceIdentifier}
-                environmentIdentifier={environmentIdentifier}
-                startTime={startTime}
-                endTime={endTime}
-                isErrorTrackingEnabled
-              />
-            }
-          />
-        )}
       </Tabs>
     </Container>
   ) : (

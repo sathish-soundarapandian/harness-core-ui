@@ -18,8 +18,7 @@ import type { RiskData } from 'services/cv'
 import type { ChangesInfoCardData } from '@cv/components/ChangeTimeline/ChangeTimeline.types'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import ServiceDependencyGraph from '@cv/pages/monitored-service/CVMonitoredService/components/MonitoredServiceGraphView/MonitoredServiceGraphView'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+
 import {
   calculateLowestHealthScoreBar,
   calculateStartAndEndTimes,
@@ -66,7 +65,6 @@ export default function ServiceHealth({
   const [changeTimelineSummary, setChangeTimelineSummary] = useState<ChangesInfoCardData[] | null>(null)
   const [healthScoreData, setHealthScoreData] = useState<RiskData[]>()
   const containerRef = useRef<HTMLElement>(null)
-  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
 
   useEffect(() => {
     if (notificationTime) {
@@ -275,7 +273,6 @@ export default function ServiceHealth({
           startTime={timeRange?.startTime}
           endTime={timeRange?.endTime}
           showTimelineSlider={showTimelineSlider}
-          isErrorTrackingEnabled={isErrorTrackingEnabled}
         />
       </Container>
     </>

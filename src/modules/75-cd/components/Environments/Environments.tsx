@@ -14,8 +14,6 @@ import { useToaster } from '@harness/uicore'
 
 import { useGetSettingValue } from 'services/cd-ng'
 
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { SettingType } from '@common/constants/Utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
@@ -31,14 +29,12 @@ export const Environments: React.FC = () => {
 
   const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
-
-  const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: !isSettingsEnabled
+    lazy: false
   })
 
   React.useEffect(() => {

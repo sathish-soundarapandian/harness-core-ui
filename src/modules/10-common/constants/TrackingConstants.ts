@@ -392,3 +392,8 @@ export enum PLG_ELEMENTS {
   RIGHT_COLUMN = 'Right column list',
   MODULE_CARD = 'Module card'
 }
+
+export enum PipelineExecutionActions {
+  ReRunPipeline = 'Re-run Pipeline',
+  RetryPipeline = 'Retry Pipeline'
+}

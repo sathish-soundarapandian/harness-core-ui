@@ -27,6 +27,18 @@ jest.mock('lodash-es', () => ({
   noop: jest.fn()
 }))
 
+const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
+  }),
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
+  })
+}))
+
 jest.mock('resize-observer-polyfill', () => {
   class ResizeObserver {
     static default = ResizeObserver
