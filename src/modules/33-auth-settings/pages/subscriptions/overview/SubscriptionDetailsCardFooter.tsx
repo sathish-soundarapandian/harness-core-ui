@@ -15,10 +15,10 @@ import type { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { isOnPrem } from '@common/utils/utils'
 
 interface SubscriptionDetailsCardFooterProps {
   openMarketoContactSales: () => void
-  handleExtendTrial: () => Promise<void>
   licenseData?: ModuleLicenseDTO
   module: ModuleName
   isExpired: boolean
@@ -27,7 +27,6 @@ interface SubscriptionDetailsCardFooterProps {
 
 const SubscriptionDetailsCardFooter = ({
   openMarketoContactSales,
-  handleExtendTrial,
   licenseData,
   module,
   isExpired,
@@ -36,7 +35,7 @@ const SubscriptionDetailsCardFooter = ({
   const { getString } = useStrings()
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
-
+  const FREE_PLAN_ENABLED = !isOnPrem()
   function handleSubscribeClick(): void {
     history.push(
       routes.toModuleTrialHome({
@@ -58,13 +57,13 @@ const SubscriptionDetailsCardFooter = ({
   )
 
   const extendTrialButton = (
-    <Button onClick={handleExtendTrial}>{getString('common.banners.trial.expired.extendTrial')}</Button>
+    <Button onClick={openMarketoContactSales}>{getString('common.banners.trial.expired.extendTrialSales')}</Button>
   )
 
   return (
     <Layout.Horizontal spacing="xxlarge">
       <React.Fragment>
-        {!licenseData && subscribeButton}
+        {!licenseData && FREE_PLAN_ENABLED && subscribeButton}
         {licenseData?.licenseType !== ModuleLicenseType.PAID && contactSalesButton}
         {licenseData?.licenseType !== ModuleLicenseType.PAID && isExpired && expiredDays < 15 && extendTrialButton}
       </React.Fragment>

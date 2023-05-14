@@ -34,6 +34,7 @@ import routes from '@common/RouteDefinitions'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { checkIfInstanceCanBeRolledBackPromise, triggerRollbackPromise } from 'services/cd-ng'
 import RbacButton from '@rbac/components/Button/Button'
+import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import {
   CellProps,
   CellType,
@@ -96,11 +97,17 @@ export function RenderExecution({ row }: CellProps): CellType {
 
 export function RenderStatus({ row }: CellProps): CellType {
   const { rollbackStatus } = row.original
+  const { getString } = useStrings()
 
   if (!rollbackStatus) {
     return <Text>-</Text>
   }
-  return <ExecutionStatusLabel status={rollbackStatus} />
+  const [status, rollbackStatusLabel] =
+    rollbackStatus === 'NOT_STARTED'
+      ? [ExecutionStatusEnum.NotStarted, getString('pipeline.executionStatus.NotStarted')]
+      : [ExecutionStatusEnum.Success, getString('pipeline.executionStatus.Started')]
+
+  return <ExecutionStatusLabel status={status} label={rollbackStatusLabel} />
 }
 
 export function RenderLastDeployedTime({ row }: CellProps): CellType {

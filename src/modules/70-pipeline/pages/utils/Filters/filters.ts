@@ -34,6 +34,18 @@ export const usePipelineListFilterFieldToLabelMapping = () => {
   }, [])
 }
 
+export const useTemplateListFilterFieldToLabelMapping = () => {
+  const { getString } = useStrings()
+
+  return useMemo(() => {
+    return new Map<string, string>([
+      ['description', getString('description')],
+      ['templateNames', getString('common.template.name')],
+      ['tags', getString('tagsLabel')],
+      ['templateEntityTypes', getString('common.template.type')]
+    ])
+  }, [])
+}
 export const useExecutionListFilterFieldToLabelMapping = () => {
   const { getString } = useStrings()
 
@@ -77,6 +89,14 @@ export const useFilterWithValidFieldsWithMetaInfo = (
   return filterWithValidFieldsWithMetaInfo
 }
 
+export const useFilterWithValidFieldsWithMetaInfoForTemplates = (
+  filterProperties: FilterProperties = {},
+  fieldToLabelMapping: Map<string, string>
+) => {
+  const filterWithValidFields = removeNullAndEmpty(pick(filterProperties || {}, ...fieldToLabelMapping.keys()))
+
+  return filterWithValidFields
+}
 export const prepareFiltersPayload = (filters: PipelineFilterProperties) => {
   if (filters?.pipelineTags) {
     filters.pipelineTags = filters?.pipelineTags?.map(({ key, value }) => {

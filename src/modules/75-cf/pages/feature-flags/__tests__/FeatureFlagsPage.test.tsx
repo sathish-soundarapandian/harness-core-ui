@@ -80,12 +80,13 @@ describe('FeatureFlagsPage', () => {
 
     jest.mock('@cf/hooks/useGitSync', () => ({
       useGitSync: jest.fn(() => ({
+        gitRepoDetails: undefined,
         getGitSyncFormMeta: jest.fn().mockReturnValue({
           gitSyncInitialValues: {},
           gitSyncValidationSchema: {}
         }),
         isAutoCommitEnabled: false,
-        isGitSyncEnabled: true,
+        isGitSyncEnabled: false,
         handleAutoCommit: jest.fn()
       }))
     }))

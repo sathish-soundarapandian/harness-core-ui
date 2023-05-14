@@ -54,6 +54,8 @@ stepField:
     productLookupType: Lookup Type
     exclude: Exclude
     projectKey: Project Key
+    scanId: Scan ID
+    siteId: Site ID
   container:
     containerAccessToken: Container Access Token
     containerRegion: Container Region

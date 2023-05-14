@@ -45,6 +45,7 @@ import {
   getArtifactFormData,
   getConnectorIdValue,
   getFinalArtifactObj,
+  isTemplateView,
   resetFieldValue,
   shouldFetchFieldOptions,
   shouldHideHeaderAndNavBtns
@@ -93,6 +94,7 @@ export function ECRArtifact({
 
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+  const isArtifactTemplate = isTemplateView(context)
   const getConnectorRefQueryData = (): string => {
     return defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.identifier)
   }
@@ -316,7 +318,7 @@ export function ECRArtifact({
             connectorId: getConnectorIdValue(modifiedPrevStepData)
           })
         }}
-        enableReinitialize={true}
+        enableReinitialize={!isArtifactTemplate}
       >
         {formik => (
           <FormikForm>

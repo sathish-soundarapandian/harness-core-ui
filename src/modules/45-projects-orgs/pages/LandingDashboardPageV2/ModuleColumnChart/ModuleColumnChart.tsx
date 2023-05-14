@@ -140,7 +140,7 @@ const ModuleColumnChart: React.FC<ModuleColumnChartProps> = props => {
               },
               tickLength: 0
             },
-            chart: { type: 'column', spacing: [1, 1, 1, 1] },
+            chart: { type: 'column', spacing: [1, 1, 1, 1], animation: false },
             yAxis: {
               visible: isExpanded,
               startOnTick: false,

@@ -156,7 +156,11 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
           comments,
           ...(isNewTemplateIdentifierCreation ? { isNewTemplate: true } : {}),
           ...(updatedGitDetails ?? {}),
-          ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {}),
+          /*
+           * Pass storeMetadata if that passed form the TemplateConfigModal.
+           * TemplateConfigModalWithRef pass storeMetadata based on supportingTemplatesGitx & isInlineRemoteSelectionApplicable
+           */
+          ...(storeMetadata ? storeMetadata : {}),
           ...(updatedGitDetails && updatedGitDetails.isNewBranch
             ? { baseBranch: defaultTo(branch, storeMetadata?.branch), branch: updatedGitDetails.branch }
             : {})
@@ -276,7 +280,7 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
       isEdit,
       undefined,
       undefined,
-      undefined,
+      storeMetadata,
       saveAsType,
       saveAsNewVersionOfExistingTemplate,
       isGitSyncOrRemoteTemplate

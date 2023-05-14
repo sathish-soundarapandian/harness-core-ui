@@ -1,5 +1,20 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
-import { render, waitFor, fireEvent, queryByAttribute, queryAllByText, queryByText } from '@testing-library/react'
+import {
+  render,
+  waitFor,
+  fireEvent,
+  queryByAttribute,
+  queryAllByText,
+  queryByText,
+  screen
+} from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import { TemplateListFilter } from '../TemplateFilter'
@@ -35,7 +50,8 @@ describe('template filter', () => {
     const menuItems = document.querySelectorAll('[class*="menuItem"]')
     expect(menuItems?.length).toBe(filterListMock.data.content.length)
     fireEvent.click(menuItems[0])
-    expect(getByTestId('dropdown-value')).toHaveTextContent(filterListMock.data.content[0].name)
+    const dropDownItems = screen.getAllByTestId('dropdown-value')
+    expect(dropDownItems[0]).toHaveTextContent(filterListMock.data.content[0].name)
     expect(container).toBeDefined()
     const filterBtn = container.querySelector('[id="ngfilterbtn"]') as HTMLButtonElement
     fireEvent.click(filterBtn!)

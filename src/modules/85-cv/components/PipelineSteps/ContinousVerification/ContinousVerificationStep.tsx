@@ -39,7 +39,7 @@ export class ContinousVerificationStep extends PipelineStep<ContinousVerificatio
 
   protected type = StepType.Verify
   protected stepName = 'Verify'
-  protected stepIcon: IconName = 'cv-main'
+  protected stepIcon: IconName = 'cv-verifystep'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.Verify'
   protected isHarnessSpecific = false
   protected defaultValues: ContinousVerificationData = cvDefaultValues

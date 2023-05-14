@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { Button, ButtonVariation, Container, FormInput, Layout, Text, useToaster } from '@harness/uicore'
 import { Formik } from 'formik'
@@ -85,13 +92,12 @@ export default function AnnotationDetails(props: AnnotationDetailsProps): JSX.El
     try {
       if (isEdit) {
         await updateAnnotationCall(annotationReqBody)
-        await fetchSecondaryEvents()
         showSuccess(getString('cv.slos.sloDetailsChart.updateAnnotationMessage'))
       } else {
         await saveAnnotationCall(annotationReqBody)
-        await fetchSecondaryEvents()
         showSuccess(getString('cv.slos.sloDetailsChart.addAnnotationMessage'))
       }
+      await fetchSecondaryEvents()
       hideDrawer()
     } catch (error) {
       showError(getErrorMessage(error))

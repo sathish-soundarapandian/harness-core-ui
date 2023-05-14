@@ -681,7 +681,8 @@ const CERoutes: React.FC = () => {
         routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id' }),
         routes.toClusterNodepoolDetailsPage({ ...accountPathProps, id: ':id' }),
         routes.toComputeGroupsSetup({ ...accountPathProps, id: ':id' }),
-        routes.toCECloudIntegration({ ...accountPathProps })
+        routes.toCECloudIntegration({ ...accountPathProps }),
+        routes.toCEManagedServiceProvider({ ...accountPathProps })
       ]
     : []
 

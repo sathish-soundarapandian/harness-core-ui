@@ -19,7 +19,6 @@ describe('RouteDestinations', () => {
   const useFeatureFlagsMock = jest.spyOn(hooks, 'useFeatureFlags')
 
   const defaultFlagValues: Partial<Record<FeatureFlag, boolean>> = {
-    NG_SETTINGS: false,
     FFM_3959_FF_MFE_Environment_Detail: false,
     FFM_5256_FF_MFE_Environment_Listing: false,
     FFM_6665_FF_MFE_Target_Detail: false,

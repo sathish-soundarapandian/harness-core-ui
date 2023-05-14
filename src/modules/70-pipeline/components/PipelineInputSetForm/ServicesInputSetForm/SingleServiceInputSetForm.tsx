@@ -16,8 +16,6 @@ import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig, ServiceSpec } from 'services/cd-ng'
 import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { isValueRuntimeInput } from '@common/utils/utils'
 
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -62,8 +60,6 @@ export default function SingleServiceInputSetForm({
 
   const { getString } = useStrings()
   const formik = useFormikContext<DeploymentStageConfig>()
-
-  const isPropagateFromStageEnabled = useFeatureFlag(FeatureFlag.CDS_PROPAGATE_STAGE_TEMPLATE)
 
   // This is the value of AllValues
   const deploymentStageInputSet = get(formik?.values, path, {})
@@ -152,7 +148,6 @@ export default function SingleServiceInputSetForm({
   }
 
   const shouldShowPropagateFromStage =
-    isPropagateFromStageEnabled &&
     !isEmpty(previousStageList) &&
     // using deploymentStage as deploymentStageTemplate is not reliable in case of optional fields
     (isValueRuntimeInput(deploymentStage?.service?.serviceRef) ||

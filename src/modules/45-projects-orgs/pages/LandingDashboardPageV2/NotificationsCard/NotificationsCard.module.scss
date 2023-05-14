@@ -26,7 +26,7 @@
   .badgesContainer {
     display: flex;
     padding-top: var(--spacing-medium);
-    margin-bottom: 15px;
+    margin-bottom: var(--spacing-small);
     flex-flow: column;
 
     .badge {
@@ -45,6 +45,10 @@
         line-height: 16px;
         letter-spacing: 0.2px;
         color: var(--primary-7);
+      }
+
+      &.lastBadge {
+        margin-bottom: 0;
       }
     }
     .failed24HrsExecutionsBadge {

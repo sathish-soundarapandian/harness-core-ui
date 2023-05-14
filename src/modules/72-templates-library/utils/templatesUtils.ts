@@ -69,8 +69,8 @@ export const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any
 export const prepareTemplateFiltersPayload = (filters: TemplateFilterProperties) => {
   if (isArray(filters?.tags)) {
     const filtersTagsObject: Record<string, string> = {}
-    filters?.tags?.forEach(({ key }: NGTag) => {
-      filtersTagsObject[key] = ''
+    filters?.tags?.forEach(({ key, value = '' }: NGTag) => {
+      filtersTagsObject[key] = value
     })
     filters.tags = filtersTagsObject
   }

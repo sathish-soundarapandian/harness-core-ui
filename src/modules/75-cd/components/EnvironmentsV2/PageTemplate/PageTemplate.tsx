@@ -38,8 +38,6 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { SettingType } from '@common/constants/Utils'
 
 import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
@@ -121,7 +119,6 @@ export default function PageTemplate({
 
   const hasFilterIdentifier = getHasFilterIdentifier(filterIdentifier)
 
-  const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const {
     data: forceDeleteSettings,
     loading: forceDeleteSettingsLoading,
@@ -131,7 +128,7 @@ export default function PageTemplate({
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: !(isForceDeleteAllowed && isSettingsEnabled)
+    lazy: !isForceDeleteAllowed
   })
 
   React.useEffect(() => {

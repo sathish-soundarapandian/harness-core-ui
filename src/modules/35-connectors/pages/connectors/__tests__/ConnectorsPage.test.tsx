@@ -32,6 +32,9 @@ jest.spyOn(cdngServices, 'useDeleteFilter').mockImplementation(() => ({ mutate: 
 jest.spyOn(cdngServices, 'useGetTestConnectionResult').mockImplementation(() => Promise.resolve() as any)
 jest.spyOn(cdngServices, 'useDeleteConnector').mockImplementation(() => Promise.resolve() as any)
 jest.spyOn(cdngServices, 'getListOfBranchesByGitConfigPromise').mockImplementation(() => fetchBranches())
+jest.spyOn(cdngServices, 'useGetSettingValue').mockImplementation(() => {
+  return { data: { data: { value: 'false' } } } as any
+})
 jest.useFakeTimers()
 
 describe('Connectors Page Test', () => {

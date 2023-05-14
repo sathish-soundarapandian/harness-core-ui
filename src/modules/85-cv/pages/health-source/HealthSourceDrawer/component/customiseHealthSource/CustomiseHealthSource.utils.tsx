@@ -21,7 +21,6 @@ import DatadogMetricsHealthSource from '@cv/pages/health-source/connectors/Datad
 import { DatadogProduct } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.utils'
 import { CustomHealthSource } from '@cv/pages/health-source/connectors/CustomHealthSource/CustomHealthSource'
 import { DatadogLogsHealthSource } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/DatadogLogsHealthSource'
-import ErrorTrackingHealthSource from '@cv/pages/health-source/connectors/ErrorTrackingHealthSource/ErrorTrackingHealthSource'
 import DynatraceHealthSourceContainer from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSourceContainer'
 import CustomHealthLogSource from '@cv/pages/health-source/connectors/CustomHealthLogSource/CustomHealthLogSource'
 import { CustomHealthProduct } from '@cv/pages/health-source/connectors/CustomHealthSource/CustomHealthSource.constants'
@@ -153,8 +152,7 @@ export const LoadSourceByType = ({
       } else {
         return <CustomHealthLogSource data={data} onSubmit={onSubmit} />
       }
-    case Connectors.ERROR_TRACKING:
-      return <ErrorTrackingHealthSource data={data} onSubmit={onSubmit} />
+
     case Connectors.AWS:
     case HealthSourceTypes.CloudWatchMetrics:
       return <CloudWatch data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />

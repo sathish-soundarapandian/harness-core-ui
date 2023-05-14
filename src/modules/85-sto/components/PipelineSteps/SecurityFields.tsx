@@ -262,7 +262,7 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
           },
           'spec.auth.access_id': {
             label: 'sto.stepField.authAccessId',
-            hide: !(showFields?.access_id && formik.values.spec.auth?.type !== API_KEY_AUTH_TYPE.value),
+            hide: !showFields?.access_id || formik.values.spec.auth?.type === API_KEY_AUTH_TYPE.value,
             inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' },
             tooltipId: tooltipIds.authAccessId
           },
@@ -423,6 +423,8 @@ interface SecurityInstanceFieldsProps extends SecurityFieldsProps<SecurityStepDa
     protocol?: boolean
     port?: boolean
     path?: boolean
+    username?: boolean
+    password?: boolean
   }
 }
 
@@ -468,6 +470,20 @@ export function SecurityInstanceFields(props: SecurityInstanceFieldsProps) {
             optional: true,
             tooltipId: tooltipIds.instancePath,
             hide: !showFields?.path
+          },
+          'spec.instance.username': {
+            label: 'username',
+            optional: true,
+            // TODO add tool tip for instance username
+            tooltipId: tooltipIds.instanceUsername,
+            hide: !showFields?.username
+          },
+          'spec.instance.password': {
+            label: 'password',
+            optional: true,
+            // TODO add tool tip for instance password
+            tooltipId: tooltipIds.instancePassword,
+            hide: !showFields?.password
           }
         }}
       />

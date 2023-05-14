@@ -47,7 +47,7 @@ jest.mock('services/cd-ng', () => ({
   useDeleteConnector: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 mockImport('@common/hooks/useFeatureFlag', {
-  useFeatureFlags: () => ({ PL_FORCE_DELETE_CONNECTOR_SECRET: false, NG_SETTINGS: false })
+  useFeatureFlags: () => ({ PL_FORCE_DELETE_CONNECTOR_SECRET: false })
 })
 describe('Connector DetailsPage Page Test', () => {
   test('Initial snapshot should match render', async () => {

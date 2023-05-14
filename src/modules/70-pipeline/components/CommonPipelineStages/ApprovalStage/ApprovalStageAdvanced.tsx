@@ -32,6 +32,8 @@ import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
+import { DelegateSelectorWithRef } from '@pipeline/components/PipelineStudio/DelegateSelector/DelegateSelector'
+import { PipelineStageTabs } from '../PipelineStage/utils'
 import css from './ApprovalAdvancedSpecifications.module.scss'
 
 export interface AdvancedSpecifications {
@@ -39,12 +41,14 @@ export interface AdvancedSpecifications {
   conditionalExecutionTooltipId?: string
   failureStrategyTooltipId?: string
   loopingStrategyTooltipId?: string
+  delegateSelectorTooltipId?: string
 }
 function ApprovalAdvancedSpecifications({
   children,
   conditionalExecutionTooltipId = 'conditionalExecutionApprovalStage',
   failureStrategyTooltipId = 'failureStrategyApprovalStage',
-  loopingStrategyTooltipId = 'loopingStrategyApprovalStage'
+  loopingStrategyTooltipId = 'loopingStrategyApprovalStage',
+  delegateSelectorTooltipId = 'delegateSelector'
 }: React.PropsWithChildren<AdvancedSpecifications>): React.ReactElement {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
@@ -74,6 +78,39 @@ function ApprovalAdvancedSpecifications({
     <div className={cx(css.stageSection, css.editStageGrid)}>
       <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
       <div className={css.contentSection} ref={scrollRef}>
+        <div className={css.tabHeading}>
+          <span data-tooltip-id={delegateSelectorTooltipId}>
+            {getString('pipeline.delegate.DelegateSelectorOptional')}
+          </span>
+        </div>
+        <Card className={css.sectionCard} id="delegateSelector">
+          <Layout.Horizontal>
+            <div>
+              <DelegateSelectorWithRef
+                selectedStage={stage}
+                isReadonly={isReadonly}
+                ref={formikRef}
+                onUpdate={delegateSelectors => {
+                  const valuePassed = delegateSelectors.delegateSelectors
+                  const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+
+                  if (pipelineStage && pipelineStage.stage) {
+                    const stageData = produce(pipelineStage, draft => {
+                      set(draft, 'stage.delegateSelectors', valuePassed)
+                      if (isEmpty(valuePassed) || valuePassed[0] === '') {
+                        unset(draft.stage, 'delegateSelectors')
+                      }
+                    })
+                    if (stageData.stage) {
+                      updateStage(stageData.stage)
+                    }
+                  }
+                }}
+                tabName={PipelineStageTabs.ADVANCED}
+              />
+            </div>
+          </Layout.Horizontal>
+        </Card>
         <div className={css.tabHeading}>
           <span data-tooltip-id={conditionalExecutionTooltipId}>
             {getString('pipeline.conditionalExecution.title')}

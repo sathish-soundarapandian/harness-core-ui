@@ -11,9 +11,6 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import type { ExecutionNode } from 'services/pipeline-ng'
-import { Connectors } from '@connectors/constants'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useLogContentHook } from '@cv/hooks/useLogContentHook/useLogContentHook'
 import { LogTypes } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
 import type { AnalysedDeploymentNode } from 'services/cv'
@@ -36,7 +33,6 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
   const activityId = useMemo(() => getActivityId(step), [step])
   const { type } = useQueryParams<{ type?: string }>()
   const defaultTabId = useMemo(() => getDefaultTabId(getString, type), [type])
-  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
 
   const { openLogContentHook } = useLogContentHook({ verifyStepExecutionId: activityId })
 
@@ -83,20 +79,7 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
           }
           panelClassName={css.mainTabPanelLogs}
         />
-        {isErrorTrackingEnabled && (
-          <Tab
-            id={getString('errors')}
-            title={getString('errors')}
-            panelClassName={css.mainTabPanelLogs}
-            panel={
-              <LogAnalysisContainer
-                step={step}
-                hostName={Connectors.ERROR_TRACKING}
-                isErrorTracking={isErrorTrackingEnabled}
-              />
-            }
-          />
-        )}
+
         <FlexExpander />
         <Layout.Horizontal>
           <Button

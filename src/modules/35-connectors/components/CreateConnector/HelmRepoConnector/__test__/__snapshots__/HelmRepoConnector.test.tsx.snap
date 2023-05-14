@@ -1385,7 +1385,7 @@ exports[`Create Helm Connector  Wizard Should render form for editing provider t
                     name="helmRepoUrl"
                     placeholder="UrlLabel"
                     type="text"
-                    value="oci://index.docker.io/v2/"
+                    value="https://index.docker.io/v2/"
                   />
                 </div>
               </div>

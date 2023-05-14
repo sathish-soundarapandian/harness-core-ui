@@ -78,6 +78,8 @@ type Tool = {
   project_token?: string
   product_lookup_type?: 'byTokens' | 'byNames' | 'appendToProductByToken' | 'appendToProductByName'
   project_key?: string
+  scan_id?: string
+  site_id?: string
 }
 
 type Instance = {
@@ -85,6 +87,8 @@ type Instance = {
   protocol?: 'https' | 'http'
   port?: number
   path?: string
+  username?: string
+  password?: string
 }
 
 type LogLevel = 'info' | 'debug' | 'warning' | 'error'

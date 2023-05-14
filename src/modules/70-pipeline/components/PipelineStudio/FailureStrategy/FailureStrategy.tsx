@@ -31,7 +31,7 @@ export function FailureStrategy(props: FailureStrategyProps, ref: StepCommandsRe
   const { getString } = useStrings()
   const { selectedStage, onUpdate, isReadonly, tabName } = props
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedUpdate = React.useCallback(debounce(onUpdate, 300), [onUpdate])
+  const debouncedUpdate = React.useCallback(debounce(onUpdate, 400), [onUpdate])
   const formikRef = React.useRef<FormikProps<{ failureStrategies: AllFailureStrategyConfig[] }> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
 

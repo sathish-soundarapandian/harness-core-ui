@@ -18,11 +18,15 @@ import {
 } from '@testing-library/react'
 
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
+import * as cdngServices from 'services/cd-ng'
 import SecretsPage from '../SecretsPage'
 
 import mockData from './secretsListMock.json'
 
 jest.useFakeTimers()
+jest.spyOn(cdngServices, 'useGetSettingValue').mockImplementation(() => {
+  return { data: { data: { value: 'false' } } } as any
+})
 
 describe('Secrets Page', () => {
   test('render data', () => {

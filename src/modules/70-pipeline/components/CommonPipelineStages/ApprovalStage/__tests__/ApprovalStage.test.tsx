@@ -58,6 +58,18 @@ jest.mock('resize-observer-polyfill', () => {
   return ResizeObserver
 })
 
+const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
+  }),
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
+  })
+}))
+
 describe('Approval Stage minimal view', () => {
   test('Basic render, selection and setup stage', async () => {
     const props = getPropsForMinimalStage()

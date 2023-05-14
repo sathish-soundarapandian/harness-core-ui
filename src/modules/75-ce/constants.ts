@@ -296,5 +296,6 @@ export const featureNames = {
   COST_CATEGORY_FEATURE: 'Cost Categories',
   GOVERNANCE: 'Governance',
   CURRENCY_PREFERENCES: 'Currency Preferences',
-  DEFAULT_SETTINGS: 'Default Settings'
+  DEFAULT_SETTINGS: 'Default Settings',
+  MSP: 'MSP'
 }

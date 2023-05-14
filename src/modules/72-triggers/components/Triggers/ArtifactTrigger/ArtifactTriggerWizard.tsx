@@ -41,7 +41,8 @@ import {
   ResponseNGTriggerResponse,
   GetTriggerQueryParams,
   CreateTriggerQueryParams,
-  UpdateTriggerQueryParams
+  UpdateTriggerQueryParams,
+  useGetMergeInputSetFromPipelineTemplateWithListInput
 } from 'services/pipeline-ng'
 import {
   isCloneCodebaseEnabledAtLeastOneStage,
@@ -210,6 +211,23 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })
 
+  const {
+    data: mergeInputSetResponse,
+    refetch: refetchMergeInputSet,
+    loading: loadingMergeInputSet
+  } = useMutateAsGet(useGetMergeInputSetFromPipelineTemplateWithListInput, {
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      pipelineIdentifier,
+      branch: branch,
+      parentEntityConnectorRef: pipelineConnectorRef,
+      parentEntityRepoName: pipelineRepoName
+    },
+    lazy: true
+  })
+
   const [errorToasterMessage, setErrorToasterMessage] = useState<string>('')
 
   const { loading: loadingYamlSchema, data: triggerSchema } = useGetSchemaYaml({
@@ -319,8 +337,14 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
   )
 
   const shouldRenderWizard = useMemo(() => {
-    return !loadingGetTrigger && !fetchingTemplate && !loadingPipeline && !loadingResolvedChildPipeline
-  }, [loadingGetTrigger, fetchingTemplate, loadingPipeline, loadingResolvedChildPipeline])
+    return (
+      !loadingGetTrigger &&
+      !fetchingTemplate &&
+      !loadingPipeline &&
+      !loadingResolvedChildPipeline &&
+      !loadingMergeInputSet
+    )
+  }, [loadingGetTrigger, fetchingTemplate, loadingPipeline, loadingResolvedChildPipeline, loadingMergeInputSet])
 
   useDeepCompareEffect(() => {
     if (shouldRenderWizard && template?.data?.inputSetTemplateYaml !== undefined) {
@@ -372,6 +396,38 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       setEnabledStatus(false)
     }
   }, [triggerResponse?.data?.enabled])
+
+  useEffect(() => {
+    if (triggerResponse?.data?.yaml) {
+      try {
+        const triggerResponseJson = parse(triggerResponse.data.yaml)
+        if (triggerResponseJson.trigger.inputYaml) {
+          refetchMergeInputSet({
+            body: {
+              lastYamlToMerge: triggerResponseJson.trigger.inputYaml,
+              withMergedPipelineYaml: true
+            }
+          })
+        }
+      } catch (e) {
+        setErrorToasterMessage(getString('triggers.cannotParseTriggersData'))
+      }
+    }
+  }, [triggerResponse?.data?.yaml])
+
+  useEffect(() => {
+    if (mergeInputSetResponse?.data?.pipelineYaml) {
+      try {
+        const pipeline = parse(mergeInputSetResponse.data.pipelineYaml)?.pipeline
+        setOnEditInitialValues(oldOnEditInitialValues => ({
+          ...oldOnEditInitialValues,
+          pipeline: clearRuntimeInput(pipeline)
+        }))
+      } catch (error) {
+        setErrorToasterMessage(getString('triggers.cannotParseTriggersData'))
+      }
+    }
+  }, [mergeInputSetResponse?.data?.pipelineYaml])
 
   useEffect(() => {
     if (

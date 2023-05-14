@@ -47,8 +47,6 @@ import {
 } from 'services/pipeline-ng'
 import { useGetSettingValue } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { useToaster } from '@common/exports'
 import { NameSchema } from '@common/utils/Validation'
 import type {
@@ -239,11 +237,10 @@ export function OverlayInputSetForm({
     lazy: true
   })
 
-  const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const { data: allowDifferentRepoSettings, error: allowDifferentRepoSettingsError } = useGetSettingValue({
     identifier: SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS,
     queryParams: { accountIdentifier: accountId },
-    lazy: !isSettingEnabled
+    lazy: false
   })
 
   React.useEffect(() => {

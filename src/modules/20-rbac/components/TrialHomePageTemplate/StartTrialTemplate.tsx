@@ -6,37 +6,31 @@
  */
 
 import React from 'react'
-import { Heading, Layout, Text, Container, Button } from '@harness/uicore'
+import { Heading, Layout, Text, Container, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { useParams, useHistory, Link } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import {
-  useStartTrialLicense,
-  ResponseModuleLicenseDTO,
-  StartTrialDTORequestBody,
-  useStartFreeLicense,
-  StartFreeLicenseQueryParams
-} from 'services/cd-ng'
+import { ResponseModuleLicenseDTO, useStartFreeLicense, StartFreeLicenseQueryParams } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { Module } from 'framework/types/ModuleName'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, PlanActions, TrialActions } from '@common/constants/TrackingConstants'
 import routes from '@common/RouteDefinitions'
-import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { Editions, ModuleLicenseType, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
+import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUtil'
+import { useContactSalesMktoModal } from '@common/modals/ContactSales/useContactSalesMktoModal'
 import css from './StartTrialTemplate.module.scss'
 
 interface StartTrialTemplateProps {
   title: string
   bgImageUrl: string
   isTrialInProgress?: boolean
-  startTrialProps: Omit<StartTrialProps, 'startTrial' | 'module' | 'loading'>
+  startTrialProps: Omit<StartTrialProps, 'startFree' | 'module' | 'loading'>
   module: Module
 }
 
@@ -51,20 +45,21 @@ interface StartTrialProps {
     onClick?: () => void
   }
   shouldShowStartTrialModal?: boolean
-  startTrial: () => Promise<ResponseModuleLicenseDTO>
+  startFree: () => Promise<ResponseModuleLicenseDTO>
   module: Module
   loading: boolean
 }
 
 const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
-  const { description, learnMore, startBtn, shouldShowStartTrialModal, startTrial, module, loading } = startTrialProps
+  const { description, learnMore, startBtn, startFree, module, loading } = startTrialProps
   const history = useHistory()
   const { accountId } = useParams<{
     accountId: string
   }>()
   const { showError } = useToaster()
   const { getString } = useStrings()
-  const { showModal } = useStartTrialModal({ module, handleStartTrial })
+
+  const { openMarketoContactSales, loading: loadingContactSales } = useContactSalesMktoModal({})
   const isDefaultProjectCreated = useFeatureFlag(FeatureFlag.CREATE_DEFAULT_PROJECT)
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const FREE_PLAN_ENABLED = !isOnPrem()
@@ -72,14 +67,15 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
   const experience = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
   const modal = FREE_PLAN_ENABLED ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
 
-  async function handleStartTrial(): Promise<void> {
+  const { trackEvent } = useTelemetry()
+  async function handleStartFree(): Promise<void> {
     trackEvent(clickEvent, {
       category: Category.SIGNUP,
       module,
       edition: FREE_PLAN_ENABLED ? Editions.FREE : Editions.ENTERPRISE
     })
     try {
-      const data = await startTrial()
+      const data = await startFree()
 
       handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, data?.data)
       if (isDefaultProjectCreated) {
@@ -98,15 +94,6 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
     }
   }
 
-  function handleStartButtonClick(): void {
-    if (shouldShowStartTrialModal) {
-      showModal()
-    } else {
-      handleStartTrial()
-    }
-  }
-
-  const { trackEvent } = useTelemetry()
   return (
     <Layout.Vertical spacing="small">
       <Text padding={{ bottom: 'xxlarge' }} width={500}>
@@ -115,18 +102,26 @@ const StartTrialComponent: React.FC<StartTrialProps> = startTrialProps => {
       <a className={css.learnMore} href={learnMore.url} rel="noreferrer" target="_blank">
         {learnMore.description}
       </a>
-      <Button
-        width={300}
-        height={45}
-        intent="primary"
-        text={startBtn.description}
-        onClick={startBtn.onClick ? startBtn.onClick : handleStartButtonClick}
-        disabled={loading}
-      />
-      {!isOnPrem() && (
-        <Link to={routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS })}>
-          {getString('common.exploreAllPlans')}
-        </Link>
+      {FREE_PLAN_ENABLED ? (
+        <Button
+          width={300}
+          height={45}
+          intent="primary"
+          text={startBtn.description}
+          onClick={startBtn.onClick ? startBtn.onClick : handleStartFree}
+          disabled={loading}
+        />
+      ) : (
+        <Button
+          width={300}
+          height={45}
+          font={{ size: 'small' }}
+          onClick={openMarketoContactSales}
+          loading={loadingContactSales}
+          variation={ButtonVariation.SECONDARY}
+        >
+          {getString('common.requestFreeTrial')}
+        </Button>
       )}
     </Layout.Vertical>
   )
@@ -139,20 +134,8 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   module
 }) => {
   const { accountId } = useParams<AccountPathProps>()
-  const isFreeEnabled = !isOnPrem()
-
-  const startTrialRequestBody: StartTrialDTORequestBody = {
-    moduleType: module.toUpperCase() as any,
-    edition: Editions.ENTERPRISE
-  }
   const refererURL = getSavedRefererURL()
   const gaClientID = getGaClientID()
-  const { mutate: startTrial, loading: startingTrial } = useStartTrialLicense({
-    queryParams: {
-      accountIdentifier: accountId,
-      ...(refererURL ? { referer: refererURL } : {})
-    }
-  })
 
   const moduleType = module.toUpperCase() as StartFreeLicenseQueryParams['moduleType']
 
@@ -171,7 +154,7 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
   })
 
   function handleStartTrial(): Promise<ResponseModuleLicenseDTO> {
-    return isFreeEnabled ? startFreePlan() : startTrial(startTrialRequestBody)
+    return startFreePlan()
   }
 
   return (
@@ -181,12 +164,7 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
           {title}
         </Heading>
 
-        <StartTrialComponent
-          {...startTrialProps}
-          startTrial={handleStartTrial}
-          module={module}
-          loading={startingTrial || startingFree}
-        />
+        <StartTrialComponent {...startTrialProps} startFree={handleStartTrial} module={module} loading={startingFree} />
       </Layout.Vertical>
     </Container>
   )

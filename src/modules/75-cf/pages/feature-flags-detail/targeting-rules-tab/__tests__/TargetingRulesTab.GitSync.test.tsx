@@ -73,7 +73,9 @@ describe('TargetingRulesTab GitSync', () => {
   })
 
   beforeAll(() => {
-    jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+    jest
+      .spyOn(useFeatureFlagMock, 'useFeatureFlags')
+      .mockImplementation(() => ({ FF_GITSYNC: true, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED: true }))
     jest.spyOn(uuid, 'v4').mockReturnValue('UUID')
   })
 

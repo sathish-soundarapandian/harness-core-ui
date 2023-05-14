@@ -33,6 +33,9 @@ function postResolutionHelper(data: any, loading: boolean) {
 }
 
 jest.spyOn(cdNgServices, 'useDeleteEnvironmentV2').mockImplementation(() => postResolutionHelper({}, false))
+jest.spyOn(cdNgServices, 'useGetSettingValue').mockImplementation(() => {
+  return { data: { data: { value: 'false' } } } as any
+})
 jest
   .spyOn(cdNgServices, 'useGetEnvironmentListForProject')
   .mockImplementation(() => getResolutionHelper(mockEnvironments, false))

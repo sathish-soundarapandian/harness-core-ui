@@ -15,6 +15,7 @@ import { startCase, isEmpty, isUndefined } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { NotificationRules, PipelineEvent } from 'services/pipeline-ng'
+import { ALL_STAGES, getValuesFromOptions } from '../NotificationUtils'
 import css from '../useNotificationModal.module.scss'
 
 export enum PipelineEventType {
@@ -133,8 +134,18 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
   const types: Required<PipelineEventsFormData>['types'] = {}
   const skipPauseStatus = !!PIE_DEPRECATE_PAUSE_INTERRUPT_NG
 
+  //Add AllStages option at the top
+  const stagesOptionsWithAllStages = React.useMemo(() => {
+    if (stagesOptions?.length) {
+      const stagesOptionArray = Array.from(stagesOptions)
+      stagesOptionArray.unshift(ALL_STAGES)
+      return stagesOptionArray
+    }
+    return stagesOptions
+  }, [stagesOptions])
+
   const getStageOption = (stageId: string): MultiSelectOption | undefined => {
-    return stagesOptions?.find(item => item.value === stageId)
+    return stagesOptionsWithAllStages?.find(item => item.value === stageId)
   }
 
   const items = pipelineEventItems.filter(item =>
@@ -308,7 +319,7 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                               formikProps.values.types?.[PipelineEventType.ALL_EVENTS]
                             }
                             className={css.stagesMultiSelect}
-                            items={stagesOptions || []}
+                            items={stagesOptionsWithAllStages || []}
                             name={event.value}
                             label={''}
                             usePortal
@@ -317,6 +328,11 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                               allowCreatingNewItems: false,
                               resetOnSelect: false,
                               resetOnQuery: false
+                            }}
+                            popoverClassName={css.stagesMultiSelectDropDown}
+                            onChange={val => {
+                              const selectValues = getValuesFromOptions(val, formikProps.values?.[event?.value])
+                              formikProps.setFieldValue(event.value, selectValues)
                             }}
                           />
                         )}

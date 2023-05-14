@@ -49,7 +49,8 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
     isModalView,
     setTempNodes,
     setUnsavedNodes,
-    unsavedNodes
+    unsavedNodes,
+    isReadonly
   } = fileStoreContext
 
   const [errorMessage, setErrorMessage] = useState('')
@@ -373,7 +374,7 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
                       minimap: {
                         enabled: false
                       },
-                      readOnly: false,
+                      readOnly: isReadonly,
                       scrollBeyondLastLine: true,
                       lineNumbers: 'on',
                       glyphMargin: false,

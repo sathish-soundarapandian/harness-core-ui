@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getByText, render, waitFor } from '@testing-library/react'
+import { getAllByText, getByText, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
@@ -149,13 +149,8 @@ describe('PostProdRollback - ', () => {
 
     const postProdRollbackDrawer = renderPostProdDrawer(envGroup, true)
 
-    const textToMatch = [
-      'common.environmentGroup.label: TestEnvGroup',
-      'TestEnvGroup',
-      'pipeline.executionStatus.Success',
-      'pipeline.executionStatus.Running',
-      'testArtifactslim'
-    ]
+    const textToMatch = ['common.environmentGroup.label: TestEnvGroup', 'TestEnvGroup', 'testArtifactslim']
+    expect(getAllByText(postProdRollbackDrawer!, 'pipeline.executionStatus.Started').length).toBe(2)
 
     matchListOfTextOnDocument(postProdRollbackDrawer!, textToMatch)
 

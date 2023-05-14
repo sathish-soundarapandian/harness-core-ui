@@ -103,11 +103,12 @@ export const Tags = ({ allowableTypes, readonly = false, formik, regions }: Tags
             name="spec.configuration.tags.spec.content"
             label={tagLabel()}
             defaultValueToReset=""
-            allowedTypes={
-              (allowableTypes as MultiTypeInputType[]).filter(
-                item => item !== MultiTypeInputType.EXPRESSION
-              ) as AllowedTypes
+            expressionRender={
+              /* istanbul ignore next */ () => (
+                <TFMonaco name="spec.configuration.tags.spec.content" formik={formik} title={getString('tagsLabel')} />
+              )
             }
+            allowedTypes={allowableTypes}
             skipRenderValueInExpressionLabel
             disabled={readonly}
           >

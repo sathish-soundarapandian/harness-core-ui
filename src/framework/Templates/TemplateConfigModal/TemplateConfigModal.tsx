@@ -7,7 +7,7 @@
 
 import React, { Dispatch, SetStateAction, useContext, useRef, useState } from 'react'
 import * as Yup from 'yup'
-import { defaultTo, isEmpty, isEqual, omit, pick, unset } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual, omit, omitBy, pick, unset } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import {
   Button,
@@ -30,8 +30,6 @@ import { Color, FontVariation } from '@harness/design-system'
 import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -288,16 +286,20 @@ const BasicTemplateDetails = (
   const onSubmit = React.useCallback(
     (values: TemplateConfigValues) => {
       setLoading(true)
-      const storeMetadataValues = {
-        storeType: values.storeType,
-        connectorRef:
-          typeof values.connectorRef === 'string'
-            ? values.connectorRef
-            : (values.connectorRef as unknown as ConnectorSelectedValue)?.value,
-        repoName: values.repo,
-        branch: values.branch,
-        filePath: values.filePath
-      }
+      // Remove the empty value as these are part of API queryParams
+      const storeMetadataValues = omitBy(
+        {
+          storeType: values.storeType,
+          connectorRef:
+            typeof values.connectorRef === 'string'
+              ? values.connectorRef
+              : (values.connectorRef as unknown as ConnectorSelectedValue)?.value,
+          repoName: values.repo,
+          branch: values.branch,
+          filePath: values.filePath
+        },
+        isEmpty
+      ) as StoreMetadata
       const updateTemplate = omit(
         values,
         'repo',
@@ -316,7 +318,8 @@ const BasicTemplateDetails = (
         ...(!isEmpty(values.repo) && {
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
         }),
-        ...(supportingTemplatesGitx ? { storeMetadata: storeMetadataValues } : {}),
+        // Pass storeMetadata only if template is Remote Enabled & supportingTemplatesGitx
+        ...(supportingTemplatesGitx && isInlineRemoteSelectionApplicable ? { storeMetadata: storeMetadataValues } : {}),
         ...(!isEmpty(values.comment?.trim()) && { comment: values.comment?.trim() }),
         saveAsNewVersionOfExistingTemplate
       })
@@ -660,14 +663,13 @@ const BasicTemplateDetails = (
   )
 }
 
-export const BasicTemplateDetailsWithRef = React.forwardRef(BasicTemplateDetails)
+const BasicTemplateDetailsWithRef = React.forwardRef(BasicTemplateDetails)
 
 const TemplateConfigModal = (
   props: ConfigModalProps,
   ref: React.ForwardedRef<TemplateConfigModalHandle>
 ): JSX.Element => {
   const { initialValues, ...rest } = props
-  const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const isInlineRemoteSelectionApplicable = templateFactory.getTemplateIsRemoteEnabled(initialValues.type)
   const { showError } = useToaster()
@@ -701,7 +703,7 @@ const TemplateConfigModal = (
       orgIdentifier,
       projectIdentifier
     },
-    lazy: !isSettingEnabled || !isInlineRemoteSelectionApplicable
+    lazy: !isInlineRemoteSelectionApplicable
   })
 
   React.useEffect(() => {

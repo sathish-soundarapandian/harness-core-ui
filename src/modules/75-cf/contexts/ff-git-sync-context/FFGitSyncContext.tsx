@@ -28,13 +28,7 @@ export const FFGitSyncContext = React.createContext<UseGitSync>({
       commitMsg: yup.string()
     })
   }),
-  gitRepoDetails: {
-    branch: '',
-    filePath: '',
-    objectId: '',
-    repoIdentifier: '',
-    rootFolder: ''
-  },
+  gitRepoDetails: undefined,
   handleAutoCommit: () => Promise.resolve(undefined),
   handleError: () => Promise.resolve(undefined),
   handleGitPause: () => Promise.resolve(undefined),

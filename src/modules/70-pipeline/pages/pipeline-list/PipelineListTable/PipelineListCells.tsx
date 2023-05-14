@@ -406,7 +406,7 @@ export const MenuCell: CellType = ({ row, column }) => {
               column.onClonePipeline!(data)
             }}
           />
-          {data?.storeType === StoreType.INLINE ? (
+          {data?.storeType === StoreType.INLINE || (!isGitSyncEnabled && !data?.storeType) ? (
             <RbacMenuItem
               icon="git-merge"
               text={getString('common.moveToGit')}

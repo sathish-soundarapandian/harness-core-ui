@@ -14,6 +14,7 @@ declare const styles: {
   readonly executionCount: string
   readonly failed24HrsExecutionsBadge: string
   readonly header: string
+  readonly lastBadge: string
   readonly loadingContainer: string
   readonly orgStyle: string
   readonly popoverStyle: string

@@ -686,6 +686,7 @@ executionStatus:
   Expired: EXPIRED
   Suspended: SUSPENDED
   NotStarted: NOT STARTED
+  Started: STARTED
   ApprovalRejected: REJECTED
   QueuedLicenseLimitReached: QUEUED LICENSE LIMIT REACHED
   QueuedExecutionConcurrencyReached: QUEUED EXECUTION CONCURRENCY REACHED
@@ -1287,6 +1288,7 @@ stepDescription:
   TerraformCloudRun: Trigger a run in a Terraform Cloud Workspace.
   TerraformCloudRollback: Trigger a rollback of the latest run on your Terraform Cloud Workspace.
   SscaOrchestration: Orchestrate SBOM generation for your artifacts and repository
+  SscaEnforcement: Enforce policies based on your SBOM by Allow list/Deny list
 
 executionStrategy:
   executionStrategies: Execution Strategies

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { render, waitFor, screen, fireEvent } from '@testing-library/react'
+import { render, waitFor, screen, fireEvent, act } from '@testing-library/react'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -109,6 +109,25 @@ describe('CVSLOsListingPage', () => {
       expect(getByText('97%')).toBeInTheDocument()
       expect(getAllByText('HEALTHY')).toHaveLength(2)
     })
+  })
+
+  test('Should render SLO Error message', async () => {
+    const { getAllByTestId, getByText } = render(<ComponentWrapper />)
+    await waitFor(() => {
+      expect(getAllByTestId('SLOErrorIcon').length).toEqual(2)
+    })
+    act(() => {
+      fireEvent.mouseOver(getAllByTestId('SLOErrorIcon')[0]!)
+    })
+    await waitFor(() =>
+      expect(getByText('Contributing SLO contain errors and needs to be addressed manually.')).toBeInTheDocument()
+    )
+    act(() => {
+      fireEvent.mouseOver(getAllByTestId('SLOErrorIcon')[1]!)
+    })
+    await waitFor(() =>
+      expect(getByText('The SLO is experiencing issues and is unable to collect data.')).toBeInTheDocument()
+    )
   })
 
   test('Should be able to search the SLO', async () => {

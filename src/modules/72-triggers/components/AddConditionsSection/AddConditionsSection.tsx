@@ -75,7 +75,7 @@ export const ConditionRow = ({
         label=""
         placeholder={getString('pipeline.operatorPlaceholder')}
         onChange={() => {
-          formikProps.setFieldTouched(valueKey, true)
+          formikProps.setFieldTouched(valueKey, true, false)
         }}
       />
       <FormInput.Text

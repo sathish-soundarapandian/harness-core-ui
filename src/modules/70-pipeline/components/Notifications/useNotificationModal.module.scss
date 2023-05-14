@@ -35,6 +35,12 @@
 .stagesMultiSelect {
   width: 350px;
   margin-bottom: 0px;
+  :global {
+    .bp3-tag-input {
+      overflow: auto;
+      max-height: 100px;
+    }
+  }
 }
 
 .formError {
@@ -47,4 +53,8 @@
 
 .stepWizardContainer {
   overflow-y: auto;
+}
+
+.stagesMultiSelectDropDown {
+  max-width: 600px;
 }

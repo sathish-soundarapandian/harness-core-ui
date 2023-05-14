@@ -6,6 +6,7 @@
  */
 
 import React, { useContext } from 'react'
+import { useParams } from 'react-router-dom'
 import { connect, FormikContextType } from 'formik'
 import {
   Layout,
@@ -21,11 +22,13 @@ import {
 import { Color } from '@harness/design-system'
 import { get, isPlainObject, defaultTo } from 'lodash-es'
 import { FormGroup, Intent } from '@blueprintjs/core'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 
 import { useStrings } from 'framework/strings'
 import type { FileUsage } from '@filestore/interfaces/FileStore'
 import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
 import css from './FileStoreSelectField.module.scss'
 
@@ -71,6 +74,7 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
   const { formik, label, name, tooltipProps, placeholder, readonly = false, onChange, fileUsage } = props
   const fileStoreValue = get(formik?.values, name)
   const [valuePath, setValuePath] = React.useState(get(formik?.values, name))
+  const params = useParams<ProjectPathProps>()
 
   const prepareFileStoreValue = (scopeType: string, path: string): string => {
     switch (scopeType) {
@@ -127,8 +131,10 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
           className={css.container}
           data-testid="container-fs"
           onClick={() => {
-            if (!readonly) {
+            if (!readonly && !!fileStoreValue) {
               modalFileStore.openFileStoreModal(get(formik?.values, name), getScope(fileStoreValue)?.scope)
+            } else {
+              modalFileStore.openFileStoreModal(get(formik?.values, name), getScopeFromDTO(params))
             }
           }}
         >

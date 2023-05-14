@@ -205,18 +205,7 @@ exports[`Subscription Plans should expand feature comparison when click on arrow
                 </div>
                 <div
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-                >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      common.start14dayTrial
-                    </span>
-                  </button>
-                </div>
+                />
                 <p
                   class="StyledProps--font StyledProps--main desc StyledProps--color StyledProps--color-black StyledProps--padding-large"
                 >
@@ -342,18 +331,7 @@ exports[`Subscription Plans should expand feature comparison when click on arrow
                 </div>
                 <div
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-                >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      common.start14dayTrial
-                    </span>
-                  </button>
-                </div>
+                />
                 <p
                   class="StyledProps--font StyledProps--main desc StyledProps--color StyledProps--color-black StyledProps--padding-large"
                 >
@@ -720,18 +698,7 @@ exports[`Subscription Plans should render the plans for CCM 1`] = `
                 </div>
                 <div
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-                >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      common.start14dayTrial
-                    </span>
-                  </button>
-                </div>
+                />
                 <p
                   class="StyledProps--font StyledProps--main desc StyledProps--color StyledProps--color-black StyledProps--padding-large"
                 >
@@ -873,18 +840,7 @@ exports[`Subscription Plans should render the plans for CCM 1`] = `
                 </div>
                 <div
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-                >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      common.start14dayTrial
-                    </span>
-                  </button>
-                </div>
+                />
                 <p
                   class="StyledProps--font StyledProps--main desc StyledProps--color StyledProps--color-black StyledProps--padding-large"
                 >
@@ -1273,18 +1229,7 @@ exports[`Subscription Plans should render the plans for CD 1`] = `
                 </div>
                 <div
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-                >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      common.start14dayTrial
-                    </span>
-                  </button>
-                </div>
+                />
                 <p
                   class="StyledProps--font StyledProps--main desc StyledProps--color StyledProps--color-black StyledProps--padding-large"
                 >
@@ -1417,18 +1362,7 @@ exports[`Subscription Plans should render the plans for CD 1`] = `
                 </div>
                 <div
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-                >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      common.start14dayTrial
-                    </span>
-                  </button>
-                </div>
+                />
                 <p
                   class="StyledProps--font StyledProps--main desc StyledProps--color StyledProps--color-black StyledProps--padding-large"
                 >
@@ -2290,18 +2224,7 @@ exports[`Subscription Plans should render the plans for FF 1`] = `
                 </div>
                 <div
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-                >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      common.start14dayTrial
-                    </span>
-                  </button>
-                </div>
+                />
                 <p
                   class="StyledProps--font StyledProps--main desc StyledProps--color StyledProps--color-black StyledProps--padding-large"
                 >
@@ -2452,18 +2375,7 @@ exports[`Subscription Plans should render the plans for FF 1`] = `
                 </div>
                 <div
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-                >
-                  <button
-                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      common.start14dayTrial
-                    </span>
-                  </button>
-                </div>
+                />
                 <p
                   class="StyledProps--font StyledProps--main desc StyledProps--color StyledProps--color-black StyledProps--padding-large"
                 >

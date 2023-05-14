@@ -17,15 +17,27 @@ exports[`SchedulePanel Triggers tests Interactivity: Schedule Tabs Hourly select
             class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
           >
             common.schedule
-            <p
-              class="StyledProps--font StyledProps--main"
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex"
             >
-              triggers.schedulePanel.currentUTCTime
-               
-              10
-              :
-              00
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                triggers.schedulePanel.currentUTCTime
+                 
+                10
+                :
+                00
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                triggers.schedulePanel.currentTime
+                10
+                :
+                00
+              </p>
+            </div>
           </span>
           <div
             class="Layout--vertical StyledProps--main formContent"
@@ -1095,15 +1107,27 @@ exports[`SchedulePanel Triggers tests Interactivity: Schedule Tabs Minutes selec
             class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
           >
             common.schedule
-            <p
-              class="StyledProps--font StyledProps--main"
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex"
             >
-              triggers.schedulePanel.currentUTCTime
-               
-              10
-              :
-              00
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                triggers.schedulePanel.currentUTCTime
+                 
+                10
+                :
+                00
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                triggers.schedulePanel.currentTime
+                10
+                :
+                00
+              </p>
+            </div>
           </span>
           <div
             class="Layout--vertical StyledProps--main formContent"
@@ -1577,15 +1601,27 @@ exports[`SchedulePanel Triggers tests Renders/snapshots Initial Render - Schedul
             class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
           >
             common.schedule
-            <p
-              class="StyledProps--font StyledProps--main"
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex"
             >
-              triggers.schedulePanel.currentUTCTime
-               
-              10
-              :
-              00
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                triggers.schedulePanel.currentUTCTime
+                 
+                10
+                :
+                00
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                triggers.schedulePanel.currentTime
+                10
+                :
+                00
+              </p>
+            </div>
           </span>
           <div
             class="Layout--vertical StyledProps--main formContent"

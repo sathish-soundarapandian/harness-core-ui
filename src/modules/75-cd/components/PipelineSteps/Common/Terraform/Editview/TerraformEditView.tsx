@@ -703,7 +703,7 @@ export default function TerraformEditView(
                             varFilePath={`spec.${fieldPath}.spec.varFiles`}
                           />
                           <div className={css.divider} />
-                          {CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG && initialValues?.type !== 'TerraformDestroy' ? (
+                          {CDS_TERRAFORM_REMOTE_BACKEND_CONFIG_NG ? (
                             <>
                               <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
                                 {get(values.spec, `${fieldPath}.spec.backendConfig.type`) ===

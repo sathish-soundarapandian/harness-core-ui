@@ -7,6 +7,7 @@
 
 import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { Classes, Menu, Position } from '@blueprintjs/core'
 import {
   Container,
   Tabs,
@@ -16,16 +17,30 @@ import {
   Layout,
   PageSpinner,
   useToaster,
-  VisualYamlSelectedView as SelectedView
+  VisualYamlSelectedView as SelectedView,
+  Popover,
+  shouldShowError,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
+import { parse } from 'yaml'
 import { Color } from '@harness/design-system'
 import { cloneDeep, defaultTo, get, omit, set, unset } from 'lodash-es'
 import produce from 'immer'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import { NGServiceConfig, useCreateServiceV2, useUpdateServiceV2 } from 'services/cd-ng'
+import {
+  NGServiceConfig,
+  ResponseValidateTemplateInputsResponseDTO,
+  useCreateServiceV2,
+  useUpdateServiceV2,
+  validateTemplateInputsPromise
+} from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -71,6 +86,10 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
   const { showSuccess, showError, clear } = useToaster()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
+  const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
+  const [validateTemplateInputsResponse, setValidateTemplateInputsResponse] =
+    React.useState<ResponseValidateTemplateInputsResponseDTO>()
+
   const handleTabChange = useCallback(
     (nextTab: ServiceTabs): void => {
       setSelectedTabId(nextTab)
@@ -99,6 +118,68 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
       }
     }
   })
+
+  const validateServiceReconcile = async (): Promise<void> => {
+    clear()
+    try {
+      const response = await validateTemplateInputsPromise({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          identifier: serviceId
+        }
+      })
+      if (response?.data?.validYaml === false && response?.data?.errorNodeSummary) {
+        setValidateTemplateInputsResponse(response)
+        setShouldShowOutOfSyncError(true)
+      } else {
+        showSuccess(getString('pipeline.outOfSyncErrorStrip.noErrorText', { entity: TemplateErrorEntity.SERVICE }))
+        setShouldShowOutOfSyncError(false)
+      }
+    } catch (reconcileValidateError) {
+      if (reconcileValidateError && shouldShowError(reconcileValidateError)) {
+        showError(getErrorInfoFromErrorObject(reconcileValidateError))
+      }
+    }
+  }
+
+  const handleReconcileClick = () => {
+    validateServiceReconcile()
+    showSuccess(getString('pipeline.outOfSyncErrorStrip.reconcileStarted'))
+  }
+
+  const updateAndPublishReconciledService = async (reconciledServiceYaml: string): Promise<void> => {
+    clear()
+    const reconciledService = parse(reconciledServiceYaml) as NGServiceConfig
+    const body = {
+      ...omit(cloneDeep(reconciledService?.service), 'serviceDefinition', 'gitOpsEnabled'),
+      projectIdentifier: isServiceCreateModalView ? projectIdentifier : serviceData?.projectIdentifier,
+      orgIdentifier: isServiceCreateModalView ? orgIdentifier : serviceData?.orgIdentifier,
+      //serviceId is not present in queryParam when service is created in pipeline studio.
+      identifier: defaultTo(serviceId, reconciledService?.service?.identifier),
+      yaml: reconciledServiceYaml
+    }
+
+    try {
+      const response = await updateService(body)
+      if (response.status === 'SUCCESS') {
+        // We invalidate the service inputs call on updating an existing service
+        queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
+
+        showSuccess(getString('common.serviceUpdated'))
+        setShouldShowOutOfSyncError(false)
+        fetchPipeline({ forceFetch: true, forceUpdate: true })
+        setIsDeploymentTypeDisabled?.(!!reconciledService.service?.serviceDefinition?.type)
+      } else {
+        throw response
+      }
+    } catch (err) {
+      showError(getErrorInfoFromErrorObject(err))
+    }
+    // this is for refetching serviceHeader API for updating "last updated" time after "saveAndPublishService" action
+    props.invokeServiceHeaderRefetch?.()
+  }
 
   const saveAndPublishService = async (): Promise<void> => {
     clear()
@@ -220,6 +301,12 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
               <ServiceConfiguration
                 setHasYamlValidationErrors={setHasYamlValidationErrors}
                 serviceData={props.serviceData}
+                shouldShowOutOfSyncError={shouldShowOutOfSyncError}
+                setShouldShowOutOfSyncError={(value: boolean) => setShouldShowOutOfSyncError(value)}
+                validateTemplateInputsResponse={validateTemplateInputsResponse}
+                updateServicePostReconcile={reconciledServiceYaml =>
+                  updateAndPublishReconciledService(reconciledServiceYaml)
+                }
               />
             }
           />
@@ -247,6 +334,29 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
               variation={ButtonVariation.SECONDARY}
               text={getString('pipeline.discard')}
             />
+            <Popover className={Classes.DARK} position={Position.LEFT}>
+              <Button variation={ButtonVariation.ICON} icon="Options" aria-label="service studio menu actions" />
+              <Menu style={{ backgroundColor: 'unset' }}>
+                <RbacMenuItem
+                  icon="refresh"
+                  text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
+                  disabled={isReadonly}
+                  onClick={handleReconcileClick}
+                  permission={{
+                    permission: PermissionIdentifier.EDIT_SERVICE,
+                    resource: {
+                      resourceType: ResourceType.SERVICE,
+                      resourceIdentifier: serviceId
+                    },
+                    resourceScope: {
+                      accountIdentifier: accountId,
+                      orgIdentifier: serviceData?.orgIdentifier,
+                      projectIdentifier: serviceData?.projectIdentifier
+                    }
+                  }}
+                />
+              </Menu>
+            </Popover>
           </Layout.Horizontal>
         )}
       </Container>

@@ -8,7 +8,6 @@
 import { useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useToaster } from '@harness/uicore'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetSettingValue } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SettingType } from '@common/constants/Utils'
@@ -19,7 +18,6 @@ const useIsGithubWebhookAuthenticationEnabled = (): {
   isGithubWebhookAuthenticationDataLoading: boolean
 } => {
   const { showError } = useToaster()
-  const { NG_SETTINGS } = useFeatureFlags()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
   const {
@@ -33,7 +31,7 @@ const useIsGithubWebhookAuthenticationEnabled = (): {
       orgIdentifier,
       projectIdentifier
     },
-    lazy: !NG_SETTINGS
+    lazy: false
   })
 
   useEffect(() => {

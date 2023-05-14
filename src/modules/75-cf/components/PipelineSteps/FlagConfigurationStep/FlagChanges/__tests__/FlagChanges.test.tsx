@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Feature } from 'services/cf'
 import FlagChanges, { FlagChangesProps } from '../FlagChanges'
@@ -55,7 +55,12 @@ describe('FlagChanges', () => {
   })
 
   test('it should disable the runtime/fixed selector button when showRuntimeFixedSelector is set and the selectedFeature is runtime', async () => {
-    renderComponent({ selectedFeature: RUNTIME_INPUT_VALUE, showRuntimeFixedSelector: true })
+    renderComponent({
+      selectedFeature: RUNTIME_INPUT_VALUE,
+      showRuntimeFixedSelector: true,
+      envType: MultiTypeInputType.RUNTIME,
+      flagType: MultiTypeInputType.RUNTIME
+    })
     expect(screen.getByTestId('runtime-fixed-selector-button')).toBeDisabled()
   })
 

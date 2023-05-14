@@ -1,97 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CITrialHomePage snapshot test should call button event when click 1`] = `
-<div>
-  <div
-    class="StyledProps--font StyledProps--main body"
-    style="background: transparent url(test-file-stub) no-repeat;"
-  >
-    <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
-    >
-      <h1
-        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-large StyledProps--color StyledProps--color-black100"
-      >
-        ci.continuous
-      </h1>
-      <div
-        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--padding-bottom-xxlarge"
-          style="width: 500px;"
-        >
-          ci.ciTrialHomePage.startTrial.description
-        </p>
-        <a
-          class="learnMore"
-          href="https://docs.harness.io/category/zgffarnh1m-ci-category"
-          rel="noreferrer"
-          target="_blank"
-        >
-          ci.learnMore
-        </a>
-        <button
-          aria-label="ci.ciTrialHomePage.startTrial.startBtn.description"
-          class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
-          disabled=""
-          style="width: 300px; height: 45px;"
-          tabindex="-1"
-          type="button"
-        >
-          <div
-            class="bp3-spinner bp3-button-spinner"
-          >
-            <div
-              class="bp3-spinner-animation"
-            >
-              <svg
-                height="20"
-                stroke-width="16.00"
-                viewBox="-3.00 -3.00 106.00 106.00"
-                width="20"
-              >
-                <path
-                  class="bp3-spinner-track"
-                  d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
-                />
-                <path
-                  class="bp3-spinner-head"
-                  d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
-                  pathLength="280"
-                  stroke-dasharray="280 280"
-                  stroke-dashoffset="210"
-                />
-              </svg>
-            </div>
-          </div>
-          <span
-            class="bp3-button-text"
-          >
-            ci.ciTrialHomePage.startTrial.startBtn.description
-          </span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`CITrialHomePage snapshot test should call button event when click 2`] = `
-<div>
-  <div>
-    <h1>
-      Not Found
-    </h1>
-    <div
-      data-testid="location"
-    >
-      /account/undefined/ci/home?modal=TRIAL&experience=TRIAL
-    </div>
-  </div>
-</div>
-`;
-
 exports[`CITrialHomePage snapshot test should render properly 1`] = `
 <div>
   <div
@@ -135,11 +43,6 @@ exports[`CITrialHomePage snapshot test should render properly 1`] = `
             common.startFreePlan
           </span>
         </button>
-        <a
-          href="/account/undefined/settings/subscriptions?moduleCard=ci&&tab=PLANS"
-        >
-          common.exploreAllPlans
-        </a>
       </div>
     </div>
   </div>

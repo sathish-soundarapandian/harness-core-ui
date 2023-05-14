@@ -36,8 +36,7 @@ import {
   useGetProjectAggregateDTOList,
   useGetSettingValue
 } from 'services/cd-ng'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -86,7 +85,6 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   const { isOpen, onClose, originalPipeline } = props
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<FormState>>()
-  const isSettingEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const history = useHistory()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { showSuccess, showError } = useToaster()
@@ -126,7 +124,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
       orgIdentifier,
       projectIdentifier
     },
-    lazy: !isSettingEnabled
+    lazy: false
   })
 
   React.useEffect(() => {

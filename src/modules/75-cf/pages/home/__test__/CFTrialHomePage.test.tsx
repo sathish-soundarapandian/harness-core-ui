@@ -120,9 +120,8 @@ describe('CFTrialHomePage', () => {
     renderComponent()
 
     expect(handleEnterpriseButtonClick).not.toHaveBeenCalled()
+    const text = screen.queryByText('cf.cfTrialHomePage.startTrial.startBtn.description')
 
-    userEvent.click(screen.getByText('cf.cfTrialHomePage.startTrial.startBtn.description'))
-
-    await waitFor(() => expect(handleEnterpriseButtonClick).toHaveBeenCalled())
+    expect(text).not.toBeInTheDocument()
   })
 })

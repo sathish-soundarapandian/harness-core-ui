@@ -47,6 +47,9 @@ window.IntersectionObserver = jest.fn().mockImplementation(intersectionObserverM
 
 describe('Environment Group Tests', () => {
   beforeEach(() => {
+    jest.spyOn(cdNgServices, 'useGetSettingValue').mockImplementation(() => {
+      return { data: { data: { value: 'false' } } } as any
+    })
     jest
       .spyOn(cdNgServices, 'useGetEnvironmentGroupList')
       .mockImplementation(() => postResolutionHelper(environmentGroupsData, false))

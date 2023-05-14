@@ -47,8 +47,7 @@ const extraAuthFieldsValidationConfig = (
         {
           name: 'spec.auth.region',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.authRegion',
-          isRequired: true
+          label: 'sto.stepField.authRegion'
         },
         {
           name: 'spec.auth.type',

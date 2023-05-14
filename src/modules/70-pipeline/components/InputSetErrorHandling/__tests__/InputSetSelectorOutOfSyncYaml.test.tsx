@@ -12,6 +12,7 @@ import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import * as pipelineng from 'services/pipeline-ng'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
+import * as cdngServices from 'services/cd-ng'
 import {
   GetInputSetYamlDiffInpSelector,
   GetOverlayISYamlDiffInpSelector,
@@ -22,7 +23,9 @@ const commonProps: InputSetSelectorProps = {
   pipelineIdentifier: 'pipId'
 }
 const successResponse = (): Promise<{ status: string }> => Promise.resolve({ status: 'SUCCESS', data: {} })
-
+jest.spyOn(cdngServices, 'useGetSettingValue').mockImplementation(() => {
+  return { data: { data: { value: 'false' } } } as any
+})
 jest.mock('react-monaco-editor', () => ({
   MonacoDiffEditor: MonacoEditor
 }))

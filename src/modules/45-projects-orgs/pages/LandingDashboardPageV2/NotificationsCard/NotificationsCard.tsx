@@ -25,16 +25,18 @@ import { usePolling } from '@common/hooks/usePolling'
 import DeployOverviewPopover, { FailedStatus } from './DeploymentOverviewPopover'
 import css from './NotificationsCard.module.scss'
 
-const getBadge = (type: string, deployStat: PipelineExecutionInfo[]): JSX.Element | null => {
+const getBadge = (type: string, deployStat: PipelineExecutionInfo[], isLastIndex: boolean): JSX.Element | null => {
   const stat = deployStat.length
   if (stat <= 0) {
     return null
   }
+
+  const badgeClass = cx(css.badge, { [css.lastBadge]: isLastIndex })
   switch (type) {
     case 'pendingManualInterventionExecutions':
       return (
         <Popover interactionKind="hover" popoverClassName={css.popoverStyle} autoFocus={false}>
-          <div className={css.badge} key={type}>
+          <div className={badgeClass} key={type}>
             <Icon name="status-pending" size={16} color={Color.ORANGE_700} />
             <Text className={css.badgeText}>
               {`${stat} `}
@@ -51,7 +53,7 @@ const getBadge = (type: string, deployStat: PipelineExecutionInfo[]): JSX.Elemen
     case 'pendingApprovalExecutions':
       return (
         <Popover interactionKind="hover" popoverClassName={css.popoverStyle} autoFocus={false}>
-          <div className={css.badge} key={type}>
+          <div className={badgeClass} key={type}>
             <Icon name="status-pending" size={16} color={Color.ORANGE_700} />
             <Text className={css.badgeText}>
               {`${stat} `}
@@ -68,7 +70,7 @@ const getBadge = (type: string, deployStat: PipelineExecutionInfo[]): JSX.Elemen
     case 'failed24HrsExecutions':
       return (
         <Popover interactionKind="hover" popoverClassName={css.popoverStyle} autoFocus={false}>
-          <div className={cx(css.badge, css.failed24HrsExecutionsBadge)} key={type}>
+          <div className={cx(badgeClass, css.failed24HrsExecutionsBadge)} key={type}>
             <Icon name="warning-sign" size={12} color={Color.RED_600} />
             <Text className={css.badgeText}>
               {`${stat} `}
@@ -85,7 +87,7 @@ const getBadge = (type: string, deployStat: PipelineExecutionInfo[]): JSX.Elemen
     case 'runningExecutions':
       return (
         <Popover interactionKind="hover" popoverClassName={css.popoverStyle} autoFocus={false}>
-          <div className={cx(css.badge, css.runningExecutions)} key={type}>
+          <div className={cx(badgeClass, css.runningExecutions)} key={type}>
             <Icon name="status-running" size={16} color={Color.PRIMARY_7} />
             <Text className={css.badgeText}>
               {`${stat} `}
@@ -162,8 +164,9 @@ export const NotificationsCard: React.FC<NotificationsCardProps> = ({ timeRange 
     }
 
     if (showBadgesCard(response?.deploymentsOverview)) {
-      return Object.keys(response?.deploymentsOverview).map(key =>
-        getBadge(key, (response?.deploymentsOverview as any)[key])
+      const badgesArr = Object.keys(response?.deploymentsOverview)
+      return badgesArr.map((key, index) =>
+        getBadge(key, (response?.deploymentsOverview as any)[key], index === badgesArr.length - 1)
       )
     }
 

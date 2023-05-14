@@ -7,7 +7,7 @@
 
 import { Container } from '@harness/uicore'
 import React, { useState } from 'react'
-import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import { NavModuleName, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { TimeRangeFilterType } from '@common/types'
 import ModuleOverview from '../ModuleOverview'
@@ -23,6 +23,8 @@ const modulesOrder: NavModuleName[] = [
   ModuleName.CHAOS
 ]
 
+const MODULES_WITH_DATA: NavModuleName[] = [ModuleName.CD, ModuleName.CI, ModuleName.CF, ModuleName.CE]
+
 export interface ModuleOverviewBaseProps {
   isExpanded: boolean
   isEmptyState: boolean
@@ -36,47 +38,53 @@ interface ModuleOverviewGridProps {
 const GRID_SIZE = 3
 const ModuleOverviewGrid: React.FC<ModuleOverviewGridProps> = ({ timeRange }) => {
   const [selectedModule, setSelectedModule] = useState<NavModuleName | undefined>()
+  const moduleMap = useNavModuleInfoMap()
 
   return (
     <Container className={css.container}>
-      {modulesOrder.map((module, index) => {
-        const isExpanded = selectedModule === module
-        const startRow = Math.floor(index / GRID_SIZE + 1)
-        let startColumn = Math.floor((index % GRID_SIZE) + 1)
+      {modulesOrder
+        .filter(module => {
+          // Removing the modules for which the User has a license but we don't have the API available
+          return !(moduleMap[module].hasLicense && MODULES_WITH_DATA.indexOf(module) === -1)
+        })
+        .map((module, index) => {
+          const isExpanded = selectedModule === module
+          const startRow = Math.floor(index / GRID_SIZE + 1)
+          let startColumn = Math.floor((index % GRID_SIZE) + 1)
 
-        if (startColumn === GRID_SIZE) {
-          startColumn = startColumn - 1
-        }
+          if (startColumn === GRID_SIZE) {
+            startColumn = startColumn - 1
+          }
 
-        return (
-          <ModuleOverview
-            className={css.module}
-            key={module}
-            module={module}
-            timeRange={timeRange}
-            isExpanded={isExpanded}
-            onClick={() => {
-              if (isExpanded) {
-                setSelectedModule(undefined)
-              } else {
-                setSelectedModule(module)
+          return (
+            <ModuleOverview
+              className={css.module}
+              key={module}
+              module={module}
+              timeRange={timeRange}
+              isExpanded={isExpanded}
+              onClick={() => {
+                if (isExpanded) {
+                  setSelectedModule(undefined)
+                } else {
+                  setSelectedModule(module)
+                }
+              }}
+              style={
+                selectedModule === module
+                  ? {
+                      gridRowStart: startRow,
+                      gridColumnStart: startColumn,
+                      gridRowEnd: 'span 2',
+                      gridColumnEnd: 'span 2',
+                      height: '316px',
+                      width: '392px'
+                    }
+                  : undefined
               }
-            }}
-            style={
-              selectedModule === module
-                ? {
-                    gridRowStart: startRow,
-                    gridColumnStart: startColumn,
-                    gridRowEnd: 'span 2',
-                    gridColumnEnd: 'span 2',
-                    height: '316px',
-                    width: '392px'
-                  }
-                : undefined
-            }
-          />
-        )
-      })}
+            />
+          )
+        })}
     </Container>
   )
 }

@@ -82,7 +82,6 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   >()
   const { isEdit } = sourceData
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
-  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
 
   const isSignalFXEnabled = useFeatureFlag(FeatureFlag.SRM_SPLUNK_SIGNALFX)
 
@@ -95,16 +94,12 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []
 
-    if (!isErrorTrackingEnabled) {
-      disabledConnectorsList.push(HealthSourceTypes.ErrorTracking)
-    }
-
     if (!isSignalFXEnabled) {
       disabledConnectorsList.push(HealthSourceTypes.SignalFX)
     }
 
     return disabledConnectorsList
-  }, [isErrorTrackingEnabled, isSignalFXEnabled])
+  }, [isSignalFXEnabled])
 
   const initialValues = useMemo(() => {
     return getInitialValues(sourceData, getString)

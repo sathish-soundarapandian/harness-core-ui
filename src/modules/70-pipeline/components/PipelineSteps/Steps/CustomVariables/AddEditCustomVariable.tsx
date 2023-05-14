@@ -9,12 +9,17 @@ import React from 'react'
 import * as Yup from 'yup'
 import { Button, Formik, FormikForm, FormInput, ButtonVariation, Dialog, Layout, AllowedTypes } from '@harness/uicore'
 
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { useQueryParams } from '@common/hooks'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { CustomDeploymentNGVariable } from 'services/cd-ng'
 import { getVaribaleTypeOptions, VariableType } from './CustomVariableUtils'
 
 const MAX_LENGTH = 128
@@ -63,6 +68,14 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
   }
 
   const actualFormName = formName || 'addEditCustomVariableForm'
+
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+    projectIdentifier: string
+    orgIdentifier: string
+    accountId: string
+  }>()
+
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   return (
     <Dialog
@@ -124,6 +137,22 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
             </Layout.Horizontal>
             {values?.type === VariableType.Secret ? (
               <MultiTypeSecretInput name={`value`} label={getString('valueLabel')} />
+            ) : (values?.type as CustomDeploymentNGVariable['type']) === VariableType.Connector ? (
+              <FormMultiTypeConnectorField
+                name={`value`}
+                label={getString('valueLabel')}
+                placeholder={getString('common.entityPlaceholderText')}
+                accountIdentifier={accountId}
+                multiTypeProps={{ expressions, allowableTypes }}
+                projectIdentifier={projectIdentifier}
+                orgIdentifier={orgIdentifier}
+                gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                setRefValue
+                connectorLabelClass="connectorVariableField"
+                enableConfigureOptions={false}
+                type={[]}
+                width="500px"
+              />
             ) : (
               <FormInput.MultiTextInput
                 name="value"

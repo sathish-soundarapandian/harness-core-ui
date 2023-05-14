@@ -46,7 +46,7 @@ const LandingDashboardPageV2 = () => {
       <PageBody>
         <Layout.Horizontal
           className={css.container}
-          padding={{ top: 'huge', bottom: 'huge' }}
+          padding="huge"
           flex={{ justifyContent: 'center', alignItems: 'flex-start' }}
         >
           <Layout.Vertical className={css.left}>

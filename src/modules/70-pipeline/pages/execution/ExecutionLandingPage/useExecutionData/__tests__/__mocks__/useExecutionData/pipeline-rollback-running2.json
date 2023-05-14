@@ -1,0 +1,127 @@
+{
+  "data": {
+    "pipelineExecutionSummary": {
+      "status": "Running",
+      "layoutNodeMap": {
+        "D1": {
+          "nodeUuid": "D1",
+          "nodeType": "Deployment",
+          "status": "Success",
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": ["D2"]
+          }
+        },
+        "D2": {
+          "nodeUuid": "D2",
+          "nodeType": "Deployment",
+          "status": "Failed",
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": ["PRB"]
+          }
+        },
+        "PRB": {
+          "nodeUuid": "PRB",
+          "nodeType": "PipelineRollback",
+          "status": "Running",
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          }
+        }
+      },
+      "startingNodeId": "D1"
+    },
+    "rollbackGraph": {
+      "pipelineExecutionSummary": {
+        "status": "Running",
+        "layoutNodeMap": {
+          "D2": {
+            "nodeUuid": "D2",
+            "nodeType": "Deployment",
+            "status": "Success",
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": ["D1"]
+            }
+          },
+          "D1": {
+            "nodeUuid": "D1",
+            "nodeType": "Deployment",
+            "status": "Running",
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            }
+          }
+        },
+        "parentStageInfo": {
+          "stagenodeid": "PRB"
+        },
+        "startingNodeId": "D2"
+      },
+      "executionGraph": {
+        "rootNodeId": "N0",
+        "nodeMap": {
+          "N0": {
+            "uuid": "N0",
+            "stepType": "DEPLOYMENT_STAGE_STEP",
+            "status": "NotStarted"
+          },
+          "N1": {
+            "uuid": "N1",
+            "stepType": "NG_EXECUTION",
+            "status": "NotStarted"
+          },
+          "N2": {
+            "uuid": "N2",
+            "stepType": "NG_FORK",
+            "status": "NotStarted"
+          },
+          "S1": {
+            "uuid": "S1",
+            "stepType": "Wait",
+            "status": "Success"
+          },
+          "S2": {
+            "uuid": "S2",
+            "stepType": "Wait",
+            "status": "Running"
+          },
+          "S3": {
+            "uuid": "S3",
+            "stepType": "Wait",
+            "status": "Running"
+          }
+        },
+        "nodeAdjacencyListMap": {
+          "N0": {
+            "children": ["N1"],
+            "nextIds": []
+          },
+          "N1": {
+            "children": ["N2"],
+            "nextIds": []
+          },
+          "N2": {
+            "children": ["S1", "S2", "S3"],
+            "nextIds": []
+          },
+          "S1": {
+            "children": [],
+            "nextIds": []
+          },
+          "S2": {
+            "children": [],
+            "nextIds": []
+          },
+          "S3": {
+            "children": [],
+            "nextIds": []
+          }
+        }
+      }
+    }
+  }
+}

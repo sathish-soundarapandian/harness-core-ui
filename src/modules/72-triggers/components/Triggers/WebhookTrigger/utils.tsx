@@ -17,14 +17,14 @@ import { connectorUrlType } from '@connectors/constants'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import type { SourceRepo, TriggerBaseType } from '../TriggerInterface'
-import { ciCodebaseBuild, ciCodebaseBuildPullRequest, CUSTOM, TriggerGitEvent } from '../utils'
+import { ciCodebaseBuild, ciCodebaseBuildPullRequest, CUSTOM, DEFAULT_TRIGGER_BRANCH, TriggerGitEvent } from '../utils'
 
 export function getDefaultPipelineReferenceBranch(event = ''): string {
   switch (event) {
     case TriggerGitEvent.ISSUE_COMMENT:
     case TriggerGitEvent.PULL_REQUEST:
     default:
-      return ciCodebaseBuild.spec.branch
+      return DEFAULT_TRIGGER_BRANCH
   }
 }
 
@@ -315,7 +315,7 @@ export const getValidationSchema = (
           (operator && !this.parent.sourceBranchValue) ||
           (operator && this.parent.sourceBranchValue) ||
           (!this.parent.sourceBranchValue?.trim() && !operator) ||
-          (!operator && this.parent.sourceBranchValue)
+          (operator !== undefined && this.parent.sourceBranchValue !== undefined)
         )
       }
     ),
@@ -337,7 +337,8 @@ export const getValidationSchema = (
         return (
           (operator && !this.parent.targetBranchValue) ||
           (operator && this.parent.targetBranchValue) ||
-          (!this.parent.targetBranchValue?.trim() && !operator)
+          (!this.parent.targetBranchValue?.trim() && !operator) ||
+          (operator !== undefined && this.parent.sourceBranchValue !== undefined)
         )
       }
     ),
@@ -359,7 +360,8 @@ export const getValidationSchema = (
         return (
           (operator && !this.parent.changedFilesValue) ||
           (operator && this.parent.changedFilesValue) ||
-          (!this.parent.changedFilesValue?.trim() && !operator)
+          (!this.parent.changedFilesValue?.trim() && !operator) ||
+          (operator !== undefined && this.parent.sourceBranchValue !== undefined)
         )
       }
     ),
@@ -381,7 +383,8 @@ export const getValidationSchema = (
         return (
           (operator && !this.parent.tagConditionValue) ||
           (operator && this.parent.tagConditionValue) ||
-          (!this.parent.tagConditionValue?.trim() && !operator)
+          (!this.parent.tagConditionValue?.trim() && !operator) ||
+          (operator !== undefined && this.parent.tagConditionValue !== undefined)
         )
       }
     ),

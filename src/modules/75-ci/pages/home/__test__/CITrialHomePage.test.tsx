@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import CITrialHomePage from '../CITrialHomePage'
 
@@ -49,16 +49,5 @@ describe('CITrialHomePage snapshot test', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
-  })
-
-  test('should call button event when click', async () => {
-    window.deploymentType = 'ON_PREM'
-    const { container, getByText } = render(
-      <TestWrapper>
-        <CITrialHomePage />
-      </TestWrapper>
-    )
-    fireEvent.click(getByText('ci.ciTrialHomePage.startTrial.startBtn.description'))
-    await waitFor(() => expect(container).toMatchSnapshot())
   })
 })

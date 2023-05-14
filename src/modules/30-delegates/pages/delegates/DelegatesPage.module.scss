@@ -141,15 +141,12 @@
   display: flex;
   justify-content: center;
   padding: var(--spacing-xlarge) !important;
+  padding-top: 0 !important;
   background: var(--primary-bg) !important;
 }
 
 .delegateListHeader {
-  padding: var(--spacing-large) 0 !important;
-  font-weight: 700;
-  font-size: var(--font-size-small);
-  color: var(--grey-800) !important;
-  text-transform: uppercase;
+  margin: var(--spacing-medium) 0 !important;
 }
 
 .delegateItemContainer {

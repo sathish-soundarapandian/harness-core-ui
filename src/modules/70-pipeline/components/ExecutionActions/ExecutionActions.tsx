@@ -41,6 +41,8 @@ import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/i
 import { killEvent } from '@common/utils/eventUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
+import { PipelineExecutionActions } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import { useOpenRetryPipelineModal } from './useOpenRetryPipelineModal'
@@ -193,6 +195,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { isCompareMode } = useExecutionCompareContext()
+  const { trackEvent } = useTelemetry()
 
   const { openDialog: openAbortDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
@@ -285,6 +288,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
   const { openRetryPipelineModal } = useOpenRetryPipelineModal({ modules, params })
   const retryPipeline = (): void => {
+    trackEvent(PipelineExecutionActions.RetryPipeline, { triggered_from: 'kebab-menu' })
     openRetryPipelineModal()
   }
   const showRetryPipelineOption = isRetryPipelineAllowed(executionStatus) && canRetry
@@ -293,6 +297,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/
   const reRunPipeline = (): void => {
+    trackEvent(PipelineExecutionActions.ReRunPipeline, { triggered_from: 'kebab-menu' })
     isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? openRunPipelineModalV1() : openRunPipelineModal()
   }
 

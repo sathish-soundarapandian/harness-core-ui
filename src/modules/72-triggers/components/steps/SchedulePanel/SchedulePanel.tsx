@@ -44,10 +44,16 @@ const SchedulePanel: React.FC<SchedulePanelPropsInterface> = ({
       <Text className={css.formContentTitle} inline={true}>
         {getString('common.schedule')}
         <HarnessDocTooltip tooltipId="schedulePanel" useStandAlone={true} />
-        <Text>
-          {getString('triggers.schedulePanel.currentUTCTime')} {currentDate.getUTCHours()}:
-          {String(currentDate.getUTCMinutes()).padStart(2, '0')}
-        </Text>
+        <Layout.Horizontal flex>
+          <Text>
+            {getString('triggers.schedulePanel.currentUTCTime')} {currentDate.getUTCHours()}:
+            {String(currentDate.getUTCMinutes()).padStart(2, '0')}
+          </Text>
+          <Text>
+            {getString('triggers.schedulePanel.currentTime')}
+            {currentDate.getHours()}:{String(currentDate.getMinutes()).padStart(2, '0')}
+          </Text>
+        </Layout.Horizontal>
       </Text>
       <Layout.Vertical className={css.formContent}>
         <Tabs

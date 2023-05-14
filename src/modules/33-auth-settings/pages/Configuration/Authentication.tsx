@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Callout } from '@blueprintjs/core'
 import { Page } from '@common/exports'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
-import { useGetAuthenticationSettings } from 'services/cd-ng'
+import { useGetAuthenticationSettingsV2, useGetAuthenticationSettings } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import AccountAndOAuth from '@auth-settings/pages/Configuration/AccountAndOAuth/AccountAndOAuth'
@@ -19,6 +19,8 @@ import RestrictEmailDomains from '@auth-settings/pages/Configuration/RestrictEma
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import SAMLProviderV2 from '@auth-settings/pages/Configuration/SAMLProvider/SAMLProviderV2'
 import LDAPProvider from './LDAPProvider/LDAPProvider'
 import SessionTimeOut from './SessionTimeOut/SessionTimeOut'
 import css from './Configuration.module.scss'
@@ -36,6 +38,7 @@ const Authentication: React.FC = () => {
   const params = useParams<AccountPathProps>()
   const { accountId } = params
   const { getString } = useStrings()
+  const { PL_ENABLE_MULTIPLE_IDP_SUPPORT } = useFeatureFlags()
   const [updating, setUpdating] = React.useState(false)
 
   const permissionRequest = {
@@ -56,15 +59,35 @@ const Authentication: React.FC = () => {
   )
 
   const {
-    data,
-    loading: fetchingAuthSettings,
-    error: errorWhileFetchingAuthSettings,
-    refetch: refetchAuthSettings
+    data: authSettingsV1,
+    loading: fetchingAuthSettingsV1,
+    error: errorWhileFetchingAuthSettingsV1,
+    refetch: refetchAuthSettingsV1
   } = useGetAuthenticationSettings({
     queryParams: {
       accountIdentifier: accountId
-    }
+    },
+    lazy: PL_ENABLE_MULTIPLE_IDP_SUPPORT
   })
+
+  const {
+    data: authSettingsV2,
+    loading: fetchingAuthSettingsV2,
+    error: errorWhileFetchingAuthSettingsV2,
+    refetch: refetchAuthSettingsV2
+  } = useGetAuthenticationSettingsV2({
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: !PL_ENABLE_MULTIPLE_IDP_SUPPORT
+  })
+
+  const data = PL_ENABLE_MULTIPLE_IDP_SUPPORT ? authSettingsV2 : authSettingsV1
+  const fetchingAuthSettings = PL_ENABLE_MULTIPLE_IDP_SUPPORT ? fetchingAuthSettingsV2 : fetchingAuthSettingsV1
+  const errorWhileFetchingAuthSettings = PL_ENABLE_MULTIPLE_IDP_SUPPORT
+    ? errorWhileFetchingAuthSettingsV2
+    : errorWhileFetchingAuthSettingsV1
+  const refetchAuthSettings = PL_ENABLE_MULTIPLE_IDP_SUPPORT ? refetchAuthSettingsV2 : refetchAuthSettingsV1
 
   return (
     <React.Fragment>
@@ -95,13 +118,23 @@ const Authentication: React.FC = () => {
               canEdit={canEdit}
               setUpdating={setUpdating}
             />
-            <SAMLProvider
-              authSettings={data.resource}
-              refetchAuthSettings={refetchAuthSettings}
-              permissionRequest={permissionRequest}
-              canEdit={canEdit}
-              setUpdating={setUpdating}
-            />
+            {PL_ENABLE_MULTIPLE_IDP_SUPPORT ? (
+              <SAMLProviderV2
+                authSettings={data.resource}
+                refetchAuthSettings={refetchAuthSettings}
+                permissionRequest={permissionRequest}
+                canEdit={canEdit}
+                setUpdating={setUpdating}
+              />
+            ) : (
+              <SAMLProvider
+                authSettings={data.resource}
+                refetchAuthSettings={refetchAuthSettings}
+                permissionRequest={permissionRequest}
+                canEdit={canEdit}
+                setUpdating={setUpdating}
+              />
+            )}
             <LDAPProvider
               authSettings={data.resource}
               refetchAuthSettings={refetchAuthSettings}

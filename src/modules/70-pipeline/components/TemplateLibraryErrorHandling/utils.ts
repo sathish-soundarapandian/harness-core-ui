@@ -11,7 +11,8 @@ import type { ErrorNodeSummary } from 'services/template-ng'
 export enum TemplateErrorEntity {
   PIPELINE = 'Pipeline',
   TEMPLATE = 'Template',
-  INFRASTRUCTURE = 'Infrastructure'
+  INFRASTRUCTURE = 'Infrastructure',
+  SERVICE = 'Service'
 }
 
 export const getTitleFromErrorNodeSummary = (

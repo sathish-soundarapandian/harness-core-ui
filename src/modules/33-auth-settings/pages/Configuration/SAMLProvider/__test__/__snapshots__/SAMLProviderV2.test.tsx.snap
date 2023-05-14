@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SAML Provider Add SAML Provider 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--margin-xlarge StyledProps--background-white"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card cardWithRadioBtn"
+    >
+      <div
+        class="StyledProps--font StyledProps--main StyledProps--margin-left-xlarge StyledProps--margin-top-xsmall"
+      >
+        <label
+          class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-primary7"
+        >
+          <input
+            type="radio"
+          />
+          <span
+            class="bp3-control-indicator"
+          />
+          authSettings.plusSAMLProvider
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;

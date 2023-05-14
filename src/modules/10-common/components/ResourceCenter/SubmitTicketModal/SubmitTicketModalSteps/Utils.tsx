@@ -1,6 +1,8 @@
+import { ModuleName } from 'framework/types/ModuleName'
+
 export const getComponentsFromModule = (module: string): Array<{ label: string; value: string }> => {
   switch (module) {
-    case 'cd':
+    case ModuleName.CD:
       return [
         { label: 'Azure Web App', value: 'Azure Web App' },
         { label: 'ECS', value: 'ECS' },
@@ -13,7 +15,7 @@ export const getComponentsFromModule = (module: string): Array<{ label: string; 
         { label: 'Tanzu/PCF', value: 'Tanzu/PCF' },
         { label: 'WinRM/SSH', value: 'WinRM/SSH' }
       ]
-    case 'ci':
+    case ModuleName.CI:
       return [
         { label: 'Artifact upload', value: 'Artifact upload' },
         { label: 'Build', value: 'Build' },
@@ -22,7 +24,7 @@ export const getComponentsFromModule = (module: string): Array<{ label: string; 
         { label: 'Tests and test autoamtion', value: 'Tests and test autoamtion' },
         { label: 'Test intelligence', value: 'Test intelligence' }
       ]
-    case 'ce':
+    case ModuleName.CE:
       return [
         { label: 'Autostopping', value: 'Autostopping' },
         { label: 'Build', value: 'Build' },
@@ -30,20 +32,20 @@ export const getComponentsFromModule = (module: string): Array<{ label: string; 
         { label: 'Cost Optimization', value: 'Cost Optimization' },
         { label: 'Dashboard', value: 'Dashboard' }
       ]
-    case 'sto':
+    case ModuleName.STO:
       return [
         { label: 'Pipeline', value: 'Pipeline' },
         { label: 'Plugins and engines', value: 'Plugins and engines' },
         { label: 'Scan results and rules', value: 'Scan results and rules' }
       ]
-    case 'chaos':
+    case ModuleName.CHAOS:
       return [
         { label: 'Experiment', value: 'Experiment' },
         { label: 'Hub', value: 'Hub' },
         { label: 'Infrastracture', value: 'Infrastracture' },
         { label: 'Probes', value: 'Probes' }
       ]
-    case 'cf':
+    case ModuleName.CF:
       return [
         { label: 'Integration and pipeline', value: 'Integration and pipeline' },
         { label: 'Relay Proxy', value: 'Relay Proxy' },

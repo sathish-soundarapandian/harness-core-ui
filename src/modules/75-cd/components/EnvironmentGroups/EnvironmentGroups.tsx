@@ -36,8 +36,6 @@ import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/ho
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { SettingType } from '@common/constants/Utils'
 
 import RbacButton from '@rbac/components/Button/Button'
@@ -69,7 +67,6 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
-  const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const {
     data: forceDeleteSettings,
     loading: forceDeleteSettingsLoading,
@@ -79,7 +76,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: !isSettingsEnabled
+    lazy: false
   })
 
   React.useEffect(() => {

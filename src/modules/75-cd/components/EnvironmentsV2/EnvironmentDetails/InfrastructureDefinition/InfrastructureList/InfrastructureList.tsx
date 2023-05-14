@@ -17,8 +17,6 @@ import type { EnvironmentPathProps, ProjectPathProps, EnvironmentQueryParams } f
 import { InfraDefinitionTabs } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
 import { useUpdateQueryParams } from '@common/hooks'
 import { SettingType } from '@common/constants/Utils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
@@ -49,7 +47,6 @@ export default function InfrastructureList({
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const isSettingsEnabled = useFeatureFlag(FeatureFlag.NG_SETTINGS)
   const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
   const [infraDetailsToBeDeleted, setInfraDetailsToBeDeleted] = React.useState<InfraDetails>()
 
@@ -58,7 +55,7 @@ export default function InfrastructureList({
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: !isSettingsEnabled
+    lazy: false
   })
 
   React.useEffect(() => {

@@ -29,6 +29,28 @@ export const pipelineContext = {
         }
       ]
     },
+    originalPipeline: {
+      name: 'Service 1',
+      identifier: 'Service_1',
+      tags: {},
+      gitOpsEnabled: false,
+      stages: [
+        {
+          stage: {
+            name: 'Stage Name',
+            identifier: 'stage_id',
+            spec: {
+              serviceConfig: {
+                serviceDefinition: {
+                  spec: {}
+                },
+                serviceRef: 'Service_1'
+              }
+            }
+          }
+        }
+      ]
+    },
     pipelineView: {
       isSplitViewOpen: false,
       isDrawerOpened: false,
