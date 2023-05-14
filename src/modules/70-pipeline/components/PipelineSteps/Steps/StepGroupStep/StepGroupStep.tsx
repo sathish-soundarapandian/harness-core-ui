@@ -6,79 +6,15 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput } from '@harness/uicore'
-import * as Yup from 'yup'
-import cx from 'classnames'
-import type { FormikProps } from 'formik'
-import { NameSchema } from '@common/utils/Validation'
-import type { StepViewType, StepProps, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
-import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { IconName } from '@harness/uicore'
+
 import type { StepGroupElementConfig } from 'services/cd-ng'
+import type { StepProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import { useStrings } from 'framework/strings'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import { StepGroupStepEditRef } from './StepGroupStepEdit'
 
-interface StepGroupWidgetProps {
-  initialValues: StepGroupElementConfig
-  isNewStep?: boolean
-  onUpdate?: (data: StepGroupElementConfig) => void
-  stepViewType?: StepViewType
-}
-
-function StepGroupWidget(
-  props: StepGroupWidgetProps,
-  formikRef: StepFormikFowardRef<StepGroupElementConfig>
-): React.ReactElement {
-  const { initialValues, onUpdate, isNewStep = true } = props
-  const { getString } = useStrings()
-  return (
-    <>
-      <Formik<StepGroupElementConfig>
-        onSubmit={values => {
-          onUpdate?.(values)
-        }}
-        formName="stepGroup"
-        initialValues={initialValues}
-        validationSchema={Yup.object().shape({
-          name: NameSchema(getString)
-        })}
-      >
-        {(formik: FormikProps<StepGroupElementConfig>) => {
-          setFormikRef(formikRef, formik)
-          return (
-            <div className={cx(stepCss.formGroup, stepCss.md)}>
-              <FormInput.InputWithIdentifier inputLabel={getString('name')} isIdentifierEditable={isNewStep} />
-            </div>
-          )
-        }}
-      </Formik>
-    </>
-  )
-}
-const StepGroupWidgetRef = React.forwardRef(StepGroupWidget)
 export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
-  renderStep(props: StepProps<StepGroupElementConfig>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, formikRef, isNewStep } = props
-
-    return (
-      <StepGroupWidgetRef
-        initialValues={initialValues}
-        onUpdate={onUpdate}
-        isNewStep={isNewStep}
-        stepViewType={stepViewType}
-        ref={formikRef}
-      />
-    )
-  }
-
-  constructor() {
-    super()
-    this._hasDelegateSelectionVisible = true
-  }
-  validateInputSet(): Record<string, any> {
-    return {}
-  }
   protected type = StepType.StepGroup
   protected stepName = 'Step Group'
   protected stepIcon: IconName = 'step-group'
@@ -88,5 +24,30 @@ export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
     identifier: '',
     name: '',
     steps: []
+  }
+
+  constructor() {
+    super()
+    this._hasDelegateSelectionVisible = true
+  }
+
+  validateInputSet(): Record<string, any> {
+    return {}
+  }
+
+  renderStep(props: StepProps<StepGroupElementConfig>): JSX.Element {
+    const { initialValues, onUpdate, stepViewType, formikRef, isNewStep, readonly, allowableTypes } = props
+
+    return (
+      <StepGroupStepEditRef
+        initialValues={initialValues}
+        onUpdate={onUpdate}
+        isNewStep={isNewStep}
+        stepViewType={stepViewType}
+        ref={formikRef}
+        readonly={readonly}
+        allowableTypes={allowableTypes}
+      />
+    )
   }
 }
