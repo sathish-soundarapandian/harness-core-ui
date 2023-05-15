@@ -11,7 +11,12 @@ import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { ServiceDefinition } from 'services/cd-ng'
 
 export const AllowedConfigStoresTypes = [ConfigFilesMap.Harness]
-export const OverrideGitStores = [ConfigFilesMap.Github, ConfigFilesMap.Git, ConfigFilesMap.Bitbucket]
+export const OverrideGitStores = [
+  ConfigFilesMap.Github,
+  ConfigFilesMap.Git,
+  ConfigFilesMap.Bitbucket,
+  ConfigFilesMap.GitLab
+]
 
 export function getAllowedConfigStores({ CDS_GIT_CONFIG_FILES = false }): ConfigFileType[] {
   let overrideConfigStores = [...AllowedConfigStoresTypes]
