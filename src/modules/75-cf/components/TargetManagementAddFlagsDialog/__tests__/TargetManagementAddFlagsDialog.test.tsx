@@ -109,8 +109,8 @@ describe('TargetManagementAddFlagsDialog', () => {
     expect(btn).toBeDisabled()
 
     const checkbox = screen.getAllByRole('checkbox')[0]
-    userEvent.click(checkbox)
-    userEvent.click(
+    await userEvent.click(checkbox)
+    await userEvent.click(
       getByPlaceholderText(
         checkbox.closest('[role="row"]') as HTMLElement,
         '- cf.targetManagementFlagConfiguration.selectVariation -'
@@ -118,7 +118,7 @@ describe('TargetManagementAddFlagsDialog', () => {
     )
 
     await waitFor(() => expect(screen.getByText(mockFlags[0].variations[0].name as string)).toBeInTheDocument())
-    userEvent.click(screen.getByText(mockFlags[0].variations[0].name as string))
+    await userEvent.click(screen.getByText(mockFlags[0].variations[0].name as string))
 
     await waitFor(() => expect(btn).toBeEnabled())
   })
@@ -141,7 +141,7 @@ describe('TargetManagementAddFlagsDialog', () => {
     expect(refetchMock).not.toHaveBeenCalled()
     expect(screen.getByText(message)).toBeInTheDocument()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => expect(refetchMock).toHaveBeenCalled())
   })
@@ -206,8 +206,8 @@ describe('TargetManagementAddFlagsDialog', () => {
     renderComponent({ includePercentageRollout: true })
 
     const checkbox = screen.getAllByRole('checkbox')[0]
-    userEvent.click(checkbox)
-    userEvent.click(
+    await userEvent.click(checkbox)
+    await userEvent.click(
       getByPlaceholderText(
         checkbox.closest('[role="row"]') as HTMLElement,
         '- cf.targetManagementFlagConfiguration.selectVariation -'
@@ -215,7 +215,7 @@ describe('TargetManagementAddFlagsDialog', () => {
     )
 
     await waitFor(() => expect(screen.getByText('cf.featureFlags.percentageRollout')).toBeInTheDocument())
-    userEvent.click(screen.getByText('cf.featureFlags.percentageRollout'))
+    await userEvent.click(screen.getByText('cf.featureFlags.percentageRollout'))
 
     await waitFor(() => expect(screen.getByText('cf.percentageRollout.invalidTotalError')).toBeInTheDocument())
   })

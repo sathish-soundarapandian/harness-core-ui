@@ -166,9 +166,9 @@ const clickOnReconcileButton = async (): Promise<void> => {
   const reconcileMenuOption = await screen.findByRole('button', {
     name: /overlay input set menu actions/i
   })
-  userEvent.click(reconcileMenuOption)
+  await userEvent.click(reconcileMenuOption)
   const reconcileBtn = await screen.findByText('pipeline.outOfSyncErrorStrip.reconcile')
-  userEvent.click(reconcileBtn)
+  await userEvent.click(reconcileBtn)
   expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 }
 
@@ -194,6 +194,9 @@ const renderComponent = (): RenderResult => {
 }
 
 describe('Inline Overlay Input Set Error Exp', () => {
+  beforeAll(() => {
+    jest.useFakeTimers({ advanceTimers: true })
+  })
   test('should render input set menu action button', async () => {
     renderComponent()
     jest.runOnlyPendingTimers()
@@ -215,7 +218,7 @@ describe('Inline Overlay Input Set Error Exp', () => {
 
     await screen.findByText('pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(removeInvalidFieldBtn)
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
@@ -237,7 +240,7 @@ describe('Inline Overlay Input Set Error Exp', () => {
 
     await screen.findByText('pipeline.inputSets.invalidOverlayISDesc1')
     const deleteOverlayISBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.deleteOverlayIS' })
-    userEvent.click(deleteOverlayISBtn)
+    await userEvent.click(deleteOverlayISBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })

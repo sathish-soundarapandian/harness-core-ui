@@ -27,11 +27,11 @@ const mockTargets: TargetData[] = [
 ]
 
 describe('FileUpload', () => {
-  const uploadCSV = (targets: TargetData[] = mockTargets): void => {
+  const uploadCSV = async (targets: TargetData[] = mockTargets): Promise<void> => {
     const targetsCSV = targets.map(({ name, identifier }) => [name, identifier].join()).join('\n')
     File.prototype.text = jest.fn().mockResolvedValueOnce(targetsCSV)
 
-    userEvent.upload(
+    await userEvent.upload(
       screen.getByLabelText('cf.targets.uploadYourFile'),
       new File([targetsCSV], 'test.csv', { type: 'text/csv' })
     )
@@ -47,7 +47,7 @@ describe('FileUpload', () => {
     renderComponent()
 
     const targets = cloneDeep(mockTargets)
-    uploadCSV(targets)
+    await uploadCSV(targets)
 
     await waitFor(() => {
       expect(screen.queryByLabelText('cf.targets.uploadYourFile')).not.toBeInTheDocument()
@@ -60,11 +60,11 @@ describe('FileUpload', () => {
   test('it should clear the targets when the clear all button is pressed', async () => {
     renderComponent()
 
-    uploadCSV()
+    await uploadCSV()
 
     await waitFor(() => expect(document.querySelectorAll('.bp3-tag')).toHaveLength(mockTargets.length))
 
-    userEvent.click(screen.getByRole('button', { name: 'filters.clearAll' }))
+    await userEvent.click(screen.getByRole('button', { name: 'filters.clearAll' }))
 
     await waitFor(() => {
       expect(document.querySelectorAll('.bp3-tag')).toHaveLength(0)
@@ -78,7 +78,7 @@ describe('FileUpload', () => {
     const targets = cloneDeep(mockTargets)
     targets[1].identifier = ''
 
-    uploadCSV(targets)
+    await uploadCSV(targets)
 
     await waitFor(() => {
       expect(document.querySelectorAll('.bp3-tag')).toHaveLength(targets.length - 1)
@@ -93,7 +93,7 @@ describe('FileUpload', () => {
 
     expect(onChangeMock).not.toHaveBeenCalled()
 
-    uploadCSV()
+    await uploadCSV()
 
     await waitFor(() => expect(onChangeMock).toHaveBeenCalled())
   })

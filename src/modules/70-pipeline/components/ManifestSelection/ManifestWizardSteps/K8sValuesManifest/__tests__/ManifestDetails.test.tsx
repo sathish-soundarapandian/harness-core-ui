@@ -499,7 +499,7 @@ describe('Manifest Details tests', () => {
         <K8sValuesManifest {...defaultProps} handleSubmit={handleSubmit} />
       </TestWrapper>
     )
-    userEvent.click(getByText('advancedTitle'))
+    await userEvent.click(getByText('advancedTitle'))
     expect(getByText('pipeline.manifestType.enableDeclarativeRollback')!).toBeInTheDocument()
 
     const enableDeclarativeRollbackCheckbox = queryByNameAttribute(
@@ -507,7 +507,7 @@ describe('Manifest Details tests', () => {
       container
     ) as HTMLInputElement
     await waitFor(() => expect(enableDeclarativeRollbackCheckbox).not.toBeChecked())
-    userEvent.click(getByText('pipeline.manifestType.enableDeclarativeRollback')!)
+    await userEvent.click(getByText('pipeline.manifestType.enableDeclarativeRollback')!)
     await waitFor(() => expect(enableDeclarativeRollbackCheckbox).toBeTruthy())
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() => {

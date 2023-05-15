@@ -47,13 +47,13 @@ describe('TASRollbackStepStep tests', () => {
     )
 
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.type(nameInput!, 'TAS Rollback Step')
+    await userEvent.type(nameInput!, 'TAS Rollback Step')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('TAS Rollback Step'))
     expect(getByText('TAS_Rollback_Step')).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '10m')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '10m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('10m'))
 
     await act(() => ref.current?.submitForm()!)
@@ -91,11 +91,11 @@ describe('TASRollbackStepStep tests', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(onUpdate).not.toHaveBeenCalled()
-    userEvent.type(timeoutInput!, '10m')
-    userEvent.click(submitBtn)
+    await userEvent.type(timeoutInput!, '10m')
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'TAS_Rollback_Step',

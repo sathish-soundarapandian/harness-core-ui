@@ -99,7 +99,7 @@ describe.skip('FlagConfigurationInputSetStep', () => {
       expect(btn).toBeInTheDocument()
       expect(refetchMock).not.toHaveBeenCalled()
 
-      userEvent.click(btn)
+      await userEvent.click(btn)
 
       await waitFor(() => expect(refetchMock).toHaveBeenCalled())
     })
@@ -119,7 +119,7 @@ describe.skip('FlagConfigurationInputSetStep', () => {
         ?.parentElement?.parentElement?.querySelector('input') as HTMLInputElement
       expect(field).toBeInTheDocument()
 
-      userEvent.click(field)
+      await userEvent.click(field)
 
       await waitFor(() => {
         mockFeatures.forEach(({ name }) => expect(screen.getByText(name)).toBeInTheDocument())

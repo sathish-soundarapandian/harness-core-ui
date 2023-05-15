@@ -100,12 +100,12 @@ describe('Metric thresholds', () => {
       render(<WrapperComponent {...newProps} />)
       expect(screen.queryByTestId(/commonHealthSource_metricThresholds/)).not.toBeInTheDocument()
     })
-    test('should check metric threshold should not render groups, if the metric packs is disabled', () => {
+    test('should check metric threshold should not render groups, if the metric packs is disabled', async () => {
       const { container } = render(<WrapperComponent {...props} />)
       const addMetricThresholdsButton = screen.getByText(/cv.monitoringSources.appD.addThreshold/)
 
-      act(() => {
-        userEvent.click(addMetricThresholdsButton)
+      await act(async () => {
+        await userEvent.click(addMetricThresholdsButton)
       })
 
       expect(container.querySelector("[name='ignoreThresholds.0.metricType']")).toBeInTheDocument()
@@ -122,8 +122,8 @@ describe('Metric thresholds', () => {
 
       const addMetricThresholdsButton = screen.getByText(/cv.monitoringSources.appD.addThreshold/)
 
-      act(() => {
-        userEvent.click(addMetricThresholdsButton)
+      await act(async () => {
+        await userEvent.click(addMetricThresholdsButton)
       })
 
       const greaterThanInput = container.querySelector(`[name="ignoreThresholds.0.criteria.spec.greaterThan"]`)
@@ -137,7 +137,7 @@ describe('Metric thresholds', () => {
         ?.querySelector('[data-icon="chevron-down"]')
 
       expect(selectCaretCriteriaType).toBeInTheDocument()
-      userEvent.click(selectCaretCriteriaType!)
+      await userEvent.click(selectCaretCriteriaType!)
 
       await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
 
@@ -148,8 +148,8 @@ describe('Metric thresholds', () => {
         'cv.monitoringSources.appD.percentageDeviation'
       )
 
-      act(() => {
-        userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
+      await act(async () => {
+        await userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
       })
 
       expect(greaterThanInput).not.toBeInTheDocument()

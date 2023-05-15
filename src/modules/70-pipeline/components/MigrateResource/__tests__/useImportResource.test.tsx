@@ -132,7 +132,7 @@ describe('useImportEntity tests', () => {
     await waitFor(() => expect(getElementByText(importPipelineDiv, 'common.importEntityFromGit')).toBeInTheDocument())
 
     const cancelButton = getByText('cancel')
-    userEvent.click(cancelButton)
+    await userEvent.click(cancelButton)
     await waitFor(() => expect(portalDivs).toHaveLength(0))
   })
 })

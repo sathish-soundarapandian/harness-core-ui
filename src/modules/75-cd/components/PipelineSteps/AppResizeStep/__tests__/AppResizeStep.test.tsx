@@ -634,20 +634,20 @@ describe('Test AppResizeStep', () => {
     )
     // Clear input and update value
     const instancePercentageInput = screen.getByPlaceholderText('instanceFieldOptions.percentagePlaceHolder')
-    userEvent.clear(instancePercentageInput)
-    userEvent.type(instancePercentageInput, '20')
+    await userEvent.clear(instancePercentageInput)
+    await userEvent.type(instancePercentageInput, '20')
 
     // Toggle percentage to count - value default to 1
     const menuItemPercetage = screen.getByText('instanceFieldOptions.percentageText')
-    userEvent.click(menuItemPercetage!)
+    await userEvent.click(menuItemPercetage!)
     const instanceCountOption = screen.getAllByText('instanceFieldOptions.instanceText')?.[1]
-    userEvent.click(instanceCountOption!)
+    await userEvent.click(instanceCountOption!)
 
     // Toggle count to percentage - value default to 100
     const menuItemCount = screen.getAllByText('instanceFieldOptions.instanceText')?.[1]!
-    userEvent.click(menuItemCount)
+    await userEvent.click(menuItemCount)
     const instancePercentageOption = screen.getAllByText('instanceFieldOptions.percentageText')?.[1]
-    userEvent.click(instancePercentageOption!)
+    await userEvent.click(instancePercentageOption!)
 
     await act(() => ref.current?.submitForm()!)
 

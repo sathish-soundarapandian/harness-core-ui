@@ -43,7 +43,7 @@ describe('FlagEnabledDefaultRulesCard', () => {
     const onVariationDropdown = document.querySelector('input[name="onVariation"]') as HTMLSelectElement
     expect(onVariationDropdown).toBeInTheDocument()
 
-    userEvent.click(onVariationDropdown)
+    await userEvent.click(onVariationDropdown)
 
     expect(screen.getByText('False')).toBeInTheDocument()
     expect(screen.getByText('True')).toBeInTheDocument()
@@ -59,7 +59,7 @@ describe('FlagEnabledDefaultRulesCard', () => {
     const onVariationDropdown = document.querySelector('input[name="onVariation"]') as HTMLSelectElement
     expect(onVariationDropdown).toBeInTheDocument()
 
-    userEvent.click(onVariationDropdown)
+    await userEvent.click(onVariationDropdown)
 
     expect(screen.getByText('true_id')).toBeInTheDocument()
     expect(screen.getByText('false_id')).toBeInTheDocument()

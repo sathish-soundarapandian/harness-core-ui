@@ -32,7 +32,7 @@ describe('VariationsCell', () => {
     const input = screen.getByPlaceholderText('- cf.targetManagementFlagConfiguration.selectVariation -')
     expect(input).toBeInTheDocument()
 
-    userEvent.click(input)
+    await userEvent.click(input)
 
     await waitFor(() => {
       mockFeatures[0].variations.forEach(({ name, identifier }) => {

@@ -78,7 +78,7 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
 }))
 
-describe('Unit tests for Configuration Template', async () => {
+describe('Unit tests for Configuration Template', () => {
   test('Service and Environment to be RUNTIME for account level template', () => {
     jest.spyOn(dbHook, 'useIndexedDBHook').mockReturnValue({
       dbInstance: {

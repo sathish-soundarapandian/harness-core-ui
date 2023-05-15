@@ -91,7 +91,7 @@ describe('TargetManagementFlagConfigurationPanel', () => {
     expect(screen.getByTestId('listing-fieldset')).toBeInTheDocument()
     expect(screen.queryByTestId('listing-buttonbar')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
 
     await waitFor(() => expect(screen.getByTestId('listing-buttonbar')).toBeInTheDocument())
   })
@@ -109,11 +109,11 @@ describe('TargetManagementFlagConfigurationPanel', () => {
     expect(onChangeMock).not.toHaveBeenCalled()
     expect(screen.queryByTestId('saving-spinner')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
 
     await waitFor(() => expect(screen.getByRole('button', { name: 'saveChanges' })).toBeInTheDocument())
 
-    userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
+    await userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
 
     await waitFor(() => {
       expect(onChangeMock).toHaveBeenCalled()
@@ -138,15 +138,15 @@ describe('TargetManagementFlagConfigurationPanel', () => {
 
     expect(screen.getAllByRole('row')).toHaveLength(4)
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
 
     await waitFor(() => expect(screen.getAllByRole('row')).toHaveLength(3))
 
-    userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
+    await userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
 
     await waitFor(() => expect(screen.getByTestId('saving-spinner')).toBeInTheDocument())
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
     await waitFor(() => expect(screen.getAllByRole('row')).toHaveLength(3))
 
     act(() => resolvePromise(undefined))
@@ -158,11 +158,11 @@ describe('TargetManagementFlagConfigurationPanel', () => {
     const message = 'ERROR MESSAGE'
     renderComponent({ onChange: jest.fn().mockRejectedValue({ message }) })
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
 
     await waitFor(() => expect(screen.getByRole('button', { name: 'saveChanges' })).toBeInTheDocument())
 
-    userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
+    await userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
 
     await waitFor(() => {
       expect(screen.queryByTestId('saving-spinner')).not.toBeInTheDocument()
@@ -177,14 +177,14 @@ describe('TargetManagementFlagConfigurationPanel', () => {
     expect(screen.getAllByRole('row')).toHaveLength(6)
     expect(screen.queryByRole('button', { name: 'cancel' })).not.toBeInTheDocument()
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
 
     await waitFor(() => {
       expect(screen.getAllByRole('row')).toHaveLength(5)
       expect(screen.getByRole('button', { name: 'cancel' })).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'cancel' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cancel' }))
 
     await waitFor(() => {
       expect(screen.getAllByRole('row')).toHaveLength(6)
@@ -213,7 +213,7 @@ describe('TargetManagementFlagConfigurationPanel', () => {
     expect(screen.getByTestId('listing-fieldset')).toBeInTheDocument()
     expect(screen.queryByTestId('no-data-all-flags-removed')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' }))
 
     await waitFor(() => {
       expect(screen.queryByTestId('listing-fieldset')).not.toBeInTheDocument()
@@ -238,7 +238,7 @@ describe('TargetManagementFlagConfigurationPanel', () => {
 
     expect(screen.getAllByRole('row')).toHaveLength(16)
 
-    userEvent.click(page2Button)
+    await userEvent.click(page2Button)
 
     await waitFor(() => {
       expect(page1Button).toBeEnabled()
@@ -246,7 +246,7 @@ describe('TargetManagementFlagConfigurationPanel', () => {
       expect(screen.getAllByRole('row')).toHaveLength(2)
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' }))
 
     await waitFor(() => {
       expect(page1Button).toBeDisabled()
@@ -277,13 +277,13 @@ describe('TargetManagementFlagConfigurationPanel', () => {
 
     expect(screen.queryByText(addFlagsDialogTitle)).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlag' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlag' }))
 
     await waitFor(() => expect(screen.getByText(addFlagsDialogTitle)).toBeInTheDocument())
 
     const checkbox = screen.getByRole('checkbox')
-    userEvent.click(checkbox)
-    userEvent.click(
+    await userEvent.click(checkbox)
+    await userEvent.click(
       getByPlaceholderText(
         checkbox.closest('[role="row"]') as HTMLElement,
         '- cf.targetManagementFlagConfiguration.selectVariation -'
@@ -291,11 +291,11 @@ describe('TargetManagementFlagConfigurationPanel', () => {
     )
 
     await waitFor(() => expect(screen.getByText(newFlag.variations[0].name as string)).toBeInTheDocument())
-    userEvent.click(screen.getByText(newFlag.variations[0].name as string))
+    await userEvent.click(screen.getByText(newFlag.variations[0].name as string))
 
     const submitBtn = screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlags' })
     await waitFor(() => expect(submitBtn).toBeEnabled())
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
 
     await waitFor(() => expect(onAddMock).toHaveBeenCalled())
   })
@@ -320,11 +320,11 @@ describe('TargetManagementFlagConfigurationPanel', () => {
 
     expect(screen.queryByText(addFlagsDialogTitle)).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlag' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlag' }))
 
     await waitFor(() => expect(screen.getByText(addFlagsDialogTitle)).toBeInTheDocument())
 
-    userEvent.click(screen.getByRole('button', { name: 'cancel' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cancel' }))
 
     await waitFor(() => expect(screen.queryByText(addFlagsDialogTitle)).not.toBeInTheDocument())
   })

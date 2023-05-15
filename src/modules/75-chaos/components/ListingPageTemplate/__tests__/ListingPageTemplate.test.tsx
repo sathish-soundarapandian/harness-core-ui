@@ -86,7 +86,7 @@ describe('ListingPageTemplate', () => {
     expect(btn).toBeInTheDocument()
     expect(retryOnErrorMock).not.toHaveBeenCalled()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => {
       expect(retryOnErrorMock).toHaveBeenCalled()

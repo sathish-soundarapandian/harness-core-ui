@@ -42,7 +42,7 @@ describe('Freeze Window Studio - Right Bar', () => {
 
     expect(document.body.getElementsByClassName('rightBar')[0]).toMatchSnapshot('closed state of Right Bar')
 
-    userEvent.click(getByRole('button', { name: 'rbac.notifications.pipelineName' }))
+    await userEvent.click(getByRole('button', { name: 'rbac.notifications.pipelineName' }))
     expect(setDrawerType).toHaveBeenCalledWith(DrawerTypes.Notification)
   })
   test('it should render in open state of Notifications', async () => {
@@ -94,10 +94,10 @@ describe('Freeze Window Studio - Right Bar', () => {
 
     const notifyBtn = getByText('rbac.notifications.pipelineName')
     expect(notifyBtn).toBeInTheDocument()
-    userEvent.click(notifyBtn)
+    await userEvent.click(notifyBtn)
 
     const notificationBtn = document.getElementsByClassName('bp3-drawer')[0].querySelector('#newNotificationBtn')
-    userEvent.click(notificationBtn!)
+    await userEvent.click(notificationBtn!)
 
     //Notification Wizard
     const notificationWizard = findDialogContainer()
@@ -105,7 +105,7 @@ describe('Freeze Window Studio - Right Bar', () => {
       target: { value: 'testNotification' }
     })
     expect(notificationWizard?.querySelector('input[name="name"]')).toHaveValue('testNotification')
-    userEvent.click(await findByText(notificationWizard!, 'continue'))
+    await userEvent.click(await findByText(notificationWizard!, 'continue'))
 
     expect(
       await findByText(notificationWizard!, 'freezeWindows.freezeNotifications.rejectedDeployments')

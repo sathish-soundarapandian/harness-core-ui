@@ -146,14 +146,14 @@ describe('CustomVariable - Allowed values', () => {
     expect(container.querySelector('[data-testid="multiSelectVariableAllowedValues"')).toBeInTheDocument()
     expect(queryByText(container, 'stringComma')).toBeInTheDocument()
 
-    userEvent.click(container.querySelector('input[class*="bp3-input"')!)
+    await userEvent.click(container.querySelector('input[class*="bp3-input"')!)
 
     // MultiSelect component should appear
     const multiselectInputField = container.querySelector('.bp3-multi-select')
     expect(multiselectInputField).toBeInTheDocument()
 
-    userEvent.click(await screen.findByText('abc'))
-    userEvent.click(await screen.findByText("abc's\\xyz"))
+    await userEvent.click(await screen.findByText('abc'))
+    await userEvent.click(await screen.findByText("abc's\\xyz"))
 
     //tags should be visible
     expect(queryByText(container, 'abc')).toBeInTheDocument()
@@ -184,7 +184,7 @@ describe('CustomVariable - Allowed values', () => {
     // MultiSelect component should appear
     const multiselectInputField = container.querySelector('.bp3-multi-select')
     expect(multiselectInputField).toBeInTheDocument()
-    userEvent.click(multiselectInputField as HTMLElement)
+    await userEvent.click(multiselectInputField as HTMLElement)
     await waitFor(() => expect(portalDivs.length).toBe(1))
 
     const dropdownPortalDiv = portalDivs[0]

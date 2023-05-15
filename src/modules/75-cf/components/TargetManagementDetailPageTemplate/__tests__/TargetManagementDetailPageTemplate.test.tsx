@@ -78,11 +78,11 @@ describe('TargetManagementDetailPageTemplate', () => {
     ) as HTMLButtonElement
     expect(optionsMenuButton).toBeInTheDocument()
 
-    userEvent.click(optionsMenuButton)
+    await userEvent.click(optionsMenuButton)
 
     await waitFor(() => expect(screen.getByText('delete')).toBeInTheDocument())
 
-    userEvent.click(screen.getByText('delete'))
+    await userEvent.click(screen.getByText('delete'))
 
     await waitFor(() => expect(openDeleteDialogMock).toHaveBeenCalled())
   })

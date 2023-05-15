@@ -105,7 +105,7 @@ describe('Test Azure Blueprint step', () => {
     })
     const { getByTestId, getByText } = renderComponent(initialValues())
     const scriptWizard = getByTestId('azureBlueprintFileStore')
-    userEvent.click(scriptWizard)
+    await userEvent.click(scriptWizard)
 
     const gitlab = getByText('GitLab')
     expect(gitlab).toBeInTheDocument()
@@ -142,17 +142,17 @@ describe('Test Azure Blueprint step', () => {
     })
     const { container } = renderComponent(initialValues())
     const stepName = queryByAttribute('name', container, 'name')
-    userEvent.type(stepName!, ' new name')
+    await userEvent.type(stepName!, ' new name')
     expect(stepName).toHaveDisplayValue(['azure blueprint new name'])
 
     const timeout = queryByAttribute('name', container, 'timeout')
-    userEvent.clear(timeout!)
-    userEvent.type(timeout!, '20m')
+    await userEvent.clear(timeout!)
+    await userEvent.type(timeout!, '20m')
     expect(timeout).toHaveDisplayValue('20m')
 
     const assignmentName = queryByAttribute('name', container, 'spec.configuration.assignmentName')
-    userEvent.clear(assignmentName!)
-    userEvent.type(assignmentName!, 'new name')
+    await userEvent.clear(assignmentName!)
+    await userEvent.type(assignmentName!, 'new name')
     expect(assignmentName).toHaveDisplayValue('new name')
   })
 

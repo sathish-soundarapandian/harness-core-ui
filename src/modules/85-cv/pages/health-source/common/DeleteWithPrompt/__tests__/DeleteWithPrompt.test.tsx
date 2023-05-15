@@ -16,8 +16,8 @@ describe('DeleteWithPrompt', () => {
 
     expect(container.querySelector('span[data-icon="main-delete"]')).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(container.querySelector('span[data-icon="main-delete"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('span[data-icon="main-delete"]')!)
     })
 
     expect(onClick).not.toHaveBeenCalled()
@@ -25,8 +25,8 @@ describe('DeleteWithPrompt', () => {
     expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
 
     const modalDeleteBtn = screen.queryAllByText('confirm')[0]
-    act(() => {
-      userEvent.click(modalDeleteBtn!)
+    await act(async () => {
+      await userEvent.click(modalDeleteBtn!)
     })
 
     await waitFor(() => {
@@ -46,8 +46,8 @@ describe('DeleteWithPrompt', () => {
 
     expect(container.querySelector('span[data-icon="main-delete"]')).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(container.querySelector('span[data-icon="main-delete"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('span[data-icon="main-delete"]')!)
     })
 
     expect(onClick).toHaveBeenCalledWith('testItem', 0)

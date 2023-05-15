@@ -57,7 +57,7 @@ describe('SaveFlagRepoDialog', () => {
     const onCloseMock = jest.fn()
     renderComponent({ closeModal: onCloseMock })
 
-    userEvent.click(screen.getByText('cancel'))
+    await userEvent.click(screen.getByText('cancel'))
 
     await waitFor(() => expect(onCloseMock).toHaveBeenCalled())
   })
@@ -65,10 +65,10 @@ describe('SaveFlagRepoDialog', () => {
   test('it should update form when Repository Name changed', async () => {
     renderComponent()
 
-    userEvent.click(document.getElementsByName('repoIdentifier')[0])
+    await userEvent.click(document.getElementsByName('repoIdentifier')[0])
     expect(screen.getByText('harness-test-2')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('harness-test-2'))
+    await userEvent.click(screen.getByText('harness-test-2'))
 
     expect(screen.getByTestId('save-flag-repo-dialog-form')).toHaveFormValues({
       repoIdentifier: 'harness-test-2',
@@ -91,10 +91,10 @@ describe('SaveFlagRepoDialog', () => {
 
     renderComponent({ gitRepoRefetch })
 
-    userEvent.click(document.getElementsByName('rootFolder')[0])
-    userEvent.click(screen.getByText('/.harness/'))
+    await userEvent.click(document.getElementsByName('rootFolder')[0])
+    await userEvent.click(screen.getByText('/.harness/'))
 
-    userEvent.click(screen.getByText('save'))
+    await userEvent.click(screen.getByText('save'))
 
     await waitFor(() =>
       expect(createGitRepoMock).toHaveBeenCalledWith({

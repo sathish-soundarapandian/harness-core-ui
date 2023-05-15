@@ -105,7 +105,7 @@ describe('SelectEnvironmentView', () => {
 
     const envInput = screen.getByRole('textbox', { name: 'cf.onboarding.selectOrCreateEnvironment' })
 
-    userEvent.click(envInput)
+    await userEvent.click(envInput)
 
     await waitFor(() => {
       // one existing environment in dropdown
@@ -116,13 +116,13 @@ describe('SelectEnvironmentView', () => {
     await userEvent.type(envInput, 'new env name', { allAtOnce: true })
 
     // click to open Create Environment modal
-    userEvent.click(screen.getByText('plus'))
+    await userEvent.click(screen.getByText('plus'))
 
     await waitFor(() => {
       expect(screen.getByText('cf.environments.create.title')).toBeVisible()
     })
 
-    userEvent.click(screen.getByText('cancel'))
+    await userEvent.click(screen.getByText('cancel'))
 
     await waitFor(() => {
       expect(screen.queryByText('cf.environments.create.title')).not.toBeInTheDocument()
@@ -256,7 +256,7 @@ describe('SelectEnvironmentView', () => {
 
     const envInput = screen.getByRole('textbox', { name: 'cf.onboarding.selectOrCreateEnvironment' })
 
-    userEvent.click(envInput)
+    await userEvent.click(envInput)
 
     await waitFor(() => {
       // one existing environment in dropdown
@@ -268,14 +268,14 @@ describe('SelectEnvironmentView', () => {
     await userEvent.type(envInput, 'new env name', { allAtOnce: true })
 
     // click to open Create Environment modal
-    userEvent.click(screen.getByText('plus'))
+    await userEvent.click(screen.getByText('plus'))
 
     await waitFor(() => {
       // modal should be open
       expect(screen.getByText('cf.environments.create.title')).toBeVisible()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+    await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
       expect(createEnvironment).toHaveBeenCalled()
@@ -322,7 +322,7 @@ describe('SelectEnvironmentView', () => {
       expect(setApiKey).not.toHaveBeenCalled()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' }))
 
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'cf.environments.apiKeys.addKeyTitle' })).toBeVisible()
@@ -338,7 +338,7 @@ describe('SelectEnvironmentView', () => {
       }
     )
 
-    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+    await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
       expect(createKey).toHaveBeenCalled()
@@ -381,7 +381,7 @@ describe('SelectEnvironmentView', () => {
       expect(setApiKey).not.toHaveBeenCalled()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' }))
 
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'cf.environments.apiKeys.addKeyTitle' })).toBeVisible()
@@ -397,7 +397,7 @@ describe('SelectEnvironmentView', () => {
       }
     )
 
-    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+    await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
       expect(createKey).toHaveBeenCalled()

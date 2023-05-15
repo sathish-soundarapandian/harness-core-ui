@@ -67,7 +67,7 @@ describe('ScriptWizard & stepOne', () => {
 
     const gitConnector = await getByText('Git')
     expect(gitConnector).toBeDefined()
-    act(() => userEvent.click(gitConnector))
+    await act(async () => await userEvent.click(gitConnector))
 
     const newConnectorLabel = await getByText('newLabel pipeline.manifestType.gitConnectorLabel connector')
     expect(newConnectorLabel).toBeDefined()

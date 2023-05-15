@@ -105,7 +105,7 @@ describe('Test cloudformation remote tags step two', () => {
       </TestWrapper>
     )
     const submit = getByTestId('submit')
-    await act(async () => userEvent.click(submit))
+    await act(async () => await userEvent.click(submit))
     expect(container).toMatchSnapshot()
   })
 
@@ -199,7 +199,7 @@ describe('Test cloudformation remote tags step two', () => {
       </TestWrapper>
     )
     const submit = getByTestId('submit')
-    await act(async () => userEvent.click(submit))
+    await act(async () => await userEvent.click(submit))
     expect(container).toMatchSnapshot()
   })
 })

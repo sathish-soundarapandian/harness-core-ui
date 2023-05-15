@@ -62,6 +62,6 @@ describe('Inline var file testing', () => {
       fireEvent.change(contentInput, { target: { value: 'test-data-content' } })
     })
     await waitFor(() => expect(contentInput.value).toBe('test-data-content'))
-    userEvent.click(getByText('submit').parentElement!)
+    await userEvent.click(getByText('submit').parentElement!)
   })
 })

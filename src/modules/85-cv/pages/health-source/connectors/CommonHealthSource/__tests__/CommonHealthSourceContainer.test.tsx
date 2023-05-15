@@ -69,7 +69,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
     const { getByText } = render(<WrapperComponent {...props} />)
     const submitButton = getByText('submit')
     await waitFor(() => expect(submitButton).toBeInTheDocument())
-    userEvent.click(submitButton)
+    await userEvent.click(submitButton)
   })
 
   test('should validate createHealthSourcePayload and handles if invalid data is sent', () => {

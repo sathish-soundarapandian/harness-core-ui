@@ -99,32 +99,32 @@ describe('ECSInfraSpec tests', () => {
     // Choose connectorRef
     const connnectorRefInput = getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
-    userEvent.click(connnectorRefInput!)
+    await userEvent.click(connnectorRefInput!)
 
     await testConnectorRefChange()
     expect(fetchClusters).not.toBeCalled()
     // Choose region
     const regionDropdownIcon = allDropDownIcons[1]
-    userEvent.click(regionDropdownIcon!)
+    await userEvent.click(regionDropdownIcon!)
     expect(portalDivs.length).toBe(2)
     const regionDropdownPortalDiv = portalDivs[1]
     const regionSelectListMenu = regionDropdownPortalDiv.querySelector('.bp3-menu')
     const usEastNVirginiaOption = await findByText(regionSelectListMenu as HTMLElement, 'US East (N. Virginia)')
     expect(usEastNVirginiaOption).not.toBeNull()
-    userEvent.click(usEastNVirginiaOption)
+    await userEvent.click(usEastNVirginiaOption)
     await waitFor(() => expect(fetchClusters).toHaveBeenCalledTimes(0))
     // Choose cluster
     const clusterDropdownIcon = allDropDownIcons[2]
-    userEvent.click(clusterDropdownIcon!)
+    await userEvent.click(clusterDropdownIcon!)
     expect(portalDivs.length).toBe(3)
     const clusterDropdownPortalDiv = portalDivs[2]
     const clusterSelectListMenu = clusterDropdownPortalDiv.querySelector('.bp3-menu')
     const awsCluster1Option = await findByText(clusterSelectListMenu as HTMLElement, 'aws-cluster-2')
     expect(awsCluster1Option).not.toBeNull()
-    userEvent.click(awsCluster1Option)
+    await userEvent.click(awsCluster1Option)
     // check Allow simultaneous deployments on the same infrastructure checkbox
     const allowSimultaneousDeploymentsCheckbox = queryByNameAttribute('allowSimultaneousDeployments', container)
-    userEvent.click(allowSimultaneousDeploymentsCheckbox!)
+    await userEvent.click(allowSimultaneousDeploymentsCheckbox!)
     expect(allowSimultaneousDeploymentsCheckbox).toBeChecked()
     // submit form and verify
     ref.current?.submitForm()

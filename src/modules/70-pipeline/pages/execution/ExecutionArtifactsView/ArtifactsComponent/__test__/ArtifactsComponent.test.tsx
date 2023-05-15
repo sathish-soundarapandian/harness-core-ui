@@ -20,7 +20,7 @@ describe('ArtifactsComponent snapshot test', () => {
     const { container, getAllByText } = render(
       <ArtifactsComponent artifactGroups={[artifacts[1]] as ArtifactGroup[]} />
     )
-    userEvent.click(container.querySelector('[data-icon="main-chevron-right"]')!)
+    await userEvent.click(container.querySelector('[data-icon="main-chevron-right"]')!)
     expect(getAllByText('file://hub.docker.com').length).toBeGreaterThan(0)
     expect(document.querySelectorAll("a[href='file://hub.docker.com']").length).toBeGreaterThan(0)
   })

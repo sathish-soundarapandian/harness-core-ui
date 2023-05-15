@@ -29,10 +29,10 @@ describe('EnvironmentDialog', () => {
       renderComponent()
 
       // open the modal
-      userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
+      await userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
 
       // leave environment name blank and submit form
-      userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+      await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
       await waitFor(() => expect(screen.getByText('fieldRequired')).toBeInTheDocument())
     })
@@ -41,13 +41,13 @@ describe('EnvironmentDialog', () => {
       renderComponent()
 
       // open the modal
-      userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
+      await userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
 
       // enter invalid text and submit form
       const environmentNameInputField = screen.getByRole('textbox', { name: '' })
-      userEvent.type(environmentNameInputField, 'à')
+      await userEvent.type(environmentNameInputField, 'à')
 
-      userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+      await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
       await waitFor(() => expect(screen.getByText('common.validation.namePatternIsNotValid')).toBeInTheDocument())
     })
@@ -56,13 +56,13 @@ describe('EnvironmentDialog', () => {
       renderComponent()
 
       // open the modal
-      userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
+      await userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
 
       // enter valid environment name and submit form
       const environmentNameInputField = screen.getByRole('textbox', { name: '' })
-      userEvent.type(environmentNameInputField, 'my environment name')
+      await userEvent.type(environmentNameInputField, 'my environment name')
 
-      userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+      await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
       await waitFor(() => {
         expect(screen.queryByText('common.validation.namePatternIsNotValid')).not.toBeInTheDocument()
@@ -90,12 +90,12 @@ describe('EnvironmentDialog', () => {
       })
 
       // open the modal
-      userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
+      await userEvent.click(screen.getByRole('button', { name: 'newEnvironment' }))
 
       const environmentNameInputField = screen.getByRole('textbox', { name: '' })
 
-      userEvent.type(environmentNameInputField, 'myEnvName')
-      userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+      await userEvent.type(environmentNameInputField, 'myEnvName')
+      await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
       await waitFor(() => {
         expect(screen.queryByText('chaos.environments.create.duplicateName')).toBeInTheDocument()

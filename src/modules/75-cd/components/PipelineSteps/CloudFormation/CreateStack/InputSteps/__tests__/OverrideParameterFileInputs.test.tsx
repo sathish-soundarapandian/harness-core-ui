@@ -114,7 +114,7 @@ describe('Test cloudformation create stack parameters input set', () => {
     }
     const { container } = renderComponent(data)
     const input = queryByAttribute('name', container, 'test.spec.configuration.parameterOverrides[0].value')
-    await act(() => userEvent.type(input!, 'test 123'))
+    await act(async () => await userEvent.type(input!, 'test 123'))
     expect(input).toHaveDisplayValue('test 123')
   })
 })

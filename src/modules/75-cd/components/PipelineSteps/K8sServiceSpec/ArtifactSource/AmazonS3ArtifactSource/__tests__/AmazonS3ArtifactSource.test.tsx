@@ -255,7 +255,7 @@ describe('AmazonS3ArtifactSource tests', () => {
     expect(portalDivs.length).toBe(0)
 
     const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
-    userEvent.click(bucketNameDropDownButton!)
+    await userEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     await waitFor(() => expect(fetchBuckets).not.toHaveBeenCalled())
   })
@@ -317,7 +317,7 @@ describe('AmazonS3ArtifactSource tests', () => {
     expect(portalDivs.length).toBe(0)
 
     const filePathDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[2]
-    userEvent.click(filePathDropDownButton!)
+    await userEvent.click(filePathDropDownButton!)
     expect(portalDivs.length).toBe(1)
     await waitFor(() => expect(fetchFilePaths).not.toHaveBeenCalled())
   })
@@ -370,7 +370,7 @@ describe('AmazonS3ArtifactSource tests', () => {
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
     const firstOption = await findByText(selectListMenu as HTMLElement, 'tdp-tdp2-1rc6irugmilkh')
     expect(firstOption).toBeDefined()
-    userEvent.click(firstOption)
+    await userEvent.click(firstOption)
     expect(bucketNameInput.value).toBe('tdp-tdp2-1rc6irugmilkh')
 
     // Switch the connector - choose AWS connector for connectorRef field
@@ -397,14 +397,14 @@ describe('AmazonS3ArtifactSource tests', () => {
 
     // Choose second option for bucketName from dropdown
     expect(portalDivs.length).toBe(2)
-    userEvent.click(bucketNameDropDownIcon!)
+    await userEvent.click(bucketNameDropDownIcon!)
     expect(fetchBuckets).toHaveBeenCalledTimes(1)
     expect(portalDivs.length).toBe(2)
     const bucketNameDropdownPortalDiv = portalDivs[0]
     const dropdownOptionList = bucketNameDropdownPortalDiv.querySelector('.bp3-menu')
     const secondOption = await findByText(dropdownOptionList as HTMLElement, 'cdng-terraform-state')
     expect(secondOption).toBeDefined()
-    userEvent.click(secondOption)
+    await userEvent.click(secondOption)
     expect(bucketNameInput.value).toBe('cdng-terraform-state')
   })
 
@@ -450,29 +450,29 @@ describe('AmazonS3ArtifactSource tests', () => {
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(dropdownIcons.length).toBe(4)
     const filePathDropDownIcon = dropdownIcons[3]
-    userEvent.click(filePathDropDownIcon!)
+    await userEvent.click(filePathDropDownIcon!)
     expect(fetchFilePaths).toHaveBeenCalledTimes(1)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
     const firstOption = await findByText(selectListMenu as HTMLElement, 'folderName/filePath1.yaml')
     expect(firstOption).toBeDefined()
-    userEvent.click(firstOption)
+    await userEvent.click(firstOption)
     expect(filePathInput.value).toBe('folderName/filePath1.yaml')
 
     // Switch the connector - choose AWS connector for connectorRef field
     const connnectorRefInput = queryByAttribute('data-testid', container, /connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
     if (connnectorRefInput) {
-      userEvent.click(connnectorRefInput)
+      await userEvent.click(connnectorRefInput)
     }
     await act(async () => {
       const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
       const awsConnector = await findByText(connectorSelectorDialog as HTMLElement, 'AWS')
       expect(awsConnector).toBeTruthy()
-      userEvent.click(awsConnector)
+      await userEvent.click(awsConnector)
       const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
-      userEvent.click(applySelected)
+      await userEvent.click(applySelected)
     })
     expect(fetchFilePaths).toHaveBeenCalledTimes(1)
     // Expect filePath field values to be empty after switching connector
@@ -480,14 +480,14 @@ describe('AmazonS3ArtifactSource tests', () => {
 
     // Choose second option for bucketName from dropdown
     expect(portalDivs.length).toBe(2)
-    userEvent.click(filePathDropDownIcon!)
+    await userEvent.click(filePathDropDownIcon!)
     expect(fetchFilePaths).toHaveBeenCalledTimes(1)
     expect(portalDivs.length).toBe(2)
     const filePathDropdownPortalDiv = portalDivs[0]
     const dropdownOptionList = filePathDropdownPortalDiv.querySelector('.bp3-menu')
     const secondOption = await findByText(dropdownOptionList as HTMLElement, 'folderName/filePath2.yaml')
     expect(secondOption).toBeDefined()
-    userEvent.click(secondOption)
+    await userEvent.click(secondOption)
     expect(filePathInput.value).toBe('folderName/filePath2.yaml')
   })
 
@@ -619,12 +619,12 @@ describe('AmazonS3ArtifactSource tests', () => {
 
     // Select filePath from dropdown
     const filePathDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[3]
-    userEvent.click(filePathDropDownButton!)
+    await userEvent.click(filePathDropDownButton!)
     expect(portalDivs.length).toBe(2)
     const filePathDropdownPortalDiv = portalDivs[1]
     const filePathSelectListMenu = filePathDropdownPortalDiv.querySelector('.bp3-menu')
     const filePathSelectItem = await findByText(filePathSelectListMenu as HTMLElement, 'folderName/filePath1.yaml')
-    userEvent.click(filePathSelectItem)
+    await userEvent.click(filePathSelectItem)
     expect(filePathSelect.value).toBe('folderName/filePath1.yaml')
   })
 
@@ -681,12 +681,12 @@ describe('AmazonS3ArtifactSource tests', () => {
 
     // Select region from dropdown
     const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[2]
-    userEvent.click(bucketNameDropDownButton!)
+    await userEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDivBucketName = portalDivs[0]
     const selectListMenuBucketName = dropdownPortalDivBucketName.querySelector('.bp3-menu')
     const selectItemBucketName = await findByText(selectListMenuBucketName as HTMLElement, 'cdng-terraform-state')
-    userEvent.click(selectItemBucketName)
+    await userEvent.click(selectItemBucketName)
     expect(bucketNameSelect.value).toBe('cdng-terraform-state')
   })
 

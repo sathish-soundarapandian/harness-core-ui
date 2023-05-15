@@ -96,7 +96,7 @@ describe('TargetGroups', () => {
     const retryBtn = screen.getByRole('button', { name: 'Retry' })
     expect(retryBtn).toBeInTheDocument()
 
-    userEvent.click(retryBtn)
+    await userEvent.click(retryBtn)
 
     await waitFor(() => expect(refetchMock).toHaveBeenCalled())
   })

@@ -78,7 +78,7 @@ describe('FilterTagsSideBar', () => {
 
     const tagButton = screen.getByText('one') as HTMLButtonElement
     await act(async () => {
-      userEvent.click(tagButton)
+      await userEvent.click(tagButton)
     })
 
     await waitFor(() => expect(setFilteredTagsMock).toHaveBeenCalled())
@@ -95,7 +95,7 @@ describe('FilterTagsSideBar', () => {
 
     const tagButton = screen.getByText('two') as HTMLButtonElement
     await act(async () => {
-      userEvent.click(tagButton)
+      await userEvent.click(tagButton)
     })
 
     await waitFor(() => expect(setFilteredTagsMock).toHaveBeenCalled())

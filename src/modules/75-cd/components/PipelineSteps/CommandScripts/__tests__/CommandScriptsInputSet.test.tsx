@@ -145,7 +145,7 @@ describe('test Command Scripts input set', () => {
 
     expect(timeoutInput).toBeInTheDocument()
 
-    userEvent.type(timeoutInput, '10m')
+    await userEvent.type(timeoutInput, '10m')
 
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('10m'))
   })

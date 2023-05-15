@@ -79,7 +79,7 @@ describe('ItemVariationDialog', () => {
     const inputEl = document.querySelector('[name="items"]')
     expect(inputEl).toBeInTheDocument()
 
-    userEvent.click(inputEl as HTMLInputElement)
+    await userEvent.click(inputEl as HTMLInputElement)
 
     await waitFor(() => {
       mockItems.forEach(({ name }) => expect(screen.getByText(name)).toBeInTheDocument())
@@ -94,7 +94,7 @@ describe('ItemVariationDialog', () => {
     const inputEl = document.querySelector('[name="variation"]')
     expect(inputEl).toBeInTheDocument()
 
-    userEvent.click(inputEl as HTMLInputElement)
+    await userEvent.click(inputEl as HTMLInputElement)
 
     await waitFor(() => {
       mockVariations.forEach(({ name, identifier }) =>
@@ -111,7 +111,7 @@ describe('ItemVariationDialog', () => {
     expect(btn).toBeInTheDocument()
     expect(closeDialogMock).not.toHaveBeenCalled()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => expect(closeDialogMock).toHaveBeenCalled())
   })
@@ -124,21 +124,21 @@ describe('ItemVariationDialog', () => {
     expect(onChangeMock).not.toHaveBeenCalled()
     expect(closeDialogMock).not.toHaveBeenCalled()
 
-    userEvent.click(document.querySelector('[name="items"]') as HTMLInputElement)
+    await userEvent.click(document.querySelector('[name="items"]') as HTMLInputElement)
     await waitFor(() => {
       expect(screen.getByText(mockItems[0].name)).toBeInTheDocument()
       expect(screen.getByText(mockItems[1].name)).toBeInTheDocument()
     })
-    userEvent.click(screen.getByText(mockItems[0].name))
-    userEvent.click(screen.getByText(mockItems[1].name))
+    await userEvent.click(screen.getByText(mockItems[0].name))
+    await userEvent.click(screen.getByText(mockItems[1].name))
 
-    userEvent.click(document.querySelector('[name="variation"]') as HTMLInputElement)
+    await userEvent.click(document.querySelector('[name="variation"]') as HTMLInputElement)
     await waitFor(() =>
       expect(screen.getByText((mockVariations[0].name || mockVariations[0].identifier) as string)).toBeInTheDocument()
     )
-    userEvent.click(screen.getByText((mockVariations[0].name || mockVariations[0].identifier) as string))
+    await userEvent.click(screen.getByText((mockVariations[0].name || mockVariations[0].identifier) as string))
 
-    userEvent.click(screen.getByRole('button', { name: 'done' }))
+    await userEvent.click(screen.getByRole('button', { name: 'done' }))
 
     await waitFor(() => {
       expect(onChangeMock).toHaveBeenCalledWith([mockItems[0], mockItems[1]], mockVariations[0])
@@ -152,7 +152,7 @@ describe('ItemVariationDialog', () => {
 
     expect(onChangeMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByRole('button', { name: 'done' }))
+    await userEvent.click(screen.getByRole('button', { name: 'done' }))
 
     await waitFor(() => expect(onChangeMock).not.toHaveBeenCalled())
   })

@@ -73,7 +73,7 @@ describe('TargetingRulesTab', () => {
       const flagToggle = screen.getByTestId('flag-status-switch')
       expect(flagToggle).toBeChecked()
 
-      userEvent.click(flagToggle)
+      await userEvent.click(flagToggle)
 
       expect(flagToggle).not.toBeChecked()
       expect(screen.getByText('cf.featureFlags.flagWillTurnOff')).toBeInTheDocument()
@@ -101,7 +101,7 @@ describe('TargetingRulesTab', () => {
       const flagToggle = screen.getByTestId('flag-status-switch')
       await waitFor(() => expect(flagToggle).not.toBeChecked())
 
-      userEvent.click(flagToggle)
+      await userEvent.click(flagToggle)
 
       expect(flagToggle).toBeChecked()
       expect(screen.getByText('cf.featureFlags.flagWillTurnOn')).toBeInTheDocument()
@@ -116,12 +116,12 @@ describe('TargetingRulesTab', () => {
 
       const onVariationDropdown = document.querySelector('input[name="onVariation"]') as HTMLSelectElement
       expect(onVariationDropdown).toHaveValue('True')
-      userEvent.click(onVariationDropdown)
+      await userEvent.click(onVariationDropdown)
 
       const onVariationDropdownOptions = document.querySelectorAll('li')
       expect(onVariationDropdownOptions).toHaveLength(2)
 
-      userEvent.click(onVariationDropdownOptions[1])
+      await userEvent.click(onVariationDropdownOptions[1])
       expect(onVariationDropdown).toHaveValue('False')
     })
 
@@ -151,7 +151,7 @@ describe('TargetingRulesTab', () => {
 
       // assert available target groups list appear on click
       const targetGroupTagInput = screen.getByTestId('false_target_groups').querySelector('input') as HTMLInputElement
-      userEvent.type(targetGroupTagInput, 'target')
+      await userEvent.type(targetGroupTagInput, 'target')
       const targetGroupInputList = document.querySelector('ul')
       await waitFor(() => expect(targetGroupInputList).toBeInTheDocument())
       expect(document.querySelectorAll('li')[0]).toHaveTextContent(/target_group_2/)
@@ -167,7 +167,7 @@ describe('TargetingRulesTab', () => {
 
       // assert availble targets appear on click
       const targetsTagInput = screen.getByTestId('false_targets').querySelector('input') as HTMLInputElement
-      userEvent.type(targetsTagInput, 'target')
+      await userEvent.type(targetsTagInput, 'target')
       const targetsInputList = document.querySelector('ul')
       await waitFor(() => expect(targetsInputList).toBeInTheDocument())
       expect(document.querySelectorAll('li')).toHaveLength(3)
@@ -185,10 +185,10 @@ describe('TargetingRulesTab', () => {
       expect(targetGroupTagInputValues[1]).toHaveTextContent(/target_group_5/)
 
       const targetGroup = document.querySelector('input[name="targetingRuleItems[0].targetGroups"]') as HTMLElement
-      userEvent.click(targetGroup)
+      await userEvent.click(targetGroup)
 
       await waitFor(() => expect(screen.getByText('target_group_2')).toBeInTheDocument())
-      userEvent.click(screen.getByText('target_group_2'))
+      await userEvent.click(screen.getByText('target_group_2'))
 
       targetGroupTagInputValues = screen.getByTestId('false_target_groups').querySelectorAll('span[data-tag-index]')
       expect(targetGroupTagInputValues).toHaveLength(3)
@@ -204,10 +204,10 @@ describe('TargetingRulesTab', () => {
 
       expect(targetTagInputValues[0]).toHaveTextContent(/target_1/)
 
-      userEvent.click(document.querySelector('input[name="targetingRuleItems[0].targets"]') as HTMLInputElement)
+      await userEvent.click(document.querySelector('input[name="targetingRuleItems[0].targets"]') as HTMLInputElement)
 
       await waitFor(() => expect(screen.getByText('target_4')).toBeInTheDocument())
-      userEvent.click(screen.getByText('target_4'))
+      await userEvent.click(screen.getByText('target_4'))
 
       targetTagInputValues = screen.getByTestId('false_targets').querySelectorAll('span[data-tag-index]')
       expect(targetTagInputValues).toHaveLength(2)
@@ -296,11 +296,11 @@ describe('TargetingRulesTab', () => {
       renderComponent()
       const addTargetingButton = screen.getByText('cf.featureFlags.rules.addTargeting')
       expect(addTargetingButton).toBeInTheDocument()
-      userEvent.click(addTargetingButton)
+      await userEvent.click(addTargetingButton)
 
       const variationOptionTrue = screen.getByTestId('variation_option_true')
       expect(variationOptionTrue).toBeInTheDocument()
-      userEvent.click(variationOptionTrue)
+      await userEvent.click(variationOptionTrue)
 
       expect(screen.getByTestId('true_target_groups')).toBeInTheDocument()
       expect(screen.getByTestId('true_targets')).toBeInTheDocument()
@@ -308,10 +308,10 @@ describe('TargetingRulesTab', () => {
 
     test('it should remove variation when "trash" icon/button clicked', async () => {
       renderComponent()
-      userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
+      await userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
 
       expect(screen.getByTestId('remove_variation_false')).toBeInTheDocument()
-      userEvent.click(screen.getByTestId('remove_variation_false'))
+      await userEvent.click(screen.getByTestId('remove_variation_false'))
 
       expect(screen.queryByTestId('false_target_groups')).not.toBeInTheDocument()
       expect(screen.queryByTestId('false_targets')).not.toBeInTheDocument()
@@ -366,10 +366,10 @@ describe('TargetingRulesTab', () => {
       })
       expect(screen.queryByText('cf.featureFlags.percentageRollout')).not.toBeInTheDocument()
 
-      userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
+      await userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
       const percentageRolloutOption = screen.getByTestId('variation_option_percentage_rollout')
       await waitFor(() => expect(percentageRolloutOption).toBeInTheDocument())
-      userEvent.click(percentageRolloutOption)
+      await userEvent.click(percentageRolloutOption)
 
       expect(screen.getByTestId('percentage_rollout_item_1')).toBeInTheDocument()
     })
@@ -411,10 +411,10 @@ describe('TargetingRulesTab', () => {
       expect(screen.queryByText('cf.featureFlags.percentageRollout')).not.toBeInTheDocument()
     })
 
-    test('it should remove percentage rollout correctly', () => {
+    test('it should remove percentage rollout correctly', async () => {
       renderComponent()
 
-      userEvent.click(screen.getByTestId('remove_percentage_rollout_1'))
+      await userEvent.click(screen.getByTestId('remove_percentage_rollout_1'))
 
       expect(screen.queryByText('cf.featureFlags.percentageRollout')).not.toBeInTheDocument()
     })
@@ -458,16 +458,16 @@ describe('TargetingRulesTab', () => {
         }
       })
 
-      userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
+      await userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
       const percentageRolloutOption = screen.getByTestId('variation_option_percentage_rollout')
       await waitFor(() => expect(percentageRolloutOption).toBeInTheDocument())
-      userEvent.click(percentageRolloutOption)
+      await userEvent.click(percentageRolloutOption)
       expect(screen.getByTestId('percentage_rollout_item_1')).toBeInTheDocument()
 
       // click save
       const saveButton = screen.getByText('save')
       expect(saveButton).toBeInTheDocument()
-      userEvent.click(saveButton)
+      await userEvent.click(saveButton)
 
       await waitFor(() => {
         expect(screen.getAllByText('cf.featureFlags.rules.validation.valueMustAddTo100')).toHaveLength(3)
@@ -486,57 +486,57 @@ describe('TargetingRulesTab', () => {
 
       // toggle flag off
       const flagToggle = screen.getByTestId('flag-status-switch')
-      userEvent.click(flagToggle)
+      await userEvent.click(flagToggle)
       expect(flagToggle).not.toBeChecked()
 
       // update default ON variation
       const onVariationDropdown = document.querySelector('input[name="onVariation"]') as HTMLSelectElement
-      userEvent.click(onVariationDropdown)
+      await userEvent.click(onVariationDropdown)
       const trueVariationOption = document.querySelector('li') as HTMLElement
-      userEvent.click(trueVariationOption)
+      await userEvent.click(trueVariationOption)
       expect(onVariationDropdown).toHaveValue('True')
 
       // add true variation with targets/target groups
-      userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
-      userEvent.click(screen.getByTestId('variation_option_true'))
+      await userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
+      await userEvent.click(screen.getByTestId('variation_option_true'))
 
       const trueTargetGroups = document.querySelector('input[name="targetingRuleItems[0].targetGroups"]') as HTMLElement
 
       await waitFor(() => expect(trueTargetGroups).toBeInTheDocument())
-      userEvent.click(trueTargetGroups)
+      await userEvent.click(trueTargetGroups)
 
       await waitFor(() => expect(screen.getByText('target_group_2')).toBeInTheDocument())
-      userEvent.click(screen.getByText('target_group_2'))
+      await userEvent.click(screen.getByText('target_group_2'))
 
-      userEvent.click(document.querySelector('input[name="targetingRuleItems[0].targets"]') as HTMLElement)
+      await userEvent.click(document.querySelector('input[name="targetingRuleItems[0].targets"]') as HTMLElement)
       await waitFor(() => screen.getByText('target_2'))
-      userEvent.click(screen.getByText('target_2'))
+      await userEvent.click(screen.getByText('target_2'))
 
       // update percentage rollout target grourp
       const targetGroup = document.querySelector(
         'input[name="targetingRuleItems[1].clauses[0].values[0]"]'
       ) as HTMLElement
-      userEvent.click(targetGroup)
+      await userEvent.click(targetGroup)
       await waitFor(() => expect(screen.getByText('target_group_6')).toBeInTheDocument())
-      userEvent.click(screen.getByText('target_group_6'))
+      await userEvent.click(screen.getByText('target_group_6'))
 
       // update percentage rollout weights
       const trueWeight = document.querySelector(
         'input[name="targetingRuleItems[1].variations[0].weight"]'
       ) as HTMLElement
-      userEvent.clear(trueWeight)
-      userEvent.type(trueWeight, '70')
+      await userEvent.clear(trueWeight)
+      await userEvent.type(trueWeight, '70')
 
       const falseWeight = document.querySelector(
         'input[name="targetingRuleItems[1].variations[1].weight"]'
       ) as HTMLElement
-      userEvent.clear(falseWeight)
-      userEvent.type(falseWeight, '30')
+      await userEvent.clear(falseWeight)
+      await userEvent.type(falseWeight, '30')
 
       // click save
       const saveButton = screen.getByText('save')
       expect(saveButton).toBeInTheDocument()
-      userEvent.click(saveButton)
+      await userEvent.click(saveButton)
       await waitFor(() => expect(saveChangesMock).toBeCalledWith(expectedFormValues))
     })
 
@@ -545,13 +545,13 @@ describe('TargetingRulesTab', () => {
 
       const flagToggle = screen.getByTestId('flag-status-switch')
       expect(flagToggle).toBeChecked()
-      userEvent.click(flagToggle)
+      await userEvent.click(flagToggle)
       expect(flagToggle).not.toBeChecked()
 
       const cancelButton = screen.getByText('cancel')
       expect(cancelButton).toBeInTheDocument()
 
-      userEvent.click(cancelButton)
+      await userEvent.click(cancelButton)
       expect(flagToggle).toBeChecked()
     })
   })

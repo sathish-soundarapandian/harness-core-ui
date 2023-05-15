@@ -12,7 +12,7 @@ describe('UpdateEventPreferenceDrawer', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
-  test('clicking close button should close the update event popup', () => {
+  test('clicking close button should close the update event popup', async () => {
     jest.spyOn(cvService, 'useGetFeedbackHistory').mockReturnValue({
       refetch: feedbackHistorySpy,
       cancel: jest.fn(),
@@ -37,8 +37,8 @@ describe('UpdateEventPreferenceDrawer', () => {
     expect(closeBtn).toBeInTheDocument()
     expect(drawerContent).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(closeBtn)
+    await act(async () => {
+      await userEvent.click(closeBtn)
     })
 
     expect(onHideMock).toHaveBeenCalled()

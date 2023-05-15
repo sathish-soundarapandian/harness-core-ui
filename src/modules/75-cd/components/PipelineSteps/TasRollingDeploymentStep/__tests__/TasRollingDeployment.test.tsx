@@ -50,13 +50,13 @@ describe('TASRollingDeploymentStepStep tests', () => {
     )
 
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.type(nameInput!, 'Rolling Deployment Step')
+    await userEvent.type(nameInput!, 'Rolling Deployment Step')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('Rolling Deployment Step'))
     expect(getByText('Rolling_Deployment_Step')).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '10m')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '10m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('10m'))
 
     await act(() => ref.current?.submitForm()!)
@@ -92,7 +92,7 @@ describe('TASRollingDeploymentStepStep tests', () => {
     const runtimeInputIcon = container.querySelector('span[data-icon="runtime-input"]')
     fireEvent.click(runtimeInputIcon!)
     fireEvent.click(getByText('Fixed value'))
-    userEvent.type(queryByNameAttribute('timeout', container)!, '10m')
+    await userEvent.type(queryByNameAttribute('timeout', container)!, '10m')
 
     await act(() => ref.current?.submitForm()!)
     await waitFor(() =>
@@ -136,11 +136,11 @@ describe('TASRollingDeploymentStepStep tests', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(onUpdate).not.toHaveBeenCalled()
-    userEvent.type(timeoutInput!, '10m')
-    userEvent.click(submitBtn)
+    await userEvent.type(timeoutInput!, '10m')
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'TAS_Rolling_Deployment_Step',

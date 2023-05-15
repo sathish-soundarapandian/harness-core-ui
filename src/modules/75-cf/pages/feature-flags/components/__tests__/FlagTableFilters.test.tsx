@@ -101,7 +101,7 @@ describe('FlagTableFilters', () => {
     expect(screen.getByText('cf.flagFilters.active')).toBeVisible()
     expect(screen.getByText('cf.flagFilters.potentiallyStale')).toBeVisible()
 
-    userEvent.click(screen.getByText('cf.flagFilters.permanent'))
+    await userEvent.click(screen.getByText('cf.flagFilters.permanent'))
 
     await waitFor(() => {
       expect(updateTableFilter).toBeCalledWith(permanentFlagsFilter)

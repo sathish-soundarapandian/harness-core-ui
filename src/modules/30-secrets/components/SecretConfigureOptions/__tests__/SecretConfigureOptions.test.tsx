@@ -20,13 +20,13 @@ const openConfigureOptionsModal = async (baseElement: HTMLElement): Promise<void
     return button
   })
 
-  userEvent.click(configureOptionsButton!)
+  await userEvent.click(configureOptionsButton!)
   expect(await screen.findByText('common.configureOptions.configureOptions')).toBeInTheDocument()
 }
 
 const selectAllowedValuesRadio = async (): Promise<void> => {
   const allowedValuesRadio = await screen.findByDisplayValue('AllowedValues')
-  userEvent.click(allowedValuesRadio)
+  await userEvent.click(allowedValuesRadio)
 }
 
 describe('<SecretConfigureOptions />', () => {
@@ -51,22 +51,22 @@ describe('<SecretConfigureOptions />', () => {
     await selectAllowedValuesRadio()
 
     const placeholder = await screen.findByText('secrets.selectSecrets')
-    userEvent.click(placeholder)
+    await userEvent.click(placeholder)
     const accountTab = await screen.findByText('account')
-    userEvent.click(accountTab)
+    await userEvent.click(accountTab)
 
     const secretToSelect = await screen.findByText('secret_test_1')
     const anotherSecretToSelect = screen.getByText('secret_test_2')
-    userEvent.click(secretToSelect)
-    userEvent.click(anotherSecretToSelect)
+    await userEvent.click(secretToSelect)
+    await userEvent.click(anotherSecretToSelect)
 
     const applyButton = screen.getByText('entityReference.apply')
     await waitFor(() => expect(applyButton).toBeEnabled())
-    userEvent.click(applyButton)
+    await userEvent.click(applyButton)
 
     await waitFor(() => expect(accountTab).not.toBeInTheDocument())
 
-    userEvent.click(screen.getByText(/submit/i))
+    await userEvent.click(screen.getByText(/submit/i))
     await waitFor(() =>
       expect(onChange).toHaveBeenCalledWith(
         '<+input>.allowedValues(account.secret_test_1,account.secret_test_2)',
@@ -89,7 +89,7 @@ describe('<SecretConfigureOptions />', () => {
     const placeholder = await screen.findByText('secrets.selectSecrets')
     expect(placeholder).toBeInTheDocument()
 
-    userEvent.click(screen.getByText(/submit/i))
+    await userEvent.click(screen.getByText(/submit/i))
 
     expect(await screen.findByText('common.configureOptions.validationErrors.minOneAllowedValue')).toBeInTheDocument()
   })

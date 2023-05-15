@@ -138,14 +138,14 @@ describe('Environment Detail Summary', () => {
     //see data in table
     const viewInTableBtn = getByText('cd.environmentDetailPage.viewInTable')
     expect(viewInTableBtn).toBeTruthy()
-    userEvent.click(viewInTableBtn)
+    await userEvent.click(viewInTableBtn)
 
     const fullTableDialog = findDialogContainer()
     expect(findAllByText(fullTableDialog!, 'cd.serviceDashboard.artifact')).toBeTruthy()
     expect(findAllByText(fullTableDialog!, 'cd.environmentDetailPage.infraSlashCluster')).toBeTruthy()
     expect(findAllByText(fullTableDialog!, 'svc1')).toBeTruthy()
-    userEvent.click(await findByText(fullTableDialog!, 'svc2'))
-    userEvent.click(await findByText(fullTableDialog!, 'svc1'))
+    await userEvent.click(await findByText(fullTableDialog!, 'svc2'))
+    await userEvent.click(await findByText(fullTableDialog!, 'svc1'))
 
     //instance table
     const infraText = getAllByText(fullTableDialog!, 'infraStructure4')
@@ -172,7 +172,7 @@ describe('Environment Detail Summary', () => {
     )
     const searchField = container.querySelector('[class*="ExpandingSearchInput"]')
     expect(searchField).toBeTruthy()
-    userEvent.type(screen.getByPlaceholderText('Search'), 'my search term')
+    await userEvent.type(screen.getByPlaceholderText('Search'), 'my search term')
     jest.runOnlyPendingTimers()
 
     await waitFor(() => expect(getByText('pipeline.emptyExecutionListMsg')).toBeTruthy())

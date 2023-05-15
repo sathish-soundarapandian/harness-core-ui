@@ -28,14 +28,14 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> =
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues') as HTMLInputElement
 
   fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
 
   await waitFor(() => expect(regexTextArea.value).toBe('<+input>.includes(/test/)'))
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
 }
 
 // type is not used in the component anywhere, just need to pass it as prop for typecheck to pass
@@ -145,7 +145,7 @@ describe('GenericExecutionStepEdit tests', () => {
     expect(timeoutInput.value).toBe('<+input>')
 
     const cogTimeout = document.querySelector('[data-icon="cog"]')
-    userEvent.click(cogTimeout!)
+    await userEvent.click(cogTimeout!)
     await waitFor(() => expect(modals.length).toBe(1))
     const timeoutCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(timeoutCOGModal)

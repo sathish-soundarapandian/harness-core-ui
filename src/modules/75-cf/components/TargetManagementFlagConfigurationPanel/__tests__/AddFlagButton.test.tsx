@@ -50,7 +50,7 @@ describe('AddFlagButton', () => {
 
     expect(screen.queryByText(title)).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlag' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlag' }))
 
     await waitFor(() => expect(screen.getByText(title)).toBeInTheDocument())
   })

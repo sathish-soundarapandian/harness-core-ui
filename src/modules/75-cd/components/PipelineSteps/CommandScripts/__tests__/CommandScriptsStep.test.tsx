@@ -52,13 +52,13 @@ describe('Command Scripts step', () => {
     )
 
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.type(nameInput!, name)
+    await userEvent.type(nameInput!, name)
     await waitFor(() => expect(nameInput).toHaveDisplayValue(name))
     expect(getByText(getIdentifierFromName(name))).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, timeout)
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, timeout)
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue(timeout))
 
     act(() => {
@@ -125,7 +125,7 @@ describe('Command Scripts step', () => {
     })
 
     const optionalConfiguration = getByTestId('optional-config-summary')
-    userEvent.click(optionalConfiguration)
+    await userEvent.click(optionalConfiguration)
 
     await waitFor(() => {
       environmentVariables.forEach(envVar => {
@@ -231,7 +231,7 @@ describe('Command Scripts step', () => {
       />
     )
 
-    userEvent.click(screen.getByText(/submit/i))
+    await userEvent.click(screen.getByText(/submit/i))
     expect(await screen.findByText('validation.timeout10SecMinimum')).toBeInTheDocument()
   })
 
@@ -283,7 +283,7 @@ describe('Command Scripts step', () => {
       />
     )
 
-    userEvent.click(screen.getByText(/submit/i))
+    await userEvent.click(screen.getByText(/submit/i))
     expect(await screen.findAllByText('common.validation.valueIsRequired')).toHaveLength(2)
   })
 
@@ -324,7 +324,7 @@ describe('Command Scripts step', () => {
       />
     )
 
-    userEvent.click(screen.getByText(/submit/i))
+    await userEvent.click(screen.getByText(/submit/i))
     expect(await screen.findByText(/^invalid syntax provided$/i)).toBeInTheDocument()
   })
 

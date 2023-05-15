@@ -39,13 +39,13 @@ const connectorConfigureOptionsProps: ConnectorConfigureOptionsProps = {
 const openConfigureOptionsModal = async (): Promise<void> => {
   const configureOptionsButton = queryByAttribute('id', document.body, 'configureOptions_spec.connectorRef')
   expect(configureOptionsButton).toBeInTheDocument()
-  userEvent.click(configureOptionsButton!)
+  await userEvent.click(configureOptionsButton!)
   expect(await screen.findByText('common.configureOptions.configureOptions')).toBeInTheDocument()
 }
 
-const selectAllowedValuesRadio = (): void => {
+const selectAllowedValuesRadio = async (): Promise<void> => {
   const allowedValuesRadio = screen.getByDisplayValue('AllowedValues')
-  userEvent.click(allowedValuesRadio)
+  await userEvent.click(allowedValuesRadio)
 }
 
 describe('test <ConnectorConfigureOptions />', () => {
@@ -58,24 +58,24 @@ describe('test <ConnectorConfigureOptions />', () => {
     )
     await openConfigureOptionsModal()
 
-    selectAllowedValuesRadio()
+    await selectAllowedValuesRadio()
 
     const placeholder = await screen.findByText('common.entityPlaceholderText')
-    userEvent.click(placeholder)
-    const accountTab = await screen.findByText(/account/i)
-    userEvent.click(accountTab)
+    await userEvent.click(placeholder)
+    const accountTab = await screen.findByText(/^account$/i)
+    await userEvent.click(accountTab)
 
     const connectorToSelect = await screen.findByText('jira_test')
     const applyButton = screen.getByText('entityReference.apply')
 
-    userEvent.click(connectorToSelect)
+    await userEvent.click(connectorToSelect)
     await waitFor(() => expect(applyButton).toBeEnabled())
-    userEvent.click(applyButton)
+    await userEvent.click(applyButton)
     await waitFor(() => expect(accountTab).not.toBeInTheDocument())
 
     const submitButton = screen.getByText(/submit/i)
 
-    userEvent.click(submitButton)
+    await userEvent.click(submitButton)
     await waitFor(() =>
       expect(onChange).toHaveBeenCalledWith('<+input>.allowedValues(account.jira_test)', undefined, undefined)
     )
@@ -89,13 +89,13 @@ describe('test <ConnectorConfigureOptions />', () => {
     )
     await openConfigureOptionsModal()
 
-    selectAllowedValuesRadio()
+    await selectAllowedValuesRadio()
 
     const placeholder = await screen.findByText('common.entityPlaceholderText')
     expect(placeholder).toBeInTheDocument()
 
     const submitButton = screen.getByText(/submit/i)
-    userEvent.click(submitButton)
+    await userEvent.click(submitButton)
 
     expect(await screen.findByText('common.configureOptions.validationErrors.minOneAllowedValue')).toBeInTheDocument()
   })

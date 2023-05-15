@@ -143,39 +143,39 @@ describe('Test CreateMonitoredServiceFromSLO component', () => {
     const { container, getByText } = render(<WrapperComponent initialValues={initialFormData} />)
     expect(container.getElementsByClassName('newEnv').length).toBe(1)
     expect(container.getElementsByClassName('newService').length).toBe(1)
-    userEvent.click(getByText('save'))
+    await userEvent.click(getByText('save'))
     await waitFor(() => expect(getByText('cv.monitoredServices.monitoredServiceCreated')).toBeInTheDocument())
   })
 
   test('should close the modal when cancel is clicked', async () => {
     const { getByText } = render(<WrapperComponent initialValues={initialFormData} />)
-    userEvent.click(getByText('cancel'))
+    await userEvent.click(getByText('cancel'))
     await waitFor(() => expect(screen.queryByText('cv.slos.monitoredServiceText')).not.toBeInTheDocument())
   })
 
   test('should add and change service and environment', async () => {
     const { container } = render(<WrapperComponent initialValues={initialFormData} />)
-    act(() => {
-      userEvent.click(container.querySelector('[class="newService"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[class="newService"]')!)
     })
-    act(() => {
-      userEvent.click(container.querySelector('[class="changeService"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[class="changeService"]')!)
     })
 
     expect(container.querySelector('[class="newService"]')).toBeInTheDocument()
     expect(container.querySelector('[class="changeService"]')).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(container.querySelector('[class="newEnv"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[class="newEnv"]')!)
     })
-    act(() => {
-      userEvent.click(container.querySelector('[class="changeEnv"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[class="changeEnv"]')!)
     })
     expect(container.querySelector('[class="newEnv"]')).toBeInTheDocument()
     expect(container.querySelector('[class="changeEnv"]')).toBeInTheDocument()
   })
 
-  test('should render when ff CDS_OrgAccountLevelServiceEnvEnvGroup is true', () => {
+  test('should render when ff CDS_OrgAccountLevelServiceEnvEnvGroup is true', async () => {
     jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
       CDS_OrgAccountLevelServiceEnvEnvGroup: true
     })
@@ -192,11 +192,11 @@ describe('Test CreateMonitoredServiceFromSLO component', () => {
     )
     expect(container.querySelector('[title="On Service Select"]')).toBeInTheDocument()
     expect(container.querySelector('[title="On Environment Select"]')).toBeInTheDocument()
-    act(() => {
-      userEvent.click(container.querySelector('[title="On Service Select"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[title="On Service Select"]')!)
     })
-    act(() => {
-      userEvent.click(container.querySelector('[title="On Environment Select"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[title="On Environment Select"]')!)
     })
     expect(getByTestId('OrgAccountLevelServiceEnvField')).toBeInTheDocument()
   })

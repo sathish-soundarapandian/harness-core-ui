@@ -53,7 +53,7 @@ describe('FlagDetailsOptionsMenuButton', () => {
   test('it should render menu correctly when options button clicked', async () => {
     renderComponent()
 
-    userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+    await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
     expect(document.querySelector('[data-icon="edit"]')).toBeInTheDocument()
     expect(document.querySelector('[data-icon="trash"]')).toBeInTheDocument()
 
@@ -78,8 +78,8 @@ describe('FlagDetailsOptionsMenuButton', () => {
     test('it should render confirm modal correctly when delete option clicked', async () => {
       renderComponent()
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
 
       expect(screen.getByText('cf.featureFlags.deleteFlag')).toBeInTheDocument()
       expect(screen.getByText('cf.featureFlags.deleteFlagMessage')).toBeInTheDocument()
@@ -96,7 +96,7 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
       renderComponent()
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
 
       fireEvent.mouseOver(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
 
@@ -108,12 +108,12 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
       renderComponent(isArchivingFfOn, { deleteFeatureFlag: deleteFlagMock })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
 
       expect(screen.getByRole('button', { name: 'delete' })).toBeInTheDocument()
 
-      userEvent.click(screen.getByRole('button', { name: 'delete' }))
+      await userEvent.click(screen.getByRole('button', { name: 'delete' }))
 
       expect(deleteFlagMock).toBeCalledWith('new_flag', {
         queryParams: {
@@ -131,12 +131,12 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
       renderComponent(isArchivingFfOn, { deleteFeatureFlag: deleteFlagMock, gitSync: mockGitSync })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
 
       expect(screen.getByRole('button', { name: 'delete' })).toBeInTheDocument()
 
-      userEvent.click(screen.getByRole('button', { name: 'delete' }))
+      await userEvent.click(screen.getByRole('button', { name: 'delete' }))
       expect(document.querySelector('#save-flag-to-git-modal-body')).toBeInTheDocument()
     })
 
@@ -145,15 +145,15 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
       renderComponent(isArchivingFfOn, { gitSync: mockGitSync })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
 
       expect(screen.getByRole('button', { name: 'delete' })).toBeInTheDocument()
 
-      userEvent.click(screen.getByRole('button', { name: 'delete' }))
+      await userEvent.click(screen.getByRole('button', { name: 'delete' }))
       expect(document.querySelector('#save-flag-to-git-modal-body')).toBeInTheDocument()
 
-      userEvent.click(screen.getByTestId('save-flag-to-git-modal-cancel-button'))
+      await userEvent.click(screen.getByTestId('save-flag-to-git-modal-cancel-button'))
 
       expect(document.querySelector('#save-flag-to-git-modal-body')).not.toBeInTheDocument()
     })
@@ -166,12 +166,12 @@ describe('FlagDetailsOptionsMenuButton', () => {
         gitSync: { ...mockGitSync, isAutoCommitEnabled: true }
       })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
 
       expect(screen.getByRole('button', { name: 'delete' })).toBeInTheDocument()
 
-      userEvent.click(screen.getByRole('button', { name: 'delete' }))
+      await userEvent.click(screen.getByRole('button', { name: 'delete' }))
 
       expect(deleteFlagMock).toBeCalledWith('new_flag', {
         queryParams: {
@@ -189,20 +189,20 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
       renderComponent(isArchivingFfOn, { deleteFeatureFlag: deleteFlagMock, gitSync: mockGitSync })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
 
       expect(screen.getByRole('button', { name: 'delete' })).toBeInTheDocument()
 
-      userEvent.click(screen.getByRole('button', { name: 'delete' }))
+      await userEvent.click(screen.getByRole('button', { name: 'delete' }))
       expect(document.querySelector('#save-flag-to-git-modal-body')).toBeInTheDocument()
 
       // enter a commit message
       const commitTextbox = screen.getByPlaceholderText('common.git.commitMessage')
-      userEvent.type(commitTextbox, 'test commit message')
+      await userEvent.type(commitTextbox, 'test commit message')
 
       // submit
-      userEvent.click(screen.getByTestId('save-flag-to-git-modal-save-button'))
+      await userEvent.click(screen.getByTestId('save-flag-to-git-modal-save-button'))
 
       await waitFor(() =>
         expect(deleteFlagMock).toBeCalledWith('new_flag', {
@@ -222,20 +222,20 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
       renderComponent(isArchivingFfOn, { deleteFeatureFlag: deleteFlagMock, gitSync: mockGitSync })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
 
       expect(screen.getByRole('button', { name: 'delete' })).toBeInTheDocument()
 
-      userEvent.click(screen.getByRole('button', { name: 'delete' }))
+      await userEvent.click(screen.getByRole('button', { name: 'delete' }))
       expect(document.querySelector('#save-flag-to-git-modal-body')).toBeInTheDocument()
 
       // enter a commit message
       const commitTextbox = screen.getByPlaceholderText('common.git.commitMessage')
-      userEvent.type(commitTextbox, 'test commit message')
+      await userEvent.type(commitTextbox, 'test commit message')
 
       // submit
-      userEvent.click(screen.getByTestId('save-flag-to-git-modal-save-button'))
+      await userEvent.click(screen.getByTestId('save-flag-to-git-modal-save-button'))
 
       await waitFor(() =>
         expect(deleteFlagMock).toBeCalledWith('new_flag', {
@@ -255,25 +255,25 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
       renderComponent(isArchivingFfOn, { gitSync: { ...mockGitSync, handleAutoCommit: handleAutoCommitMock } })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)
 
       expect(screen.getByRole('button', { name: 'delete' })).toBeInTheDocument()
 
-      userEvent.click(screen.getByRole('button', { name: 'delete' }))
+      await userEvent.click(screen.getByRole('button', { name: 'delete' }))
       expect(document.querySelector('#save-flag-to-git-modal-body')).toBeInTheDocument()
 
       // enter a commit message
       const commitTextbox = screen.getByPlaceholderText('common.git.commitMessage')
-      userEvent.type(commitTextbox, 'test commit message')
+      await userEvent.type(commitTextbox, 'test commit message')
 
       // toggle autocommit value
       const autoCommitCheckbox = document.querySelector("input[name='autoCommit']") as HTMLInputElement
-      userEvent.click(autoCommitCheckbox)
+      await userEvent.click(autoCommitCheckbox)
       expect(autoCommitCheckbox).toBeChecked()
 
       // submit
-      userEvent.click(screen.getByTestId('save-flag-to-git-modal-save-button'))
+      await userEvent.click(screen.getByTestId('save-flag-to-git-modal-save-button'))
 
       await waitFor(() => expect(handleAutoCommitMock).toBeCalledWith(true))
     })
@@ -323,8 +323,8 @@ describe('FlagDetailsOptionsMenuButton', () => {
     test('it should render edit flag modal correctly on click', async () => {
       renderComponent()
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
 
       expect(screen.getByTestId('edit-flag-form')).toBeInTheDocument()
 
@@ -343,14 +343,14 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
       renderComponent(isArchivingFfOn, { submitPatch: submitPatchMock })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
 
-      userEvent.type(document.querySelector("input[name='name']") as HTMLInputElement, ' UPDATED')
+      await userEvent.type(document.querySelector("input[name='name']") as HTMLInputElement, ' UPDATED')
 
       expect(document.querySelector("input[name='name']")).toHaveValue('new flag UPDATED')
 
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
 
       await waitFor(() =>
         expect(submitPatchMock).toBeCalledWith({
@@ -374,10 +374,10 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
       renderComponent(isArchivingFfOn, { submitPatch: submitPatchMock })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
 
-      userEvent.click(screen.getByText('cancel'))
+      await userEvent.click(screen.getByText('cancel'))
 
       // assert modal closes
       expect(screen.queryByTestId('edit-flag-form')).not.toBeInTheDocument()
@@ -386,8 +386,8 @@ describe('FlagDetailsOptionsMenuButton', () => {
     test('it should render edit flag modal correctly when Git Sync enabled on click', async () => {
       renderComponent(isArchivingFfOn, { gitSync: mockGitSync })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
 
       expect(screen.getByTestId('edit-flag-form')).toBeInTheDocument()
 
@@ -409,13 +409,13 @@ describe('FlagDetailsOptionsMenuButton', () => {
 
       renderComponent(isArchivingFfOn, { gitSync: mockGitSync, submitPatch: submitPatchMock })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
 
       await waitFor(() => expect(screen.getByTestId('edit-flag-form')).toBeInTheDocument())
 
-      userEvent.type(document.querySelector("input[name='name']") as HTMLInputElement, ' UPDATED')
-      userEvent.type(
+      await userEvent.type(document.querySelector("input[name='name']") as HTMLInputElement, ' UPDATED')
+      await userEvent.type(
         document.querySelector("textarea[name='gitDetails.commitMsg']") as HTMLInputElement,
         'Updating flag name'
       )
@@ -423,7 +423,7 @@ describe('FlagDetailsOptionsMenuButton', () => {
       expect(document.querySelector("input[name='name']")).toHaveValue('new flag UPDATED')
       expect(document.querySelector("textarea[name='gitDetails.commitMsg']")).toHaveValue('Updating flag name')
 
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
 
       await waitFor(() =>
         expect(submitPatchMock).toBeCalledWith({
@@ -453,13 +453,13 @@ describe('FlagDetailsOptionsMenuButton', () => {
       const handleAutoCommitMock = jest.fn()
       renderComponent(isArchivingFfOn, { gitSync: { ...mockGitSync, handleAutoCommit: handleAutoCommitMock } })
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
 
       await waitFor(() => expect(screen.getByTestId('edit-flag-form')).toBeInTheDocument())
 
-      userEvent.type(document.querySelector("input[name='name']") as HTMLInputElement, ' UPDATED')
-      userEvent.type(
+      await userEvent.type(document.querySelector("input[name='name']") as HTMLInputElement, ' UPDATED')
+      await userEvent.type(
         document.querySelector("textarea[name='gitDetails.commitMsg']") as HTMLInputElement,
         'Updating flag name'
       )
@@ -468,10 +468,10 @@ describe('FlagDetailsOptionsMenuButton', () => {
       expect(document.querySelector("textarea[name='gitDetails.commitMsg']")).toHaveValue('Updating flag name')
 
       const autoCommitCheckbox = document.querySelector("input[name='autoCommit']") as HTMLInputElement
-      userEvent.click(autoCommitCheckbox)
+      await userEvent.click(autoCommitCheckbox)
       expect(autoCommitCheckbox).toBeChecked()
 
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
 
       await waitFor(() => expect(handleAutoCommitMock).toBeCalledWith(true))
 

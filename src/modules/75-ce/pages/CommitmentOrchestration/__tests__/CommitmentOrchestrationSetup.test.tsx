@@ -28,7 +28,7 @@ jest.mock('services/lw-co', () => ({
   }))
 }))
 
-describe('Commitment Orchestration Setup', async () => {
+describe('Commitment Orchestration Setup', () => {
   test('complete setup process', async () => {
     const { container, getByText, getByTestId } = render(
       <TestWrapper>

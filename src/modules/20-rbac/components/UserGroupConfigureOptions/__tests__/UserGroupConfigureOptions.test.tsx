@@ -36,13 +36,13 @@ const userGroupConfigureOptionsProps = {
 const openConfigureOptionsModal = async (): Promise<void> => {
   const configureOptionsButton = queryByAttribute('id', document.body, 'configureOptions_spec.approvers.userGroups')
   expect(configureOptionsButton).toBeInTheDocument()
-  userEvent.click(configureOptionsButton!)
+  await userEvent.click(configureOptionsButton!)
   expect(await screen.findByText('common.configureOptions.configureOptions')).toBeInTheDocument()
 }
 
-const selectAllowedValuesRadio = (): void => {
+const selectAllowedValuesRadio = async (): Promise<void> => {
   const allowedValuesRadio = screen.getByDisplayValue('AllowedValues')
-  userEvent.click(allowedValuesRadio)
+  await userEvent.click(allowedValuesRadio)
 }
 
 describe('test <UserGroupConfigureOptions />', () => {
@@ -54,24 +54,24 @@ describe('test <UserGroupConfigureOptions />', () => {
       </TestWrapper>
     )
     await openConfigureOptionsModal()
-    selectAllowedValuesRadio()
+    await selectAllowedValuesRadio()
 
     const userGroupPlaceholder = await screen.findByText('common.selectUserGroups')
-    userEvent.click(userGroupPlaceholder)
+    await userEvent.click(userGroupPlaceholder)
     const accountTab = await screen.findByText(/account/i)
-    userEvent.click(accountTab)
+    await userEvent.click(accountTab)
 
     const userGroupCheckbox = await screen.findByTestId('Checkbox-user_group_1')
-    userEvent.click(userGroupCheckbox)
+    await userEvent.click(userGroupCheckbox)
     await waitFor(() => expect(screen.getByTestId('Checkbox-user_group_1')).toBeChecked())
 
     const applyButton = screen.getByText('entityReference.apply')
-    userEvent.click(applyButton)
+    await userEvent.click(applyButton)
 
     await waitFor(() => expect(accountTab).not.toBeInTheDocument())
 
     const submitButton = screen.getByText(/submit/i)
-    userEvent.click(submitButton)
+    await userEvent.click(submitButton)
 
     await waitFor(() =>
       expect(onChange).toHaveBeenCalledWith('<+input>.allowedValues(account.user_group_1)', undefined, undefined)
@@ -85,13 +85,13 @@ describe('test <UserGroupConfigureOptions />', () => {
       </TestWrapper>
     )
     await openConfigureOptionsModal()
-    selectAllowedValuesRadio()
+    await selectAllowedValuesRadio()
 
     const userGroupPlaceholder = await screen.findByText('common.selectUserGroups')
     expect(userGroupPlaceholder).toBeInTheDocument()
 
     const submitButton = screen.getByText(/submit/i)
-    userEvent.click(submitButton)
+    await userEvent.click(submitButton)
 
     expect(await screen.findByText('common.configureOptions.validationErrors.minOneAllowedValue')).toBeInTheDocument()
   })

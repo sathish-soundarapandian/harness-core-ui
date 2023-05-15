@@ -114,13 +114,13 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement, fieldElement: HT
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
   act(() => {
     fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   })
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
   await waitFor(() => expect(fieldElement.value).toBe('<+input>.regex(<+input>.includes(/test/))'))
 }
 
@@ -318,7 +318,7 @@ describe('GoogleArtifactRegistry tests', () => {
 
     // Configure options testing for bucketName and filePath fields
     const cogVersion = document.getElementById('configureOptions_version')
-    userEvent.click(cogVersion!)
+    await userEvent.click(cogVersion!)
     await waitFor(() => expect(modals.length).toBe(1))
     const versionCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(versionCOGModal, versionInput)
@@ -377,31 +377,31 @@ describe('GoogleArtifactRegistry tests', () => {
 
     // Configure options testing for bucketName and filePath fields
     const cogProject = document.getElementById('configureOptions_project')
-    userEvent.click(cogProject!)
+    await userEvent.click(cogProject!)
     await waitFor(() => expect(modals.length).toBe(1))
     const projectCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(projectCOGModal, projectInput)
 
     const cogRegion = document.getElementById('configureOptions_region')
-    userEvent.click(cogRegion!)
+    await userEvent.click(cogRegion!)
     await waitFor(() => expect(modals.length).toBe(1))
     const regionCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(regionCOGModal, regionInput)
 
     const cogPackage = document.getElementById('configureOptions_package')
-    userEvent.click(cogPackage!)
+    await userEvent.click(cogPackage!)
     await waitFor(() => expect(modals.length).toBe(1))
     const packageCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(packageCOGModal, packageInput)
 
     const cogRepositoryName = document.getElementById('configureOptions_repositoryName')
-    userEvent.click(cogRepositoryName!)
+    await userEvent.click(cogRepositoryName!)
     await waitFor(() => expect(modals.length).toBe(1))
     const repositoryNameCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(repositoryNameCOGModal, repositoryNameInput)
 
     const cogVersionRegex = document.getElementById('configureOptions_versionRegex')
-    userEvent.click(cogVersionRegex!)
+    await userEvent.click(cogVersionRegex!)
     await waitFor(() => expect(modals.length).toBe(2))
     const versionRegexCOGModal = modals[1] as HTMLElement
     await doConfigureOptionsTesting(versionRegexCOGModal, versionRegexInput)

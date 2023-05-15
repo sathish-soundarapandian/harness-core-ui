@@ -105,7 +105,7 @@ describe('Test cases for CVSLODetailsPage', () => {
     expect(screen.getByText('details')).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByText(errorMessage)).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('Retry'))
+    await userEvent.click(screen.getByText('Retry'))
 
     const { identifier, accountId, orgIdentifier, projectIdentifier } = pathParams
 
@@ -120,11 +120,11 @@ describe('Test cases for CVSLODetailsPage', () => {
       })
     })
 
-    userEvent.click(screen.getByText('common.configurations'))
+    await userEvent.click(screen.getByText('common.configurations'))
 
     expect(screen.getByText('common.configurations')).toHaveAttribute('aria-selected', 'true')
 
-    userEvent.click(screen.getByText('Retry'))
+    await userEvent.click(screen.getByText('Retry'))
 
     await waitFor(() => {
       expect(cvServices.useGetSLODetails).toHaveBeenLastCalledWith({
@@ -166,6 +166,6 @@ describe('DowntimeBanner', () => {
 
     const crossButton = getByTestId('downtime-banner-dismiss')
     await expect(crossButton).toBeInTheDocument()
-    userEvent.click(crossButton!)
+    await userEvent.click(crossButton!)
   })
 })

@@ -87,7 +87,7 @@ describe('Audit trail filters', () => {
     expect(applyFilter).toBeCalledWith({})
   })
 
-  test('apply filters', async done => {
+  test('apply filters', done => {
     const applyFilter = jest.fn()
 
     const { container, getByText } = render(

@@ -100,15 +100,15 @@ describe('ECSRunTaskInputSet tests', () => {
     // Connector Ref
     const runTaskRequestConnectorRefInput = getAllByTestId(/connectorRef/)[0]
     expect(runTaskRequestConnectorRefInput).toBeInTheDocument()
-    userEvent.click(runTaskRequestConnectorRefInput!)
+    await userEvent.click(runTaskRequestConnectorRefInput!)
     const runTaskRequestConnectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
     const runTaskRequestGithubConnector1 = await findByText(runTaskRequestConnectorSelectorDialog, 'Git CTR')
     expect(runTaskRequestGithubConnector1).toBeTruthy()
     const runTaskRequestGithubConnector2 = await findByText(runTaskRequestConnectorSelectorDialog, 'Sample')
     expect(runTaskRequestGithubConnector2).toBeTruthy()
-    userEvent.click(runTaskRequestGithubConnector2)
+    await userEvent.click(runTaskRequestGithubConnector2)
     const applyBtn = getElementByText(runTaskRequestConnectorSelectorDialog, 'entityReference.apply')
-    userEvent.click(applyBtn)
+    await userEvent.click(applyBtn)
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
     expect(getElementByText(runTaskRequestConnectorRefInput, 'Sample')).toBeInTheDocument()
 
@@ -170,15 +170,15 @@ describe('ECSRunTaskInputSet tests', () => {
     // Connector Ref
     const connectorRefInput = getAllByTestId(/connectorRef/)[0]
     expect(connectorRefInput).toBeInTheDocument()
-    userEvent.click(connectorRefInput!)
+    await userEvent.click(connectorRefInput!)
     const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
     const githubConnector1 = await findByText(connectorSelectorDialog, 'Git CTR')
     expect(githubConnector1).toBeTruthy()
     const githubConnector2 = await findByText(connectorSelectorDialog, 'Sample')
     expect(githubConnector2).toBeTruthy()
-    userEvent.click(githubConnector1)
+    await userEvent.click(githubConnector1)
     const applySelected = getElementByText(connectorSelectorDialog, 'entityReference.apply')
-    userEvent.click(applySelected)
+    await userEvent.click(applySelected)
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
     expect(getElementByText(connectorRefInput, 'Git CTR')).toBeInTheDocument()
 
@@ -209,15 +209,15 @@ describe('ECSRunTaskInputSet tests', () => {
     // Connector Ref
     const runTaskRequestConnectorRefInput = getAllByTestId(/connectorRef/)[1]
     expect(runTaskRequestConnectorRefInput).toBeInTheDocument()
-    userEvent.click(runTaskRequestConnectorRefInput!)
+    await userEvent.click(runTaskRequestConnectorRefInput!)
     const runTaskRequestConnectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
     const runTaskRequestGithubConnector1 = await findByText(runTaskRequestConnectorSelectorDialog, 'Git CTR')
     expect(runTaskRequestGithubConnector1).toBeTruthy()
     const runTaskRequestGithubConnector2 = await findByText(runTaskRequestConnectorSelectorDialog, 'Sample')
     expect(runTaskRequestGithubConnector2).toBeTruthy()
-    userEvent.click(runTaskRequestGithubConnector2)
+    await userEvent.click(runTaskRequestGithubConnector2)
     const applyBtn = getElementByText(runTaskRequestConnectorSelectorDialog, 'entityReference.apply')
-    userEvent.click(applyBtn)
+    await userEvent.click(applyBtn)
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
     expect(getElementByText(runTaskRequestConnectorRefInput, 'Sample')).toBeInTheDocument()
 
@@ -284,15 +284,15 @@ describe('ECSRunTaskInputSet tests', () => {
     // Connector Ref
     const connectorRefInput = getAllByTestId(/connectorRef/)[0]
     expect(connectorRefInput).toBeInTheDocument()
-    userEvent.click(connectorRefInput!)
+    await userEvent.click(connectorRefInput!)
     const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
     const githubConnector1 = await findByText(connectorSelectorDialog, 'AWS')
     expect(githubConnector1).toBeTruthy()
     const githubConnector2 = await findByText(connectorSelectorDialog, 'Sample')
     expect(githubConnector2).toBeTruthy()
-    userEvent.click(githubConnector1)
+    await userEvent.click(githubConnector1)
     const applySelected = getElementByText(connectorSelectorDialog, 'entityReference.apply')
-    userEvent.click(applySelected)
+    await userEvent.click(applySelected)
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
     expect(getElementByText(connectorRefInput, 'AWS')).toBeInTheDocument()
 
@@ -304,12 +304,12 @@ describe('ECSRunTaskInputSet tests', () => {
     expect(regionSelect.value).toBe('')
     expect(regionSelect).not.toBeDisabled()
     const regionDropdownIcon = dropDownIcons[1]
-    userEvent.click(regionDropdownIcon)
+    await userEvent.click(regionDropdownIcon)
     await waitFor(() => expect(portalDivs.length).toBe(2))
     const regionDropdownDialogDiv = portalDivs[1]
     const regionSelectListMenu = regionDropdownDialogDiv.querySelector('.bp3-menu')
     const regionItem = await findByText(regionSelectListMenu as HTMLElement, 'US East (N. Virginia)')
-    userEvent.click(regionItem)
+    await userEvent.click(regionItem)
     await waitFor(() => expect(regionSelect.value).toBe('US East (N. Virginia)'))
 
     // Bucket Name
@@ -320,12 +320,12 @@ describe('ECSRunTaskInputSet tests', () => {
     expect(bucketNameSelect.value).toBe('')
     expect(bucketNameSelect).not.toBeDisabled()
     const bucketNameDropdownIcon = dropDownIcons[2]
-    userEvent.click(bucketNameDropdownIcon)
+    await userEvent.click(bucketNameDropdownIcon)
     await waitFor(() => expect(portalDivs.length).toBe(2))
     const bucketNameDropdownDialogDiv = portalDivs[1]
     const bucketNameSelectListMenu = bucketNameDropdownDialogDiv.querySelector('.bp3-menu')
     const bucketNameItem = await findByText(bucketNameSelectListMenu as HTMLElement, 'prod-bucket-339')
-    userEvent.click(bucketNameItem)
+    await userEvent.click(bucketNameItem)
     expect(bucketNameSelect.value).toBe('prod-bucket-339')
 
     // Path
@@ -344,15 +344,15 @@ describe('ECSRunTaskInputSet tests', () => {
     // Connector Ref
     const runTaskRequestConnectorRefInput = getAllByTestId(/connectorRef/)[1]
     expect(runTaskRequestConnectorRefInput).toBeInTheDocument()
-    userEvent.click(runTaskRequestConnectorRefInput!)
+    await userEvent.click(runTaskRequestConnectorRefInput!)
     const runTaskRequestConnectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
     const runTaskRequestGithubConnector1 = await findByText(runTaskRequestConnectorSelectorDialog, 'AWS')
     expect(runTaskRequestGithubConnector1).toBeTruthy()
     const runTaskRequestGithubConnector2 = await findByText(runTaskRequestConnectorSelectorDialog, 'Sample')
     expect(runTaskRequestGithubConnector2).toBeTruthy()
-    userEvent.click(runTaskRequestGithubConnector2)
+    await userEvent.click(runTaskRequestGithubConnector2)
     const applyBtn = getElementByText(runTaskRequestConnectorSelectorDialog, 'entityReference.apply')
-    userEvent.click(applyBtn)
+    await userEvent.click(applyBtn)
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
     expect(getElementByText(runTaskRequestConnectorRefInput, 'Sample')).toBeInTheDocument()
 
@@ -364,7 +364,7 @@ describe('ECSRunTaskInputSet tests', () => {
     expect(requestDefinitionRegionSelect.value).toBe('')
     expect(requestDefinitionRegionSelect).not.toBeDisabled()
     const requestDefinitionRegionDropdownIcon = dropDownIcons[4]
-    userEvent.click(requestDefinitionRegionDropdownIcon)
+    await userEvent.click(requestDefinitionRegionDropdownIcon)
     await waitFor(() => expect(portalDivs.length).toBe(3))
     const requestDefinitionRegionDropdownDialogDiv = portalDivs[2]
     const requestDefinitionRegionSelectListMenu = requestDefinitionRegionDropdownDialogDiv.querySelector('.bp3-menu')
@@ -372,7 +372,7 @@ describe('ECSRunTaskInputSet tests', () => {
       requestDefinitionRegionSelectListMenu as HTMLElement,
       'GovCloud (US-East)'
     )
-    userEvent.click(requestDefinitionRegionItem)
+    await userEvent.click(requestDefinitionRegionItem)
     await waitFor(() => expect(requestDefinitionRegionSelect.value).toBe('GovCloud (US-East)'))
 
     // Bucket Name
@@ -383,7 +383,7 @@ describe('ECSRunTaskInputSet tests', () => {
     expect(requestDefinitionBucketNameSelect.value).toBe('')
     expect(requestDefinitionBucketNameSelect).not.toBeDisabled()
     const requestDefinitionBucketNameDropdownIcon = dropDownIcons[5]
-    userEvent.click(requestDefinitionBucketNameDropdownIcon)
+    await userEvent.click(requestDefinitionBucketNameDropdownIcon)
     await waitFor(() => expect(portalDivs.length).toBe(3))
     const requestDefinitionBucketNameDropdownDialogDiv = portalDivs[2]
     const requestDefinitionBucketNameSelectListMenu =
@@ -392,7 +392,7 @@ describe('ECSRunTaskInputSet tests', () => {
       requestDefinitionBucketNameSelectListMenu as HTMLElement,
       'cdng-terraform-state'
     )
-    userEvent.click(requestDefinitionBucketNameItem)
+    await userEvent.click(requestDefinitionBucketNameItem)
     expect(requestDefinitionBucketNameSelect.value).toBe('cdng-terraform-state')
 
     // Path

@@ -48,7 +48,7 @@ describe('SetFlagSwitch', () => {
     expect(screen.queryByText('common.ON')).not.toBeInTheDocument()
     expect(screen.queryByText('common.OFF')).not.toBeInTheDocument()
 
-    userEvent.click(input)
+    await userEvent.click(input)
 
     expect(screen.getByText('common.ON')).toBeInTheDocument()
     expect(screen.getByText('common.OFF')).toBeInTheDocument()
@@ -60,13 +60,13 @@ describe('SetFlagSwitch', () => {
     const input = document.querySelector('[name$="spec.state"]') as HTMLInputElement
     expect(input).not.toHaveValue()
 
-    userEvent.click(input)
-    userEvent.click(screen.getByText('common.ON'))
+    await userEvent.click(input)
+    await userEvent.click(screen.getByText('common.ON'))
 
     expect(get(formValues, prefixInstructionField('spec.state'))).toBe('on')
 
-    userEvent.click(input)
-    userEvent.click(screen.getByText('common.OFF'))
+    await userEvent.click(input)
+    await userEvent.click(screen.getByText('common.OFF'))
 
     expect(get(formValues, prefixInstructionField('spec.state'))).toBe('off')
   })

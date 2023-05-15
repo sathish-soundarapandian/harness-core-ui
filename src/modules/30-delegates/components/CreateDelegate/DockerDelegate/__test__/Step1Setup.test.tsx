@@ -75,7 +75,7 @@ describe('Create Docker Step1Setup', () => {
       </TestWrapper>
     )
     const submitBtn = getByRole('button', { name: /continue/ })
-    userEvent.click(submitBtn!)
+    await userEvent.click(submitBtn!)
 
     await waitFor(() => {
       expect(nextStepFn).toBeCalled()

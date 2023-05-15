@@ -89,13 +89,13 @@ describe('ECSRollingDeployStep tests', () => {
     )
 
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.type(nameInput!, 'Step 1')
+    await userEvent.type(nameInput!, 'Step 1')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('Step 1'))
     expect(getByText('Step_1')).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '30m')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '30m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('30m'))
 
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
@@ -105,47 +105,47 @@ describe('ECSRollingDeployStep tests', () => {
 
     const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer', container) as HTMLInputElement
     const loadBalancerDropdownIcon = dropdownIcons[0].parentElement
-    userEvent.click(loadBalancerDropdownIcon!)
+    await userEvent.click(loadBalancerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(1))
     const loadBalancerOption1 = await findByText('Load_Balancer_1')
     expect(loadBalancerOption1).toBeInTheDocument()
-    userEvent.click(loadBalancerOption1)
+    await userEvent.click(loadBalancerOption1)
     await waitFor(() => expect(loadBalancerSelect.value).toBe('Load_Balancer_1'))
 
     const prodListenerSelect = queryByNameAttribute('spec.prodListener', container) as HTMLInputElement
     const prodListenerDropdownIcon = dropdownIcons[1].parentElement
-    userEvent.click(prodListenerDropdownIcon!)
+    await userEvent.click(prodListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(2))
     const listenerOption1 = await findByText('HTTP 80')
     expect(listenerOption1).toBeInTheDocument()
-    userEvent.click(listenerOption1)
+    await userEvent.click(listenerOption1)
     await waitFor(() => expect(prodListenerSelect.value).toBe('HTTP 80'))
 
     const prodListenerRuleSelect = queryByNameAttribute('spec.prodListenerRuleArn', container) as HTMLInputElement
     const prodListenerRuleDropdownIcon = dropdownIcons[2].parentElement
-    userEvent.click(prodListenerRuleDropdownIcon!)
+    await userEvent.click(prodListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(3))
     const listenerRuleOption1 = await findByText('Listener_Rule_1')
     expect(listenerRuleOption1).toBeInTheDocument()
-    userEvent.click(listenerRuleOption1)
+    await userEvent.click(listenerRuleOption1)
     await waitFor(() => expect(prodListenerRuleSelect.value).toBe('Listener_Rule_1'))
 
     const stageListenerSelect = queryByNameAttribute('spec.stageListener', container) as HTMLInputElement
     const stageListenerDropdownIcon = dropdownIcons[3].parentElement
-    userEvent.click(stageListenerDropdownIcon!)
+    await userEvent.click(stageListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(4))
     const listenerOption2 = await findByText('HTTP 81')
     expect(listenerOption2).toBeInTheDocument()
-    userEvent.click(listenerOption2)
+    await userEvent.click(listenerOption2)
     await waitFor(() => expect(stageListenerSelect.value).toBe('HTTP 81'))
 
     const stageListenerRuleSelect = queryByNameAttribute('spec.stageListenerRuleArn', container) as HTMLInputElement
     const stageListenerRuleDropdownIcon = dropdownIcons[4].parentElement
-    userEvent.click(stageListenerRuleDropdownIcon!)
+    await userEvent.click(stageListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(5))
     const listenerRuleOption2 = await findByText('Listener_Rule_2')
     expect(listenerRuleOption2).toBeInTheDocument()
-    userEvent.click(listenerRuleOption2)
+    await userEvent.click(listenerRuleOption2)
     await waitFor(() => expect(stageListenerRuleSelect.value).toBe('Listener_Rule_2'))
 
     act(() => {
@@ -200,13 +200,13 @@ describe('ECSRollingDeployStep tests', () => {
     )
 
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.type(nameInput!, 'Step 1')
+    await userEvent.type(nameInput!, 'Step 1')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('Step 1'))
     expect(getByText('Step_1')).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '30m')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '30m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('30m'))
 
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
@@ -216,47 +216,47 @@ describe('ECSRollingDeployStep tests', () => {
 
     const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer', container) as HTMLInputElement
     const loadBalancerDropdownIcon = dropdownIcons[0].parentElement
-    userEvent.click(loadBalancerDropdownIcon!)
+    await userEvent.click(loadBalancerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(1))
     const loadBalancerOption1 = await findByText('Load_Balancer_1')
     expect(loadBalancerOption1).toBeInTheDocument()
-    userEvent.click(loadBalancerOption1)
+    await userEvent.click(loadBalancerOption1)
     await waitFor(() => expect(loadBalancerSelect.value).toBe('Load_Balancer_1'))
 
     const prodListenerSelect = queryByNameAttribute('spec.prodListener', container) as HTMLInputElement
     const prodListenerDropdownIcon = dropdownIcons[1].parentElement
-    userEvent.click(prodListenerDropdownIcon!)
+    await userEvent.click(prodListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(2))
     const listenerOption1 = await findByText('HTTP 80')
     expect(listenerOption1).toBeInTheDocument()
-    userEvent.click(listenerOption1)
+    await userEvent.click(listenerOption1)
     await waitFor(() => expect(prodListenerSelect.value).toBe('HTTP 80'))
 
     const prodListenerRuleSelect = queryByNameAttribute('spec.prodListenerRuleArn', container) as HTMLInputElement
     const prodListenerRuleDropdownIcon = dropdownIcons[2].parentElement
-    userEvent.click(prodListenerRuleDropdownIcon!)
+    await userEvent.click(prodListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(3))
     const listenerRuleOption1 = await findByText('Listener_Rule_1')
     expect(listenerRuleOption1).toBeInTheDocument()
-    userEvent.click(listenerRuleOption1)
+    await userEvent.click(listenerRuleOption1)
     await waitFor(() => expect(prodListenerRuleSelect.value).toBe('Listener_Rule_1'))
 
     const stageListenerSelect = queryByNameAttribute('spec.stageListener', container) as HTMLInputElement
     const stageListenerDropdownIcon = dropdownIcons[3].parentElement
-    userEvent.click(stageListenerDropdownIcon!)
+    await userEvent.click(stageListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(4))
     const listenerOption2 = await findByText('HTTP 81')
     expect(listenerOption2).toBeInTheDocument()
-    userEvent.click(listenerOption2)
+    await userEvent.click(listenerOption2)
     await waitFor(() => expect(stageListenerSelect.value).toBe('HTTP 81'))
 
     const stageListenerRuleSelect = queryByNameAttribute('spec.stageListenerRuleArn', container) as HTMLInputElement
     const stageListenerRuleDropdownIcon = dropdownIcons[4].parentElement
-    userEvent.click(stageListenerRuleDropdownIcon!)
+    await userEvent.click(stageListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(5))
     const listenerRuleOption2 = await findByText('Listener_Rule_2')
     expect(listenerRuleOption2).toBeInTheDocument()
-    userEvent.click(listenerRuleOption2)
+    await userEvent.click(listenerRuleOption2)
     await waitFor(() => expect(stageListenerRuleSelect.value).toBe('Listener_Rule_2'))
 
     act(() => {
@@ -391,10 +391,10 @@ describe('ECSRollingDeployStep tests', () => {
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(onUpdate).not.toHaveBeenCalled()
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.type(timeoutInput!, '20m')
 
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(dropdownIcons.length).toBe(5)
@@ -403,53 +403,53 @@ describe('ECSRollingDeployStep tests', () => {
 
     const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer', container) as HTMLInputElement
     const loadBalancerDropdownIcon = dropdownIcons[0].parentElement
-    userEvent.click(loadBalancerDropdownIcon!)
+    await userEvent.click(loadBalancerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(1))
     const loadBalancerOption1 = await findByText('Load_Balancer_1')
     expect(loadBalancerOption1).toBeInTheDocument()
-    userEvent.click(loadBalancerOption1)
+    await userEvent.click(loadBalancerOption1)
     await waitFor(() => expect(loadBalancerSelect.value).toBe('Load_Balancer_1'))
 
     const prodListenerSelect = queryByNameAttribute('spec.prodListener', container) as HTMLInputElement
     const prodListenerRuleSelect = queryByNameAttribute('spec.prodListenerRuleArn', container) as HTMLInputElement
     const prodListenerDropdownIcon = dropdownIcons[1].parentElement
-    userEvent.click(prodListenerDropdownIcon!)
+    await userEvent.click(prodListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(2))
     const listenerOption1 = await findByText('HTTP 80')
     expect(listenerOption1).toBeInTheDocument()
-    userEvent.click(listenerOption1)
+    await userEvent.click(listenerOption1)
     await waitFor(() => expect(prodListenerSelect.value).toBe('HTTP 80'))
     await waitFor(() => expect(prodListenerRuleSelect.value).toBe(''))
 
     const prodListenerRuleDropdownIcon = dropdownIcons[2].parentElement
-    userEvent.click(prodListenerRuleDropdownIcon!)
+    await userEvent.click(prodListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(3))
     const listenerRuleOption1 = await findByText('Listener_Rule_1')
     expect(listenerRuleOption1).toBeInTheDocument()
-    userEvent.click(listenerRuleOption1)
+    await userEvent.click(listenerRuleOption1)
     await waitFor(() => expect(prodListenerRuleSelect.value).toBe('Listener_Rule_1'))
 
     const stageListenerSelect = queryByNameAttribute('spec.stageListener', container) as HTMLInputElement
     const stageListenerRuleSelect = queryByNameAttribute('spec.stageListenerRuleArn', container) as HTMLInputElement
     const stageListenerDropdownIcon = dropdownIcons[3].parentElement
-    userEvent.click(stageListenerDropdownIcon!)
+    await userEvent.click(stageListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(4))
     const listenerOption2 = await findByText('HTTP 81')
     expect(listenerOption2).toBeInTheDocument()
-    userEvent.click(listenerOption2)
+    await userEvent.click(listenerOption2)
     await waitFor(() => expect(stageListenerSelect.value).toBe('HTTP 81'))
     await waitFor(() => expect(stageListenerRuleSelect.value).toBe(''))
 
     const stageListenerRuleDropdownIcon = dropdownIcons[4].parentElement
-    userEvent.click(stageListenerRuleDropdownIcon!)
+    await userEvent.click(stageListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(5))
     const listenerRuleOption2 = await findByText('Listener_Rule_2')
     expect(listenerRuleOption2).toBeInTheDocument()
-    userEvent.click(listenerRuleOption2)
+    await userEvent.click(listenerRuleOption2)
     await waitFor(() => expect(stageListenerRuleSelect.value).toBe('Listener_Rule_2'))
     debug(stageListenerRuleSelect)
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Step_1',
@@ -523,13 +523,13 @@ describe('ECSRollingDeployStep tests', () => {
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     expect(onUpdate).not.toHaveBeenCalled()
 
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(3)
 
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.type(timeoutInput!, '20m')
   })
 
   test('InputSet view renders fine when Service / Env V2 FF is ON', async () => {
@@ -587,7 +587,7 @@ describe('ECSRollingDeployStep tests', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.type(timeoutInput!, '20m')
 
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(dropdownIcons.length).toBe(5)
@@ -596,7 +596,7 @@ describe('ECSRollingDeployStep tests', () => {
 
     const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer', container) as HTMLInputElement
     const loadBalancerDropdownIcon = dropdownIcons[0].parentElement
-    userEvent.click(loadBalancerDropdownIcon!)
+    await userEvent.click(loadBalancerDropdownIcon!)
 
     await waitFor(() => expect(fetchLoadBalancers).toHaveBeenCalledTimes(1))
     expect(fetchLoadBalancers).toHaveBeenCalledWith({
@@ -616,48 +616,48 @@ describe('ECSRollingDeployStep tests', () => {
     await waitFor(() => expect(portalDivs.length).toBe(1))
     const loadBalancerOption1 = await findByText('Load_Balancer_1')
     expect(loadBalancerOption1).toBeInTheDocument()
-    userEvent.click(loadBalancerOption1)
+    await userEvent.click(loadBalancerOption1)
     await waitFor(() => expect(loadBalancerSelect.value).toBe('Load_Balancer_1'))
 
     const prodListenerSelect = queryByNameAttribute('spec.prodListener', container) as HTMLInputElement
     const prodListenerRuleSelect = queryByNameAttribute('spec.prodListenerRuleArn', container) as HTMLInputElement
     const prodListenerDropdownIcon = dropdownIcons[1].parentElement
-    userEvent.click(prodListenerDropdownIcon!)
+    await userEvent.click(prodListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(2))
     const listenerOption1 = await findByText('HTTP 80')
     expect(listenerOption1).toBeInTheDocument()
-    userEvent.click(listenerOption1)
+    await userEvent.click(listenerOption1)
     await waitFor(() => expect(prodListenerSelect.value).toBe('HTTP 80'))
     await waitFor(() => expect(prodListenerRuleSelect.value).toBe(''))
 
     const prodListenerRuleDropdownIcon = dropdownIcons[2].parentElement
-    userEvent.click(prodListenerRuleDropdownIcon!)
+    await userEvent.click(prodListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(3))
     const listenerRuleOption1 = await findByText('Listener_Rule_1')
     expect(listenerRuleOption1).toBeInTheDocument()
-    userEvent.click(listenerRuleOption1)
+    await userEvent.click(listenerRuleOption1)
     await waitFor(() => expect(prodListenerRuleSelect.value).toBe('Listener_Rule_1'))
 
     const stageListenerSelect = queryByNameAttribute('spec.stageListener', container) as HTMLInputElement
     const stageListenerRuleSelect = queryByNameAttribute('spec.stageListenerRuleArn', container) as HTMLInputElement
     const stageListenerDropdownIcon = dropdownIcons[3].parentElement
-    userEvent.click(stageListenerDropdownIcon!)
+    await userEvent.click(stageListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(4))
     const listenerOption2 = await findByText('HTTP 81')
     expect(listenerOption2).toBeInTheDocument()
-    userEvent.click(listenerOption2)
+    await userEvent.click(listenerOption2)
     await waitFor(() => expect(stageListenerSelect.value).toBe('HTTP 81'))
     await waitFor(() => expect(stageListenerRuleSelect.value).toBe(''))
 
     const stageListenerRuleDropdownIcon = dropdownIcons[4].parentElement
-    userEvent.click(stageListenerRuleDropdownIcon!)
+    await userEvent.click(stageListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(5))
     const listenerRuleOption2 = await findByText('Listener_Rule_2')
     expect(listenerRuleOption2).toBeInTheDocument()
-    userEvent.click(listenerRuleOption2)
+    await userEvent.click(listenerRuleOption2)
     await waitFor(() => expect(stageListenerRuleSelect.value).toBe('Listener_Rule_2'))
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Step_1',
@@ -741,7 +741,7 @@ describe('ECSRollingDeployStep tests', () => {
     expect(stageListenerRuleSelect).toBeInTheDocument()
 
     const submitBtn = getByText('Submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).not.toHaveBeenCalled())
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(3)
@@ -869,7 +869,7 @@ describe('ECSRollingDeployStep tests', () => {
 
     const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer', container) as HTMLInputElement
     const loadBalancerDropdownIcon = dropdownIcons[0].parentElement
-    userEvent.click(loadBalancerDropdownIcon!)
+    await userEvent.click(loadBalancerDropdownIcon!)
 
     await waitFor(() => expect(fetchLoadBalancers).toHaveBeenCalledTimes(1))
     expect(fetchLoadBalancers).toHaveBeenCalledWith({
@@ -889,7 +889,7 @@ describe('ECSRollingDeployStep tests', () => {
     await waitFor(() => expect(portalDivs.length).toBe(1))
     const loadBalancerOption1 = await findByText('Load_Balancer_1')
     expect(loadBalancerOption1).toBeInTheDocument()
-    userEvent.click(loadBalancerOption1)
+    await userEvent.click(loadBalancerOption1)
     await waitFor(() => expect(loadBalancerSelect.value).toBe('Load_Balancer_1'))
   })
 })

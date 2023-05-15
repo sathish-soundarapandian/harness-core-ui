@@ -82,19 +82,19 @@ describe('ECSRunTaskStep tests', () => {
 
     // Name
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.type(nameInput!, 'Step 1')
+    await userEvent.type(nameInput!, 'Step 1')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('Step 1'))
     expect(getByText('Step_1')).toBeInTheDocument()
 
     // Timeout
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '30m')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '30m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('30m'))
 
     // Task Definition
     const addTaskDefinitionBtn = getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
-    userEvent.click(addTaskDefinitionBtn)
+    await userEvent.click(addTaskDefinitionBtn)
     const dialogList = document.getElementsByClassName('bp3-dialog')
     const portal = dialogList[0] as HTMLElement
     // Test manifest store tiles, choose Git and fill in Connector field
@@ -104,7 +104,7 @@ describe('ECSRunTaskStep tests', () => {
     await waitFor(() => expect(dialogList.length).toBe(0))
 
     const addRunTaskRequestDefinitionBtn = getByText('cd.steps.ecsRunTaskStep.runTaskRequestDefinition')
-    userEvent.click(addRunTaskRequestDefinitionBtn)
+    await userEvent.click(addRunTaskRequestDefinitionBtn)
     const runTaskRequestDefinitionPortal = dialogList[0] as HTMLElement
     // Test manifest store tiles, choose Git and fill in Connector field
     await testTaskDefinitionSecondStep(runTaskRequestDefinitionPortal)
@@ -114,9 +114,9 @@ describe('ECSRunTaskStep tests', () => {
 
     // Optional Configurations
     const optionalConfigAccordionHeader = getByText('common.optionalConfig')
-    userEvent.click(optionalConfigAccordionHeader)
+    await userEvent.click(optionalConfigAccordionHeader)
     const skipSteadyStateCheck = await queryByText('cd.steps.ecsRunTaskStep.skipSteadyStateCheck')?.parentElement
-    userEvent.click(skipSteadyStateCheck!)
+    await userEvent.click(skipSteadyStateCheck!)
 
     act(() => {
       ref.current?.submitForm()
@@ -223,15 +223,15 @@ describe('ECSRunTaskStep tests', () => {
     // Connector
     const connnectorRefInput = getAllByTestId(/connectorRef/)[0]
     expect(connnectorRefInput).toBeTruthy()
-    userEvent.click(connnectorRefInput!)
+    await userEvent.click(connnectorRefInput!)
     const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
     const githubConnector1 = await findByText(connectorSelectorDialog, 'Git CTR')
     expect(githubConnector1).toBeTruthy()
     const githubConnector2 = await findByText(connectorSelectorDialog, 'Sample')
     expect(githubConnector2).toBeTruthy()
-    userEvent.click(githubConnector1)
+    await userEvent.click(githubConnector1)
     const applySelected = getElementByText(connectorSelectorDialog, 'entityReference.apply')
-    userEvent.click(applySelected)
+    await userEvent.click(applySelected)
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
 
     // Branch
@@ -247,15 +247,15 @@ describe('ECSRunTaskStep tests', () => {
     // Connector Ref
     const runTaskRequestConnectorRefInput = getAllByTestId(/connectorRef/)[1]
     expect(runTaskRequestConnectorRefInput).toBeInTheDocument()
-    userEvent.click(runTaskRequestConnectorRefInput!)
+    await userEvent.click(runTaskRequestConnectorRefInput!)
     const runTaskRequestConnectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
     const runTaskRequestGithubConnector1 = await findByText(runTaskRequestConnectorSelectorDialog, 'Git CTR')
     expect(runTaskRequestGithubConnector1).toBeTruthy()
     const runTaskRequestGithubConnector2 = await findByText(runTaskRequestConnectorSelectorDialog, 'Sample')
     expect(runTaskRequestGithubConnector2).toBeTruthy()
-    userEvent.click(runTaskRequestGithubConnector2)
+    await userEvent.click(runTaskRequestGithubConnector2)
     const applyBtn = getElementByText(runTaskRequestConnectorSelectorDialog, 'entityReference.apply')
-    userEvent.click(applyBtn)
+    await userEvent.click(applyBtn)
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
     expect(getElementByText(runTaskRequestConnectorRefInput, 'Sample')).toBeInTheDocument()
 
@@ -285,13 +285,13 @@ describe('ECSRunTaskStep tests', () => {
     expect(runTaskRequestPathInput.value).toBe('run-task-requesttest-path')
 
     // Click Submit and check if validation kicks in
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(onUpdate).not.toHaveBeenCalled()
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.type(timeoutInput!, '20m')
 
     // Submit after giving valid values
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Step_1',

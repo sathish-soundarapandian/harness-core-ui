@@ -119,7 +119,7 @@ describe('FinalReview', () => {
         />
       </TestWrapper>
     )
-    userEvent.click(getByText('back'))
+    await userEvent.click(getByText('back'))
     await waitFor(() => {
       expect(setViewMock).toBeCalledWith(SubscribeViews.PAYMENT_METHOD)
     })

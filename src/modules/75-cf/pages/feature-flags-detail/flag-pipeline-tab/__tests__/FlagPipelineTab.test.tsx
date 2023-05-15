@@ -89,7 +89,7 @@ describe('FlagPipelineTab', () => {
       renderComponent()
 
       await waitFor(() => expect(screen.getByText('cf.featureFlags.flagPipeline.pipelineDeleted')).toBeInTheDocument())
-      userEvent.click(screen.getByTestId('close-banner-button'))
+      await userEvent.click(screen.getByTestId('close-banner-button'))
       await waitFor(() =>
         expect(screen.queryByText('cf.featureFlags.flagPipeline.pipelineDeleted')).not.toBeInTheDocument()
       )
@@ -137,7 +137,7 @@ describe('FlagPipelineTab', () => {
       expect(screen.getByText('cf.featureFlags.flagPipeline.noDataDescription')).toBeInTheDocument()
 
       // assert drawer opens with correct text. Save button hidden initially
-      userEvent.click(addFlagPipelineButton)
+      await userEvent.click(addFlagPipelineButton)
       await waitFor(() => {
         expect(screen.getByText('cf.featureFlags.flagPipeline.drawerTitle')).toBeInTheDocument()
         expect(screen.getByText('cf.featureFlags.flagPipeline.drawerDescription')).toBeInTheDocument()
@@ -153,14 +153,14 @@ describe('FlagPipelineTab', () => {
 
       // select a pipeline
       const itemToSelect = screen.getAllByRole('listitem')[4]
-      userEvent.click(itemToSelect)
+      await userEvent.click(itemToSelect)
       await waitFor(() => expect(itemToSelect).toHaveClass('Card--selected'))
 
       // save
       const savePipelineButton = screen.getByRole('button', { name: 'cf.featureFlags.flagPipeline.drawerButtonText' })
       expect(savePipelineButton).toBeInTheDocument()
 
-      userEvent.click(savePipelineButton)
+      await userEvent.click(savePipelineButton)
 
       await waitFor(() =>
         expect(createFeaturePipelineMock).toHaveBeenCalledWith({
@@ -173,7 +173,7 @@ describe('FlagPipelineTab', () => {
     test('it should let user search for a flag pipeline', async () => {
       renderComponent()
 
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', {
           name: 'cf.featureFlags.flagPipeline.title'
         })
@@ -198,10 +198,10 @@ describe('FlagPipelineTab', () => {
         name: 'cf.featureFlags.flagPipeline.title'
       })
 
-      userEvent.click(addFlagPipelineButton)
+      await userEvent.click(addFlagPipelineButton)
 
       const closeDrawerButton = screen.getByTestId('close-drawer-button')
-      userEvent.click(closeDrawerButton)
+      await userEvent.click(closeDrawerButton)
 
       await waitFor(() =>
         expect(screen.queryByText('cf.featureFlags.flagPipeline.drawerTitle')).not.toBeInTheDocument()
@@ -221,7 +221,7 @@ describe('FlagPipelineTab', () => {
       const addFlagPipelineButton = screen.getByRole('button', {
         name: 'cf.featureFlags.flagPipeline.title'
       })
-      userEvent.click(addFlagPipelineButton)
+      await userEvent.click(addFlagPipelineButton)
 
       await waitFor(() => expect(screen.getByText('Loading, please wait...')).toBeInTheDocument())
     })
@@ -239,7 +239,7 @@ describe('FlagPipelineTab', () => {
         const addFlagPipelineButton = screen.getByRole('button', {
           name: 'cf.featureFlags.flagPipeline.title'
         })
-        userEvent.click(addFlagPipelineButton)
+        await userEvent.click(addFlagPipelineButton)
 
         await waitFor(() =>
           expect(screen.getByText('cf.featureFlags.flagPipeline.noAvailablePipelinesMessage')).toBeInTheDocument()
@@ -271,12 +271,12 @@ describe('FlagPipelineTab', () => {
 
       // click edit button
       const rbacOptionsMenu = document.querySelector("[data-icon='Options']") as HTMLElement
-      userEvent.click(rbacOptionsMenu)
+      await userEvent.click(rbacOptionsMenu)
       const editButton = screen.getAllByRole('listitem')[0].querySelector('a') as HTMLElement
       await waitFor(() => {
         expect(editButton).toHaveTextContent(/edit/)
       })
-      userEvent.click(editButton)
+      await userEvent.click(editButton)
 
       await waitFor(() => {
         expect(screen.getByText('cf.featureFlags.flagPipeline.drawerTitle')).toBeInTheDocument()
@@ -289,11 +289,11 @@ describe('FlagPipelineTab', () => {
 
       // select another pipeline
       const newSelectedItem = screen.getAllByRole('listitem')[6]
-      userEvent.click(newSelectedItem)
+      await userEvent.click(newSelectedItem)
       await waitFor(() => expect(newSelectedItem).toHaveClass('Card--selected'))
 
       // save
-      userEvent.click(screen.getByRole('button', { name: 'cf.featureFlags.flagPipeline.drawerButtonText' }))
+      await userEvent.click(screen.getByRole('button', { name: 'cf.featureFlags.flagPipeline.drawerButtonText' }))
 
       await waitFor(() =>
         expect(patchFeaturePipelineMock).toHaveBeenCalledWith({
@@ -308,12 +308,12 @@ describe('FlagPipelineTab', () => {
 
       // click delete button - assert modal appears
       const rbacOptionsMenu = document.querySelector("[data-icon='Options']") as HTMLElement
-      userEvent.click(rbacOptionsMenu)
+      await userEvent.click(rbacOptionsMenu)
       const deleteButton = screen.getAllByRole('listitem')[1].getElementsByTagName('a')[0]
       await waitFor(() => {
         expect(deleteButton).toHaveTextContent(/delete/)
       })
-      userEvent.click(deleteButton)
+      await userEvent.click(deleteButton)
 
       await waitFor(() => {
         expect(screen.getByText('cf.featureFlags.flagPipeline.deleteModalTitle')).toBeInTheDocument()
@@ -323,7 +323,7 @@ describe('FlagPipelineTab', () => {
       })
 
       // click confirm
-      userEvent.click(screen.getByRole('button', { name: 'confirm' }))
+      await userEvent.click(screen.getByRole('button', { name: 'confirm' }))
 
       await waitFor(() => {
         expect(deleteFeaturePipelineMock).toHaveBeenCalledWith()
@@ -336,12 +336,12 @@ describe('FlagPipelineTab', () => {
 
       // click delete button - assert modal appears
       const rbacOptionsMenu = document.querySelector("[data-icon='Options']") as HTMLElement
-      userEvent.click(rbacOptionsMenu)
+      await userEvent.click(rbacOptionsMenu)
       const deleteButton = screen.getAllByRole('listitem')[1].getElementsByTagName('a')[0]
       await waitFor(() => {
         expect(deleteButton).toHaveTextContent(/delete/)
       })
-      userEvent.click(deleteButton)
+      await userEvent.click(deleteButton)
 
       await waitFor(() => {
         expect(screen.getByText('cf.featureFlags.flagPipeline.deleteModalTitle')).toBeInTheDocument()
@@ -351,7 +351,7 @@ describe('FlagPipelineTab', () => {
       })
 
       // click cancel
-      userEvent.click(screen.getByRole('button', { name: 'cancel' }))
+      await userEvent.click(screen.getByRole('button', { name: 'cancel' }))
 
       await waitFor(() => {
         expect(screen.queryByText('cf.featureFlags.flagPipeline.deleteModalTitle')).not.toBeInTheDocument()
@@ -380,17 +380,17 @@ describe('FlagPipelineTab', () => {
 
       // click delete button - assert modal appears
       const rbacOptionsMenu = document.querySelector("[data-icon='Options']") as HTMLElement
-      userEvent.click(rbacOptionsMenu)
+      await userEvent.click(rbacOptionsMenu)
       const deleteButton = screen.getAllByRole('listitem')[1].getElementsByTagName('a')[0]
       await waitFor(() => {
         expect(deleteButton).toHaveTextContent(/delete/)
       })
-      userEvent.click(deleteButton)
+      await userEvent.click(deleteButton)
 
       // click confirm
       const confirmButton = screen.getByRole('button', { name: 'confirm' })
       expect(confirmButton).toBeInTheDocument()
-      userEvent.click(confirmButton)
+      await userEvent.click(confirmButton)
 
       await waitFor(() => {
         expect(screen.getByText('ERROR DELETING PIPELINE')).toBeInTheDocument()
@@ -440,7 +440,7 @@ describe('FlagPipelineTab', () => {
       expect(screen.getByText('3/3')).toBeInTheDocument()
 
       // trigger details
-      userEvent.click(screen.getByText('cf.featureFlags.flagPipeline.triggerDetails'))
+      await userEvent.click(screen.getByText('cf.featureFlags.flagPipeline.triggerDetails'))
       await waitFor(() => {
         expect(screen.getByTestId('flag-state')).toHaveTextContent('on')
         expect(screen.getAllByTestId('target-variation')[0]).toHaveTextContent('True')
@@ -477,9 +477,9 @@ describe('FlagPipelineTab', () => {
       renderComponent()
 
       const openPipelineExecutionBtn = document.querySelectorAll("[data-icon='Options']")[1] as HTMLElement
-      userEvent.click(openPipelineExecutionBtn)
+      await userEvent.click(openPipelineExecutionBtn)
 
-      userEvent.click(screen.getByText('cf.featureFlags.flagPipeline.openExecution'))
+      await userEvent.click(screen.getByText('cf.featureFlags.flagPipeline.openExecution'))
 
       expect(screen.getByTestId('location')).toHaveTextContent(
         '/account/dummy/cf/orgs/dummy/projects/dummy/pipelines/pipeline5/executions/1997/pipeline'

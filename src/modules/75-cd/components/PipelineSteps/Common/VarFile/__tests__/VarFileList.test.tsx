@@ -128,8 +128,8 @@ describe('Test VarFileList', () => {
     const { getByTestId, container } = renderComponent(defaultProps)
     const removeLabel = getByTestId('remove-varFile-0')
 
-    act(() => {
-      userEvent.click(removeLabel)
+    await act(async () => {
+      await userEvent.click(removeLabel)
     })
 
     expect(container.querySelector('span[data-icon="Inline"]')).toBeInTheDocument()

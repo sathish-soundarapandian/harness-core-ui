@@ -70,9 +70,9 @@ describe('Primary Artifact ref tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('[data-icon="chevron-down"]')!)
+    await userEvent.click(container.querySelector('[data-icon="chevron-down"]')!)
     const primaryArtifact = getByText('source1')
-    userEvent.click(primaryArtifact)
+    await userEvent.click(primaryArtifact)
     await waitFor(() => expect(primaryArtifact).toBeInTheDocument())
     expect(stageContextValue.updateStageFormTemplate).toHaveBeenCalled()
   })
@@ -103,8 +103,8 @@ describe('Primary Artifact ref tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('[data-icon="chevron-down"]')!)
-    userEvent.click(getByText('artifactSource'))
+    await userEvent.click(container.querySelector('[data-icon="chevron-down"]')!)
+    await userEvent.click(getByText('artifactSource'))
 
     expect(stageContextValue.updateStageFormTemplate).toHaveBeenCalled()
   })

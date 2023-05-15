@@ -122,13 +122,13 @@ describe('EnvironmentDetailsBody', () => {
   test('it should show Delete SDK key confirmation modal when trash icon is clicked', async () => {
     deleteMutate.mockResolvedValue({ data: {} })
     renderComponent({ data: mockApiKeys as ApiKeys })
-    userEvent.click(screen.getByRole('button', { name: 'trash' }))
+    await userEvent.click(screen.getByRole('button', { name: 'trash' }))
 
     await waitFor(() => {
       expect(screen.queryByText('cf.environments.apiKeys.deleteTitle')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'delete' }))
+    await userEvent.click(screen.getByRole('button', { name: 'delete' }))
     await waitFor(() => {
       expect(deleteMutate).toBeCalledWith(existingKey.identifier)
       expect(screen.queryByText('cf.environments.apiKeys.deleteTitle')).not.toBeInTheDocument()
@@ -139,13 +139,13 @@ describe('EnvironmentDetailsBody', () => {
   test('it should close confirmation modal when cancel button is clicked', async () => {
     renderComponent({ data: mockApiKeys as ApiKeys })
 
-    userEvent.click(screen.getByRole('button', { name: 'trash' }))
+    await userEvent.click(screen.getByRole('button', { name: 'trash' }))
 
     await waitFor(() => {
       expect(screen.queryByText('cf.environments.apiKeys.deleteTitle')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'cancel' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cancel' }))
 
     await waitFor(() => {
       expect(screen.queryByText('cf.environments.apiKeys.deleteTitle')).not.toBeInTheDocument()
@@ -157,13 +157,13 @@ describe('EnvironmentDetailsBody', () => {
 
     renderComponent({ data: mockApiKeys as ApiKeys })
 
-    userEvent.click(screen.getByRole('button', { name: 'trash' }))
+    await userEvent.click(screen.getByRole('button', { name: 'trash' }))
 
     await waitFor(() => {
       expect(screen.queryByText('cf.environments.apiKeys.deleteTitle')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'delete' }))
+    await userEvent.click(screen.getByRole('button', { name: 'delete' }))
     await waitFor(() => {
       expect(screen.queryByText('FAILED TO FETCH')).toBeInTheDocument()
     })

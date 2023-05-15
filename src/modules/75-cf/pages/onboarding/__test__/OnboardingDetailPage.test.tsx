@@ -88,8 +88,8 @@ describe('OnboardingDetailPage', () => {
     expect(screen.getByText('next')).toBeVisible()
     expect(screen.getByText('next').closest('button')).toBeDisabled()
 
-    userEvent.click(selectInput)
-    userEvent.type(selectInput, flagName, { allAtOnce: true })
+    await userEvent.click(selectInput)
+    await userEvent.type(selectInput, flagName, { allAtOnce: true })
 
     expect(refetchFlags).toBeCalled()
 
@@ -101,7 +101,7 @@ describe('OnboardingDetailPage', () => {
     })
 
     // Click to create new flag
-    userEvent.click(document.querySelector('button[class*="createNewItemButton"]') as TargetElement)
+    await userEvent.click(document.querySelector('button[class*="createNewItemButton"]') as TargetElement)
 
     await waitFor(() => {
       expect(createNewFlag).toBeCalled()
@@ -147,14 +147,14 @@ describe('OnboardingDetailPage', () => {
 
     expect(document.querySelector(barInProgress)).toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('textbox'))
+    await userEvent.click(screen.getByRole('textbox'))
 
     // select a flag
     await waitFor(() => expect(screen.getByText('ABC Flag')).toBeInTheDocument())
-    userEvent.click(screen.getByText('ABC Flag'))
+    await userEvent.click(screen.getByText('ABC Flag'))
 
     // proceed to next step
-    userEvent.click(screen.getByRole('button', { name: 'next' }))
+    await userEvent.click(screen.getByRole('button', { name: 'next' }))
 
     await waitFor(() => {
       // first step Complete
@@ -166,7 +166,7 @@ describe('OnboardingDetailPage', () => {
     })
 
     // testing Previous button
-    userEvent.click(screen.getByRole('button', { name: 'back' }))
+    await userEvent.click(screen.getByRole('button', { name: 'back' }))
 
     await waitFor(() => {
       // first step still Complete
@@ -179,7 +179,7 @@ describe('OnboardingDetailPage', () => {
       expect(screen.getByRole('button', { name: 'next' })).not.toBeDisabled()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'next' }))
+    await userEvent.click(screen.getByRole('button', { name: 'next' }))
 
     // Second component replaces First component
     await waitFor(() => {
@@ -188,7 +188,7 @@ describe('OnboardingDetailPage', () => {
     })
 
     // select language and create sdk key
-    userEvent.click(screen.getByRole('button', { name: 'JavaScript' }))
+    await userEvent.click(screen.getByRole('button', { name: 'JavaScript' }))
 
     await waitFor(() => {
       expect(screen.getByText('cf.onboarding.selectOrCreateEnvironment')).toBeVisible()
@@ -258,7 +258,7 @@ describe('OnboardingDetailPage', () => {
 
   test('should navigate to the previous page if you click the [x] icon and preference exists', async () => {
     renderComponent()
-    userEvent.click(screen.getByTestId('close'))
+    await userEvent.click(screen.getByTestId('close'))
 
     expect(screen.getByTestId('location')).toHaveTextContent(preferenceURL.pathname)
   })
@@ -270,7 +270,7 @@ describe('OnboardingDetailPage', () => {
       clearPreference: jest.fn()
     })
     renderComponent()
-    userEvent.click(screen.getByTestId('close'))
+    await userEvent.click(screen.getByTestId('close'))
 
     expect(screen.getByTestId('location')).toHaveTextContent(
       '/account/dummy/cf/orgs/dummy/projects/dummy/configurePath'

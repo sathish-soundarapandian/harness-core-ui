@@ -215,7 +215,7 @@ describe('useSubscriptionModal', () => {
         <TestComponent />
       </TestWrapper>
     )
-    userEvent.click(container.querySelector('.open')!)
+    await userEvent.click(container.querySelector('.open')!)
 
     const dialog = findDialogContainer() as HTMLElement
     expect(dialog).toMatchSnapshot()
@@ -226,7 +226,7 @@ describe('useSubscriptionModal', () => {
         <TestComponentCI />
       </TestWrapper>
     )
-    userEvent.click(container.querySelector('.open')!)
+    await userEvent.click(container.querySelector('.open')!)
 
     const dialog = findDialogContainer() as HTMLElement
     expect(dialog).toMatchSnapshot()

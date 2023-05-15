@@ -69,7 +69,7 @@ describe('test <CommandScriptsEdit />', () => {
 
       expect(queryByText(commandUnits[commandUnitIndex].name)).toBeVisible()
 
-      userEvent.click(deleteButton)
+      await userEvent.click(deleteButton)
 
       await waitFor(() => {
         expect(queryByText(commandUnits[commandUnitIndex].name)).not.toBeInTheDocument()
@@ -80,7 +80,7 @@ describe('test <CommandScriptsEdit />', () => {
       const { queryByText, getByTestId, findByTestId } = renderResult
       const addButton = getByTestId('add-command-unit')
 
-      userEvent.click(addButton)
+      await userEvent.click(addButton)
 
       const commandUnitForm = await findByTestId('command-unit-form-container')
 
@@ -90,12 +90,12 @@ describe('test <CommandScriptsEdit />', () => {
       const destinationPathInput = queryByNameAttribute('spec.destinationPath', commandUnitForm)
       const newCommandName = 'copy cmd test'
 
-      userEvent.type(nameInput!, newCommandName)
-      userEvent.type(destinationPathInput!, 'test-path')
+      await userEvent.type(nameInput!, newCommandName)
+      await userEvent.type(destinationPathInput!, 'test-path')
 
       const submitButton = await findByTestId('command-unit-form-submit')
 
-      userEvent.click(submitButton)
+      await userEvent.click(submitButton)
 
       await waitFor(() => expect(queryByText(newCommandName)).toBeVisible())
     })
@@ -105,7 +105,7 @@ describe('test <CommandScriptsEdit />', () => {
       const commandUnitIndex = 0
       const editButton = getByTestId(`edit-command-unit-${commandUnitIndex}`)
 
-      userEvent.click(editButton)
+      await userEvent.click(editButton)
 
       const commandUnitForm = await findByTestId('command-unit-form-container')
 
@@ -114,12 +114,12 @@ describe('test <CommandScriptsEdit />', () => {
       const nameInput = queryByNameAttribute('name', commandUnitForm)
       const updatedCommandUnitName = 'updated-cmd'
 
-      userEvent.clear(nameInput!)
-      userEvent.type(nameInput!, updatedCommandUnitName)
+      await userEvent.clear(nameInput!)
+      await userEvent.type(nameInput!, updatedCommandUnitName)
 
       const submitButton = await findByTestId('command-unit-form-submit')
 
-      userEvent.click(submitButton)
+      await userEvent.click(submitButton)
 
       await waitFor(() => {
         expect(queryByText(updatedCommandUnitName)).toBeVisible()
@@ -131,17 +131,17 @@ describe('test <CommandScriptsEdit />', () => {
       const { getByTestId, findByTestId, queryByTestId } = renderResult
       const editButton = getByTestId('edit-command-unit-1')
 
-      userEvent.click(editButton)
+      await userEvent.click(editButton)
       expect(await findByTestId('command-unit-form-container')).toBeInTheDocument()
 
-      userEvent.click(getByTestId('command-unit-form-cancel'))
+      await userEvent.click(getByTestId('command-unit-form-cancel'))
       await waitFor(() => expect(queryByTestId('command-unit-form-container')).not.toBeInTheDocument())
 
-      userEvent.click(editButton)
+      await userEvent.click(editButton)
       expect(await findByTestId('command-unit-form-container')).toBeInTheDocument()
 
       const submitButton = await findByTestId('command-unit-form-submit')
-      userEvent.click(submitButton)
+      await userEvent.click(submitButton)
       await waitFor(() => expect(queryByTestId('command-unit-form-container')).not.toBeInTheDocument())
     })
   })
@@ -189,7 +189,7 @@ describe('test <CommandScriptsEdit />', () => {
         const { getByTestId, findByTestId } = renderResult
         const optionalConfiguration = getByTestId('optional-config-summary')
 
-        userEvent.click(optionalConfiguration)
+        await userEvent.click(optionalConfiguration)
 
         const formWrapper = await findByTestId(fieldName)
 
@@ -208,7 +208,7 @@ describe('test <CommandScriptsEdit />', () => {
         const { getByTestId, findByTestId } = renderResult
         const optionalConfiguration = getByTestId('optional-config-summary')
 
-        userEvent.click(optionalConfiguration)
+        await userEvent.click(optionalConfiguration)
 
         const formWrapper = await findByTestId(fieldName)
         const index = 0
@@ -218,7 +218,7 @@ describe('test <CommandScriptsEdit />', () => {
 
         const removeButton = getByTestId(`remove-${fieldName}-${index}`)
 
-        userEvent.click(removeButton)
+        await userEvent.click(removeButton)
 
         await waitFor(() => {
           expect(within(formWrapper).queryByDisplayValue(variable.name)).not.toBeInTheDocument()
@@ -229,13 +229,13 @@ describe('test <CommandScriptsEdit />', () => {
         const { getByTestId, findByTestId } = renderResult
         const optionalConfiguration = getByTestId('optional-config-summary')
 
-        userEvent.click(optionalConfiguration)
+        await userEvent.click(optionalConfiguration)
 
         const formWrapper = await findByTestId(fieldName)
         const lastVariableIndex = variables.length - 1
         const addButton = getByTestId(`add-${fieldName}`)
 
-        userEvent.click(addButton)
+        await userEvent.click(addButton)
 
         await waitFor(() => {
           expect(within(formWrapper).getByTestId(`${fieldName}[${lastVariableIndex + 1}]`)).toBeInTheDocument()
@@ -246,7 +246,7 @@ describe('test <CommandScriptsEdit />', () => {
     test('should render a checkbox for onDelegate field', async () => {
       const { getByTestId, container } = renderResult
       const optionalConfiguration = getByTestId('optional-config-summary')
-      userEvent.click(optionalConfiguration)
+      await userEvent.click(optionalConfiguration)
       const delegateCheckbox = queryByNameAttribute('spec.onDelegate', container) as HTMLInputElement
       expect(delegateCheckbox).toBeInTheDocument()
       act(() => {
@@ -280,17 +280,17 @@ describe('test <CommandScriptsEdit />', () => {
 
     const configureOptionsButton = queryByAttribute('data-icon', container, 'cog')
     expect(configureOptionsButton).toBeInTheDocument()
-    userEvent.click(configureOptionsButton!)
+    await userEvent.click(configureOptionsButton!)
 
     expect(await findByText('common.configureOptions.configureOptions')).toBeInTheDocument()
 
-    userEvent.click(getByText('common.configureOptions.regex'))
+    await userEvent.click(getByText('common.configureOptions.regex'))
     const regexField = queryByNameAttribute('regExValues', document.body)
     await waitFor(() => expect(regexField).toBeInTheDocument())
     const regex = '.*'
-    userEvent.type(regexField!, regex)
+    await userEvent.type(regexField!, regex)
 
-    userEvent.click(getByText(/submit/i))
+    await userEvent.click(getByText(/submit/i))
 
     await waitFor(() =>
       expect(queryByNameAttribute('timeout', container)).toHaveDisplayValue(`${RUNTIME_INPUT_VALUE}.regex(${regex})`)

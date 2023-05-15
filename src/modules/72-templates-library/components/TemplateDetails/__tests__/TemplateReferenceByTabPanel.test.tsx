@@ -57,7 +57,7 @@ describe('template referenced by tab panel tests', () => {
       </TestWrapper>
     )
 
-    userEvent.type(screen.getByTestId('mock-entity-usage-list-input'), searchTerm)
+    await userEvent.type(screen.getByTestId('mock-entity-usage-list-input'), searchTerm)
 
     await waitFor(() =>
       expect(templateUsageFn).toBeCalledWith({

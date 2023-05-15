@@ -81,12 +81,12 @@ describe('SaveFlagToGitModal', () => {
 
     renderComponent({ onSubmit: onSubmitMock })
 
-    userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'this is my commit messsage')
+    await userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'this is my commit messsage')
 
     const saveButton = screen.getByText('save')
     expect(saveButton).toBeInTheDocument()
 
-    userEvent.click(saveButton)
+    await userEvent.click(saveButton)
 
     await waitFor(() =>
       expect(onSubmitMock).toHaveBeenCalledWith({

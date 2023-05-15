@@ -65,7 +65,7 @@ describe('Test azure arm rollback input step', () => {
     expect(provId).toBeInTheDocument()
   })
 
-  test('timeout should be updated', () => {
+  test('timeout should be updated', async () => {
     const data = {
       type: StepType.AzureArmRollback,
       name: 'test name',
@@ -78,11 +78,11 @@ describe('Test azure arm rollback input step', () => {
     const { getByPlaceholderText } = renderComponent(data)
 
     const timeout = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    userEvent.type(timeout, '10m')
+    await userEvent.type(timeout, '10m')
     expect(timeout).toHaveDisplayValue('10m')
   })
 
-  test('provisionerIdentifier should be updated', () => {
+  test('provisionerIdentifier should be updated', async () => {
     const data = {
       type: StepType.AzureArmRollback,
       name: 'test name',
@@ -94,7 +94,7 @@ describe('Test azure arm rollback input step', () => {
     }
     const { container } = renderComponent(data)
     const provId = queryByAttribute('name', container, 'test.spec.provisionerIdentifier')
-    userEvent.type(provId!, 'testID')
+    await userEvent.type(provId!, 'testID')
     expect(provId).toHaveDisplayValue('testID')
   })
 })

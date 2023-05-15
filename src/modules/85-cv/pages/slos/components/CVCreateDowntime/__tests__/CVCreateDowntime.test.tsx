@@ -82,8 +82,8 @@ describe('CVCreateDowntime', () => {
 
     expect(container).toMatchSnapshot()
 
-    act(() => {
-      userEvent.click(getByText('next'))
+    await act(async () => {
+      await userEvent.click(getByText('next'))
     })
   })
 
@@ -105,19 +105,19 @@ describe('CVCreateDowntime', () => {
       </TestWrapper>
     )
 
-    userEvent.click(getByText('next'))
+    await userEvent.click(getByText('next'))
 
     await waitFor(() => {
       expect(getAllByText('cv.sloDowntime.validations.nameValidation')).toHaveLength(2)
       expect(getAllByText('cv.sloDowntime.validations.categoryValidation')).toHaveLength(2)
     })
 
-    act(() => {
+    await act(async () => {
       fireEvent.change(getByPlaceholderText('common.namePlaceholder')!, { target: { value: 'Weekly downtime' } })
-      userEvent.click(getByText('cv.sloDowntime.scheduledMaintenance'))
+      await userEvent.click(getByText('cv.sloDowntime.scheduledMaintenance'))
     })
 
-    userEvent.click(getByText('next'))
+    await userEvent.click(getByText('next'))
 
     await waitFor(() => {
       expect(getByText('common.occurrence.oneTime')).toBeInTheDocument()
@@ -128,14 +128,14 @@ describe('CVCreateDowntime', () => {
       expect(getByText('cv.sloDowntime.durationText')).toBeInTheDocument()
     })
 
-    userEvent.click(getByText('next'))
+    await userEvent.click(getByText('next'))
 
     await waitFor(() => {
       expect(getByText('cv.sloDowntime.selectMonitoredServices')).toBeInTheDocument()
       expect(getByText('cv.sloDowntime.selectAllMonitoredServices')).toBeInTheDocument()
     })
 
-    userEvent.click(getByText('save'))
+    await userEvent.click(getByText('save'))
 
     await waitFor(() => {
       expect(getByText('cv.sloDowntime.validations.msListValidation')).toBeInTheDocument()
@@ -170,8 +170,8 @@ describe('CVCreateDowntime', () => {
 
     expect(getByText('Oops, something went wrong on our end. Please contact Harness Support.')).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(getByText('Retry'))
+    await act(async () => {
+      await userEvent.click(getByText('Retry'))
     })
   })
 
@@ -207,8 +207,8 @@ describe('CVCreateDowntime', () => {
     expect(getByText('Weekly downtime')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Deployment')).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(getByText('next'))
+    await act(async () => {
+      await userEvent.click(getByText('next'))
     })
 
     expect(getByText('Asia/Calcutta')).toBeInTheDocument()
@@ -217,8 +217,8 @@ describe('CVCreateDowntime', () => {
     expect(getByText('common.endTime')).toBeInTheDocument()
     expect(getByText('cv.sloDowntime.durationText')).toBeInTheDocument()
 
-    await act(() => {
-      userEvent.click(getByText('next'))
+    await act(async () => {
+      await userEvent.click(getByText('next'))
     })
 
     expect(getByText('cv.sloDowntime.msList')).toBeInTheDocument()
@@ -226,8 +226,8 @@ describe('CVCreateDowntime', () => {
 
     expect(container).toMatchSnapshot()
 
-    act(() => {
-      userEvent.click(getByText('save'))
+    await act(async () => {
+      await userEvent.click(getByText('save'))
       waitFor(() => expect(getByText('cv.sloDowntime.downtimeUpdated')).toBeInTheDocument())
     })
   })
@@ -258,8 +258,8 @@ describe('CVCreateDowntime', () => {
     expect(getByText('First downtime')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Deployment')).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(screen.getByText('save'))
+    await act(async () => {
+      await userEvent.click(screen.getByText('save'))
     })
   })
 
@@ -282,8 +282,8 @@ describe('CVCreateDowntime', () => {
     expect(getByText('Recurring downtime')).toBeInTheDocument()
     expect(screen.getByDisplayValue('ScheduledMaintenance')).toBeInTheDocument()
 
-    await act(() => {
-      userEvent.click(getByTestId(/nextButton/i))
+    await act(async () => {
+      await userEvent.click(getByTestId(/nextButton/i))
     })
 
     expect(getByText('Asia/Bangkok')).toBeInTheDocument()

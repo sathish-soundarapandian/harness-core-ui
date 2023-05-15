@@ -160,14 +160,14 @@ describe('ECR Artifact tests', () => {
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
     const imagePathDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
-    userEvent.click(imagePathDropDownButton!)
+    await userEvent.click(imagePathDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     await waitFor(() => expect(fetchImages).toHaveBeenCalledTimes(1))
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
     const secondImageOption = await findByText(selectListMenu as HTMLElement, 'harnesscie-testing3')
     expect(secondImageOption).toBeInTheDocument()
-    userEvent.click(secondImageOption)
+    await userEvent.click(secondImageOption)
     // Tag Regex
     fireEvent.change(queryByNameAttribute('tagRegex')!, { target: { value: 'tagRegex' } })
 
@@ -220,24 +220,24 @@ describe('ECR Artifact tests', () => {
     // Only one dropdown field should be rendered - Image Path
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(dropdownIcons.length).toBe(1)
-    userEvent.click(dropdownIcons[0])
+    await userEvent.click(dropdownIcons[0])
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDivImagePath = portalDivs[0]
     await waitFor(() => expect(fetchImages).toHaveBeenCalledTimes(0))
     const selectListMenu = dropdownPortalDivImagePath.querySelector('.bp3-menu')
     const noImagesOption = await findByText(selectListMenu as HTMLElement, 'pipeline.noImagesFound')
     expect(noImagesOption).toBeInTheDocument()
-    userEvent.type(imagePathInput, 'abc')
+    await userEvent.type(imagePathInput, 'abc')
     const abcOption = await findByText(selectListMenu as HTMLElement, 'abc')
     expect(abcOption).toBeInTheDocument()
-    userEvent.click(abcOption)
+    await userEvent.click(abcOption)
     await waitFor(() => expect(imagePathInput.value).toBe('abc'))
 
     // Tag Regex
     fireEvent.change(queryByNameAttribute('tagRegex')!, { target: { value: 'tagRegex' } })
 
     const submitBtn = getByText('submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith({
         identifier: 'testECR',
@@ -289,7 +289,7 @@ describe('ECR Artifact tests', () => {
     // Only one dropdown field should be rendered - Image Path
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(dropdownIcons.length).toBe(2)
-    userEvent.click(dropdownIcons[1])
+    await userEvent.click(dropdownIcons[1])
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDivImagePath = portalDivs[0]
     await waitFor(() => expect(fetchImages).toHaveBeenCalledTimes(0))
@@ -302,7 +302,7 @@ describe('ECR Artifact tests', () => {
     fireEvent.change(queryByNameAttribute('tagRegex')!, { target: { value: 'tagRegex' } })
 
     const submitBtn = getByText('submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => {
       expect(onSubmit).not.toBeCalled()
     })

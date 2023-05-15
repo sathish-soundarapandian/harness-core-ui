@@ -80,7 +80,7 @@ describe('Test Terraform Cloud Rollback Step', () => {
     await act(async () => {
       fireEvent.change(queryByNameAttribute('name', container)!, { target: { value: 'Step1' } })
       fireEvent.change(queryByNameAttribute('timeout', container)!, { target: { value: '20m' } })
-      userEvent.type(queryByNameAttribute('spec.runMessage', container)!, 'test message')
+      await userEvent.type(queryByNameAttribute('spec.runMessage', container)!, 'test message')
       fireEvent.change(queryByNameAttribute('spec.provisionerIdentifier', container)!, {
         target: { value: 'pId2' }
       })
@@ -150,7 +150,7 @@ describe('Test Terraform Cloud Rollback Step', () => {
     //run Message
     const messageInput = queryByNameAttribute('spec.runMessage', container) as HTMLInputElement
     const cogMessage = document.getElementById('configureOptions_spec.runMessage')
-    userEvent.click(cogMessage!)
+    await userEvent.click(cogMessage!)
     await waitFor(() => expect(modals.length).toBe(1))
     const terraformCOGMessage = modals[0] as HTMLElement
     await doConfigureOptionsTesting(terraformCOGMessage, messageInput)
@@ -158,7 +158,7 @@ describe('Test Terraform Cloud Rollback Step', () => {
     //provisionerIdentifier
     const provisionerInput = queryByNameAttribute('spec.provisionerIdentifier', container) as HTMLInputElement
     const cogProvisioner = document.getElementById('configureOptions_spec.provisionerIdentifier')
-    userEvent.click(cogProvisioner!)
+    await userEvent.click(cogProvisioner!)
     await waitFor(() => expect(modals.length).toBe(1))
     const terraformCOGProvisioner = modals[0] as HTMLElement
     await doConfigureOptionsTesting(terraformCOGProvisioner, provisionerInput)
@@ -198,11 +198,11 @@ describe('Test Terraform Cloud Rollback Step', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.type(timeoutInput!, '20m')
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       name: 'TerraformCloudRollback_step1',

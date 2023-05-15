@@ -48,7 +48,7 @@ describe('MonitoredServiceLogContent', () => {
 
     expect(screen.getByText('cv.download')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.download'))
+    await userEvent.click(screen.getByText('cv.download'))
 
     await waitFor(() => {
       expect(cvService.getMonitoredServiceLogsPromise).toHaveBeenCalledWith({
@@ -83,7 +83,7 @@ describe('MonitoredServiceLogContent', () => {
 
     expect(screen.getByText('cv.download')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.download'))
+    await userEvent.click(screen.getByText('cv.download'))
 
     await waitFor(() => {
       expect(cvService.getMonitoredServiceLogsPromise).toHaveBeenCalled()
@@ -165,7 +165,7 @@ describe('MonitoredServiceLogContent', () => {
 
     expect(screen.getByRole('button', { name: STRING_ID_LOAD_MORE })).toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: STRING_ID_LOAD_MORE }))
+    await userEvent.click(screen.getByRole('button', { name: STRING_ID_LOAD_MORE }))
 
     await waitFor(() => {
       expect(cvService.useGetMonitoredServiceLogs).toHaveBeenLastCalledWith({
@@ -187,7 +187,7 @@ describe('MonitoredServiceLogContent', () => {
     })
   })
 
-  test('should handle the Top and Bottom navigation', () => {
+  test('should handle the Top and Bottom navigation', async () => {
     const { container } = render(
       <TestWrapper {...testWrapperProps}>
         <MonitoredServiceLogContent
@@ -203,7 +203,7 @@ describe('MonitoredServiceLogContent', () => {
 
     expect(container.querySelector('[data-icon="arrow-down"]')).toBeInTheDocument()
 
-    userEvent.click(container.querySelector('[data-icon="arrow-down"]')!)
+    await userEvent.click(container.querySelector('[data-icon="arrow-down"]')!)
   })
 
   test('should show the text Loading...', () => {
@@ -247,7 +247,7 @@ describe('MonitoredServiceLogContent', () => {
 
     expect(screen.getByText(errorMessage)).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('retry'))
+    await userEvent.click(screen.getByText('retry'))
 
     await waitFor(() => {
       expect(cvService.useGetMonitoredServiceLogs).toHaveBeenLastCalledWith({
@@ -309,7 +309,7 @@ describe('MonitoredServiceLogContent', () => {
 
     expect(screen.getByText(errorMessage)).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('Retry'))
+    await userEvent.click(screen.getByText('Retry'))
 
     await waitFor(() => {
       expect(cvService.useGetMonitoredServiceLogs).toHaveBeenLastCalledWith({

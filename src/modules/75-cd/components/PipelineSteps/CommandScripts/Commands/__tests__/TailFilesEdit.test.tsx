@@ -87,7 +87,7 @@ describe('test <TailFilesEdit />', () => {
 
     expect(tailFilesEditQueries.getByDisplayValue(tailFileToDelete.tailFile as string)).toBeInTheDocument()
 
-    userEvent.click(tailFilesEditQueries.getByTestId(`remove-tailFile-${index}`))
+    await userEvent.click(tailFilesEditQueries.getByTestId(`remove-tailFile-${index}`))
 
     await waitFor(() => {
       expect(tailFilesEditQueries.queryByDisplayValue(tailFileToDelete.tailFile as string)).not.toBeInTheDocument()
@@ -98,7 +98,7 @@ describe('test <TailFilesEdit />', () => {
     const lastTailFileIndex = initialValues.spec.tailFiles.length - 1
     const tailFilesEditContainer = renderResult.getByTestId('tail-files-edit')
 
-    userEvent.click(within(tailFilesEditContainer).getByTestId(`add-tailFile`))
+    await userEvent.click(within(tailFilesEditContainer).getByTestId(`add-tailFile`))
 
     await waitFor(() => {
       expect(
@@ -115,7 +115,7 @@ describe('test <TailFilesEdit />', () => {
     const tailFileInput = queryByNameAttribute(`spec.tailFiles[${index}].tailFile`, tailFilesEditContainer)
     const suffix = 'updated'
 
-    userEvent.type(tailFileInput!, suffix)
+    await userEvent.type(tailFileInput!, suffix)
 
     expect(await tailFilesEditQueries.findByDisplayValue(tailFileToUpdate.tailFile + suffix)).toBeInTheDocument()
   })

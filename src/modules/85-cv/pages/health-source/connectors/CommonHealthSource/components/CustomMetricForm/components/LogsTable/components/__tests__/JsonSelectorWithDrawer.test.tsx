@@ -48,7 +48,7 @@ describe('JsonSelectorWithDrawer', () => {
       expect(document.querySelector('input[name="serviceInstanceField"]')).toBeInTheDocument()
     })
 
-    act(() => {
+    await act(async () => {
       userEvent.click(screen.getByTestId(/jsonSelectorBtn/))
     })
 

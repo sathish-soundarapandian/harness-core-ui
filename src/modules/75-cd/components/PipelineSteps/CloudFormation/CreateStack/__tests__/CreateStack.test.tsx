@@ -136,10 +136,10 @@ describe('Test Cloudformation create stack', () => {
       />
     )
     await waitFor(() => expect(getByTestId('remoteTemplate')).toBeTruthy())
-    userEvent.click(getByTestId('remoteTemplate'))
+    await userEvent.click(getByTestId('remoteTemplate'))
 
     await waitFor(() => expect(getByTestId('remoteClose')).toBeTruthy())
-    await act(async () => userEvent.click(getByTestId('remoteClose')))
+    await act(async () => await userEvent.click(getByTestId('remoteClose')))
     expect(container).toMatchSnapshot()
   })
 
@@ -177,25 +177,25 @@ describe('Test Cloudformation create stack', () => {
       />
     )
     const stepName = queryByAttribute('name', container, 'name')
-    userEvent.type(stepName!, ' new name')
+    await userEvent.type(stepName!, ' new name')
     expect(stepName).toHaveDisplayValue(['create stack new name'])
 
     const timeout = queryByAttribute('name', container, 'timeout')
-    userEvent.clear(timeout!)
-    userEvent.type(timeout!, '20m')
+    await userEvent.clear(timeout!)
+    await userEvent.type(timeout!, '20m')
     expect(timeout).toHaveDisplayValue('20m')
 
     const provisionerIdentifier = queryByAttribute('name', container, 'spec.provisionerIdentifier')
-    userEvent.clear(provisionerIdentifier!)
-    userEvent.type(provisionerIdentifier!, 'newID')
+    await userEvent.clear(provisionerIdentifier!)
+    await userEvent.type(provisionerIdentifier!, 'newID')
     expect(provisionerIdentifier).toHaveDisplayValue('newID')
 
     const region = queryByAttribute('name', container, 'spec.configuration.region')
-    userEvent.click(region!)
+    await userEvent.click(region!)
 
     const stackName = queryByAttribute('name', container, 'spec.configuration.stackName')
-    userEvent.clear(stackName!)
-    userEvent.type(stackName!, 'new name')
+    await userEvent.clear(stackName!)
+    await userEvent.type(stackName!, 'new name')
     expect(stackName).toHaveDisplayValue('new name')
   })
 
@@ -257,9 +257,9 @@ describe('Test Cloudformation create stack', () => {
         initialValues={initialValues()}
       />
     )
-    userEvent.click(getByText('common.optionalConfig'))
+    await userEvent.click(getByText('common.optionalConfig'))
     await waitFor(() => expect(getByTestId('remove-param-0')))
-    userEvent.click(getByTestId('remove-param-0'))
+    await userEvent.click(getByTestId('remove-param-0'))
     expect(queryByText('remove-param-0')).not.toBeInTheDocument()
   })
 
@@ -321,10 +321,10 @@ describe('Test Cloudformation create stack', () => {
         initialValues={initialValues()}
       />
     )
-    userEvent.click(getByText('common.optionalConfig'))
+    await userEvent.click(getByText('common.optionalConfig'))
 
     await waitFor(() => expect(getByTestId('remoteParamFiles')).toBeTruthy())
-    userEvent.click(getByTestId('remoteParamFiles'))
+    await userEvent.click(getByTestId('remoteParamFiles'))
     expect(container).toMatchSnapshot()
   })
 
@@ -385,13 +385,13 @@ describe('Test Cloudformation create stack', () => {
         initialValues={initialValues()}
       />
     )
-    userEvent.click(getByText('common.optionalConfig'))
+    await userEvent.click(getByText('common.optionalConfig'))
 
     await waitFor(() => expect(getByTestId('inlineParamFiles')).toBeTruthy())
-    userEvent.click(getByTestId('inlineParamFiles'))
+    await userEvent.click(getByTestId('inlineParamFiles'))
 
     await waitFor(() => expect(getByText('submit')).toBeTruthy())
-    await act(async () => userEvent.click(getByText('submit')))
+    await act(async () => await userEvent.click(getByText('submit')))
     await waitForElementToBeRemoved(() => getByTestId('inlineParamClose'))
     expect(container).toMatchSnapshot()
   })

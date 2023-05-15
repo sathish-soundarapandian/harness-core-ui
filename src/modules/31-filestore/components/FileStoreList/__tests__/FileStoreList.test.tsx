@@ -62,7 +62,7 @@ jest.mock('services/cd-ng', () => ({
   useCreate: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 describe('FileStoreList', () => {
   test('should render FileStoreList component', async () => {
@@ -126,7 +126,7 @@ describe('FileStoreList', () => {
     })
 
     const applyBtn = document.body.querySelector('button[aria-label="entityReference.apply"]')
-    userEvent.click(applyBtn!)
+    await userEvent.click(applyBtn!)
 
     await waitFor(() => expect(getByText('/t2confiog')).toBeInTheDocument())
   })

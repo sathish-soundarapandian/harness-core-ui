@@ -355,7 +355,7 @@ describe('TargetsPage', () => {
 
     const optionsButton = document.querySelector('[data-icon="Options"]') as Element
 
-    userEvent.click(optionsButton)
+    await userEvent.click(optionsButton)
 
     expect(document.querySelector('[data-icon="trash"]')).toBeInTheDocument()
     expect(document.querySelector('[data-icon="edit"]')).toBeInTheDocument()
@@ -424,7 +424,7 @@ describe('TargetsPage', () => {
     renderComponent()
 
     const optionsButton = document.querySelector('[data-icon="Options"]') as Element
-    userEvent.click(optionsButton)
+    await userEvent.click(optionsButton)
 
     fireEvent.mouseOver(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
     fireEvent.mouseOver(document.querySelector('[data-icon="trash"]') as HTMLButtonElement)

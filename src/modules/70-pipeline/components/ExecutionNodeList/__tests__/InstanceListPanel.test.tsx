@@ -55,8 +55,8 @@ describe('InstanceListPanel', () => {
 
     expect(searchInput).toBeInTheDocument()
 
-    userEvent.clear(searchInput)
-    userEvent.type(searchInput, 'Shell Script_1_0_1')
+    await userEvent.clear(searchInput)
+    await userEvent.type(searchInput, 'Shell Script_1_0_1')
 
     await waitFor(() => {
       expect(nodeA).toBeInTheDocument()
@@ -72,7 +72,7 @@ describe('InstanceListPanel', () => {
 
     const statusDropdown = screen.getByTestId('dropdown-button')
     expect(statusDropdown).toBeInTheDocument()
-    userEvent.click(statusDropdown)
+    await userEvent.click(statusDropdown)
 
     const statusMenu = baseElement.querySelector('.bp3-menu')
     await waitFor(() => {
@@ -80,20 +80,20 @@ describe('InstanceListPanel', () => {
     })
 
     const successItem = within(statusMenu as HTMLElement).getByText(/^success$/i)
-    userEvent.click(successItem)
+    await userEvent.click(successItem)
     await waitFor(() => {
       expect(screen.getByTestId('dropdown-value')).toHaveTextContent(/^success$/i)
     })
 
     expect(nodeWithStatusSuccess).toBeInTheDocument()
 
-    userEvent.click(statusDropdown)
+    await userEvent.click(statusDropdown)
     await waitFor(() => {
       expect(statusMenu).toBeInTheDocument()
     })
 
     const failedItem = within(statusMenu as HTMLElement).getByText(/^failed$/i)
-    userEvent.click(failedItem)
+    await userEvent.click(failedItem)
     await waitFor(() => {
       expect(screen.getByTestId('dropdown-value')).toHaveTextContent(/^failed$/i)
     })
@@ -107,9 +107,9 @@ describe('InstanceListPanel', () => {
     const checkbox = container.querySelector(`input[name="instanceCheckbox-${nodeName}"]`)
 
     expect(checkbox).toBeInTheDocument()
-    userEvent.click(checkbox!)
+    await userEvent.click(checkbox!)
     expect(checkbox).toBeChecked()
-    userEvent.click(checkbox!)
+    await userEvent.click(checkbox!)
     expect(checkbox).not.toBeChecked()
   })
 
@@ -117,17 +117,17 @@ describe('InstanceListPanel', () => {
     const { container } = renderInstanceListPanel()
     const nodeNames = getNodeNames()
 
-    nodeNames.forEach(nodeName => {
+    nodeNames.forEach(async nodeName => {
       const checkbox = container.querySelector(`input[name="instanceCheckbox-${nodeName}"]`)
 
       expect(checkbox).toBeInTheDocument()
-      userEvent.click(checkbox!)
+      await userEvent.click(checkbox!)
       expect(checkbox).toBeChecked()
     })
 
     const globalCheckbox = container.querySelector(`input[name="globalInstancesCheckbox"]`)
     expect(globalCheckbox).toBeInTheDocument()
-    expect(globalCheckbox).toBeChecked()
+    await waitFor(() => expect(globalCheckbox).toBeChecked())
   })
 
   test('checking some nodes should make global checkbox indeterminate', async () => {
@@ -135,18 +135,18 @@ describe('InstanceListPanel', () => {
     const nodeNames = getNodeNames()
     const someNodeNames = nodeNames.slice(0, Math.floor(nodeNames.length / 2))
 
-    someNodeNames.forEach(nodeName => {
+    someNodeNames.forEach(async nodeName => {
       const checkbox = container.querySelector(`input[name="instanceCheckbox-${nodeName}"]`)
 
       expect(checkbox).toBeInTheDocument()
-      userEvent.click(checkbox!)
+      await userEvent.click(checkbox!)
       expect(checkbox).toBeChecked()
     })
 
     const globalCheckbox = container.querySelector(`input[name="globalInstancesCheckbox"]`)
     expect(globalCheckbox).toBeInTheDocument()
     expect(globalCheckbox).not.toBeChecked()
-    expect(globalCheckbox).toBePartiallyChecked()
+    await waitFor(() => expect(globalCheckbox).toBePartiallyChecked())
   })
 
   test('checking/unchecking global checkbox should check/uncheck all node checkboxes', async () => {
@@ -154,7 +154,7 @@ describe('InstanceListPanel', () => {
     const globalCheckbox = container.querySelector(`input[name="globalInstancesCheckbox"]`)
 
     expect(globalCheckbox).toBeInTheDocument()
-    userEvent.click(globalCheckbox!)
+    await userEvent.click(globalCheckbox!)
 
     await waitFor(() => {
       expect(globalCheckbox).toBeChecked()
@@ -169,7 +169,7 @@ describe('InstanceListPanel', () => {
       expect(checkbox).toBeChecked()
     })
 
-    userEvent.click(globalCheckbox!)
+    await userEvent.click(globalCheckbox!)
 
     await waitFor(() => {
       expect(globalCheckbox).not.toBeChecked()

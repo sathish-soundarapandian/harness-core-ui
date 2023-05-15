@@ -74,7 +74,7 @@ describe('deploy environment entity widget', () => {
     const multiEnvToggle = screen.getByRole('checkbox')
     await waitFor(() => expect(multiEnvToggle).not.toBeChecked())
 
-    userEvent.click(multiEnvToggle)
+    await userEvent.click(multiEnvToggle)
 
     await waitFor(() => expect(multiEnvToggle).toBeChecked())
     await waitFor(() =>
@@ -105,15 +105,15 @@ describe('deploy environment entity widget', () => {
     const multiEnvToggle = screen.getByRole('checkbox')
     await waitFor(() => expect(multiEnvToggle).not.toBeChecked())
 
-    userEvent.click(multiEnvToggle)
+    await userEvent.click(multiEnvToggle)
 
     const buttonsInDialog = getAllByRole(findDialogContainer()!, 'button')
-    userEvent.click(buttonsInDialog[1])
+    await userEvent.click(buttonsInDialog[1])
 
     await waitFor(() => expect(multiEnvToggle).not.toBeChecked())
 
-    userEvent.click(multiEnvToggle)
-    userEvent.click(buttonsInDialog[0])
+    await userEvent.click(multiEnvToggle)
+    await userEvent.click(buttonsInDialog[0])
 
     await waitFor(() => expect(multiEnvToggle).toBeChecked())
     await waitFor(() =>

@@ -83,13 +83,13 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement, fieldElement: HT
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
   act(() => {
     fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   })
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
   await waitFor(() => expect(fieldElement.value).toBe('<+input>.regex(<+input>.includes(/test/))'))
 }
 
@@ -425,19 +425,19 @@ describe('AmazonS3 tests', () => {
 
     // Configure options testing for region, bucketName and filePath fields
     const cogRegion = document.getElementById('configureOptions_region')
-    userEvent.click(cogRegion!)
+    await userEvent.click(cogRegion!)
     await waitFor(() => expect(modals.length).toBe(1))
     const regionCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(regionCOGModal, regionInput)
 
     const cogBucketName = document.getElementById('configureOptions_bucketName')
-    userEvent.click(cogBucketName!)
+    await userEvent.click(cogBucketName!)
     await waitFor(() => expect(modals.length).toBe(1))
     const bucketNameCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(bucketNameCOGModal, bucketNameInput)
 
     const cogFilePath = document.getElementById('configureOptions_filePath')
-    userEvent.click(cogFilePath!)
+    await userEvent.click(cogFilePath!)
     await waitFor(() => expect(modals.length).toBe(2))
     const filePathCOGModal = modals[1] as HTMLElement
     await doConfigureOptionsTesting(filePathCOGModal, filePathInput)
@@ -486,7 +486,7 @@ describe('AmazonS3 tests', () => {
 
     // Configure options testing for filePath field
     const cogFilePath = document.getElementById('configureOptions_filePath')
-    userEvent.click(cogFilePath!)
+    await userEvent.click(cogFilePath!)
     await waitFor(() => expect(modals.length).toBe(1))
     const filePathCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(filePathCOGModal, filePathInput)
@@ -534,14 +534,14 @@ describe('AmazonS3 tests', () => {
 
     // Configure options testing for bucketName and filePath fields
     const cogBucketName = document.getElementById('configureOptions_bucketName')
-    userEvent.click(cogBucketName!)
+    await userEvent.click(cogBucketName!)
     await waitFor(() => expect(modals.length).toBe(1))
     const bucketNameCOGModal = modals[0] as HTMLElement
     const bucketNameInput = queryByAttribute('name', container, 'bucketName') as HTMLInputElement
     await doConfigureOptionsTesting(bucketNameCOGModal, bucketNameInput)
 
     const cogFilePathRegex = document.getElementById('configureOptions_filePathRegex')
-    userEvent.click(cogFilePathRegex!)
+    await userEvent.click(cogFilePathRegex!)
     await waitFor(() => expect(modals.length).toBe(2))
     const filePathCOGModal = modals[1] as HTMLElement
     const filePathInput = queryByAttribute('name', container, 'filePathRegex') as HTMLInputElement
@@ -580,7 +580,7 @@ describe('AmazonS3 tests', () => {
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
     const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
-    userEvent.click(bucketNameDropDownButton!)
+    await userEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
@@ -657,11 +657,11 @@ describe('AmazonS3 tests', () => {
     const bucketNameInput = queryByNameAttribute('bucketName') as HTMLInputElement
     const bucketNameDropDownButtons = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(bucketNameDropDownButtons.length).toBe(0)
-    userEvent.click(bucketNameInput)
+    await userEvent.click(bucketNameInput)
     await waitFor(() => expect(fetchBuckets).toHaveBeenCalledTimes(1))
     expect(bucketNameInput.value).toBe('cdng-terraform-state')
-    userEvent.clear(bucketNameInput)
-    userEvent.type(bucketNameInput, 'abc')
+    await userEvent.clear(bucketNameInput)
+    await userEvent.type(bucketNameInput, 'abc')
     expect(bucketNameInput.value).toBe('abc')
   })
 
@@ -675,7 +675,7 @@ describe('AmazonS3 tests', () => {
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
     const submitBtn = getByText('submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     const bucketNameRequiredErr = await findByText(container, 'pipeline.manifestType.bucketNameRequired')
     expect(bucketNameRequiredErr).toBeDefined()
     const filePathRegexRequiredErr = await findByText(container, 'pipeline.manifestType.pathRequired')
@@ -686,24 +686,24 @@ describe('AmazonS3 tests', () => {
 
     // Select bucketName from dropdown
     const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
-    userEvent.click(bucketNameDropDownButton!)
+    await userEvent.click(bucketNameDropDownButton!)
     await waitFor(() => expect(popoverDivs.length).toBe(1))
     const bucketNameDropdownDialogDiv = popoverDivs[0]
     const bucketNameSelectListMenu = bucketNameDropdownDialogDiv.querySelector('.bp3-menu')
     const bucketItem = await findByText(bucketNameSelectListMenu as HTMLElement, 'prod-bucket-339')
-    userEvent.click(bucketItem)
+    await userEvent.click(bucketItem)
     const bucketNameSelect = queryByNameAttribute('bucketName') as HTMLInputElement
     expect(bucketNameSelect.value).toBe('prod-bucket-339')
     await waitFor(() => expect(popoverDivs.length).toBe(0))
 
     // Select filePath from dropdown
     const filePathDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[2]
-    userEvent.click(filePathDropDownButton!)
+    await userEvent.click(filePathDropDownButton!)
     await waitFor(() => expect(popoverDivs.length).toBe(1))
     const filePathDropdownDialogDiv = popoverDivs[0]
     const filePathSelectListMenu = filePathDropdownDialogDiv.querySelector('.bp3-menu')
     const filePathItem = await findByText(filePathSelectListMenu as HTMLElement, 'folderName/filePath2.yaml')
-    userEvent.click(filePathItem)
+    await userEvent.click(filePathItem)
     const filePathSelect = queryByNameAttribute('filePath') as HTMLInputElement
     expect(filePathSelect.value).toBe('folderName/filePath2.yaml')
     await waitFor(() => expect(popoverDivs.length).toBe(0))
@@ -836,34 +836,34 @@ describe('AmazonS3 tests', () => {
     const dropdownPortalDivRegion = portalDivs[0]
     const selectListMenuRegion = dropdownPortalDivRegion.querySelector('.bp3-menu')
     const selectItemRegion = await findByText(selectListMenuRegion as HTMLElement, 'GovCloud (US-West)')
-    userEvent.click(selectItemRegion)
+    await userEvent.click(selectItemRegion)
     const regionSelect = queryByNameAttribute('region') as HTMLInputElement
     expect(regionSelect.value).toBe('GovCloud (US-West)')
     await waitFor(() => expect(bucketNameSelect.value).toBe(''))
 
     // Select bucketName from dropdown
     const bucketNameDropDownButton = dropdownIcons[1]
-    userEvent.click(bucketNameDropDownButton!)
+    await userEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(2)
     const bucketNameDropdownPortalDiv = portalDivs[1]
     const bucketNameSelectListMenu = bucketNameDropdownPortalDiv.querySelector('.bp3-menu')
     const bucketNameSelectItem = await findByText(bucketNameSelectListMenu as HTMLElement, 'prod-bucket-339')
-    userEvent.click(bucketNameSelectItem)
+    await userEvent.click(bucketNameSelectItem)
     await waitFor(() => expect(bucketNameSelect.value).toBe('prod-bucket-339'))
 
     // Select bucketName from dropdown
     const filePathDropDownButton = dropdownIcons[2]
-    userEvent.click(filePathDropDownButton!)
+    await userEvent.click(filePathDropDownButton!)
     expect(portalDivs.length).toBe(3)
     const filePathDropdownPortalDiv = portalDivs[2]
     const filePathSelectListMenu = filePathDropdownPortalDiv.querySelector('.bp3-menu')
     const filePathSelectItem = await findByText(filePathSelectListMenu as HTMLElement, 'folderName/filePath3.yaml')
-    userEvent.click(filePathSelectItem)
+    await userEvent.click(filePathSelectItem)
     await waitFor(() => expect(filePathSelect.value).toBe('folderName/filePath3.yaml'))
 
     // Submit the form
     const submitBtn = getByText('submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => {
       expect(props.handleSubmit).toBeCalled()
       expect(props.handleSubmit).toHaveBeenLastCalledWith({

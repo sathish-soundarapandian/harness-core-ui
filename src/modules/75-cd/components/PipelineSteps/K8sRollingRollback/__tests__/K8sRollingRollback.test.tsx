@@ -31,7 +31,7 @@ describe('Test K8sRollingRollback Step', () => {
     )
     expect(container).toMatchSnapshot()
 
-    userEvent.click(screen.getByTestId('optional-config-summary'))
+    await userEvent.click(screen.getByTestId('optional-config-summary'))
 
     expect(await screen.findByRole('checkbox', { name: 'cd.steps.common.enableKubernetesPruning' })).toBeInTheDocument()
   })

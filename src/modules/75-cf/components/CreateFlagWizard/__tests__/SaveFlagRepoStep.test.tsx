@@ -80,12 +80,12 @@ describe('SaveFlagRepoStep', () => {
 
     renderComponent({ nextStep: nextStepMock })
 
-    userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'this is my commit messsage')
+    await userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'this is my commit messsage')
 
     const nextButton = screen.getByText('cf.creationModal.saveAndClose')
     expect(nextButton).toBeInTheDocument()
 
-    userEvent.click(nextButton)
+    await userEvent.click(nextButton)
 
     await waitFor(() =>
       expect(nextStepMock).toHaveBeenCalledWith({
@@ -103,7 +103,7 @@ describe('SaveFlagRepoStep', () => {
     )
   })
 
-  test('it should call previousStep callback on "back" click', () => {
+  test('it should call previousStep callback on "back" click', async () => {
     const previousStepMock = jest.fn()
     const previouStepDataMock = { name: 'test 1' }
     renderComponent({ previousStep: previousStepMock, prevStepData: previouStepDataMock })
@@ -111,7 +111,7 @@ describe('SaveFlagRepoStep', () => {
     const backButton = screen.getByText('back')
     expect(backButton).toBeInTheDocument()
 
-    userEvent.click(backButton)
+    await userEvent.click(backButton)
 
     expect(previousStepMock).toHaveBeenCalledWith(previouStepDataMock)
   })

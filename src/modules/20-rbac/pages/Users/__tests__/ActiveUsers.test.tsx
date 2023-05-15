@@ -16,7 +16,7 @@ import {
   RenderResult,
   waitFor
 } from '@testing-library/react'
-
+import userEvent from '@testing-library/user-event'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import type { ResponseBoolean } from 'services/cd-ng'
 import { clickSubmit } from '@common/utils/JestFormHelper'
@@ -24,8 +24,6 @@ import routes from '@common/RouteDefinitions'
 import { orgPathProps } from '@common/utils/routeUtils'
 import { activeUserMock, mockResponse, resourceGroupsMockData, roleMockData, usersMockData } from './mock'
 import UsersPage from '../UsersPage'
-
-jest.useFakeTimers()
 
 const deleteActiveUser = jest.fn()
 const unlockActiveUser = jest.fn()
@@ -90,6 +88,8 @@ describe('UsersPage Test', () => {
   let getAllByText: RenderResult['getAllByText']
 
   beforeEach(async () => {
+    jest.useFakeTimers({ advanceTimers: true })
+    jest.runAllTimers()
     const renderObj = render(
       <TestWrapper path={routes.toUsers(orgPathProps)} pathParams={{ accountId: 'testAcc', orgIdentifier: 'org' }}>
         <UsersPage />
@@ -127,13 +127,18 @@ describe('UsersPage Test', () => {
     expect(createUser).toBeCalled()
   })
   test('Delete Active User', async () => {
+    jest.runOnlyPendingTimers()
     deleteActiveUser.mockReset()
     const menu = container.querySelector(`[data-testid="menu-${activeUserMock.data?.content?.[0].user.uuid}"]`)
-    fireEvent.click(menu!)
+    await act(async () => {
+      await userEvent.click(menu!)
+    })
+
     const popover = findPopoverContainer()
     const deleteMenu = getByText(popover as HTMLElement, 'delete')
+
     await act(async () => {
-      fireEvent.click(deleteMenu)
+      await userEvent.click(deleteMenu)
       await waitFor(() => getByText(document.body, 'rbac.usersPage.deleteTitle'))
       const form = findDialogContainer()
       expect(form).toBeTruthy()
@@ -188,6 +193,7 @@ describe('UsersPage Test', () => {
   test('Unlock Active User', async () => {
     unlockActiveUser.mockReset()
     const menu = container.querySelector(`[data-testid="menu-${activeUserMock.data?.content?.[1].user.uuid}"]`)
+
     fireEvent.click(menu!)
     const popover = findPopoverContainer()
     const unlockMenu = getByText(popover as HTMLElement, 'rbac.usersPage.unlockTitle')

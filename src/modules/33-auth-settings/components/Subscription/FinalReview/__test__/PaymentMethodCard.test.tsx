@@ -42,7 +42,7 @@ describe('PaymentMethodCard', () => {
         <PaymentMethodCard {...props} module={'cd'} />
       </TestWrapper>
     )
-    userEvent.click(getByText('edit'))
+    await userEvent.click(getByText('edit'))
     await waitFor(() => {
       expect(setViewMock).toHaveBeenCalledWith(SubscribeViews.PAYMENT_METHOD)
     })

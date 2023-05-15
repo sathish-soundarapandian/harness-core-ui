@@ -74,15 +74,15 @@ describe('ServiceList', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
     // add a new service
-    userEvent.click(screen.getByRole('checkbox', { name: 'Support' }))
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Support' }))
 
     // delete existing service
-    userEvent.click(screen.getByRole('checkbox', { name: 'My Service 1' }))
+    await userEvent.click(screen.getByRole('checkbox', { name: 'My Service 1' }))
 
-    userEvent.click(screen.getByRole('button', { name: 'save' }))
+    await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
     await waitFor(() => {
       expect(patchMock).toBeCalledWith({
@@ -127,17 +127,17 @@ describe('ServiceList', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
     // add a new service
-    userEvent.click(screen.getByRole('checkbox', { name: 'Support' }))
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Support' }))
     await waitFor(() => expect(screen.getByRole('checkbox', { name: 'Support' })).toBeChecked())
 
     // delete existing service
-    userEvent.click(screen.getByRole('checkbox', { name: 'My Service 1' }))
+    await userEvent.click(screen.getByRole('checkbox', { name: 'My Service 1' }))
     await waitFor(() => expect(screen.getByRole('checkbox', { name: 'My Service 1' })).not.toBeChecked())
 
-    userEvent.click(screen.getByRole('button', { name: 'save' }))
+    await userEvent.click(screen.getByRole('button', { name: 'save' }))
     await waitFor(() => {
       expect(screen.getByText('failed to patch services')).toBeInTheDocument()
       expect(refetchFlagMock).not.toBeCalled()
@@ -158,11 +158,11 @@ describe('ServiceList', () => {
     } as any)
 
     renderComponent()
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
-    userEvent.click(screen.getByRole('checkbox', { name: 'My Service 1' }))
+    await userEvent.click(screen.getByRole('checkbox', { name: 'My Service 1' }))
 
-    userEvent.click(screen.getByRole('button', { name: 'save' }))
+    await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
     await waitFor(() => expect(screen.getByText(loadingMessage)).toBeInTheDocument())
   })
@@ -185,14 +185,14 @@ describe('ServiceList', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
     // delete existing service
-    userEvent.click(screen.getByRole('checkbox', { name: 'My Service 1' }))
+    await userEvent.click(screen.getByRole('checkbox', { name: 'My Service 1' }))
     // re-add the deleted service
-    userEvent.click(screen.getByRole('checkbox', { name: 'My Service 1' }))
+    await userEvent.click(screen.getByRole('checkbox', { name: 'My Service 1' }))
 
-    userEvent.click(screen.getByRole('button', { name: 'save' }))
+    await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
     await waitFor(() => {
       expect(patchMock).toBeCalledWith({
@@ -238,7 +238,7 @@ describe('EditServicesModal', () => {
     expect(screen.getByRole('heading', { name: 'common.monitoredServices' })).toBeInTheDocument()
     expect(screen.getByText('cf.featureFlagDetail.serviceDescription')).toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
     await waitFor(() => {
       expect(screen.getByTestId('modaldialog-header')).toBeInTheDocument()
@@ -246,7 +246,7 @@ describe('EditServicesModal', () => {
       expect(screen.getByTestId('modaldialog-footer')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'Close' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }))
 
     await waitFor(() => {
       expect(screen.queryByTestId('modaldialog-header')).not.toBeInTheDocument()
@@ -264,7 +264,7 @@ describe('EditServicesModal', () => {
     } as any)
 
     renderComponent()
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
     await waitFor(() => expect(screen.getByText(loadingMessage)).toBeInTheDocument())
   })
@@ -281,14 +281,14 @@ describe('EditServicesModal', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
       expect(screen.getByText('failed to fetch services')).toBeInTheDocument()
       expect(refetch).not.toBeCalled()
     })
-    userEvent.click(screen.getByRole('button', { name: 'Retry' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }))
 
     await waitFor(() => expect(refetch).toBeCalled())
   })
@@ -302,7 +302,7 @@ describe('EditServicesModal', () => {
     } as any)
 
     renderComponent()
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
     const service = screen.getByRole('checkbox', { name: 'My Service 1' })
 
@@ -319,9 +319,9 @@ describe('EditServicesModal', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
-    userEvent.type(screen.getByRole('searchbox'), 'Support', { allAtOnce: true })
+    await userEvent.type(screen.getByRole('searchbox'), 'Support', { allAtOnce: true })
 
     await waitFor(() => expect(screen.getByText(loadingMessage)).toBeInTheDocument())
   })
@@ -335,15 +335,15 @@ describe('EditServicesModal', () => {
     } as any)
 
     renderComponent()
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
     const dropdown = screen.getByPlaceholderText('- Select -')
 
-    userEvent.click(dropdown)
+    await userEvent.click(dropdown)
 
     expect(screen.getByText('showAll')).toBeInTheDocument()
     expect(screen.getByText('common.showSelected')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('common.showSelected'))
+    await userEvent.click(screen.getByText('common.showSelected'))
 
     // Only services already associated with a flag should appear
     await waitFor(() => {
@@ -356,7 +356,7 @@ describe('EditServicesModal', () => {
     })
 
     // searching amongst the already associated services
-    userEvent.type(screen.getByRole('searchbox'), 'My Service 1', { allAtOnce: true })
+    await userEvent.type(screen.getByRole('searchbox'), 'My Service 1', { allAtOnce: true })
 
     await waitFor(() => {
       expect(screen.queryByRole('checkbox', { name: 'My Service 1' })).toBeInTheDocument()
@@ -377,7 +377,7 @@ describe('EditServicesModal', () => {
     } as any)
 
     renderComponent()
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
     await waitFor(() => {
       expect(screen.queryByRole('checkbox', { name: 'My Service 1' })).toBeInTheDocument()
@@ -387,9 +387,9 @@ describe('EditServicesModal', () => {
       expect(screen.queryByRole('checkbox', { name: 'Account' })).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByPlaceholderText('- Select -'))
+    await userEvent.click(screen.getByPlaceholderText('- Select -'))
 
-    userEvent.click(screen.getByText('common.showSelected'))
+    await userEvent.click(screen.getByText('common.showSelected'))
 
     await waitFor(() => {
       expect(screen.queryByRole('checkbox', { name: 'My Service 1' })).toBeInTheDocument()
@@ -411,7 +411,7 @@ describe('EditServicesModal', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'cf.featureFlagDetail.noServices' })).toBeInTheDocument()
@@ -429,9 +429,9 @@ describe('EditServicesModal', () => {
     } as any)
 
     renderComponent()
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
-    userEvent.click(await screen.findByRole('button', { name: 'common.newMonitoredService' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'common.newMonitoredService' }))
 
     expect(screen.getByTestId('location')).toHaveTextContent(
       '/account/dummy/cv/orgs/dummy/projects/dummy/monitoringservices/setup'
@@ -447,16 +447,16 @@ describe('EditServicesModal', () => {
     } as any)
 
     renderComponent()
-    userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
+    await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
-    userEvent.click(screen.getByRole('button', { name: '2' }))
+    await userEvent.click(screen.getByRole('button', { name: '2' }))
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: '2' })).toBeDisabled
       expect(screen.getByRole('button', { name: '1' })).not.toBeDisabled
     })
 
-    userEvent.click(screen.getByRole('button', { name: '1' }))
+    await userEvent.click(screen.getByRole('button', { name: '1' }))
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: '1' })).toBeDisabled

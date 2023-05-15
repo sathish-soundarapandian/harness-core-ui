@@ -31,7 +31,7 @@ const props = {
   closeModal: jest.fn()
 }
 
-describe('Should be able to Disable AutoStopping', async () => {
+describe('Should be able to Disable AutoStopping', () => {
   test('Install Components', async () => {
     const { getByText } = render(
       <TestWrapper>

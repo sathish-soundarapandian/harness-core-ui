@@ -35,7 +35,7 @@ describe('GetStartedWithFF', () => {
     const getStartedBtn = screen.getByText('cf.featureFlags.getStartedWithFF')
     expect(getStartedBtn).toBeVisible()
 
-    userEvent.click(getStartedBtn)
+    await userEvent.click(getStartedBtn)
 
     await waitFor(() => {
       expect(screen.getByTestId('location')).toHaveTextContent(

@@ -28,7 +28,7 @@ describe('NoTargetsView', () => {
     expect(btn).toBeInTheDocument()
     expect(onNewTargetsCreated).not.toHaveBeenCalled()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => expect(screen.getByRole('heading', { name: 'cf.targets.addTargetsLabel' })).toBeInTheDocument())
   })

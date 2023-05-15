@@ -191,14 +191,14 @@ describe('Unit tests for PrometheusHealthSource', () => {
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.customizeQuery')).not.toBeNull())
     expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
 
-    act(() => {
-      userEvent.click(container.querySelector('button[class*="manualQuery"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('button[class*="manualQuery"]')!)
     })
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.isManualQuery')).not.toBeNull())
     expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(2)
 
-    act(() => {
-      userEvent.click(getByText('submit'))
+    await act(async () => {
+      await userEvent.click(getByText('submit'))
     })
 
     expect(screen.getByText(/validation.identifierRequired/i)).toBeInTheDocument()
@@ -216,14 +216,14 @@ describe('Unit tests for PrometheusHealthSource', () => {
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.customizeQuery')).not.toBeNull())
     expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
 
-    act(() => {
-      userEvent.click(container.querySelector('button[class*="manualQuery"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('button[class*="manualQuery"]')!)
     })
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.isManualQuery')).not.toBeNull())
     expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(2)
 
-    act(() => {
-      userEvent.click(getByText('submit'))
+    await act(async () => {
+      await userEvent.click(getByText('submit'))
     })
 
     await waitFor(() =>
@@ -241,7 +241,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
   })
 
   describe('Metric thresholds', () => {
-    test('should render metric thresholds', () => {
+    test('should render metric thresholds', async () => {
       jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
 
       render(<WrapperComponent data={mockDataWitCVEnabled} onSubmit={jest.fn()} />)
@@ -252,14 +252,14 @@ describe('Unit tests for PrometheusHealthSource', () => {
 
       expect(addButton).toBeInTheDocument()
 
-      userEvent.click(addButton)
+      await userEvent.click(addButton)
 
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
 
       expect(screen.getByText(/submit/)).toBeInTheDocument()
 
-      act(() => {
-        userEvent.click(screen.getByText(/submit/))
+      await act(async () => {
+        await userEvent.click(screen.getByText(/submit/))
       })
     })
 
@@ -286,7 +286,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
       expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
 
       await waitFor(() => expect(screen.getByText('cv.monitoringSources.addMetric')).not.toBeNull())
-      userEvent.click(screen.getByText('cv.monitoringSources.addMetric'))
+      await userEvent.click(screen.getByText('cv.monitoringSources.addMetric'))
 
       await waitFor(() =>
         expect(screen.getByText('cv.monitoringSources.prometheus.querySpecificationsAndMappings')).toBeTruthy()
@@ -322,7 +322,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
       fireEvent.click(screen.getByText('cv.monitoringSources.assign'))
 
       await waitFor(() => expect(screen.getByText('cv.monitoredServices.continuousVerification')).toBeInTheDocument())
-      userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
+      await userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
 
       expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
       expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()

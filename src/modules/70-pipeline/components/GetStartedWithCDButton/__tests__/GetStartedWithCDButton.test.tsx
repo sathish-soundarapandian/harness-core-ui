@@ -28,7 +28,7 @@ describe('GetStartedWithCDButton', () => {
 
     const getStartedBtn = screen.getByText('pipeline.guidedCDK8sGetStarted')
     expect(getStartedBtn).toBeVisible()
-    userEvent.click(getStartedBtn)
+    await userEvent.click(getStartedBtn)
     await waitFor(() => {
       expect(screen.getByTestId('location')).toHaveTextContent(
         '/account/dummy/cd/orgs/dummy/projects/dummy/cd-onboarding'

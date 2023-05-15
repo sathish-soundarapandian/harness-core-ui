@@ -357,7 +357,7 @@ describe('Git Clone Step', () => {
         expect(gitBranch).toHaveAttribute('value', 'main')
       })
       if (gitTagRadio) {
-        userEvent.click(gitTagRadio)
+        await userEvent.click(gitTagRadio)
       } else {
         throw Error('cannot find tag radio button')
       }
@@ -385,7 +385,7 @@ describe('Git Clone Step', () => {
       })
       const branchNameInput = queryByAttribute('name', container, 'spec.build.spec.branch')!
       if (gitTagRadio) {
-        userEvent.click(gitTagRadio)
+        await userEvent.click(gitTagRadio)
       } else {
         throw Error('cannot find tag radio button')
       }
@@ -396,7 +396,7 @@ describe('Git Clone Step', () => {
       const gitBranchRadio = document.body.querySelector('[value="branch"]')
 
       if (gitBranchRadio) {
-        userEvent.click(gitBranchRadio)
+        await userEvent.click(gitBranchRadio)
       } else {
         throw Error('cannot find git branch button')
       }

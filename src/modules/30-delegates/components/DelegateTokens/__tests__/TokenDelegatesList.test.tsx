@@ -40,7 +40,7 @@ describe('Token delegates component', () => {
     await waitFor(() => {
       expect(getByRole('button', { name: 'delegates.troubleshootOption' })).toBeInTheDocument()
     })
-    userEvent.click(getByRole('button', { name: 'delegates.troubleshootOption' }))
+    await userEvent.click(getByRole('button', { name: 'delegates.troubleshootOption' }))
     expect(queryAllByText('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot')[0]).toBeInTheDocument()
   })
 })

@@ -95,7 +95,7 @@ describe('Environment Groups Filters', () => {
     )
 
     const filterButton = screen.getByRole('button')
-    userEvent.click(filterButton)
+    await userEvent.click(filterButton)
 
     const drawer = document.querySelector('.bp3-drawer')
     await waitFor(() => expect(drawer).toBeInTheDocument())
@@ -111,21 +111,21 @@ describe('Environment Groups Filters', () => {
 
     fireEvent.click(clearAllButton!)
 
-    userEvent.type(envGroupNameField, 'Env Group 1')
+    await userEvent.type(envGroupNameField, 'Env Group 1')
     const descriptionField = drawer?.querySelector('[name="description"]')
-    userEvent.type(descriptionField!, 'Sample description')
+    await userEvent.type(descriptionField!, 'Sample description')
 
     const envGroupTagField = drawer?.querySelector('[placeholder="Type and press enter to create a tag"]')
-    userEvent.type(envGroupTagField!, 'Tag 1\nTag 2\n')
+    await userEvent.type(envGroupTagField!, 'Tag 1\nTag 2\n')
 
     const radioButtons = drawer?.querySelectorAll('.RadioButton--input')
-    userEvent.click(radioButtons![0])
+    await userEvent.click(radioButtons![0])
 
     const filterNameField = drawer?.querySelector('[name="name"]')
     if (!filterNameField) {
       throw Error('cannot find filter name field')
     }
-    userEvent.type(filterNameField, 'Test')
+    await userEvent.type(filterNameField, 'Test')
 
     const buttons = drawer?.querySelectorAll('button')
     if (!buttons) {
@@ -148,7 +148,7 @@ describe('Environment Groups Filters', () => {
     `)
     )
 
-    userEvent.click(buttons[4])
+    await userEvent.click(buttons[4])
     await waitFor(() => expect(refetchFilters).toHaveBeenCalled())
   })
 

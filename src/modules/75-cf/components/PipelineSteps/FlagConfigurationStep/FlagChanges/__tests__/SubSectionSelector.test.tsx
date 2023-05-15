@@ -48,7 +48,7 @@ describe('SubSectionSelector', () => {
     expect(screen.queryByText(subSectionNameMap.get(DefaultRules))).not.toBeInTheDocument()
     expect(screen.queryByText(subSectionNameMap.get(ServePercentageRollout))).not.toBeInTheDocument()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     expect(screen.getByText(subSectionNameMap.get(DefaultRules))).toBeInTheDocument()
     expect(screen.getByText(subSectionNameMap.get(ServePercentageRollout))).toBeInTheDocument()
@@ -61,9 +61,9 @@ describe('SubSectionSelector', () => {
     renderComponent({ onSubSectionChange })
 
     const btn = screen.getByRole('button')
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
-    userEvent.click(screen.getByText(subSectionNameMap.get(newSubSection)))
+    await userEvent.click(screen.getByText(subSectionNameMap.get(newSubSection)))
 
     expect(onSubSectionChange).toHaveBeenCalledWith(newSubSection)
   })

@@ -102,7 +102,7 @@ describe('AllEnvironmentsFlagsListing', () => {
     const flag1Columns = getAllByRole(rows[1], 'cell')
     const menuButton = getByRole(flag1Columns[3], 'button')
 
-    userEvent.click(menuButton)
+    await userEvent.click(menuButton)
 
     const menuItems = screen.getAllByRole('listitem')
 

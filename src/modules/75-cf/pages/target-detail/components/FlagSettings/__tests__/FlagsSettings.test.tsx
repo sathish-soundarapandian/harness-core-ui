@@ -139,7 +139,7 @@ describe('FlagSettings', () => {
     expect(refetchMock).not.toHaveBeenCalled()
     expect(screen.getByText(message)).toBeInTheDocument()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => expect(refetchMock).toHaveBeenCalled())
   })
@@ -171,13 +171,13 @@ describe('FlagSettings', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
     await waitFor(() => screen.getByRole('button', { name: 'saveChanges' }))
 
     expect(patchTargetMock).not.toHaveBeenCalled()
     expect(refetchMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
+    await userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
 
     await waitFor(() => {
       expect(patchTargetMock).toHaveBeenCalled()
@@ -200,12 +200,12 @@ describe('FlagSettings', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
     await waitFor(() => screen.getByRole('button', { name: 'saveChanges' }))
 
     await waitFor(() => expect(refetchMock).not.toHaveBeenCalled())
 
-    userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
+    await userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
 
     await waitFor(() => {
       expect(patchTargetMock).toHaveBeenCalled()
@@ -236,13 +236,13 @@ describe('FlagSettings', () => {
         refetch: jest.fn()
       } as any)
 
-      userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlag' }))
+      await userEvent.click(screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlag' }))
 
       await waitFor(() => expect(screen.getByText(newFlag.name)).toBeInTheDocument())
 
       const checkbox = screen.getByRole('checkbox') as HTMLInputElement
-      userEvent.click(checkbox)
-      userEvent.click(
+      await userEvent.click(checkbox)
+      await userEvent.click(
         getByPlaceholderText(
           checkbox.closest('[role="row"]') as HTMLElement,
           '- cf.targetManagementFlagConfiguration.selectVariation -'
@@ -250,7 +250,7 @@ describe('FlagSettings', () => {
       )
 
       await waitFor(() => expect(screen.getByText(newFlag.variations[0].name as string)).toBeInTheDocument())
-      userEvent.click(screen.getByText(newFlag.variations[0].name as string))
+      await userEvent.click(screen.getByText(newFlag.variations[0].name as string))
 
       const submitBtn = screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlags' })
 
@@ -260,7 +260,7 @@ describe('FlagSettings', () => {
         expect(refetchMock).not.toHaveBeenCalled()
       })
 
-      userEvent.click(submitBtn)
+      await userEvent.click(submitBtn)
     }
 
     test('it should call the patchTarget hook and reload the flags when a new flag is added', async () => {

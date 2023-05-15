@@ -52,13 +52,13 @@ describe('SLOAndErrorBudget', () => {
       })
     )
 
-    userEvent.click(screen.getByRole('button', { name: /SLO 1/i }))
-    userEvent.click(screen.getByRole('button', { name: /SLO 2/i }))
-    userEvent.click(screen.getByRole('button', { name: /SLO 3/i }))
+    await userEvent.click(screen.getByRole('button', { name: /SLO 1/i }))
+    await userEvent.click(screen.getByRole('button', { name: /SLO 2/i }))
+    await userEvent.click(screen.getByRole('button', { name: /SLO 3/i }))
 
     expect(screen.getByText('cv.pleaseSelectSLOToGetTheData')).toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: /SLO 4/i }))
+    await userEvent.click(screen.getByRole('button', { name: /SLO 4/i }))
 
     expect(screen.queryByText('cv.pleaseSelectSLOToGetTheData')).not.toBeInTheDocument()
     expect(screen.getByText('cv.noDataAvailableForTheCurrentSLOCycle')).toBeInTheDocument()
@@ -88,7 +88,7 @@ describe('SLOAndErrorBudget', () => {
     expect(container.querySelectorAll('span[data-icon="steps-spinner"]')).toHaveLength(3)
   })
 
-  test('should handle error state of graph', () => {
+  test('should handle error state of graph', async () => {
     const errorMessage = 'TEST ERROR MESSAGE'
     const refetch = jest.fn()
     jest
@@ -99,7 +99,7 @@ describe('SLOAndErrorBudget', () => {
 
     expect(screen.getAllByText(errorMessage)).toHaveLength(3)
 
-    userEvent.click(screen.getAllByText('Retry')[0])
+    await userEvent.click(screen.getAllByText('Retry')[0])
 
     expect(refetch).toBeCalled()
   })

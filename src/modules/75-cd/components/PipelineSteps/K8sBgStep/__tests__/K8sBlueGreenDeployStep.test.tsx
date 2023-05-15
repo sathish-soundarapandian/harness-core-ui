@@ -207,11 +207,11 @@ describe('Test K8sBlueGreenDeployStep', () => {
     fireEvent.change(container.querySelector('input[value="Test A"]') as HTMLElement, { target: { value: 'newName' } })
     fireEvent.change(container.querySelector('input[value="1s"]') as HTMLElement, { target: { value: '1m' } })
 
-    userEvent.click(screen.getByTestId('optional-config-summary'))
+    await userEvent.click(screen.getByTestId('optional-config-summary'))
 
     const pruningCheckbox = await screen.findByRole('checkbox', { name: 'cd.steps.common.enableKubernetesPruning' })
 
-    userEvent.click(pruningCheckbox)
+    await userEvent.click(pruningCheckbox)
 
     await waitFor(() =>
       expect(onChange).toHaveBeenCalledWith({

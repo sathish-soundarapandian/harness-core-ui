@@ -58,25 +58,25 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   const Harness = queryByValueAttribute('Harness')
   expect(Harness).not.toBeNull()
 
-  userEvent.click(Git!)
+  await userEvent.click(Git!)
   const connnectorRefInput = await findByTestId(portal, /connectorRef/)
   expect(connnectorRefInput).toBeTruthy()
-  userEvent.click(connnectorRefInput!)
+  await userEvent.click(connnectorRefInput!)
 
   const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[1] as HTMLElement
   const githubConnector1 = await findByText(connectorSelectorDialog, 'Git CTR')
   expect(githubConnector1).toBeTruthy()
   const githubConnector2 = await findByText(connectorSelectorDialog, 'Sample')
   expect(githubConnector2).toBeTruthy()
-  userEvent.click(githubConnector1)
+  await userEvent.click(githubConnector1)
   const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
-  userEvent.click(applySelected)
+  await userEvent.click(applySelected)
 
   await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(1))
 
   const secondStepContinueButton = getByText(portal, 'continue').parentElement as HTMLElement
   await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-  userEvent.click(secondStepContinueButton)
+  await userEvent.click(secondStepContinueButton)
 }
 
 const testEcsManifestLastStep = async (portal: HTMLElement): Promise<void> => {
@@ -90,7 +90,7 @@ const testEcsManifestLastStep = async (portal: HTMLElement): Promise<void> => {
   fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: 'test-path' } })
 
   const submitButton = getByText(portal, 'submit').parentElement as HTMLElement
-  userEvent.click(submitButton)
+  await userEvent.click(submitButton)
 }
 
 describe('ManifestSelection tests for ECS', () => {
@@ -117,7 +117,7 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     const addManifestButton = await findByText(container, '+ Add Task Definition')
-    userEvent.click(addManifestButton)
+    await userEvent.click(addManifestButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
     // Test manifest store tiles, choose Git and fill in Connector field
@@ -154,7 +154,7 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     const addManifestButton = await findByText(container, '+ Add Service Definition')
-    userEvent.click(addManifestButton)
+    await userEvent.click(addManifestButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
     // Test manifest store tiles, choose Git and fill in Connector field
@@ -191,7 +191,7 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     const addManifestButton = await findByText(container, '+ Add Scalling Policy')
-    userEvent.click(addManifestButton)
+    await userEvent.click(addManifestButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
     const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
@@ -231,7 +231,7 @@ describe('ManifestSelection tests for ECS', () => {
     )
 
     const addManifestButton = await findByText(container, '+ Add Scalable Target')
-    userEvent.click(addManifestButton)
+    await userEvent.click(addManifestButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
     const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)

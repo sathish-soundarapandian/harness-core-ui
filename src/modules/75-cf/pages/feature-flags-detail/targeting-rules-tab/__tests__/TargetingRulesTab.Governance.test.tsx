@@ -111,13 +111,13 @@ describe('TargetingRulesTab Governance', () => {
     // toggle flag off
     const flagToggle = screen.getByTestId('flag-status-switch')
     expect(flagToggle).toBeChecked()
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).not.toBeChecked()
 
     // click save
     const saveButton = screen.getByText('save')
     expect(saveButton).toBeInTheDocument()
-    userEvent.click(saveButton)
+    await userEvent.click(saveButton)
 
     await waitFor(() => expect(screen.getByText('GOVERNANCE MODAL')).toBeInTheDocument())
   })
@@ -132,13 +132,13 @@ describe('TargetingRulesTab Governance', () => {
     // toggle flag off
     const flagToggle = screen.getByTestId('flag-status-switch')
     expect(flagToggle).toBeChecked()
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).not.toBeChecked()
 
     // click save
     const saveButton = screen.getByText('save')
     expect(saveButton).toBeInTheDocument()
-    userEvent.click(saveButton)
+    await userEvent.click(saveButton)
 
     await waitFor(() => expect(screen.getByText('GOVERNANCE MODAL')).toBeInTheDocument())
   })

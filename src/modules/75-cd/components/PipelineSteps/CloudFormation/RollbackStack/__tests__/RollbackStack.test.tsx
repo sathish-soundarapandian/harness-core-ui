@@ -147,10 +147,10 @@ describe('Test Cloudformation rollback stack', () => {
     }
     const { container, getByPlaceholderText } = renderComponent(data)
     const timeout = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    userEvent.type(timeout, '10m')
+    await userEvent.type(timeout, '10m')
     const provId = queryByAttribute('name', container, 'spec.configuration.provisionerIdentifier')
-    userEvent.click(provId!)
-    userEvent.type(provId!, 'testing')
+    await userEvent.click(provId!)
+    await userEvent.type(provId!, 'testing')
 
     expect(container).toMatchSnapshot()
   })

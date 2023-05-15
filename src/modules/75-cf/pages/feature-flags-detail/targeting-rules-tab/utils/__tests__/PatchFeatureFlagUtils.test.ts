@@ -8,7 +8,7 @@
 import { FormVariationMap, TargetingRuleItemStatus, TargetingRuleItemType, TargetingRulesFormValues } from '../../types'
 import { PatchFeatureFlagUtils } from '../PatchFeatureFlagUtils'
 
-describe('PatchFeatureFlagUtils', async () => {
+describe('PatchFeatureFlagUtils', () => {
   const submittedValues: TargetingRulesFormValues = {
     state: '',
     onVariation: '',

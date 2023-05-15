@@ -135,9 +135,9 @@ describe('Validate DynatraceHealthSource', () => {
       </TestWrapper>
     )
     expect(getByText('Dynatrace metric custom')).toBeInTheDocument()
-    userEvent.click(container.querySelector('[data-icon="main-delete"]')!)
+    await userEvent.click(container.querySelector('[data-icon="main-delete"]')!)
     expect(getByText('cv.healthSource.connectors.customMetrics')).toBeInTheDocument()
-    userEvent.click(getByText('cv.monitoringSources.addMetric'))
+    await userEvent.click(getByText('cv.monitoringSources.addMetric'))
     expect(getByText('cv.healthSource.connectors.Dynatrace.defaultMetricName')).toBeInTheDocument()
   })
 

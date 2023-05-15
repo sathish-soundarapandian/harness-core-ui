@@ -134,7 +134,7 @@ describe('EnvironmentDetails tests', () => {
     await waitFor(() => expect(screen.queryByText('cd.gitOpsCluster')).toBeVisible())
 
     const gitOpsTab = screen.getByText('cd.gitOpsCluster')
-    userEvent.click(gitOpsTab!)
+    await userEvent.click(gitOpsTab!)
 
     await waitFor(() => expect(screen.queryByText('test-cluster-a')).toBeVisible())
   })
@@ -165,7 +165,7 @@ describe('EnvironmentDetails tests', () => {
     )
 
     //Go to Configuration Tab as Now Summary Tab is default (Project Level)
-    userEvent.click(getByText('configuration'))
+    await userEvent.click(getByText('configuration'))
     await waitFor(() => expect(screen.getAllByText('description should come')).toHaveLength(2))
   })
 })

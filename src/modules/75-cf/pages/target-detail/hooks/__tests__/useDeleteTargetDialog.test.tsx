@@ -31,8 +31,6 @@ const renderComponent = (): RenderResult => {
     </TestWrapper>
   )
 
-  userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
-
   return result
 }
 
@@ -57,6 +55,8 @@ describe('useDeleteTargetDialog', () => {
   test('it should display the dialog', async () => {
     renderComponent()
 
+    await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
+
     expect(screen.getByText('cf.targets.deleteTarget')).toBeInTheDocument()
     expect(screen.getByText('cf.targets.deleteTargetMessage')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'delete' })).toBeInTheDocument()
@@ -69,10 +69,12 @@ describe('useDeleteTargetDialog', () => {
 
     renderComponent()
 
+    await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
+
     expect(mutateMock).not.toHaveBeenCalled()
     expect(screen.queryByText('cf.messages.targetDeleted')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'delete' }))
+    await userEvent.click(screen.getByRole('button', { name: 'delete' }))
 
     await waitFor(() => {
       expect(mutateMock).toHaveBeenCalledWith(sampleTarget.identifier)
@@ -94,9 +96,11 @@ describe('useDeleteTargetDialog', () => {
 
     renderComponent()
 
+    await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
+
     expect(screen.queryByText(message)).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'delete' }))
+    await userEvent.click(screen.getByRole('button', { name: 'delete' }))
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

@@ -35,7 +35,7 @@ jest.mock('services/cd-ng', () => ({
   useDeleteManyFreezes: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 const PROJECT_LEVEL_FREEZE_ROUTE = routes.toFreezeWindows({ ...projectPathProps, ...modulePathProps })
 
@@ -88,12 +88,12 @@ describe('Freeze Windows - Project Level', () => {
     const toggleFreezeSwitches = await screen.findAllByRole('checkbox', {
       name: /toggle freeze/i
     })
-    userEvent.click(toggleFreezeSwitches[0])
+    await userEvent.click(toggleFreezeSwitches[0])
     expect(mutateAction).toHaveBeenLastCalledWith([projectLevelFreezeList.data.content[0].identifier], {
       queryParams: { status: 'Enabled' }
     })
 
-    userEvent.click(toggleFreezeSwitches[2])
+    await userEvent.click(toggleFreezeSwitches[2])
     expect(mutateAction).toHaveBeenLastCalledWith([projectLevelFreezeList.data.content[2].identifier], {
       queryParams: { status: 'Disabled' }
     })
@@ -112,14 +112,14 @@ describe('Freeze Windows - Project Level', () => {
     const selectAll = await screen.findByRole('checkbox', {
       name: /select all row/i
     })
-    userEvent.click(selectAll)
+    await userEvent.click(selectAll)
 
     const toggleFreezeSwitches = screen.getAllByRole('checkbox', {
       name: /select row/i
     })
     expect(toggleFreezeSwitches[0]).toBeChecked() // individual row is selected when select all is clicked
-    userEvent.click(toggleFreezeSwitches[1]) // unselect second row
-    userEvent.click(screen.getByRole('button', { name: /disable/i })) // bulk disable
+    await userEvent.click(toggleFreezeSwitches[1]) // unselect second row
+    await userEvent.click(screen.getByRole('button', { name: /disable/i })) // bulk disable
     expect(mutateAction).toHaveBeenLastCalledWith(
       [projectLevelFreezeList.data.content[0].identifier, projectLevelFreezeList.data.content[2].identifier],
       {
@@ -137,14 +137,14 @@ describe('Freeze Windows - Project Level', () => {
       cancel: jest.fn()
     })
     renderFreezeWindows()
-    userEvent.click(
+    await userEvent.click(
       await screen.findByRole('checkbox', {
         name: /select all row/i
       })
     )
-    userEvent.click(screen.getByRole('button', { name: /delete/i }))
+    await userEvent.click(screen.getByRole('button', { name: /delete/i }))
     expect(findDialogContainer()).toBeTruthy()
-    userEvent.click(screen.getByRole('button', { name: /confirm/i }))
+    await userEvent.click(screen.getByRole('button', { name: /confirm/i }))
     expect(mutateAction).toHaveBeenLastCalledWith([
       projectLevelFreezeList.data.content[0].identifier,
       projectLevelFreezeList.data.content[1].identifier,
@@ -161,14 +161,14 @@ describe('Freeze Windows - Project Level', () => {
       cancel: jest.fn()
     })
     renderFreezeWindows()
-    userEvent.click(
+    await userEvent.click(
       await screen.findByRole('checkbox', {
         name: /select all row/i
       })
     )
-    userEvent.click(screen.getByRole('button', { name: /delete/i }))
+    await userEvent.click(screen.getByRole('button', { name: /delete/i }))
     expect(findDialogContainer()).toBeTruthy()
-    userEvent.click(screen.getByRole('button', { name: /confirm/i }))
+    await userEvent.click(screen.getByRole('button', { name: /confirm/i }))
     expect(mutateAction).toHaveBeenLastCalledWith([
       projectLevelFreezeList.data.content[0].identifier,
       projectLevelFreezeList.data.content[1].identifier,

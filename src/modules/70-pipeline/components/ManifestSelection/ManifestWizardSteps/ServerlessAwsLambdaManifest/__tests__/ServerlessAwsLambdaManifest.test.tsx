@@ -94,19 +94,19 @@ describe('Manifest Details tests', () => {
 
     // Branch cog test
     const cogBranch = document.getElementById('configureOptions_branch')
-    userEvent.click(cogBranch!)
+    await userEvent.click(cogBranch!)
     await waitFor(() => expect(getElementByText(document.body, 'common.configureOptions.regex')).toBeInTheDocument())
     const modals = document.getElementsByClassName('bp3-dialog')
     expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(1)
     const cogModal = modals[0] as HTMLElement
     const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-    userEvent.click(regexRadio)
+    await userEvent.click(regexRadio)
     const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
     act(() => {
       fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
     })
     const cogSubmit = getElementByText(cogModal, 'submit')
-    userEvent.click(cogSubmit)
+    await userEvent.click(cogSubmit)
     const branchInput = queryByAttribute('name', container, 'branch') as HTMLInputElement
     await waitFor(() => expect(branchInput.value).toBe('<+input>.regex(<+input>.includes(/test/))'))
   })
@@ -143,26 +143,26 @@ describe('Manifest Details tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(getByText('advancedTitle'))
+    await userEvent.click(getByText('advancedTitle'))
 
     const configOverridePathInput = queryByAttribute('name', container, 'configOverridePath') as HTMLInputElement
     expect(configOverridePathInput.value).toBe('<+input>')
 
     const cogConfigOverridePath = document.getElementById('configureOptions_configOverridePath')
-    userEvent.click(cogConfigOverridePath!)
+    await userEvent.click(cogConfigOverridePath!)
 
     await waitFor(() => expect(getElementByText(document.body, 'common.configureOptions.regex')).toBeInTheDocument())
     const modals = document.getElementsByClassName('bp3-dialog')
     expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(1)
     const cogModal = modals[0] as HTMLElement
     const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-    userEvent.click(regexRadio)
+    await userEvent.click(regexRadio)
     const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
     act(() => {
       fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test.yaml/)' } })
     })
     const cogSubmit = getElementByText(cogModal, 'submit')
-    userEvent.click(cogSubmit)
+    await userEvent.click(cogSubmit)
 
     await waitFor(() => expect(configOverridePathInput.value).toBe('<+input>.regex(<+input>.includes(/test.yaml/))'))
   })
@@ -188,7 +188,7 @@ describe('Manifest Details tests', () => {
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
 
     const submitBtn = getByText('submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     // Check for all validation errors
     /* 
     Validation Error with common.validation.fieldIsRequired:
@@ -206,7 +206,7 @@ describe('Manifest Details tests', () => {
     expect(folderPathValidationError).toBeInTheDocument()
     // Change Folder Path to value that starts with "." and check for validation error message
     fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: './folder1/sub-folder-1' } })
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     const periodPrefixValidationError = await findByText('pipeline.manifestType.periodPrefixValidation')
     expect(periodPrefixValidationError).toBeInTheDocument()
     await act(async () => {
@@ -215,7 +215,7 @@ describe('Manifest Details tests', () => {
       fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: 'test-path' } })
       fireEvent.change(queryByNameAttribute('repoName')!, { target: { value: 'repo-name' } })
     })
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => {
       expect(props.handleSubmit).toHaveBeenCalledTimes(1)
       expect(props.handleSubmit).toHaveBeenCalledWith({
@@ -281,7 +281,7 @@ describe('Manifest Details tests', () => {
     )
     expect(container).toMatchSnapshot()
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     expect(defaultProps.previousStep).toHaveBeenCalledWith(defaultProps.prevStepData)
   })
@@ -324,11 +324,11 @@ describe('Manifest Details tests', () => {
     )
     expect(container).toMatchSnapshot()
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     expect(defaultProps.previousStep).toHaveBeenCalledWith(undefined)
     const submitButton = getElementByText(container, 'submit')
-    userEvent.click(submitButton!)
+    await userEvent.click(submitButton!)
   })
 
   test('when prevStepData is passed with connectorRef as Runtime input', async () => {
@@ -372,11 +372,11 @@ describe('Manifest Details tests', () => {
     )
     expect(container).toMatchSnapshot()
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     expect(defaultProps.previousStep).toHaveBeenCalledWith(defaultProps.prevStepData)
     const submitButton = getElementByText(container, 'submit')
-    userEvent.click(submitButton!)
+    await userEvent.click(submitButton!)
   })
 
   test('change Git Fetch Type value to Commit and submit', async () => {
@@ -436,14 +436,14 @@ describe('Manifest Details tests', () => {
 
     // Click on gitFetchType dropdown and select Specific Commit Id / Git Tag option
     const gitFetchTypeInput = queryByAttribute('name', container, 'gitFetchType') as HTMLInputElement
-    userEvent.click(gitFetchTypeInput)
+    await userEvent.click(gitFetchTypeInput)
     const specifiCommitIdOption = getByText('Specific Commit Id / Git Tag')
     await waitFor(() => expect(specifiCommitIdOption).toBeInTheDocument())
-    userEvent.click(specifiCommitIdOption)
+    await userEvent.click(specifiCommitIdOption)
     await waitFor(() => expect(gitFetchTypeInput.value).toBe('Specific Commit Id / Git Tag'))
 
     // Click on Submit button without providing commitId value and check if proper validation error appears
-    userEvent.click(getByText('submit').parentElement!)
+    await userEvent.click(getByText('submit').parentElement!)
     await waitFor(() => expect(getByText('validation.commitId')).toBeInTheDocument())
 
     // Provide commitId value
@@ -454,14 +454,14 @@ describe('Manifest Details tests', () => {
     await waitFor(() => expect(commitIdInput.value).toBe('abc123'))
 
     // Advanced Section
-    userEvent.click(getByText('advancedTitle'))
+    await userEvent.click(getByText('advancedTitle'))
     const configOverridePathInput = queryByAttribute('name', container, 'configOverridePath') as HTMLInputElement
     act(() => {
       fireEvent.change(configOverridePathInput, { target: { value: 'serverless.yaml' } })
     })
 
     // Click on submit button and submit the form
-    userEvent.click(getByText('submit').parentElement!)
+    await userEvent.click(getByText('submit').parentElement!)
 
     await waitFor(() => {
       expect(defaultProps.handleSubmit).toHaveBeenCalledTimes(1)
@@ -719,7 +719,7 @@ describe('Manifest Details tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('expand advanced section - when type is k8smanifest', () => {
+  test('expand advanced section - when type is k8smanifest', async () => {
     const defaultProps = {
       ...props,
       prevStepData: {
@@ -744,7 +744,7 @@ describe('Manifest Details tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(getByText('advancedTitle'))
+    await userEvent.click(getByText('advancedTitle'))
     expect(container).toMatchSnapshot()
   })
 })

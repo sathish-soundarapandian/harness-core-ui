@@ -171,7 +171,7 @@ describe('<ClonePipelineForm /> tests', () => {
 
       const clone = await findByTestId('clone')
 
-      userEvent.click(clone)
+      await userEvent.click(clone)
 
       await waitFor(() =>
         expect(clonePipeline).toHaveBeenLastCalledWith(
@@ -223,7 +223,7 @@ describe('<ClonePipelineForm /> tests', () => {
       )
       const clone = await screen.findByTestId('clone')
 
-      userEvent.click(clone)
+      await userEvent.click(clone)
 
       await waitFor(() =>
         expect(clonePipeline).toHaveBeenLastCalledWith(
@@ -278,7 +278,7 @@ describe('<ClonePipelineForm /> tests', () => {
       )
 
       const clone = await findByTestId('clone')
-      userEvent.click(clone)
+      await userEvent.click(clone)
 
       await waitFor(() => expect(showError).toHaveBeenLastCalledWith(err_msg))
     })
@@ -326,7 +326,7 @@ describe('<ClonePipelineForm /> tests', () => {
       const form = await findByTestId(FORM_ID)
       const org = queryByAttribute('name', form, 'destinationConfig.orgIdentifier') as HTMLInputElement
 
-      userEvent.click(org.parentElement!.querySelector('.bp3-icon')!)
+      await userEvent.click(org.parentElement!.querySelector('.bp3-icon')!)
 
       await waitFor(() => {
         expect(document.querySelector('ul.bp3-menu')).toBeTruthy()
@@ -334,7 +334,7 @@ describe('<ClonePipelineForm /> tests', () => {
 
       const item = await findByTextGlobal(document.body, 'Test Org 2')
 
-      userEvent.click(item)
+      await userEvent.click(item)
 
       await waitFor(() =>
         expect(useGetProjectAggregateDTOList).toHaveBeenLastCalledWith({
@@ -467,7 +467,7 @@ describe('<ClonePipelineForm /> tests', () => {
 
       expect(getCardTick(inlineStore)).toBeInTheDocument()
 
-      userEvent.click(remoteStore)
+      await userEvent.click(remoteStore)
 
       const remoteStore2 = await findByText('common.git.remoteStoreLabel')
 
@@ -501,7 +501,7 @@ describe('<ClonePipelineForm /> tests', () => {
 
       const clone = await findByTestId('clone')
 
-      userEvent.click(clone)
+      await userEvent.click(clone)
 
       await waitFor(() =>
         expect(clonePipeline).toHaveBeenLastCalledWith(
@@ -584,7 +584,7 @@ describe('<ClonePipelineForm /> tests', () => {
 
       const clone = await findByTestId('clone')
 
-      userEvent.click(clone)
+      await userEvent.click(clone)
 
       await waitFor(() =>
         expect(clonePipeline).toHaveBeenLastCalledWith(

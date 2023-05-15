@@ -65,13 +65,13 @@ describe('Test Filter component', () => {
       </TestWrapper>
     )
 
-    userEvent.click(await screen.findByLabelText('filters.newFilter'))
+    await userEvent.click(await screen.findByLabelText('filters.newFilter'))
 
     const filterNameInput = await screen.findByPlaceholderText('filters.typeFilterName')
 
-    userEvent.clear(filterNameInput)
-    userEvent.type(filterNameInput, 'foo')
-    userEvent.click(screen.getByLabelText('save'))
+    await userEvent.clear(filterNameInput)
+    await userEvent.type(filterNameInput, 'foo')
+    await userEvent.click(screen.getByLabelText('save'))
 
     expect(await screen.findByText('filters.invalidCriteria')).toBeInTheDocument()
   })
@@ -87,7 +87,7 @@ describe('Test Filter component', () => {
     )
     expect(await screen.findByLabelText('filters.newFilter')).toBeInTheDocument()
 
-    userEvent.click(screen.getByTestId('filter-drawer-close'))
+    await userEvent.click(screen.getByTestId('filter-drawer-close'))
     await waitFor(() => expect(screen.queryByLabelText('filters.newFilter')).not.toBeInTheDocument())
   })
 })

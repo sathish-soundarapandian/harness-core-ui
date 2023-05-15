@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
-import userEvent, { TargetElement } from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SupportPlatforms } from '@cf/components/LanguageSelection/LanguageSelection'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
@@ -96,13 +96,13 @@ describe('SetUpYourApplicationView', () => {
     expect(screen.queryByText('cf.onboarding.selectOrCreateEnvironment')).not.toBeInTheDocument()
   })
 
-  test('It should set the language when button is clicked', () => {
+  test('It should set the language when button is clicked', async () => {
     renderComponent()
 
     expect(screen.queryByText('cf.onboarding.selectOrCreateEnvironment')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'JavaScript' })).toBeVisible()
 
-    userEvent.click(screen.getByRole('button', { name: 'JavaScript' }))
+    await userEvent.click(screen.getByRole('button', { name: 'JavaScript' }))
 
     expect(setLanguage).toBeCalled()
   })
@@ -121,21 +121,21 @@ describe('SetUpYourApplicationView', () => {
     expect(screen.queryByRole('button', { name: 'cf.environments.apiKeys.addKeyTitle' })).not.toBeInTheDocument()
   })
 
-  test('It should select an environment', () => {
+  test('It should select an environment', async () => {
     renderComponent({ language: SupportPlatforms[1], selectedEnvironment: undefined })
 
     expect(screen.queryByText('cf.onboarding.selectOrCreateEnvironment')).toBeInTheDocument()
 
-    const envInput = document.querySelector('input[name="environmentSelectEl"]') as TargetElement
+    const envInput = document.querySelector('input[name="environmentSelectEl"]') as HTMLElement
     expect(envInput).toBeVisible()
     expect(envInput).toHaveValue('')
 
-    userEvent.click(envInput)
+    await userEvent.click(envInput)
 
     const dropdownOptions = document.querySelectorAll('li[class*="Select--menuItem"]')
     expect(dropdownOptions).toHaveLength(16)
 
-    userEvent.click(dropdownOptions[1])
+    await userEvent.click(dropdownOptions[1])
     expect(setSelectedEnvironment).toBeCalledWith({
       accountId: 'zEaak-FLS425IEO7OLzMUg',
       color: '#0063F7',

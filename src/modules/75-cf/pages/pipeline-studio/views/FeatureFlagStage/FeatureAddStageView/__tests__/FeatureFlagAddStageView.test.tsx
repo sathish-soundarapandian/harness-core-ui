@@ -50,13 +50,13 @@ describe('FeatureFlagAddStageView', () => {
     const stageNameInput = screen.getByPlaceholderText('common.namePlaceholder')
     expect(stageNameInput).toBeInTheDocument()
 
-    userEvent.type(stageNameInput, 'FF_TEST_STAGE')
+    await userEvent.type(stageNameInput, 'FF_TEST_STAGE')
     expect(stageNameInput).toHaveValue('FF_TEST_STAGE')
 
     const setUpStageBtn = screen.getByRole('button', { name: 'pipelineSteps.build.create.setupStage' })
     expect(setUpStageBtn).toBeInTheDocument()
 
-    userEvent.click(setUpStageBtn)
+    await userEvent.click(setUpStageBtn)
 
     await waitFor(() =>
       expect(mockSubmit).toHaveBeenCalledWith(
@@ -81,11 +81,11 @@ describe('FeatureFlagAddStageView', () => {
 
     const stageNameInput = screen.getByPlaceholderText('common.namePlaceholder')
 
-    userEvent.type(stageNameInput, 'FF_STAGE_1')
+    await userEvent.type(stageNameInput, 'FF_STAGE_1')
 
     const setUpStageBtn = screen.getByRole('button', { name: 'pipelineSteps.build.create.setupStage' })
 
-    userEvent.click(setUpStageBtn)
+    await userEvent.click(setUpStageBtn)
 
     await waitFor(() => expect(screen.getByText('validation.identifierDuplicate')).toBeInTheDocument())
   })
@@ -98,7 +98,7 @@ describe('FeatureFlagAddStageView', () => {
     const stageNameInput = screen.getByPlaceholderText('common.namePlaceholder')
     expect(stageNameInput).toBeInTheDocument()
 
-    userEvent.type(stageNameInput, 'FF_TEST_STAGE')
+    await userEvent.type(stageNameInput, 'FF_TEST_STAGE')
     expect(stageNameInput).toHaveValue('FF_TEST_STAGE')
 
     await waitFor(() => expect(screen.getByText(/Using Template: tempalte_2/)).toBeInTheDocument())
@@ -106,7 +106,7 @@ describe('FeatureFlagAddStageView', () => {
     const setUpStageBtn = screen.getByRole('button', { name: 'pipelineSteps.build.create.setupStage' })
     expect(setUpStageBtn).toBeInTheDocument()
 
-    userEvent.click(setUpStageBtn)
+    await userEvent.click(setUpStageBtn)
 
     await waitFor(() =>
       expect(mockSubmit).toHaveBeenCalledWith(

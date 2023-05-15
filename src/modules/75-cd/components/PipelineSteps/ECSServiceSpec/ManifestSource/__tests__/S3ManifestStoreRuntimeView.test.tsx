@@ -60,11 +60,11 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement) => {
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
   fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
 }
 
 const props: S3ManifestStoreRuntimeViewProps = {
@@ -268,7 +268,7 @@ describe('S3ManifestStoreRuntimeView tests', () => {
     const cogRegion = document.getElementById(
       'configureOptions_stage.serviceInputs.manifests[0].manifest.spec.store.spec.region'
     )
-    userEvent.click(cogRegion!)
+    await userEvent.click(cogRegion!)
     await waitFor(() => expect(modals.length).toBe(1))
     const regionCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(regionCOGModal)
@@ -276,7 +276,7 @@ describe('S3ManifestStoreRuntimeView tests', () => {
     const cogBucketName = document.getElementById(
       'configureOptions_stage.serviceInputs.manifests[0].manifest.spec.store.spec.bucketName'
     )
-    userEvent.click(cogBucketName!)
+    await userEvent.click(cogBucketName!)
     await waitFor(() => expect(modals.length).toBe(1))
     const bucketNameCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(bucketNameCOGModal)
@@ -294,7 +294,7 @@ describe('S3ManifestStoreRuntimeView tests', () => {
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
     const bucketNameDropDownButton = dropdownIcons[2]
-    userEvent.click(bucketNameDropDownButton!)
+    await userEvent.click(bucketNameDropDownButton!)
     await waitFor(() => expect(portalDivs.length).toBe(1))
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
@@ -333,7 +333,7 @@ describe('S3ManifestStoreRuntimeView tests', () => {
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
     const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[2]
-    userEvent.click(bucketNameDropDownButton!)
+    await userEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(0)
     await waitFor(() => expect(fetchBuckets).toHaveBeenCalledTimes(0))
   })

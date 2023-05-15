@@ -135,7 +135,7 @@ describe('Test cloudformation remote tags', () => {
       </TestWrapper>
     )
     const newConnButton = getByText('newLabel common.repo_provider.githubLabel connector')
-    await act(async () => userEvent.click(newConnButton))
+    await act(async () => await userEvent.click(newConnButton))
     expect(container).toMatchSnapshot()
   })
 })

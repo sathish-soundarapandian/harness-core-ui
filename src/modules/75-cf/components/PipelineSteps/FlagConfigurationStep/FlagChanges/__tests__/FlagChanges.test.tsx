@@ -68,10 +68,10 @@ describe('FlagChanges', () => {
     const setFieldMock = jest.fn()
     renderComponent({ showRuntimeFixedSelector: true, setField: setFieldMock })
 
-    userEvent.click(screen.getByTestId('runtime-fixed-selector-button'))
+    await userEvent.click(screen.getByTestId('runtime-fixed-selector-button'))
     await waitFor(() => expect(screen.getByText('Runtime input')).toBeInTheDocument())
 
-    userEvent.click(screen.getByText('Runtime input'))
+    await userEvent.click(screen.getByText('Runtime input'))
     await waitFor(() =>
       expect(setFieldMock).toHaveBeenCalledWith(expect.stringContaining('spec.instructions'), RUNTIME_INPUT_VALUE)
     )
@@ -85,10 +85,10 @@ describe('FlagChanges', () => {
       fieldValues: { spec: { instructions: RUNTIME_INPUT_VALUE } } as FlagChangesProps['fieldValues']
     })
 
-    userEvent.click(screen.getByTestId('runtime-fixed-selector-button'))
+    await userEvent.click(screen.getByTestId('runtime-fixed-selector-button'))
     await waitFor(() => expect(screen.getByText('Fixed value')).toBeInTheDocument())
 
-    userEvent.click(screen.getByText('Fixed value'))
+    await userEvent.click(screen.getByText('Fixed value'))
     await waitFor(() =>
       expect(setFieldMock).toHaveBeenCalledWith(expect.stringContaining('spec.instructions'), undefined)
     )

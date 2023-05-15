@@ -44,7 +44,7 @@ describe('AddToFlagButton', () => {
     renderComponent({ handleClick: handleClickMock })
 
     expect(screen.getByText('+ Add to Flag')).toBeInTheDocument()
-    userEvent.click(screen.getByText('+ Add to Flag'))
+    await userEvent.click(screen.getByText('+ Add to Flag'))
 
     expect(handleClickMock).toBeCalled()
   })

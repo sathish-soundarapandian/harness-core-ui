@@ -84,10 +84,10 @@ describe('Remote Wizard tests', () => {
       container,
       'varFile.spec.store.spec.gitFetchType'
     ) as HTMLInputElement
-    userEvent.click(gitFetchTypeInput)
+    await userEvent.click(gitFetchTypeInput)
     const specifiCommitIdOption = getByText('gitFetchTypes.fromCommit')
     await waitFor(() => expect(specifiCommitIdOption).toBeInTheDocument())
-    userEvent.click(getByText('gitFetchTypes.fromCommit'))
+    await userEvent.click(getByText('gitFetchTypes.fromCommit'))
     await waitFor(() => expect(gitFetchTypeInput.value).toBe('gitFetchTypes.fromCommit'))
 
     const commitIdInput = container.querySelector('input[name="varFile.spec.store.spec.commitId"]') as HTMLInputElement
@@ -95,7 +95,7 @@ describe('Remote Wizard tests', () => {
       fireEvent.change(commitIdInput, { target: { value: 'abc123' } })
     })
     await waitFor(() => expect(commitIdInput.value).toBe('abc123'))
-    userEvent.click(getByText('submit').parentElement!)
+    await userEvent.click(getByText('submit').parentElement!)
     await waitFor(() => {
       expect(remoteWizardProps.onSubmitCallBack).toHaveBeenCalledTimes(1)
     })

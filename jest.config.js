@@ -6,17 +6,18 @@
  */
 
 process.env.TZ = 'GMT'
-const { pathsToModuleNameMapper } = require('ts-jest/utils')
+const { pathsToModuleNameMapper } = require('ts-jest')
 const { compilerOptions } = require('./tsconfig')
 
 module.exports = {
   globals: {
-    'ts-jest': {
-      isolatedModules: true,
-      diagnostics: false
-    },
     __DEV__: false,
     __ON_PREM__: false
+  },
+  // https://jestjs.io/docs/29.0/upgrading-to-jest29#snapshot-format
+  snapshotFormat: {
+    escapeString: true,
+    printBasicPrototype: true
   },
   setupFilesAfterEnv: ['<rootDir>/scripts/jest/setup-file.js', 'fake-indexeddb/auto', 'jest-canvas-mock'],
   collectCoverageFrom: [
@@ -54,9 +55,28 @@ module.exports = {
     '!src/modules/70-pipeline/pages/execution/ExecutionIACMResourcesView/ExecutionIACMResourcesView.tsx'
   ],
   coverageReporters: ['lcov', 'json-summary', 'json'],
+  testEnvironment: 'jsdom',
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-    '^.+\\.jsx?$': 'ts-jest',
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        tsconfig: '<rootDir>/tsconfig.json',
+        isolatedModules: true,
+        diagnostics: false,
+        __DEV__: false,
+        __ON_PREM__: false
+      }
+    ],
+    '^.+\\.jsx?$': [
+      'ts-jest',
+      {
+        tsconfig: '<rootDir>/tsconfig.json',
+        isolatedModules: true,
+        diagnostics: false,
+        __DEV__: false,
+        __ON_PREM__: false
+      }
+    ],
     '^.+\\.ya?ml$': '<rootDir>/scripts/jest/yaml-transform.js',
     '^.+\\.gql$': '<rootDir>/scripts/jest/gql-loader.js'
   },

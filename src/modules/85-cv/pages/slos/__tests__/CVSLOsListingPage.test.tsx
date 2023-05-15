@@ -162,15 +162,15 @@ describe('CVSLOsListingPage', () => {
   test('add new SLO should go to create page', async () => {
     render(<ComponentWrapper />)
 
-    userEvent.click(screen.getByText('cv.slos.createSLO'))
+    await userEvent.click(screen.getByText('cv.slos.createSLO'))
 
     expect(screen.getByText(routes.toCVCreateSLOs({ ...pathParams, module: 'cv' }))).toBeInTheDocument()
   })
 
-  test('it should have monitored service identifier query param when adding new SLO from MS details page', () => {
+  test('it should have monitored service identifier query param when adding new SLO from MS details page', async () => {
     render(<ComponentWrapper />)
 
-    userEvent.click(screen.getByText('cv.slos.createSLO'))
+    await userEvent.click(screen.getByText('cv.slos.createSLO'))
 
     expect(screen.getByText(routes.toCVCreateSLOs({ ...pathParams, module: 'cv' }))).toBeInTheDocument()
   })
@@ -214,7 +214,7 @@ describe('CVSLOsListingPage', () => {
     expect(container.querySelectorAll('.TableV2--body [role="row"]').length).toEqual(2)
   })
 
-  test('page retry should trigger both dashboard widget and user journey APIs when both returned error response', () => {
+  test('page retry should trigger both dashboard widget and user journey APIs when both returned error response', async () => {
     useGetAllJourneys.mockReturnValue({
       data: {},
       loading: false,
@@ -236,13 +236,13 @@ describe('CVSLOsListingPage', () => {
     expect(refetchUserJourneys).not.toHaveBeenCalled()
     expect(refetchDashboardWidgets).toHaveBeenCalled()
 
-    userEvent.click(onRetryButton)
+    await userEvent.click(onRetryButton)
 
     expect(refetchUserJourneys).toHaveBeenCalled()
     expect(refetchDashboardWidgets).toHaveBeenCalled()
   })
 
-  test('page retry should only trigger the user journey API when dashboard widget API returned success response', () => {
+  test('page retry should only trigger the user journey API when dashboard widget API returned success response', async () => {
     useGetAllJourneys.mockReturnValue({
       data: {},
       loading: false,
@@ -258,12 +258,12 @@ describe('CVSLOsListingPage', () => {
     expect(refetchDashboardWidgets).toHaveBeenCalled()
     expect(refetchUserJourneys).not.toHaveBeenCalled()
 
-    userEvent.click(onRetryButton)
+    await userEvent.click(onRetryButton)
 
     expect(refetchUserJourneys).toHaveBeenCalled()
   })
 
-  test('page retry should only trigger the dashboard widget API when userJourney API returned success response', () => {
+  test('page retry should only trigger the dashboard widget API when userJourney API returned success response', async () => {
     useGetSLODashboardWidgets.mockReturnValue({
       data: {},
       loading: false,
@@ -278,7 +278,7 @@ describe('CVSLOsListingPage', () => {
     expect(onRetryButton).toBeInTheDocument()
     expect(refetchDashboardWidgets).toHaveBeenCalled()
 
-    userEvent.click(onRetryButton)
+    await userEvent.click(onRetryButton)
 
     expect(refetchUserJourneys).not.toHaveBeenCalled()
     expect(refetchDashboardWidgets).toHaveBeenCalled()
@@ -343,10 +343,10 @@ describe('CVSLOsListingPage', () => {
       'Card--selected'
     )
 
-    userEvent.click(screen.getByText('Healthy'))
+    await userEvent.click(screen.getByText('Healthy'))
     expect(container.querySelector('div[data-test-id="Healthy_tooltip"]')?.parentElement).toHaveClass('Card--selected')
 
-    userEvent.click(screen.getByText('Healthy'))
+    await userEvent.click(screen.getByText('Healthy'))
     expect(container.querySelector('div[data-test-id="Healthy_tooltip"]')?.parentElement).not.toHaveClass(
       'Card--selected'
     )
@@ -383,19 +383,19 @@ describe('CVSLOsListingPage', () => {
     const { container, getByText, getByTestId, queryByText } = render(<ComponentWrapper />)
 
     // Cancelling deletion of widget
-    await waitFor(() => userEvent.click(container.querySelector('[data-icon="main-trash"]') as HTMLElement))
-    await waitFor(() => userEvent.click(getByText('cancel')))
+    await waitFor(async () => await userEvent.click(container.querySelector('[data-icon="main-trash"]') as HTMLElement))
+    await waitFor(async () => await userEvent.click(getByText('cancel')))
     await waitFor(() => expect(queryByText('cv.slos.sloDeleted')).not.toBeInTheDocument())
 
     // Deleting the widget
-    await waitFor(() => userEvent.click(container.querySelector('[data-icon="main-trash"]') as HTMLElement))
-    await waitFor(() => userEvent.click(getByText('delete')))
+    await waitFor(async () => await userEvent.click(container.querySelector('[data-icon="main-trash"]') as HTMLElement))
+    await waitFor(async () => await userEvent.click(getByText('delete')))
     expect(deleteMutate).toHaveBeenCalledWith(dashboardWidgetsContent.sloIdentifier)
     await waitFor(() => expect(refetch).toHaveBeenCalled())
     await waitFor(() => expect(getByText('cv.slos.sloDeleted')).toBeInTheDocument())
 
     // Editing the SLO Widget
-    await waitFor(() => userEvent.click(container.querySelector('[data-icon="Edit"]') as HTMLElement))
+    await waitFor(async () => await userEvent.click(container.querySelector('[data-icon="Edit"]') as HTMLElement))
     expect(getByTestId('location').innerHTML).toContain(
       '/account/account_id/cv/orgs/org_identifier/projects/project_identifier/slos/slo_identifier?tab=Configurations'
     )

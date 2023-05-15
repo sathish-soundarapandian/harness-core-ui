@@ -181,13 +181,13 @@ describe('Test TerragruntApply', () => {
       />
     )
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.type(nameInput!, 'Test A')
+    await userEvent.type(nameInput!, 'Test A')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('Test A'))
     expect(getByText(getIdentifierFromName('Test A'))).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '5m')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '5m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('5m'))
   })
 

@@ -93,22 +93,22 @@ describe('AsgInfraSpec tests', () => {
     // Choose connectorRef
     const connnectorRefInput = getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
-    userEvent.click(connnectorRefInput!)
+    await userEvent.click(connnectorRefInput!)
 
     await testConnectorRefChange()
     // Choose region
     const regionDropdownIcon = allDropDownIcons[1]
-    userEvent.click(regionDropdownIcon!)
+    await userEvent.click(regionDropdownIcon!)
     expect(portalDivs.length).toBe(2)
     const regionDropdownPortalDiv = portalDivs[1]
     const regionSelectListMenu = regionDropdownPortalDiv.querySelector('.bp3-menu')
     const usEastNVirginiaOption = await findByText(regionSelectListMenu as HTMLElement, 'US East (N. Virginia)')
     expect(usEastNVirginiaOption).not.toBeNull()
-    userEvent.click(usEastNVirginiaOption)
+    await userEvent.click(usEastNVirginiaOption)
 
     // check Allow simultaneous deployments on the same infrastructure checkbox
     const allowSimultaneousDeploymentsCheckbox = queryByNameAttribute('allowSimultaneousDeployments', container)
-    userEvent.click(allowSimultaneousDeploymentsCheckbox!)
+    await userEvent.click(allowSimultaneousDeploymentsCheckbox!)
     expect(allowSimultaneousDeploymentsCheckbox).toBeChecked()
     // submit form and verify
     ref.current?.submitForm()

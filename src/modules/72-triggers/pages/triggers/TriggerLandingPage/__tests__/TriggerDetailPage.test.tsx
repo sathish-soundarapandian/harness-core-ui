@@ -78,7 +78,7 @@ describe('Test Trigger Detail Page Test', () => {
       name: /enabled/i
     })
     expect(enableTriggerToggle).toBeChecked()
-    userEvent.click(enableTriggerToggle)
+    await userEvent.click(enableTriggerToggle)
     expect(mockUpdateTrigger).toHaveBeenCalledTimes(1)
 
     datespy.mockRestore()

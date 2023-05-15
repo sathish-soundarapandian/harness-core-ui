@@ -66,7 +66,7 @@ describe('Delegate Tokens page', () => {
       </TestWrapper>
     )
     const createTokenBtn = getByRole('button', { name: /rbac.token.createLabel/ })
-    userEvent.click(createTokenBtn!)
+    await userEvent.click(createTokenBtn!)
     await waitFor(() => {
       expect(document.body.innerHTML).toContain('apply')
     })
@@ -80,7 +80,7 @@ describe('Delegate Tokens page', () => {
     })
 
     const applyTokenBtn = getByRole('button', { name: /apply/ })
-    userEvent.click(applyTokenBtn!)
+    await userEvent.click(applyTokenBtn!)
 
     await waitFor(() => {
       expect(document.body.innerHTML).not.toContain('delegates.tokens.generatedValuePlaceholder')
@@ -99,7 +99,7 @@ describe('Delegate Tokens page', () => {
     await waitFor(() => {
       tokenNameElement = getByText('Token 1')
     })
-    userEvent.click(tokenNameElement!)
+    await userEvent.click(tokenNameElement!)
     await waitFor(() => {
       expect(document.body.innerHTML).toContain('moreInfoTitle')
     })
@@ -117,7 +117,7 @@ describe('Delegate Tokens page', () => {
     await waitFor(() => {
       tokenNameElement = getByText('delegates.tokens.revoke')
     })
-    userEvent.click(tokenNameElement!)
+    await userEvent.click(tokenNameElement!)
     await waitFor(() => {
       expect(getByText('delegates.tokens.revokeToken')).toBeInTheDocument()
     })
@@ -135,7 +135,7 @@ describe('Delegate Tokens page', () => {
     await waitFor(() => {
       tokenNameElement = getAllByText('delegates.tokens.revoke')
     })
-    userEvent.click(tokenNameElement[0]!)
+    await userEvent.click(tokenNameElement[0]!)
     await waitFor(() => {
       expect(getByText('delegates.tokens.revokeTokenSubtitle')).toBeInTheDocument()
     })
@@ -144,7 +144,7 @@ describe('Delegate Tokens page', () => {
       tokenNameElement = getAllByText('delegates.tokens.revoke')
     })
     const revokeBtnOnModal = tokenNameElement[1]
-    userEvent.click(revokeBtnOnModal!)
+    await userEvent.click(revokeBtnOnModal!)
   })
 
   test('Create new token', async () => {
@@ -159,7 +159,7 @@ describe('Delegate Tokens page', () => {
     await waitFor(() => {
       tokenCreateBtn = getAllByText('rbac.token.createLabel')
     })
-    userEvent.click(tokenCreateBtn[0]!)
+    await userEvent.click(tokenCreateBtn[0]!)
     expect(getByText('common.apply')).toBeInTheDocument()
 
     let tokenApplyBtn: HTMLElement
@@ -167,7 +167,7 @@ describe('Delegate Tokens page', () => {
       const allApplyElements = getAllByText('common.apply')
       tokenApplyBtn = allApplyElements[0]
     })
-    userEvent.click(tokenApplyBtn!)
+    await userEvent.click(tokenApplyBtn!)
     await waitFor(() => {
       expect(document.body.innerHTML).toContain(mockTokens[0].name)
     })

@@ -304,7 +304,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
     fireEvent.click(screen.getByTestId(/node_name_filter/))
     await waitFor(() => expect(document.querySelector('[class*="menuItem"]')).not.toBeNull())
     fireEvent.click(screen.getByText('V'))
-    jest.runTimersToTime(1000)
+    jest.runOnlyPendingTimers()
 
     await waitFor(() =>
       expect(useGetVerifyStepDeploymentLogAnalysisRadarChartReslutSpy).toHaveBeenCalledWith({

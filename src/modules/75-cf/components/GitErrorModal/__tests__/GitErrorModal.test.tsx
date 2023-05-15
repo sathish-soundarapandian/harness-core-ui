@@ -48,7 +48,7 @@ describe('GitErrorModal', () => {
 
     await waitFor(() => expect(screen.getByText('cf.gitSync.turnOffGitAndContinue')).toBeInTheDocument())
 
-    userEvent.click(screen.getByText('cf.gitSync.turnOffGitAndContinue'))
+    await userEvent.click(screen.getByText('cf.gitSync.turnOffGitAndContinue'))
 
     expect(onSubmitMock).toHaveBeenCalled()
   })
@@ -60,7 +60,7 @@ describe('GitErrorModal', () => {
 
     await waitFor(() => expect(screen.getByText('cancel')).toBeInTheDocument())
 
-    userEvent.click(screen.getByText('cancel'))
+    await userEvent.click(screen.getByText('cancel'))
 
     expect(onCloseMock).toHaveBeenCalled()
   })

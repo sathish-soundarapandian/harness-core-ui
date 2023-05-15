@@ -51,7 +51,7 @@ describe('Unit tests for CommonRecords component', () => {
     // should be able to click on the retry button
     const retryButton = getByText('Retry')
     expect(retryButton).not.toBeNull()
-    userEvent.click(retryButton)
+    await userEvent.click(retryButton)
   })
 
   test('Verify that No Records state is rendering correctly for Records', async () => {
@@ -62,7 +62,7 @@ describe('Unit tests for CommonRecords component', () => {
     // should be able to click on the retry button
     const retryButton = getByText('retry')
     expect(retryButton).not.toBeNull()
-    userEvent.click(retryButton)
+    await userEvent.click(retryButton)
   })
 
   test('Verify that correct message is shown if no query is executed', async () => {

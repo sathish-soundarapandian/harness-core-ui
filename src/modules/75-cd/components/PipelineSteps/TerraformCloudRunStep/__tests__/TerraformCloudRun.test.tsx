@@ -120,7 +120,7 @@ describe('Test Terraform Cloud Run Step Edit View', () => {
       })
     })
 
-    userEvent.click(getByText('common.optionalConfig'))
+    await userEvent.click(getByText('common.optionalConfig'))
     await expect(getByText('common.variables')).toBeInTheDocument()
     await expect(getByText('pipeline.targets.title')).toBeInTheDocument()
 
@@ -200,7 +200,7 @@ describe('Test Terraform Cloud Run Step Edit View', () => {
     //run Message
     const messageInput = queryByNameAttribute('spec.runMessage', container) as HTMLInputElement
     const cogMessage = document.getElementById('configureOptions_spec.runMessage')
-    userEvent.click(cogMessage!)
+    await userEvent.click(cogMessage!)
     await waitFor(() => expect(modals.length).toBe(1))
     const terraformCOGMessage = modals[0] as HTMLElement
     await doConfigureOptionsTesting(terraformCOGMessage, messageInput)
@@ -208,7 +208,7 @@ describe('Test Terraform Cloud Run Step Edit View', () => {
     // connectorRef
     const connectorInput = queryByNameAttribute('spec.spec.connectorRef', container) as HTMLInputElement
     const cogConnectorRef = document.getElementById('configureOptions_spec.spec.connectorRef')
-    userEvent.click(cogConnectorRef!)
+    await userEvent.click(cogConnectorRef!)
     await waitFor(() => expect(modals.length).toBe(1))
     const terraformCOGConnectorRef = modals[0] as HTMLElement
     await doConfigureOptionsTesting(terraformCOGConnectorRef, connectorInput)
@@ -216,7 +216,7 @@ describe('Test Terraform Cloud Run Step Edit View', () => {
     //organization
     const organizationInput = queryByNameAttribute('spec.spec.organization', container) as HTMLInputElement
     const cogOrganization = document.getElementById('configureOptions_spec.spec.organization')
-    userEvent.click(cogOrganization!)
+    await userEvent.click(cogOrganization!)
     await waitFor(() => expect(modals.length).toBe(1))
     const terraformCOGOrganization = modals[0] as HTMLElement
     await doConfigureOptionsTesting(terraformCOGOrganization, organizationInput)
@@ -224,7 +224,7 @@ describe('Test Terraform Cloud Run Step Edit View', () => {
     //workspace
     const workspaceInput = queryByNameAttribute('spec.spec.workspace', container) as HTMLInputElement
     const cogWorkspace = document.getElementById('configureOptions_spec.spec.workspace')
-    userEvent.click(cogWorkspace!)
+    await userEvent.click(cogWorkspace!)
     await waitFor(() => expect(modals.length).toBe(1))
     const terraformCOGWorkspace = modals[0] as HTMLElement
     await doConfigureOptionsTesting(terraformCOGWorkspace, workspaceInput)
@@ -232,7 +232,7 @@ describe('Test Terraform Cloud Run Step Edit View', () => {
     //provisionerIdentifier
     const provisionerInput = queryByNameAttribute('spec.spec.provisionerIdentifier', container) as HTMLInputElement
     const cogProvisioner = document.getElementById('configureOptions_spec.spec.provisionerIdentifier')
-    userEvent.click(cogProvisioner!)
+    await userEvent.click(cogProvisioner!)
     await waitFor(() => expect(modals.length).toBe(1))
     const terraformCOGProvisioner = modals[0] as HTMLElement
     await doConfigureOptionsTesting(terraformCOGProvisioner, provisionerInput)
@@ -240,7 +240,7 @@ describe('Test Terraform Cloud Run Step Edit View', () => {
     //terraformVersion
     const terraformVersionInput = queryByNameAttribute('spec.spec.terraformVersion', container) as HTMLInputElement
     const cogTerraformVersion = document.getElementById('configureOptions_spec.spec.terraformVersion')
-    userEvent.click(cogTerraformVersion!)
+    await userEvent.click(cogTerraformVersion!)
     await waitFor(() => expect(modals.length).toBe(1))
     const terraformCOGVersion = modals[0] as HTMLElement
     await doConfigureOptionsTesting(terraformCOGVersion, terraformVersionInput)
@@ -364,11 +364,11 @@ describe('Test Terraform Cloud Run Step Edit View', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.type(timeoutInput!, '20m')
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       name: 'TerraformCloudRun_step1',

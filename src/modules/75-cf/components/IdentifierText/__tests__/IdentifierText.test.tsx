@@ -60,7 +60,7 @@ describe('IdentifierText', () => {
     expect(screen.queryByText('copiedToClipboard')).not.toBeInTheDocument()
     expect(copyMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByRole('button', { name: 'clickToCopy' }))
+    await userEvent.click(screen.getByRole('button', { name: 'clickToCopy' }))
 
     expect(await screen.findByText('copiedToClipboard')).toBeInTheDocument()
     expect(copyMock).toHaveBeenCalledWith(identifier)

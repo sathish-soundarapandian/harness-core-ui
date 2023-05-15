@@ -128,15 +128,15 @@ describe('Targeting GitSync', () => {
     expect(flag1).toHaveValue('Variation 1')
 
     // change the variation value
-    userEvent.click(flag1)
+    await userEvent.click(flag1)
     const var2 = screen.getByText('Variation 2')
     expect(var2).toBeInTheDocument()
-    userEvent.click(var2)
+    await userEvent.click(var2)
 
     // click save and assert modal appears
     const saveButton = await waitFor(() => screen.getByRole('button', { name: 'saveChanges' }))
     expect(saveButton).toBeInTheDocument()
-    userEvent.click(saveButton)
+    await userEvent.click(saveButton)
   }
 
   test('it should open Git Modal and send correct data on save', async () => {
@@ -152,16 +152,16 @@ describe('Targeting GitSync', () => {
     await waitFor(() =>
       expect(screen.getByPlaceholderText('common.git.commitMessage')).toHaveValue('Updated feature flag variations')
     )
-    userEvent.clear(screen.getByPlaceholderText('common.git.commitMessage'))
-    userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'MY COMMIT MESSAGE')
+    await userEvent.clear(screen.getByPlaceholderText('common.git.commitMessage'))
+    await userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'MY COMMIT MESSAGE')
 
     // select autocommit checkbox
     const autoCommitCheckbox = document.querySelector('input[name="autoCommit"]') as HTMLInputElement
-    userEvent.click(autoCommitCheckbox)
+    await userEvent.click(autoCommitCheckbox)
     expect(autoCommitCheckbox).toBeChecked()
 
     // click save and assert
-    userEvent.click(screen.getByTestId('save-flag-to-git-modal-save-button'))
+    await userEvent.click(screen.getByTestId('save-flag-to-git-modal-save-button'))
     await waitFor(() =>
       expect(patchTargetMock).toBeCalledWith({
         gitDetails: {

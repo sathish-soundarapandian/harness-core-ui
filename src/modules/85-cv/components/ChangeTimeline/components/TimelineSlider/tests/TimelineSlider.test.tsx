@@ -69,7 +69,7 @@ describe('Unit tests for timeline slider', () => {
       })
     )
 
-    userEvent.click(dragEnds[2])
+    await userEvent.click(dragEnds[2])
     await waitFor(() =>
       expect(onDragEndMock).toHaveBeenLastCalledWith({
         endX: 0,
@@ -91,7 +91,7 @@ describe('Unit tests for timeline slider', () => {
       })
     )
 
-    userEvent.click(drags[1])
+    await userEvent.click(drags[1])
     await waitFor(() =>
       expect(onDragEndMock).toHaveBeenLastCalledWith({
         endX: 0,
@@ -101,7 +101,7 @@ describe('Unit tests for timeline slider', () => {
       })
     )
 
-    userEvent.click(drags[2])
+    await userEvent.click(drags[2])
     await waitFor(() =>
       expect(onDragEndMock).toHaveBeenLastCalledWith({
         endX: 0,
@@ -111,7 +111,7 @@ describe('Unit tests for timeline slider', () => {
       })
     )
 
-    userEvent.click(drags[1])
+    await userEvent.click(drags[1])
     await waitFor(() =>
       expect(onDragEndMock).toHaveBeenLastCalledWith({
         endX: 0,
@@ -121,7 +121,7 @@ describe('Unit tests for timeline slider', () => {
       })
     )
 
-    userEvent.click(drags[2])
+    await userEvent.click(drags[2])
     await waitFor(() =>
       expect(onDragEndMock).toHaveBeenLastCalledWith({
         endX: 0,
@@ -145,7 +145,7 @@ describe('Unit tests for timeline slider', () => {
     await waitFor(() => expect(container.querySelector('[class*="sliderContainer"]')).not.toBeNull())
   })
 
-  test('Ensure zoom callback is handled properly', () => {
+  test('Ensure zoom callback is handled properly', async () => {
     const onSliderDragEnd = jest.fn()
     const onZoom = jest.fn()
 
@@ -164,7 +164,7 @@ describe('Unit tests for timeline slider', () => {
     expect(container.querySelector('[class*="main"]')).toBeInTheDocument()
 
     expect(screen.getByText('cv.zoom')).toBeInTheDocument()
-    userEvent.click(screen.getByText('cv.zoom'))
+    await userEvent.click(screen.getByText('cv.zoom'))
 
     expect(onZoom).toBeCalledTimes(1)
     expect(onSliderDragEnd).toBeCalledTimes(0)

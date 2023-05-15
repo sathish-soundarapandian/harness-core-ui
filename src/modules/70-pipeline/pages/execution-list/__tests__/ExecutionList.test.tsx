@@ -183,7 +183,7 @@ const renderExecutionPage = (module = 'cd'): RenderResult =>
     </TestWrapper>
   )
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 describe('Execution List', () => {
   beforeAll(() => {
@@ -238,10 +238,10 @@ describe('Execution List', () => {
       name: /MultipleStage CD Running/i
     })
     const toggle = within(matrixExecutionRow).getByRole('button', { name: /toggle row expanded/i })
-    userEvent.click(toggle)
+    await userEvent.click(toggle)
     const expandedMatrixStage = screen.getByText(/s1_0_0/i)
     expect(expandedMatrixStage).toBeInTheDocument()
-    // userEvent.click(toggle)
+    // await userEvent.click(toggle)
     // TODO: this works on UI but assertion is somehow not passing. check why.
     //expect(expandedMatrixStage).not.toBeInTheDocument()
   })
@@ -249,14 +249,14 @@ describe('Execution List', () => {
   test('should be able to filter my executions', async () => {
     renderExecutionPage()
     const myExecutions = await waitFor(() => screen.getByText('pipeline.myDeploymentsText'))
-    userEvent.click(myExecutions)
+    await userEvent.click(myExecutions)
 
     const request = commonRequest()
     request.queryParams.myDeployments = true
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
 
     // deselect
-    userEvent.click(myExecutions)
+    await userEvent.click(myExecutions)
     request.queryParams.myDeployments = undefined
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
   })
@@ -264,7 +264,7 @@ describe('Execution List', () => {
   test('should be able to search by pipeline name and identifier', async () => {
     renderExecutionPage()
     await screen.findByText('filters.executions.pipelineName')
-    userEvent.type(screen.getByRole('searchbox'), 'my search term')
+    await userEvent.type(screen.getByRole('searchbox'), 'my search term')
     jest.runOnlyPendingTimers()
 
     const request = commonRequest()
@@ -275,20 +275,20 @@ describe('Execution List', () => {
   test('should be able to filter by execution status', async () => {
     renderExecutionPage()
     const select = await waitFor(() => screen.getByTestId('status-select')!)
-    userEvent.click(select)
+    await userEvent.click(select)
     const menuContent = findPopoverContainer() as HTMLElement
     const optionFailed = within(menuContent).getByText('pipeline.executionFilters.labels.Failed')
-    userEvent.click(optionFailed)
+    await userEvent.click(optionFailed)
     const optionExpired = within(menuContent).getByText('pipeline.executionFilters.labels.Expired')
-    userEvent.click(optionExpired)
+    await userEvent.click(optionExpired)
 
     const request = commonRequest()
     request.queryParams.status = ['Failed', 'Errored', 'Expired']
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
 
     // deselect all
-    userEvent.click(optionFailed)
-    userEvent.click(optionExpired)
+    await userEvent.click(optionFailed)
+    await userEvent.click(optionExpired)
 
     request.queryParams.status = undefined
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
@@ -297,10 +297,10 @@ describe('Execution List', () => {
   test('should be able to filter by pipeline name', async () => {
     renderExecutionPage()
     const select = await waitFor(() => screen.getByTestId('pipeline-select'))
-    userEvent.click(select)
+    await userEvent.click(select)
     const pipelineSelect = findPopoverContainer() as HTMLElement
     const pipeline1 = within(pipelineSelect).getByText('NG Docker Image')
-    userEvent.click(pipeline1)
+    await userEvent.click(pipeline1)
 
     const request = commonRequest()
     request.queryParams.pipelineIdentifier = 'NG_Docker_Image'
@@ -321,9 +321,9 @@ describe('Execution List', () => {
     const moreOptions = within(row[1]).getByRole('button', {
       name: /execution menu actions/i
     })
-    userEvent.click(moreOptions)
+    await userEvent.click(moreOptions)
     const compareExecutions = await screen.findByText('pipeline.execution.actions.compareExecutions')
-    userEvent.click(compareExecutions)
+    await userEvent.click(compareExecutions)
 
     expect(screen.getByText('pipeline.execution.compareExecutionsTitle')).toBeInTheDocument()
     const compareButton = screen.getByRole('button', {
@@ -333,14 +333,14 @@ describe('Execution List', () => {
 
     const checkboxesForCompare = screen.getAllByRole('checkbox')
     expect(checkboxesForCompare[0]).toBeChecked() // auto selected for the execution chosen for compare
-    userEvent.click(checkboxesForCompare[1])
+    await userEvent.click(checkboxesForCompare[1])
     expect(compareButton).toBeEnabled() // enabled once two items are chosen
     expect(checkboxesForCompare[2]).toBeDisabled()
-    userEvent.click(checkboxesForCompare[0]) // unselect one of two items
-    userEvent.click(checkboxesForCompare[2]) // click happened with item being selected
+    await userEvent.click(checkboxesForCompare[0]) // unselect one of two items
+    await userEvent.click(checkboxesForCompare[2]) // click happened with item being selected
 
     expect(compareButton).toBeEnabled() // enabled once two items are chosen
-    userEvent.click(compareButton) // click happened with compare being enabled
+    await userEvent.click(compareButton) // click happened with compare being enabled
     expect(useGetExecutionData).toHaveBeenCalled()
     expect(screen.getByTestId('execution-compare-yaml-viewer')).toBeInTheDocument()
   })
@@ -351,7 +351,7 @@ describe('Execution List', () => {
     const moreOptions = within(row[4]).getByRole('button', {
       name: /execution menu actions/i
     })
-    userEvent.click(moreOptions)
+    await userEvent.click(moreOptions)
 
     const menuContent = findPopoverContainer() as HTMLElement
 
@@ -381,10 +381,10 @@ describe('Execution List', () => {
   test('should call API with branch when branch is selected', async () => {
     renderExecutionPage()
     const select = await waitFor(() => screen.getByTestId('branch-filter'))
-    userEvent.click(select)
+    await userEvent.click(select)
     const BranchSelect = findPopoverContainer() as HTMLElement
     const branch1 = within(BranchSelect).getByText('main')
-    userEvent.click(branch1)
+    await userEvent.click(branch1)
 
     const request = commonRequest()
     request.queryParams.branch = 'main'
@@ -394,7 +394,7 @@ describe('Execution List', () => {
   test('sorting should fetch the executions with sorted column and order', async () => {
     renderExecutionPage()
     const pipelineName = await screen.findByText('filters.executions.pipelineName')
-    userEvent.click(pipelineName)
+    await userEvent.click(pipelineName)
     jest.runOnlyPendingTimers()
 
     const request = commonRequest()
@@ -409,15 +409,15 @@ describe('Execution List', () => {
       expect(element).toBeInTheDocument()
       return element
     })
-    userEvent.click(filtersButton!)
+    await userEvent.click(filtersButton!)
 
     const newFilterButton = await screen.findByLabelText('filters.newFilter')
-    userEvent.click(newFilterButton)
+    await userEvent.click(newFilterButton)
 
     const filterNameInput = await screen.findByPlaceholderText('filters.typeFilterName')
-    userEvent.clear(filterNameInput)
-    userEvent.type(filterNameInput, 'foo')
-    userEvent.click(screen.getByLabelText('save'))
+    await userEvent.clear(filterNameInput)
+    await userEvent.type(filterNameInput, 'foo')
+    await userEvent.click(screen.getByLabelText('save'))
 
     expect(await screen.findByText('filters.invalidCriteria')).toBeInTheDocument()
   })

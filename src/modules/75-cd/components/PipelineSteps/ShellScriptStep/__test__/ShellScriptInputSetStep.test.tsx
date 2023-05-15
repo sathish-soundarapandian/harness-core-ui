@@ -446,7 +446,7 @@ describe('ShellScriptInputSetStep tests', () => {
     const dropDownButtonList = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(dropDownButtonList.length).toBe(3)
     const timeoutDropdownBtn = dropDownButtonList[0]
-    userEvent.click(timeoutDropdownBtn!)
+    await userEvent.click(timeoutDropdownBtn!)
     expect(portalDivs.length).toBe(1)
     const timeoutDropdownPortalDiv = portalDivs[0]
     const timeoutSelectListMenu = timeoutDropdownPortalDiv.querySelector('.bp3-menu')
@@ -456,10 +456,10 @@ describe('ShellScriptInputSetStep tests', () => {
     expect(t2Option).toBeDefined()
     const t3Option = await findByText(timeoutSelectListMenu as HTMLElement, '30s')
     expect(t3Option).toBeDefined()
-    userEvent.click(t2Option)
+    await userEvent.click(t2Option)
 
     const hostDropdownBtn = dropDownButtonList[1]
-    userEvent.click(hostDropdownBtn!)
+    await userEvent.click(hostDropdownBtn!)
     expect(portalDivs.length).toBe(2)
     const hostDropdownPortalDiv = portalDivs[1]
     const hostSelectListMenu = hostDropdownPortalDiv.querySelector('.bp3-menu')
@@ -469,10 +469,10 @@ describe('ShellScriptInputSetStep tests', () => {
     expect(host2Option).toBeDefined()
     const host3Option = await findByText(hostSelectListMenu as HTMLElement, 'host3')
     expect(host3Option).toBeDefined()
-    userEvent.click(host2Option)
+    await userEvent.click(host2Option)
 
     const wdDropdownBtn = dropDownButtonList[2]
-    userEvent.click(wdDropdownBtn!)
+    await userEvent.click(wdDropdownBtn!)
     expect(portalDivs.length).toBe(3)
     const wdDropdownPortalDiv = portalDivs[2]
     const wdSelectListMenu = wdDropdownPortalDiv.querySelector('.bp3-menu')
@@ -482,9 +482,9 @@ describe('ShellScriptInputSetStep tests', () => {
     expect(wd2Option).toBeDefined()
     const wd3Option = await findByText(wdSelectListMenu as HTMLElement, 'wd3')
     expect(wd3Option).toBeDefined()
-    userEvent.click(wd3Option)
+    await userEvent.click(wd3Option)
 
-    userEvent.click(getByText('Submit'))
+    await userEvent.click(getByText('Submit'))
     await waitFor(() =>
       expect(onUpdate).toHaveBeenCalledWith({
         identifier: 'ShellScript',

@@ -38,7 +38,7 @@ describe('SubscriptionDetailsCard', () => {
         <SubscriptionDetailsCard {...props} module={'cd'} />
       </TestWrapper>
     )
-    userEvent.click(getByText('edit'))
+    await userEvent.click(getByText('edit'))
     await waitFor(() => {
       expect(setViewMock).toHaveBeenCalledWith(SubscribeViews.CALCULATE)
     })

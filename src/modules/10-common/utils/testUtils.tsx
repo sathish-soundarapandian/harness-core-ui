@@ -274,12 +274,12 @@ export const doConfigureOptionsTesting = async (
   // check if field has desired value
   await waitFor(() => expect(getByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues') as HTMLInputElement
   act(() => {
     fireEvent.change(regexTextArea, { target: { value: '<+input>.includes(/test/)' } })
   })
   const cogSubmit = getByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
   await waitFor(() => expect(fieldElement.value).toBe('<+input>.regex(<+input>.includes(/test/))'))
 }

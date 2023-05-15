@@ -60,7 +60,7 @@ describe('CloudWatch IgnoreThresholdTabContent', () => {
       ?.querySelector('[data-icon="chevron-down"]')
 
     expect(selectCaretMetricName).toBeInTheDocument()
-    userEvent.click(selectCaretMetricName!)
+    await userEvent.click(selectCaretMetricName!)
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
     expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('Prometheus Metric')
   })
@@ -78,7 +78,7 @@ describe('CloudWatch IgnoreThresholdTabContent', () => {
       ?.querySelector('[data-icon="chevron-down"]')
 
     expect(selectCaretCriteriaType).toBeInTheDocument()
-    userEvent.click(selectCaretCriteriaType!)
+    await userEvent.click(selectCaretCriteriaType!)
 
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
 
@@ -89,29 +89,29 @@ describe('CloudWatch IgnoreThresholdTabContent', () => {
       'cv.monitoringSources.appD.percentageDeviation'
     )
 
-    act(() => {
-      userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
+    await act(async () => {
+      await userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
     })
 
     expect(greaterThanInput).not.toBeInTheDocument()
     expect(lessThanInput).toBeInTheDocument()
   })
 
-  test('should check whether a new row is added when Add Threshold button is clicked', () => {
+  test('should check whether a new row is added when Add Threshold button is clicked', async () => {
     render(<WrappingComponent />)
 
     expect(screen.getAllByTestId('ThresholdRow')).toHaveLength(1)
 
     const addButton = screen.getByTestId('AddThresholdButton')
 
-    act(() => {
-      userEvent.click(addButton)
+    await act(async () => {
+      await userEvent.click(addButton)
     })
 
     expect(screen.getAllByTestId('ThresholdRow')).toHaveLength(2)
 
-    act(() => {
-      userEvent.click(screen.getAllByText('trash')[0])
+    await act(async () => {
+      await userEvent.click(screen.getAllByText('trash')[0])
     })
 
     expect(screen.getAllByTestId('ThresholdRow')).toHaveLength(1)

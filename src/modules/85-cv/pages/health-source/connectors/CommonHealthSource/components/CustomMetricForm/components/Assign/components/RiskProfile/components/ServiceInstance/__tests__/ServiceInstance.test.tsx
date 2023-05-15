@@ -129,9 +129,9 @@ describe('Common health source ServiceInstance', () => {
 
     expect(serviceInput).toBeInTheDocument()
 
-    act(() => {
-      userEvent.clear(serviceInput!)
-      userEvent.type(serviceInput!, 'test service input')
+    await act(async () => {
+      await userEvent.clear(serviceInput!)
+      await userEvent.type(serviceInput!, 'test service input')
     })
 
     await waitFor(() => {

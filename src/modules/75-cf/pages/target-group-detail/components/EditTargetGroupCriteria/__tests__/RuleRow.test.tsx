@@ -58,7 +58,7 @@ describe('RuleRow', () => {
       expect(screen.queryByText(item.label)).not.toBeInTheDocument()
     }
 
-    userEvent.click(screen.getByLabelText('cf.segmentDetail.attribute'))
+    await userEvent.click(screen.getByLabelText('cf.segmentDetail.attribute'))
 
     for (const item of targetAttributeItems) {
       expect(screen.getByText(item.label)).toBeInTheDocument()
@@ -79,7 +79,7 @@ describe('RuleRow', () => {
       expect(screen.queryByText(op.label)).not.toBeInTheDocument()
     }
 
-    userEvent.click(screen.getByLabelText('cf.segmentDetail.operator'))
+    await userEvent.click(screen.getByLabelText('cf.segmentDetail.operator'))
 
     for (const op of ops) {
       expect(screen.getByText(op.label)).toBeInTheDocument()
@@ -147,7 +147,7 @@ describe('RuleRow', () => {
 
     expect(onDeleteMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.segmentDetail.removeRule' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.segmentDetail.removeRule' }))
 
     await waitFor(() => {
       expect(onDeleteMock).toHaveBeenCalled()

@@ -43,7 +43,7 @@ describe('SaveFlagRepoDialogForm', () => {
       filePath: '/flags.yaml'
     })
 
-    userEvent.click(document.getElementsByName('rootFolder')[0])
+    await userEvent.click(document.getElementsByName('rootFolder')[0])
     expect(screen.getByText('/.testFolder/')).toBeInTheDocument()
     expect(screen.getByText('/.harness/')).toBeInTheDocument()
   })
@@ -53,10 +53,10 @@ describe('SaveFlagRepoDialogForm', () => {
 
     renderComponent({ onSubmit: onSubmitMock })
 
-    userEvent.click(document.getElementsByName('rootFolder')[0])
-    userEvent.click(screen.getByText('/.testFolder/'))
+    await userEvent.click(document.getElementsByName('rootFolder')[0])
+    await userEvent.click(screen.getByText('/.testFolder/'))
 
-    userEvent.click(screen.getByText('save'))
+    await userEvent.click(screen.getByText('save'))
 
     await waitFor(() =>
       expect(onSubmitMock).toHaveBeenCalledWith({
@@ -73,7 +73,7 @@ describe('SaveFlagRepoDialogForm', () => {
 
     renderComponent({ onClose: onCloseMock })
 
-    userEvent.click(screen.getByText('cancel'))
+    await userEvent.click(screen.getByText('cancel'))
 
     await waitFor(() => expect(onCloseMock).toHaveBeenCalled())
   })

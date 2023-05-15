@@ -121,11 +121,11 @@ describe('PostProdRollback - ', () => {
     expect(postProdRollbackDrawer?.querySelector('#cancelBtn')).toBeTruthy()
     expect(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]').length).toBe(3)
 
-    userEvent.click(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]')[0]!)
+    await userEvent.click(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]')[0]!)
     expect(rollbackBtn).not.toHaveAttribute('disabled')
 
     //should open confirmation dialog
-    userEvent.click(rollbackBtn!)
+    await userEvent.click(rollbackBtn!)
     const confirmationDialog = findDialogContainer()
 
     //match dailog content
@@ -137,9 +137,9 @@ describe('PostProdRollback - ', () => {
     ]
 
     matchListOfTextOnDocument(confirmationDialog!, dialogContent)
-    userEvent.click(getByText(confirmationDialog!, 'cancel'))
+    await userEvent.click(getByText(confirmationDialog!, 'cancel'))
 
-    userEvent.click(postProdRollbackDrawer?.querySelector('span[icon="cross"]')!)
+    await userEvent.click(postProdRollbackDrawer?.querySelector('span[icon="cross"]')!)
   })
 
   test('should match content on env group and trigger a valid rollback', async () => {
@@ -160,23 +160,23 @@ describe('PostProdRollback - ', () => {
     expect(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]').length).toBe(2)
 
     //try row select-deselect
-    userEvent.click(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]')[0]!)
+    await userEvent.click(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]')[0]!)
     expect(rollbackBtn).not.toHaveAttribute('disabled')
-    userEvent.click(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]')[0]!)
+    await userEvent.click(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]')[0]!)
     expect(rollbackBtn).toHaveAttribute('disabled')
-    userEvent.click(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]')[0]!)
+    await userEvent.click(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]')[0]!)
     expect(rollbackBtn).not.toHaveAttribute('disabled')
 
     //should open confirmation dialog
-    userEvent.click(rollbackBtn!)
+    await userEvent.click(rollbackBtn!)
     const confirmationDialog = findDialogContainer()
     expect(confirmationDialog).toBeTruthy()
 
-    userEvent.click(getByText(confirmationDialog!, 'confirm'))
+    await userEvent.click(getByText(confirmationDialog!, 'confirm'))
     await waitFor(() => expect(cdng.checkIfInstanceCanBeRolledBackPromise).toHaveBeenCalledTimes(1))
     await waitFor(() => expect(cdng.triggerRollbackPromise).toHaveBeenCalledTimes(1))
 
-    userEvent.click(cancelBtn!)
+    await userEvent.click(cancelBtn!)
   })
 
   test('test that rollback trigger should not happen if validation fails', async () => {
@@ -188,14 +188,14 @@ describe('PostProdRollback - ', () => {
     const postProdRollbackDrawer = renderPostProdDrawer(envGroup, true)
 
     const rollbackBtn = postProdRollbackDrawer?.querySelector('#rollbackBtn')
-    userEvent.click(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]')[0]!)
+    await userEvent.click(postProdRollbackDrawer?.querySelectorAll('.TableV2--body [role="row"]')[0]!)
 
     //should open confirmation dialog
-    userEvent.click(rollbackBtn!)
+    await userEvent.click(rollbackBtn!)
     const confirmationDialog = findDialogContainer()
     expect(confirmationDialog).toBeTruthy()
 
-    userEvent.click(getByText(confirmationDialog!, 'confirm'))
+    await userEvent.click(getByText(confirmationDialog!, 'confirm'))
     await waitFor(() => expect(cdng.checkIfInstanceCanBeRolledBackPromise).toHaveBeenCalledTimes(1))
 
     //test that its not triggering rollback after the invalid validation
@@ -212,14 +212,14 @@ describe('PostProdRollback - ', () => {
     const postProdRollbackDrawer = renderPostProdDrawer(envGroup, true)
 
     //pipeline execution click navigation with stageId and stageExecId present
-    userEvent.click(getByText(postProdRollbackDrawer!, 'k8sTestPipeline_envGroup'))
+    await userEvent.click(getByText(postProdRollbackDrawer!, 'k8sTestPipeline_envGroup'))
     expect(window.open).toHaveBeenCalledTimes(1)
     expect(window.open).toHaveBeenCalledWith(
       'http://localhost/#/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/k8sTestPipeline_envGroup/deployments/testplanexec/pipeline?stage=teststageid&stageExecId=teststagenoe'
     )
 
     //pipeline execution click navigation without stageId and stageExecId present
-    userEvent.click(getByText(postProdRollbackDrawer!, 'k8sTestPipeline_Group'))
+    await userEvent.click(getByText(postProdRollbackDrawer!, 'k8sTestPipeline_Group'))
     expect(window.open).toHaveBeenCalledWith(
       'http://localhost/#/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/k8sTestPipeline_Group/deployments/testplan/pipeline'
     )
@@ -228,7 +228,7 @@ describe('PostProdRollback - ', () => {
 
 describe('PostProdRollback - empty, loading, error states - ', () => {
   configurations()
-  test('should render empty state', () => {
+  test('should render empty state', async () => {
     jest.spyOn(cdng, 'useGetActiveInstanceGroupedByEnvironment').mockImplementation(() => {
       return { data: [], refetch: jest.fn(), loading: false, error: false } as any
     })
@@ -245,11 +245,11 @@ describe('PostProdRollback - empty, loading, error states - ', () => {
 
     const refreshIcon = postProdRollbackDrawer?.querySelector('[data-icon="refresh"]')
     expect(refreshIcon).toBeTruthy()
-    userEvent.click(refreshIcon!)
+    await userEvent.click(refreshIcon!)
 
     matchListOfTextOnDocument(postProdRollbackDrawer!, emptyStateTextMatch)
   })
-  test('should render error state', () => {
+  test('should render error state', async () => {
     jest.spyOn(cdng, 'useGetActiveInstanceGroupedByEnvironment').mockImplementation(() => {
       return {
         data: [],
@@ -273,7 +273,7 @@ describe('PostProdRollback - empty, loading, error states - ', () => {
 
     const retry = postProdRollbackDrawer?.querySelector('button[aria-label="Retry"]')
     expect(retry).toBeTruthy()
-    userEvent.click(retry!)
+    await userEvent.click(retry!)
 
     matchListOfTextOnDocument(postProdRollbackDrawer!, errorStateText)
   })

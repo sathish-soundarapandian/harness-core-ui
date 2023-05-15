@@ -44,7 +44,7 @@ const renderComponent = async (props: Partial<EditVariationsModalProps> = {}): P
     </TestWrapper>
   )
 
-  userEvent.click(screen.getByTestId('open-edit-variations-modal'))
+  await userEvent.click(screen.getByTestId('open-edit-variations-modal'))
 
   await waitFor(() => expect(screen.getByTestId('edit-variation-modal')).toBeInTheDocument())
 }
@@ -69,13 +69,13 @@ describe('EditVariationsModal', () => {
     await renderComponent()
 
     const variation1 = document.getElementsByName('variations.0.name')[0]
-    userEvent.clear(variation1)
+    await userEvent.clear(variation1)
     await userEvent.type(variation1, 'new variation', { allAtOnce: true })
 
     await userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'test commit message', {
       allAtOnce: true
     })
-    userEvent.click(screen.getByText('save'))
+    await userEvent.click(screen.getByText('save'))
 
     await waitFor(() =>
       expect(patchMock).toBeCalledWith({
@@ -123,7 +123,7 @@ describe('EditVariationsModal', () => {
       mockFeature.variations.length
     )
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.editVariation.remove' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.editVariation.remove' })[0])
 
     await waitFor(() =>
       expect(screen.getAllByRole('button', { name: 'cf.editVariation.remove' })).toHaveLength(
@@ -142,7 +142,7 @@ describe('EditVariationsModal', () => {
       mockFeature.variations.length
     )
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.shared.variation' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.shared.variation' }))
 
     await waitFor(() =>
       expect(screen.getAllByRole('button', { name: 'cf.editVariation.remove' })).toHaveLength(

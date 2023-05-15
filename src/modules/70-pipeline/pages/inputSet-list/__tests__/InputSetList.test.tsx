@@ -55,7 +55,7 @@ jest.mock('react-monaco-editor', () => ({
 }))
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
@@ -152,6 +152,9 @@ const renderComponent = (): RenderResult => {
 }
 
 describe('Input Set List tests', () => {
+  beforeEach(() => {
+    jest.runAllTimers()
+  })
   test('render Input Set List view', async () => {
     const { getAllByText, container } = renderComponent()
     jest.runOnlyPendingTimers()
@@ -373,7 +376,7 @@ describe('Input Set List - Reconcile Button', () => {
     await waitFor(() => screen.getAllByText('OverLayInput'))
 
     const reconcileBtns = await screen.findAllByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtns[1])
+    await userEvent.click(reconcileBtns[1])
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 
     const reconcileDialog = findDialogContainer() as HTMLElement
@@ -386,7 +389,7 @@ describe('Input Set List - Reconcile Button', () => {
     await waitFor(() => screen.getAllByText('OverLayInput'))
 
     const reconcileBtns = await screen.findAllByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtns[1])
+    await userEvent.click(reconcileBtns[1])
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 
     const reconcileDialog = findDialogContainer() as HTMLElement
@@ -394,7 +397,7 @@ describe('Input Set List - Reconcile Button', () => {
     const removeInvalidFieldBtn = await findByRole(reconcileDialog, 'button', {
       name: 'pipeline.inputSets.removeInvalidFields'
     })
-    userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(removeInvalidFieldBtn)
     await waitFor(() => expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled())
   })
 
@@ -405,14 +408,14 @@ describe('Input Set List - Reconcile Button', () => {
     await waitFor(() => screen.getAllByText('OverLayInput'))
 
     const reconcileBtns = await screen.findAllByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtns[0])
+    await userEvent.click(reconcileBtns[0])
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 
     await screen.findAllByText('pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = await screen.findAllByRole('button', {
       name: 'pipeline.inputSets.removeInvalidFields'
     })
-    userEvent.click(removeInvalidFieldBtn[0])
+    await userEvent.click(removeInvalidFieldBtn[0])
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
   })
 
@@ -431,7 +434,7 @@ describe('Input Set List - Reconcile Button', () => {
     await waitFor(() => screen.getAllByText('OverLayInput'))
 
     const reconcileBtns = await screen.findAllByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtns[0])
+    await userEvent.click(reconcileBtns[0])
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 
     const deleteInputSetModal = findDialogContainer() as HTMLElement
@@ -440,7 +443,7 @@ describe('Input Set List - Reconcile Button', () => {
       name: 'pipeline.inputSets.deleteOverlayIS'
     })
 
-    userEvent.click(deleteOverlayISBtn)
+    await userEvent.click(deleteOverlayISBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
   })
 })
@@ -492,6 +495,6 @@ test('should render correct page size options when FF is enabled', async () => {
   const pageSizeDropdown = within(pageSizeDropdownWrapper as HTMLElement).getByTestId('dropdown-button')
   expect(pageSizeDropdown).toBeInTheDocument()
 
-  userEvent.click(pageSizeDropdown)
+  await userEvent.click(pageSizeDropdown)
   expect(await screen.findByText(`${COMMON_DEFAULT_PAGE_SIZE}`)).toBeInTheDocument()
 })

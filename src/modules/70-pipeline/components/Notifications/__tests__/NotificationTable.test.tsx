@@ -162,7 +162,7 @@ describe('testing notification method', () => {
       </TestWrapper>
     )
     const notificationMethodDropDown = getByPlaceholderText('- Select -')
-    userEvent.click(notificationMethodDropDown)
+    await userEvent.click(notificationMethodDropDown)
     await waitFor(() => getByText('Slack'))
     fireEvent.click(getByText('Slack'))
     expect(container).toMatchSnapshot()
@@ -175,9 +175,9 @@ describe('testing notification method', () => {
       </TestWrapper>
     )
     const notificationMethodDropDown = getByPlaceholderText('- Select -')
-    userEvent.click(notificationMethodDropDown)
+    await userEvent.click(notificationMethodDropDown)
     await waitFor(() => getByText('Microsoft Teams'))
-    userEvent.click(getByText('Microsoft Teams'))
+    await userEvent.click(getByText('Microsoft Teams'))
     await waitFor(() => expect(getByText('rbac.notifications.helpMSTeams')).toBeTruthy())
     const urlInput = document.querySelector('input[name="msTeamKeys.0"]')
     act(() => {
@@ -185,7 +185,7 @@ describe('testing notification method', () => {
     })
     expect(urlInput).toBeTruthy()
     await waitFor(() => getByText('finish'))
-    userEvent.click(getByText('finish'))
+    await userEvent.click(getByText('finish'))
     await waitFor(() =>
       expect(notificationMethodProps.nextStep).toHaveBeenCalledWith({
         notificationMethod: {
@@ -206,12 +206,12 @@ describe('testing notification method', () => {
       </TestWrapper>
     )
     const notificationMethodDropDown = getByPlaceholderText('- Select -')
-    userEvent.click(notificationMethodDropDown)
+    await userEvent.click(notificationMethodDropDown)
     await waitFor(() => getByText('Microsoft Teams'))
-    userEvent.click(getByText('Microsoft Teams'))
+    await userEvent.click(getByText('Microsoft Teams'))
     await waitFor(() => expect(getByText('rbac.notifications.helpMSTeams')).toBeTruthy())
     await waitFor(() => getByText('back'))
-    userEvent.click(getByText('back'))
+    await userEvent.click(getByText('back'))
     await waitFor(() =>
       expect(notificationMethodProps.previousStep).toHaveBeenCalledWith({
         notificationMethod: {
@@ -232,16 +232,16 @@ describe('testing notification method', () => {
       </TestWrapper>
     )
     const notificationMethodDropDown = getByPlaceholderText('- Select -')
-    userEvent.click(notificationMethodDropDown)
+    await userEvent.click(notificationMethodDropDown)
     await waitFor(() => getByText('Email'))
-    userEvent.click(getByText('Email'))
+    await userEvent.click(getByText('Email'))
     const urlInput = document.querySelector('textarea[name="emailIds"]')
     act(() => {
       fireEvent.change(urlInput!, { target: { value: 'xyz@xyz.com' } })
     })
     expect(urlInput).toBeTruthy()
     await waitFor(() => getByText('finish'))
-    userEvent.click(getByText('finish'))
+    await userEvent.click(getByText('finish'))
     await waitFor(() =>
       expect(notificationMethodProps.nextStep).toHaveBeenCalledWith({
         notificationMethod: {
@@ -262,11 +262,11 @@ describe('testing notification method', () => {
       </TestWrapper>
     )
     const notificationMethodDropDown = getByPlaceholderText('- Select -')
-    userEvent.click(notificationMethodDropDown)
+    await userEvent.click(notificationMethodDropDown)
     await waitFor(() => getByText('Email'))
-    userEvent.click(getByText('Email'))
+    await userEvent.click(getByText('Email'))
     await waitFor(() => getByText('back'))
-    userEvent.click(getByText('back'))
+    await userEvent.click(getByText('back'))
     await waitFor(() =>
       expect(notificationMethodProps.previousStep).toHaveBeenCalledWith({
         notificationMethod: {

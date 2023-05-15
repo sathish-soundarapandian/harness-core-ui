@@ -51,25 +51,25 @@ export const testTaskDefinitionSecondStep = async (portal: HTMLElement): Promise
   const Harness = queryByValueAttribute('Harness')
   expect(Harness).not.toBeNull()
 
-  userEvent.click(Git!)
+  await userEvent.click(Git!)
   const connnectorRefInput = await findByTestId(portal, /connectorRef/)
   expect(connnectorRefInput).toBeTruthy()
-  userEvent.click(connnectorRefInput!)
+  await userEvent.click(connnectorRefInput!)
   // Pick up second dialog for choosing connector
   const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[1] as HTMLElement
   const githubConnector1 = await findByText(connectorSelectorDialog, 'Git CTR')
   expect(githubConnector1).toBeTruthy()
   const githubConnector2 = await findByText(connectorSelectorDialog, 'Sample')
   expect(githubConnector2).toBeTruthy()
-  userEvent.click(githubConnector1)
+  await userEvent.click(githubConnector1)
   const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
-  userEvent.click(applySelected)
+  await userEvent.click(applySelected)
   // Expect for connector dialog to be closed and only task definition dialog to be opened
   await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(1))
 
   const secondStepContinueButton = getByText(portal, 'continue').parentElement as HTMLElement
   await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-  userEvent.click(secondStepContinueButton)
+  await userEvent.click(secondStepContinueButton)
 }
 
 export const testTaskDefinitionLastStep = async (portal: HTMLElement): Promise<void> => {
@@ -82,7 +82,7 @@ export const testTaskDefinitionLastStep = async (portal: HTMLElement): Promise<v
   fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: 'test-path' } })
 
   const submitButton = getByText(portal, 'submit').parentElement as HTMLElement
-  userEvent.click(submitButton)
+  await userEvent.click(submitButton)
 }
 
 const emptyInitialValues = {}
@@ -188,7 +188,7 @@ describe('TaskDefinitionModal tests', () => {
     await waitFor(() => expect(getByText(connnectorRefInput, 'Git CTR')).toBeInTheDocument())
     const secondStepContinueButton = getByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-    userEvent.click(secondStepContinueButton)
+    await userEvent.click(secondStepContinueButton)
 
     // Final step
     await waitFor(() => expect(getByText(portal, 'pipeline.manifestType.gitFetchTypeLabel')).toBeInTheDocument())
@@ -201,7 +201,7 @@ describe('TaskDefinitionModal tests', () => {
     const path1Input = queryByNameAttribute('paths[0].path') as HTMLInputElement
     expect(path1Input.value).toBe('path1')
     const submitButton = getByText(portal, 'submit').parentElement as HTMLElement
-    userEvent.click(submitButton)
+    await userEvent.click(submitButton)
 
     await waitFor(() =>
       expect(updateManifestList1).toHaveBeenCalledWith({
@@ -262,7 +262,7 @@ describe('TaskDefinitionModal tests', () => {
     expect(Harness).toBeChecked()
     const changeButton = await waitFor(() => findByText(portal, 'Change'))
     expect(changeButton).toBeInTheDocument()
-    userEvent.click(changeButton)
+    await userEvent.click(changeButton)
 
     // Test manifest store tiles, choose Git and fill in Connector field
     await testTaskDefinitionSecondStep(portal)
@@ -321,10 +321,10 @@ describe('TaskDefinitionModal tests', () => {
     expect(Bitbucket).not.toBeNull()
     const Harness = queryByValueAttribute('Harness')
     expect(Harness).not.toBeNull()
-    userEvent.click(Harness!)
+    await userEvent.click(Harness!)
     const secondStepContinueButton = getByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-    userEvent.click(secondStepContinueButton)
+    await userEvent.click(secondStepContinueButton)
 
     // Check if last step is rendered file with + Add adding file select field properly
     await waitFor(() => expect(getByText(portal, 'fileFolderPathText')).toBeInTheDocument())

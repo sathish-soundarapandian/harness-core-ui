@@ -200,7 +200,7 @@ describe('Azure Artifacts tests', () => {
     expect(portalDivs.length).toBe(0)
     const projectDropdownBtn = container.querySelectorAll('[data-icon="chevron-down"]')[1]
 
-    userEvent.click(projectDropdownBtn!)
+    await userEvent.click(projectDropdownBtn!)
 
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
@@ -245,7 +245,7 @@ describe('Azure Artifacts tests', () => {
     expect(container).toMatchSnapshot()
     const feedDropDwmBtn = container.querySelectorAll('[data-icon="chevron-down"]')[2]
 
-    userEvent.click(feedDropDwmBtn!)
+    await userEvent.click(feedDropDwmBtn!)
 
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
@@ -273,7 +273,7 @@ describe('Azure Artifacts tests', () => {
     expect(portalDivs.length).toBe(0)
     expect(container).toMatchSnapshot()
     const packageDropdwnBtn = container.querySelectorAll('[data-icon="chevron-down"]')[4]
-    userEvent.click(packageDropdwnBtn!)
+    await userEvent.click(packageDropdwnBtn!)
 
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')

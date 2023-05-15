@@ -217,7 +217,7 @@ describe('ECSServiceSpec tests', () => {
     expect(scalableTargetPathInput).toBeInTheDocument()
 
     const submitBtn = getByText('Submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
   })
 
   test('check Input Set view for manifest when manifestStore is S3', async () => {
@@ -306,7 +306,7 @@ describe('ECSServiceSpec tests', () => {
     expect(scalableTargetPathInput).toBeInTheDocument()
 
     const submitBtn = getByText('Submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
   })
 
   test('when template is empty object, no fields should be rendered', async () => {

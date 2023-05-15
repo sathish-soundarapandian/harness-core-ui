@@ -133,7 +133,7 @@ describe('Unit tests for ExecutionVerificationView unit tests', () => {
 
     expect(screen.getByText('cv.executionLogs')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.executionLogs'))
+    await userEvent.click(screen.getByText('cv.executionLogs'))
 
     const dialog = findDialogContainer()
 
@@ -142,7 +142,7 @@ describe('Unit tests for ExecutionVerificationView unit tests', () => {
       expect(screen.queryByText(LogTypes.ApiCallLog)).not.toBeInTheDocument()
     })
 
-    userEvent.click(dialog?.querySelector('[data-icon="Stroke"]')!)
+    await userEvent.click(dialog?.querySelector('[data-icon="Stroke"]')!)
   })
 
   test('should open the LogContent modal and render VerifyStepLog with typ ApiCallLog by clicking the Execution Logs button', async () => {
@@ -154,7 +154,7 @@ describe('Unit tests for ExecutionVerificationView unit tests', () => {
 
     expect(screen.getByText('cv.externalAPICalls')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.externalAPICalls'))
+    await userEvent.click(screen.getByText('cv.externalAPICalls'))
 
     const dialog = findDialogContainer()
 
@@ -163,6 +163,6 @@ describe('Unit tests for ExecutionVerificationView unit tests', () => {
       expect(screen.queryByText(LogTypes.ExecutionLog)).not.toBeInTheDocument()
     })
 
-    userEvent.click(dialog?.querySelector('[data-icon="Stroke"]')!)
+    await userEvent.click(dialog?.querySelector('[data-icon="Stroke"]')!)
   })
 })

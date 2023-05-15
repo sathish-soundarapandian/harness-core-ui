@@ -60,7 +60,7 @@ describe('RenderFeatureFlag', () => {
   test('switch tooltip appear when there are environments', async () => {
     renderFlagComponent({ numberOfEnvs: 2 })
     const switchToggle = screen.getByRole('checkbox')
-    userEvent.click(switchToggle)
+    await userEvent.click(switchToggle)
 
     const toggleFlagPopover = screen.getByRole('heading', { name: 'cf.featureFlags.turnOnHeading' })
 

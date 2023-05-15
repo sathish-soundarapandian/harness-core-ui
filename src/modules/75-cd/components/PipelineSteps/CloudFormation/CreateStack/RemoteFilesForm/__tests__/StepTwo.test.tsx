@@ -106,8 +106,8 @@ describe('Test cloudformation remote wizard step one', () => {
       </TestWrapper>
     )
     const submit = getByTestId('submit')
-    act(() => {
-      userEvent.click(submit)
+    await act(async () => {
+      await userEvent.click(submit)
     })
     expect(container).toMatchSnapshot()
   })
@@ -463,14 +463,14 @@ describe('Test cloudformation remote wizard step one', () => {
       </TestWrapper>
     )
     const addButton = getByTestId('add-header')
-    act(() => {
-      userEvent.click(addButton)
+    await act(async () => {
+      await userEvent.click(addButton)
     })
     expect(container).toMatchSnapshot()
 
     const removeButton = getByTestId('remove-header-0')
-    act(() => {
-      userEvent.click(removeButton)
+    await act(async () => {
+      await userEvent.click(removeButton)
     })
     expect(container).toMatchSnapshot()
   })
@@ -520,8 +520,8 @@ describe('Test cloudformation remote wizard step one', () => {
       </TestWrapper>
     )
     const submit = getByTestId('submit')
-    act(() => {
-      userEvent.click(submit)
+    await act(async () => {
+      await userEvent.click(submit)
     })
     expect(container).toMatchSnapshot()
   })

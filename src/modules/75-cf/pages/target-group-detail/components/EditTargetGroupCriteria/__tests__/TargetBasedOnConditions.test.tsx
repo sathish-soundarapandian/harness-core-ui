@@ -92,7 +92,7 @@ describe('TargetBasedOnConditions', () => {
     expect(btn).toBeInTheDocument()
     expect(refetchMock).not.toHaveBeenCalled()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => expect(refetchMock).toHaveBeenCalled())
   })
@@ -126,7 +126,7 @@ describe('TargetBasedOnConditions', () => {
     expect(fieldsEl).toBeInTheDocument()
     expect(btnEl).toBeInTheDocument()
 
-    userEvent.click(btnEl)
+    await userEvent.click(btnEl)
 
     await waitFor(() => {
       expect(screen.getByTestId('rule-rows').children).toHaveLength((rules.length - 1) * 3)
@@ -139,7 +139,7 @@ describe('TargetBasedOnConditions', () => {
 
     expect(screen.queryByTestId('rule-rows')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.segmentDetail.addRule' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.segmentDetail.addRule' }))
 
     await waitFor(() => {
       expect(screen.getByTestId('rule-rows')).toBeInTheDocument()
@@ -155,16 +155,16 @@ describe('TargetBasedOnConditions', () => {
 
     const addRowBtn = screen.getByRole('button', { name: 'cf.segmentDetail.addRule' })
 
-    userEvent.click(addRowBtn)
+    await userEvent.click(addRowBtn)
     expect(screen.queryAllByText('common.or')).toHaveLength(0)
 
-    userEvent.click(addRowBtn)
-    await waitFor(() => expect(screen.queryAllByText('common.or')).toHaveLength(0))
-
-    userEvent.click(addRowBtn)
+    await userEvent.click(addRowBtn)
     await waitFor(() => expect(screen.queryAllByText('common.or')).toHaveLength(1))
 
-    userEvent.click(addRowBtn)
+    await userEvent.click(addRowBtn)
     await waitFor(() => expect(screen.queryAllByText('common.or')).toHaveLength(2))
+
+    await userEvent.click(addRowBtn)
+    await waitFor(() => expect(screen.queryAllByText('common.or')).toHaveLength(3))
   })
 })

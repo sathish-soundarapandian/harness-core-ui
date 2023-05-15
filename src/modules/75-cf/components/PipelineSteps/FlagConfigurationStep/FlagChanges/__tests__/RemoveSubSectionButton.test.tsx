@@ -15,7 +15,7 @@ describe('RemoveSubSectionButton', () => {
     const onClick = jest.fn()
     render(<RemoveSubSectionButton onClick={onClick} />)
 
-    userEvent.click(screen.getByRole('button'))
+    await userEvent.click(screen.getByRole('button'))
 
     await waitFor(() => {
       expect(onClick).toHaveBeenCalled()

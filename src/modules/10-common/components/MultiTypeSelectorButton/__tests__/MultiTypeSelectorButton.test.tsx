@@ -41,7 +41,7 @@ describe('MultiTypeSelectorButton', () => {
     expect(screen.queryByText('Runtime input')).not.toBeInTheDocument()
     expect(screen.queryByText('Expression')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button'))
+    await userEvent.click(screen.getByRole('button'))
 
     await waitFor(() => {
       expect(screen.getByText('Fixed value')).toBeInTheDocument()
@@ -62,7 +62,7 @@ describe('MultiTypeSelectorButton', () => {
     expect(screen.queryByText('Runtime input')).not.toBeInTheDocument()
     expect(screen.queryByText('Expression')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button'))
+    await userEvent.click(screen.getByRole('button'))
 
     await waitFor(() => {
       expect(screen.getByText('Fixed value')).toBeInTheDocument()
@@ -77,10 +77,10 @@ describe('MultiTypeSelectorButton', () => {
 
     expect(onChangeMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByRole('button'))
+    await userEvent.click(screen.getByRole('button'))
 
     await waitFor(() => expect(screen.getByText('Runtime input')).toBeInTheDocument())
-    userEvent.click(screen.getByText('Runtime input'))
+    await userEvent.click(screen.getByText('Runtime input'))
 
     await waitFor(() => expect(onChangeMock).toHaveBeenCalledWith(MultiTypeInputType.RUNTIME))
   })

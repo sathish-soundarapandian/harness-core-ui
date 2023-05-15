@@ -145,7 +145,7 @@ describe('helm with http tests', () => {
     const chartVersionDropdownPortal = portalDivs[0]
     const chartVersionSelectList = chartVersionDropdownPortal.querySelector('.bp3-menu')
     const selectedChartVersion = await findByText(chartVersionSelectList as HTMLElement, 'test')
-    userEvent.click(selectedChartVersion)
+    await userEvent.click(selectedChartVersion)
 
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() => {

@@ -77,13 +77,13 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement, fieldElement: HT
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
   act(() => {
     fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   })
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
   await waitFor(() => expect(fieldElement.value).toBe('<+input>.regex(<+input>.includes(/test/))'))
 }
 
@@ -271,7 +271,7 @@ describe('GithubPackageRegistry tests', () => {
 
     // Configure options testing for bucketName and filePath fields
     const cogVersion = document.getElementById('configureOptions_version')
-    userEvent.click(cogVersion!)
+    await userEvent.click(cogVersion!)
     await waitFor(() => expect(modals.length).toBe(1))
     const versionCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(versionCOGModal, versionInput)
@@ -327,19 +327,19 @@ describe('GithubPackageRegistry tests', () => {
     // Configure options testing for bucketName and filePath fields
 
     const cogOrg = document.getElementById('configureOptions_org')
-    userEvent.click(cogOrg!)
+    await userEvent.click(cogOrg!)
     await waitFor(() => expect(modals.length).toBe(1))
     const orgCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(orgCOGModal, orgInput)
 
     const cogPackageName = document.getElementById('configureOptions_packageName')
-    userEvent.click(cogPackageName!)
+    await userEvent.click(cogPackageName!)
     await waitFor(() => expect(modals.length).toBe(1))
     const packageNameCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(packageNameCOGModal, packageNameInput)
 
     const cogVersionRegex = document.getElementById('configureOptions_versionRegex')
-    userEvent.click(cogVersionRegex!)
+    await userEvent.click(cogVersionRegex!)
     await waitFor(() => expect(modals.length).toBe(2))
     const versionRegexCOGModal = modals[1] as HTMLElement
     await doConfigureOptionsTesting(versionRegexCOGModal, versionRegexInput)

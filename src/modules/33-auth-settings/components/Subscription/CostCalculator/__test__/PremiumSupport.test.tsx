@@ -25,7 +25,7 @@ describe('PremiumSupport', () => {
         />
       </TestWrapper>
     )
-    userEvent.click(getByRole('checkbox'))
+    await userEvent.click(getByRole('checkbox'))
     expect(onChangeMock).toHaveBeenCalledWith(false)
   })
 })

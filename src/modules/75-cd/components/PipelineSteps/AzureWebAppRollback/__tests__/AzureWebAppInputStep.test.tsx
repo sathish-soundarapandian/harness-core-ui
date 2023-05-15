@@ -67,7 +67,7 @@ describe('Test Azure Web App Rollback input set', () => {
     }
     const { container, getByPlaceholderText } = renderComponent(data)
     await waitFor(() => expect(getByPlaceholderText('Enter w/d/h/m/s/ms')))
-    await act(() => userEvent.type(getByPlaceholderText('Enter w/d/h/m/s/ms'), '10m'))
+    await act(async () => await userEvent.type(getByPlaceholderText('Enter w/d/h/m/s/ms'), '10m'))
 
     expect(getByPlaceholderText('Enter w/d/h/m/s/ms')).toHaveDisplayValue('10m')
     expect(container).toMatchSnapshot()

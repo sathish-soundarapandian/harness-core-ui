@@ -44,13 +44,13 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement, fieldElement: HT
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
   act(() => {
     fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   })
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
   await waitFor(() => expect(fieldElement.value).toBe('<+input>.regex(<+input>.includes(/test/))'))
 }
 
@@ -269,19 +269,19 @@ describe('Sync step tests', () => {
     expect(modals.length).toBe(0)
 
     const cogLimit = document.getElementById('configureOptions_spec.retryStrategy.limit')
-    userEvent.click(cogLimit!)
+    await userEvent.click(cogLimit!)
     await waitFor(() => expect(modals.length).toBe(1))
     const limitCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(limitCOGModal, limitInput)
 
     const cogBaseBackoffDuration = document.getElementById('configureOptions_spec.retryStrategy.baseBackoffDuration')
-    userEvent.click(cogBaseBackoffDuration!)
+    await userEvent.click(cogBaseBackoffDuration!)
     await waitFor(() => expect(modals.length).toBe(1))
     const baseBackoffDurationCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(baseBackoffDurationCOGModal, baseBackoffDurationInput)
 
     const cogMaxBackoffDuration = document.getElementById('configureOptions_spec.retryStrategy.maxBackoffDuration')
-    userEvent.click(cogMaxBackoffDuration!)
+    await userEvent.click(cogMaxBackoffDuration!)
     await waitFor(() => expect(modals.length).toBe(1))
     const maxBackoffDurationCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(maxBackoffDurationCOGModal, maxBackoffDurationInput)
@@ -289,7 +289,7 @@ describe('Sync step tests', () => {
     const cogIncreaseBackoffByFactor = document.getElementById(
       'configureOptions_spec.retryStrategy.increaseBackoffByFactor'
     )
-    userEvent.click(cogIncreaseBackoffByFactor!)
+    await userEvent.click(cogIncreaseBackoffByFactor!)
     await waitFor(() => expect(modals.length).toBe(1))
     const increaseBackoffByFactorCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(increaseBackoffByFactorCOGModal, increaseBackoffByFactorInput)

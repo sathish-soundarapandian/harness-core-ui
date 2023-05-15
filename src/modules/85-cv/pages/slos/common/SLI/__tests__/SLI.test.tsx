@@ -108,8 +108,8 @@ describe('Test SLI component', () => {
 
   test('should render SLI component', async () => {
     const { container, getByText } = render(<WrapperComponent initialValues={initialFormData} />)
-    act(() => {
-      userEvent.click(getByText('cv.healthSource.newHealthSource'))
+    act(async () => {
+      await userEvent.click(getByText('cv.healthSource.newHealthSource'))
     })
     expect(container).toMatchSnapshot()
   })
@@ -158,8 +158,8 @@ describe('Test SLI component', () => {
     expect(container.querySelector('input[name="healthSourceRef"]')).toHaveValue('AppD for SLO 2 metric')
 
     // select event type
-    await act(() => {
-      userEvent.click(container.querySelector('input[name="eventType"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('input[name="eventType"]')!)
     })
     await waitFor(() => expect(document.querySelectorAll('ul.bp3-menu li').length).toEqual(2))
     await act(() => {
@@ -169,8 +169,8 @@ describe('Test SLI component', () => {
 
     //  select metric validRequestMetric
     expect(container.querySelectorAll('[data-icon="chevron-down"]').length).toEqual(6)
-    await act(() => {
-      userEvent.click(container.querySelector('input[name="validRequestMetric"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('input[name="validRequestMetric"]')!)
     })
     await waitFor(() => expect(document.querySelectorAll('ul.bp3-menu li').length).toEqual(2))
     await act(() => {
@@ -179,8 +179,8 @@ describe('Test SLI component', () => {
     expect(container.querySelector('input[name="validRequestMetric"]')).toHaveValue('appdMetric 2')
 
     //  select metric goodRequestMetric
-    await act(() => {
-      userEvent.click(container.querySelector('input[name="goodRequestMetric"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('input[name="goodRequestMetric"]')!)
     })
     await waitFor(() => expect(document.querySelectorAll('ul.bp3-menu li').length).toEqual(2))
     await act(() => {
@@ -257,14 +257,14 @@ describe('Test SLI component', () => {
       await waitFor(() => expect(showError).toHaveBeenCalled())
     })
 
-    test('Event type and Good request metrics dropdowns should not be in the document for Threshold', () => {
+    test('Event type and Good request metrics dropdowns should not be in the document for Threshold', async () => {
       render(<WrapperComponent initialValues={initialFormData} />)
 
       const ratioMetricRadio = screen.getByRole('radio', {
         name: /cv.slos.slis.metricOptions.ratioBased/i,
         hidden: true
       })
-      userEvent.click(ratioMetricRadio)
+      await userEvent.click(ratioMetricRadio)
       expect(ratioMetricRadio).toBeChecked()
       expect(screen.queryByText('cv.slos.slis.ratioMetricType.eventType')).toBeInTheDocument()
       expect(screen.queryByText('cv.slos.slis.ratioMetricType.goodRequestsMetrics')).toBeInTheDocument()
@@ -274,7 +274,7 @@ describe('Test SLI component', () => {
         hidden: true
       })
 
-      userEvent.click(thresholdMetricRadio)
+      await userEvent.click(thresholdMetricRadio)
 
       expect(thresholdMetricRadio).toBeChecked()
       expect(screen.queryByText('cv.slos.slis.ratioMetricType.eventType')).not.toBeInTheDocument()

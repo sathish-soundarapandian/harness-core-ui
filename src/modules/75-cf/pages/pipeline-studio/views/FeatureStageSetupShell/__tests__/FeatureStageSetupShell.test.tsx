@@ -58,7 +58,7 @@ describe('FeatureStageSetupShell', () => {
   test('it should display the Overview tab', async () => {
     renderComponent()
 
-    userEvent.click(screen.getByRole('tab', { name: 'overview' }))
+    await userEvent.click(screen.getByRole('tab', { name: 'overview' }))
 
     await waitFor(() => expect(screen.getByTestId('stage-overview-panel')).toBeInTheDocument())
   })
@@ -66,7 +66,7 @@ describe('FeatureStageSetupShell', () => {
   test('it should pass the Next button to the Overview tab to display', async () => {
     renderComponent()
 
-    userEvent.click(screen.getByRole('tab', { name: 'overview' }))
+    await userEvent.click(screen.getByRole('tab', { name: 'overview' }))
 
     await waitFor(() => expect(screen.getByRole('button', { name: 'next' })).toBeInTheDocument())
   })
@@ -76,8 +76,8 @@ describe('FeatureStageSetupShell', () => {
 
     updatePipelineMock.mockClear()
 
-    userEvent.click(screen.getByRole('tab', { name: 'overview' }))
-    userEvent.click(await screen.findByRole('button', { name: 'next' }))
+    await userEvent.click(screen.getByRole('tab', { name: 'overview' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'next' }))
 
     await waitFor(() => {
       expect(screen.getByTestId('rollout-strategy-panel')).toBeInTheDocument()
@@ -88,7 +88,7 @@ describe('FeatureStageSetupShell', () => {
   test('it should display the Rollout Strategy tab', async () => {
     renderComponent()
 
-    userEvent.click(screen.getByRole('tab', { name: 'cf.pipeline.rolloutStrategy.title' }))
+    await userEvent.click(screen.getByRole('tab', { name: 'cf.pipeline.rolloutStrategy.title' }))
 
     await waitFor(() => expect(screen.getByTestId('rollout-strategy-panel')).toBeInTheDocument())
   })
@@ -97,13 +97,13 @@ describe('FeatureStageSetupShell', () => {
     renderComponent()
     scrollToMock.mockClear()
 
-    userEvent.click(screen.getByRole('tab', { name: 'overview' }))
+    await userEvent.click(screen.getByRole('tab', { name: 'overview' }))
     await waitFor(() => expect(scrollToMock).toHaveBeenCalledTimes(1))
 
-    userEvent.click(screen.getByRole('tab', { name: 'cf.pipeline.rolloutStrategy.title' }))
+    await userEvent.click(screen.getByRole('tab', { name: 'cf.pipeline.rolloutStrategy.title' }))
     await waitFor(() => expect(scrollToMock).toHaveBeenCalledTimes(2))
 
-    userEvent.click(screen.getByRole('tab', { name: 'overview' }))
+    await userEvent.click(screen.getByRole('tab', { name: 'overview' }))
     await waitFor(() => expect(scrollToMock).toHaveBeenCalledTimes(3))
   })
 

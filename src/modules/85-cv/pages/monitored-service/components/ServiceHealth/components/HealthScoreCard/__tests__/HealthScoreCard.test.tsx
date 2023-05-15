@@ -111,7 +111,7 @@ describe('HealthScoreCard Tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('Error state', () => {
+  test('Error state', async () => {
     const errorMessage = 'TEST ERROR MESSAGE'
 
     ;(cvService.useGetMonitoredServiceScores as jest.Mock).mockReturnValue({
@@ -127,7 +127,7 @@ describe('HealthScoreCard Tests', () => {
 
     expect(screen.getByText('cv.monitoredServices.failedToFetchHealthScore')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('common.seeDetails'))
+    await userEvent.click(screen.getByText('common.seeDetails'))
 
     waitFor(() => expect(screen.getByText(errorMessage)).toBeInTheDocument())
   })

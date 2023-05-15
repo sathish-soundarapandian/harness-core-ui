@@ -231,19 +231,19 @@ describe('Test cloudformation remote tags step one', () => {
       </TestWrapper>
     )
     const git = getByTestId('connector-Git')
-    await act(async () => userEvent.click(git))
+    await act(async () => await userEvent.click(git))
     expect(container).toMatchSnapshot()
 
     const github = getByTestId('connector-Github')
-    await act(async () => userEvent.click(github))
+    await act(async () => await userEvent.click(github))
     expect(container).toMatchSnapshot()
 
     const gitLab = getByTestId('connector-GitLab')
-    await act(async () => userEvent.click(gitLab))
+    await act(async () => await userEvent.click(gitLab))
     expect(container).toMatchSnapshot()
 
     const bitbucket = getByTestId('connector-Bitbucket')
-    await act(async () => userEvent.click(bitbucket))
+    await act(async () => await userEvent.click(bitbucket))
     expect(container).toMatchSnapshot()
   })
 
@@ -293,11 +293,11 @@ describe('Test cloudformation remote tags step one', () => {
       </TestWrapper>
     )
     const git = getByTestId('connector-Git')
-    await act(async () => userEvent.click(git))
+    await act(async () => await userEvent.click(git))
     expect(container).toMatchSnapshot()
 
     const newConnector = getByTestId('new-connector')
-    await act(async () => userEvent.click(newConnector))
+    await act(async () => await userEvent.click(newConnector))
     expect(container).toMatchSnapshot()
   })
 
@@ -394,7 +394,7 @@ describe('Test cloudformation remote tags step one', () => {
       </TestWrapper>
     )
     const continueButton = getByTestId('submit')
-    await act(async () => userEvent.click(continueButton))
+    await act(async () => await userEvent.click(continueButton))
 
     expect(container).toMatchSnapshot()
   })
@@ -432,7 +432,7 @@ describe('Test cloudformation remote tags step one', () => {
       </TestWrapper>
     )
     const continueButton = getByTestId('submit')
-    await act(async () => userEvent.click(continueButton))
+    await act(async () => await userEvent.click(continueButton))
 
     expect(container).toMatchSnapshot()
   })

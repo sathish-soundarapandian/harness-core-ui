@@ -86,8 +86,8 @@ describe('Artifactory tests for generic repository type', () => {
 
     expect(repositoryFormat!).toHaveValue('Generic')
 
-    userEvent.click(repositoryFormat)
-    userEvent.click(screen.getByText('Docker'))
+    await userEvent.click(repositoryFormat)
+    await userEvent.click(screen.getByText('Docker'))
     expect(repositoryFormat!).toHaveValue('Docker')
   })
 })

@@ -96,11 +96,11 @@ describe('Harness File Store with TAS Manifest tests', () => {
       </TestWrapper>
     )
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     expect(defaultProps.previousStep).toHaveBeenCalledWith(defaultProps.prevStepData)
     const submitButton = getElementByText(container, 'submit')
-    userEvent.click(submitButton!)
+    await userEvent.click(submitButton!)
     const titleText = getElementByText(container, 'Manifest details')
     expect(titleText).toBeDefined()
   })
@@ -152,9 +152,9 @@ describe('Harness File Store with TAS Manifest tests', () => {
 
     expect(autoScalerPath.value).toBe('<+input>')
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     const submitButton = getElementByText(container, 'submit')
-    userEvent.click(submitButton!)
+    await userEvent.click(submitButton!)
   })
 })

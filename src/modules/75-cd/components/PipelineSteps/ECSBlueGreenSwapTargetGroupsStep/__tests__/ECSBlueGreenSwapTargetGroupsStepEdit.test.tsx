@@ -92,7 +92,7 @@ describe('GenericExecutionStepEdit tests', () => {
     expect(timeoutInput.value).toBe('20m')
 
     const doNotDownsizeOldServiceCheckbox = queryByNameAttribute('spec.doNotDownsizeOldService') as HTMLInputElement
-    userEvent.click(doNotDownsizeOldServiceCheckbox)
+    await userEvent.click(doNotDownsizeOldServiceCheckbox)
 
     act(() => {
       formikRef.current?.submitForm()

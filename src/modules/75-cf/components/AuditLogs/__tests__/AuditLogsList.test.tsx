@@ -67,7 +67,7 @@ describe('AuditLogsList', () => {
       expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'Retry' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }))
 
     await waitFor(() => expect(refetch).toHaveBeenCalled())
   })
@@ -239,13 +239,13 @@ describe('AuditLogsList', () => {
     fireEvent.mouseOver(viewEventSummaryButton)
     await waitFor(() => expect(screen.getByText('cf.auditLogs.viewEventSummary')).toBeInTheDocument())
 
-    userEvent.click(viewEventSummaryButton)
+    await userEvent.click(viewEventSummaryButton)
 
     expect(await screen.findByRole('heading', { name: 'auditTrail.eventSummary' })).toBeInTheDocument()
     expect(await screen.findByRole('heading', { name: 'CF.AUDITLOGS.CHANGEDETAILS' })).toBeInTheDocument()
     expect(await screen.findByTestId('yaml-diff-btn')).toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'Close' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Close' }))
 
     await waitFor(() => {
       expect(screen.queryByText('auditTrail.eventSummary')).not.toBeInTheDocument()

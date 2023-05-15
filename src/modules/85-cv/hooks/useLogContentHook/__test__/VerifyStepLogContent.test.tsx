@@ -112,7 +112,7 @@ describe('VerifyStepLogContent', () => {
 
     expect(screen.getByRole('button', { name: STRING_ID_LOAD_MORE })).toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: STRING_ID_LOAD_MORE }))
+    await userEvent.click(screen.getByRole('button', { name: STRING_ID_LOAD_MORE }))
 
     await waitFor(() => {
       expect(cvService.useGetVerifyStepLogs).toHaveBeenLastCalledWith({
@@ -132,7 +132,7 @@ describe('VerifyStepLogContent', () => {
     })
   })
 
-  test('should handle the Top and Bottom navigation', () => {
+  test('should handle the Top and Bottom navigation', async () => {
     const { container } = render(
       <TestWrapper {...testWrapperProps}>
         <VerifyStepLogContent
@@ -146,7 +146,7 @@ describe('VerifyStepLogContent', () => {
 
     expect(container.querySelector('[data-icon="arrow-down"]')).toBeInTheDocument()
 
-    userEvent.click(container.querySelector('[data-icon="arrow-down"]')!)
+    await userEvent.click(container.querySelector('[data-icon="arrow-down"]')!)
   })
 
   test('should show the text Loading...', () => {
@@ -186,7 +186,7 @@ describe('VerifyStepLogContent', () => {
 
     expect(screen.getByText(errorMessage)).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('retry'))
+    await userEvent.click(screen.getByText('retry'))
 
     await waitFor(() => {
       expect(cvService.useGetVerifyStepLogs).toHaveBeenLastCalledWith({
@@ -242,7 +242,7 @@ describe('VerifyStepLogContent', () => {
 
     expect(screen.getByText(errorMessage)).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('Retry'))
+    await userEvent.click(screen.getByText('Retry'))
 
     await waitFor(() => {
       expect(cvService.useGetVerifyStepLogs).toHaveBeenLastCalledWith({
@@ -299,7 +299,7 @@ describe('VerifyStepLogContent', () => {
 
     expect(screen.getByText('cv.download')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.download'))
+    await userEvent.click(screen.getByText('cv.download'))
 
     await waitFor(() => {
       expect(cvService.getVerifyStepLogsPromise).toHaveBeenCalledWith({
@@ -328,7 +328,7 @@ describe('VerifyStepLogContent', () => {
 
     expect(screen.getByText('cv.download')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.download'))
+    await userEvent.click(screen.getByText('cv.download'))
 
     await waitFor(() => {
       expect(cvService.getVerifyStepLogsPromise).toHaveBeenCalledWith({

@@ -88,14 +88,14 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> =
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByNameAttribute('regExValues', cogModal) as HTMLInputElement
   act(() => {
     fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   })
   await waitFor(() => expect(regexTextArea.value).toBe('<+input>.includes(/test/)'))
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
 }
 
 describe('ECSInfraSpecEditable tests', () => {
@@ -131,7 +131,7 @@ describe('ECSInfraSpecEditable tests', () => {
     await waitFor(() => expect(getByText('Aws Connector 2')).toBeInTheDocument())
     const connnectorRefInput = getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
-    userEvent.click(connnectorRefInput!)
+    await userEvent.click(connnectorRefInput!)
     await testConnectorRefChange()
 
     await waitFor(() => expect(clusterInput.value).toBe(''))
@@ -194,14 +194,14 @@ describe('ECSInfraSpecEditable tests', () => {
     expect(portalDivs.length).toBe(0)
 
     const clusterDropdownIcon = allDropDownIcons[2]
-    userEvent.click(clusterDropdownIcon!)
+    await userEvent.click(clusterDropdownIcon!)
     expect(portalDivs.length).toBe(1)
     const clusterDropdownPortalDiv = portalDivs[0]
     const clusterSelectListMenu = clusterDropdownPortalDiv.querySelector('.bp3-menu')
     const awsCluster1Option = await findByText(clusterSelectListMenu as HTMLElement, 'Loading Clusters...')
     expect(awsCluster1Option).not.toBeNull()
     expect(awsCluster1Option.parentElement?.parentElement?.parentElement).toHaveClass('bp3-disabled')
-    userEvent.click(awsCluster1Option)
+    await userEvent.click(awsCluster1Option)
     const clusterInput = queryByNameAttribute('cluster', container) as HTMLInputElement
     expect(clusterInput.value).toBe('')
   })
@@ -235,13 +235,13 @@ describe('ECSInfraSpecEditable tests', () => {
     expect(portalDivs.length).toBe(0)
 
     const clusterDropdownIcon = allDropDownIcons[2]
-    userEvent.click(clusterDropdownIcon!)
+    await userEvent.click(clusterDropdownIcon!)
     expect(portalDivs.length).toBe(1)
     const clusterDropdownPortalDiv = portalDivs[0]
     const clusterSelectListMenu = clusterDropdownPortalDiv.querySelector('.bp3-menu')
     const awsCluster1Option = await findByText(clusterSelectListMenu as HTMLElement, 'Error while fetching clusters')
     expect(awsCluster1Option).not.toBeNull()
-    userEvent.click(awsCluster1Option)
+    await userEvent.click(awsCluster1Option)
     const clusterInput = queryByNameAttribute('cluster', container) as HTMLInputElement
     expect(clusterInput.value).toBe('')
   })
@@ -266,7 +266,7 @@ describe('ECSInfraSpecEditable tests', () => {
     const connectorInput = queryByNameAttribute('connectorRef', container) as HTMLInputElement
     expect(connectorInput.value).toBe(RUNTIME_INPUT_VALUE)
     const cogConnectorRef = document.getElementById('configureOptions_connectorRef')
-    userEvent.click(cogConnectorRef!)
+    await userEvent.click(cogConnectorRef!)
     await waitFor(() => expect(modals.length).toBe(1))
     const regionCOGConnectorRef = modals[0] as HTMLElement
     await doConfigureOptionsTesting(regionCOGConnectorRef)
@@ -274,7 +274,7 @@ describe('ECSInfraSpecEditable tests', () => {
     const regionInput = queryByNameAttribute('region', container) as HTMLInputElement
     expect(regionInput.value).toBe(RUNTIME_INPUT_VALUE)
     const cogRegion = document.getElementById('configureOptions_region')
-    userEvent.click(cogRegion!)
+    await userEvent.click(cogRegion!)
     await waitFor(() => expect(modals.length).toBe(1))
     const regionCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(regionCOGModal)
@@ -282,7 +282,7 @@ describe('ECSInfraSpecEditable tests', () => {
     const clusterInput = queryByNameAttribute('cluster', container) as HTMLInputElement
     expect(clusterInput.value).toBe(RUNTIME_INPUT_VALUE)
     const cogCluster = document.getElementById('configureOptions_cluster')
-    userEvent.click(cogCluster!)
+    await userEvent.click(cogCluster!)
     await waitFor(() => expect(modals.length).toBe(1))
     const clusterCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(clusterCOGModal)

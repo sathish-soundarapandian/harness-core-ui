@@ -274,7 +274,7 @@ describe('PipelineCanvas tests', () => {
           saveToGitSaveBtn = getByText(portalDiv, 'save').parentElement as HTMLElement
           expect(saveToGitSaveBtn).toBeInTheDocument()
         })
-        userEvent.click(saveToGitSaveBtn!)
+        await userEvent.click(saveToGitSaveBtn!)
         await waitFor(() => expect(pipelineNg.putPipelineV2Promise).toHaveBeenCalled())
         const putPipelinePromiseArgNewBranch = {
           ...putPipelinePromiseArg,
@@ -308,23 +308,23 @@ describe('PipelineCanvas tests', () => {
 
         // Click on Start a pull request to merge Checkbox
         const createPRCheckbox = portalDiv.querySelector('input[name="createPr"]') as HTMLInputElement
-        userEvent.click(createPRCheckbox!)
+        await userEvent.click(createPRCheckbox!)
         expect(createPRCheckbox.value).toBe('on')
 
         // Select a target branch and check if target branch values is changed to selected one
         const targetBranchSelector = portalDiv.querySelector('input[name="targetBranch"]')
         await waitFor(() => expect(targetBranchSelector).not.toBeDisabled())
-        userEvent.click(targetBranchSelector!)
+        await userEvent.click(targetBranchSelector!)
         await waitFor(() => expect(document.getElementsByClassName('bp3-portal').length).toBe(2))
         const branchSelectorPortalDiv = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
         const branchOption = getByText(branchSelectorPortalDiv, 'gitSync')
-        userEvent.click(branchOption!)
+        await userEvent.click(branchOption!)
         await waitFor(() => expect(targetBranchSelector?.getAttribute('value')).toBe('gitSync'))
 
         // Click on Save button in the Save to Git dialog to save pipeline
         const saveToGitSaveBtn = getByText(portalDiv, 'save').parentElement as HTMLElement
         expect(saveToGitSaveBtn).toBeInTheDocument()
-        userEvent.click(saveToGitSaveBtn!)
+        await userEvent.click(saveToGitSaveBtn!)
 
         // Check if putPipelinePromise (which makes API call) called with correct arguments
         await waitFor(() => expect(pipelineNg.putPipelineV2Promise).toHaveBeenCalled())

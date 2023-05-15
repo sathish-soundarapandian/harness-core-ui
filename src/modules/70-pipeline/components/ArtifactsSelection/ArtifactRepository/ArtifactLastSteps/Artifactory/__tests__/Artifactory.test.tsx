@@ -236,7 +236,7 @@ describe('Serverless artifact', () => {
 
     const repositoryField = getByPlaceholderText('Search...')
     expect(repositoryField).toBeTruthy()
-    userEvent.click(repositoryField)
+    await userEvent.click(repositoryField)
     const errorText = await findPopoverContainer()?.querySelector('.StyledProps--main')?.innerHTML
     await waitFor(() => expect(errorText).toEqual('error'))
   })
@@ -276,7 +276,7 @@ describe('Serverless artifact', () => {
 
     const repositoryField = getByPlaceholderText('Search...')
     expect(repositoryField).toBeTruthy()
-    userEvent.click(repositoryField)
+    await userEvent.click(repositoryField)
   })
 
   test(`ServerlessArtifactoryRepository with repository as runtime`, () => {
@@ -408,7 +408,7 @@ describe('SSH artifactory artifact', () => {
     jest.spyOn(pipelineng, 'useGetRepositoriesDetailsForArtifactory').getMockImplementation()
   })
 
-  test(`renders Generic Artifactory view by default`, () => {
+  test(`renders Generic Artifactory view by default`, async () => {
     const { container, getByPlaceholderText } = render(
       <TestWrapper>
         <Artifactory key={'key'} initialValues={genericArtifactoryInitialValues} {...sshDeploymentTypeProps} />
@@ -428,7 +428,7 @@ describe('SSH artifactory artifact', () => {
     const repository = container.querySelector('input[name="repository"]')
     expect(repository).toHaveAttribute('placeholder', 'Search...')
 
-    userEvent.click(repository!)
+    await userEvent.click(repository!)
 
     expect(pipelineng.useGetRepositoriesDetailsForArtifactory).toBeCalled()
   })
@@ -504,7 +504,7 @@ describe('WinRm artifactory artifact', () => {
     const repository = container.querySelector('input[name="repository"]')
     expect(repository).toHaveAttribute('placeholder', 'Search...')
 
-    userEvent.click(repository!)
+    await userEvent.click(repository!)
 
     expect(pipelineng.useGetRepositoriesDetailsForArtifactory).toBeCalled()
   })

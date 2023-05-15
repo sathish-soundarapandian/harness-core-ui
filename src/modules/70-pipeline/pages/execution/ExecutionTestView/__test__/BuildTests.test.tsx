@@ -133,7 +133,7 @@ describe('BuildTests snapshot test', () => {
     if (!stepOptionCaret) {
       throw Error('Cannot find step caret')
     }
-    userEvent.click(stepOptionCaret)
+    await userEvent.click(stepOptionCaret)
 
     await waitFor(() => {
       const options = container.querySelectorAll('[class*="bp3-menu"] li [class*="menuItem"]')
@@ -264,7 +264,7 @@ describe('BuildTests snapshot test', () => {
     if (!ungroupedButton) {
       throw Error('Cannot find ungrouped button')
     }
-    userEvent.click(ungroupedButton)
+    await userEvent.click(ungroupedButton)
     await waitFor(() => expect(() => container.querySelector('data-icon="spinner"')).not.toBeNull())
     await waitFor(() =>
       expect(() => document.querySelector('[data-testid="activeGroupedIcon"] [data-icon="list-view"]')).not.toBeNull()
@@ -321,7 +321,7 @@ describe('BuildTests snapshot test', () => {
     if (!ungroupedButton) {
       throw Error('Cannot find ungrouped button')
     }
-    userEvent.click(ungroupedButton)
+    await userEvent.click(ungroupedButton)
     await waitFor(() => expect(() => container.querySelector('data-icon="spinner"')).not.toBeNull())
     await waitFor(() =>
       expect(() => document.querySelector('[data-testid="activeGroupedIcon"] [data-icon="list-view"]')).not.toBeNull()
@@ -334,12 +334,12 @@ describe('BuildTests snapshot test', () => {
 
     const formEl = screen.getByPlaceholderText('pipeline.testsReports.searchByTestName') as Element
 
-    userEvent.type(formEl, 'testShould')
+    await userEvent.type(formEl, 'testShould')
     const searchButton = container.querySelector('[data-testid="search-btn"]')
     if (!searchButton) {
       throw Error('Cannot find search button')
     }
-    userEvent.click(searchButton)
+    await userEvent.click(searchButton)
     await waitFor(() => expect(refetch).toHaveBeenCalled())
   })
 
@@ -382,7 +382,7 @@ describe('BuildTests snapshot test', () => {
     if (!ungroupedButton) {
       throw Error('Cannot find ungrouped button')
     }
-    userEvent.click(ungroupedButton)
+    await userEvent.click(ungroupedButton)
     await waitFor(() => expect(() => container.querySelector('data-icon="spinner"')).not.toBeNull())
     await waitFor(() =>
       expect(() =>
@@ -394,7 +394,7 @@ describe('BuildTests snapshot test', () => {
       throw Error('Cannot find testNameColumnHeader button')
     }
 
-    userEvent.click(testNameColumnHeader)
+    await userEvent.click(testNameColumnHeader)
 
     await waitFor(() => expect(() => container.querySelector('data-icon="spinner"')).not.toBeNull())
 
