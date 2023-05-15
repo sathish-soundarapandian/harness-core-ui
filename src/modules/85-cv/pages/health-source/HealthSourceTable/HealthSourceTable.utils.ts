@@ -103,6 +103,8 @@ export const getIconBySourceType = (type: string): IconName => {
       return 'service-aws'
     case HealthSourceTypes.SumologicLogs:
     case HealthSourceTypes.SumologicMetrics:
+    case 'SUMOLOGIC_METRICS':
+    case 'SUMOLOGIC_LOG':
       return 'service-sumologic'
     case HealthSourceTypes.SignalFX:
     case HealthSourceTypes.SplunkSignalFXMetrics:
