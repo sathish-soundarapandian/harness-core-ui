@@ -163,7 +163,7 @@ export function DockerRegistryArtifact({
         ...formData,
         tag: defaultTo(formData?.tag?.value, formData?.tag),
         connectorId: getConnectorIdValue(modifiedPrevStepData),
-        digest: formData?.digest
+        digest: defaultTo(formData?.digest?.value, formData?.digest)
       })
     }
   }
