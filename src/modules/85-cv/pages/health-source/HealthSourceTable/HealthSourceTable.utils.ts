@@ -106,6 +106,7 @@ export const getIconBySourceType = (type: string): IconName => {
       return 'service-sumologic'
     case HealthSourceTypes.SignalFX:
     case HealthSourceTypes.SplunkSignalFXMetrics:
+    case 'SPLUNK_SIGNALFX_METRICS':
       return 'service-signalfx'
     default:
       return 'placeholder'
