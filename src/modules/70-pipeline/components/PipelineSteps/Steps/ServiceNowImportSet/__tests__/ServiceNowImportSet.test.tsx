@@ -57,7 +57,7 @@ describe('ServiceNowImportSet Step Test', () => {
         inputSetData={props.inputSetData}
       />
     )
-    userEvent.click(getByText('Submit'))
+    await userEvent.click(getByText('Submit'))
     await waitFor(() => queryByText('Errors'))
     expect(container).toMatchSnapshot('input set with errors')
   })

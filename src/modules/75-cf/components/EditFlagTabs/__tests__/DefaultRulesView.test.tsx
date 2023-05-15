@@ -56,7 +56,7 @@ describe('DefaultRulesView', () => {
       expect(screen.queryByText(name || identifier)).not.toBeInTheDocument()
     }
 
-    userEvent.click(inputEl)
+    await userEvent.click(inputEl)
 
     await waitFor(() => {
       for (const { name, identifier } of mockVariations) {

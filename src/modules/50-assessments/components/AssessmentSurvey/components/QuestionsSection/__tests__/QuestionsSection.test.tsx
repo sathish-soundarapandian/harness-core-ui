@@ -84,7 +84,7 @@ describe('QuestionsSection', () => {
     // Find a row and click on it
     const questionsRows = container.querySelectorAll('.TableV2--body [role="row"]')
     const firstRow = questionsRows[0]
-    userEvent.click(firstRow)
+    await userEvent.click(firstRow)
 
     // Verify that the drawer is opened
     const levelHeader = screen.getByText('LEVEL')

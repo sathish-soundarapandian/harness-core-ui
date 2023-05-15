@@ -103,10 +103,10 @@ describe('HealthSource table', () => {
     //render rows based on data
     await waitFor(() => expect(container.querySelectorAll('.TableV2--body [role="row"]').length).toEqual(2))
 
-    userEvent.click(container.querySelector('span[icon="edit"]')!)
+    await userEvent.click(container.querySelector('span[icon="edit"]')!)
     await waitFor(() => expect(healthSourceTableProps.onEdit).toHaveBeenCalled())
 
-    userEvent.click(getByText('plusAdd'))
+    await userEvent.click(getByText('plusAdd'))
     await waitFor(() => expect(healthSourceTableProps.addNew).toHaveBeenCalled())
 
     expect(container).toMatchSnapshot()

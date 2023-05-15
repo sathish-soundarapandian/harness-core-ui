@@ -61,7 +61,7 @@ describe('test <CommandEdit />', () => {
     const configRadio = getByDisplayValue(/config/i)
     expect(configRadio).not.toBeChecked()
 
-    userEvent.click(configRadio)
+    await userEvent.click(configRadio)
     await waitFor(() => expect(configRadio).toBeChecked())
   })
 
@@ -78,9 +78,9 @@ describe('test <CommandEdit />', () => {
       </TestWrapper>
     )
 
-    userEvent.click(queryByNameAttribute('type', container)!)
-    userEvent.click(within(findPopoverContainer()!).getByText(CommandType.Script))
-    userEvent.click(getByText('cd.steps.commands.locationFileStore'))
+    await userEvent.click(queryByNameAttribute('type', container)!)
+    await userEvent.click(within(findPopoverContainer()!).getByText(CommandType.Script))
+    await userEvent.click(getByText('cd.steps.commands.locationFileStore'))
 
     expect(await findByTestId('tail-files-edit')).toBeInTheDocument()
     expect(queryByNameAttribute('spec.workingDirectory', container)).toBeInTheDocument()
@@ -116,8 +116,8 @@ describe('test <CommandEdit />', () => {
     )
     const scriptTypeField = queryByNameAttribute('spec.shell', container)!
 
-    userEvent.click(scriptTypeField)
-    userEvent.click(within(findPopoverContainer()!).getByText(/bash/i))
+    await userEvent.click(scriptTypeField)
+    await userEvent.click(within(findPopoverContainer()!).getByText(/bash/i))
 
     expect(await findByDisplayValue(/bash/i)).toBeInTheDocument()
   })
@@ -148,7 +148,7 @@ describe('test <CommandEdit />', () => {
         />
       </TestWrapper>
     )
-    userEvent.click(getByText('cd.steps.commands.locationFileStore'))
+    await userEvent.click(getByText('cd.steps.commands.locationFileStore'))
     const fileStoreField = getByText('common.git.filePath')
 
     expect(fileStoreField).toBeInTheDocument()
@@ -180,21 +180,21 @@ describe('test <CommandEdit />', () => {
         />
       </TestWrapper>
     )
-    userEvent.click(getByText('inline'))
+    await userEvent.click(getByText('inline'))
     expect(queryByNameAttribute('spec.source.spec.script', container)).toHaveDisplayValue(RUNTIME_INPUT_VALUE)
 
     const configureOptionsButton = queryByAttribute('id', container, 'configureOptions_spec.source.spec.script')
     expect(configureOptionsButton).toBeInTheDocument()
-    userEvent.click(configureOptionsButton!)
+    await userEvent.click(configureOptionsButton!)
 
     expect(await findByText('common.configureOptions.configureOptions')).toBeInTheDocument()
 
-    userEvent.click(getByText('common.configureOptions.regex'))
+    await userEvent.click(getByText('common.configureOptions.regex'))
     const regexField = queryByNameAttribute('regExValues', document.body)
     await waitFor(() => expect(regexField).toBeInTheDocument())
     const regex = '.*'
-    userEvent.type(regexField!, regex)
-    userEvent.click(getByText(/submit/i))
+    await userEvent.type(regexField!, regex)
+    await userEvent.click(getByText(/submit/i))
 
     await waitFor(() =>
       expect(queryByNameAttribute('spec.source.spec.script', container)).toHaveDisplayValue(

@@ -47,13 +47,13 @@ describe('Asg Rolling Rollback Step tests', () => {
     )
 
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.type(nameInput!, 'Step 1')
+    await userEvent.type(nameInput!, 'Step 1')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('Step 1'))
     expect(getByText('Step_1')).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '20m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('20m'))
 
     act(() => {
@@ -93,11 +93,11 @@ describe('Asg Rolling Rollback Step tests', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(onUpdate).not.toHaveBeenCalled()
-    userEvent.type(timeoutInput!, '20m')
-    userEvent.click(submitBtn)
+    await userEvent.type(timeoutInput!, '20m')
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Step_AsgRollingRollback',

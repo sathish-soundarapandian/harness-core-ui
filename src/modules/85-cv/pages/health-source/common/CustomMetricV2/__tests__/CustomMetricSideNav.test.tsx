@@ -40,7 +40,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
     } as unknown as any)
   })
 
-  test('should render the component', () => {
+  test('should render the component', async () => {
     const { container } = render(
       <TestWrapper>
         <Formik.Formik initialValues={formikValuesMock} onSubmit={() => Promise.resolve()}>
@@ -51,14 +51,14 @@ describe('AppDIgnoreThresholdTabContent', () => {
 
     screen.debug(container)
 
-    act(() => {
-      userEvent.click(screen.getByTestId('invalidMetricSelect'))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('invalidMetricSelect'))
     })
 
     expect(setFieldValueMock).not.toHaveBeenCalled()
 
-    act(() => {
-      userEvent.click(screen.getByTestId('validMetricSelect'))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('validMetricSelect'))
     })
 
     expect(setFieldValueMock).toHaveBeenCalled()

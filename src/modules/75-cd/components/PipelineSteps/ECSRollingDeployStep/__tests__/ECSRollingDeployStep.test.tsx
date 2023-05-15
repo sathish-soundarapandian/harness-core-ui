@@ -42,23 +42,23 @@ describe('ECSRollingDeployStep tests', () => {
     )
 
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.type(nameInput!, 'Step 1')
+    await userEvent.type(nameInput!, 'Step 1')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('Step 1'))
     expect(getByText('Step_1')).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '30m')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '30m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('30m'))
 
     const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
       'spec.sameAsAlreadyRunningInstances',
       container
     ) as HTMLInputElement
-    userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
+    await userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
 
     const forceNewDeploymentCheckbox = queryByNameAttribute('spec.forceNewDeployment', container) as HTMLInputElement
-    userEvent.click(forceNewDeploymentCheckbox)
+    await userEvent.click(forceNewDeploymentCheckbox)
 
     act(() => {
       ref.current?.submitForm()
@@ -109,9 +109,9 @@ describe('ECSRollingDeployStep tests', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.type(timeoutInput!, '20m')
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Step_1',

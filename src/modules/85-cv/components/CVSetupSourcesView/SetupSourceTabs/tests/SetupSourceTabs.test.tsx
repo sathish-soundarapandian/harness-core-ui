@@ -243,7 +243,7 @@ describe('Unit tests for SetupSourceTabs ', () => {
 
     // ensure all other tabs are disabled
     container.querySelectorAll('[aria-disabled="true"]').forEach((disabledTab, index) => {
-      expect(disabledTab.getAttribute('id')).toContain(index + 1)
+      expect(disabledTab.getAttribute('id')).toContain(String(index + 1))
     })
 
     // hit next and make sure correct tabs are disabled

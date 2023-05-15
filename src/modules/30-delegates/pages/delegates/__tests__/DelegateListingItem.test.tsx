@@ -49,13 +49,13 @@ describe('Delegates Listing With Groups', () => {
     const moreOptions = within(row[2]).getByRole('button', {
       name: /delegate menu options/i
     })
-    userEvent.click(moreOptions)
+    await userEvent.click(moreOptions)
 
     const menuContent = findPopoverContainer() as HTMLElement
 
     const viewDetailsFromMenu = within(menuContent).getByText('details')
 
-    userEvent.click(viewDetailsFromMenu)
+    await userEvent.click(viewDetailsFromMenu)
     await waitFor(() => {
       expect(routesToDelegateDetails).toHaveBeenCalled()
     })
@@ -72,13 +72,13 @@ describe('Delegates Listing With Groups', () => {
     const moreOptions = within(row[1]).getByRole('button', {
       name: /delegate menu options/i
     })
-    userEvent.click(moreOptions)
+    await userEvent.click(moreOptions)
 
     const menuContent = findPopoverContainer() as HTMLElement
 
     const viewDeleteFromMenu = within(menuContent).getByText('delete')
 
-    userEvent.click(viewDeleteFromMenu)
+    await userEvent.click(viewDeleteFromMenu)
 
     expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
     const modalDeleteBtn = queryAllByText('delete')[1]
@@ -100,11 +100,11 @@ describe('Delegates Listing With Groups', () => {
     const moreOptions = within(row[1]).getByRole('button', {
       name: /delegate menu options/i
     })
-    userEvent.click(moreOptions)
+    await userEvent.click(moreOptions)
 
     const menuContent = findPopoverContainer() as HTMLElement
     const viewTroubleshooterFromMenu = within(menuContent).getByText('delegates.openTroubleshooter')
-    userEvent.click(viewTroubleshooterFromMenu)
+    await userEvent.click(viewTroubleshooterFromMenu)
     expect(document.body.innerHTML).toContain('troubleshoot')
   })
 

@@ -169,7 +169,7 @@ describe('helm with S3 tests', () => {
     const chartVersionDropdownPortal = portalDivs[0]
     const chartVersionSelectList = chartVersionDropdownPortal.querySelector('.bp3-menu')
     const selectedChartVersion = await findByText(chartVersionSelectList as HTMLElement, 'test')
-    userEvent.click(selectedChartVersion)
+    await userEvent.click(selectedChartVersion)
 
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     expect(container.querySelector('button[type="submit"]')).toBeTruthy()
@@ -199,7 +199,7 @@ describe('helm with S3 tests', () => {
     })
   })
 
-  test('bucketname is null', () => {
+  test('bucketname is null', async () => {
     const initialValues = {
       identifier: 'test',
       type: ManifestDataType.HelmChart,
@@ -225,7 +225,7 @@ describe('helm with S3 tests', () => {
       </TestWrapper>
     )
     const bucketField = getByPlaceholderText('pipeline.manifestType.bucketPlaceHolder')
-    userEvent.click(bucketField)
+    await userEvent.click(bucketField)
     expect(container).toMatchSnapshot()
   })
 })

@@ -54,7 +54,7 @@ describe('RadioButtonQuestion', () => {
     })
   })
 
-  test('should select a response when a radio button is clicked', () => {
+  test('should select a response when a radio button is clicked', async () => {
     const { container } = render(
       <RadioButtonQuestion
         questionNumber={questionNumber}
@@ -65,12 +65,12 @@ describe('RadioButtonQuestion', () => {
     )
 
     const radioButtons = container.querySelectorAll('input[type="radio"]')
-    userEvent.click(radioButtons[0])
+    await userEvent.click(radioButtons[0])
     expect(radioButtons[0]).toBeChecked()
     expect(radioButtons[1]).not.toBeChecked()
     expect(radioButtons[2]).not.toBeChecked()
 
-    userEvent.click(radioButtons[2])
+    await userEvent.click(radioButtons[2])
     expect(radioButtons[0]).not.toBeChecked()
     expect(radioButtons[1]).not.toBeChecked()
     expect(radioButtons[2]).toBeChecked()

@@ -416,7 +416,7 @@ describe('Harness Approval tests', () => {
 
     const btn = await findByText(/project/i)
     expect(btn).toBeTruthy()
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => expect(document.querySelector('.bp3-dialog div[data-tab-id="account"]')).toBeInTheDocument())
     fireEvent.click(document.querySelector('.bp3-dialog div[data-tab-id="account"]') as HTMLElement)

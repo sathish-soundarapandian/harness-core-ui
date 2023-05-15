@@ -30,7 +30,7 @@ const Wrapped = ({
 }
 
 describe('Validate Stepper', () => {
-  test('render in create mode', () => {
+  test('render in create mode', async () => {
     const isStepValid = jest.fn().mockReturnValue(true)
     const { container, getByText } = render(
       <TestWrapper>
@@ -42,57 +42,57 @@ describe('Validate Stepper', () => {
     expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="ring"]')).toBeInTheDocument()
     expect(screen.getByText('next')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="backButton"]')).not.toBeInTheDocument()
-    userEvent.click(screen.getByText('next'))
+    await userEvent.click(screen.getByText('next'))
     expect(getByText('Preview Panel Step 1')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step1"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step2"] [data-icon="Edit"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="ring"]')).toBeInTheDocument()
     expect(screen.getByText('back')).toBeInTheDocument()
     expect(screen.getByText('next')).toBeInTheDocument()
-    userEvent.click(screen.getByText('next'))
+    await userEvent.click(screen.getByText('next'))
     expect(getByText('Preview Panel Step 2')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step1"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step2"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step3"] [data-icon="Edit"]')).toBeInTheDocument()
     expect(screen.getByText('back')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="nextButton"]')).not.toBeInTheDocument()
-    userEvent.click(screen.getByText('save'))
+    await userEvent.click(screen.getByText('save'))
 
     // goto step 1 ( edit icon not visible on selected one as status is available )
-    userEvent.click(container.querySelector('[data-testid="steptitle_Step1"]')!)
+    await userEvent.click(container.querySelector('[data-testid="steptitle_Step1"]')!)
     expect(container.querySelector('[data-testid="steptitle_Step1"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step2"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="tick-circle"]')).toBeInTheDocument()
-    userEvent.click(container.querySelector('[data-testid="steptitle_Step2"]')!)
+    await userEvent.click(container.querySelector('[data-testid="steptitle_Step2"]')!)
     expect(container.querySelector('[data-testid="steptitle_Step2"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step1"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="tick-circle"]')).toBeInTheDocument()
-    userEvent.click(container.querySelector('[data-testid="steptitle_Step3"]')!)
+    await userEvent.click(container.querySelector('[data-testid="steptitle_Step3"]')!)
     expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step2"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step1"] [icon="tick-circle"]')).toBeInTheDocument()
 
     // Back button works as expected
-    userEvent.click(screen.getByText('back'))
+    await userEvent.click(screen.getByText('back'))
     expect(getByText('Panel Step 2')).toBeInTheDocument()
-    userEvent.click(screen.getByText('back'))
+    await userEvent.click(screen.getByText('back'))
     expect(getByText('Panel Step 1')).toBeInTheDocument()
   })
 
-  test('On clicking save in create mode all steps status is updated ', () => {
+  test('On clicking save in create mode all steps status is updated ', async () => {
     const isStepValid = jest.fn().mockReturnValue(true)
     const { container } = render(
       <TestWrapper>
         <Wrapped isStepValid={isStepValid} />
       </TestWrapper>
     )
-    userEvent.click(screen.getByText('save'))
+    await userEvent.click(screen.getByText('save'))
     expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step2"] [icon="tick-circle"]')).toBeInTheDocument()
     expect(container.querySelector('[data-testid="steptitle_Step1"] [icon="tick-circle"]')).toBeInTheDocument()
   })
 
-  test('render in edit mode', () => {
+  test('render in edit mode', async () => {
     const isStepValid = (stepId: string): boolean => {
       if (stepId === 'Step3') {
         return false
@@ -112,11 +112,11 @@ describe('Validate Stepper', () => {
     expect(container.querySelector('[data-testid="steptitle_Step3"] [icon="warning-sign"]')).toBeInTheDocument()
 
     // directly jump to step 3 in error state
-    userEvent.click(container.querySelector('[data-testid="steptitle_Step3"]')!)
+    await userEvent.click(container.querySelector('[data-testid="steptitle_Step3"]')!)
     expect(getByText('Panel Step 3')).toBeInTheDocument()
-    userEvent.click(screen.getByText('back'))
+    await userEvent.click(screen.getByText('back'))
     expect(getByText('Panel Step 2')).toBeInTheDocument()
-    userEvent.click(screen.getByText('back'))
+    await userEvent.click(screen.getByText('back'))
     expect(getByText('Panel Step 1')).toBeInTheDocument()
   })
 

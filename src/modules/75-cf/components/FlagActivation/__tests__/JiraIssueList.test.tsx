@@ -89,7 +89,7 @@ describe('JiraIssueList', () => {
 
     const jiraModalButton = screen.getByRole('button', { name: 'cf.featureFlags.jira.newJiraIssueButton' })
     expect(jiraModalButton).toBeInTheDocument()
-    userEvent.click(jiraModalButton)
+    await userEvent.click(jiraModalButton)
 
     //assert dialog elements appear
     expect(screen.getByText('cf.featureFlags.jira.jiraModalTitle')).toBeInTheDocument()
@@ -103,11 +103,11 @@ describe('JiraIssueList', () => {
 
     const jiraModalButton = screen.getByRole('button', { name: 'cf.featureFlags.jira.newJiraIssueButton' })
     expect(jiraModalButton).toBeInTheDocument()
-    userEvent.click(jiraModalButton)
+    await userEvent.click(jiraModalButton)
 
     // type into issue search field
     expect(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -')).toBeInTheDocument()
-    userEvent.click(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'))
+    await userEvent.click(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'))
     await userEvent.type(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'), 'FD-7', {
       allAtOnce: true
     })
@@ -115,13 +115,13 @@ describe('JiraIssueList', () => {
     // select issue from dropdown
     const item = await screen.findByRole('listitem')
     expect(item).toHaveTextContent('FD-7')
-    userEvent.click(screen.getByRole('listitem'))
+    await userEvent.click(screen.getByRole('listitem'))
     await waitFor(() =>
       expect(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -')).toHaveValue('FD-7')
     )
 
     // submit form
-    userEvent.click(screen.getByRole('button', { name: 'add' }))
+    await userEvent.click(screen.getByRole('button', { name: 'add' }))
     await waitFor(() => {
       expect(patchMutateMock).toHaveBeenCalledWith({
         instructions: [
@@ -147,11 +147,11 @@ describe('JiraIssueList', () => {
 
     const jiraModalButton = screen.getByRole('button', { name: 'cf.featureFlags.jira.newJiraIssueButton' })
     expect(jiraModalButton).toBeInTheDocument()
-    userEvent.click(jiraModalButton)
+    await userEvent.click(jiraModalButton)
 
     // type into issue search field
     expect(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -')).toBeInTheDocument()
-    userEvent.click(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'))
+    await userEvent.click(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'))
     await userEvent.type(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'), 'FD-7', {
       allAtOnce: true
     })
@@ -159,13 +159,13 @@ describe('JiraIssueList', () => {
     // select issue from dropdown
     await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(1))
     expect(screen.getByRole('listitem')).toHaveTextContent('FD-7')
-    userEvent.click(screen.getByRole('listitem'))
+    await userEvent.click(screen.getByRole('listitem'))
     await waitFor(() =>
       expect(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -')).toHaveValue('FD-7')
     )
 
     // submit form
-    userEvent.click(screen.getByRole('button', { name: 'add' }))
+    await userEvent.click(screen.getByRole('button', { name: 'add' }))
     await waitFor(() => expect(screen.getByText('error')).toBeInTheDocument())
   })
 
@@ -174,11 +174,11 @@ describe('JiraIssueList', () => {
 
     const jiraModalButton = screen.getByRole('button', { name: 'cf.featureFlags.jira.newJiraIssueButton' })
     expect(jiraModalButton).toBeInTheDocument()
-    userEvent.click(jiraModalButton)
+    await userEvent.click(jiraModalButton)
 
     // type into issue search field
     expect(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -')).toBeInTheDocument()
-    userEvent.click(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'))
+    await userEvent.click(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'))
     await userEvent.type(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'), 'FD-NOT-FOUND', {
       allAtOnce: true
     })
@@ -200,9 +200,9 @@ describe('JiraIssueList', () => {
 
     const jiraModalButton = screen.getByRole('button', { name: 'cf.featureFlags.jira.newJiraIssueButton' })
     expect(jiraModalButton).toBeInTheDocument()
-    userEvent.click(jiraModalButton)
+    await userEvent.click(jiraModalButton)
 
-    userEvent.click(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'))
+    await userEvent.click(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'))
 
     // 'no issue found' message should appear in dropdown
     await waitFor(() => expect(screen.getByText('No matching results found')).toBeInTheDocument())
@@ -213,10 +213,10 @@ describe('JiraIssueList', () => {
 
     const jiraModalButton = screen.getByRole('button', { name: 'cf.featureFlags.jira.newJiraIssueButton' })
     expect(jiraModalButton).toBeInTheDocument()
-    userEvent.click(jiraModalButton)
+    await userEvent.click(jiraModalButton)
 
     await waitFor(() => expect(screen.getByRole('button', { name: 'add' })).toBeInTheDocument())
-    userEvent.click(screen.getByRole('button', { name: 'add' }))
+    await userEvent.click(screen.getByRole('button', { name: 'add' }))
 
     // 'no issue found' message should appear in dropdown
     await waitFor(() => expect(screen.getByText('cf.featureFlags.jira.jiraIssueRequiredError')).toBeInTheDocument())
@@ -227,10 +227,10 @@ describe('JiraIssueList', () => {
 
     const jiraModalButton = screen.getByRole('button', { name: 'cf.featureFlags.jira.newJiraIssueButton' })
     expect(jiraModalButton).toBeInTheDocument()
-    userEvent.click(jiraModalButton)
+    await userEvent.click(jiraModalButton)
 
     await waitFor(() => expect(screen.getByRole('button', { name: 'cancel' })).toBeInTheDocument())
-    userEvent.click(screen.getByRole('button', { name: 'cancel' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cancel' }))
 
     await waitFor(() => expect(screen.queryByText('cf.featureFlagDetail.jira.jiraModalTitle')).not.toBeInTheDocument())
   })

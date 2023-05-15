@@ -83,7 +83,7 @@ describe('container test', () => {
       <TestStepWidget initialValues={initialValues} type={StepType.Container} stepViewType={StepViewType.Edit} />
     )
 
-    userEvent.click(getByText('common.optionalConfig'))
+    await userEvent.click(getByText('common.optionalConfig'))
 
     await waitFor(() => {
       expect(screen.getByText('connectors.title.harnessImageConnectorRef')).toBeInTheDocument()

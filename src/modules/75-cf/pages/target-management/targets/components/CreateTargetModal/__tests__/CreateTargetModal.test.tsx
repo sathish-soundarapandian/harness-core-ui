@@ -25,7 +25,7 @@ const renderComponent = (props: Partial<CreateTargetModalProps> = {}): RenderRes
 
 describe('CreateTargetModal', () => {
   const openModal = async (): Promise<void> => {
-    userEvent.click(screen.getByRole('button', { name: 'cf.targets.create' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.targets.create' }))
 
     await waitFor(() => expect(screen.getByText('cf.targets.addTargetsLabel')).toBeInTheDocument())
   }
@@ -52,7 +52,7 @@ describe('CreateTargetModal', () => {
 
     await waitFor(() => expect(submitButton).toBeEnabled())
 
-    userEvent.click(submitButton)
+    await userEvent.click(submitButton)
 
     await waitFor(() => expect(onSubmitTargetsMock).toHaveBeenCalled())
   })
@@ -65,7 +65,7 @@ describe('CreateTargetModal', () => {
     expect(screen.getAllByPlaceholderText('cf.targets.enterValue')).toHaveLength(1)
     expect(screen.queryAllByRole('button', { name: 'cf.targets.removeRow' })).toHaveLength(0)
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.targets.addRow' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.targets.addRow' }))
 
     await waitFor(() => {
       expect(screen.getAllByPlaceholderText('cf.targets.enterName')).toHaveLength(2)
@@ -73,7 +73,7 @@ describe('CreateTargetModal', () => {
       expect(screen.queryAllByRole('button', { name: 'cf.targets.removeRow' })).toHaveLength(2)
     })
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targets.removeRow' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targets.removeRow' })[0])
 
     await waitFor(() => {
       expect(screen.getAllByPlaceholderText('cf.targets.enterName')).toHaveLength(1)
@@ -94,7 +94,7 @@ describe('CreateTargetModal', () => {
     expect(screen.queryByPlaceholderText('cf.targets.enterName')).toBeInTheDocument()
     expect(screen.queryByLabelText('cf.targets.uploadYourFile')).not.toBeInTheDocument()
 
-    userEvent.click(uploadTargetsOption)
+    await userEvent.click(uploadTargetsOption)
 
     await waitFor(() => {
       expect(addATargetOption).not.toBeChecked()
@@ -103,7 +103,7 @@ describe('CreateTargetModal', () => {
       expect(screen.queryByLabelText('cf.targets.uploadYourFile')).toBeInTheDocument()
     })
 
-    userEvent.click(addATargetOption)
+    await userEvent.click(addATargetOption)
 
     await waitFor(() => {
       expect(addATargetOption).toBeChecked()
@@ -118,7 +118,7 @@ describe('CreateTargetModal', () => {
     await openModal()
 
     await userEvent.type(screen.getByPlaceholderText('cf.targets.enterName'), 'test', { allAtOnce: true })
-    userEvent.click(screen.getByRole('button', { name: 'cancel' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cancel' }))
 
     await waitFor(() => expect(screen.queryByText('cf.targets.addTargetsLabel')).not.toBeInTheDocument())
 
@@ -140,7 +140,7 @@ describe('CreateTargetModal', () => {
 
     const submitBtn = screen.getByRole('button', { name: 'add' })
     await waitFor(() => expect(submitBtn).toBeEnabled())
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
 
     await waitFor(() => expect(screen.queryByText('cf.targets.addTargetsLabel')).not.toBeInTheDocument())
   })
@@ -156,16 +156,16 @@ describe('CreateTargetModal', () => {
     renderComponent({ onSubmitTargetFile: onSubmitTargetFileMock })
     await openModal()
 
-    userEvent.click(screen.getByRole('radio', { name: 'cf.targets.upload' }))
+    await userEvent.click(screen.getByRole('radio', { name: 'cf.targets.upload' }))
 
     const fileInput = await screen.findByLabelText('cf.targets.uploadYourFile')
-    userEvent.upload(fileInput, csv)
+    await userEvent.upload(fileInput, csv)
 
     await waitFor(() => expect(fileInput).not.toBeInTheDocument())
 
     const submitBtn = screen.getByRole('button', { name: 'add' })
     await waitFor(() => expect(submitBtn).toBeEnabled())
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
 
     await waitFor(() => expect(screen.queryByText('cf.targets.addTargetsLabel')).not.toBeInTheDocument())
   })
@@ -176,7 +176,7 @@ describe('CreateTargetModal', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getByRole('button', { name: 'cf.targets.create' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cf.targets.create' }))
 
     await waitFor(() => {
       expect(screen.getByText('cf.targets.addTargetsLabel')).toBeInTheDocument()

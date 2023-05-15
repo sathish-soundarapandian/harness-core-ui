@@ -137,12 +137,12 @@ describe('FlowControl tests', () => {
 
     const editBarrierButtons = await screen.findAllByRole('button', { name: /edit/i })
     expect(editBarrierButtons[0]).toBeTruthy()
-    userEvent.click(editBarrierButtons[0])
+    await userEvent.click(editBarrierButtons[0])
     fireEvent.change(await screen.findByRole('textbox')!, { target: { value: 'demoId' } })
-    await waitFor(() => userEvent.click(screen.getByText('pipeline.barriers.syncBarriers')))
+    await waitFor(async () => await userEvent.click(screen.getByText('pipeline.barriers.syncBarriers')))
     expect(container).toMatchSnapshot()
     const applyChangeButton = await screen.findByText('applyChanges')
-    userEvent.click(applyChangeButton)
+    await userEvent.click(applyChangeButton)
     await waitFor(() => expect(pipelineContextMock.updatePipeline).toHaveBeenCalled())
   })
 

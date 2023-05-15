@@ -65,9 +65,9 @@ describe('Unit tests for Annotation', () => {
     const annotationsIcon = getByTestId('annotationsIcon')
 
     // When annotationIcon is clicked user should be able to see all the data
-    userEvent.click(annotationsIcon)
+    await userEvent.click(annotationsIcon)
     await waitFor(() => expect(getByText('cv.slos.sloDetailsChart.addAnnotation')).toBeInTheDocument())
-    userEvent.click(getByText('cv.slos.sloDetailsChart.addAnnotation'))
+    await userEvent.click(getByText('cv.slos.sloDetailsChart.addAnnotation'))
   })
 
   test('should be able to click on Add annotation link when annotations icon is clicked', async () => {
@@ -76,9 +76,9 @@ describe('Unit tests for Annotation', () => {
     await waitFor(() => expect(annotationsIcon).toBeInTheDocument())
 
     // When annotationIcon is clicked user should be able to see all the data
-    userEvent.click(annotationsIcon)
+    await userEvent.click(annotationsIcon)
     await waitFor(() => expect(getByText('cv.slos.sloDetailsChart.addAnnotation')).toBeInTheDocument())
-    userEvent.click(getByText('cv.slos.sloDetailsChart.addAnnotation'))
+    await userEvent.click(getByText('cv.slos.sloDetailsChart.addAnnotation'))
     for (const annotation of mockedSecondaryEventsDetailsResponse.data.details.annotations) {
       expect(getByText(annotation.message)).toBeInTheDocument()
     }
@@ -91,13 +91,13 @@ describe('Unit tests for Annotation', () => {
     await waitFor(() => expect(annotationsIcon).toBeInTheDocument())
 
     // When annotationIcon is clicked user should be able to see all the data
-    userEvent.click(annotationsIcon)
+    await userEvent.click(annotationsIcon)
     const editAnnotationIcons = getAllByTestId('editAnnotations')
     expect(editAnnotationIcons.length).toEqual(mockedSecondaryEventsDetailsResponse.data.details.annotations.length)
 
     const editAnnotationIcon = editAnnotationIcons[0]
     await waitFor(() => expect(editAnnotationIcon).toBeInTheDocument())
-    userEvent.click(editAnnotationIcon)
+    await userEvent.click(editAnnotationIcon)
   })
 
   test('should be able to click on delete annotation link when annotations icon is clicked', async () => {
@@ -106,17 +106,17 @@ describe('Unit tests for Annotation', () => {
     await waitFor(() => expect(annotationsIcon).toBeInTheDocument())
 
     // When annotationIcon is clicked user should be able to see all the data
-    userEvent.click(annotationsIcon)
+    await userEvent.click(annotationsIcon)
     const deleteAnnotationIcons = getAllByTestId('deleteAnnotations')
     expect(deleteAnnotationIcons.length).toEqual(mockedSecondaryEventsDetailsResponse.data.details.annotations.length)
 
     const deleteAnnotationIcon = deleteAnnotationIcons[0]
     await waitFor(() => expect(deleteAnnotationIcon).toBeInTheDocument())
-    userEvent.click(deleteAnnotationIcon)
+    await userEvent.click(deleteAnnotationIcon)
     expect(getByText('cv.slos.sloDetailsChart.deleteMessageConfirmation')).toBeInTheDocument()
 
     // Triggering the Delete
-    userEvent.click(getByText('delete'))
+    await userEvent.click(getByText('delete'))
   })
 
   test('should be able to click on delete annotation link when annotations icon is clicked and cancel the delete', async () => {
@@ -125,17 +125,17 @@ describe('Unit tests for Annotation', () => {
     await waitFor(() => expect(annotationsIcon).toBeInTheDocument())
 
     // When annotationIcon is clicked user should be able to see all the data
-    userEvent.click(annotationsIcon)
+    await userEvent.click(annotationsIcon)
     const deleteAnnotationIcons = getAllByTestId('deleteAnnotations')
     expect(deleteAnnotationIcons.length).toEqual(mockedSecondaryEventsDetailsResponse.data.details.annotations.length)
 
     const deleteAnnotationIcon = deleteAnnotationIcons[0]
     await waitFor(() => expect(deleteAnnotationIcon).toBeInTheDocument())
-    userEvent.click(deleteAnnotationIcon)
+    await userEvent.click(deleteAnnotationIcon)
     expect(getByText('cv.slos.sloDetailsChart.deleteMessageConfirmation')).toBeInTheDocument()
 
     // Cancelling the Delete
-    userEvent.click(getByText('cancel'))
+    await userEvent.click(getByText('cancel'))
   })
 
   test('should render loading state when api to fetch annotation details is in loading state', async () => {
@@ -152,7 +152,7 @@ describe('Unit tests for Annotation', () => {
     await waitFor(() => expect(annotationsIcon).toBeInTheDocument())
 
     // When annotationIcon is clicked user should be able to see the loading state
-    userEvent.click(annotationsIcon)
+    await userEvent.click(annotationsIcon)
     expect(getByTestId('loading')).toBeInTheDocument()
   })
 

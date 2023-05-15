@@ -15,7 +15,7 @@ export const mockData: CloudWatchSetupSource = {
         feature: 'CloudWatch Metrics',
         metricDefinitions: [
           {
-            identifier: 'CustomMetric 1',
+            identifier: 'customMetric1',
             metricName: 'CustomMetric 1',
             riskProfile: {
               riskCategory: 'Infrastructure',
@@ -64,7 +64,7 @@ export const mockDataTemplate: CloudWatchSetupSource = {
         ...mockData.healthSourceList[0].spec,
         metricDefinitions: [
           {
-            identifier: 'CustomMetric 1',
+            identifier: 'customMetric1',
             metricName: 'CustomMetric 1',
             riskProfile: {
               riskCategory: 'Infrastructure',
@@ -161,7 +161,7 @@ export const submitRequestDataPayload = {
             },
             expression: 'gfd',
             groupName: 'G2',
-            identifier: 'CustomMetric 1',
+            identifier: 'customMetric1',
             metricName: 'CustomMetric 1',
             responseMapping: { serviceInstanceJsonPath: 'asaa' },
             riskProfile: { riskCategory: 'Infrastructure', thresholdTypes: ['ACT_WHEN_HIGHER'] },
@@ -199,7 +199,7 @@ export const submitRequestFormikPayload = {
         },
         expression: 'gfd',
         groupName: 'G2',
-        identifier: 'CustomMetric 1',
+        identifier: 'customMetric1',
         metricName: 'CustomMetric 1',
         responseMapping: { serviceInstanceJsonPath: 'asaa' },
         riskProfile: {

@@ -55,7 +55,7 @@ describe('<FilterDrawer />', () => {
     expect(filterDrawer).toMatchSnapshot()
   })
 
-  test('apply filter', async done => {
+  test('apply filter', done => {
     const applyFilter = jest.fn()
     render(
       <TestWrapper path={routes.toAuditTrail({ ...accountPathProps })} pathParams={{ accountId: 'testAcc' }}>
@@ -80,7 +80,7 @@ describe('<FilterDrawer />', () => {
       done()
     })
   })
-  test('apply filter', async done => {
+  test('apply filter', done => {
     const selectFilter = jest.fn()
     render(
       <TestWrapper path={routes.toAuditTrail({ ...accountPathProps })} pathParams={{ accountId: 'testAcc' }}>
@@ -107,7 +107,7 @@ describe('<FilterDrawer />', () => {
     })
   })
 
-  test('select filter', async done => {
+  test('select filter', done => {
     const selectFilter = jest.fn()
     render(
       <TestWrapper path={routes.toAuditTrail({ ...accountPathProps })} pathParams={{ accountId: 'testAcc' }}>

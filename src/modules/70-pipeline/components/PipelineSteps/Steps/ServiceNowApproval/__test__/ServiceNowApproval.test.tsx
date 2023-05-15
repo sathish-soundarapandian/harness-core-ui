@@ -199,22 +199,22 @@ describe('ServiceNow Approval tests', () => {
     expect(queryByDisplayValue('itd1')).toBeTruthy()
 
     expect(queryByDisplayValue('somevalue for f1')).toBeTruthy()
-    userEvent.click(screen.getByText('common.optionalConfig'))
+    await userEvent.click(screen.getByText('common.optionalConfig'))
     expect(queryByDisplayValue("<+state> == 'Blocked'")).toBeTruthy()
 
     // Approval change window
     const windowStart = await screen.findByPlaceholderText('select pipeline.serviceNowApprovalStep.windowStart')
-    userEvent.click(windowStart)
+    await userEvent.click(windowStart)
     const startPopOver = findPopoverContainer()!
-    userEvent.click(getByText(startPopOver, 'updated'))
+    await userEvent.click(getByText(startPopOver, 'updated'))
     await waitFor(() => expect(startPopOver).not.toBeInTheDocument()) // wait for the popover to close, we have a transition delay for popover
 
     await act(() => ref.current?.submitForm()!)
     expect(screen.getByText('pipeline.serviceNowApprovalStep.validations.windowEnd')).toBeInTheDocument()
 
     const windowEnd = screen.getByPlaceholderText('select pipeline.serviceNowApprovalStep.windowEnd')
-    userEvent.click(windowEnd)
-    userEvent.click(getByText(findPopoverContainer()!, 'Due Date'))
+    await userEvent.click(windowEnd)
+    await userEvent.click(getByText(findPopoverContainer()!, 'Due Date'))
     await act(() => ref.current?.submitForm()!)
 
     expect(props.onUpdate).toBeCalledWith({

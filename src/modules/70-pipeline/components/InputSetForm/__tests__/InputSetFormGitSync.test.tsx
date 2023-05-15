@@ -133,7 +133,7 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
         saveToGitSaveBtn = getElementByText(portalDiv, 'save').parentElement as HTMLElement
         expect(saveToGitSaveBtn).toBeInTheDocument()
       })
-      userEvent.click(saveToGitSaveBtn!)
+      await userEvent.click(saveToGitSaveBtn!)
       await waitFor(() => {
         expect(updateInputSet).toHaveBeenCalled()
         expect(updateInputSet).toHaveBeenCalledWith(createInputSetCallFirstArg, updateInputSetCallSecondArg)
@@ -182,7 +182,7 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
         saveToGitSaveBtn = getElementByText(portalDiv, 'save').parentElement as HTMLElement
         expect(saveToGitSaveBtn).toBeInTheDocument()
       })
-      userEvent.click(saveToGitSaveBtn!)
+      await userEvent.click(saveToGitSaveBtn!)
       await waitFor(() => {
         expect(updateInputSet).toHaveBeenCalled()
         expect(updateInputSet).toHaveBeenCalledWith(createInputSetCallFirstArg, updateInputSetCallSecondArgNewBranch)

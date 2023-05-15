@@ -67,7 +67,7 @@ describe('DialogFooter', () => {
 
       expect(setPageNumberMock).not.toHaveBeenCalled()
 
-      userEvent.click(screen.getByRole('button', { name: /Next/ }))
+      await userEvent.click(screen.getByRole('button', { name: /Next/ }))
 
       await waitFor(() => expect(setPageNumberMock).toHaveBeenCalledWith(1))
     })
@@ -109,7 +109,7 @@ describe('DialogFooter', () => {
       expect(btn).toBeEnabled()
       expect(onSubmitMock).not.toHaveBeenCalled()
 
-      userEvent.click(btn)
+      await userEvent.click(btn)
 
       await waitFor(() => expect(onSubmitMock).toHaveBeenCalled())
     })
@@ -123,7 +123,7 @@ describe('DialogFooter', () => {
     expect(btn).toBeInTheDocument()
     expect(onCancelMock).not.toHaveBeenCalled()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => expect(onCancelMock).toHaveBeenCalled())
   })

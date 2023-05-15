@@ -11,9 +11,7 @@ import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import HealthSourceDrawerHeader from '../HealthSourceDrawerHeader'
 
-describe('Validate HealthSourceDrawerHeader', async () => {
-  //
-
+describe('Validate HealthSourceDrawerHeader', () => {
   test('should render in cv', async () => {
     const { container, getByText } = render(
       <TestWrapper>
@@ -60,7 +58,7 @@ describe('Validate HealthSourceDrawerHeader', async () => {
     )
     await waitFor(() => expect(getByText('cv.healthSource.addHealthSource')).toBeInTheDocument())
     await waitFor(() => expect(getByText('Test title')).toBeInTheDocument())
-    userEvent.click(getByText('Test title'))
+    await userEvent.click(getByText('Test title'))
     await waitFor(() => expect(clickBreadCrumb).toHaveBeenCalled())
     expect(container).toMatchSnapshot()
   })

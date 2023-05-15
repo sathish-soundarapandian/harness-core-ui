@@ -154,13 +154,13 @@ describe('Test ServerlessDeployStep - Edit view', () => {
 
     const accordionHeder = await findByText('common.optionalConfig')
     expect(accordionHeder).toBeTruthy()
-    userEvent.click(accordionHeder)
+    await userEvent.click(accordionHeder)
     const commandOptionsDetailsDiv = getByTestId('commandOptions-details')
     const inputTypeBtn = commandOptionsDetailsDiv.getElementsByClassName('MultiTypeInput--FIXED')[0] as HTMLElement
-    userEvent.click(inputTypeBtn)
+    await userEvent.click(inputTypeBtn)
     const runTimeInputOption = getByText(document.body, 'Runtime input')
     await waitFor(() => expect(runTimeInputOption).toBeInTheDocument())
-    userEvent.click(runTimeInputOption)
+    await userEvent.click(runTimeInputOption)
 
     await waitFor(() =>
       expect(onChangeHandler).toHaveBeenCalledWith({
@@ -213,7 +213,7 @@ describe('Test ServerlessDeployStep - InputSet view', () => {
     )
     const accordionHeder = await findByText('common.optionalConfig')
     expect(accordionHeder).toBeTruthy()
-    userEvent.click(accordionHeder)
+    await userEvent.click(accordionHeder)
     const commandOptionsDetailsDiv = getByTestId('commandOptions-details')
     expect(commandOptionsDetailsDiv).toBeInTheDocument()
     expect(container).toMatchSnapshot()

@@ -69,14 +69,14 @@ describe('Test Elastigroup Deploy Step', () => {
     factory.registerStep(new ElastigroupDeploy())
   })
 
-  test('should render edit view as new step - empty values', () => {
+  test('should render edit view as new step - empty values', async () => {
     const { container, getByText, getAllByText } = render(
       <TestStepWidget initialValues={{}} type={StepType.ElastigroupDeploy} stepViewType={StepViewType.Edit} />
     )
 
     const instanceField = container.querySelector('input[placeholder="instanceFieldOptions.instanceHolder"]')
     const optionalConfigAccordion = getByText('common.optionalConfig')
-    userEvent.click(optionalConfigAccordion)
+    await userEvent.click(optionalConfigAccordion)
 
     //initial empty form
     expect(container.querySelector('input[placeholder="pipeline.stepNamePlaceholder"]')).toBeTruthy()
@@ -92,7 +92,7 @@ describe('Test Elastigroup Deploy Step', () => {
     expect(container.querySelector('input[min="0"]'))
   })
 
-  test('should render edit view as new step - with initial values', () => {
+  test('should render edit view as new step - with initial values', async () => {
     const { container, getByText } = render(
       <TestStepWidget
         initialValues={initialValuesEdit}
@@ -102,7 +102,7 @@ describe('Test Elastigroup Deploy Step', () => {
     )
 
     const optionalConfigAccordion = getByText('common.optionalConfig')
-    userEvent.click(optionalConfigAccordion)
+    await userEvent.click(optionalConfigAccordion)
 
     expect(container).toMatchSnapshot()
   })

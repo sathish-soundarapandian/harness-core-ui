@@ -160,7 +160,7 @@ describe('Change table', () => {
       fireEvent.click(pageButtons[2])
     })
 
-    userEvent.click(pageButtons[2])
+    await userEvent.click(pageButtons[2])
 
     await waitFor(() =>
       expect(refetchChangeList).toHaveBeenLastCalledWith({

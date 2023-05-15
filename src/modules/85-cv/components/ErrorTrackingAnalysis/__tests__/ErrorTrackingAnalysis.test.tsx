@@ -137,7 +137,7 @@ describe('Unit tests for ErrorTrackingAnalysisContainer', () => {
     await waitFor(() => expect(getAllByText('Unknown')).toHaveLength(unknownClusterTypeMockedData.length))
   })
 
-  test('it should not pass field clusterTypes to BE for event type All', () => {
+  test('it should not pass field clusterTypes to BE for event type All', async () => {
     let useGetAllLogsClusterDataQueryParams: cvServices.GetAllErrorTrackingClusterDataQueryParams | undefined
     let useGetAllLogsDataQueryParams: cvServices.GetAllErrorTrackingDataQueryParams | undefined
 
@@ -169,8 +169,8 @@ describe('Unit tests for ErrorTrackingAnalysisContainer', () => {
     expect(useGetAllLogsClusterDataQueryParams?.clusterTypes).toEqual([ErrorTrackingEvents.UNKNOWN])
     expect(useGetAllLogsDataQueryParams?.clusterTypes).toEqual([ErrorTrackingEvents.UNKNOWN])
 
-    userEvent.click(clusterTypeFilterDropdown)
-    userEvent.click(screen.getByText('auditTrail.allEvents'))
+    await userEvent.click(clusterTypeFilterDropdown)
+    await userEvent.click(screen.getByText('auditTrail.allEvents'))
 
     expect(clusterTypeFilterDropdown.value).toBe('auditTrail.allEvents')
     expect(useGetAllLogsClusterDataQueryParams).not.toHaveProperty('clusterTypes')
@@ -216,7 +216,7 @@ describe('Unit tests for ErrorTrackingAnalysisContainer', () => {
 
     expect(retryButton).toBeDefined()
 
-    userEvent.click(retryButton)
+    await userEvent.click(retryButton)
 
     await waitFor(() => expect(screen.getByText('Retry')).toBeDefined())
     expect(fetchLogAnalysis).toBeCalled()
@@ -266,7 +266,7 @@ describe('Unit tests for ErrorTrackingAnalysisContainer', () => {
 
     expect(retryButton).toBeDefined()
 
-    userEvent.click(retryButton)
+    await userEvent.click(retryButton)
 
     await waitFor(() => expect(screen.getByText('Retry')).toBeDefined())
     expect(fetchClusterData).toBeCalled()

@@ -52,7 +52,7 @@ describe('FlagPrerequisiteItem', () => {
       expect(screen.getByTestId('prerequisiteMenuBtn')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByTestId('prerequisiteMenuBtn'))
+    await userEvent.click(screen.getByTestId('prerequisiteMenuBtn'))
 
     await waitFor(() => {
       expect(screen.getByRole('link', { name: /edit/ })).toBeInTheDocument()

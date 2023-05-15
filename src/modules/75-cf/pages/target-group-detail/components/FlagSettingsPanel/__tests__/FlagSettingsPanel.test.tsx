@@ -147,7 +147,7 @@ describe('FlagSettingsPanel', () => {
     expect(refetchMock).not.toHaveBeenCalled()
     expect(screen.getByText(message)).toBeInTheDocument()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => expect(refetchMock).toHaveBeenCalled())
   })
@@ -179,13 +179,13 @@ describe('FlagSettingsPanel', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
     await waitFor(() => screen.getByRole('button', { name: 'saveChanges' }))
 
     expect(patchSegmentMock).not.toHaveBeenCalled()
     expect(refetchMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
+    await userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
 
     await waitFor(() => {
       expect(patchSegmentMock).toHaveBeenCalled()
@@ -204,12 +204,12 @@ describe('FlagSettingsPanel', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetManagementFlagConfiguration.removeFlag' })[0])
     await waitFor(() => screen.getByRole('button', { name: 'saveChanges' }))
 
     expect(refetchMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
+    await userEvent.click(screen.getByRole('button', { name: 'saveChanges' }))
 
     await waitFor(() => {
       expect(patchSegmentMock).toHaveBeenCalled()
@@ -251,13 +251,13 @@ describe('FlagSettingsPanel', () => {
         refetch: jest.fn()
       } as any)
 
-      userEvent.click(screen.getAllByText('cf.targetManagementFlagConfiguration.addFlag')[0])
+      await userEvent.click(screen.getAllByText('cf.targetManagementFlagConfiguration.addFlag')[0])
 
       await waitFor(() => expect(screen.getByText('cf.segmentDetail.addFlagToTargetGroup')).toBeInTheDocument())
 
       const checkbox = screen.getByRole('checkbox')
-      userEvent.click(checkbox)
-      userEvent.click(
+      await userEvent.click(checkbox)
+      await userEvent.click(
         getByPlaceholderText(
           checkbox.closest('[role="row"]') as HTMLElement,
           '- cf.targetManagementFlagConfiguration.selectVariation -'
@@ -265,7 +265,7 @@ describe('FlagSettingsPanel', () => {
       )
 
       await waitFor(() => expect(screen.getByText(newFlag.variations[0].name as string)).toBeInTheDocument())
-      userEvent.click(screen.getByText(newFlag.variations[0].name as string))
+      await userEvent.click(screen.getByText(newFlag.variations[0].name as string))
 
       const submitBtn = screen.getByRole('button', { name: 'cf.targetManagementFlagConfiguration.addFlags' })
       await waitFor(() => {
@@ -275,7 +275,7 @@ describe('FlagSettingsPanel', () => {
       })
 
       await act(async () => {
-        userEvent.click(submitBtn)
+        await userEvent.click(submitBtn)
       })
     }
     test('it should call patchTargetGroup and refetch when the add flags form is submitted', async () => {

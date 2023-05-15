@@ -157,7 +157,7 @@ describe('TargetGroupDetailPage', () => {
       expect(refetchTargetGroupMock).not.toHaveBeenCalled()
       expect(refetchEnvMock).not.toHaveBeenCalled()
 
-      userEvent.click(screen.getByRole('button', { name: 'Retry' }))
+      await userEvent.click(screen.getByRole('button', { name: 'Retry' }))
 
       await waitFor(() => {
         expect(refetchTargetGroupMock).toHaveBeenCalled()
@@ -194,7 +194,7 @@ describe('TargetGroupDetailPage', () => {
 
       expect(screen.queryByTestId('audit-logs')).not.toBeInTheDocument()
 
-      userEvent.click(screen.getByRole('tab', { name: 'activityLog' }))
+      await userEvent.click(screen.getByRole('tab', { name: 'activityLog' }))
 
       await waitFor(() => expect(screen.getByTestId('audit-logs')).toBeInTheDocument())
     })

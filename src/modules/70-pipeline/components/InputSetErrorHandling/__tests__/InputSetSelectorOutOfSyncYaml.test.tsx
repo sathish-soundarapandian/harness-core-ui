@@ -55,6 +55,11 @@ jest.mock('services/pipeline-ng', () => ({
 }))
 
 describe('INPUT SET SELECTOR -> Input Sets Error Exp', () => {
+  beforeAll(() => {
+    jest.useFakeTimers({ advanceTimers: true })
+    jest.runAllTimers()
+  })
+
   test('Input Set - should open reconcile dialog on clicking reconcile button', async () => {
     jest.spyOn(pipelineng, 'useGetInputSetsListForPipeline').mockImplementation((): any => mockInvalidInputSetsList)
     render(
@@ -64,13 +69,13 @@ describe('INPUT SET SELECTOR -> Input Sets Error Exp', () => {
     )
     jest.runOnlyPendingTimers()
 
-    userEvent.click(screen.getByText('pipeline.inputSets.selectPlaceholder'))
+    await userEvent.click(screen.getByText('pipeline.inputSets.selectPlaceholder'))
 
     const inputSetName = await screen.findByText('is1')
     expect(inputSetName).toBeDefined()
     const reconcileBtns = await screen.findAllByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
     expect(reconcileBtns.length).toBe(2)
-    userEvent.click(reconcileBtns[0])
+    await userEvent.click(reconcileBtns[0])
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 
     const reconcileDialog = findDialogContainer() as HTMLElement
@@ -79,7 +84,7 @@ describe('INPUT SET SELECTOR -> Input Sets Error Exp', () => {
       name: 'pipeline.inputSets.removeInvalidFields'
     })
     expect(reconcileDialog).toMatchSnapshot('Reconcile Dialog - Input Set')
-    userEvent.click(removeInvalidFieldBtn[0])
+    await userEvent.click(removeInvalidFieldBtn[0])
     await waitFor(() => expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(screen.getByText('is1')).toBeDefined())
   })
@@ -93,13 +98,13 @@ describe('INPUT SET SELECTOR -> Input Sets Error Exp', () => {
     )
     jest.runOnlyPendingTimers()
 
-    userEvent.click(screen.getByText('pipeline.inputSets.selectPlaceholder'))
+    await userEvent.click(screen.getByText('pipeline.inputSets.selectPlaceholder'))
 
     const inputSetName = await screen.findByText('is1')
     expect(inputSetName).toBeDefined()
     const reconcileBtns = await screen.findAllByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
     expect(reconcileBtns.length).toBe(2)
-    userEvent.click(reconcileBtns[1])
+    await userEvent.click(reconcileBtns[1])
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 
     const reconcileDialog = findDialogContainer() as HTMLElement
@@ -108,7 +113,7 @@ describe('INPUT SET SELECTOR -> Input Sets Error Exp', () => {
       name: 'pipeline.inputSets.removeInvalidFields'
     })
     expect(reconcileDialog).toMatchSnapshot('Reconcile Dialog - Overlay IS')
-    userEvent.click(removeInvalidFieldBtn[0])
+    await userEvent.click(removeInvalidFieldBtn[0])
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(screen.getByText('is1')).toBeDefined())
   })

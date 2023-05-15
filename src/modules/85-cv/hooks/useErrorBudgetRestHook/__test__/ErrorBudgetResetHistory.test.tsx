@@ -78,7 +78,7 @@ describe('ErrorBudgetResetHistory', () => {
 
     expect(screen.getByText(errorMessage)).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('Retry'))
+    await userEvent.click(screen.getByText('Retry'))
 
     await waitFor(() => expect(retryOnError).toHaveBeenCalled())
   })

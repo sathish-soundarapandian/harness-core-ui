@@ -30,8 +30,8 @@ describe('LogAnalysisRowContextMenu', () => {
     expect(screen.getByTestId(/feedbackContainer/)).toBeInTheDocument()
     expect(screen.getByTestId(/createdJiraTicketIdDisplay/)).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(screen.getByTestId(/createdJiraTicketIdDisplay/))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId(/createdJiraTicketIdDisplay/))
     })
 
     await waitFor(() => expect(openSpy).toHaveBeenCalledWith('abc.com', '_blank'))

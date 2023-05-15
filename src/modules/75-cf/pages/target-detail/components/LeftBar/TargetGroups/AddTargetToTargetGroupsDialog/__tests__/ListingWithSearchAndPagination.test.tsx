@@ -99,7 +99,7 @@ describe('ListingWithSearchAndPagination', () => {
 
       expect(setPageNumberMock).not.toHaveBeenCalled()
 
-      userEvent.click(getByRole(getPaginationEl() as HTMLElement, 'button', { name: '2' }))
+      await userEvent.click(getByRole(getPaginationEl() as HTMLElement, 'button', { name: '2' }))
 
       await waitFor(() => {
         // sent page number is 0 indexed, so 1 lower than button clicked
@@ -115,7 +115,7 @@ describe('ListingWithSearchAndPagination', () => {
     renderComponent({ setFieldValue: setFieldValueMock })
 
     expect(setFieldValueMock).not.toHaveBeenCalled()
-    userEvent.click(screen.getByText(firstRowData.name))
+    await userEvent.click(screen.getByText(firstRowData.name))
 
     await waitFor(() => expect(setFieldValueMock).toHaveBeenCalledWith(`targetGroups.${firstRowData.identifier}`, true))
   })

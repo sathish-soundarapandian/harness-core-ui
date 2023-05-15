@@ -42,7 +42,7 @@ describe('Unit tests for Downtime', () => {
     const downTimeIcon = getByTestId('downtimeIcon')
     await waitFor(() => expect(downTimeIcon).toBeInTheDocument())
 
-    userEvent.click(downTimeIcon)
+    await userEvent.click(downTimeIcon)
     await waitFor(() => expect(getByText('cv.sloDowntime.label')).toBeInTheDocument())
   })
 })

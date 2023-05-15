@@ -58,10 +58,10 @@ const renderComponent = (): RenderResult => {
 }
 
 describe('TabToolbar', () => {
-  test('it should call the onTabChange by clicking on Edit', () => {
+  test('it should call the onTabChange by clicking on Edit', async () => {
     renderComponent()
 
-    userEvent.click(screen.getByText('edit'))
+    await userEvent.click(screen.getByText('edit'))
 
     expect(onTabChange).toHaveBeenCalledWith(SLODetailsPageTabIds.Configurations)
   })
@@ -71,7 +71,7 @@ describe('TabToolbar', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getByText('cv.resetErrorBudget'))
+    await userEvent.click(screen.getByText('cv.resetErrorBudget'))
 
     const dialogContainer = findDialogContainer()
 
@@ -91,7 +91,7 @@ describe('TabToolbar', () => {
       value: 'REASON'
     })
 
-    userEvent.click(getByText(dialogContainer!, 'save'))
+    await userEvent.click(getByText(dialogContainer!, 'save'))
 
     await waitFor(() => {
       expect(queryByText(dialogContainer!, 'cv.resetErrorBudget')).not.toBeInTheDocument()
@@ -103,7 +103,7 @@ describe('TabToolbar', () => {
       expect(getByText(confirmationDialogContainer!, 'cv.slos.reviewChanges')).toBeInTheDocument()
     })
 
-    userEvent.click(getByText(confirmationDialogContainer!, 'common.ok'))
+    await userEvent.click(getByText(confirmationDialogContainer!, 'common.ok'))
 
     await waitFor(() => {
       expect(resetErrorBudget).toBeCalledWith(
@@ -121,7 +121,7 @@ describe('TabToolbar', () => {
   test('it should open the LogContent modal and render SLOLogContent with type ExecutionLog by clicking on Execution Logs', async () => {
     renderComponent()
 
-    userEvent.click(screen.getByText('cv.executionLogs'))
+    await userEvent.click(screen.getByText('cv.executionLogs'))
 
     await waitFor(() => {
       expect(screen.getByText(LogTypes.ExecutionLog)).toBeInTheDocument()
@@ -132,7 +132,7 @@ describe('TabToolbar', () => {
   test('it should open the LogContent modal and render SLOLogContent with type ApiCallLog by clicking on External API Calls', async () => {
     renderComponent()
 
-    userEvent.click(screen.getByText('cv.externalAPICalls'))
+    await userEvent.click(screen.getByText('cv.externalAPICalls'))
 
     await waitFor(() => {
       expect(screen.getByText(LogTypes.ApiCallLog)).toBeInTheDocument()
@@ -145,13 +145,13 @@ describe('TabToolbar', () => {
 
     renderComponent()
 
-    userEvent.click(screen.getByText('delete'))
+    await userEvent.click(screen.getByText('delete'))
 
     const dialogContainer = findDialogContainer()
 
     expect(getByText(dialogContainer!, 'delete')).toBeInTheDocument()
 
-    userEvent.click(getByText(dialogContainer!, 'delete'))
+    await userEvent.click(getByText(dialogContainer!, 'delete'))
 
     const { accountId, orgIdentifier, projectIdentifier } = pathParams
 
@@ -180,13 +180,13 @@ describe('TabToolbar', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByText('delete'))
+    await userEvent.click(screen.getByText('delete'))
 
     const dialogContainer = findDialogContainer()
 
     expect(getByText(dialogContainer!, 'delete')).toBeInTheDocument()
 
-    userEvent.click(getByText(dialogContainer!, 'delete'))
+    await userEvent.click(getByText(dialogContainer!, 'delete'))
 
     const { accountId, orgIdentifier, projectIdentifier } = pathParams
 

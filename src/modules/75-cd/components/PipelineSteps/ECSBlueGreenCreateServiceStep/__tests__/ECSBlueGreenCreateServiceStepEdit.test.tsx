@@ -47,13 +47,13 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement, fieldElement: HT
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
   act(() => {
     fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   })
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
   await waitFor(() => expect(fieldElement.value).toBe('<+input>.regex(<+input>.includes(/test/))'))
 }
 
@@ -203,47 +203,47 @@ describe('GenericExecutionStepEdit tests', () => {
 
     const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer') as HTMLInputElement
     const loadBalancerDropdownIcon = dropdownIcons[0].parentElement
-    userEvent.click(loadBalancerDropdownIcon!)
+    await userEvent.click(loadBalancerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(1))
     const loadBalancerOption1 = await findByText('Load_Balancer_1')
     expect(loadBalancerOption1).toBeInTheDocument()
-    userEvent.click(loadBalancerOption1)
+    await userEvent.click(loadBalancerOption1)
     await waitFor(() => expect(loadBalancerSelect.value).toBe('Load_Balancer_1'))
 
     const prodListenerSelect = queryByNameAttribute('spec.prodListener') as HTMLInputElement
     const prodListenerDropdownIcon = dropdownIcons[1].parentElement
-    userEvent.click(prodListenerDropdownIcon!)
+    await userEvent.click(prodListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(2))
     const listenerOption1 = await findByText('HTTP 80')
     expect(listenerOption1).toBeInTheDocument()
-    userEvent.click(listenerOption1)
+    await userEvent.click(listenerOption1)
     await waitFor(() => expect(prodListenerSelect.value).toBe('HTTP 80'))
 
     const prodListenerRuleSelect = queryByNameAttribute('spec.prodListenerRuleArn') as HTMLInputElement
     const prodListenerRuleDropdownIcon = dropdownIcons[2].parentElement
-    userEvent.click(prodListenerRuleDropdownIcon!)
+    await userEvent.click(prodListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(3))
     const listenerRuleOption1 = await findByText('Listener_Rule_1')
     expect(listenerRuleOption1).toBeInTheDocument()
-    userEvent.click(listenerRuleOption1)
+    await userEvent.click(listenerRuleOption1)
     await waitFor(() => expect(prodListenerRuleSelect.value).toBe('Listener_Rule_1'))
 
     const stageListenerSelect = queryByNameAttribute('spec.stageListener') as HTMLInputElement
     const stageListenerDropdownIcon = dropdownIcons[3].parentElement
-    userEvent.click(stageListenerDropdownIcon!)
+    await userEvent.click(stageListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(4))
     const listenerOption2 = await findByText('HTTP 81')
     expect(listenerOption2).toBeInTheDocument()
-    userEvent.click(listenerOption2)
+    await userEvent.click(listenerOption2)
     await waitFor(() => expect(stageListenerSelect.value).toBe('HTTP 81'))
 
     const stageListenerRuleSelect = queryByNameAttribute('spec.stageListenerRuleArn') as HTMLInputElement
     const stageListenerRuleDropdownIcon = dropdownIcons[4].parentElement
-    userEvent.click(stageListenerRuleDropdownIcon!)
+    await userEvent.click(stageListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(5))
     const listenerRuleOption2 = await findByText('Listener_Rule_2')
     expect(listenerRuleOption2).toBeInTheDocument()
-    userEvent.click(listenerRuleOption2)
+    await userEvent.click(listenerRuleOption2)
     await waitFor(() => expect(stageListenerRuleSelect.value).toBe('Listener_Rule_2'))
 
     act(() => {
@@ -314,34 +314,34 @@ describe('GenericExecutionStepEdit tests', () => {
 
     let loadBalancerSelect = queryByNameAttribute('spec.loadBalancer') as HTMLInputElement
     const loadBalancerFixedInputIcon = fixedInputIcons[1]
-    userEvent.click(loadBalancerFixedInputIcon)
+    await userEvent.click(loadBalancerFixedInputIcon)
     await waitFor(() => expect(getByText('Runtime input')).toBeInTheDocument())
-    userEvent.click(getByText('Runtime input'))
+    await userEvent.click(getByText('Runtime input'))
     runtimeInputIcons = container.querySelectorAll('span[data-icon="runtime-input"]')
     await waitFor(() => expect(runtimeInputIcons.length).toBe(1))
     loadBalancerSelect = queryByNameAttribute('spec.loadBalancer') as HTMLInputElement
     await waitFor(() => expect(loadBalancerSelect.value).toBe(RUNTIME_INPUT_VALUE))
 
     const prodListenerDropdownIcon = dropdownIcons[1].parentElement
-    userEvent.click(prodListenerDropdownIcon!)
+    await userEvent.click(prodListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(2))
     const listenerOption1 = queryByText('HTTP 80')
     expect(listenerOption1).not.toBeInTheDocument()
 
     const prodListenerRuleDropdownIcon = dropdownIcons[2].parentElement
-    userEvent.click(prodListenerRuleDropdownIcon!)
+    await userEvent.click(prodListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(3))
     const listenerRuleOption1 = queryByText('Listener_Rule_1')
     expect(listenerRuleOption1).not.toBeInTheDocument()
 
     const stageListenerDropdownIcon = dropdownIcons[3].parentElement
-    userEvent.click(stageListenerDropdownIcon!)
+    await userEvent.click(stageListenerDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(4))
     const listenerOption2 = queryByText('HTTP 81')
     expect(listenerOption2).not.toBeInTheDocument()
 
     const stageListenerRuleDropdownIcon = dropdownIcons[4].parentElement
-    userEvent.click(stageListenerRuleDropdownIcon!)
+    await userEvent.click(stageListenerRuleDropdownIcon!)
     await waitFor(() => expect(portalDivs.length).toBe(5))
     const listenerRuleOption2 = queryByText('Listener_Rule_2')
     expect(listenerRuleOption2).not.toBeInTheDocument()
@@ -405,7 +405,7 @@ describe('GenericExecutionStepEdit tests', () => {
     const loadBalancerSelect = queryByNameAttribute('spec.loadBalancer') as HTMLInputElement
     expect(loadBalancerSelect).toBeInTheDocument()
     const cogLoadBalancer = document.getElementById('configureOptions_spec.loadBalancer')
-    userEvent.click(cogLoadBalancer!)
+    await userEvent.click(cogLoadBalancer!)
     await waitFor(() => expect(modals.length).toBe(1))
     const loadBalancerCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(loadBalancerCOGModal, loadBalancerSelect)
@@ -413,7 +413,7 @@ describe('GenericExecutionStepEdit tests', () => {
     const prodListenerSelect = queryByNameAttribute('spec.prodListener') as HTMLInputElement
     expect(prodListenerSelect).toBeInTheDocument()
     const cogProdListener = document.getElementById('configureOptions_spec.prodListener')
-    userEvent.click(cogProdListener!)
+    await userEvent.click(cogProdListener!)
     await waitFor(() => expect(modals.length).toBe(1))
     const prodListenerCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(prodListenerCOGModal, prodListenerSelect)
@@ -421,7 +421,7 @@ describe('GenericExecutionStepEdit tests', () => {
     const prodListenerRuleSelect = queryByNameAttribute('spec.prodListenerRuleArn') as HTMLInputElement
     expect(prodListenerRuleSelect).toBeInTheDocument()
     const cogProdListenerRuleArn = document.getElementById('configureOptions_spec.prodListenerRuleArn')
-    userEvent.click(cogProdListenerRuleArn!)
+    await userEvent.click(cogProdListenerRuleArn!)
     await waitFor(() => expect(modals.length).toBe(1))
     const prodListenerRuleArnCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(prodListenerRuleArnCOGModal, prodListenerRuleSelect)
@@ -429,7 +429,7 @@ describe('GenericExecutionStepEdit tests', () => {
     const stageListenerSelect = queryByNameAttribute('spec.stageListener') as HTMLInputElement
     expect(stageListenerSelect).toBeInTheDocument()
     const cogStageListener = document.getElementById('configureOptions_spec.stageListener')
-    userEvent.click(cogStageListener!)
+    await userEvent.click(cogStageListener!)
     await waitFor(() => expect(modals.length).toBe(1))
     const stageListenerCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(stageListenerCOGModal, stageListenerSelect)
@@ -437,7 +437,7 @@ describe('GenericExecutionStepEdit tests', () => {
     const stageListenerRuleSelect = queryByNameAttribute('spec.stageListenerRuleArn') as HTMLInputElement
     expect(stageListenerRuleSelect).toBeInTheDocument()
     const cogStageListenerRuleArn = document.getElementById('configureOptions_spec.stageListenerRuleArn')
-    userEvent.click(cogStageListenerRuleArn!)
+    await userEvent.click(cogStageListenerRuleArn!)
     await waitFor(() => expect(modals.length).toBe(1))
     const stageListenerRuleArnCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(stageListenerRuleArnCOGModal, stageListenerRuleSelect)

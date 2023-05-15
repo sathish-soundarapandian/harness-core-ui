@@ -76,7 +76,7 @@ describe('ServeVariationToItem', () => {
     const btn = screen.getByRole('button', { name: dialogTitle })
     expect(btn).toBeInTheDocument()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => {
       expect(dialogSpy).toHaveBeenCalledWith(expect.objectContaining({ isOpen: true }), {})
@@ -88,7 +88,7 @@ describe('ServeVariationToItem', () => {
 
     renderComponent({ dialogTitle })
 
-    userEvent.click(screen.getByRole('button', { name: dialogTitle }))
+    await userEvent.click(screen.getByRole('button', { name: dialogTitle }))
 
     expect(dialogSpy).toHaveBeenLastCalledWith(expect.objectContaining({ isOpen: true }), {})
     await act(dialogSpy.mock.calls[1][0].closeDialog)

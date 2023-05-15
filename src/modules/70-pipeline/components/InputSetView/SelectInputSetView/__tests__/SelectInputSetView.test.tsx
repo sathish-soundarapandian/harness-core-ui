@@ -43,7 +43,7 @@ describe('SelectInputSetView tests', () => {
     expect(portalDivs.length).toBe(0)
     // This icon indicates that field is rendered as dropdown
     const dropDownButton = container.querySelector('[data-icon="chevron-down"]')
-    userEvent.click(dropDownButton!)
+    await userEvent.click(dropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
@@ -88,7 +88,7 @@ describe('SelectInputSetView tests', () => {
     expect(portalDivs.length).toBe(0)
     // This icon indicates that field is rendered as dropdown
     const dropDownButton = container.querySelector('[data-icon="chevron-down"]')
-    userEvent.click(dropDownButton!)
+    await userEvent.click(dropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')

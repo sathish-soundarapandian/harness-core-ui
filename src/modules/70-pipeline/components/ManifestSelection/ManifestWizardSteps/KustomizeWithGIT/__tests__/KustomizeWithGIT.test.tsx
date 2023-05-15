@@ -117,10 +117,10 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
     )
 
     // Advanced Section
-    userEvent.click(getByText('advancedTitle'))
+    await userEvent.click(getByText('advancedTitle'))
     const deleteCommandFlagButton = container.querySelector('[data-icon="main-trash"]') as HTMLElement
     expect(deleteCommandFlagButton).toBeDefined()
-    userEvent.click(deleteCommandFlagButton)
+    await userEvent.click(deleteCommandFlagButton)
     expect(container.querySelector('span[data-tooltip-id="kustomizeGit_repoName"]')).toBeInTheDocument()
     expect(container.querySelector('span[data-tooltip-id="kustomizeGit_identifier"]')).toBeInTheDocument()
   })
@@ -211,7 +211,7 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
       </TestWrapper>
     )
 
-    await act(async () => userEvent.click(getByTestId('advancedTitle-summary')))
+    await act(async () => await userEvent.click(getByTestId('advancedTitle-summary')))
     expect(queryByNameAttribute('optimizedKustomizeManifestCollection', container)).toBeInTheDocument()
   })
 
@@ -235,11 +235,11 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
       </TestWrapper>
     )
 
-    await act(async () => userEvent.click(getByTestId('advancedTitle-summary')))
+    await act(async () => await userEvent.click(getByTestId('advancedTitle-summary')))
     expect(queryByNameAttribute('kustomizeYamlFolderPath', container)).toBeNull()
 
-    await act(async () =>
-      userEvent.click(container.querySelector('input[name="optimizedKustomizeManifestCollection"]')!)
+    await act(
+      async () => await userEvent.click(container.querySelector('input[name="optimizedKustomizeManifestCollection"]')!)
     )
     expect(queryByNameAttribute('kustomizeYamlFolderPath', container)).toBeInTheDocument()
   })

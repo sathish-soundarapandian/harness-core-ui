@@ -30,7 +30,7 @@ jest.mock('@governance/PolicyManagementEvaluationModal', () => ({
 jest.mock('uuid')
 
 const renderComponent = (props: Partial<TargetingRulesTabProps> = {}): void => {
-  render(
+  const { container } = render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
@@ -113,28 +113,28 @@ describe('TargetingRulesTab GitSync', () => {
     // toggle flag off
     const flagToggle = screen.getByTestId('flag-status-switch')
     expect(flagToggle).toBeChecked()
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).not.toBeChecked()
 
     // click save and assert modal appears
     const saveButton = screen.getByText('save')
     expect(saveButton).toBeInTheDocument()
-    userEvent.click(saveButton)
+    await userEvent.click(saveButton)
     await waitFor(() => expect(screen.getByTestId('save-flag-to-git-modal-body')).toBeInTheDocument())
 
     // clear prepopulated messsage and add commit message
     await waitFor(() =>
       expect(screen.getByPlaceholderText('common.git.commitMessage')).toHaveValue('Updated feature flag targeting')
     )
-    userEvent.clear(screen.getByPlaceholderText('common.git.commitMessage'))
+    await userEvent.clear(screen.getByPlaceholderText('common.git.commitMessage'))
 
     // select autocommit checkbox
     const autoCommitCheckbox = document.querySelector('input[name="autoCommit"]') as HTMLInputElement
-    userEvent.click(autoCommitCheckbox)
+    await userEvent.click(autoCommitCheckbox)
     expect(autoCommitCheckbox).toBeChecked()
 
     // click save and assert
-    userEvent.click(screen.getByTestId('save-flag-to-git-modal-save-button'))
+    await userEvent.click(screen.getByTestId('save-flag-to-git-modal-save-button'))
     await waitFor(() =>
       expect(patchFeatureMock).toBeCalledWith({
         gitDetails: {
@@ -166,13 +166,13 @@ describe('TargetingRulesTab GitSync', () => {
     // toggle flag off
     const flagToggle = screen.getByTestId('flag-status-switch')
     expect(flagToggle).toBeChecked()
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).not.toBeChecked()
 
     // click save
     const saveButton = screen.getByText('save')
     expect(saveButton).toBeInTheDocument()
-    userEvent.click(saveButton)
+    await userEvent.click(saveButton)
 
     await waitFor(() =>
       expect(patchFeatureMock).toBeCalledWith({
@@ -208,13 +208,13 @@ describe('TargetingRulesTab GitSync', () => {
     // toggle flag off
     const flagToggle = screen.getByTestId('flag-status-switch')
     expect(flagToggle).toBeChecked()
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).not.toBeChecked()
 
     // click save
     const saveButton = screen.getByText('save')
     expect(saveButton).toBeInTheDocument()
-    userEvent.click(saveButton)
+    await userEvent.click(saveButton)
 
     await waitFor(() => expect(screen.getByText('cf.gitSync.gitErrorModalTitle')).toBeInTheDocument())
   })

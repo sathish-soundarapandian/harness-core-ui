@@ -57,11 +57,11 @@ describe('<ExecutionInputs /> tests', () => {
       expect(container).toMatchSnapshot()
 
       const input = queryByAttribute('name', container, 'stage.variables[0].value')!
-      userEvent.type(input, 'Hello')
+      await userEvent.type(input, 'Hello')
 
       const submit = await findByTestId('submit')
 
-      userEvent.click(submit)
+      await userEvent.click(submit)
 
       await waitFor(() => {
         expect(mutate).toHaveBeenCalledWith(
@@ -142,11 +142,11 @@ describe('<ExecutionInputs /> tests', () => {
       expect(container).toMatchSnapshot()
 
       const input = queryByAttribute('name', container, 'timeout')!
-      userEvent.type(input, '1m')
+      await userEvent.type(input, '1m')
 
       const submit = await findByTestId('submit')
 
-      userEvent.click(submit)
+      await userEvent.click(submit)
 
       await waitFor(() => {
         expect(mutate).toHaveBeenCalledWith(
@@ -205,11 +205,11 @@ describe('<ExecutionInputs /> tests', () => {
 
       const submit = await findByTestId('abort')
 
-      userEvent.click(submit)
+      await userEvent.click(submit)
 
       const confirm = await findByText('confirm')
 
-      userEvent.click(confirm)
+      await userEvent.click(confirm)
 
       await waitFor(() => {
         expect(mutate).toHaveBeenCalledWith({})

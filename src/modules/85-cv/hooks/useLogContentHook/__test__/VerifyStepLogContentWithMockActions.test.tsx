@@ -89,11 +89,11 @@ describe('ExecutionLog - with mock actions', () => {
 
     expect(screen.getByPlaceholderText('- Select -')).toHaveValue('pipeline.verification.healthSourceLabel: all')
 
-    userEvent.click(screen.getByPlaceholderText('- Select -'))
+    await userEvent.click(screen.getByPlaceholderText('- Select -'))
 
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(screen.getByText('dyna')).toBeInTheDocument()
-      userEvent.click(screen.getByText('dyna'))
+      await userEvent.click(screen.getByText('dyna'))
     })
 
     await waitFor(() => {
@@ -129,11 +129,11 @@ describe('ExecutionLog - with mock actions', () => {
 
     expect(screen.getByPlaceholderText('- Select -')).toHaveValue('pipeline.verification.healthSourceLabel: all')
 
-    userEvent.click(screen.getByPlaceholderText('- Select -'))
+    await userEvent.click(screen.getByPlaceholderText('- Select -'))
 
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(screen.getByText('dyna')).toBeInTheDocument()
-      userEvent.click(screen.getByText('dyna'))
+      await userEvent.click(screen.getByText('dyna'))
     })
 
     await waitFor(() => {
@@ -166,7 +166,7 @@ describe('ExecutionLog - with mock actions', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByText('cv.displayOnlyErrors'))
+    await userEvent.click(screen.getByText('cv.displayOnlyErrors'))
 
     await waitFor(() => {
       expect(actions.resetExecutionLogs).toHaveBeenCalledTimes(1)
@@ -198,7 +198,7 @@ describe('ExecutionLog - with mock actions', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByText('cv.displayOnlyErrors'))
+    await userEvent.click(screen.getByText('cv.displayOnlyErrors'))
 
     await waitFor(() => {
       expect(cvService.useGetVerifyStepLogs).toHaveBeenLastCalledWith({
@@ -231,12 +231,12 @@ describe('ExecutionLog - with mock actions', () => {
 
     const searchInput = screen.getByPlaceholderText('Search')
 
-    userEvent.click(searchInput)
-    userEvent.type(searchInput, 'INFO')
+    await userEvent.click(searchInput)
+    await userEvent.type(searchInput, 'INFO')
 
     await waitFor(() => expect(actions.search).toHaveBeenCalledTimes(1))
 
-    userEvent.click(container.querySelector('[data-icon="main-close"]')!)
+    await userEvent.click(container.querySelector('[data-icon="main-close"]')!)
 
     await waitFor(() => expect(actions.resetSearch).toHaveBeenCalledTimes(1))
   })
@@ -257,7 +257,7 @@ describe('ExecutionLog - with mock actions', () => {
 
     expect(container.querySelector('[data-icon="full-screen"]')!).toBeInTheDocument()
 
-    userEvent.click(container.querySelector('[data-icon="full-screen"]')!)
+    await userEvent.click(container.querySelector('[data-icon="full-screen"]')!)
 
     await waitFor(() => expect(setIsFullScreen).toHaveBeenCalled())
   })
@@ -278,7 +278,7 @@ describe('ExecutionLog - with mock actions', () => {
 
     expect(container.querySelector('[data-icon="full-screen-exit"]')!).toBeInTheDocument()
 
-    userEvent.click(container.querySelector('[data-icon="full-screen-exit"]')!)
+    await userEvent.click(container.querySelector('[data-icon="full-screen-exit"]')!)
 
     await waitFor(() => expect(setIsFullScreen).toHaveBeenCalled())
   })

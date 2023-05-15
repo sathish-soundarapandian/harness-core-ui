@@ -210,7 +210,7 @@ describe('SLOTargetChartWrapper', () => {
 
     expect(screen.getByText(errorMessage)).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('Retry'))
+    await userEvent.click(screen.getByText('Retry'))
 
     await waitFor(() => expect(retryOnError).toBeCalledWith(serviceLevelIndicator, 'Service_1_Environment_1'))
   })

@@ -46,48 +46,48 @@ const renderComponent = (props: Partial<FlagElemBooleanProps> = {}): void => {
 }
 
 describe('FlagElemBoolean', () => {
-  test('it should render flag type options and handle change correctly', () => {
+  test('it should render flag type options and handle change correctly', async () => {
     const flagToggleMock = jest.fn()
     renderComponent({ toggleFlagType: flagToggleMock })
 
     const kindDropdown = document.getElementsByName('kind')[0]
     expect(kindDropdown).toHaveValue('boolean')
 
-    userEvent.click(kindDropdown)
+    await userEvent.click(kindDropdown)
 
     expect(screen.getByText('boolean')).toBeInTheDocument()
     expect(screen.getByText('multivariate')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('boolean'))
+    await userEvent.click(screen.getByText('boolean'))
 
     expect(flagToggleMock).toHaveBeenCalled()
   })
 
-  test('it should update "True" value on input change', () => {
+  test('it should update "True" value on input change', async () => {
     renderComponent()
 
     const trueValueInput = document.getElementsByName('variations[0].name')[0]
     expect(trueValueInput).toHaveValue('True')
 
-    userEvent.clear(trueValueInput)
-    userEvent.type(trueValueInput, 'newTrueValue')
+    await userEvent.clear(trueValueInput)
+    await userEvent.type(trueValueInput, 'newTrueValue')
 
     expect(trueValueInput).toHaveValue('newTrueValue')
   })
 
-  test('it should update "False" value on input change', () => {
+  test('it should update "False" value on input change', async () => {
     renderComponent()
 
     const falseValueInput = document.getElementsByName('variations[1].name')[0]
     expect(falseValueInput).toHaveValue('False')
 
-    userEvent.clear(falseValueInput)
-    userEvent.type(falseValueInput, 'newFalseValue')
+    await userEvent.clear(falseValueInput)
+    await userEvent.type(falseValueInput, 'newFalseValue')
 
     expect(falseValueInput).toHaveValue('newFalseValue')
   })
 
-  test('it should call previousStep callback on "back" click', () => {
+  test('it should call previousStep callback on "back" click', async () => {
     const previousStepMock = jest.fn()
     const previouStepDataMock = { name: 'test 1' }
     renderComponent({ previousStep: previousStepMock, prevStepData: previouStepDataMock })
@@ -95,7 +95,7 @@ describe('FlagElemBoolean', () => {
     const backButton = screen.getByText('back')
     expect(backButton).toBeInTheDocument()
 
-    userEvent.click(backButton)
+    await userEvent.click(backButton)
 
     expect(previousStepMock).toHaveBeenCalledWith(previouStepDataMock)
   })
@@ -125,7 +125,7 @@ describe('FlagElemBoolean', () => {
     const nextButton = screen.getByText('cf.creationModal.saveAndClose')
     expect(nextButton).toBeInTheDocument()
 
-    userEvent.click(nextButton)
+    await userEvent.click(nextButton)
 
     await waitFor(() => expect(nextStepMock).toHaveBeenCalledWith(nextStepDataMock))
   })
@@ -138,7 +138,7 @@ describe('FlagElemBoolean', () => {
     const nextButton = screen.getByText('next')
     expect(nextButton).toBeInTheDocument()
 
-    userEvent.click(nextButton)
+    await userEvent.click(nextButton)
 
     await waitFor(() => expect(nextStepMock).toHaveBeenCalled())
   })

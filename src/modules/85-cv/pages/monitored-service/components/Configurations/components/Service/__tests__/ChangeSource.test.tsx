@@ -126,20 +126,20 @@ describe('Verify ChangeSource', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(getByText('cv.changeSource.addChangeSource'))
+    await act(async () => {
+      await userEvent.click(getByText('cv.changeSource.addChangeSource'))
     })
 
     await waitFor(() => expect(getByText('Harness CD Next Gen')).toBeInTheDocument())
 
-    await act(() => {
-      userEvent.click(screen.getByText('Harness CD Next Gen'))
+    await act(async () => {
+      await userEvent.click(screen.getByText('Harness CD Next Gen'))
     })
 
     await waitFor(() => expect(screen.getByText('cv.changeSource.defineChangeSource')).toBeInTheDocument())
 
-    await act(() => {
-      userEvent.click(screen.getByText('submit'))
+    await act(async () => {
+      await userEvent.click(screen.getByText('submit'))
     })
 
     await waitFor(() => expect(onSuccess).not.toHaveBeenCalled())
@@ -163,20 +163,20 @@ describe('Verify ChangeSource', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(getByText('cv.changeSource.addChangeSource'))
+    await act(async () => {
+      await userEvent.click(getByText('cv.changeSource.addChangeSource'))
     })
 
     await waitFor(() => expect(getByText('Harness CD Next Gen')).toBeInTheDocument())
 
-    await act(() => {
-      userEvent.click(screen.getByText('Harness CD Next Gen'))
+    await act(async () => {
+      await userEvent.click(screen.getByText('Harness CD Next Gen'))
     })
 
     await waitFor(() => expect(screen.getByText('cv.changeSource.defineChangeSource')).toBeInTheDocument())
 
-    await act(() => {
-      userEvent.click(screen.getByText('submit'))
+    await act(async () => {
+      await userEvent.click(screen.getByText('submit'))
     })
 
     await waitFor(() => expect(onSuccess).toHaveBeenCalled())

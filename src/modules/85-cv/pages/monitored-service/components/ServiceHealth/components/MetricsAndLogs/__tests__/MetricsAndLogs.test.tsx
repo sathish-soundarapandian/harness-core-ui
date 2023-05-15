@@ -87,7 +87,7 @@ describe('Unit tests for MetricsAndLogs', () => {
 
     expect(screen.getByText('cv.externalAPICalls')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.externalAPICalls'))
+    await userEvent.click(screen.getByText('cv.externalAPICalls'))
 
     await waitFor(() => {
       expect(screen.getByText(LogTypes.ApiCallLog)).toBeInTheDocument()
@@ -108,7 +108,7 @@ describe('Unit tests for MetricsAndLogs', () => {
 
     expect(screen.getByText('cv.executionLogs')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.executionLogs'))
+    await userEvent.click(screen.getByText('cv.executionLogs'))
 
     await waitFor(() => {
       expect(screen.getByText(LogTypes.ExecutionLog)).toBeInTheDocument()

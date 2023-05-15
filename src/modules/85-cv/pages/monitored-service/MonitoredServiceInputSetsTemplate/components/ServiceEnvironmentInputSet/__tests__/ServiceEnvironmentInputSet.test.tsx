@@ -85,7 +85,7 @@ describe('ServiceEnvironmentInputSet', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('should render correctly with a service and environment value provided', () => {
+  test('should render correctly with a service and environment value provided', async () => {
     const { container, getByText } = render(
       <TestWrapper>
         <ServiceEnvironmentInputSet
@@ -99,11 +99,11 @@ describe('ServiceEnvironmentInputSet', () => {
     expect(getByText('cv.monitoredServices.serviceAndEnvironment')).toBeInTheDocument()
     expect(container.querySelector('[title="addService"]')).toBeInTheDocument()
     expect(container.querySelector('[title="addEnv"]')).toBeInTheDocument()
-    act(() => {
-      userEvent.click(container.querySelector('[title="addEnv"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[title="addEnv"]')!)
     })
-    act(() => {
-      userEvent.click(container.querySelector('[title="onSelectEnv"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[title="onSelectEnv"]')!)
     })
   })
 
@@ -133,7 +133,7 @@ describe('ServiceEnvironmentInputSet', () => {
     )
   })
 
-  test('should render correctly with an service value provided', () => {
+  test('should render correctly with an service value provided', async () => {
     const { getByText, container } = render(
       <TestWrapper>
         <ServiceEnvironmentInputSet serviceValue={'svc1'} onChange={onChangeMock} isReadOnlyInputSet={false} />
@@ -141,11 +141,11 @@ describe('ServiceEnvironmentInputSet', () => {
     )
     expect(getByText('cv.monitoredServices.serviceAndEnvironment')).toBeInTheDocument()
     expect(container.querySelector('[title="addService"]')).toBeInTheDocument()
-    act(() => {
-      userEvent.click(container.querySelector('[title="addService"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[title="addService"]')!)
     })
-    act(() => {
-      userEvent.click(container.querySelector('[title="onSelectService"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[title="onSelectService"]')!)
     })
   })
 
@@ -209,12 +209,12 @@ describe('ServiceEnvironmentInputSet', () => {
     )
     expect(container.querySelector('[title="On Service Select"]')).toBeInTheDocument()
     expect(container.querySelector('[title="On Environment Select"]')).toBeInTheDocument()
-    act(() => {
-      userEvent.click(container.querySelector('[title="On Service Select"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[title="On Service Select"]')!)
     })
     expect(onInputSetChangeMock).toHaveBeenCalledWith('serviceRef', 'newService')
-    act(() => {
-      userEvent.click(container.querySelector('[title="On Environment Select"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[title="On Environment Select"]')!)
     })
     expect(onInputSetChangeMock).toHaveBeenNthCalledWith(2, 'environmentRef', 'newEnv')
 

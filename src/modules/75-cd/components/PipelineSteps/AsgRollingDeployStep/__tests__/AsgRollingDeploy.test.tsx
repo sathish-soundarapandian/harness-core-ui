@@ -47,31 +47,31 @@ describe('Asg Canary Delete Step tests', () => {
     )
 
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.type(nameInput!, 'Step 1')
+    await userEvent.type(nameInput!, 'Step 1')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('Step 1'))
     expect(getByText('Step_1')).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '20m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('20m'))
 
     const instancesCheckbox = queryByNameAttribute('spec.useAlreadyRunningInstances', container)
     expect(instancesCheckbox!).not.toBeChecked()
 
     const instanceRefreshAccordian = getByText('cd.instanceRefresh')
-    userEvent.click(instanceRefreshAccordian!)
+    await userEvent.click(instanceRefreshAccordian!)
 
     await waitFor(() => expect(queryByNameAttribute('spec.minimumHealthyPercentage', container)).toBeInTheDocument())
 
     const minimumHealthyPercentage = queryByNameAttribute('spec.minimumHealthyPercentage', container)
-    userEvent.clear(minimumHealthyPercentage!)
-    userEvent.type(minimumHealthyPercentage!, '100')
+    await userEvent.clear(minimumHealthyPercentage!)
+    await userEvent.type(minimumHealthyPercentage!, '100')
     await waitFor(() => expect(minimumHealthyPercentage).toHaveDisplayValue('100'))
 
     const instanceWarmup = queryByNameAttribute('spec.instanceWarmup', container)
-    userEvent.clear(instanceWarmup!)
-    userEvent.type(instanceWarmup!, '100')
+    await userEvent.clear(instanceWarmup!)
+    await userEvent.type(instanceWarmup!, '100')
     await waitFor(() => expect(instanceWarmup).toHaveDisplayValue('100'))
 
     const skipMatching = queryByNameAttribute('spec.skipMatching', container)
@@ -126,36 +126,36 @@ describe('Asg Canary Delete Step tests', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(onUpdate).not.toHaveBeenCalled()
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.type(timeoutInput!, '20m')
 
     const minimumHealthyPercentage = queryByNameAttribute('spec.minimumHealthyPercentage', container)
-    userEvent.clear(minimumHealthyPercentage!)
-    userEvent.type(minimumHealthyPercentage!, '-1')
-    userEvent.click(submitBtn)
+    await userEvent.clear(minimumHealthyPercentage!)
+    await userEvent.type(minimumHealthyPercentage!, '-1')
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(queryByText('cd.minimumHealthyPercentageMinLimit')).toBeInTheDocument())
 
-    userEvent.clear(minimumHealthyPercentage!)
-    userEvent.type(minimumHealthyPercentage!, '1000')
-    userEvent.click(submitBtn)
+    await userEvent.clear(minimumHealthyPercentage!)
+    await userEvent.type(minimumHealthyPercentage!, '1000')
+    await userEvent.click(submitBtn)
 
     await waitFor(() => expect(queryByText('cd.minimumHealthyPercentageMaxLimit')).toBeInTheDocument())
 
-    userEvent.clear(minimumHealthyPercentage!)
-    userEvent.type(minimumHealthyPercentage!, '100')
+    await userEvent.clear(minimumHealthyPercentage!)
+    await userEvent.type(minimumHealthyPercentage!, '100')
 
     const instanceWarmup = queryByNameAttribute('spec.instanceWarmup', container)
-    userEvent.clear(instanceWarmup!)
-    userEvent.type(instanceWarmup!, '-1')
-    userEvent.click(submitBtn)
+    await userEvent.clear(instanceWarmup!)
+    await userEvent.type(instanceWarmup!, '-1')
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(queryByText('cd.instanceWarmupError')).toBeInTheDocument())
 
-    userEvent.clear(instanceWarmup!)
-    userEvent.type(instanceWarmup!, '10')
+    await userEvent.clear(instanceWarmup!)
+    await userEvent.type(instanceWarmup!, '10')
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Step_AsgRollingDeploy',

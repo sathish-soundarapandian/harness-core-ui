@@ -19,7 +19,7 @@ jest.mock('react-monaco-editor', () => ({
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor', () => MonacoEditor)
 
-describe('Event summary test', async () => {
+describe('Event summary test', () => {
   test('render', async () => {
     const renderObj = render(
       <TestWrapper>

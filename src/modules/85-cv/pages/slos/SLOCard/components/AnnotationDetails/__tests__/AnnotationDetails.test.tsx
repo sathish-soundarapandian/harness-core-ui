@@ -51,10 +51,10 @@ describe('Unit tests for AnnotationDetails', () => {
       fieldId: AnnotationDetailsFields.ANNOTATION_MESSAGE,
       value: 'New annotation'
     })
-    userEvent.click(getByText('save'))
+    await userEvent.click(getByText('save'))
 
     // should be able to click on cancel
-    userEvent.click(getByText('cancel'))
+    await userEvent.click(getByText('cancel'))
   })
 
   test('should be able to verify that AnnotationDetails component loads in edit annotation mode', async () => {
@@ -77,6 +77,6 @@ describe('Unit tests for AnnotationDetails', () => {
       value: 'New annotation updated'
     })
 
-    userEvent.click(getByText('save'))
+    await userEvent.click(getByText('save'))
   })
 })

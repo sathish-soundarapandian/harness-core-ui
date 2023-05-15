@@ -56,7 +56,7 @@ describe('TargetGroupsSubSection', () => {
 
     renderComponent({ removeTargetGroup, onRemoveTargetGroup })
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetDetail.removeSegment' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetDetail.removeSegment' })[0])
 
     await waitFor(() => {
       expect(removeTargetGroup).not.toHaveBeenCalled()
@@ -64,7 +64,7 @@ describe('TargetGroupsSubSection', () => {
       expect(screen.getByRole('button', { name: 'confirm' })).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'confirm' }))
+    await userEvent.click(screen.getByRole('button', { name: 'confirm' }))
 
     await waitFor(() => {
       expect(removeTargetGroup).toHaveBeenCalled()
@@ -78,13 +78,13 @@ describe('TargetGroupsSubSection', () => {
 
     renderComponent({ removeTargetGroup })
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.targetDetail.removeSegment' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.targetDetail.removeSegment' })[0])
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'confirm' })).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'confirm' }))
+    await userEvent.click(screen.getByRole('button', { name: 'confirm' }))
 
     await waitFor(() => {
       expect(screen.getByText(message)).toBeInTheDocument()
@@ -102,7 +102,7 @@ describe('TargetGroupsSubSection', () => {
     expect(addBtn).toBeInTheDocument()
     expect(openModal).not.toHaveBeenCalled()
 
-    userEvent.click(addBtn)
+    await userEvent.click(addBtn)
 
     await waitFor(() => expect(openModal).toHaveBeenCalled())
   })

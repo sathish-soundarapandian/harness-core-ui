@@ -94,10 +94,10 @@ describe('<MultiTypeMultiSelectDropDown /> tests', () => {
     )
 
     const fixedIcon = container.querySelector('.MultiTypeInput--btn')!
-    userEvent.click(fixedIcon)
+    await userEvent.click(fixedIcon)
 
     const runtimeMenu = await findByTextGlobal(document.body, 'Runtime input')
-    userEvent.click(runtimeMenu)
+    await userEvent.click(runtimeMenu)
 
     await waitFor(() => expect(queryByAttribute('placeholder', container, '<+input>')).toBeInTheDocument())
   })
@@ -110,10 +110,10 @@ describe('<MultiTypeMultiSelectDropDown /> tests', () => {
     )
 
     const fixedIcon = container.querySelector('.MultiTypeInput--btn')!
-    userEvent.click(fixedIcon)
+    await userEvent.click(fixedIcon)
 
     const runtimeMenu = await findByTextGlobal(document.body, 'Expression')
-    userEvent.click(runtimeMenu)
+    await userEvent.click(runtimeMenu)
 
     await waitFor(() => expect(queryByAttribute('placeholder', container, '<+expression>')).toBeInTheDocument())
   })
@@ -137,7 +137,7 @@ describe('<MultiTypeMultiSelectDropDown /> tests', () => {
 
     const submit = await findByText('submit')
 
-    userEvent.click(submit)
+    await userEvent.click(submit)
 
     await waitFor(() => expect(container.querySelector('.hasError')).toBeInTheDocument())
 

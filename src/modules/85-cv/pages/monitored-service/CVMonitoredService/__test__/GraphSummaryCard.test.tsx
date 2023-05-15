@@ -49,7 +49,7 @@ describe('Monitored Service Summary Card', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('[data-icon="Edit"]')!)
+    await userEvent.click(container.querySelector('[data-icon="Edit"]')!)
 
     await waitFor(() =>
       expect(
@@ -68,7 +68,7 @@ describe('Monitored Service Summary Card', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('[data-icon="trash"]')!)
+    await userEvent.click(container.querySelector('[data-icon="trash"]')!)
 
     await waitFor(() => screen.queryByText('yes'))
 
@@ -76,7 +76,7 @@ describe('Monitored Service Summary Card', () => {
 
     expect(confirmDialog).toBeInTheDocument()
 
-    userEvent.click(queryByText(confirmDialog!, 'yes')!)
+    await userEvent.click(queryByText(confirmDialog!, 'yes')!)
 
     expect(onDeleteService).toBeCalledWith(monitoredService.identifier)
   })
@@ -88,7 +88,7 @@ describe('Monitored Service Summary Card', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('[data-name="on-btn"]')!)
+    await userEvent.click(container.querySelector('[data-name="on-btn"]')!)
 
     expect(onToggleService).toHaveBeenCalledWith(monitoredService.identifier, true)
   })
@@ -120,7 +120,7 @@ describe('Monitored Service Summary Card', () => {
 
     expect(screen.getByText(errorMessage)).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('Retry'))
+    await userEvent.click(screen.getByText('Retry'))
 
     await waitFor(() =>
       expect(cvService.useGetMonitoredServiceDetailsWithServiceId).toHaveBeenLastCalledWith({

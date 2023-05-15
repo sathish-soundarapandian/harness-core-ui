@@ -46,7 +46,7 @@ describe('TargetGroupRow', () => {
     const deleteBtn = screen.getByRole('button', { name: 'cf.targetDetail.removeSegment' })
     expect(deleteBtn).toBeInTheDocument()
 
-    userEvent.click(deleteBtn)
+    await userEvent.click(deleteBtn)
 
     await waitFor(() => {
       expect(screen.getByText(confirmActionProps.title as string)).toBeInTheDocument()
@@ -55,7 +55,7 @@ describe('TargetGroupRow', () => {
       expect(confirmActionProps.action).not.toHaveBeenCalled()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'confirm' }))
+    await userEvent.click(screen.getByRole('button', { name: 'confirm' }))
 
     await waitFor(() => expect(confirmActionProps.action).toHaveBeenCalled())
   })
@@ -63,7 +63,7 @@ describe('TargetGroupRow', () => {
   test('it should navigate to the Target Group detail page when clicked', async () => {
     renderComponent()
 
-    userEvent.click(screen.getByTestId('target-group-row'))
+    await userEvent.click(screen.getByTestId('target-group-row'))
 
     expect(await screen.findByTestId('location')).toHaveTextContent('target-management/target-groups')
   })

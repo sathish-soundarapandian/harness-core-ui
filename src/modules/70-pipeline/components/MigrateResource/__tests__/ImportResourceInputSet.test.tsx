@@ -106,8 +106,8 @@ describe('ImportResource - Input Set', () => {
 
     const importButton = getByText('common.import')
     expect(container).toMatchSnapshot()
-    act(() => {
-      userEvent.click(importButton)
+    await act(async () => {
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('pipeline.importSuccessMessage')).toBeDefined())
     await waitFor(() => expect(onSuccess).toHaveBeenCalled())
@@ -115,7 +115,7 @@ describe('ImportResource - Input Set', () => {
   })
 
   test('when pipelineIdentifier is not passed in extraQueryParams prop - provide required values and click on import button', async () => {
-    const { getByText } = render(
+    const { getAllByText, getByText } = render(
       <TestWrapper path={TEST_PIPELINES_PATH} pathParams={TEST_PATH_PARAMS}>
         <ImportResource
           resourceType={ResourceType.INPUT_SETS}
@@ -128,10 +128,10 @@ describe('ImportResource - Input Set', () => {
     )
 
     const importButton = getByText('common.import')
-    act(() => {
-      userEvent.click(importButton)
+    await act(async () => {
+      await userEvent.click(importButton)
     })
-    await waitFor(() => expect(getByText('pipeline.importSuccessMessage')).toBeDefined())
+    await waitFor(() => expect(getAllByText('pipeline.importSuccessMessage')).toBeDefined())
     await waitFor(() => expect(onSuccess).toHaveBeenCalled())
     expect(onSuccess).toHaveBeenCalledTimes(1)
   })

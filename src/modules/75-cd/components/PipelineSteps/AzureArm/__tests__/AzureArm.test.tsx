@@ -148,18 +148,18 @@ describe('Test Azure ARM step', () => {
       />
     )
     const provId = queryByAttribute('name', container, 'spec.provisionerIdentifier')
-    userEvent.click(provId!)
-    userEvent.type(provId!, 'testingProvId')
+    await userEvent.click(provId!)
+    await userEvent.type(provId!, 'testingProvId')
     expect(provId).toHaveDisplayValue('testingProvId')
 
     const name = queryByAttribute('name', container, 'name')
-    userEvent.click(name!)
-    userEvent.type(name!, 'test_name')
+    await userEvent.click(name!)
+    await userEvent.type(name!, 'test_name')
     expect(name).toHaveDisplayValue('test_name')
 
     const timeout = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    userEvent.clear(timeout)
-    userEvent.type(timeout, '15m')
+    await userEvent.clear(timeout)
+    await userEvent.type(timeout, '15m')
     expect(timeout).toHaveDisplayValue('15m')
   })
 

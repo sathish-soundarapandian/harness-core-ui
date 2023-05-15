@@ -55,7 +55,7 @@ describe('DefaultRules', () => {
         expect(screen.queryByText(name || identifier)).not.toBeInTheDocument()
       })
 
-      userEvent.click(select as HTMLElement)
+      await userEvent.click(select as HTMLElement)
       await waitFor(() => {
         mockVariations.forEach(({ name, identifier }) => {
           expect(screen.getByText(name || identifier)).toBeInTheDocument()

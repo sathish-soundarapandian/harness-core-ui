@@ -93,7 +93,7 @@ describe('FilterCard', () => {
     expect(filterCard).toBeVisible()
     expect(filterCard).not.toHaveClass('Card--selected')
 
-    userEvent.click(filterCard)
+    await userEvent.click(filterCard)
 
     await waitFor(() => {
       expect(updateTableFilter).toBeCalled()

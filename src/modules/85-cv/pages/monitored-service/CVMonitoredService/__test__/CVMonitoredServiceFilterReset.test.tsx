@@ -31,6 +31,8 @@ export const testWrapperProps: TestWrapperProps = {
   }
 }
 
+jest.useFakeTimers({ advanceTimers: true })
+
 const mockHistoryPush = jest.fn()
 // eslint-disable-next-line jest-no-mock
 jest.mock('react-router-dom', () => ({
@@ -85,11 +87,11 @@ describe('Monitored Service list', () => {
   const useLicenseStoreMock = jest.spyOn(useLicenseStore, 'useLicenseStore')
 
   beforeAll(() => {
+    jest.runAllTimers()
     useLicenseStoreMock.mockReturnValue(licenseWithSRMActive as unknown as useLicenseStore.LicenseStoreContextProps)
   })
 
   test('Reset filters when user changes the project', async () => {
-    jest.useFakeTimers()
     const refetchListMonitoredService2 = jest.fn()
     const { container } = render(
       <TestWrapper {...testWrapperProps}>
@@ -101,7 +103,7 @@ describe('Monitored Service list', () => {
       .spyOn(cvServices, 'useListMonitoredService')
       .mockImplementation(() => ({ data: riskMSListData, refetch: refetchListMonitoredService2 } as any))
 
-    userEvent.click(container.querySelector('[data-icon="offline-outline"]')!)
+    await userEvent.click(container.querySelector('[data-icon="offline-outline"]')!)
 
     const searchContainer = container.querySelector('[data-name="monitoredServiceSeachContainer"]')
     const searchIcon = searchContainer?.querySelector('span[data-icon="thinner-search"]')
@@ -110,27 +112,27 @@ describe('Monitored Service list', () => {
     ) as HTMLInputElement
 
     await act(async () => {
-      userEvent.click(searchIcon!)
+      await userEvent.click(searchIcon!)
     })
 
     refetchListMonitoredService2.mockClear()
 
     await act(async () => {
-      userEvent.type(searchInput!, 'demo')
+      await userEvent.type(searchInput!, 'demo')
     })
 
     const environmentFilter = container.querySelector('[data-icon="chevron-down"]')
 
-    act(() => {
-      userEvent.click(environmentFilter!)
+    await act(async () => {
+      await userEvent.click(environmentFilter!)
     })
 
     await waitFor(() => {
       expect(screen.getByText(/new_env_test/)).toBeInTheDocument()
     })
 
-    act(() => {
-      userEvent.click(screen.getByText(/new_env_test/))
+    await act(async () => {
+      await userEvent.click(screen.getByText(/new_env_test/))
     })
 
     act(() => {

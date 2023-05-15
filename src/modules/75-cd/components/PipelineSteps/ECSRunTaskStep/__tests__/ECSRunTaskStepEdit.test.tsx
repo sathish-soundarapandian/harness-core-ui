@@ -56,14 +56,14 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> =
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues') as HTMLInputElement
   act((): void => {
     fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   })
   await waitFor(() => expect(regexTextArea.value).toBe('<+input>.includes(/test/)'))
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
 }
 
 const emptyInitialValues: ECSRunTaskStepInitialValues = {
@@ -161,9 +161,9 @@ describe('ECSRunTaskStepEdit tests', () => {
 
     // Optional Configurations
     const optionalConfigAccordionHeader = getByText('common.optionalConfig')
-    userEvent.click(optionalConfigAccordionHeader)
+    await userEvent.click(optionalConfigAccordionHeader)
     const skipSteadyStateCheck = await queryByText('cd.steps.ecsRunTaskStep.skipSteadyStateCheck')?.parentElement
-    userEvent.click(skipSteadyStateCheck!)
+    await userEvent.click(skipSteadyStateCheck!)
 
     // Submit form
     act(() => {
@@ -208,7 +208,7 @@ describe('ECSRunTaskStepEdit tests', () => {
 
     // Task Definition
     const addTaskDefinitionBtn = getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
-    userEvent.click(addTaskDefinitionBtn)
+    await userEvent.click(addTaskDefinitionBtn)
     const dialogList = document.getElementsByClassName('bp3-dialog')
     const taskDefinitionPortal = dialogList[0] as HTMLElement
     // Test manifest store tiles, choose Git and fill in Connector field
@@ -219,7 +219,7 @@ describe('ECSRunTaskStepEdit tests', () => {
 
     // Task Definition
     const addRunTaskRequestDefinitionBtn = getByText('cd.steps.ecsRunTaskStep.runTaskRequestDefinition')
-    userEvent.click(addRunTaskRequestDefinitionBtn)
+    await userEvent.click(addRunTaskRequestDefinitionBtn)
     await waitFor(() => expect(dialogList.length).toBe(1))
     const runTaskRequestDefinitionPortal = dialogList[0] as HTMLElement
     // Test manifest store tiles, choose Git and fill in Connector field
@@ -300,7 +300,7 @@ describe('ECSRunTaskStepEdit tests', () => {
     expect(addTaskDefinitionBtn).toBeInTheDocument()
     // Task Definition ARN
     const ecsRunTaskDefinitionARNRadioOption = getByText('ECS Run Task Definition ARN')
-    userEvent.click(ecsRunTaskDefinitionARNRadioOption)
+    await userEvent.click(ecsRunTaskDefinitionARNRadioOption)
     const ecsRunTaskDefinitionARNInput = queryByNameAttribute('spec.taskDefinitionArn', container)
     await waitFor(() => expect(ecsRunTaskDefinitionARNInput).toBeInTheDocument())
     fireEvent.change(ecsRunTaskDefinitionARNInput!, { target: { value: 'task:arn:8081' } })
@@ -308,7 +308,7 @@ describe('ECSRunTaskStepEdit tests', () => {
     const dialogList = document.getElementsByClassName('bp3-dialog')
     // Run Task Request Definition
     const addRunTaskRequestDefinitionBtn = getByText('cd.steps.ecsRunTaskStep.runTaskRequestDefinition')
-    userEvent.click(addRunTaskRequestDefinitionBtn)
+    await userEvent.click(addRunTaskRequestDefinitionBtn)
     await waitFor(() => expect(dialogList.length).toBe(1))
     const runTaskRequestDefinitionPortal = dialogList[0] as HTMLElement
     // Test manifest store tiles, choose Git and fill in Connector field
@@ -359,17 +359,17 @@ describe('ECSRunTaskStepEdit tests', () => {
     const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
 
     const addTaskDefinitionBtn = getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
-    userEvent.click(addTaskDefinitionBtn)
+    await userEvent.click(addTaskDefinitionBtn)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
     const Git = queryByValueAttribute('Git')
     expect(Git).not.toBeNull()
-    userEvent.click(Git!)
+    await userEvent.click(Git!)
     const connnectorRefInput = await findByTestId(portal, /connectorRef/)
     expect(connnectorRefInput).toBeInTheDocument()
     const createNewConnectorBtn = getElementByText(portal, 'newLabel pipeline.manifestType.gitConnectorLabel connector')
     expect(createNewConnectorBtn).toBeInTheDocument()
-    userEvent.click(createNewConnectorBtn!)
+    await userEvent.click(createNewConnectorBtn!)
 
     // Connector creation - First Step
     const overviewTitle = await findAllByText(portal, 'overview')
@@ -380,20 +380,20 @@ describe('ECSRunTaskStepEdit tests', () => {
     })
     const firstStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(firstStepContinueButton).not.toBeDisabled())
-    userEvent.click(firstStepContinueButton)
+    await userEvent.click(firstStepContinueButton)
     // Connector creation - Second Step
     const urlType = await findByText(portal, 'common.git.urlType')
     expect(urlType).toBeInTheDocument()
     const repositoryUrlTypeOption = getByDisplayValue(portal, 'Repo')
     // const repositoryUrlTypeOption = await findByText(portal, 'repository')
-    userEvent.click(repositoryUrlTypeOption)
+    await userEvent.click(repositoryUrlTypeOption)
     const gitHubRepoUrlInput = queryByNameAttribute('url', portal)
     act(() => {
       fireEvent.change(gitHubRepoUrlInput!, { target: { value: 'https://repo1.com' } })
     })
     const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-    userEvent.click(secondStepContinueButton)
+    await userEvent.click(secondStepContinueButton)
     // Connector creation - Third Step
     await waitFor(() => expect(queryByNameAttribute('usernametextField', portal)).toBeInTheDocument())
     const patInput = getElementByTestId(portal, 'password')
@@ -416,19 +416,19 @@ describe('ECSRunTaskStepEdit tests', () => {
     )
 
     const addTaskDefinitionBtn = getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
-    userEvent.click(addTaskDefinitionBtn)
+    await userEvent.click(addTaskDefinitionBtn)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
     const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
 
     const Github = queryByValueAttribute('Github')
     expect(Github).not.toBeNull()
-    userEvent.click(Github!)
+    await userEvent.click(Github!)
     const connnectorRefInput = await findByTestId(portal, /connectorRef/)
     expect(connnectorRefInput).toBeInTheDocument()
     const createNewConnectorBtn = getElementByText(portal, 'newLabel common.repo_provider.githubLabel connector')
     expect(createNewConnectorBtn).toBeInTheDocument()
-    userEvent.click(createNewConnectorBtn!)
+    await userEvent.click(createNewConnectorBtn!)
 
     // Connector creation - First Step
     const overviewTitle = await findAllByText(portal, 'overview')
@@ -439,20 +439,20 @@ describe('ECSRunTaskStepEdit tests', () => {
     })
     const firstStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(firstStepContinueButton).not.toBeDisabled())
-    userEvent.click(firstStepContinueButton)
+    await userEvent.click(firstStepContinueButton)
     // Connector creation - Second Step
     const urlType = await findByText(portal, 'common.git.urlType')
     expect(urlType).toBeInTheDocument()
     const repositoryUrlTypeOption = getByDisplayValue(portal, 'Repo')
     // const repositoryUrlTypeOption = await findByText(portal, 'repository')
-    userEvent.click(repositoryUrlTypeOption)
+    await userEvent.click(repositoryUrlTypeOption)
     const gitHubRepoUrlInput = queryByNameAttribute('url', portal)
     act(() => {
       fireEvent.change(gitHubRepoUrlInput!, { target: { value: 'https://repo1.com' } })
     })
     const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-    userEvent.click(secondStepContinueButton)
+    await userEvent.click(secondStepContinueButton)
     // Connector creation - Third Step
     const authenticationHeader = await findByText(portal, 'authentication')
     expect(authenticationHeader).toBeInTheDocument()
@@ -480,17 +480,17 @@ describe('ECSRunTaskStepEdit tests', () => {
     const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
 
     const addTaskDefinitionBtn = getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
-    userEvent.click(addTaskDefinitionBtn)
+    await userEvent.click(addTaskDefinitionBtn)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
     const Bitbucket = queryByValueAttribute('Bitbucket')
     expect(Bitbucket).not.toBeNull()
-    userEvent.click(Bitbucket!)
+    await userEvent.click(Bitbucket!)
     const connnectorRefInput = await findByTestId(portal, /connectorRef/)
     expect(connnectorRefInput).toBeInTheDocument()
     const createNewConnectorBtn = getElementByText(portal, 'newLabel common.repo_provider.bitbucketLabel connector')
     expect(createNewConnectorBtn).toBeInTheDocument()
-    userEvent.click(createNewConnectorBtn!)
+    await userEvent.click(createNewConnectorBtn!)
 
     // Connector creation - First Step
     const overviewTitle = await findAllByText(portal, 'overview')
@@ -501,20 +501,20 @@ describe('ECSRunTaskStepEdit tests', () => {
     })
     const firstStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(firstStepContinueButton).not.toBeDisabled())
-    userEvent.click(firstStepContinueButton)
+    await userEvent.click(firstStepContinueButton)
     // Connector creation - Second Step
     const urlType = await findByText(portal, 'common.git.urlType')
     expect(urlType).toBeInTheDocument()
     const repositoryUrlTypeOption = getByDisplayValue(portal, 'Repo')
     // const repositoryUrlTypeOption = await findByText(portal, 'repository')
-    userEvent.click(repositoryUrlTypeOption)
+    await userEvent.click(repositoryUrlTypeOption)
     const gitHubRepoUrlInput = queryByNameAttribute('url', portal)
     act(() => {
       fireEvent.change(gitHubRepoUrlInput!, { target: { value: 'https://repo1.com' } })
     })
     const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-    userEvent.click(secondStepContinueButton)
+    await userEvent.click(secondStepContinueButton)
     // Connector creation - Third Step
     const authenticationHeader = await findByText(portal, 'authentication')
     expect(authenticationHeader).toBeInTheDocument()
@@ -542,17 +542,17 @@ describe('ECSRunTaskStepEdit tests', () => {
     const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
 
     const addTaskDefinitionBtn = getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
-    userEvent.click(addTaskDefinitionBtn)
+    await userEvent.click(addTaskDefinitionBtn)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
     const GitLab = queryByValueAttribute('GitLab')
     expect(GitLab).not.toBeNull()
-    userEvent.click(GitLab!)
+    await userEvent.click(GitLab!)
     const connnectorRefInput = await findByTestId(portal, /connectorRef/)
     expect(connnectorRefInput).toBeInTheDocument()
     const createNewConnectorBtn = getElementByText(portal, 'newLabel common.repo_provider.gitlabLabel connector')
     expect(createNewConnectorBtn).toBeInTheDocument()
-    userEvent.click(createNewConnectorBtn!)
+    await userEvent.click(createNewConnectorBtn!)
 
     // Connector creation - First Step
     const overviewTitle = await findAllByText(portal, 'overview')
@@ -563,20 +563,20 @@ describe('ECSRunTaskStepEdit tests', () => {
     })
     const firstStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(firstStepContinueButton).not.toBeDisabled())
-    userEvent.click(firstStepContinueButton)
+    await userEvent.click(firstStepContinueButton)
     // Connector creation - Second Step
     const urlType = await findByText(portal, 'common.git.urlType')
     expect(urlType).toBeInTheDocument()
     const repositoryUrlTypeOption = getByDisplayValue(portal, 'Repo')
     // const repositoryUrlTypeOption = await findByText(portal, 'repository')
-    userEvent.click(repositoryUrlTypeOption)
+    await userEvent.click(repositoryUrlTypeOption)
     const gitHubRepoUrlInput = queryByNameAttribute('url', portal)
     act(() => {
       fireEvent.change(gitHubRepoUrlInput!, { target: { value: 'https://repo1.com' } })
     })
     const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-    userEvent.click(secondStepContinueButton)
+    await userEvent.click(secondStepContinueButton)
     // Connector creation - Third Step
     const authenticationHeader = await findByText(portal, 'authentication')
     expect(authenticationHeader).toBeInTheDocument()
@@ -632,7 +632,7 @@ describe('ECSRunTaskStepEdit tests', () => {
     expect(timeoutInput.value).toBe(RUNTIME_INPUT_VALUE)
 
     const cogTimeout = document.querySelector('[data-icon="cog"]')
-    userEvent.click(cogTimeout!)
+    await userEvent.click(cogTimeout!)
     await waitFor(() => expect(modals.length).toBe(1))
     const timeoutCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(timeoutCOGModal)
@@ -717,7 +717,7 @@ describe('ECSRunTaskStepEdit tests', () => {
       </TestWrapper>
     )
     const editIcon = getByTestId('edit-task-definition')
-    userEvent.click(editIcon!)
+    await userEvent.click(editIcon!)
 
     const dialogList = document.getElementsByClassName('bp3-dialog')
     const portal = dialogList[0] as HTMLElement
@@ -732,7 +732,7 @@ describe('ECSRunTaskStepEdit tests', () => {
     await waitFor(() => expect(getElementByText(connnectorRefInput, 'Git CTR')).toBeInTheDocument())
     const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-    userEvent.click(secondStepContinueButton)
+    await userEvent.click(secondStepContinueButton)
 
     // Final step
     await waitFor(() => expect(getElementByText(portal, 'pipeline.manifestType.gitFetchTypeLabel')).toBeInTheDocument())
@@ -745,7 +745,7 @@ describe('ECSRunTaskStepEdit tests', () => {
     const path1Input = queryByNameAttribute('paths[0].path', portal) as HTMLInputElement
     expect(path1Input.value).toBe('path1')
     const submitButton = getElementByText(portal, 'submit').parentElement as HTMLElement
-    userEvent.click(submitButton)
+    await userEvent.click(submitButton)
     await waitFor(() => expect(dialogList.length).toBe(0))
 
     act(() => {
@@ -801,7 +801,7 @@ describe('ECSRunTaskStepEdit tests', () => {
       </TestWrapper>
     )
     const editIcon = getByTestId('edit-run-task-request-definition')
-    userEvent.click(editIcon!)
+    await userEvent.click(editIcon!)
 
     const dialogList = document.getElementsByClassName('bp3-dialog')
     const portal = dialogList[0] as HTMLElement
@@ -816,7 +816,7 @@ describe('ECSRunTaskStepEdit tests', () => {
     await waitFor(() => expect(getElementByText(connnectorRefInput, 'Git CTR')).toBeInTheDocument())
     const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-    userEvent.click(secondStepContinueButton)
+    await userEvent.click(secondStepContinueButton)
 
     // Final step
     await waitFor(() => expect(getElementByText(portal, 'pipeline.manifestType.gitFetchTypeLabel')).toBeInTheDocument())
@@ -829,7 +829,7 @@ describe('ECSRunTaskStepEdit tests', () => {
     const path1Input = queryByNameAttribute('paths[0].path', portal) as HTMLInputElement
     expect(path1Input.value).toBe('path2')
     const submitButton = getElementByText(portal, 'submit').parentElement as HTMLElement
-    userEvent.click(submitButton)
+    await userEvent.click(submitButton)
     await waitFor(() => expect(dialogList.length).toBe(0))
 
     act(() => {
@@ -885,14 +885,14 @@ describe('ECSRunTaskStepEdit tests', () => {
       </TestWrapper>
     )
     const editIcon = getByTestId('edit-task-definition')
-    userEvent.click(editIcon!)
+    await userEvent.click(editIcon!)
 
     const dialogList = document.getElementsByClassName('bp3-dialog')
     const portal = dialogList[0] as HTMLElement
     expect(dialogList.length).toBe(1)
 
     const crossIcon = portal.querySelector('[data-icon="cross"]')
-    userEvent.click(crossIcon!)
+    await userEvent.click(crossIcon!)
     await waitFor(() => expect(dialogList.length).toBe(0))
   })
 
@@ -912,14 +912,14 @@ describe('ECSRunTaskStepEdit tests', () => {
       </TestWrapper>
     )
     const editIcon = getByTestId('edit-run-task-request-definition')
-    userEvent.click(editIcon!)
+    await userEvent.click(editIcon!)
 
     const dialogList = document.getElementsByClassName('bp3-dialog')
     const portal = dialogList[0] as HTMLElement
     expect(dialogList.length).toBe(1)
 
     const crossIcon = portal.querySelector('[data-icon="cross"]')
-    userEvent.click(crossIcon!)
+    await userEvent.click(crossIcon!)
     await waitFor(() => expect(dialogList.length).toBe(0))
   })
 })

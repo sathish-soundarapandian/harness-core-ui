@@ -124,7 +124,7 @@ describe('EditTargetGroupCriteriaDialog', () => {
     expect(hideModalMock).not.toHaveBeenCalled()
     expect(onUpdateMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByRole('button', { name: 'save' }))
+    await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
     await waitFor(() => {
       expect(sendPatchMock).not.toHaveBeenCalled()
@@ -147,7 +147,7 @@ describe('EditTargetGroupCriteriaDialog', () => {
 
     renderComponent({ hideModal: hideModalMock, onUpdate: onUpdateMock })
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.segmentDetail.removeRule' })[0])
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.segmentDetail.removeRule' })[0])
 
     await waitFor(() => {
       expect(sendPatchMock).not.toHaveBeenCalled()
@@ -155,7 +155,7 @@ describe('EditTargetGroupCriteriaDialog', () => {
       expect(onUpdateMock).not.toHaveBeenCalled()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'save' }))
+    await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
     await waitFor(() => {
       expect(sendPatchMock).toHaveBeenCalled()
@@ -179,8 +179,8 @@ describe('EditTargetGroupCriteriaDialog', () => {
 
     renderComponent({ hideModal: hideModalMock, onUpdate: onUpdateMock })
 
-    userEvent.click(screen.getAllByRole('button', { name: 'cf.segmentDetail.removeRule' })[0])
-    userEvent.click(screen.getByRole('button', { name: 'save' }))
+    await userEvent.click(screen.getAllByRole('button', { name: 'cf.segmentDetail.removeRule' })[0])
+    await userEvent.click(screen.getByRole('button', { name: 'save' }))
 
     await waitFor(() => {
       expect(sendPatchMock).toHaveBeenCalled()

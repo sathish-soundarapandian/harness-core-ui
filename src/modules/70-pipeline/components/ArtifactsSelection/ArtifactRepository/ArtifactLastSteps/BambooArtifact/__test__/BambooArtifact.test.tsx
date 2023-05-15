@@ -204,7 +204,7 @@ describe('Bamboo Artifact tests', () => {
     })
   })
 
-  test('onclick of previous button', () => {
+  test('onclick of previous button', async () => {
     const { container } = render(
       <TestWrapper>
         <BambooArtifact
@@ -222,7 +222,7 @@ describe('Bamboo Artifact tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByRole('button', { name: /back/i }))
+    await userEvent.click(screen.getByRole('button', { name: /back/i }))
 
     expect(container).toMatchSnapshot()
   })

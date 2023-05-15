@@ -113,7 +113,7 @@ describe('Test Azure Blueprint template input set', () => {
     const { getByPlaceholderText } = renderComponent(data)
 
     const timeout = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    await act(() => userEvent.type(timeout, '10m'))
+    await act(async () => await userEvent.type(timeout, '10m'))
     await expect(timeout).toHaveDisplayValue('10m')
   })
 
@@ -173,7 +173,7 @@ describe('Test Azure Blueprint template input set', () => {
     const { container } = renderComponent(data)
 
     const assignmentName = queryByAttribute('name', container, 'test.spec.configuration.assignmentName')
-    await act(() => userEvent.type(assignmentName!, 'test name'))
+    await act(async () => await userEvent.type(assignmentName!, 'test name'))
     await expect(assignmentName).toHaveDisplayValue('test name')
   })
 

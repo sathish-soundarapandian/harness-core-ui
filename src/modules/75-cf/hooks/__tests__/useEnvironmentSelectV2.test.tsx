@@ -92,7 +92,7 @@ describe('Test useEnvironmentSelectV2', () => {
 
     expect(envInput).toHaveValue('abc')
 
-    userEvent.click(envInput)
+    await userEvent.click(envInput)
 
     const options = screen.getAllByRole('listitem')
 
@@ -109,14 +109,14 @@ describe('Test useEnvironmentSelectV2', () => {
     expect(envInput).toHaveValue('abc')
     expect(screen.getByTestId('location')).toHaveTextContent('activeEnvironment=abc')
 
-    userEvent.click(envInput)
+    await userEvent.click(envInput)
 
     const options = screen.getAllByRole('listitem')
 
     expect(options[0]).toHaveTextContent('abc')
     expect(options[1]).toHaveTextContent('xyz')
 
-    userEvent.click(options[1])
+    await userEvent.click(options[1])
 
     expect(setPreference).toHaveBeenCalledWith('xyz')
     expect(refetchAllEnvironmentsFlags).not.toHaveBeenCalled()
@@ -126,7 +126,7 @@ describe('Test useEnvironmentSelectV2', () => {
   test('It should send back the proper component including "All Environments" option', async () => {
     renderComponent({ allowAllOption: true }, { defaultFeatureFlagValues: { FFM_6683_ALL_ENVIRONMENTS_FLAGS: true } })
 
-    userEvent.click(screen.getByRole('textbox', { name: 'cf.shared.selectEnvironment' }))
+    await userEvent.click(screen.getByRole('textbox', { name: 'cf.shared.selectEnvironment' }))
 
     expect(screen.getByText('common.allEnvironments')).toBeInTheDocument()
     expect(screen.getByText('abc')).toBeInTheDocument()
@@ -143,7 +143,7 @@ describe('Test useEnvironmentSelectV2', () => {
     expect(envInput).toHaveValue('abc')
     expect(screen.getByTestId('location')).toHaveTextContent('activeEnvironment=abc')
 
-    userEvent.click(envInput)
+    await userEvent.click(envInput)
 
     const options = screen.getAllByRole('listitem')
 
@@ -152,7 +152,7 @@ describe('Test useEnvironmentSelectV2', () => {
     expect(options[2]).toHaveTextContent('xyz')
     expect(refetchAllEnvironmentsFlags).not.toHaveBeenCalled()
 
-    userEvent.click(options[0])
+    await userEvent.click(options[0])
 
     expect(refetchAllEnvironmentsFlags).toHaveBeenCalled()
     // should not set 'All Environments' as preference and keep already selected preference

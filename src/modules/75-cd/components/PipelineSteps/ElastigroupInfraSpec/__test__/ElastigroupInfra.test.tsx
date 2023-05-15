@@ -200,22 +200,22 @@ describe('ElastigroupInfraSpec tests', () => {
     // Change connectorRef
     const connnectorRefInput = getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
-    userEvent.click(connnectorRefInput!)
+    await userEvent.click(connnectorRefInput!)
 
     const dialogs = document.getElementsByClassName('bp3-dialog')
     await waitFor(() => expect(dialogs).toHaveLength(1))
     const connectorSelectorDialog = dialogs[0] as HTMLElement
     const spotConnector1 = await findByText(connectorSelectorDialog, 'common.ID: spotConnector')
     await waitFor(() => expect(spotConnector1).toBeInTheDocument())
-    userEvent.click(spotConnector1)
+    await userEvent.click(spotConnector1)
 
     const applySelected = getByText('entityReference.apply')
-    userEvent.click(applySelected)
+    await userEvent.click(applySelected)
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
 
     // check Allow simultaneous deployments on the same infrastructure checkbox
     const allowSimultaneousDeploymentsCheckbox = queryByNameAttribute('allowSimultaneousDeployments', container)
-    userEvent.click(allowSimultaneousDeploymentsCheckbox!)
+    await userEvent.click(allowSimultaneousDeploymentsCheckbox!)
     expect(allowSimultaneousDeploymentsCheckbox).toBeChecked()
 
     //submit form and verify

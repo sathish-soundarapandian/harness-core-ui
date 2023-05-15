@@ -58,7 +58,7 @@ describe('MultiSelectInputSetView tests', () => {
 
     expect(screen.queryByText('Option 1')).toBeNull()
 
-    userEvent.click(abcOption)
+    await userEvent.click(abcOption)
 
     await waitFor(() =>
       expect(onChange).toHaveBeenCalledWith([{ label: 'abc', value: 'abc' }], 'MULTI_SELECT_OPTION', 'FIXED')
@@ -111,7 +111,7 @@ describe('MultiSelectInputSetView tests', () => {
     const option2 = screen.getByText('Option 2')
     expect(option2).toBeInTheDocument()
 
-    userEvent.click(option1)
+    await userEvent.click(option1)
 
     await waitFor(() =>
       expect(onChange).toHaveBeenCalledWith([{ label: 'Option 1', value: 'Option_1' }], 'MULTI_SELECT_OPTION', 'FIXED')

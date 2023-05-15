@@ -120,11 +120,11 @@ describe('Test cloudformation tags', () => {
       </Formik>
     )
     const remoteTags = getByTestId('remoteTags')
-    await act(async () => userEvent.click(remoteTags))
+    await act(async () => await userEvent.click(remoteTags))
     expect(container).toMatchSnapshot()
 
     const closeButton = getByTestId('remoteClose')
-    await act(async () => userEvent.click(closeButton))
+    await act(async () => await userEvent.click(closeButton))
     expect(container).toMatchSnapshot()
   })
 })

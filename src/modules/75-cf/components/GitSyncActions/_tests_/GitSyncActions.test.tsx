@@ -77,7 +77,7 @@ describe('GitSyncActions', () => {
 
     expect(screen.getByTestId('auto-commit-status-icon')).toHaveClass('autoCommitDisabled')
 
-    userEvent.click(screen.getByText('test branch'))
+    await userEvent.click(screen.getByText('test branch'))
 
     expect(screen.getByText('cf.gitSync.autoCommitStatusLabel')).toBeInTheDocument()
     expect(screen.getByTestId('auto-commit-switch')).toBeInTheDocument()
@@ -93,7 +93,7 @@ describe('GitSyncActions', () => {
 
     expect(screen.getByTestId('auto-commit-status-icon')).toHaveClass('autoCommitEnabled')
 
-    userEvent.click(screen.getByText('test branch'))
+    await userEvent.click(screen.getByText('test branch'))
 
     expect(screen.getByText('cf.gitSync.autoCommitStatusLabel')).toBeInTheDocument()
     expect(screen.getByTestId('auto-commit-switch')).toBeInTheDocument()
@@ -108,7 +108,7 @@ describe('GitSyncActions', () => {
     expect(screen.getByText('test repository')).toBeInTheDocument()
     expect(screen.queryByTestId('git-paused-icon')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByText('test branch'))
+    await userEvent.click(screen.getByText('test branch'))
 
     expect(screen.getByText('cf.gitSync.autoCommitStatusLabel')).toBeInTheDocument()
     expect(screen.getByTestId('toggle-git-sync-pause-switch')).toBeInTheDocument()
@@ -122,7 +122,7 @@ describe('GitSyncActions', () => {
     expect(screen.getByText('test repository')).toBeInTheDocument()
     expect(screen.queryByTestId('git-paused-icon')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('test branch'))
+    await userEvent.click(screen.getByText('test branch'))
 
     expect(screen.getByText('cf.gitSync.autoCommitStatusLabel')).toBeInTheDocument()
     expect(screen.getByTestId('toggle-git-sync-pause-switch')).toBeInTheDocument()
@@ -136,8 +136,8 @@ describe('GitSyncActions', () => {
 
     renderComponent({ handleAutoCommit: handleAutoCommitMock })
 
-    userEvent.click(screen.getByText('test branch'))
-    userEvent.click(screen.getByTestId('auto-commit-switch'))
+    await userEvent.click(screen.getByText('test branch'))
+    await userEvent.click(screen.getByTestId('auto-commit-switch'))
 
     expect(handleAutoCommitMock).toBeCalledWith(true)
   })
@@ -147,8 +147,8 @@ describe('GitSyncActions', () => {
 
     renderComponent({ handleAutoCommit: handleAutoCommitMock, isAutoCommitEnabled: true })
 
-    userEvent.click(screen.getByText('test branch'))
-    userEvent.click(screen.getByTestId('auto-commit-switch'))
+    await userEvent.click(screen.getByText('test branch'))
+    await userEvent.click(screen.getByTestId('auto-commit-switch'))
 
     expect(handleAutoCommitMock).toBeCalledWith(false)
   })
@@ -158,8 +158,8 @@ describe('GitSyncActions', () => {
 
     renderComponent({ handleGitPause: handleGitPauseMock, isGitSyncPaused: true })
 
-    userEvent.click(screen.getByText('test branch'))
-    userEvent.click(screen.getByTestId('toggle-git-sync-pause-switch'))
+    await userEvent.click(screen.getByText('test branch'))
+    await userEvent.click(screen.getByTestId('toggle-git-sync-pause-switch'))
 
     expect(handleGitPauseMock).toBeCalledWith(true)
   })
@@ -169,8 +169,8 @@ describe('GitSyncActions', () => {
 
     renderComponent({ handleGitPause: handleGitPauseMock, isGitSyncPaused: false })
 
-    userEvent.click(screen.getByText('test branch'))
-    userEvent.click(screen.getByTestId('toggle-git-sync-pause-switch'))
+    await userEvent.click(screen.getByText('test branch'))
+    await userEvent.click(screen.getByTestId('toggle-git-sync-pause-switch'))
 
     expect(handleGitPauseMock).toBeCalledWith(false)
   })
@@ -203,12 +203,12 @@ describe('GitSyncActions', () => {
     expect(settingsButton).toBeInTheDocument()
 
     // open settings menu
-    userEvent.click(settingsButton)
+    await userEvent.click(settingsButton)
 
     const resetButton = screen.getByRole('button', { name: 'cf.gitSync.resetGitSettings' })
     expect(resetButton).toBeInTheDocument()
 
-    userEvent.click(resetButton)
+    await userEvent.click(resetButton)
 
     // confirmation modal
     expect(screen.getByText('cf.gitSync.resetGitWarning')).toBeInTheDocument()

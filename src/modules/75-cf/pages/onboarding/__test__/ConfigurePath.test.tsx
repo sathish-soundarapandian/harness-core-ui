@@ -133,7 +133,7 @@ describe('ConfigurePath', () => {
     expect(screen.getByText(message)).toBeVisible()
     expect(refetchMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByRole('button', { name: 'Retry' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }))
 
     await waitFor(() => expect(refetchMock).toHaveBeenCalled())
   })

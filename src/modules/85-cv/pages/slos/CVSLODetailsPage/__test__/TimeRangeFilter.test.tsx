@@ -135,7 +135,7 @@ describe('Test cases for TimeRangeFilter', () => {
 
     expect(screen.queryByText('reset')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('1 Hour'))
+    await userEvent.click(screen.getByText('1 Hour'))
     expect(screen.getByText('reset')).toBeInTheDocument()
 
     await waitFor(() => {
@@ -168,7 +168,7 @@ describe('Test cases for TimeRangeFilter', () => {
       )
     })
 
-    userEvent.click(screen.getByText('1 Day'))
+    await userEvent.click(screen.getByText('1 Day'))
     expect(screen.getByText('reset')).toBeInTheDocument()
 
     await waitFor(() => {
@@ -201,7 +201,7 @@ describe('Test cases for TimeRangeFilter', () => {
       )
     })
 
-    userEvent.click(screen.getByText('1 Week'))
+    await userEvent.click(screen.getByText('1 Week'))
 
     await waitFor(() => {
       expect(cvServices.useGetSLODetails).toHaveBeenCalledWith(
@@ -233,7 +233,7 @@ describe('Test cases for TimeRangeFilter', () => {
       )
     })
 
-    userEvent.click(screen.getByText('reset'))
+    await userEvent.click(screen.getByText('reset'))
     expect(screen.queryByText('reset')).not.toBeInTheDocument()
 
     await waitFor(() => {
@@ -267,14 +267,14 @@ describe('Test cases for TimeRangeFilter', () => {
     renderComponent()
 
     expect(screen.getByText('reset')).toBeInTheDocument()
-    userEvent.click(screen.getByText('reset'))
+    await userEvent.click(screen.getByText('reset'))
 
     expect(screen.getByTestId('timeline-slider-container')).toBeInTheDocument()
-    userEvent.click(screen.getByTestId('timeline-slider-container'))
+    await userEvent.click(screen.getByTestId('timeline-slider-container'))
 
     expect(screen.getByText('cv.zoom')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.zoom'))
+    await userEvent.click(screen.getByText('cv.zoom'))
 
     expect(screen.queryByText('cv.zoom')).not.toBeInTheDocument()
   })

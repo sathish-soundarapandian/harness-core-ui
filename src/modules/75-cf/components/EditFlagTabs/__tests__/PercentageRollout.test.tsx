@@ -115,7 +115,7 @@ describe('PercentageRollout Tests', () => {
     expect(screen.getByDisplayValue(expectedPremiumValue)).toBeInTheDocument()
   })
 
-  test('it should update weighting inputs and weighting bar on edit input change', () => {
+  test('it should update weighting inputs and weighting bar on edit input change', async () => {
     const variations = [
       { identifier: 'Basic', name: 'Basic', value: '20' },
       { identifier: 'Visitor', name: 'Visitor', value: '30' },
@@ -135,14 +135,14 @@ describe('PercentageRollout Tests', () => {
 
     renderComponent(editing, variations, weightedVariations)
 
-    userEvent.clear(screen.getByTestId('Basic-percentage-value'))
-    userEvent.type(screen.getByTestId('Basic-percentage-value'), expectedNewBasicValue.toString())
+    await userEvent.clear(screen.getByTestId('Basic-percentage-value'))
+    await userEvent.type(screen.getByTestId('Basic-percentage-value'), expectedNewBasicValue.toString())
 
-    userEvent.clear(screen.getByTestId('Visitor-percentage-value'))
-    userEvent.type(screen.getByTestId('Visitor-percentage-value'), expectedNewVisitorValue.toString())
+    await userEvent.clear(screen.getByTestId('Visitor-percentage-value'))
+    await userEvent.type(screen.getByTestId('Visitor-percentage-value'), expectedNewVisitorValue.toString())
 
-    userEvent.clear(screen.getByTestId('Premium-percentage-value'))
-    userEvent.type(screen.getByTestId('Premium-percentage-value'), expectedNewPremiumValue.toString())
+    await userEvent.clear(screen.getByTestId('Premium-percentage-value'))
+    await userEvent.type(screen.getByTestId('Premium-percentage-value'), expectedNewPremiumValue.toString())
 
     // assert input change
     expect(screen.getByTestId('Basic-percentage-value')).toHaveValue(expectedNewBasicValue)
@@ -155,7 +155,7 @@ describe('PercentageRollout Tests', () => {
     expect(screen.getByTestId('Premium-bar-percentage')).toHaveStyle(`width: 10%`)
   })
 
-  test('it should show error message if weightings sum is > 100% on edit', () => {
+  test('it should show error message if weightings sum is > 100% on edit', async () => {
     const variations = [
       { identifier: 'Basic', name: 'Basic', value: '20' },
       { identifier: 'Visitor', name: 'Visitor', value: '30' },
@@ -174,9 +174,9 @@ describe('PercentageRollout Tests', () => {
 
     const overflowValue = '60'
 
-    userEvent.type(screen.getByTestId('Basic-percentage-value'), overflowValue)
-    userEvent.type(screen.getByTestId('Visitor-percentage-value'), overflowValue)
-    userEvent.type(screen.getByTestId('Premium-percentage-value'), overflowValue)
+    await userEvent.type(screen.getByTestId('Basic-percentage-value'), overflowValue)
+    await userEvent.type(screen.getByTestId('Visitor-percentage-value'), overflowValue)
+    await userEvent.type(screen.getByTestId('Premium-percentage-value'), overflowValue)
 
     expect(screen.getByText('cf.featureFlags.bucketOverflow')).toBeInTheDocument()
   })

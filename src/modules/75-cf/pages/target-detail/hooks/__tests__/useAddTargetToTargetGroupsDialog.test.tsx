@@ -56,14 +56,14 @@ const renderComponent = (props: Partial<AddTargetToTargetGroupsDialogProps> = {}
     </TestWrapper>
   )
 
-  userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
-
   return result
 }
 
 describe('useAddTargetToTargetGroupsDialog', () => {
   test('it should render the dialog', async () => {
     renderComponent()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
 
     expect(screen.getByTestId('add-target-to-target-groups-dialog')).toBeInTheDocument()
   })

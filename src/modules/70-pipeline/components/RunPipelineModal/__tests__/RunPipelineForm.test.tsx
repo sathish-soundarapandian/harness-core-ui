@@ -175,7 +175,7 @@ describe('STUDIO MODE', () => {
 
     const yamlSwitch = getByText('YAML')
     await waitFor(() => expect(yamlSwitch).not.toHaveClass('disabledMode'))
-    userEvent.click(yamlSwitch)
+    await userEvent.click(yamlSwitch)
 
     await waitFor(() => {
       const editorDiv = container.querySelector('.editor')
