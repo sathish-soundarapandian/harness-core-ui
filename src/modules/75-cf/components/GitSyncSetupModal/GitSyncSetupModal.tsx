@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import { GitSyncForm, GitSyncFormFields } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useCreateGitRepo } from 'services/cf'
 import { getErrorMessage } from '@cf/utils/CFUtils'
+import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 
 export interface GitSyncSetupModalProps {
   hideModal: () => void
@@ -22,7 +23,8 @@ export interface GitSyncSetupModalProps {
 
 export const GitSyncSetupModal: FC<GitSyncSetupModalProps> = ({ hideModal }) => {
   const { orgIdentifier, projectIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
-  const { showError } = useToaster()
+  const { refetchGitRepo } = useFFGitSyncContext()
+  const { clear, showError, showSuccess } = useToaster()
   const { getString } = useStrings()
 
   const { mutate: createGitRepo } = useCreateGitRepo({
@@ -51,15 +53,19 @@ export const GitSyncSetupModal: FC<GitSyncSetupModalProps> = ({ hideModal }) => 
           typeof formValues.connectorRef === 'string' ? formValues.connectorRef : formValues.connectorRef?.value
       }
 
+      clear()
+
       try {
         await createGitRepo(requestData)
-
+        refetchGitRepo()
+        showSuccess(getString('cf.gitSync.setUpGitSuccess', { repoName: formValues.repo }))
         hideModal()
       } catch (error) {
         showError(getErrorMessage(error), 0, getString('cf.selectFlagRepo.createRepoError'))
       }
     },
-    [createGitRepo, getString, hideModal, showError]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [createGitRepo, getString, hideModal, clear, showError, showSuccess]
   )
 
   return (

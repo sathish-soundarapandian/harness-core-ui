@@ -12,6 +12,7 @@ declare const styles: {
   readonly branchActionButton: string
   readonly branchActionButtonActive: string
   readonly branchActionButtonWrapper: string
+  readonly confirmationModalText: string
   readonly gitRepoText: string
   readonly gitStatusIcon: string
   readonly loadingSpinner: string

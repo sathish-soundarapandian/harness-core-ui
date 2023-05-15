@@ -19,8 +19,7 @@ import {
   useGetGitRepo,
   usePatchGitRepo
 } from 'services/cf'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import GitErrorModal from '@cf/components/GitErrorModal/GitErrorModal'
 import InvalidYamlModal from '@cf/components/InvalidYamlModal/InvalidYamlModal'
@@ -65,6 +64,7 @@ export interface UseGitSync {
   handleGitPause: (newGitPauseValue: boolean) => Promise<void>
   getGitSyncFormMeta: (commitMessage: string) => GitSyncFormMeta
   handleError: (error: GitSyncErrorResponse) => void
+  refetchGitRepo: () => void
 }
 
 export const GIT_SYNC_ERROR_CODE = 424
@@ -93,28 +93,48 @@ export const useGitSync = (): UseGitSync => {
     }
   })
 
-  const FF_GITSYNC = useFeatureFlag(FeatureFlag.FF_GITSYNC)
+  const { FF_GITSYNC, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED } = useFeatureFlags()
 
   const [isLoading, setIsLoading] = useState(false)
 
   const isGitSyncEnabled = useMemo<boolean>(
-    () => !!(FF_GITSYNC && getGitRepo?.data?.repoSet && getGitRepo?.data?.repoDetails?.enabled),
-    [FF_GITSYNC, getGitRepo?.data?.repoDetails?.enabled, getGitRepo?.data?.repoSet]
+    () =>
+      !!(
+        (FF_GITSYNC || FF_FLAG_SYNC_THROUGH_GITEX_ENABLED) &&
+        getGitRepo?.data?.repoSet &&
+        getGitRepo?.data?.repoDetails?.enabled
+      ),
+    [FF_GITSYNC, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED, getGitRepo?.data?.repoDetails?.enabled, getGitRepo?.data?.repoSet]
   )
 
   const isAutoCommitEnabled = useMemo<boolean>(
-    () => !!(FF_GITSYNC && getGitRepo?.data?.repoSet && getGitRepo?.data?.repoDetails?.autoCommit),
-    [FF_GITSYNC, getGitRepo?.data?.repoDetails?.autoCommit, getGitRepo?.data?.repoSet]
+    () =>
+      !!(
+        (FF_GITSYNC || FF_FLAG_SYNC_THROUGH_GITEX_ENABLED) &&
+        getGitRepo?.data?.repoSet &&
+        getGitRepo?.data?.repoDetails?.autoCommit
+      ),
+    [
+      FF_GITSYNC,
+      FF_FLAG_SYNC_THROUGH_GITEX_ENABLED,
+      getGitRepo?.data?.repoDetails?.autoCommit,
+      getGitRepo?.data?.repoSet
+    ]
   )
 
   const isGitSyncActionsEnabled = useMemo<boolean>(
-    () => !!(FF_GITSYNC && getGitRepo?.data?.repoSet),
-    [FF_GITSYNC, getGitRepo?.data?.repoSet]
+    () => !!((FF_GITSYNC || FF_FLAG_SYNC_THROUGH_GITEX_ENABLED) && getGitRepo?.data?.repoSet),
+    [FF_GITSYNC, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED, getGitRepo?.data?.repoSet]
   )
 
   const isGitSyncPaused = useMemo<boolean>(
-    () => !!(FF_GITSYNC && getGitRepo?.data?.repoSet && !getGitRepo?.data?.repoDetails?.enabled),
-    [FF_GITSYNC, getGitRepo?.data?.repoDetails?.enabled, getGitRepo?.data?.repoSet]
+    () =>
+      !!(
+        (FF_GITSYNC || FF_FLAG_SYNC_THROUGH_GITEX_ENABLED) &&
+        getGitRepo?.data?.repoSet &&
+        !getGitRepo?.data?.repoDetails?.enabled
+      ),
+    [FF_GITSYNC, FF_FLAG_SYNC_THROUGH_GITEX_ENABLED, getGitRepo?.data?.repoDetails?.enabled, getGitRepo?.data?.repoSet]
   )
 
   const gitSyncLoading = getGitRepo.loading || patchGitRepo.loading || isLoading
@@ -306,6 +326,7 @@ export const useGitSync = (): UseGitSync => {
     isGitSyncPaused,
     isGitSyncActionsEnabled,
     gitSyncLoading,
+    refetchGitRepo: getGitRepo.refetch,
     apiError,
     saveWithGit,
     handleAutoCommit,

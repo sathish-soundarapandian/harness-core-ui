@@ -6,6 +6,7 @@
  */
 
 import React, { ReactElement } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 import type { MutateMethod, MutateRequestOptions } from 'restful-react/dist/Mutate'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
@@ -22,6 +23,8 @@ import type {
 import type { UseGitSync } from '@cf/hooks/useGitSync'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { useQueryParams } from '@common/hooks'
+import routes from '@common/RouteDefinitions'
 import useDeleteFlagModal from '../FlagActivation/hooks/useDeleteFlagModal'
 import useEditFlagDetailsModal from '../FlagActivation/hooks/useEditFlagDetailsModal'
 
@@ -48,8 +51,24 @@ const FlagDetailsOptionsMenuButton = (props: FlagDetailsOptionsMenuButtonProps):
     props
 
   const { getString } = useStrings()
+  const history = useHistory()
+  const urlQuery: Record<string, string> = useQueryParams()
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
 
-  const { confirmDeleteFlag } = useDeleteFlagModal({ featureFlag, gitSync, queryParams, deleteFeatureFlag })
+  const featureFlagListURL =
+    routes.toCFFeatureFlags({
+      projectIdentifier: projectIdentifier,
+      orgIdentifier: orgIdentifier,
+      accountId
+    }) + `${urlQuery?.activeEnvironment ? `?activeEnvironment=${urlQuery.activeEnvironment}` : ''}`
+
+  const { confirmDeleteFlag } = useDeleteFlagModal({
+    featureFlag,
+    gitSync,
+    queryParams,
+    deleteFeatureFlag,
+    onSuccess: () => history.push(featureFlagListURL)
+  })
 
   const { openEditDetailsModal } = useEditFlagDetailsModal({
     featureFlag,

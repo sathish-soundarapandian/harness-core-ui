@@ -18,10 +18,10 @@ export interface GitSyncActionsProps {
 }
 
 const GitSyncActions = ({ isLoading }: GitSyncActionsProps): ReactElement => {
-  const { gitRepoDetails, isGitSyncActionsEnabled } = useFFGitSyncContext()
+  const { gitRepoDetails } = useFFGitSyncContext()
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
-  return isGitSyncActionsEnabled ? (
+  return gitRepoDetails ? (
     <Layout.Horizontal spacing="small" width={400}>
       <Container className={css.gitRepoText}>
         <Icon name="repository" />

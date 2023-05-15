@@ -149,6 +149,7 @@ featureFlags:
   servePercentageRollout: serve <strong>percentage rollout</strong>
   deleteFlag: Delete Flag
   deleteFlagMessage: Are you sure you want to delete flag <strong>{{name}}</strong>? This action cannot be undone.
+  deleteFlagWarning: 'Warning: deleting a flag removes it from all environments, not just the currently selected environment'
   flagOff: Flag is Disabled
   flagOn: Flag is Enabled
   flagWillTurnOn: Enable flag for this environment upon save
@@ -518,6 +519,11 @@ gitSync:
   goToGit: Go to Git to fix issue
   invalidYaml: 'We are unable to render your {{{ flagsYamlFilename }}} file because it is invalid. Fix the following issues on Git and try again.'
   setUpGitConnection: Set up a Git connection
+  setUpGitSuccess: 'Successfully connected to repository {{ repoName }}'
+  resetGitSettings: Reset Git Settings
+  resetGitWarning: This will delete all git configurations and you will have to set it up from the beginning
+  resetGitSuccess: Successfully reset Git settings
+  resetGitError: Error resetting Git settings
 policyEvaluations:
   failedToSave: Flag cannot be saved due to the policy evaluation failures
   warning: Flag saved with policy warnings
