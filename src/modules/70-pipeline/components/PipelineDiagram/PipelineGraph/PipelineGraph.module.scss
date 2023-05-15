@@ -76,7 +76,7 @@
   align-items: center;
 }
 
-.common {
+.svg-paths {
   inset: 0px;
   position: absolute;
   transform-origin: 0px 0px;
@@ -94,7 +94,7 @@
 }
 
 .graph-tree {
-  display: flex;
+  display: inline-flex;
   column-gap: 80px;
   cursor: move;
 }

@@ -297,7 +297,7 @@ export function SVGComponent({ svgPath, className }: SVGComponentProps): React.R
     }
   }
   return (
-    <svg className={css.common} id="graph-svg">
+    <svg className={css.svgPaths} id="graph-svg">
       {svgPathFlattened.map((path, idx) => {
         const [[nodeId, pathDetails]] = Object.entries(path)
         return (

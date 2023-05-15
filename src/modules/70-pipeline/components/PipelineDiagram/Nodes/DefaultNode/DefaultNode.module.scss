@@ -224,6 +224,11 @@
     }
   }
 }
+
+.floatingAddNodeWrapper {
+  position: absolute;
+}
+
 .addNode {
   visibility: hidden;
   &.visible {

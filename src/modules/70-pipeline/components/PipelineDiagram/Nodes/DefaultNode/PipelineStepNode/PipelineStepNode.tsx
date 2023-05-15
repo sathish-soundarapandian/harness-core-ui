@@ -345,6 +345,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             })
           }}
           className={cx(defaultCss.addNode, defaultCss.stepAddNode, { [defaultCss.visible]: showAddNode })}
+          wrapperClassname={defaultCss.floatingAddNodeWrapper}
           data-nodeid="add-parallel"
         />
       )}

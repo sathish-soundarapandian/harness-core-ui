@@ -428,6 +428,7 @@ export function StepGroupNode(props: any): JSX.Element {
                 { [defaultCss.visible]: showAdd },
                 { [defaultCss.marginBottom]: props?.isParallelNode }
               )}
+              wrapperClassname={defaultCss.floatingAddNodeWrapper}
               onMouseOver={() => allowAdd && setVisibilityOfAdd(true)}
               onMouseLeave={() => allowAdd && debounceHideVisibility()}
               onDragLeave={debounceHideVisibility}

@@ -20,6 +20,7 @@ declare const styles: {
   readonly draggable: string
   readonly fadeIn: string
   readonly failed: string
+  readonly floatingAddNodeWrapper: string
   readonly hoverName: string
   readonly icon: string
   readonly iconGroup: string
