@@ -1050,9 +1050,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     const editor = editorRef.current?.editor
     if (shouldShowPluginsPanel && editor) {
       PipelineEntitiesWithCodeLensIntegrationEnabled.map((entity: PipelineEntity) => {
-        const stepMatchingPositions = getMatchingPositionsForPipelineEntity(editor, entity)
-        if (stepMatchingPositions.length) {
-          stepMatchingPositions.map((matchingPosition: Position) => {
+        const matchingPositionsForEntity = getMatchingPositionsForPipelineEntity(editor, entity)
+        if (matchingPositionsForEntity.length) {
+          matchingPositionsForEntity.map((matchingPosition: Position) => {
             const { lineNumber } = matchingPosition
             const registrationsForSelectedPipelineEntity = codeLensRegistrations.current.get(PipelineAtomicEntity.Step)
             if (registrationsForSelectedPipelineEntity && registrationsForSelectedPipelineEntity.has(lineNumber)) {
