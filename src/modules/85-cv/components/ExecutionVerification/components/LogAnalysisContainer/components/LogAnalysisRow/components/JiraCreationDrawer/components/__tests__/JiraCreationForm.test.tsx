@@ -103,8 +103,8 @@ describe('JiraViewDetails', () => {
 
     const addFieldButton = screen.getByText(/pipeline.jiraCreateStep.addFields/)
 
-    act(() => {
-      userEvent.click(addFieldButton)
+    await act(async () => {
+      await userEvent.click(addFieldButton)
     })
 
     const keyInput = screen.getByPlaceholderText(/pipeline.keyPlaceholder/)
@@ -112,20 +112,20 @@ describe('JiraViewDetails', () => {
 
     await waitFor(() => expect(keyInput).toBeInTheDocument())
 
-    act(() => {
-      userEvent.type(keyInput, 'key1')
+    await act(async () => {
+      await userEvent.type(keyInput, 'key1')
     })
 
     await waitFor(() => expect(keyInput).toHaveValue('key1'))
 
-    act(() => {
-      userEvent.type(valueInput, 'value1')
+    await act(async () => {
+      await userEvent.type(valueInput, 'value1')
     })
 
     await waitFor(() => expect(valueInput).toHaveValue('value1'))
 
-    act(() => {
-      userEvent.click(addFieldButton)
+    await act(async () => {
+      await userEvent.click(addFieldButton)
     })
 
     const keyInputs = screen.getAllByPlaceholderText(/pipeline.keyPlaceholder/)
@@ -134,8 +134,8 @@ describe('JiraViewDetails', () => {
 
     const deleteIcon = container.querySelector('[data-icon="main-trash"]:last-child')
 
-    act(() => {
-      userEvent.click(deleteIcon!)
+    await act(async () => {
+      await userEvent.click(deleteIcon!)
     })
 
     expect(showErrorMock).toHaveBeenCalled()
@@ -149,8 +149,8 @@ describe('JiraViewDetails', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(screen.getByTestId('jiraDrawerClose_button'))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('jiraDrawerClose_button'))
     })
 
     await waitFor(() => expect(onHideCallbackMock).toHaveBeenCalled())

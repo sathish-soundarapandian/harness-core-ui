@@ -67,8 +67,8 @@ describe('CloudWatch', () => {
       '- cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder -'
     )
 
-    act(() => {
-      userEvent.click(regionDropdown)
+    await act(async () => {
+      await userEvent.click(regionDropdown)
     })
 
     await waitFor(() => {
@@ -76,16 +76,16 @@ describe('CloudWatch', () => {
       expect(screen.getByText(/region 1/)).toBeInTheDocument()
     })
 
-    act(() => {
-      userEvent.click(screen.getByText('region 1'))
+    await act(async () => {
+      await userEvent.click(screen.getByText('region 1'))
     })
 
     expect(regionDropdown).toHaveValue('region 1')
 
     const submitButton = screen.getAllByText(/submit/)[0]
 
-    act(() => {
-      userEvent.click(submitButton)
+    await act(async () => {
+      await userEvent.click(submitButton)
     })
 
     await waitFor(() =>
@@ -107,8 +107,8 @@ describe('CloudWatch', () => {
       '- cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder -'
     )
 
-    act(() => {
-      userEvent.click(regionDropdown)
+    await act(async () => {
+      await userEvent.click(regionDropdown)
     })
 
     await waitFor(() => {
@@ -116,8 +116,8 @@ describe('CloudWatch', () => {
       expect(screen.getByText(/region 1/)).toBeInTheDocument()
     })
 
-    act(() => {
-      userEvent.click(screen.getByText(/region 1/))
+    await act(async () => {
+      await userEvent.click(screen.getByText(/region 1/))
     })
 
     expect(regionDropdown).toHaveValue('region 1')
@@ -126,8 +126,8 @@ describe('CloudWatch', () => {
       expect(screen.getByTestId('addCustomMetricButton')).not.toBeDisabled()
     })
 
-    act(() => {
-      userEvent.click(screen.getByTestId('addCustomMetricButton'))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('addCustomMetricButton'))
     })
 
     await waitFor(() => {
@@ -151,9 +151,9 @@ describe('CloudWatch', () => {
     }
 
     // click on new option
-    userEvent.click(groupNameDropdown)
+    await userEvent.click(groupNameDropdown)
     await waitFor(() => expect(screen.getByText('cv.addNew')).not.toBeNull())
-    userEvent.click(screen.getByText('cv.addNew'))
+    await userEvent.click(screen.getByText('cv.addNew'))
 
     //expect modal to show and fill out new name
     await waitFor(() =>
@@ -166,22 +166,22 @@ describe('CloudWatch', () => {
       value: 'G1'
     })
 
-    userEvent.click(screen.getAllByText('submit')[0])
+    await userEvent.click(screen.getAllByText('submit')[0])
 
     const expressionInput = container.querySelector('textarea[name="customMetrics.0.expression"]')
 
     expect(expressionInput).toBeInTheDocument()
 
-    act(() => {
-      userEvent.type(expressionInput!, 'SELECT *')
+    await act(async () => {
+      await userEvent.type(expressionInput!, 'SELECT *')
     })
 
     expect(expressionInput).toHaveValue('SELECT *')
 
     const assignAccordion = screen.getByText(/cv.monitoringSources.assign/)
 
-    act(() => {
-      userEvent.click(assignAccordion!)
+    await act(async () => {
+      await userEvent.click(assignAccordion!)
     })
 
     expect(screen.getByText('cv.slos.sli')).toBeInTheDocument()
@@ -193,9 +193,9 @@ describe('CloudWatch', () => {
       'input[name="customMetrics.0.analysis.liveMonitoring.enabled"]'
     )
 
-    act(() => {
-      userEvent.click(sliCheckbox!)
-      userEvent.click(serviceHealthCheckbox!)
+    await act(async () => {
+      await userEvent.click(sliCheckbox!)
+      await userEvent.click(serviceHealthCheckbox!)
     })
 
     expect(sliCheckbox).toBeChecked()
@@ -206,22 +206,22 @@ describe('CloudWatch', () => {
     expect(actHigher).toBeInTheDocument()
     expect(actHigher).not.toBeChecked()
 
-    act(() => {
-      userEvent.click(actHigher!)
+    await act(async () => {
+      await userEvent.click(actHigher!)
     })
 
     expect(actHigher).toBeChecked()
 
-    act(() => {
-      userEvent.click(actHigher!)
+    await act(async () => {
+      await userEvent.click(actHigher!)
     })
 
     expect(actHigher).not.toBeChecked()
 
     const cvCheckbox = screen.getByText('cv.monitoredServices.continuousVerification')
 
-    act(() => {
-      userEvent.click(cvCheckbox!)
+    await act(async () => {
+      await userEvent.click(cvCheckbox!)
     })
 
     const serviceIdentifierInput = container.querySelector(
@@ -230,8 +230,8 @@ describe('CloudWatch', () => {
 
     expect(serviceIdentifierInput).toBeInTheDocument()
 
-    act(() => {
-      userEvent.type(serviceIdentifierInput!, 'test value')
+    await act(async () => {
+      await userEvent.type(serviceIdentifierInput!, 'test value')
     })
 
     const serviceIdentifierInput2 = container.querySelector(
@@ -251,7 +251,7 @@ describe('CloudWatch', () => {
     expect(riskProfileRadio).toBeInTheDocument()
   })
 
-  test('should check correct payload is being passed upon clicking submit', () => {
+  test('should check correct payload is being passed upon clicking submit', async () => {
     const onSubmit = jest.fn()
     render(
       <TestWrapper>
@@ -261,14 +261,14 @@ describe('CloudWatch', () => {
 
     const submit = screen.getByText('submit')
 
-    act(() => {
-      userEvent.click(submit)
+    await act(async () => {
+      await userEvent.click(submit)
     })
 
-    expect(onSubmit).toHaveBeenCalledWith(submitRequestDataPayload, submitRequestFormikPayload)
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(submitRequestDataPayload, submitRequestFormikPayload))
   })
 
-  test('should check new metric is added correctly', () => {
+  test('should check new metric is added correctly', async () => {
     const onSubmit = jest.fn()
     const { container } = render(
       <TestWrapper>
@@ -283,8 +283,8 @@ describe('CloudWatch', () => {
 
     expect(metricNameInput).toHaveValue('CustomMetric 1')
 
-    act(() => {
-      userEvent.click(addCustomMetricButton)
+    await act(async () => {
+      await userEvent.click(addCustomMetricButton)
     })
 
     const metricName2 = container.querySelector('input[name="customMetrics.1.metricName"]')
@@ -294,8 +294,8 @@ describe('CloudWatch', () => {
     expect(screen.getByTestId('sideNav-customMetric 2')).toBeInTheDocument()
     expect(screen.getByTestId('sideNav-CustomMetric 1')).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(screen.getByTestId('sideNav-CustomMetric 1'))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('sideNav-CustomMetric 1'))
     })
 
     expect(metricName2).not.toBeInTheDocument()
@@ -304,14 +304,14 @@ describe('CloudWatch', () => {
 
     expect(deleteMetricIcons).toHaveLength(2)
 
-    act(() => {
-      userEvent.click(deleteMetricIcons[1])
+    await act(async () => {
+      await userEvent.click(deleteMetricIcons[1])
     })
 
     expect(screen.queryByText('CustomMetric 2')).not.toBeInTheDocument()
   })
 
-  test('should show loading skeleton for metric packs, if metric pack call is in progress', () => {
+  test('should show loading skeleton for metric packs, if metric pack call is in progress', async () => {
     const onSubmit = jest.fn()
 
     const getMetricPackSpy = jest.spyOn(cvService, 'useGetRiskCategoryForCustomHealthMetric')
@@ -333,8 +333,8 @@ describe('CloudWatch', () => {
 
     const assignAccordion = screen.getByText(/cv.monitoringSources.assign/)
 
-    act(() => {
-      userEvent.click(assignAccordion!)
+    await act(async () => {
+      await userEvent.click(assignAccordion!)
     })
 
     expect(screen.getAllByTestId('metricPackOptions-loading')).toHaveLength(1)
@@ -360,8 +360,8 @@ describe('CloudWatch', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(screen.getByTestId('addCustomMetricButton'))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('addCustomMetricButton'))
     })
 
     await waitFor(() => {
@@ -373,8 +373,8 @@ describe('CloudWatch', () => {
 
     expect(fetchDataButton).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(fetchDataButton)
+    await act(async () => {
+      await userEvent.click(fetchDataButton)
     })
 
     expect(refetch).not.toHaveBeenCalled()
@@ -383,8 +383,8 @@ describe('CloudWatch', () => {
       '- cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder -'
     )
 
-    act(() => {
-      userEvent.click(regionDropdown)
+    await act(async () => {
+      await userEvent.click(regionDropdown)
     })
 
     await waitFor(() => {
@@ -392,8 +392,8 @@ describe('CloudWatch', () => {
       expect(screen.getByText(/region 1/)).toBeInTheDocument()
     })
 
-    act(() => {
-      userEvent.click(screen.getByText('region 1'))
+    await act(async () => {
+      await userEvent.click(screen.getByText('region 1'))
     })
 
     expect(regionDropdown).toHaveValue('region 1')
@@ -402,8 +402,8 @@ describe('CloudWatch', () => {
 
     expect(expressionInput).toBeInTheDocument()
 
-    act(() => {
-      userEvent.type(expressionInput!, 'SELECT *')
+    await act(async () => {
+      await userEvent.type(expressionInput!, 'SELECT *')
     })
 
     expect(expressionInput).toHaveValue('SELECT *')
@@ -412,8 +412,8 @@ describe('CloudWatch', () => {
       expect(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/)).not.toBeDisabled()
     })
 
-    act(() => {
-      userEvent.click(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/))
+    await act(async () => {
+      await userEvent.click(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/))
     })
 
     expect(refetch).toHaveBeenCalled()
@@ -444,8 +444,8 @@ describe('CloudWatch', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(screen.getByTestId('addCustomMetricButton'))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('addCustomMetricButton'))
     })
 
     await waitFor(() => {
@@ -457,8 +457,8 @@ describe('CloudWatch', () => {
 
     expect(fetchDataButton).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(fetchDataButton)
+    await act(async () => {
+      await userEvent.click(fetchDataButton)
     })
 
     expect(refetch).not.toHaveBeenCalled()
@@ -467,8 +467,8 @@ describe('CloudWatch', () => {
       '- cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder -'
     )
 
-    act(() => {
-      userEvent.click(regionDropdown)
+    await act(async () => {
+      await userEvent.click(regionDropdown)
     })
 
     await waitFor(() => {
@@ -476,8 +476,8 @@ describe('CloudWatch', () => {
       expect(screen.getByText(/region 1/)).toBeInTheDocument()
     })
 
-    act(() => {
-      userEvent.click(screen.getByText('region 1'))
+    await act(async () => {
+      await userEvent.click(screen.getByText('region 1'))
     })
 
     expect(regionDropdown).toHaveValue('region 1')
@@ -486,8 +486,8 @@ describe('CloudWatch', () => {
 
     expect(expressionInput).toBeInTheDocument()
 
-    act(() => {
-      userEvent.type(expressionInput!, 'SELECT *')
+    await act(async () => {
+      await userEvent.type(expressionInput!, 'SELECT *')
     })
 
     expect(expressionInput).toHaveValue('SELECT *')
@@ -496,8 +496,8 @@ describe('CloudWatch', () => {
       expect(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/)).not.toBeDisabled()
     })
 
-    act(() => {
-      userEvent.click(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/))
+    await act(async () => {
+      await userEvent.click(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/))
     })
 
     expect(refetch).toHaveBeenCalled()
@@ -526,8 +526,8 @@ describe('CloudWatch', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(screen.getByTestId('addCustomMetricButton'))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId('addCustomMetricButton'))
     })
 
     await waitFor(() => {
@@ -539,8 +539,8 @@ describe('CloudWatch', () => {
 
     expect(fetchDataButton).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(fetchDataButton)
+    await act(async () => {
+      await userEvent.click(fetchDataButton)
     })
 
     expect(refetch).not.toHaveBeenCalled()
@@ -549,8 +549,8 @@ describe('CloudWatch', () => {
       '- cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder -'
     )
 
-    act(() => {
-      userEvent.click(regionDropdown)
+    await act(async () => {
+      await userEvent.click(regionDropdown)
     })
 
     await waitFor(() => {
@@ -558,8 +558,8 @@ describe('CloudWatch', () => {
       expect(screen.getByText(/region 1/)).toBeInTheDocument()
     })
 
-    act(() => {
-      userEvent.click(screen.getByText('region 1'))
+    await act(async () => {
+      await userEvent.click(screen.getByText('region 1'))
     })
 
     expect(regionDropdown).toHaveValue('region 1')
@@ -568,8 +568,8 @@ describe('CloudWatch', () => {
 
     expect(expressionInput).toBeInTheDocument()
 
-    act(() => {
-      userEvent.type(expressionInput!, 'SELECT *')
+    await act(async () => {
+      await userEvent.type(expressionInput!, 'SELECT *')
     })
 
     expect(expressionInput).toHaveValue('SELECT *')
@@ -578,8 +578,8 @@ describe('CloudWatch', () => {
       expect(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/)).not.toBeDisabled()
     })
 
-    act(() => {
-      userEvent.click(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/))
+    await act(async () => {
+      await userEvent.click(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/))
     })
 
     expect(refetch).toHaveBeenCalled()
@@ -620,7 +620,7 @@ describe('CloudWatch', () => {
     beforeAll(() => {
       jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
     })
-    test('should render metric thresholds', () => {
+    test('should render metric thresholds', async () => {
       jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
       const onSubmit = jest.fn()
       render(
@@ -635,7 +635,7 @@ describe('CloudWatch', () => {
 
       expect(addButton).toBeInTheDocument()
 
-      userEvent.click(addButton)
+      await userEvent.click(addButton)
 
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (2)')).toBeInTheDocument()
     })
@@ -680,15 +680,15 @@ describe('CloudWatch', () => {
 
       const deleteButton = container.querySelectorAll('span[data-icon="main-delete"]')[0]
 
-      act(() => {
-        userEvent.click(deleteButton!)
+      await act(async () => {
+        await userEvent.click(deleteButton!)
       })
 
       expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
 
       const modalDeleteBtn = screen.queryAllByText('confirm')[0]
-      act(() => {
-        userEvent.click(modalDeleteBtn!)
+      await act(async () => {
+        await userEvent.click(modalDeleteBtn!)
       })
 
       await waitFor(() => {

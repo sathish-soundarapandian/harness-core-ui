@@ -55,7 +55,7 @@ describe('AddToFlagButton', () => {
 
     expect(screen.getByText('+ Add to Flag')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('+ Add to Flag'))
+    await userEvent.click(screen.getByText('+ Add to Flag'))
 
     expect(screen.getByText('test modal title')).toBeInTheDocument()
 
@@ -72,20 +72,20 @@ describe('AddToFlagButton', () => {
 
     renderComponent({ onSubmit: onSubmitMock })
 
-    userEvent.click(screen.getByText('+ Add to Flag'))
+    await userEvent.click(screen.getByText('+ Add to Flag'))
 
     // select a variation first
-    userEvent.click(screen.getByPlaceholderText('- Select -'))
+    await userEvent.click(screen.getByPlaceholderText('- Select -'))
     await waitFor(() => expect(screen.getByText('True')).toBeInTheDocument())
 
-    userEvent.click(screen.getByText('True'))
+    await userEvent.click(screen.getByText('True'))
 
     expect(screen.getByPlaceholderText('- Select -')).toHaveValue('True')
 
-    // userEvent.click(screen.getByTestId('flag_row_0_input'))
+    // await userEvent.click(screen.getByTestId('flag_row_0_input'))
     await waitFor(() => expect(screen.getByTestId('flag_row_0_input')).toBeChecked())
 
-    userEvent.click(screen.getByText('add'))
+    await userEvent.click(screen.getByText('add'))
 
     await waitFor(() => expect(onSubmitMock).toBeCalled())
 

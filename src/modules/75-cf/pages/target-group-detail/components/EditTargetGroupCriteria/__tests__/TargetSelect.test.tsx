@@ -74,7 +74,7 @@ describe('TargetSelect', () => {
     expect(screen.queryByText(mockTargets[1].name)).not.toBeInTheDocument()
     expect(screen.queryByText(mockTargets[2].name)).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByPlaceholderText('- cf.segmentDetail.searchTarget -'))
+    await userEvent.click(screen.getByPlaceholderText('- cf.segmentDetail.searchTarget -'))
 
     await waitFor(() => {
       expect(screen.getByText(mockTargets[0].name)).toBeInTheDocument()

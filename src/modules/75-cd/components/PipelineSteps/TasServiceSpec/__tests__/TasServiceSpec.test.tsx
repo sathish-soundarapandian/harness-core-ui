@@ -221,7 +221,7 @@ describe('TasServiceSpec tests', () => {
           onUpdate={onUpdateHandler}
         />
       )
-      userEvent.click(getByText('Submit'))
+      await userEvent.click(getByText('Submit'))
       expect(onUpdateHandler).not.toBeCalled()
     })
   })

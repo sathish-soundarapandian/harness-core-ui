@@ -174,14 +174,14 @@ describe('ScriptWizardStepTwo', () => {
 
     const branch = queryByAttribute('name', container, 'branch')
     expect(branch).toHaveDisplayValue('')
-    userEvent.clear(branch!)
-    userEvent.type(branch!, 'main')
+    await userEvent.clear(branch!)
+    await userEvent.type(branch!, 'main')
     expect(branch).toHaveDisplayValue('main')
 
     const folderPath = queryByAttribute('name', container, 'folderPath')
     expect(folderPath).toHaveDisplayValue('')
-    userEvent.clear(folderPath!)
-    userEvent.type(folderPath!, 'main')
+    await userEvent.clear(folderPath!)
+    await userEvent.type(folderPath!, 'main')
     expect(folderPath).toHaveDisplayValue('main')
   })
 

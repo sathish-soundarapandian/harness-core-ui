@@ -48,14 +48,14 @@ const renderComponent = (props: Partial<WrapperComponentProps> = {}): RenderResu
     </TestWrapper>
   )
 
-  userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
-
   return result
 }
 
 describe('useEditTargetGroupCriteriaDialog', () => {
   test('it should render the dialog', async () => {
     renderComponent()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
 
     expect(screen.getByTestId('edit-target-group-criteria-dialog')).toBeInTheDocument()
   })

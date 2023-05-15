@@ -39,8 +39,8 @@ describe('JiraViewDetails', () => {
 
     screen.debug(container, 50000)
 
-    act(() => {
-      userEvent.click(screen.getByTestId(/jiraDrawerClose_button_top/))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId(/jiraDrawerClose_button_top/))
     })
 
     await waitFor(() => expect(onHideCallbackMock).toHaveBeenCalled())

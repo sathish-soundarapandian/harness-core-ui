@@ -91,7 +91,7 @@ describe('ModuleTagsFilter', () => {
     expect(firstCheckbox).not.toBeChecked()
     expect(setPredefinedFilterMock).not.toHaveBeenCalled()
 
-    userEvent.click(firstCheckbox)
+    await userEvent.click(firstCheckbox)
 
     await waitFor(() => expect(setPredefinedFilterMock).toHaveBeenCalledWith('HARNESS', true))
   })

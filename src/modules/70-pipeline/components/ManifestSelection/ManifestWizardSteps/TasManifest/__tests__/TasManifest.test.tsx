@@ -40,16 +40,16 @@ const validateRuntimeField = async (pathInput: HTMLInputElement, regexText = '')
   expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(1)
   const cogModal = modals[0] as HTMLElement
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
   act(() => {
     fireEvent.change(regexTextArea!, { target: { value: `<+input>.includes(/${regexText}/)` } })
   })
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
 
   await waitFor(() => expect(pathInput.value).toBe(`<+input>.regex(<+input>.includes(/${regexText}/))`))
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
 }
 
 describe('Manifest Details tests', () => {
@@ -91,7 +91,7 @@ describe('Manifest Details tests', () => {
     const branchInput = queryByAttribute('name', container, 'branch') as HTMLInputElement
     expect(branchInput.value).toBe('<+input>')
     const cogBranch = document.getElementById('configureOptions_branch')
-    userEvent.click(cogBranch!)
+    await userEvent.click(cogBranch!)
     await validateRuntimeField(branchInput, 'test')
 
     const varsPathInput = queryByAttribute('name', container, 'varsPaths') as HTMLInputElement
@@ -101,10 +101,10 @@ describe('Manifest Details tests', () => {
     expect(autoScalerPathInput.value).toBe('<+input>')
 
     const varsPath = document.getElementById('configureOptions_varsPaths')
-    userEvent.click(varsPath!)
+    await userEvent.click(varsPath!)
     await validateRuntimeField(varsPathInput, 'varTest.yaml')
     const autoScalerPath = document.getElementById('configureOptions_autoScalerPath')
-    userEvent.click(autoScalerPath!)
+    await userEvent.click(autoScalerPath!)
     await validateRuntimeField(autoScalerPathInput, 'autoScaler.yaml')
   })
 
@@ -263,7 +263,7 @@ describe('Manifest Details tests', () => {
     )
     expect(container).toMatchSnapshot()
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     expect(defaultProps.previousStep).toHaveBeenCalledWith(defaultProps.prevStepData)
   })
@@ -281,11 +281,11 @@ describe('Manifest Details tests', () => {
       </TestWrapper>
     )
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     expect(defaultProps.previousStep).toHaveBeenCalledWith(undefined)
     const submitButton = getElementByText(container, 'submit')
-    userEvent.click(submitButton!)
+    await userEvent.click(submitButton!)
   })
 
   test('when prevStepData is passed with connectorRef as Runtime input', async () => {
@@ -320,11 +320,11 @@ describe('Manifest Details tests', () => {
       </TestWrapper>
     )
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     expect(defaultProps.previousStep).toHaveBeenCalledWith(defaultProps.prevStepData)
     const submitButton = getElementByText(container, 'submit')
-    userEvent.click(submitButton!)
+    await userEvent.click(submitButton!)
   })
 
   test('change Git Fetch Type value to Commit and submit', async () => {
@@ -377,14 +377,14 @@ describe('Manifest Details tests', () => {
 
     // Click on gitFetchType dropdown and select Specific Commit Id / Git Tag option
     const gitFetchTypeInput = queryByAttribute('name', container, 'gitFetchType') as HTMLInputElement
-    userEvent.click(gitFetchTypeInput)
+    await userEvent.click(gitFetchTypeInput)
     const specifiCommitIdOption = getByText('Specific Commit Id / Git Tag')
     await waitFor(() => expect(specifiCommitIdOption).toBeInTheDocument())
-    userEvent.click(specifiCommitIdOption)
+    await userEvent.click(specifiCommitIdOption)
     await waitFor(() => expect(gitFetchTypeInput.value).toBe('Specific Commit Id / Git Tag'))
 
     // Click on Submit button without providing commitId value and check if proper validation error appears
-    userEvent.click(getByText('submit').parentElement!)
+    await userEvent.click(getByText('submit').parentElement!)
     await waitFor(() => expect(getByText('validation.commitId')).toBeInTheDocument())
 
     // Provide commitId value
@@ -395,7 +395,7 @@ describe('Manifest Details tests', () => {
     await waitFor(() => expect(commitIdInput.value).toBe('abc123'))
 
     // Click on submit button and submit the form
-    userEvent.click(getByText('submit').parentElement!)
+    await userEvent.click(getByText('submit').parentElement!)
 
     await waitFor(() => {
       expect(defaultProps.handleSubmit).toHaveBeenCalledTimes(1)

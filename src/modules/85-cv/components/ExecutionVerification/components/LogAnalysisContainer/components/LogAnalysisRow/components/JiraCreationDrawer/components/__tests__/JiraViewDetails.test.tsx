@@ -60,7 +60,7 @@ describe('JiraViewDetails', () => {
 
     const retryButton = screen.getByText(/Retry/)
 
-    act(() => {
+    await act(() => {
       userEvent.click(retryButton)
     })
 
@@ -99,7 +99,7 @@ describe('JiraViewDetails', () => {
       </TestWrapper>
     )
 
-    act(() => {
+    await act(() => {
       userEvent.click(screen.getByTestId('jiraDetailsLink_button'))
     })
 
@@ -125,16 +125,16 @@ describe('JiraViewDetails', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(screen.getByTestId('jiraDetailsLink_button'))
+    await act(() => {
+      return userEvent.click(screen.getByTestId('jiraDetailsLink_button'))
     })
 
     await waitFor(() =>
       expect(openSpy).toHaveBeenCalledWith('https://example.atlassian.net/browse/ABCD-1234', '_blank')
     )
 
-    act(() => {
-      userEvent.click(screen.getByTestId('jiraDetailsClose_button'))
+    await act(() => {
+      return userEvent.click(screen.getByTestId('jiraDetailsClose_button'))
     })
 
     await waitFor(() => expect(onHideCallbackMock).toHaveBeenCalled())

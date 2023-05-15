@@ -53,7 +53,7 @@ describe('SetUpGitSync', () => {
     expect(screen.queryByText('cf.gitSync.setUpGitConnection')).not.toBeInTheDocument()
     expect(setupGitBtn).toBeVisible()
 
-    userEvent.click(setupGitBtn)
+    await userEvent.click(setupGitBtn)
 
     await waitFor(() => {
       expect(screen.getByTestId('location')).toHaveTextContent(
@@ -71,7 +71,7 @@ describe('SetUpGitSync', () => {
 
     expect(setupGitBtn).toBeVisible()
 
-    userEvent.click(setupGitBtn)
+    await userEvent.click(setupGitBtn)
 
     await waitFor(() => {
       expect(screen.getByText('cf.gitSync.setUpGitConnection')).toBeVisible()
@@ -86,13 +86,13 @@ describe('SetUpGitSync', () => {
     expect(setupGitBtn).toBeVisible()
     expect(screen.queryByText('cf.gitSync.setUpGitConnection')).not.toBeInTheDocument()
 
-    userEvent.click(setupGitBtn)
+    await userEvent.click(setupGitBtn)
 
     await waitFor(() => {
       expect(screen.getByText('cf.gitSync.setUpGitConnection')).toBeVisible()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'cancel' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cancel' }))
 
     await waitFor(() => {
       expect(screen.queryByText('cf.gitSync.setUpGitConnection')).not.toBeInTheDocument()

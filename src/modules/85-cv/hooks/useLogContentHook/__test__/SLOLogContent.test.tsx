@@ -119,18 +119,18 @@ describe('SLOLogContent', () => {
 
     expect(screen.getByText('cv.showingLogsFor cv.lastonehour from DUMMY_DATE to DUMMY_DATE.')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.lastOneHour'))
-    userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs'))
+    await userEvent.click(screen.getByText('cv.lastOneHour'))
+    await userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs'))
 
     expect(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs'))
-    userEvent.click(screen.getByText('cv.last12Hours'))
+    await userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs'))
+    await userEvent.click(screen.getByText('cv.last12Hours'))
 
     expect(screen.getByText('cv.last12Hours')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.last12Hours'))
-    userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last24Hrs'))
+    await userEvent.click(screen.getByText('cv.last12Hours'))
+    await userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last24Hrs'))
 
     expect(screen.getByText('cv.monitoredServices.serviceHealth.last24Hrs')).toBeInTheDocument()
 
@@ -168,8 +168,8 @@ describe('SLOLogContent', () => {
 
     expect(screen.getByText('cv.showingLogsFor cv.lastonehour from DUMMY_DATE to DUMMY_DATE.')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.lastOneHour'))
-    userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs'))
+    await userEvent.click(screen.getByText('cv.lastOneHour'))
+    await userEvent.click(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs'))
 
     expect(screen.getByText('cv.monitoredServices.serviceHealth.last4Hrs')).toBeInTheDocument()
 
@@ -209,7 +209,7 @@ describe('SLOLogContent', () => {
 
     expect(screen.getByText('cv.download')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.download'))
+    await userEvent.click(screen.getByText('cv.download'))
 
     await waitFor(() => {
       expect(cvService.getServiceLevelObjectiveLogsPromise).toHaveBeenCalledWith({
@@ -244,7 +244,7 @@ describe('SLOLogContent', () => {
 
     expect(screen.getByText('cv.download')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.download'))
+    await userEvent.click(screen.getByText('cv.download'))
 
     await waitFor(() => {
       expect(cvService.getServiceLevelObjectiveLogsPromise).toHaveBeenCalledWith({
@@ -263,7 +263,7 @@ describe('SLOLogContent', () => {
     })
   })
 
-  test('it should handle the custom time range filter for ExecutionLog', () => {
+  test('it should handle the custom time range filter for ExecutionLog', async () => {
     render(
       <TestWrapper {...testWrapperProps}>
         <SLOLogContent
@@ -277,24 +277,24 @@ describe('SLOLogContent', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByRole('button', { name: /cv.lastOneHour/i }))
+    await userEvent.click(screen.getByRole('button', { name: /cv.lastOneHour/i }))
 
     expect(screen.getByText('cv.selectTimeRange')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cancel'))
+    await userEvent.click(screen.getByText('cancel'))
 
     expect(screen.queryByText('cv.selectTimeRange')).not.toBeVisible()
 
-    userEvent.click(screen.getByRole('button', { name: /cv.lastOneHour/i }))
+    await userEvent.click(screen.getByRole('button', { name: /cv.lastOneHour/i }))
 
     expect(screen.getByText('cv.selectTimeRange')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('common.apply'))
+    await userEvent.click(screen.getByText('common.apply'))
 
     expect(screen.queryByText('cv.selectTimeRange')).not.toBeVisible()
   })
 
-  test('it should handle the custom time range filter for ApiCallLog', () => {
+  test('it should handle the custom time range filter for ApiCallLog', async () => {
     render(
       <TestWrapper {...testWrapperProps}>
         <SLOLogContent
@@ -308,11 +308,11 @@ describe('SLOLogContent', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByRole('button', { name: /cv.lastOneHour/i }))
+    await userEvent.click(screen.getByRole('button', { name: /cv.lastOneHour/i }))
 
     expect(screen.getByText('cv.selectTimeRange')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('common.apply'))
+    await userEvent.click(screen.getByText('common.apply'))
 
     expect(screen.queryByText('cv.selectTimeRange')).not.toBeVisible()
   })

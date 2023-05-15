@@ -6,7 +6,14 @@
  */
 
 import React from 'react'
-import { queryByAttribute, render, waitFor, getByText as getElementByText, queryByText } from '@testing-library/react'
+import {
+  queryByAttribute,
+  render,
+  waitFor,
+  getByText as getElementByText,
+  queryByText,
+  act
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { GetDataError } from 'restful-react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
@@ -42,9 +49,13 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> =
   // Click on Allowed Values radio button and then on Select input
   await waitFor(() => expect(getElementByText(cogModal, 'allowedValues')).toBeInTheDocument())
   const allowedValuesRadio = getElementByText(cogModal, 'allowedValues')
-  userEvent.click(allowedValuesRadio)
+  await act(async () => {
+    await userEvent.click(allowedValuesRadio)
+  })
   const allowedValuesSelect = queryByAttribute('name', cogModal, 'allowedValues')
-  userEvent.click(allowedValuesSelect!)
+  await act(async () => {
+    await userEvent.click(allowedValuesSelect!)
+  })
   // 1 popover should be opened which displays list of options
   // Click on test1 and test2 options
   await waitFor(() => expect(popovers.length).toBe(1))
@@ -53,11 +64,15 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> =
   await waitFor(() => expect(option1).toBeInTheDocument())
   const option2 = getElementByText(selectOptionsPopover, 'test2')
   expect(option2).toBeInTheDocument()
-  userEvent.click(option1!)
-  userEvent.click(option2)
+  await act(async () => {
+    await userEvent.click(option1!)
+    await userEvent.click(option2)
+  })
   // Click on Submit button and verify onChange call
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await act(async () => {
+    await userEvent.click(cogSubmit)
+  })
   await waitFor(() => expect(onChange).toBeCalledWith('<+input>.allowedValues(test1,test2)', undefined, undefined))
 }
 
@@ -77,7 +92,9 @@ describe('SelectConfigureOptions tests', () => {
     expect(modals.length).toBe(0)
 
     const cogButton = document.getElementById('configureOptions_repository')
-    userEvent.click(cogButton!)
+    await act(async () => {
+      await userEvent.click(cogButton!)
+    })
     await waitFor(() => expect(modals.length).toBe(1))
     const cogModal = modals[0] as HTMLElement
 
@@ -96,13 +113,17 @@ describe('SelectConfigureOptions tests', () => {
     expect(modals.length).toBe(0)
 
     const cogButton = document.getElementById('configureOptions_repository')
-    userEvent.click(cogButton!)
+    await act(async () => {
+      await userEvent.click(cogButton!)
+    })
     await waitFor(() => expect(modals.length).toBe(1))
     const cogModal = modals[0] as HTMLElement
 
     await waitFor(() => expect(getElementByText(cogModal, 'allowedValues')).toBeInTheDocument())
     const allowedValuesRadio = getElementByText(cogModal, 'allowedValues')
-    userEvent.click(allowedValuesRadio)
+    await act(async () => {
+      await userEvent.click(allowedValuesRadio)
+    })
     const allowedValuesSelect = queryByAttribute('name', cogModal, 'allowedValues') as HTMLInputElement
     expect(allowedValuesSelect).toBeInTheDocument()
     await waitFor(() => expect(allowedValuesSelect.placeholder).toBe('- loading -'))
@@ -128,13 +149,17 @@ describe('SelectConfigureOptions tests', () => {
     expect(modals.length).toBe(0)
 
     const cogButton = document.getElementById('configureOptions_repository')
-    userEvent.click(cogButton!)
+    await act(async () => {
+      await userEvent.click(cogButton!)
+    })
     await waitFor(() => expect(modals.length).toBe(1))
     const cogModal = modals[0] as HTMLElement
 
     await waitFor(() => expect(getElementByText(cogModal, 'allowedValues')).toBeInTheDocument())
     const allowedValuesRadio = getElementByText(cogModal, 'allowedValues')
-    userEvent.click(allowedValuesRadio)
+    await act(async () => {
+      await userEvent.click(allowedValuesRadio)
+    })
     const allowedValuesSelect = queryByAttribute('name', cogModal, 'allowedValues') as HTMLInputElement
     expect(allowedValuesSelect).toBeInTheDocument()
     expect(getElementByText(cogModal, 'Failed to fetch')).toBeInTheDocument()
@@ -158,13 +183,17 @@ describe('SelectConfigureOptions tests', () => {
     expect(modals.length).toBe(0)
 
     const cogButton = document.getElementById('configureOptions_repository')
-    userEvent.click(cogButton!)
+    await act(async () => {
+      await userEvent.click(cogButton!)
+    })
     await waitFor(() => expect(modals.length).toBe(1))
     const cogModal = modals[0] as HTMLElement
 
     await waitFor(() => expect(getElementByText(cogModal, 'allowedValues')).toBeInTheDocument())
     const allowedValuesRadio = getElementByText(cogModal, 'allowedValues')
-    userEvent.click(allowedValuesRadio)
+    await act(async () => {
+      await userEvent.click(allowedValuesRadio)
+    })
     const allowedValuesSelect = queryByAttribute('name', cogModal, 'allowedValues') as HTMLInputElement
     expect(allowedValuesSelect).toBeInTheDocument()
     expect(getElementByText(cogModal, 'somethingWentWrong')).toBeInTheDocument()
@@ -194,13 +223,17 @@ describe('SelectConfigureOptions tests', () => {
     expect(modals.length).toBe(0)
 
     const cogButton = document.getElementById('configureOptions_repository')
-    userEvent.click(cogButton!)
+    await act(async () => {
+      await userEvent.click(cogButton!)
+    })
     await waitFor(() => expect(modals.length).toBe(1))
     const cogModal = modals[0] as HTMLElement
 
     await waitFor(() => expect(getElementByText(cogModal, 'allowedValues')).toBeInTheDocument())
     const allowedValuesRadio = getElementByText(cogModal, 'allowedValues')
-    userEvent.click(allowedValuesRadio)
+    await act(async () => {
+      await userEvent.click(allowedValuesRadio)
+    })
     const allowedValuesSelect = queryByAttribute('name', cogModal, 'allowedValues') as HTMLInputElement
     expect(allowedValuesSelect).toBeInTheDocument()
     expect(getElementByText(cogModal, 'repository No results fould for given params')).toBeInTheDocument()
@@ -229,13 +262,17 @@ describe('SelectConfigureOptions tests', () => {
     expect(modals.length).toBe(0)
 
     const cogButton = document.getElementById('configureOptions_repository')
-    userEvent.click(cogButton!)
+    await act(async () => {
+      await userEvent.click(cogButton!)
+    })
     await waitFor(() => expect(modals.length).toBe(1))
     const cogModal = modals[0] as HTMLElement
 
     await waitFor(() => expect(getElementByText(cogModal, 'allowedValues')).toBeInTheDocument())
     const allowedValuesRadio = getElementByText(cogModal, 'allowedValues')
-    userEvent.click(allowedValuesRadio)
+    await act(async () => {
+      await userEvent.click(allowedValuesRadio)
+    })
     const allowedValuesSelect = queryByAttribute('name', cogModal, 'allowedValues') as HTMLInputElement
     expect(allowedValuesSelect).toBeInTheDocument()
     expect(getElementByText(cogModal, 'somethingWentWrong')).toBeInTheDocument()
@@ -260,13 +297,17 @@ describe('SelectConfigureOptions tests', () => {
     expect(modals.length).toBe(0)
 
     const cogButton = document.getElementById('configureOptions_repository')
-    userEvent.click(cogButton!)
+    await act(async () => {
+      await userEvent.click(cogButton!)
+    })
     await waitFor(() => expect(modals.length).toBe(1))
     const cogModal = modals[0] as HTMLElement
 
     await waitFor(() => expect(getElementByText(cogModal, 'allowedValues')).toBeInTheDocument())
     const allowedValuesRadio = getElementByText(cogModal, 'allowedValues')
-    userEvent.click(allowedValuesRadio)
+    await act(async () => {
+      await userEvent.click(allowedValuesRadio)
+    })
     const allowedValuesSelect = queryByAttribute('name', cogModal, 'allowedValues') as HTMLInputElement
     expect(allowedValuesSelect).toBeInTheDocument()
     expect(getElementByText(cogModal, 'somethingWentWrong')).toBeInTheDocument()

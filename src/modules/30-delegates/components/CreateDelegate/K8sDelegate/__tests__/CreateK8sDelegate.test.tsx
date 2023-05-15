@@ -83,7 +83,7 @@ describe('Create K8s Delegate', () => {
     })
 
     const continueBtn = getByRole('button', { name: /continue/ })
-    userEvent.click(continueBtn!)
+    await userEvent.click(continueBtn!)
 
     await waitFor(() => {
       expect(document.body.innerHTML).not.toContain('continue')

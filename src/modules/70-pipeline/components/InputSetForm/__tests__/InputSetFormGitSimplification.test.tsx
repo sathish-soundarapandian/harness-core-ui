@@ -172,7 +172,7 @@ describe('InputSetFrom testing - When Git Simplification is enabled', () => {
         saveToGitSaveBtn = getByRole(portalDiv, 'button', { name: 'save' })
         expect(saveToGitSaveBtn).toBeInTheDocument()
       })
-      userEvent.click(saveToGitSaveBtn!)
+      await userEvent.click(saveToGitSaveBtn!)
       await waitFor(() => {
         expect(updateInputSet).toHaveBeenCalled()
         expect(updateInputSet).toHaveBeenCalledWith(
@@ -210,7 +210,7 @@ describe('InputSetFrom testing - When Git Simplification is enabled', () => {
         saveToGitSaveBtn = getByRole(portalDiv, 'button', { name: 'save' })
         expect(saveToGitSaveBtn).toBeInTheDocument()
       })
-      userEvent.click(saveToGitSaveBtn!)
+      await userEvent.click(saveToGitSaveBtn!)
       await waitFor(() => {
         expect(updateInputSet).toHaveBeenCalled()
         expect(updateInputSet).toHaveBeenCalledWith(

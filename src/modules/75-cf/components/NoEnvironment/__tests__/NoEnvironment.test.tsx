@@ -28,7 +28,7 @@ describe('NoEnvironment', () => {
     expect(btn).toBeInTheDocument()
     expect(onCreated).not.toHaveBeenCalled()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() =>
       expect(screen.getByRole('heading', { name: 'cf.environments.create.title' })).toBeInTheDocument()

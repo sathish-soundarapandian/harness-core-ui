@@ -56,7 +56,7 @@ describe('TargetManagementFlagsListing', () => {
         expect(input).toBeDisabled()
       }
 
-      userEvent.click(screen.getByRole('checkbox'))
+      await userEvent.click(screen.getByRole('checkbox'))
 
       await waitFor(() => {
         for (const input of document.querySelectorAll('input:not([type="checkbox"])')) {

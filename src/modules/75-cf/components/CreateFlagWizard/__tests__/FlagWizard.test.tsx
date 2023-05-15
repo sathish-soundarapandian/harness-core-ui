@@ -25,7 +25,7 @@ jest.mock('@common/hooks/useTelemetry', () => ({
 }))
 
 describe('FlagWizard', () => {
-  test('it should fire telementary event when completed created flag', () => {
+  test('it should fire telementary event when completed created flag', async () => {
     jest.spyOn(cfServiceMock, 'useGetGitRepo').mockReturnValue({ loading: false, data: { repoSet: true } } as any)
 
     render(
@@ -43,7 +43,7 @@ describe('FlagWizard', () => {
       </TestWrapper>
     )
 
-    userEvent.type(screen.getByPlaceholderText('cf.creationModal.aboutFlag.ffNamePlaceholder'), 'TEST_FLAG')
+    await userEvent.type(screen.getByPlaceholderText('cf.creationModal.aboutFlag.ffNamePlaceholder'), 'TEST_FLAG')
 
     fireEvent.click(screen.getByText('next'))
 

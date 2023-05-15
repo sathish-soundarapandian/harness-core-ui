@@ -184,23 +184,23 @@ describe('Test Cloudformation delete stack', () => {
     const { container } = renderComponent(data)
 
     const stepName = queryByAttribute('name', container, 'name')
-    act(() => {
-      userEvent.clear(stepName!)
-      userEvent.type(stepName!, 'new name')
+    await act(async () => {
+      await userEvent.clear(stepName!)
+      await userEvent.type(stepName!, 'new name')
     })
     expect(stepName).toHaveDisplayValue('new name')
 
     const timeout = queryByAttribute('name', container, 'timeout')
-    act(() => {
-      userEvent.clear(timeout!)
-      userEvent.type(timeout!, '20m')
+    await act(async () => {
+      await userEvent.clear(timeout!)
+      await userEvent.type(timeout!, '20m')
     })
     expect(timeout).toHaveDisplayValue('20m')
 
     const stackName = queryByAttribute('name', container, 'spec.configuration.spec.stackName')
-    act(() => {
-      userEvent.clear(stackName!)
-      userEvent.type(stackName!, 'new_name')
+    await act(async () => {
+      await userEvent.clear(stackName!)
+      await userEvent.type(stackName!, 'new_name')
     })
     expect(stackName).toHaveDisplayValue('new_name')
     expect(container).toMatchSnapshot()
@@ -279,8 +279,9 @@ describe('Test Cloudformation delete stack', () => {
     const { container, getByText } = renderComponent(data)
 
     const provId = queryByAttribute('name', container, 'spec.configuration.spec.provisionerIdentifier')
-    act(() => {
-      userEvent.type(provId!, '')
+
+    await act(async () => {
+      await userEvent.clear(provId!)
     })
     expect(provId).toHaveDisplayValue('')
 

@@ -64,7 +64,7 @@ describe('NewUserRoleDropdown', () => {
 
     await waitFor(() => expect(screen.getByPlaceholderText('rbac.usersPage.selectRole')).toBeInTheDocument())
 
-    userEvent.click(screen.getByPlaceholderText('rbac.usersPage.selectRole'))
+    await userEvent.click(screen.getByPlaceholderText('rbac.usersPage.selectRole'))
 
     await waitFor(() => {
       expect(screen.getByText('Feature Flag Manage Role')).toBeInTheDocument()
@@ -87,7 +87,7 @@ describe('NewUserRoleDropdown', () => {
 
     await waitFor(() => expect(screen.getByPlaceholderText('rbac.usersPage.selectRole')).toBeInTheDocument())
 
-    userEvent.click(screen.getByPlaceholderText('rbac.usersPage.selectRole'))
+    await userEvent.click(screen.getByPlaceholderText('rbac.usersPage.selectRole'))
 
     fireEvent.mouseOver(screen.getByText('Feature Flag Manage Role'))
 
@@ -109,13 +109,13 @@ describe('NewUserRoleDropdown', () => {
 
     await waitFor(() => expect(screen.getByPlaceholderText('rbac.usersPage.selectRole')).toBeInTheDocument())
 
-    userEvent.click(screen.getByPlaceholderText('rbac.usersPage.selectRole'))
+    await userEvent.click(screen.getByPlaceholderText('rbac.usersPage.selectRole'))
 
     fireEvent.mouseOver(screen.getByText('Feature Flag Manage Role'))
 
     await waitFor(() => expect(screen.getByText('cf.planEnforcement.upgradeRequiredDev')).toBeInTheDocument())
 
-    userEvent.click(screen.getByText('Feature Flag Manage Role'))
+    await userEvent.click(screen.getByText('Feature Flag Manage Role'))
 
     await waitFor(() => expect(handleChangeMock).not.toHaveBeenCalled())
 
@@ -134,7 +134,7 @@ describe('NewUserRoleDropdown', () => {
 
     await waitFor(() => expect(screen.getByPlaceholderText('rbac.usersPage.selectRole')).toBeInTheDocument())
 
-    userEvent.click(screen.getByPlaceholderText('rbac.usersPage.selectRole'))
+    await userEvent.click(screen.getByPlaceholderText('rbac.usersPage.selectRole'))
 
     fireEvent.mouseOver(screen.getByText('Feature Flag Manage Role'))
 
@@ -157,8 +157,8 @@ describe('NewUserRoleDropdown', () => {
 
     await waitFor(() => expect(screen.getByPlaceholderText('rbac.usersPage.selectRole')).toBeInTheDocument())
 
-    userEvent.click(screen.getByPlaceholderText('rbac.usersPage.selectRole'))
-    userEvent.click(screen.getByText('Feature Flag Manage Role'))
+    await userEvent.click(screen.getByPlaceholderText('rbac.usersPage.selectRole'))
+    await userEvent.click(screen.getByText('Feature Flag Manage Role'))
 
     await waitFor(() =>
       expect(handleChangeMock).toHaveBeenCalledWith({

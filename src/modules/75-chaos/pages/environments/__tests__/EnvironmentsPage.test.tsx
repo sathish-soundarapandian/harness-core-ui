@@ -76,7 +76,7 @@ describe('EnvironmentsPage', () => {
 
     const { container } = renderComponent()
 
-    userEvent.click(container.querySelector('[role="row"]:not(:first-of-type)') as HTMLElement)
+    await userEvent.click(container.querySelector('[role="row"]:not(:first-of-type)') as HTMLElement)
 
     expect(getByText(container, '/account/dummy/chaos/orgs/dummy/projects/dummy/environments/QB')).toBeDefined()
   })
@@ -93,8 +93,8 @@ describe('EnvironmentsPage', () => {
 
     const { container } = renderComponent()
 
-    userEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
-    userEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
+    await userEvent.click(container.querySelector('[data-icon="Options"]') as HTMLElement)
+    await userEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
 
     expect(getByText(container, '/account/dummy/chaos/orgs/dummy/projects/dummy/environments/foobar')).toBeDefined()
   })
@@ -121,15 +121,15 @@ describe('EnvironmentsPage', () => {
 
     renderComponent()
 
-    userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-    userEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
+    await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+    await userEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
 
     // Delete environment modal to appear
     await waitFor(() => {
       expect(screen.queryByText('chaos.environments.delete.title')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'delete' }))
+    await userEvent.click(screen.getByRole('button', { name: 'delete' }))
 
     await waitFor(() => {
       // expect successfully deleted toaster to appear
@@ -149,15 +149,15 @@ describe('EnvironmentsPage', () => {
 
     renderComponent()
 
-    userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-    userEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
+    await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+    await userEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
 
     // Delete environment modal to appear
     await waitFor(() => {
       expect(screen.queryByText('chaos.environments.delete.title')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByRole('button', { name: 'cancel' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cancel' }))
 
     await waitFor(() => {
       // expect modal to disappear

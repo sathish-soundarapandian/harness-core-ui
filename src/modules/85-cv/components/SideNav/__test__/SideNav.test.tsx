@@ -45,9 +45,9 @@ describe('Sidenav', () => {
     if (!button) {
       throw Error('Button was not rendered.')
     }
-    userEvent.click(button)
+    await userEvent.click(button)
     const accountTab = container.querySelector('[data-tab-id="AccountTab"]')
-    userEvent.click(accountTab!)
+    await userEvent.click(accountTab!)
     expect(getByText('/account/dummy/cv/slos')).toBeInTheDocument()
   })
 })

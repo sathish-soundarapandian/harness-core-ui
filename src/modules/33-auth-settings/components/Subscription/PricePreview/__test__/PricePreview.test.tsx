@@ -118,7 +118,7 @@ describe('PricePreview', () => {
         <PricePreview {...props} />
       </TestWrapper>
     )
-    userEvent.click(getByTestId('toggle'))
+    await userEvent.click(getByTestId('toggle'))
     await waitFor(() => {
       expect(setSubscriptionDetailsMock).toHaveBeenCalledWith({
         ...subscriptionDetails,

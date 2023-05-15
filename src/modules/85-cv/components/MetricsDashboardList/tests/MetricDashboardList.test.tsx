@@ -67,7 +67,7 @@ describe('MetricDashboardList unit tests', () => {
 
     expect(screen.getByText('cv.monitoringSources.gco.addManualInputQuery')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.monitoringSources.gco.addManualInputQuery'))
+    await userEvent.click(screen.getByText('cv.monitoringSources.gco.addManualInputQuery'))
 
     const dialogContainer = findDialogContainer()
 
@@ -80,7 +80,7 @@ describe('MetricDashboardList unit tests', () => {
       value: 'GCO Metric'
     })
 
-    userEvent.click(getByText(dialogContainer!, 'submit'))
+    await userEvent.click(getByText(dialogContainer!, 'submit'))
   })
 
   test('When api returns and error, ensure error state is rendered', async () => {

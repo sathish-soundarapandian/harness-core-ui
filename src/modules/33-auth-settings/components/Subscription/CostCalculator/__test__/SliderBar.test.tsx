@@ -80,8 +80,15 @@ describe('SliderBar', () => {
         <SliderBar {...props} />
       </TestWrapper>
     )
-    userEvent.clear(getByTestId('slider-input'))
-    userEvent.type(getByTestId('slider-input'), '20')
-    expect(setValueMock).toHaveBeenCalledWith(20)
+
+    expect(getByTestId('slider-input')).toHaveValue('5')
+
+    await userEvent.clear(getByTestId('slider-input'))
+
+    expect(getByTestId('slider-input')).toHaveValue('')
+
+    await userEvent.type(getByTestId('slider-input'), '10')
+
+    await waitFor(() => expect(setValueMock).toHaveBeenCalledWith(50))
   })
 })

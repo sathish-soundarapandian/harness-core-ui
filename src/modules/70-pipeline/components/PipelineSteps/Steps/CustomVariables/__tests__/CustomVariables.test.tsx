@@ -99,18 +99,18 @@ describe('Custom Variables', () => {
     )
 
     const addBtn = await screen.findByText('common.addVariable')
-    userEvent.click(addBtn)
+    await userEvent.click(addBtn)
     await screen.findByRole('heading', { name: 'variables.newVariable' })
     const view = screen.getByTestId('add-edit-variable')
     const saveVariableBtn = within(view).getByText('save')
     const variableNameTextBox = screen.getByPlaceholderText('pipeline.variable.variableNamePlaceholder')
 
-    userEvent.type(variableNameTextBox, mockLongName_130)
-    userEvent.click(saveVariableBtn)
+    await userEvent.type(variableNameTextBox, mockLongName_130)
+    await userEvent.click(saveVariableBtn)
     expect(await within(view).findByText('common.validation.fieldCannotbeLongerThanN')).toBeInTheDocument()
 
-    userEvent.clear(variableNameTextBox)
-    userEvent.type(variableNameTextBox, mockName_78)
+    await userEvent.clear(variableNameTextBox)
+    await userEvent.type(variableNameTextBox, mockName_78)
     await waitFor(() => expect(within(view).queryByText('common.validation.fieldCannotbeLongerThanN')).toBeFalsy())
   })
 

@@ -263,13 +263,13 @@ describe('Test ConfigureOptions', () => {
     )
 
     const btn = container.querySelector('#configureOptions_test')
-    userEvent.click(btn as Element)
+    await userEvent.click(btn as Element)
     const dialog = findDialogContainer() as HTMLElement
     await waitFor(() => getByTextBody(dialog, 'test'))
 
     // Click on Allowed Values radio
     const allowedValuesRadio = getByDisplayValue(dialog, 'AllowedValues')
-    userEvent.click(allowedValuesRadio)
+    await userEvent.click(allowedValuesRadio)
 
     // Check for Allowed Values input box
     const allowedValuesField = queryByPlaceholderText(
@@ -278,20 +278,20 @@ describe('Test ConfigureOptions', () => {
     ) as HTMLInputElement
     await waitFor(() => expect(allowedValuesField).toBeInTheDocument())
     // Error case
-    userEvent.type(allowedValuesField, '20s')
+    await userEvent.type(allowedValuesField, '20s')
     fireEvent.keyDown(allowedValuesField, { key: 'enter', keyCode: 13 })
     const errorText = 'common.validation.onlyDigitsAllowed'
     const errorEl = await findByText(dialog, errorText)
     expect(errorEl).toBeInTheDocument()
     // Valid case - enter number here
-    userEvent.clear(allowedValuesField)
-    userEvent.type(allowedValuesField, '200')
+    await userEvent.clear(allowedValuesField)
+    await userEvent.type(allowedValuesField, '200')
     fireEvent.keyDown(allowedValuesField, { key: 'enter', keyCode: 13 })
     await waitFor(() => expect(queryByText(dialog, errorText)).not.toBeInTheDocument())
 
     // Click Submit
     const submitBtn = getByTextBody(dialog, 'submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
     expect(onChange).toHaveBeenCalledWith('<+input>.allowedValues(200)', undefined, true)
   })
@@ -378,7 +378,7 @@ describe('Test ConfigureOptions', () => {
     const configureButton = screen.getByRole('button', {
       name: /cog/i
     })
-    userEvent.click(configureButton)
+    await userEvent.click(configureButton)
     const configureOptionsDialog = findDialogContainer() as HTMLElement
     expect(
       await waitFor(() =>
@@ -388,8 +388,8 @@ describe('Test ConfigureOptions', () => {
       )
     )
 
-    userEvent.clear(getByRole(configureOptionsDialog, 'spinbutton'))
-    userEvent.click(
+    await userEvent.clear(getByRole(configureOptionsDialog, 'spinbutton'))
+    await userEvent.click(
       getByRole(configureOptionsDialog, 'button', {
         name: /submit/i
       })

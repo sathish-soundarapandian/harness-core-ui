@@ -52,7 +52,7 @@ describe('<LoopingStrategy /> tests', () => {
 
     const matrix = await findByTestId('matrix')
 
-    userEvent.click(matrix)
+    await userEvent.click(matrix)
 
     const editor = (await findByTestId('editor')) as HTMLTextAreaElement
 
@@ -69,7 +69,7 @@ describe('<LoopingStrategy /> tests', () => {
 
     const for_ = await findByTestId('repeat')
 
-    userEvent.click(for_)
+    await userEvent.click(for_)
 
     const editor = (await findByTestId('editor')) as HTMLTextAreaElement
 
@@ -218,7 +218,7 @@ describe('<LoopingStrategy /> tests', () => {
 
     const parallelism = await findByTestId('parallelism')
 
-    userEvent.click(parallelism)
+    await userEvent.click(parallelism)
 
     const editor = (await findByTestId('editor')) as HTMLTextAreaElement
 
@@ -242,24 +242,24 @@ describe('<LoopingStrategy /> tests', () => {
     )
 
     const parallelism = await findByTestId('parallelism')
-    userEvent.click(parallelism)
+    await userEvent.click(parallelism)
 
     await waitFor(() => findByTextGlobal(document.body, changeTypeModalTitle))
 
     // cancel the prompt
     const cancel = await findByTextGlobal(document.body, 'cancel')
-    userEvent.click(cancel)
+    await userEvent.click(cancel)
 
     const editor1 = (await findByTestId('editor')) as HTMLTextAreaElement
     expect(editor1.value.trim()).toBe('matrix: {}')
 
-    userEvent.click(parallelism)
+    await userEvent.click(parallelism)
 
     await waitFor(() => findByTextGlobal(document.body, changeTypeModalTitle))
 
     // apply the changes
     const apply = await findByTextGlobal(document.body, 'pipeline.loopingStrategy.toggleTypeModal.switch')
-    userEvent.click(apply)
+    await userEvent.click(apply)
 
     const editor2 = (await findByTestId('editor')) as HTMLTextAreaElement
     expect(editor2.value.trim()).toBe('parallelism: 1')
@@ -281,23 +281,23 @@ describe('<LoopingStrategy /> tests', () => {
     )
 
     const delete_ = await findByTestId('delete')
-    userEvent.click(delete_)
+    await userEvent.click(delete_)
 
     await waitFor(() => findByTextGlobal(document.body, deleteModalTitle))
 
     // cancel the prompt
     const cancel = await findByTextGlobal(document.body, 'cancel')
-    userEvent.click(cancel)
+    await userEvent.click(cancel)
 
     const editor1 = (await findByTestId('editor')) as HTMLTextAreaElement
     expect(editor1.value.trim()).toBe('matrix: {}')
 
-    userEvent.click(delete_)
+    await userEvent.click(delete_)
     await waitFor(() => findByTextGlobal(document.body, deleteModalTitle))
 
     // apply the changes
     const apply = await findByTextGlobal(document.body, 'common.remove')
-    userEvent.click(apply)
+    await userEvent.click(apply)
 
     await waitFor(() => expect(queryByTestId('editor')).not.toBeInTheDocument())
   })
@@ -313,13 +313,13 @@ describe('<LoopingStrategy /> tests', () => {
 
     const parallelism = await findByTestId('parallelism')
 
-    userEvent.click(parallelism)
+    await userEvent.click(parallelism)
 
     const editor = (await findByTestId('editor')) as HTMLTextAreaElement
 
     expect(editor.value.trim()).toBe('parallelism: 1')
 
-    userEvent.type(editor, '2')
+    await userEvent.type(editor, '2')
 
     expect(onUpdateStrategy).toHaveBeenCalled()
   })
@@ -342,7 +342,7 @@ describe('<LoopingStrategy /> tests', () => {
 
     const parallelism = await findByTestId('parallelism')
 
-    userEvent.click(parallelism)
+    await userEvent.click(parallelism)
 
     expect(queryByTextGlobal(document.body, changeTypeModalTitle)).not.toBeInTheDocument()
 

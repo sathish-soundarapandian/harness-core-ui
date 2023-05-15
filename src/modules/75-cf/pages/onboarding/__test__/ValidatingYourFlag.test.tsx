@@ -188,7 +188,7 @@ describe.skip('ValidatingYourFlag', () => {
     expect(flagToggle).toBeInTheDocument()
     expect(flagToggle).not.toBeChecked()
 
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).toBeChecked()
 
     expect(await screen.findByTestId('fetchingContainer')).toBeVisible()
@@ -202,7 +202,7 @@ describe.skip('ValidatingYourFlag', () => {
     expect(flagToggle).toBeInTheDocument()
     expect(flagToggle).not.toBeChecked()
 
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).toBeChecked()
 
     act(() => {
@@ -223,7 +223,7 @@ describe.skip('ValidatingYourFlag', () => {
     expect(flagToggle).toBeInTheDocument()
     expect(flagToggle).not.toBeChecked()
 
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).toBeChecked()
 
     jest.spyOn(cfService, 'useGetAllFeatures').mockReturnValue({
@@ -258,7 +258,7 @@ describe.skip('ValidatingYourFlag', () => {
     expect(flagToggle).toBeInTheDocument()
     expect(flagToggle).not.toBeChecked()
 
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).toBeChecked()
 
     act(() => {
@@ -280,7 +280,7 @@ describe.skip('ValidatingYourFlag', () => {
     expect(flagToggle).toBeInTheDocument()
     expect(flagToggle).not.toBeChecked()
 
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).toBeChecked()
 
     act(() => {
@@ -294,11 +294,11 @@ describe.skip('ValidatingYourFlag', () => {
     })
 
     //Toggle OFF
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).not.toBeChecked()
 
     //TOGGLE ON again
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).toBeChecked()
 
     expect(await screen.findByTestId('fetchingContainer')).toBeVisible()
@@ -312,7 +312,7 @@ describe.skip('ValidatingYourFlag', () => {
     expect(flagToggle).toBeInTheDocument()
     expect(flagToggle).not.toBeChecked()
 
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).toBeChecked()
 
     jest.spyOn(cfService, 'useGetAllFeatures').mockReturnValue({
@@ -333,11 +333,11 @@ describe.skip('ValidatingYourFlag', () => {
     })
 
     //Toggle OFF
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).not.toBeChecked()
 
     //TOGGLE ON again
-    userEvent.click(flagToggle)
+    await userEvent.click(flagToggle)
     expect(flagToggle).toBeChecked()
 
     expect(await screen.findByTestId('fetchingContainer')).toBeInTheDocument()

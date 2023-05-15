@@ -422,26 +422,26 @@ describe('Artifact WizardStep tests', () => {
     expect(ECRArtifactType).toBeInTheDocument()
     const continueButton = await findByText(container, 'continue')
     expect(continueButton).toBeInTheDocument()
-    userEvent.click(continueButton)
+    await userEvent.click(continueButton)
 
     // Second step
     const artifactConnectorLabel = await findByText(container, 'AWS connector')
     expect(artifactConnectorLabel).toBeInTheDocument()
     const connnectorRefInput = getByTestId(/cr-field-connectorId/)
     expect(connnectorRefInput).toBeTruthy()
-    userEvent.click(connnectorRefInput!)
+    await userEvent.click(connnectorRefInput!)
     const dialogs = document.getElementsByClassName('bp3-dialog')
     await waitFor(() => expect(dialogs).toHaveLength(1))
     const connectorSelectorDialog = dialogs[0] as HTMLElement
     const awsConnector1 = await findByText(connectorSelectorDialog, 'Git CTR')
     await waitFor(() => expect(awsConnector1).toBeInTheDocument())
-    userEvent.click(awsConnector1)
+    await userEvent.click(awsConnector1)
     const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
-    userEvent.click(applySelected)
+    await userEvent.click(applySelected)
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
     const secondStepContinueButton = await findByText(container, 'continue')
     expect(secondStepContinueButton).toBeInTheDocument()
-    userEvent.click(secondStepContinueButton)
+    await userEvent.click(secondStepContinueButton)
 
     // Last step
     // region and bucketName both should be dropdown

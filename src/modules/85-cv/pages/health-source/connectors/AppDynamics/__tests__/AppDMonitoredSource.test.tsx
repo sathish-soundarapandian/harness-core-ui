@@ -72,8 +72,8 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
 describe('Unit tests for createAppd monitoring source', () => {
   const refetchMock = jest.fn()
 
+  beforeEach(() => jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true))
   beforeAll(() => {
-    beforeEach(() => jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true))
     jest
       .spyOn(cvServices, 'useGetAppDynamicsTiers')
       .mockImplementation(() => ({ loading: false, error: null, data: appTier, refetch: refetchMock } as any))
@@ -250,8 +250,8 @@ describe('Unit tests for createAppd monitoring source', () => {
       expect(container.querySelector("input[name='Errors']")).toBeChecked()
       expect(container.querySelector("input[name='Performance']")).toBeChecked()
 
-      userEvent.click(container.querySelector("input[name='Errors']")!)
-      userEvent.click(container.querySelector("input[name='Performance']")!)
+      await userEvent.click(container.querySelector("input[name='Errors']")!)
+      await userEvent.click(container.querySelector("input[name='Performance']")!)
 
       expect(container.querySelector("input[name='Errors']")).not.toBeChecked()
       expect(container.querySelector("input[name='Performance']")).not.toBeChecked()
@@ -260,7 +260,7 @@ describe('Unit tests for createAppd monitoring source', () => {
       expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
 
       await waitFor(() => expect(screen.getByText('cv.monitoringSources.addMetric')).not.toBeNull())
-      userEvent.click(screen.getByText('cv.monitoringSources.addMetric'))
+      await userEvent.click(screen.getByText('cv.monitoringSources.addMetric'))
 
       await waitFor(() =>
         expect(screen.getByText('cv.monitoringSources.prometheus.querySpecificationsAndMappings')).toBeTruthy()
@@ -294,7 +294,7 @@ describe('Unit tests for createAppd monitoring source', () => {
       fireEvent.click(screen.getByText('cv.monitoringSources.assign'))
 
       await waitFor(() => expect(screen.getByText('cv.monitoredServices.continuousVerification')).toBeInTheDocument())
-      userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
+      await userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
 
       expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
       expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
@@ -327,13 +327,13 @@ describe('Unit tests for createAppd monitoring source', () => {
 
       expect(container.querySelector('input[name="ignoreThresholds.0.metricType"]')).toHaveValue('Performance')
 
-      userEvent.click(container.querySelector("input[name='Performance']")!)
+      await userEvent.click(container.querySelector("input[name='Performance']")!)
 
       expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
 
       const modalDeleteBtn = screen.queryAllByText('confirm')[0]
-      act(() => {
-        userEvent.click(modalDeleteBtn!)
+      await act(async () => {
+        await userEvent.click(modalDeleteBtn!)
       })
 
       await waitFor(() => {
@@ -342,7 +342,7 @@ describe('Unit tests for createAppd monitoring source', () => {
 
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
 
-      userEvent.click(container.querySelector("input[name='Errors']")!)
+      await userEvent.click(container.querySelector("input[name='Errors']")!)
 
       expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
     })
@@ -357,11 +357,11 @@ describe('Unit tests for createAppd monitoring source', () => {
         </TestWrapper>
       )
 
-      userEvent.click(container.querySelector("input[name='Errors']")!)
-      userEvent.click(container.querySelector("input[name='Performance']")!)
+      await userEvent.click(container.querySelector("input[name='Errors']")!)
+      await userEvent.click(container.querySelector("input[name='Performance']")!)
 
       await waitFor(() => expect(screen.getByText('cv.monitoringSources.addMetric')).not.toBeNull())
-      userEvent.click(screen.getByText('cv.monitoringSources.addMetric'))
+      await userEvent.click(screen.getByText('cv.monitoringSources.addMetric'))
 
       await waitFor(() =>
         expect(screen.getByText('cv.monitoringSources.prometheus.querySpecificationsAndMappings')).toBeTruthy()
@@ -392,7 +392,7 @@ describe('Unit tests for createAppd monitoring source', () => {
       fireEvent.click(screen.getByText('cv.monitoringSources.assign'))
 
       await waitFor(() => expect(screen.getByText('cv.monitoredServices.continuousVerification')).toBeInTheDocument())
-      userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
+      await userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
 
       expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
       expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
@@ -406,16 +406,16 @@ describe('Unit tests for createAppd monitoring source', () => {
       expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
       expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
 
-      // userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
+      // await userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
 
       // expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
 
       await waitFor(() => {
         expect(container.querySelector('input[name="ignoreThresholds.0.metricType"]')).toBeInTheDocument()
       })
-      userEvent.click(container.querySelector('input[name="ignoreThresholds.0.metricType"]')!)
+      await userEvent.click(container.querySelector('input[name="ignoreThresholds.0.metricType"]')!)
 
-      userEvent.click(screen.getByText('Custom'))
+      await userEvent.click(screen.getByText('Custom'))
 
       await waitFor(() => {
         expect(container.querySelector('input[name="ignoreThresholds.0.metricType"]')).toHaveValue('Custom')

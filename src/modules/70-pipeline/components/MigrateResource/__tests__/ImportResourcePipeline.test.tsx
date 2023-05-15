@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, render, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as pipelineNg from 'services/pipeline-ng'
 import { mockRepos, mockBranches, gitConnectorMock } from '@gitsync/components/GitSyncForm/__tests__/mockdata'
@@ -73,6 +73,7 @@ describe('ImportResource - Pipeline', () => {
     onSuccess.mockReset()
     onFailure.mockReset()
     onCancelClick.mockReset()
+    jest.clearAllMocks()
   })
 
   test('snapshot testing', () => {
@@ -85,7 +86,7 @@ describe('ImportResource - Pipeline', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('clicking on cancel button should call onCancelClick prop function', () => {
+  test('clicking on cancel button should call onCancelClick prop function', async () => {
     const { getByText } = render(
       <TestWrapper path={TEST_PIPELINES_PATH} pathParams={TEST_PATH_PARAMS}>
         <ImportResource resourceType={ResourceType.PIPELINES} onCancelClick={onCancelClick} />
@@ -93,12 +94,12 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const cancelButton = getByText('cancel')
-    userEvent.click(cancelButton)
+    await userEvent.click(cancelButton)
     expect(onCancelClick).toHaveBeenCalled()
     expect(onCancelClick).toHaveBeenCalledTimes(1)
   })
 
-  test('when onCancelClick prop is not passed - clicking on cancel button should call onCancelClick prop function', () => {
+  test('when onCancelClick prop is not passed - clicking on cancel button should call onCancelClick prop function', async () => {
     const { getByText } = render(
       <TestWrapper path={TEST_PIPELINES_PATH} pathParams={TEST_PATH_PARAMS}>
         <ImportResource resourceType={ResourceType.PIPELINES} />
@@ -106,7 +107,7 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const cancelButton = getByText('cancel')
-    userEvent.click(cancelButton)
+    await userEvent.click(cancelButton)
     expect(onCancelClick).not.toHaveBeenCalled()
     expect(onCancelClick).toHaveBeenCalledTimes(0)
   })
@@ -125,8 +126,8 @@ describe('ImportResource - Pipeline', () => {
 
     const importButton = getByText('common.import')
     expect(container).toMatchSnapshot()
-    act(() => {
-      userEvent.click(importButton)
+    await act(async () => {
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('pipeline.importSuccessMessage')).toBeDefined())
     await waitFor(() => expect(onSuccess).toHaveBeenCalled())
@@ -134,7 +135,7 @@ describe('ImportResource - Pipeline', () => {
   })
 
   test('when onSuccess prop is not passed - provide required values and click on import button', async () => {
-    const { container, getByText } = render(
+    const { container, getByText, findByText } = render(
       <TestWrapper path={TEST_PIPELINES_PATH} pathParams={TEST_PATH_PARAMS}>
         <ImportResource
           resourceType={ResourceType.PIPELINES}
@@ -146,10 +147,13 @@ describe('ImportResource - Pipeline', () => {
 
     const importButton = getByText('common.import')
     expect(container).toMatchSnapshot()
-    act(() => {
-      userEvent.click(importButton)
+    await act(async () => {
+      await userEvent.click(importButton)
     })
-    await waitFor(() => expect(getByText('pipeline.importSuccessMessage')).toBeDefined())
+
+    screen.debug(container, 30000)
+
+    await waitFor(async () => expect(await findByText('pipeline.importSuccessMessage')).toBeInTheDocument())
     await waitFor(() => expect(onSuccess).not.toHaveBeenCalled())
     expect(onSuccess).toHaveBeenCalledTimes(0)
   })
@@ -177,8 +181,8 @@ describe('ImportResource - Pipeline', () => {
 
     const importButton = getByText('common.import')
     expect(container).toMatchSnapshot()
-    act(() => {
-      userEvent.click(importButton)
+    await act(async () => {
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('Invalid Request: Error while importing pipeline')).toBeDefined())
     await waitFor(() => expect(onFailure).toHaveBeenCalled())
@@ -205,8 +209,8 @@ describe('ImportResource - Pipeline', () => {
 
     const importButton = getByText('common.import')
     expect(container).toMatchSnapshot()
-    act(() => {
-      userEvent.click(importButton)
+    await act(async () => {
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('somethingWentWrong')).toBeDefined())
     await waitFor(() => expect(onFailure).not.toHaveBeenCalled())
@@ -252,8 +256,8 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const importButton = getByText('common.import')
-    act(() => {
-      userEvent.click(importButton)
+    await act(async () => {
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('Error while importing pipeline because file does not exist')).toBeDefined())
     expect(getByText('common.errorHandler.issueCouldBe')).toBeDefined()
@@ -286,8 +290,8 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const importButton = getByText('common.import')
-    act(() => {
-      userEvent.click(importButton)
+    await act(async () => {
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('Invalid Request: Error while importing pipeline')).toBeDefined())
     await waitFor(() => expect(onFailure).toHaveBeenCalled())
@@ -313,8 +317,8 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const importButton = getByText('common.import')
-    act(() => {
-      userEvent.click(importButton)
+    await act(async () => {
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('somethingWentWrong')).toBeDefined())
     await waitFor(() => expect(onFailure).not.toHaveBeenCalled())
@@ -360,8 +364,8 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const importButton = getByText('common.import')
-    act(() => {
-      userEvent.click(importButton)
+    await act(async () => {
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('Error while importing pipeline because file does not exist')).toBeDefined())
     expect(getByText('common.errorHandler.issueCouldBe')).toBeDefined()

@@ -108,10 +108,10 @@ describe('ECSRollingDeployStepEdit tests', () => {
     const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
       'spec.sameAsAlreadyRunningInstances'
     ) as HTMLInputElement
-    userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
+    await userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
 
     const forceNewDeploymentCheckbox = queryByNameAttribute('spec.forceNewDeployment') as HTMLInputElement
-    userEvent.click(forceNewDeploymentCheckbox)
+    await userEvent.click(forceNewDeploymentCheckbox)
 
     act(() => {
       formikRef.current?.submitForm()

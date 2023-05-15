@@ -94,7 +94,7 @@ jest.mock('services/cv', () => {
 })
 
 describe('SLOCardContent', () => {
-  test('Toggle the SLO and Error budget', () => {
+  test('Toggle the SLO and Error budget', async () => {
     render(
       <TestWrapper {...testWrapperProps}>
         <SLOCardContent serviceLevelObjective={dashboardWidgetsContent} />
@@ -106,7 +106,7 @@ describe('SLOCardContent', () => {
     expect(screen.getByText('cv.SLOPerformanceTrend')).toBeInTheDocument()
     expect(screen.queryByText('cv.sloRecalculationInProgress')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.errorBudget'))
+    await userEvent.click(screen.getByText('cv.errorBudget'))
 
     expect(screen.queryByTestId('error-budget-gauge')).toBeInTheDocument()
     expect(screen.getAllByText('cv.SLO')[0]).not.toHaveClass('PillToggle--selected')
@@ -114,12 +114,12 @@ describe('SLOCardContent', () => {
     expect(screen.getByText('cv.errorBudgetRemainingWithMins')).toBeInTheDocument()
     expect(screen.getByText('cv.errorBudgetBurnDown')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.SLO'))
+    await userEvent.click(screen.getByText('cv.SLO'))
 
     expect(screen.getAllByText('cv.SLO')[0]).toHaveClass('PillToggle--selected')
   })
 
-  test('it should call setSliderTimeRange when toggle triggered', () => {
+  test('it should call setSliderTimeRange when toggle triggered', async () => {
     const setSliderTimeRange = jest.fn()
     const setChartTimeRange = jest.fn()
 
@@ -134,7 +134,7 @@ describe('SLOCardContent', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByText('cv.errorBudget'))
+    await userEvent.click(screen.getByText('cv.errorBudget'))
 
     expect(screen.getByText('cv.errorBudget')).toHaveClass('PillToggle--selected')
 
@@ -152,7 +152,7 @@ describe('SLOCardContent', () => {
     expect(screen.getByText('cv.sloRecalculationInProgress')).toBeInTheDocument()
   })
 
-  test('it should handle resetSlider for type SLO', () => {
+  test('it should handle resetSlider for type SLO', async () => {
     const setSliderTimeRange = jest.fn()
 
     render(
@@ -168,17 +168,17 @@ describe('SLOCardContent', () => {
     expect(screen.getByTestId('timeline-slider-container')).toBeInTheDocument()
 
     expect(setSliderTimeRange).toBeCalledTimes(0)
-    userEvent.click(screen.getByTestId('timeline-slider-container'))
+    await userEvent.click(screen.getByTestId('timeline-slider-container'))
 
     expect(screen.getByText('reset')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('reset'))
+    await userEvent.click(screen.getByText('reset'))
 
     expect(screen.queryByText('reset')).not.toBeInTheDocument()
     expect(setSliderTimeRange).toBeCalledTimes(1)
   })
 
-  test('it should handle resetSlider for type Error Budget', () => {
+  test('it should handle resetSlider for type Error Budget', async () => {
     const sliderTimeRange = { startTime: 1639993400000, endTime: 1639993420000 }
 
     render(
@@ -192,22 +192,22 @@ describe('SLOCardContent', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByText('cv.errorBudget'))
+    await userEvent.click(screen.getByText('cv.errorBudget'))
     expect(screen.queryByTestId('error-budget-gauge')).toBeInTheDocument()
 
     expect(screen.getByTestId('timeline-slider-container')).toBeInTheDocument()
-    userEvent.click(screen.getByTestId('timeline-slider-container'))
+    await userEvent.click(screen.getByTestId('timeline-slider-container'))
 
-    userEvent.click(screen.getByTestId('timeline-slider-container'))
+    await userEvent.click(screen.getByTestId('timeline-slider-container'))
 
     expect(screen.getByText('reset')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('reset'))
+    await userEvent.click(screen.getByText('reset'))
 
     expect(screen.queryByText('reset')).not.toBeInTheDocument()
   })
 
-  test('should not render the user hint if showUserHint prop is not passed', () => {
+  test('should not render the user hint if showUserHint prop is not passed', async () => {
     const sliderTimeRange = { startTime: 1639993400000, endTime: 1639993420000 }
 
     render(
@@ -223,12 +223,12 @@ describe('SLOCardContent', () => {
 
     expect(screen.queryByTestId('SLOCard_UserHint_SLO')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.errorBudget'))
+    await userEvent.click(screen.getByText('cv.errorBudget'))
 
     expect(screen.queryByTestId('SLOCard_UserHint_ErrorBudget')).not.toBeInTheDocument()
   })
 
-  test('should render the user hint if showUserHint prop is passed', () => {
+  test('should render the user hint if showUserHint prop is passed', async () => {
     const sliderTimeRange = { startTime: 1639993400000, endTime: 1639993420000 }
 
     render(
@@ -245,7 +245,7 @@ describe('SLOCardContent', () => {
 
     expect(screen.queryByTestId('SLOCard_UserHint_SLO')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.errorBudget'))
+    await userEvent.click(screen.getByText('cv.errorBudget'))
 
     expect(screen.queryByTestId('SLOCard_UserHint_ErrorBudget')).toBeInTheDocument()
   })

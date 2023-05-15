@@ -72,7 +72,7 @@ describe('Service Dependency Graph', () => {
 
     expect(screen.getByText(errorMessage)).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('Retry'))
+    await userEvent.click(screen.getByText('Retry'))
 
     await waitFor(() =>
       expect(cvService.useGetServiceDependencyGraph).toHaveBeenLastCalledWith({
@@ -144,7 +144,7 @@ describe('Service Dependency Graph', () => {
 
     expect(screen.getByText(errorMessage)).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('Retry'))
+    await userEvent.click(screen.getByText('Retry'))
 
     await waitFor(() =>
       expect(cvService.useGetServiceDependencyGraph).toHaveBeenLastCalledWith({
@@ -176,7 +176,7 @@ describe('Service Dependency Graph', () => {
 
     expect(screen.getByText(errorMessage)).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('Retry'))
+    await userEvent.click(screen.getByText('Retry'))
 
     await waitFor(() => expect(refetchServiceCountData).toBeCalledTimes(1))
     expect(refetch).not.toBeCalled()

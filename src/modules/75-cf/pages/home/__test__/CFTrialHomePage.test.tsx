@@ -85,7 +85,7 @@ describe('CFTrialHomePage', () => {
 
     expect(openRoleAssignmentModalMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByText('cf.cfTrialHomePage.dontCode.inviteDeveloper'))
+    await userEvent.click(screen.getByText('cf.cfTrialHomePage.dontCode.inviteDeveloper'))
 
     await waitFor(() => {
       expect(openRoleAssignmentModalMock).toHaveBeenCalled()
@@ -104,7 +104,7 @@ describe('CFTrialHomePage', () => {
 
     expect(handleStartButtonClick).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByText('cf.cfTrialHomePage.startFreePlanBtn'))
+    await userEvent.click(screen.getByText('cf.cfTrialHomePage.startFreePlanBtn'))
 
     await waitFor(() => expect(handleStartButtonClick).toHaveBeenCalled())
   })

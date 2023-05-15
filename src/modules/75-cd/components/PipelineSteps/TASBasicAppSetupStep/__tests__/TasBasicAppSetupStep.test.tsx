@@ -118,7 +118,7 @@ describe('Test TAS Setup Steps', () => {
     )
     // Clear input and update value
     const versionInput = queryByNameAttribute(container, 'spec.existingVersionToKeep')!
-    userEvent.clear(versionInput)
+    await userEvent.clear(versionInput)
 
     await act(() => ref.current?.submitForm()!)
 

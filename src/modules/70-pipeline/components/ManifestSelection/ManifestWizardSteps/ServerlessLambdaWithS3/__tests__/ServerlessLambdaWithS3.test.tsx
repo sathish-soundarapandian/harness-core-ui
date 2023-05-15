@@ -55,11 +55,11 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement, fieldElement: HT
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
   fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
   await waitFor(() => expect(fieldElement.value).toBe('<+input>.regex(<+input>.includes(/test/))'))
 }
 
@@ -102,7 +102,7 @@ describe('ServerlessLambdaWithS3 tests', () => {
     expect(queryByNameAttribute('paths[0].path')).not.toBeNull()
 
     const submitBtn = getByText('submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => {
       expect(props.handleSubmit).toHaveBeenCalledWith({
         manifest: {
@@ -244,7 +244,7 @@ describe('ServerlessLambdaWithS3 tests', () => {
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
     const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
-    userEvent.click(bucketNameDropDownButton!)
+    await userEvent.click(bucketNameDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
@@ -290,29 +290,29 @@ describe('ServerlessLambdaWithS3 tests', () => {
 
     // Configure options testing for region, bucketName, paths and configOverridePath fields
     const cogRegion = document.getElementById('configureOptions_region')
-    userEvent.click(cogRegion!)
+    await userEvent.click(cogRegion!)
     await waitFor(() => expect(modals.length).toBe(1))
     const regionCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(regionCOGModal, regionInput)
 
     const cogBucketName = document.getElementById('configureOptions_bucketName')
-    userEvent.click(cogBucketName!)
+    await userEvent.click(cogBucketName!)
     await waitFor(() => expect(modals.length).toBe(1))
     const bucketNameCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(bucketNameCOGModal, bucketNameInput)
 
     const cogPaths = document.getElementById('configureOptions_paths')
-    userEvent.click(cogPaths!)
+    await userEvent.click(cogPaths!)
     await waitFor(() => expect(modals.length).toBe(2))
     const filePathCOGModal = modals[1] as HTMLElement
     await doConfigureOptionsTesting(filePathCOGModal, pathsInput)
 
     const advancedAccordionTitle = getByText('advancedTitle')
-    userEvent.click(advancedAccordionTitle)
+    await userEvent.click(advancedAccordionTitle)
     const configOverridePathInput = queryByAttribute('name', container, 'configOverridePath') as HTMLInputElement
     await waitFor(() => expect(configOverridePathInput).not.toBeNull())
     const cogConfigOverridePath = document.getElementById('configureOptions_configOverridePath')
-    userEvent.click(cogConfigOverridePath!)
+    await userEvent.click(cogConfigOverridePath!)
     await waitFor(() => expect(modals.length).toBe(3))
     const configOverridePathCOGModal = modals[2] as HTMLElement
     await doConfigureOptionsTesting(configOverridePathCOGModal, configOverridePathInput)
@@ -376,7 +376,7 @@ describe('ServerlessLambdaWithS3 tests', () => {
 
     // Configure options testing for bucketName
     const cogBucketName = document.getElementById('configureOptions_bucketName')
-    userEvent.click(cogBucketName!)
+    await userEvent.click(cogBucketName!)
     await waitFor(() => expect(modals.length).toBe(1))
     const bucketNameCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(bucketNameCOGModal, bucketNameInput)

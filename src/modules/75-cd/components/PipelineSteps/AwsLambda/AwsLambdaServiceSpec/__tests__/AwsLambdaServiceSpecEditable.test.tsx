@@ -67,10 +67,10 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   const Bitbucket = queryByValueAttribute('Bitbucket')
   expect(Bitbucket).not.toBeNull()
 
-  userEvent.click(Git!)
+  await userEvent.click(Git!)
   const connnectorRefInput = await findByTestId(portal, /connectorRef/)
   expect(connnectorRefInput).toBeTruthy()
-  userEvent.click(connnectorRefInput!)
+  await userEvent.click(connnectorRefInput!)
 
   await act(async () => {
     const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[1] as HTMLElement
@@ -78,7 +78,7 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
     expect(githubConnector1).toBeTruthy()
     const githubConnector2 = await findByText(connectorSelectorDialog, 'Sample')
     expect(githubConnector2).toBeTruthy()
-    userEvent.click(githubConnector1)
+    await userEvent.click(githubConnector1)
     const applySelected = getElementByText(connectorSelectorDialog, 'entityReference.apply')
     await act(async () => {
       fireEvent.click(applySelected)
@@ -87,7 +87,7 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   })
   const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
   await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-  userEvent.click(secondStepContinueButton)
+  await userEvent.click(secondStepContinueButton)
 }
 
 const testAwsLambdaManifestLastStep = async (portal: HTMLElement): Promise<void> => {
@@ -101,7 +101,7 @@ const testAwsLambdaManifestLastStep = async (portal: HTMLElement): Promise<void>
     fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: 'test-path' } })
   })
   const submitButton = getElementByText(portal, 'submit').parentElement as HTMLElement
-  userEvent.click(submitButton)
+  await userEvent.click(submitButton)
 }
 
 const testUpdateAwsLambdaFunctionDefinitionManifest = async (): Promise<void> => {
@@ -147,7 +147,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
     const functionDefinitionSection = screen.getByTestId('aws-lambda-function-definition-card')
     const addTaskDefinitionBtn = within(functionDefinitionSection).getByText('common.addName')
     expect(addTaskDefinitionBtn).toBeInTheDocument()
-    userEvent.click(addTaskDefinitionBtn)
+    await userEvent.click(addTaskDefinitionBtn)
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
 
     // Test manifest store tiles, choose Git and fill in Connector field
@@ -260,7 +260,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
     expect(editButtons).toHaveLength(2)
     const functionDefinitionManifestEditButton = editButtons[0]
     expect(functionDefinitionManifestEditButton).toBeInTheDocument()
-    userEvent.click(functionDefinitionManifestEditButton)
+    await userEvent.click(functionDefinitionManifestEditButton)
 
     await testUpdateAwsLambdaFunctionDefinitionManifest()
 
@@ -296,7 +296,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
     expect(deleteButtons).toHaveLength(2)
     const functionDefinitionManifestDeleteButton = deleteButtons[0]
     expect(functionDefinitionManifestDeleteButton).toBeInTheDocument()
-    userEvent.click(functionDefinitionManifestDeleteButton)
+    await userEvent.click(functionDefinitionManifestDeleteButton)
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgAwsLambdaFunctionDefinitionManifestDelete)
@@ -327,7 +327,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
     expect(deleteButtons).toHaveLength(2)
     const functionAliasDefinitionManifestDeleteButton = deleteButtons[1]
     expect(functionAliasDefinitionManifestDeleteButton).toBeInTheDocument()
-    userEvent.click(functionAliasDefinitionManifestDeleteButton)
+    await userEvent.click(functionAliasDefinitionManifestDeleteButton)
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgAwsLambdaFunctionAliasDefinitionManifestDelete)
@@ -364,7 +364,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
     expect(editButtons).toHaveLength(1)
     const functionDefinitionManifestEditButton = editButtons[0]
     expect(functionDefinitionManifestEditButton).toBeInTheDocument()
-    userEvent.click(functionDefinitionManifestEditButton)
+    await userEvent.click(functionDefinitionManifestEditButton)
 
     await testUpdateAwsLambdaFunctionDefinitionManifest()
 

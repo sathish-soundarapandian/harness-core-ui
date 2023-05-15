@@ -144,7 +144,7 @@ describe('Subscriptions Page', () => {
       refetch: jest.fn()
     }
   })
-  jest.useFakeTimers('modern')
+  jest.useFakeTimers({ advanceTimers: true })
   jest.setSystemTime(new Date('2020-01-19'))
 
   test('it renders the subscriptions page', async () => {
@@ -193,7 +193,7 @@ describe('Subscriptions Page', () => {
     expect(getByText('common.subscriptions.trial')).toBeTruthy()
     expect(container).toMatchSnapshot()
     expect(getByText('common.licensesConsumed')).toBeTruthy()
-    userEvent.click(getByText('common.licensesConsumed'))
+    await userEvent.click(getByText('common.licensesConsumed'))
   })
 
   test('test for fetching active services by clicking the fetch button using filters', async () => {
@@ -238,10 +238,10 @@ describe('Subscriptions Page', () => {
       </TestWrapper>
     )
     expect(getByText('common.licensesConsumed')).toBeTruthy()
-    userEvent.click(getByText('common.licensesConsumed'))
+    await userEvent.click(getByText('common.licensesConsumed'))
     const fetchButton = getByText('Update')
     expect(fetchButton).toBeDefined()
-    userEvent.click(fetchButton)
+    await userEvent.click(fetchButton)
   })
 
   test('it renders the correct card in the subscriptions page', () => {
@@ -847,13 +847,13 @@ describe('Subscriptions Page', () => {
       )
       expect(container).toMatchSnapshot('ci module ')
       expect(getByText('common.lastBuildDate')).toBeTruthy()
-      userEvent.click(getByText('common.lastBuildDate'))
+      await userEvent.click(getByText('common.lastBuildDate'))
       expect(getByText('common.lastBuildDate')).toBeTruthy()
 
       // checking update filters for undefined
       const fetchButton0 = getAllByText('Update')[0]
       expect(fetchButton0).toBeDefined()
-      userEvent.click(fetchButton0)
+      await userEvent.click(fetchButton0)
 
       // changing values in dropdowns
       expect(getByText('common.subscriptions.usage.developers')).toBeTruthy()
@@ -880,7 +880,7 @@ describe('Subscriptions Page', () => {
 
       const fetchButton = getAllByText('Update')[0]
       expect(fetchButton).toBeDefined()
-      userEvent.click(fetchButton)
+      await userEvent.click(fetchButton)
       // checking the trend tab for ci graphs
       await waitFor(() => {
         getByText('common.subscriptions.tabs.trend')

@@ -96,7 +96,7 @@ describe('<ExecutionActions /> tests', () => {
 
     expect(result!.container).toMatchSnapshot('container')
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -256,7 +256,7 @@ describe('<ExecutionActions /> tests', () => {
     expect(result!.container).toMatchSnapshot('repeat button should be disabled as cd, ci are not allowed')
   })
 
-  test('do not show the edit button if prop is false', () => {
+  test('do not show the edit button if prop is false', async () => {
     const mutate = jest.fn()
     ;(useHandleInterrupt as jest.Mock).mockImplementation(() => ({
       mutate,
@@ -276,7 +276,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -287,7 +287,7 @@ describe('<ExecutionActions /> tests', () => {
     expect(within(menu as HTMLElement).queryByText('editPipeline')).not.toBeInTheDocument()
   })
 
-  test('when showEditButton is true and canEdit is false, View Pipeline button should appear', () => {
+  test('when showEditButton is true and canEdit is false, View Pipeline button should appear', async () => {
     const { getByText } = render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ExecutionActions
@@ -301,7 +301,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -311,7 +311,7 @@ describe('<ExecutionActions /> tests', () => {
     expect(viewPipelineBtn.parentElement?.parentElement).not.toHaveAttribute('hidden')
   })
 
-  test('renders View Execution link if isExecutionListView prop is true', () => {
+  test('renders View Execution link if isExecutionListView prop is true', async () => {
     const { orgIdentifier, pipelineIdentifier, executionIdentifier, projectIdentifier, accountId } = pathParams
     const module: Module = pathParams.module as Module
 
@@ -338,7 +338,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -349,7 +349,7 @@ describe('<ExecutionActions /> tests', () => {
     expect(within(viewExecutionLink).getByText('pipeline.viewExecution')).toBeInTheDocument()
   })
 
-  test('should not render View Execution item if isExecutionListView prop is false', () => {
+  test('should not render View Execution item if isExecutionListView prop is false', async () => {
     render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ExecutionActions
@@ -363,7 +363,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -373,7 +373,7 @@ describe('<ExecutionActions /> tests', () => {
   })
 
   const routeToPipelineStudio = jest.spyOn(routes, 'toPipelineStudio')
-  test('On Edit, take user to Pipeline Studio V0 route', () => {
+  test('On Edit, take user to Pipeline Studio V0 route', async () => {
     const { getByText } = render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ExecutionActions
@@ -387,7 +387,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -399,7 +399,7 @@ describe('<ExecutionActions /> tests', () => {
   })
 
   const routeToPipelineStudioV1 = jest.spyOn(routes, 'toPipelineStudioV1')
-  test('For CI with FF CI_YAML_VERSIONING ON, on edit, take user to Pipeline Studio V1 route', () => {
+  test('For CI with FF CI_YAML_VERSIONING ON, on edit, take user to Pipeline Studio V1 route', async () => {
     mockImport('@common/hooks/useFeatureFlag', {
       useFeatureFlags: () => ({ CI_YAML_VERSIONING: true })
     })
@@ -416,7 +416,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })

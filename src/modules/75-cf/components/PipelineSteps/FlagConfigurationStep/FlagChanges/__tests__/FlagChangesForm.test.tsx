@@ -150,7 +150,7 @@ describe('FlagChangesForm', () => {
     const configureMoreButton = getConfigureMoreButton()
     expect(configureMoreButton).toBeInTheDocument()
 
-    userEvent.click(configureMoreButton)
+    await userEvent.click(configureMoreButton)
     await waitFor(() => {
       expect(container.querySelectorAll('.subSection')).toHaveLength(2)
     })
@@ -176,7 +176,7 @@ describe('FlagChangesForm', () => {
     renderComponent()
     expect(screen.queryAllByTestId('flagChanges-removeSubSection')).toHaveLength(0)
 
-    userEvent.click(getConfigureMoreButton())
+    await userEvent.click(getConfigureMoreButton())
     await waitFor(() => {
       expect(screen.getAllByTestId('flagChanges-removeSubSection')).toHaveLength(2)
     })
@@ -185,11 +185,11 @@ describe('FlagChangesForm', () => {
   test('it should remove the sub-section which contains the remove sub-section button that is clicked', async () => {
     renderComponent()
 
-    userEvent.click(getConfigureMoreButton())
+    await userEvent.click(getConfigureMoreButton())
 
     const setFlagSwitchSubSection = screen.getByTestId('flagChanges-setFlagSwitch')
 
-    userEvent.click(getByTestId(setFlagSwitchSubSection, 'flagChanges-removeSubSection'))
+    await userEvent.click(getByTestId(setFlagSwitchSubSection, 'flagChanges-removeSubSection'))
     await waitFor(() => {
       expect(screen.queryByTestId('flagChanges-setFlagSwitch')).not.toBeInTheDocument()
     })
@@ -199,13 +199,13 @@ describe('FlagChangesForm', () => {
     const setFieldMock = jest.fn()
     renderComponent({ setField: setFieldMock })
 
-    userEvent.click(getConfigureMoreButton())
+    await userEvent.click(getConfigureMoreButton())
 
     const setFlagSwitchSubSection = screen.getByTestId('flagChanges-setFlagSwitch')
 
     expect(setFieldMock).not.toHaveBeenCalledWith('spec.instructions', expect.anything())
 
-    userEvent.click(getByTestId(setFlagSwitchSubSection, 'flagChanges-removeSubSection'))
+    await userEvent.click(getByTestId(setFlagSwitchSubSection, 'flagChanges-removeSubSection'))
     await waitFor(() => {
       expect(setFieldMock).toHaveBeenLastCalledWith('spec.instructions', expect.anything())
       expect([...setFieldMock.mock.calls].pop()[1]).toHaveLength(1)
@@ -220,8 +220,8 @@ describe('FlagChangesForm', () => {
     expect(setFlagSwitchSubSection).toBeInTheDocument()
     expect(screen.queryByTestId('flagChanges-servePercentageRollout')).not.toBeInTheDocument()
 
-    userEvent.click(getByRole(setFlagSwitchSubSection, 'button'))
-    userEvent.click(screen.getByText('cf.pipeline.flagConfiguration.servePercentageRollout'))
+    await userEvent.click(getByRole(setFlagSwitchSubSection, 'button'))
+    await userEvent.click(screen.getByText('cf.pipeline.flagConfiguration.servePercentageRollout'))
 
     await waitFor(() => {
       expect(setFlagSwitchSubSection).not.toBeInTheDocument()

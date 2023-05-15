@@ -70,10 +70,10 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   const Bitbucket = queryByValueAttribute('Bitbucket')
   expect(Bitbucket).not.toBeNull()
 
-  userEvent.click(Git!)
+  await userEvent.click(Git!)
   const connnectorRefInput = await findByTestId(portal, /connectorRef/)
   expect(connnectorRefInput).toBeTruthy()
-  userEvent.click(connnectorRefInput!)
+  await userEvent.click(connnectorRefInput!)
 
   await act(async () => {
     const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[1] as HTMLElement
@@ -81,7 +81,7 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
     expect(githubConnector1).toBeTruthy()
     const githubConnector2 = await findByText(connectorSelectorDialog, 'Sample')
     expect(githubConnector2).toBeTruthy()
-    userEvent.click(githubConnector1)
+    await userEvent.click(githubConnector1)
     const applySelected = getElementByText(connectorSelectorDialog, 'entityReference.apply')
     await act(async () => {
       fireEvent.click(applySelected)
@@ -90,7 +90,7 @@ const testManifestStoreStep = async (portal: HTMLElement): Promise<void> => {
   })
   const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
   await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-  userEvent.click(secondStepContinueButton)
+  await userEvent.click(secondStepContinueButton)
 }
 
 const testEcsManifestLastStep = async (portal: HTMLElement): Promise<void> => {
@@ -104,7 +104,7 @@ const testEcsManifestLastStep = async (portal: HTMLElement): Promise<void> => {
     fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: 'test-path' } })
   })
   const submitButton = getElementByText(portal, 'submit').parentElement as HTMLElement
-  userEvent.click(submitButton)
+  await userEvent.click(submitButton)
 }
 
 const testUpdateEcsTaskDefinitionManifest = async (): Promise<void> => {
@@ -376,11 +376,11 @@ describe('ECSServiceSpecEditable tests', () => {
 
     // Try moving Task Definition ARN section and check if warning appears
     const taskDefinitionArnSectionCard = getByText('cd.serviceDashboard.taskDefinitionArn')
-    userEvent.click(taskDefinitionArnSectionCard)
+    await userEvent.click(taskDefinitionArnSectionCard)
     const warningDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
     expect(within(warningDialog).getByText('cd.changeTaskDefinitionTypeWarning')).toBeInTheDocument()
     const cancelBtn = within(warningDialog).getByText('cancel')
-    userEvent.click(cancelBtn)
+    await userEvent.click(cancelBtn)
 
     // continue with updating manifest
     expect(getByText('TaskDefinition_Manifest')).toBeInTheDocument()
@@ -388,7 +388,7 @@ describe('ECSServiceSpecEditable tests', () => {
     expect(editButtons).toHaveLength(4)
     const taskDefinitionManifestEditButton = editButtons[0]
     expect(taskDefinitionManifestEditButton).toBeInTheDocument()
-    userEvent.click(taskDefinitionManifestEditButton)
+    await userEvent.click(taskDefinitionManifestEditButton)
 
     await testUpdateEcsTaskDefinitionManifest()
 
@@ -428,7 +428,7 @@ describe('ECSServiceSpecEditable tests', () => {
     expect(deleteButtons).toHaveLength(4)
     const taskDefinitionManifestDeleteButton = deleteButtons[0]
     expect(taskDefinitionManifestDeleteButton).toBeInTheDocument()
-    userEvent.click(taskDefinitionManifestDeleteButton)
+    await userEvent.click(taskDefinitionManifestDeleteButton)
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsTaskDefinitionManifestDelete)
@@ -459,7 +459,7 @@ describe('ECSServiceSpecEditable tests', () => {
     expect(deleteButtons).toHaveLength(4)
     const serviceDefinitionManifestDeleteButton = deleteButtons[1]
     expect(serviceDefinitionManifestDeleteButton).toBeInTheDocument()
-    userEvent.click(serviceDefinitionManifestDeleteButton)
+    await userEvent.click(serviceDefinitionManifestDeleteButton)
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsServiceDefinitionManifestDelete)
@@ -490,7 +490,7 @@ describe('ECSServiceSpecEditable tests', () => {
     expect(deleteButtons).toHaveLength(4)
     const scalableTargetManifestDeleteButton = deleteButtons[2]
     expect(scalableTargetManifestDeleteButton).toBeInTheDocument()
-    userEvent.click(scalableTargetManifestDeleteButton)
+    await userEvent.click(scalableTargetManifestDeleteButton)
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsScalableTargetManifestDelete)
@@ -521,7 +521,7 @@ describe('ECSServiceSpecEditable tests', () => {
     expect(deleteButtons).toHaveLength(4)
     const scallingPolicyManifestDeleteButton = deleteButtons[3]
     expect(scallingPolicyManifestDeleteButton).toBeInTheDocument()
-    userEvent.click(scallingPolicyManifestDeleteButton)
+    await userEvent.click(scallingPolicyManifestDeleteButton)
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsScallingPolicyManifestDelete)
@@ -562,7 +562,7 @@ describe('ECSServiceSpecEditable tests', () => {
     expect(editButtons).toHaveLength(1)
     const taskDefinitionManifestEditButton = editButtons[0]
     expect(taskDefinitionManifestEditButton).toBeInTheDocument()
-    userEvent.click(taskDefinitionManifestEditButton)
+    await userEvent.click(taskDefinitionManifestEditButton)
 
     await testUpdateEcsTaskDefinitionManifest()
 

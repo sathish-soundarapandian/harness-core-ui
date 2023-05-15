@@ -65,17 +65,17 @@ describe('DashboardsHeader', () => {
     const sidebarQueryText = 'dashboards.getStarted.title'
     expect(screen.queryByText(sidebarQueryText)).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'getStarted' }))
+    await userEvent.click(screen.getByRole('button', { name: 'getStarted' }))
 
     await waitFor(() => expect(screen.queryByText(sidebarQueryText)).toBeInTheDocument())
   })
 
   test('it should close the getting started sidebar when clicking the getStarted X button', async () => {
     renderComponent()
-    userEvent.click(screen.getByRole('button', { name: 'getStarted' }))
+    await userEvent.click(screen.getByRole('button', { name: 'getStarted' }))
     await waitFor(() => expect(screen.getByText('cross')).toBeInTheDocument())
 
-    userEvent.click(screen.getByRole('button', { name: 'cross' }))
+    await userEvent.click(screen.getByRole('button', { name: 'cross' }))
 
     await waitFor(() => expect(screen.queryByText('cross')).not.toBeInTheDocument())
   })

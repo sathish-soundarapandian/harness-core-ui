@@ -118,7 +118,7 @@ describe('Single Environment Input Set Form - Runtime Env in pipeline studio', (
     )
 
     // open environment select modal
-    userEvent.click(screen.getByTestId('cr-field-environment.environmentRef'))
+    await userEvent.click(screen.getByTestId('cr-field-environment.environmentRef'))
 
     const environmentSelectDialog = findDialogContainer()
 
@@ -130,13 +130,13 @@ describe('Single Environment Input Set Form - Runtime Env in pipeline studio', (
     const environmentWithInputsButton = queryByText(environmentSelectDialog!, 'env with both inputs')
     await waitFor(() => expect(environmentWithInputsButton).toBeVisible())
 
-    userEvent.click(environmentWithInputsButton!)
+    await userEvent.click(environmentWithInputsButton!)
 
     // apply changes
     const applySelectedButton = queryByText(environmentSelectDialog!, 'entityReference.apply')
     await waitFor(() => expect(applySelectedButton?.parentElement).not.toBeDisabled())
 
-    userEvent.click(applySelectedButton!)
+    await userEvent.click(applySelectedButton!)
 
     // wait for data to load
     await waitFor(() => expect(screen.getByText('common.environmentPrefix')).toBeVisible())
@@ -154,10 +154,10 @@ describe('Single Environment Input Set Form - Runtime Env in pipeline studio', (
     expect(inputFields[1]).toHaveValue('svcOverrideVal1')
 
     // select infrastructure
-    userEvent.click(inputFields[2])
+    await userEvent.click(inputFields[2])
 
     const infraSelectionPopover = findPopoverContainer()
-    userEvent.click(getByText(infraSelectionPopover!, 'Infra 4'))
+    await userEvent.click(getByText(infraSelectionPopover!, 'Infra 4'))
 
     await waitFor(() => expect(screen.getByText('common.infrastructurePrefix')).toBeVisible())
 

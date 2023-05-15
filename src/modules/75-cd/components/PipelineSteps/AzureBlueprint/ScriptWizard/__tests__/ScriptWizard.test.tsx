@@ -105,12 +105,12 @@ describe('ScriptWizard & stepOne', () => {
     const { getByText, getByTestId } = renderComponent(propWizard)
 
     const changeText = getByText('Change')
-    userEvent.click(changeText)
+    await userEvent.click(changeText)
 
     //connector change
     const gitConnector = getByText('Git')
     expect(gitConnector).toBeDefined()
-    userEvent.click(gitConnector)
+    await userEvent.click(gitConnector)
 
     const newConnectorLabel = getByText('newLabel pipeline.manifestType.gitConnectorLabel connector')
     expect(newConnectorLabel).toBeDefined()
@@ -125,19 +125,19 @@ describe('ScriptWizard & stepOne', () => {
     const { getByText, getByTestId } = renderComponent({ ...propWizard, newConnectorView: true })
 
     const changeText = getByText('Change')
-    userEvent.click(changeText)
+    await userEvent.click(changeText)
 
     //connector change
     const gitConnector = getByText('Git')
     expect(gitConnector).toBeDefined()
-    userEvent.click(gitConnector)
+    await userEvent.click(gitConnector)
 
     const newConnectorLabel = getByText('newLabel pipeline.manifestType.gitConnectorLabel connector')
     expect(newConnectorLabel).toBeDefined()
 
     const newConnectorBtn = getByTestId('newConnectorButton')
     expect(newConnectorBtn).toBeDefined()
-    userEvent.click(newConnectorBtn)
+    await userEvent.click(newConnectorBtn)
 
     const createNewConnectorLabel = getByText('connectors.createNewConnector')
     expect(createNewConnectorLabel).toBeDefined()
@@ -175,7 +175,7 @@ describe('ScriptWizard & stepOne', () => {
     const { getByText } = renderComponent({ propWizard, ...props })
     const continueBtn = getByText('continue')
     expect(continueBtn).toBeDefined()
-    userEvent.click(continueBtn)
+    await userEvent.click(continueBtn)
 
     await waitFor(() => {
       expect(getByText('back')).toBeDefined()

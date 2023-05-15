@@ -84,7 +84,7 @@ describe('AddTargetToTargetGroupsDialog', () => {
       expect(retryMock).not.toHaveBeenCalled()
       expect(screen.getByText(message)).toBeInTheDocument()
 
-      userEvent.click(btn)
+      await userEvent.click(btn)
 
       await waitFor(() => expect(retryMock).toHaveBeenCalled())
     })
@@ -101,8 +101,8 @@ describe('AddTargetToTargetGroupsDialog', () => {
       expect(hideModalMock).not.toHaveBeenCalled()
       expect(screen.queryByText(message)).not.toBeInTheDocument()
 
-      userEvent.click(screen.getByText(mockTargetGroups[0].name))
-      userEvent.click(screen.getByRole('button', { name: 'cf.targetDetail.addToSegment' }))
+      await userEvent.click(screen.getByText(mockTargetGroups[0].name))
+      await userEvent.click(screen.getByRole('button', { name: 'cf.targetDetail.addToSegment' }))
 
       await waitFor(() => {
         expect(onChangeMock).not.toHaveBeenCalled()
@@ -189,8 +189,8 @@ describe('AddTargetToTargetGroupsDialog', () => {
       expect(onChangeMock).not.toHaveBeenCalled()
       expect(hideModalMock).not.toHaveBeenCalled()
 
-      mockTargetGroups.forEach(({ name }) => userEvent.click(screen.getByText(name)))
-      userEvent.click(screen.getByRole('button', { name: 'cf.targetDetail.addToSegment' }))
+      mockTargetGroups.forEach(async ({ name }) => await userEvent.click(screen.getByText(name)))
+      await userEvent.click(screen.getByRole('button', { name: 'cf.targetDetail.addToSegment' }))
 
       await waitFor(() => {
         expect(patchTargetMock).toHaveBeenCalledWith({

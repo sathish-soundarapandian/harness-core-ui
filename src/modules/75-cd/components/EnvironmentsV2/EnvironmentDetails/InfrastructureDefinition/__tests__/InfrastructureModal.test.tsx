@@ -85,16 +85,16 @@ describe('Infrastructure Modal Test', () => {
     )
 
     const buttons = screen.getAllByRole('button')
-    userEvent.click(buttons[2]!)
+    await userEvent.click(buttons[2]!)
 
     expect(await screen.findByText('fieldRequired')).toBeVisible()
     expect(screen.getByText('cd.pipelineSteps.serviceTab.deploymentTypeRequired')).toBeInTheDocument()
 
     const nameInput = screen.getAllByRole('textbox')[0]
-    userEvent.type(nameInput, 'Infra 1')
+    await userEvent.type(nameInput, 'Infra 1')
 
     const kubernetesDeploymentType = screen.getAllByRole('checkbox')[0]
-    userEvent.click(kubernetesDeploymentType)
+    await userEvent.click(kubernetesDeploymentType)
 
     expect(await screen.findByText('pipelineSteps.deploy.infrastructure.viaCloudProvider')).toBeVisible()
 
@@ -102,7 +102,7 @@ describe('Infrastructure Modal Test', () => {
     expect(screen.getByText('pipelineSteps.deploymentTypes.kubernetes')).toBeInTheDocument()
     expect(screen.getByText('pipelineSteps.deploymentTypes.gk8engine')).toBeInTheDocument()
 
-    userEvent.click(buttons[2]!)
+    await userEvent.click(buttons[2]!)
 
     await waitFor(() => {
       expect(screen.getByText('cd.pipelineSteps.infraTab.deploymentType')).toBeInTheDocument()
@@ -110,12 +110,12 @@ describe('Infrastructure Modal Test', () => {
 
     // This is the index of the kubernetes infra thumbnails
     const kubernetesDirectInfraType = screen.getAllByRole('checkbox')[7]
-    userEvent.click(kubernetesDirectInfraType)
+    await userEvent.click(kubernetesDirectInfraType)
 
     expect(await screen.findByText('cd.steps.common.clusterDetails')).toBeVisible()
     expect(screen.getByText('Step Widget button')).toBeInTheDocument()
 
-    userEvent.click(buttons[2]!)
+    await userEvent.click(buttons[2]!)
 
     await waitFor(() => expect(createInfraFn).toHaveBeenCalledTimes(1))
   })
@@ -151,13 +151,13 @@ describe('Infrastructure Modal Test', () => {
     const buttons = screen.getAllByRole('button')
 
     // switch to YAML and back
-    userEvent.click(buttons[2])
+    await userEvent.click(buttons[2])
 
     await waitFor(() => {
       expect(buttons[2]).toHaveClass('PillToggle--item PillToggle--selected')
     })
 
-    userEvent.click(buttons[1])
+    await userEvent.click(buttons[1])
 
     await waitFor(() => {
       expect(screen.getByText('K8s_Direct_Id')).toBeInTheDocument()

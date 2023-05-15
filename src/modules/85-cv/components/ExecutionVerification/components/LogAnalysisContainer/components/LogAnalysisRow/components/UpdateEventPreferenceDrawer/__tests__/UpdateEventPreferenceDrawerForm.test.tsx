@@ -12,7 +12,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
-  test('UpdateEventPreferenceDrawerForm calls correct function upon submitting the form', () => {
+  test('UpdateEventPreferenceDrawerForm calls correct function upon submitting the form', async () => {
     render(
       <TestWrapper
         path="/:accountId/:projectIdentifier/:orgIdentifier"
@@ -22,8 +22,8 @@ describe('UpdateEventPreferenceDrawerForm', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(screen.getByTestId(/updatePreferenceDrawerClose_button/))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId(/updatePreferenceDrawerClose_button/))
     })
 
     expect(onHideCallbackMock).toHaveBeenCalled()
@@ -39,8 +39,8 @@ describe('UpdateEventPreferenceDrawerForm', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(screen.getByTestId(/updatePreferenceDrawerSubmit_button/))
+    await act(async () => {
+      await userEvent.click(screen.getByTestId(/updatePreferenceDrawerSubmit_button/))
     })
 
     await waitFor(() => {
@@ -73,17 +73,17 @@ describe('UpdateEventPreferenceDrawerForm', () => {
 
     const reasonTextarea = screen.getByPlaceholderText('cv.logs.reasonPlaceholder')
 
-    act(() => {
-      userEvent.clear(reasonTextarea)
-      userEvent.type(reasonTextarea, 'This is not a risk again')
+    await act(async () => {
+      await userEvent.clear(reasonTextarea)
+      await userEvent.type(reasonTextarea, 'This is not a risk again')
     })
 
     const eventPreferenceSubmitButton = screen.getByTestId('updatePreferenceDrawerSubmit_button')
 
     expect(eventPreferenceSubmitButton).toBeInTheDocument()
 
-    act(() => {
-      userEvent.click(eventPreferenceSubmitButton)
+    await act(async () => {
+      await userEvent.click(eventPreferenceSubmitButton)
     })
 
     await waitFor(() => {

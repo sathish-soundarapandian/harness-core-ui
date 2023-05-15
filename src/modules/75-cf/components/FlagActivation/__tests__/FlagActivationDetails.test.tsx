@@ -76,7 +76,7 @@ describe('FlagActivationDetails', () => {
   test('it should render rbac menu correctly', async () => {
     renderComponent()
 
-    userEvent.click(document.querySelectorAll("[data-icon='Options']")[0])
+    await userEvent.click(document.querySelectorAll("[data-icon='Options']")[0])
 
     await waitFor(() => expect(document.getElementsByTagName('li')[0]).toHaveTextContent(/edit/i))
   })
@@ -84,10 +84,10 @@ describe('FlagActivationDetails', () => {
   test('it should render edit flag modal correctly', async () => {
     renderComponent()
 
-    userEvent.click(document.querySelectorAll("[data-icon='Options']")[0])
+    await userEvent.click(document.querySelectorAll("[data-icon='Options']")[0])
 
     await waitFor(() => expect(document.getElementsByTagName('li')[0]).toBeInTheDocument())
-    userEvent.click(document.getElementsByTagName('li')[0].getElementsByTagName('a')[0])
+    await userEvent.click(document.getElementsByTagName('li')[0].getElementsByTagName('a')[0])
 
     await waitFor(() => expect(screen.getByTestId('edit-flag-form')).toBeInTheDocument())
     expect(screen.getByTestId('edit-flag-form')).toMatchSnapshot()

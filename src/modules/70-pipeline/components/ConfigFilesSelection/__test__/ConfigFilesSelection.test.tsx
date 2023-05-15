@@ -39,13 +39,13 @@ describe('ConfigFilesSelection tests', () => {
     )
     const addBtn = await findByText(container, 'pipeline.configFiles.addConfigFile')
     expect(addBtn).toBeInTheDocument()
-    act(() => {
-      userEvent.click(addBtn)
+    await act(async () => {
+      await userEvent.click(addBtn)
     })
     const dialog = document.body.querySelector('.bp3-dialog') as HTMLElement
     const closeBtn = dialog.querySelector('.bp3-minimal') as HTMLElement
-    act(() => {
-      userEvent.click(closeBtn)
+    await act(async () => {
+      await userEvent.click(closeBtn)
     })
     expect(container).toBeInTheDocument()
   })

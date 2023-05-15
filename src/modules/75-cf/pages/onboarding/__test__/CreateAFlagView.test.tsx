@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
-import userEvent, { TargetElement } from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as ffServices from 'services/cf'
 import mockFeatureFlags from '@cf/pages/feature-flags/__tests__/mockFeatureFlags'
@@ -56,7 +56,7 @@ describe('CreateAFlagView', () => {
     expect(screen.getByText('cf.featureFlags.flagsDescription')).toBeVisible()
     expect(screen.getByText('cf.onboarding.flagInputLabel')).toBeVisible()
 
-    const selectInput = document.querySelector('#selectOrCreateFlag') as TargetElement
+    const selectInput = document.querySelector('#selectOrCreateFlag')
     expect(selectInput).toBeVisible()
     expect(selectInput).toHaveValue('')
     expect(selectInput).toHaveAttribute('placeholder', 'cf.onboarding.selectOrCreateFlag')
@@ -90,8 +90,8 @@ describe('CreateAFlagView', () => {
 
     expect(createNewFlagTextbox).toBeInTheDocument()
 
-    userEvent.type(createNewFlagTextbox, myNewFlag)
-    userEvent.click(screen.getByRole('button', { name: 'common.createFlag' }))
+    await userEvent.type(createNewFlagTextbox, myNewFlag)
+    await userEvent.click(screen.getByRole('button', { name: 'common.createFlag' }))
 
     await waitFor(() =>
       expect(mutateCreateMock).toHaveBeenCalledWith({
@@ -119,37 +119,37 @@ describe('CreateAFlagView', () => {
     )
   })
 
-  test('It should retrieve existing feature flags and list these as options in the Select component', () => {
+  test('It should retrieve existing feature flags and list these as options in the Select component', async () => {
     renderComponent()
 
-    const selectInput = document.querySelector('#selectOrCreateFlag') as TargetElement
+    const selectInput = document.querySelector('#selectOrCreateFlag') as HTMLElement
     expect(selectInput).toBeVisible()
     expect(selectInput).toHaveValue('')
     expect(screen.queryByTestId('ffOnboardingSelectedFlag')).not.toBeInTheDocument()
     expect(refetchFlags).toHaveBeenCalled()
 
-    userEvent.click(selectInput as TargetElement)
+    await userEvent.click(selectInput)
 
     const dropdownOptions = screen.queryAllByRole('listitem')
     expect(dropdownOptions).toHaveLength(CF_DEFAULT_PAGE_SIZE)
     expect(dropdownOptions[0]).toHaveTextContent('hello world')
   })
 
-  test('It should set the selected dropdown option as the selected flag for Onboarding', () => {
+  test('It should set the selected dropdown option as the selected flag for Onboarding', async () => {
     renderComponent()
 
-    const selectInput = document.querySelector('#selectOrCreateFlag') as TargetElement
+    const selectInput = document.querySelector('#selectOrCreateFlag') as HTMLElement
     expect(selectInput).toBeVisible()
     expect(screen.queryByTestId('ffOnboardingSelectedFlag')).not.toBeInTheDocument()
     expect(refetchFlags).toHaveBeenCalled()
 
-    userEvent.click(selectInput as TargetElement)
+    await userEvent.click(selectInput)
 
     const dropdownOptions = screen.queryAllByRole('listitem')
     expect(dropdownOptions).toHaveLength(CF_DEFAULT_PAGE_SIZE)
     expect(dropdownOptions[0]).toHaveTextContent('hello world')
 
-    userEvent.click(dropdownOptions[0])
+    await userEvent.click(dropdownOptions[0])
 
     expect(selectInput).toHaveValue('hello world')
     expect(setSelectedFlag).toBeCalledWith(mockFeatureFlags.features[0])
@@ -158,7 +158,7 @@ describe('CreateAFlagView', () => {
   test('It should display a label for the selected flag name and id', async () => {
     renderComponent({ selectedFlag: mockFeatureFlags.features[0] as any })
 
-    const selectInput = document.querySelector('#selectOrCreateFlag') as TargetElement
+    const selectInput = document.querySelector('#selectOrCreateFlag')
     expect(document.querySelector('input[id="selectOrCreateFlag"]')).toBeVisible()
     expect(refetchFlags).toBeCalled()
     expect(selectInput).toHaveValue('hello world')
@@ -174,12 +174,12 @@ describe('CreateAFlagView', () => {
 
     renderComponent()
 
-    const selectInput = document.querySelector('#selectOrCreateFlag') as TargetElement
-    userEvent.type(selectInput, 'Onboarding Flag 1', { allAtOnce: true })
+    const selectInput = document.querySelector('#selectOrCreateFlag') as HTMLElement
+    await userEvent.type(selectInput, 'Onboarding Flag 1')
 
     // no options returned
     expect(document.getElementsByTagName('li')).toHaveLength(0)
-    userEvent.type(selectInput, '{enter}', { allAtOnce: true })
+    await userEvent.type(selectInput, '{enter}')
 
     await waitFor(() => {
       expect(createFeatureFlag).toBeCalled()

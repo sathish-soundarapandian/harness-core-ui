@@ -244,7 +244,7 @@ describe('FlagConfigurationStepWidget', () => {
       checkFormInputs('Test Paging Flag', 'Mock Environment')
 
       // Click the flag dropdown to display options
-      userEvent.click(flagInput)
+      await userEvent.click(flagInput)
 
       const dropdownOptions = screen.getAllByRole('listitem')
 
@@ -280,7 +280,7 @@ describe('FlagConfigurationStepWidget', () => {
       checkFormInputs('X Flag 11', 'Mock Environment')
 
       // Click the flag dropdown to display options
-      userEvent.click(flagInput)
+      await userEvent.click(flagInput)
       const dropdownOptions = screen.getAllByRole('listitem')
 
       // saved flag should be not have been prepended to list

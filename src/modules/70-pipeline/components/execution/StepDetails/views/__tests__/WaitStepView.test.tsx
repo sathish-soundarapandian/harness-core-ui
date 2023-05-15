@@ -123,7 +123,7 @@ const checkPolicyEnforcementTab = async (): Promise<HTMLElement> => {
   const policyEnforcementTab = await screen.findByRole('tab', {
     name: 'pipeline.policyEnforcement.title'
   })
-  userEvent.click(policyEnforcementTab)
+  await userEvent.click(policyEnforcementTab)
   const tabpanel = screen.getByRole('tabpanel', {
     name: 'pipeline.policyEnforcement.title'
   })

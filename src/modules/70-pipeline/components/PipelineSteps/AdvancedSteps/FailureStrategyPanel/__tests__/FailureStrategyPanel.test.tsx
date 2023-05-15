@@ -28,7 +28,7 @@ describe('<FailureStrategyPanel /> tests', () => {
 
     const add = await findByTestId('add-failure-strategy')
 
-    userEvent.click(add)
+    await userEvent.click(add)
 
     await findByTestId('failure-strategy-step-0')
 
@@ -75,11 +75,11 @@ describe('<FailureStrategyPanel /> tests', () => {
 
     const step2 = await findByTestId('failure-strategy-step-1')
 
-    userEvent.click(step2)
+    await userEvent.click(step2)
 
     const deleteBtn = await findByTestId('remove-failure-strategy')
 
-    userEvent.click(deleteBtn)
+    await userEvent.click(deleteBtn)
 
     expect(() => getByTestId('failure-strategy-step-1')).toThrow()
 
@@ -112,7 +112,7 @@ describe('<FailureStrategyPanel /> tests', () => {
 
     const add = await findByTestId('add-failure-strategy')
 
-    userEvent.click(add)
+    await userEvent.click(add)
 
     await findByTestId('failure-strategy-step-0')
 
@@ -120,7 +120,7 @@ describe('<FailureStrategyPanel /> tests', () => {
 
     const opt1 = await findByText(authErrorTxt, { selector: menuItemSelector })
 
-    userEvent.click(opt1)
+    await userEvent.click(opt1)
     await act(() => {
       fireEvent.focus(getErrorTypeField()[0])
       return Promise.resolve()
@@ -152,7 +152,7 @@ describe('<FailureStrategyPanel /> tests', () => {
 
     const add = await findByTestId('add-failure-strategy')
 
-    userEvent.click(add)
+    await userEvent.click(add)
 
     await findByTestId('failure-strategy-step-0')
     const errorTypeFields = queryAllByAttribute('name', container, 'failureStrategies[0].onFailure.errors')!
@@ -219,7 +219,7 @@ describe('<FailureStrategyPanel /> tests', () => {
     `)
     const removeTags = queryAllByAttribute('class', container, 'bp3-tag-remove')
 
-    userEvent.click(removeTags[removeTags.length - 1])
+    await userEvent.click(removeTags[removeTags.length - 1])
 
     expect(code.innerHTML).toMatchInlineSnapshot(`
       "failureStrategies:
@@ -242,7 +242,7 @@ describe('<FailureStrategyPanel /> tests', () => {
 
     const tab1 = await findByTestId('failure-strategy-step-0')
 
-    userEvent.click(tab1)
+    await userEvent.click(tab1)
 
     await findByText('pipeline.failureStrategies.validation.errorsRequired')
 
@@ -302,7 +302,7 @@ describe('<FailureStrategyPanel /> tests', () => {
 
     const submit = await findByTestId('test-submit')
 
-    userEvent.click(submit)
+    await userEvent.click(submit)
 
     const err = await findByTestId('failure-strategy-step-1')
 
@@ -331,7 +331,7 @@ describe('<FailureStrategyPanel /> tests', () => {
 
     const add = await findByTestId('add-failure-strategy')
 
-    userEvent.click(add)
+    await userEvent.click(add)
 
     const panel = await findByTestId(`failure-strategy-step-${NUM}`)
     expect(panel.dataset.selected).toBe('true')
@@ -388,14 +388,14 @@ describe('<FailureStrategyPanel /> tests', () => {
 
     const change = await findAllByTestId('thumbnail-select-change')
 
-    act(() => {
-      userEvent.click(change[0])
+    await act(async () => {
+      await userEvent.click(change[0])
     })
 
     const retry = queryFieldAndStrategy('failureStrategies[0].onFailure.action.type', Strategy.Retry)!
 
-    act(() => {
-      userEvent.click(retry)
+    await act(async () => {
+      await userEvent.click(retry)
     })
 
     expect(code.innerHTML).toMatchInlineSnapshot(`

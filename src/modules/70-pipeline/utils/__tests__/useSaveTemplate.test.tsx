@@ -205,7 +205,7 @@ describe('useSaveTemplate Test', () => {
       )
 
       const editBtn = getByText('Edit')
-      userEvent.click(editBtn)
+      await userEvent.click(editBtn)
 
       let saveToGitSaveBtn: HTMLElement
       await waitFor(() => {
@@ -251,7 +251,7 @@ describe('useSaveTemplate Test', () => {
       )
 
       const editBtn = getByText('Edit')
-      userEvent.click(editBtn)
+      await userEvent.click(editBtn)
 
       let saveToGitSaveBtn: HTMLElement
       await waitFor(() => {
@@ -293,7 +293,7 @@ describe('useSaveTemplate Test', () => {
       )
 
       const saveBtn = getByText('Save')
-      userEvent.click(saveBtn)
+      await userEvent.click(saveBtn)
 
       let saveToGitSaveBtn: HTMLElement
       await waitFor(() => {
@@ -336,7 +336,7 @@ describe('useSaveTemplate Test', () => {
       )
 
       const saveBtn = getByText('Save')
-      userEvent.click(saveBtn)
+      await userEvent.click(saveBtn)
 
       let saveToGitSaveBtn: HTMLElement
       await waitFor(() => {

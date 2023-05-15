@@ -180,17 +180,17 @@ describe('Test DeploymentInfraWrapperWithRef', () => {
     const rows = container.querySelectorAll('div[role="row"]')
     expect(rows.length).toBe(3)
     await act(async () => {
-      userEvent.click(rows[1])
+      await userEvent.click(rows[1])
     })
     const settingsPanel = container.querySelectorAll('[data-icon="more"]')[0]!
     await act(async () => {
-      userEvent.click(settingsPanel)
+      await userEvent.click(settingsPanel)
     })
     //edit settings
-    userEvent.click(settingsPanel)
+    await userEvent.click(settingsPanel)
     expect(queryByText(`templatesLibrary.openEditTemplate`)).toBeInTheDocument()
     await act(async () => {
-      userEvent.click(queryByText('templatesLibrary.openEditTemplate')!)
+      await userEvent.click(queryByText('templatesLibrary.openEditTemplate')!)
     })
   })
 })

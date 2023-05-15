@@ -37,19 +37,19 @@ describe('Azure Traffic Shift step', () => {
     )
 
     const name = container.querySelector('input[name="name"]')
-    act(() => userEvent.type(name!, 'New azure traffic shift'))
+    await act(async () => await userEvent.type(name!, 'New azure traffic shift'))
     expect(name).toHaveDisplayValue('New azure traffic shift')
 
     const id = getByText('New_azure_traffic_shift')
     expect(id!).toBeDefined()
 
     const timeout = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    act(() => userEvent.clear(timeout!))
-    act(() => userEvent.type(timeout!, '10s'))
+    await act(async () => await userEvent.clear(timeout!))
+    await act(async () => await userEvent.type(timeout!, '10s'))
     expect(timeout).toHaveDisplayValue('10s')
 
     const traffic = container.querySelector('input[name="spec.traffic"]')
-    act(() => userEvent.type(traffic!, '20%'))
+    await act(async () => await userEvent.type(traffic!, '20%'))
     expect(traffic).toHaveDisplayValue('20%')
 
     await act(() => ref.current?.submitForm()!)

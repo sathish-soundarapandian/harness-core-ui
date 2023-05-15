@@ -40,7 +40,7 @@ jest.mock('services/cd-ng', () => ({
   useDeleteManyFreezes: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 const ORG_LEVEL_FREEZE_ROUTE = routes.toFreezeWindows(orgPathProps)
 
@@ -72,9 +72,9 @@ describe('Global Freeze - Org Level', () => {
     })
     expect(globalFreezeToggle).toBeChecked()
     expect(screen.getByText(/freeze in place/i)).toBeInTheDocument() // banner text
-    userEvent.click(globalFreezeToggle)
+    await userEvent.click(globalFreezeToggle)
     expect(findDialogContainer()).toBeTruthy()
-    userEvent.click(screen.getByRole('button', { name: /confirm/i }))
+    await userEvent.click(screen.getByRole('button', { name: /confirm/i }))
     expect(mutateAction).toHaveBeenLastCalledWith(expect.stringContaining('status: Disabled'))
   })
 
@@ -91,7 +91,7 @@ describe('Global Freeze - Org Level', () => {
         name: /global freeze toggle/i
       })
     ).toBeEnabled()
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /expand list/i
       })
@@ -127,10 +127,10 @@ describe('Global Freeze - Org Level', () => {
     expect(globalFreezeToggle).not.toBeChecked()
 
     // With default form values
-    userEvent.click(globalFreezeToggle)
+    await userEvent.click(globalFreezeToggle)
     const dialog = findDialogContainer()
     expect(dialog).toBeTruthy()
-    userEvent.click(
+    await userEvent.click(
       within(dialog!).getByRole('button', {
         name: /save/i
       })

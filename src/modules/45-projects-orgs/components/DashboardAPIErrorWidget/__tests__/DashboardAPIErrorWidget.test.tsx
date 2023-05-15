@@ -25,7 +25,7 @@ describe('DashboardAPIErrorWidget', () => {
     expect(queryByText('projectsOrgs.apiError')).toBeInTheDocument()
     expect(queryByText('retry')).toBeInTheDocument()
 
-    userEvent.click(queryByText('retry')!)
+    await userEvent.click(queryByText('retry')!)
     expect(retryCallback).toBeCalledTimes(1)
   })
 })

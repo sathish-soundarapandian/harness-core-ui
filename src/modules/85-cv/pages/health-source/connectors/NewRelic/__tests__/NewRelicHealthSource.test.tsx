@@ -248,13 +248,13 @@ describe('Unit tests for NewRelic health source', () => {
 
       expect(container.querySelector('input[name="ignoreThresholds.0.metricType"]')).toHaveValue('Performance')
 
-      userEvent.click(container.querySelector("input[name='Performance']")!)
+      await userEvent.click(container.querySelector("input[name='Performance']")!)
 
       expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
 
       const modalDeleteBtn = screen.queryAllByText('confirm')[0]
-      act(() => {
-        userEvent.click(modalDeleteBtn!)
+      await act(async () => {
+        await userEvent.click(modalDeleteBtn!)
       })
 
       await waitFor(() => {

@@ -64,14 +64,14 @@ describe('ValidationBadge', () => {
 
     expect(await screen.findByText('pipeline.validation.validationSuccessful')).toBeInTheDocument()
 
-    userEvent.click(validationBadge)
+    await userEvent.click(validationBadge)
 
     expect(await screen.findByText('pipeline.validation.pipelineValidated')).toBeInTheDocument()
     expect(screen.getByTestId('template_success')).toBeInTheDocument()
     expect(screen.getByTestId('policy_success')).toBeInTheDocument()
 
     const revalidateButton = screen.getByText('pipeline.validation.revalidate')
-    userEvent.click(revalidateButton)
+    await userEvent.click(revalidateButton)
 
     expect(validatePipeline).toBeCalled()
     await waitFor(() => {
@@ -123,7 +123,7 @@ describe('ValidationBadge', () => {
 
     expect(await screen.findByText('pipeline.validation.nIssuesFound')).toBeInTheDocument()
 
-    userEvent.click(validationBadge)
+    await userEvent.click(validationBadge)
 
     expect(await screen.findByText('pipeline.validation.validationResultApiError')).toBeInTheDocument()
     expect(await screen.findByText('retry')).toBeInTheDocument()
@@ -158,18 +158,18 @@ describe('ValidationBadge', () => {
 
     expect(await screen.findByText('pipeline.validation.nIssuesFound')).toBeInTheDocument()
 
-    userEvent.click(validationBadge)
+    await userEvent.click(validationBadge)
 
     expect(await screen.findByText('pipeline.validation.pipelineValidationFailed')).toBeInTheDocument()
     expect(screen.getByTestId('template_success')).toBeInTheDocument()
     expect(screen.getByTestId('policy_failure')).toBeInTheDocument()
 
     const issuesButton = screen.getByRole('button', { name: '(pipeline.validation.nIssues)' })
-    userEvent.click(issuesButton)
+    await userEvent.click(issuesButton)
     expect(await screen.findByText('Evaluation View')).toBeInTheDocument()
 
     const revalidateButton = screen.getByText('pipeline.validation.revalidate')
-    userEvent.click(revalidateButton)
+    await userEvent.click(revalidateButton)
 
     expect(validatePipeline).toBeCalled()
     await waitFor(() => {
@@ -199,14 +199,14 @@ describe('ValidationBadge', () => {
 
     expect(await screen.findByText('pipeline.validation.nIssuesFound')).toBeInTheDocument()
 
-    userEvent.click(validationBadge)
+    await userEvent.click(validationBadge)
 
     expect(await screen.findByText('pipeline.validation.pipelineValidationFailed')).toBeInTheDocument()
     expect(screen.getByTestId('template_failure')).toBeInTheDocument()
     expect(screen.getByTestId('policy_pending')).toBeInTheDocument()
 
     const issuesButton = screen.getByRole('button', { name: '(pipeline.validation.nIssues)' })
-    userEvent.click(issuesButton)
+    await userEvent.click(issuesButton)
     expect(
       await screen.findByText('Template with template ID async_validation and version v1 not found.')
     ).toBeInTheDocument()

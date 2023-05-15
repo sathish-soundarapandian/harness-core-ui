@@ -610,15 +610,15 @@ describe('ArtifactsSelection tests', () => {
     expect(firstStepTitle).toBeDefined()
     const artifactoryTileText = getByText(portal, 'connectors.artifactory.artifactoryLabel')
     expect(artifactoryTileText).toBeDefined()
-    userEvent.click(artifactoryTileText!)
+    await userEvent.click(artifactoryTileText!)
     const continueButton = getByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(continueButton).not.toBeDisabled())
-    userEvent.click(continueButton)
+    await userEvent.click(continueButton)
 
     const artifactRepoLabel = await findByText(portal, 'Artifactory connector')
     expect(artifactRepoLabel).toBeDefined()
     const newConnectorButton = getByText(portal, 'newLabel Artifactory connector')
-    userEvent.click(newConnectorButton!)
+    await userEvent.click(newConnectorButton!)
 
     const overviewTitle = await findAllByText(portal, 'overview')
     expect(overviewTitle).toHaveLength(2)
@@ -706,14 +706,14 @@ describe('ArtifactsSelection tests', () => {
     fireEvent.click(addPrimaryButton)
 
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
-    userEvent.click(getByText(portal, 'pipeline.artifactsSelection.amazonS3Title')!)
+    await userEvent.click(getByText(portal, 'pipeline.artifactsSelection.amazonS3Title')!)
     const continueButton = getByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(continueButton).not.toBeDisabled())
-    userEvent.click(continueButton)
+    await userEvent.click(continueButton)
 
     const artifactRepoLabel = await findByText(portal, 'AWS connector')
     expect(artifactRepoLabel).toBeDefined()
-    userEvent.click(getByText(portal, 'newLabel AWS connector')!)
+    await userEvent.click(getByText(portal, 'newLabel AWS connector')!)
 
     const overviewTitle = await findAllByText(portal, 'overview')
     expect(overviewTitle).toHaveLength(2)

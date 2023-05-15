@@ -128,7 +128,7 @@ describe('FeatureFlagsPage', () => {
 
     expect(environmentSelect).toHaveValue('foobar')
 
-    userEvent.click(environmentSelect)
+    await userEvent.click(environmentSelect)
 
     await waitFor(() => {
       expect(screen.getByText('common.allEnvironments')).toBeInTheDocument()
@@ -154,13 +154,13 @@ describe('FeatureFlagsPage', () => {
 
     expect(environmentSelect).toHaveValue('foobar')
 
-    userEvent.click(environmentSelect)
+    await userEvent.click(environmentSelect)
 
     expect(refetchAllEnvironmentsFlags).not.toHaveBeenCalled()
     expect(screen.getByText('common.allEnvironments')).toBeInTheDocument()
     expect(screen.getByText('QB')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('common.allEnvironments'))
+    await userEvent.click(screen.getByText('common.allEnvironments'))
 
     expect(refetchAllEnvironmentsFlags).toHaveBeenCalledTimes(1)
     expect(screen.getAllByText('cf.environments.nonProd')).toHaveLength(17)
@@ -249,12 +249,12 @@ describe('FeatureFlagsPage', () => {
 
     expect(environmentSelect).toHaveValue('foobar')
 
-    userEvent.click(environmentSelect)
+    await userEvent.click(environmentSelect)
 
     expect(refetchProjectFlags).not.toHaveBeenCalled()
     expect(screen.getByText('common.allEnvironments')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('common.allEnvironments'))
+    await userEvent.click(screen.getByText('common.allEnvironments'))
 
     expect(refetchProjectFlags).toHaveBeenCalledTimes(1)
     expect(screen.getAllByText('cf.environments.nonProd')).toHaveLength(17)
@@ -272,7 +272,7 @@ describe('FeatureFlagsPage', () => {
     expect(nonProdEnvironments[0]).toHaveTextContent('foobarENABLEDLABEL')
     expect(nonProdEnvironments[1]).toHaveTextContent('QBENABLEDLABEL')
 
-    userEvent.click(nonProdEnvironments[1])
+    await userEvent.click(nonProdEnvironments[1])
 
     expect(screen.getByTestId('location')).toHaveTextContent('dummy/feature-flags/hello_world?activeEnvironment=QB')
   })

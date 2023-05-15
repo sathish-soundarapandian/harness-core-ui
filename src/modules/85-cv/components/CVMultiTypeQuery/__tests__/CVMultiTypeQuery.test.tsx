@@ -117,8 +117,8 @@ describe('Validate CVMultiTypeQuery', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      userEvent.click(container.querySelector('[icon="fullscreen"]')!)
+    await act(async () => {
+      await userEvent.click(container.querySelector('[icon="fullscreen"]')!)
     })
 
     await waitFor(() => expect(screen.getByRole('heading', { name: 'cv.query' })).toBeInTheDocument())

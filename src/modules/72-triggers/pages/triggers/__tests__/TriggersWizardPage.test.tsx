@@ -389,7 +389,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       fireEvent.click(tab3)
       const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
       await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
-      userEvent.type(pipelineInputVariable, 'test')
+      await userEvent.type(pipelineInputVariable, 'test')
       await waitFor(() => expect(result.current.getString('triggers.updateTrigger')).not.toBeNull())
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
       if (!updateButton) {
@@ -469,7 +469,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       fireEvent.click(tab3)
       const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
       await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
-      userEvent.type(pipelineInputVariable, 'test')
+      await userEvent.type(pipelineInputVariable, 'test')
       await waitFor(() => expect(result.current.getString('triggers.updateTrigger')).not.toBeNull())
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
       if (!updateButton) {
@@ -548,7 +548,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       fireEvent.click(tab3)
       const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
       await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
-      userEvent.type(pipelineInputVariable, 'test')
+      await userEvent.type(pipelineInputVariable, 'test')
       await waitFor(() => expect(result.current.getString('triggers.updateTrigger')).not.toBeNull())
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
       if (!updateButton) {
@@ -621,7 +621,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       fireEvent.click(tab3)
       const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
       await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
-      userEvent.type(pipelineInputVariable, 'test')
+      await userEvent.type(pipelineInputVariable, 'test')
       await waitFor(() => expect(result.current.getString('triggers.updateTrigger')).not.toBeNull())
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
       if (!updateButton) {
@@ -688,7 +688,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       fireEvent.click(tab3)
       const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
       await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
-      userEvent.type(pipelineInputVariable, 'test')
+      await userEvent.type(pipelineInputVariable, 'test')
       await waitFor(() => expect(result.current.getString('triggers.updateTrigger')).not.toBeNull())
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
       if (!updateButton) {
@@ -841,7 +841,7 @@ describe('TriggersWizardPage Triggers tests', () => {
       fireEvent.click(tab3)
       const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
       await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
-      userEvent.type(pipelineInputVariable, 'test')
+      await userEvent.type(pipelineInputVariable, 'test')
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
 
       if (!updateButton) {
