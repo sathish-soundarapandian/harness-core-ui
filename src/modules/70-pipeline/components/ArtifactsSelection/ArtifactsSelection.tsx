@@ -68,7 +68,6 @@ import {
   ArtifactTitleIdByType,
   allowedArtifactTypes,
   ModalViewFor,
-  isAllowedCustomArtifactDeploymentTypes,
   isSidecarAllowed,
   isAllowedAzureArtifactDeploymentTypes,
   showArtifactStoreStepDirectly,
@@ -109,23 +108,11 @@ export default function ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const {
-    CUSTOM_ARTIFACT_NG,
-    AZURE_ARTIFACTS_NG,
-    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS,
-    CDS_SERVICE_CONFIG_LAST_STEP,
-    BAMBOO_ARTIFACT_NG
-  } = useFeatureFlags()
+  const { AZURE_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS, CDS_SERVICE_CONFIG_LAST_STEP, BAMBOO_ARTIFACT_NG } =
+    useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
-    if (
-      CUSTOM_ARTIFACT_NG &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.CustomArtifact) &&
-      isAllowedCustomArtifactDeploymentTypes(deploymentType)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
-    }
     if (
       isAllowedAzureArtifactDeploymentTypes(deploymentType) &&
       AZURE_ARTIFACTS_NG &&
