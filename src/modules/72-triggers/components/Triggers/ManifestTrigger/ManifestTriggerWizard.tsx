@@ -80,6 +80,8 @@ import type {
   TriggerGitQueryParams
 } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 
 import {
   clearNullUndefined,
@@ -130,6 +132,7 @@ export default function ManifestTriggerWizard(
     manifestType
   } = useQueryParams<TriggerGitQueryParams>()
   const history = useHistory()
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const { getString } = useStrings()
   const { data: template, loading: fetchingTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
@@ -618,6 +621,7 @@ export default function ManifestTriggerWizard(
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true },
+                isOptionalVariableAllowed,
                 stagesToExecute
               }) as any) || formErrors
             resolve(validatedErrors)

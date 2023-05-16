@@ -46,6 +46,8 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { StepNodeType, NonSelectableStepNodes } from '@pipeline/utils/executionUtils'
 import { StageForm, StageFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { getStageFromPipeline, validateStage } from '@pipeline/components/PipelineStudio/StepUtil'
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import css from './ExecutionInputs.module.scss'
@@ -63,6 +65,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
   const { step, factory = pipelineFactory, executionMetadata, className, onSuccess, onError } = props
   const { accountId, projectIdentifier, orgIdentifier, planExecutionId } = defaultTo(executionMetadata, {})
   const { getString } = useStrings()
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const [hasSubmitted, setHasSubmitted] = useState(false)
@@ -126,7 +129,8 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
         template: parsedStage.stage,
         viewType: StepViewType.DeploymentForm,
         originalStage: fieldYaml.stage,
-        getString
+        getString,
+        isOptionalVariableAllowed
       })
 
       return isEmpty(errors) ? {} : ({ stage: errors } as FormikErrors<StageElementWrapperConfig>)

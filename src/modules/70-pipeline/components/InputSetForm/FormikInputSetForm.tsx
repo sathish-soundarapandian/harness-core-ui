@@ -60,6 +60,8 @@ import {
 } from '@pipeline/utils/inputSetUtils'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { SettingType } from '@common/constants/Utils'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import factory from '../PipelineSteps/PipelineStepFactory'
@@ -156,6 +158,7 @@ function useValidateValues({
     name: NameSchema(getString),
     identifier: IdentifierSchema(getString)
   })
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   return {
     validateValues: async (
       values: InputSetDTO & GitContextProps & StoreMetadata
@@ -176,7 +179,8 @@ function useValidateValues({
           getString,
           viewType: StepViewType.InputSet,
           viewTypeMetadata: { isInputSet: true },
-          resolvedPipeline
+          resolvedPipeline,
+          isOptionalVariableAllowed
         }) as any
 
         /* istanbul ignore else */ if (isEmpty(errors.pipeline)) {

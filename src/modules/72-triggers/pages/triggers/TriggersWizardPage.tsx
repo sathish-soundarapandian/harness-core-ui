@@ -207,6 +207,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
 
   const {
     CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled,
+    FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed,
 
     CI_YAML_VERSIONING
   } = useFeatureFlags()
@@ -1304,6 +1305,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true },
+                isOptionalVariableAllowed,
                 stagesToExecute
               }) as any) || formErrors
             resolve(validatedErrors)

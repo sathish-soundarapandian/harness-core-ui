@@ -57,6 +57,8 @@ import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinde
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AcceptableValue } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { PipelineStageTabs } from './utils'
 import css from './PipelineStageAdvancedSpecifications.module.scss'
 
@@ -122,6 +124,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
     {} as PipelineInfoConfig
   )
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const tempPipelineInputs = useRef<PipelineInfoConfig | undefined>(undefined)
   const [selectedInputSets, setSelectedInputSets] = useState<InputSetSelectorProps['value']>(selectedInputSetsContext)
   const [invalidInputSetReferences, setInvalidInputSetReferences] = useState<Array<string>>([])
@@ -287,7 +290,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
             resolvedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
-            viewTypeMetadata: { isInputSet: true }
+            viewTypeMetadata: { isInputSet: true },
+            isOptionalVariableAllowed
           }) as any) || formErrors
         resolve(validatedErrors)
       })

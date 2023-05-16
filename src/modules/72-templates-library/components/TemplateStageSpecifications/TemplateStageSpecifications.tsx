@@ -35,6 +35,7 @@ import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { useStageTemplateActions } from '@pipeline/utils/useStageTemplateActions'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getTemplateErrorMessage, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
@@ -62,6 +63,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const queryParams = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const templateRef = getIdentifierFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
+  const { FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } = useFeatureFlags()
   const templateVersionLabel = getIdentifierFromValue(defaultTo(stage?.stage?.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
   const [formValues, setFormValues] = React.useState<StageElementConfig | undefined>(
@@ -204,7 +206,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
         template: templateInputs,
         originalStage: stage?.stage?.template?.templateInputs as StageElementConfig,
         getString,
-        viewType: StepViewType.DeploymentForm
+        viewType: StepViewType.DeploymentForm,
+        isOptionalVariableAllowed
       })
       return set({}, TEMPLATE_INPUT_PATH, errorsResponse)
     } else {

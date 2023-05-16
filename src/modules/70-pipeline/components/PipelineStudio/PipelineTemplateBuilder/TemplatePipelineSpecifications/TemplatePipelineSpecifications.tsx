@@ -37,6 +37,7 @@ import { useMutateAsGet } from '@common/hooks'
 import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { Pipeline } from '@pipeline/utils/types'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './TemplatePipelineSpecifications.module.scss'
 
 interface TemplatePipelineSpecificationsProps {
@@ -57,6 +58,7 @@ export function TemplatePipelineSpecifications({
   } = usePipelineContext()
   const queryParams = useParams<ProjectPathProps>()
   const templateRef = getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, ''))
+  const { FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } = useFeatureFlags()
   const templateVersionLabel = getIdentifierFromValue(defaultTo(pipeline.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const pipelineScope = getScopeFromDTO(pipeline)
@@ -249,7 +251,8 @@ export function TemplatePipelineSpecifications({
         originalPipeline: allValues,
         getString,
         viewType: StepViewType.DeploymentForm,
-        viewTypeMetadata
+        viewTypeMetadata,
+        isOptionalVariableAllowed
       })
       const newFormikErrors = set({}, TEMPLATE_INPUT_PATH, errorsResponse)
       setFormikErrors(newFormikErrors)

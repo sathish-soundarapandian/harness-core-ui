@@ -74,6 +74,8 @@ import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetai
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import GitPopover from '../GitPopover/GitPopover'
 import SelectStagetoRetry from './SelectStagetoRetry'
@@ -122,6 +124,7 @@ function RetryPipeline({
     gitSyncEnabledOnlyForFF,
     supportingGitSimplification
   } = useAppStore()
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   const { showSuccess, showWarning, showError } = useToaster()
@@ -521,7 +524,8 @@ function RetryPipeline({
         template: parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline,
         originalPipeline: currentPipeline.pipeline,
         getString,
-        viewType: StepViewType.DeploymentForm
+        viewType: StepViewType.DeploymentForm,
+        isOptionalVariableAllowed
       }) as any
       setFormErrors(errors)
       // triggerValidation should be true every time 'currentPipeline' changes
@@ -844,7 +848,8 @@ function RetryPipeline({
                   template: parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline,
                   originalPipeline: pipeline,
                   getString,
-                  viewType: StepViewType.DeploymentForm
+                  viewType: StepViewType.DeploymentForm,
+                  isOptionalVariableAllowed
                 }) as any) || formErrors
               resolve(validatedErrors)
             }, 300)
