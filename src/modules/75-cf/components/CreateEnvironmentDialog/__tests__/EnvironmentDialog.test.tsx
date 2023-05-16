@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render, RenderResult, screen, waitFor, fireEvent } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -14,7 +15,8 @@ import * as usePlanEnforcementMock from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { CheckFeatureReturn } from 'framework/featureStore/featureStoreUtil'
 import mockImport from 'framework/utils/mockImport'
-import EnvironmentDialog, { EnvironmentDialogProps } from '../EnvironmentDialog'
+import type { EnvironmentDialogProps } from '../EnvironmentDialog';
+import EnvironmentDialog from '../EnvironmentDialog'
 import mockCreateEnvironmentResp from './mockCreateEnvironmentResp'
 
 const createEnvironment = jest.fn().mockResolvedValue(mockCreateEnvironmentResp)

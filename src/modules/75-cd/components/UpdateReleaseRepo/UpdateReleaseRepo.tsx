@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AllowedTypes, Formik, IconName } from '@harness/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore';
+import { Formik } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
@@ -14,8 +15,8 @@ import { v4 as uuid } from 'uuid'
 
 import { defaultTo, get } from 'lodash-es'
 
-import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
-import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef , StepProps, ValidateInputSetProps} from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
@@ -28,7 +29,8 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StringsMap } from 'stringTypes'
 import UpdateReleaseRepoForm from './UpdateReleaseRepoForm'
 
-import { UpdateReleaseRepoVariableStepProps, UpdateReleaseRepoVariableView } from './UpdateReleaseRepoVariableStep'
+import type { UpdateReleaseRepoVariableStepProps} from './UpdateReleaseRepoVariableStep';
+import { UpdateReleaseRepoVariableView } from './UpdateReleaseRepoVariableStep'
 import UpdateReleaseRepoInputStep from './UpdateReleaseRepoInputStep'
 import { validateGitOpsExecutionStepForm } from '../PipelineSteps/PipelineStepsUtil'
 

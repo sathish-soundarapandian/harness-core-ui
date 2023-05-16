@@ -18,10 +18,11 @@ import { yamlParse } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
-import {
+import type {
   AccessControlCheckError,
   ServiceDefinition,
-  TemplateLinkConfig,
+  TemplateLinkConfig} from 'services/cd-ng';
+import {
   useGetInfrastructureList,
   useGetInfrastructureYamlAndRuntimeInputs
 } from 'services/cd-ng'

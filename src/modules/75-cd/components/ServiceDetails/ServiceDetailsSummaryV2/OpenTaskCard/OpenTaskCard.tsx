@@ -24,7 +24,8 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 
 import type { ServicePipelineWithRevertInfo } from 'services/cd-ng'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'

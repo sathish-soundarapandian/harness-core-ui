@@ -26,15 +26,17 @@ import { useToaster } from '@common/components'
 import { useMutateAsGet } from '@common/hooks'
 import type { PipelineType, ProjectPathProps, UserPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   AddUsers,
   ResponsePageUserGroupAggregateDTO,
   ScopeSelector,
+  UserAggregate,
+  UserGroupAggregateDTO
+} from 'services/cd-ng';
+import {
   useAddUsers,
   useGetUserGroupAggregateListByUser,
-  UserAggregate,
-  useRemoveMember,
-  UserGroupAggregateDTO
+  useRemoveMember
 } from 'services/cd-ng'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import { ResourceType } from '@rbac/interfaces/ResourceType'

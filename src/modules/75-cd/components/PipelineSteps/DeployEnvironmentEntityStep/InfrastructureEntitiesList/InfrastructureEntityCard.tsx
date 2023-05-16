@@ -10,11 +10,12 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { Collapse } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
   ButtonVariation,
   Card,
   Text,
-  AllowedTypes,
   Container,
   Layout,
   TagsPopover,
@@ -25,7 +26,8 @@ import {
 import { useStrings } from 'framework/strings'
 import type { Infrastructure } from 'services/cd-ng'
 
-import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
+import type { ButtonProps } from '@rbac/components/Button/Button';
+import RbacButton from '@rbac/components/Button/Button'
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'

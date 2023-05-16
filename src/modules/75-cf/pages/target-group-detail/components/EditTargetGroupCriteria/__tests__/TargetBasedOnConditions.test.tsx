@@ -7,13 +7,15 @@
 
 /* eslint-disable react/display-name */
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
 import type { Clause, Segment } from 'services/cf'
-import TargetBasedOnConditions, { TargetBasedOnConditionsProps } from '../TargetBasedOnConditions'
+import type { TargetBasedOnConditionsProps } from '../TargetBasedOnConditions';
+import TargetBasedOnConditions from '../TargetBasedOnConditions'
 
 jest.mock('@common/components/ContainerSpinner/ContainerSpinner', () => ({
   ContainerSpinner: () => <span data-testid="container-spinner">Container Spinner</span>

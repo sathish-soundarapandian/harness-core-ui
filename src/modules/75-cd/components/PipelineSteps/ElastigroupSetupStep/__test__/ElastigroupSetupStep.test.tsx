@@ -9,7 +9,8 @@ import React from 'react'
 import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
-import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { ElastigroupSetupStep } from '../ElastigroupSetupStep'

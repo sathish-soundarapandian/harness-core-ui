@@ -11,8 +11,9 @@ import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import type {
+  LogAnalysisRadarChartListDTO} from 'services/cv';
 import {
-  LogAnalysisRadarChartListDTO,
   useGetAllRadarChartLogsData,
   useGetVerifyStepDeploymentLogAnalysisRadarChartResult
 } from 'services/cv'

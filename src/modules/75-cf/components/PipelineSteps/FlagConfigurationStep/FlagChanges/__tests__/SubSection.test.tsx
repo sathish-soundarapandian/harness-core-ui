@@ -5,9 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
-import SubSection, { disallowedProps, SubSectionProps } from '../SubSection'
+import type { ReactElement } from 'react';
+import React from 'react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
+import type { SubSectionProps } from '../SubSection';
+import SubSection, { disallowedProps } from '../SubSection'
 
 const renderComponent = (
   props: Partial<SubSectionProps & { children: ReactElement } & Record<string, unknown>> = {}

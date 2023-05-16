@@ -5,12 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback, useMemo } from 'react'
+import type { FC} from 'react';
+import React, { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { PageError, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { Feature, Segment, usePatchSegment } from 'services/cf'
-import type { PatchOperation } from 'services/cf'
+import { usePatchSegment } from 'services/cf'
+import type { PatchOperation , Feature, Segment} from 'services/cf'
 import useResponseError from '@cf/hooks/useResponseError'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { getErrorMessage } from '@cf/utils/CFUtils'

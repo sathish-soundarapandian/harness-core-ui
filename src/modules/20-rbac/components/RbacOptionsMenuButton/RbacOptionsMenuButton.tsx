@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { AnchorHTMLAttributes, ReactElement, Fragment } from 'react'
+import type { AnchorHTMLAttributes, ReactElement} from 'react';
+import React, { Fragment } from 'react'
 import { Classes, Menu } from '@blueprintjs/core'
-import { Button, ButtonProps, Icon, IconName } from '@harness/uicore'
+import type { ButtonProps, IconName } from '@harness/uicore';
+import { Button, Icon } from '@harness/uicore'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 

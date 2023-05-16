@@ -6,13 +6,14 @@
  */
 
 import React from 'react'
+import type {
+  RenderResult} from '@testing-library/react';
 import {
   render,
   fireEvent,
   findByText,
   waitFor,
   act,
-  RenderResult,
   getByText as getByTextAlt
 } from '@testing-library/react'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'

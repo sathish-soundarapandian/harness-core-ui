@@ -8,9 +8,12 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { isArray, isEmpty, isObject, set } from 'lodash-es'
-import { connect, FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType, SelectOption } from '@harness/uicore'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { FormikErrors} from 'formik';
+import { connect, yupToFormErrors } from 'formik'
+import type { IconName, SelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { StringsMap } from 'stringTypes'

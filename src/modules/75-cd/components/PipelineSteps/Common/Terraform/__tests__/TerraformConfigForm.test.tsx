@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ConfigFileStoreStepOne } from '../../ConfigFileStore/ConfigFileStoreStepOne'
 import { ConfigFileStoreStepTwo } from '../../ConfigFileStore/ConfigFileStoreStepTwo'

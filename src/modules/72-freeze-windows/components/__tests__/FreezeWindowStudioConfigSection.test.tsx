@@ -16,7 +16,8 @@ import {
   within,
   getByTestId
 } from '@testing-library/react'
-import userEvent, { TargetElement } from '@testing-library/user-event'
+import type { TargetElement } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { getOrganizationAggregateDTOListMockData } from '@projects-orgs/pages/organizations/__tests__/OrganizationsMockData'

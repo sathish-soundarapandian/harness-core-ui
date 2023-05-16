@@ -8,7 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import HoverCard, { HoverCardProps } from '@pipeline/components/HoverCard/HoverCard'
+import type { HoverCardProps } from '@pipeline/components/HoverCard/HoverCard';
+import HoverCard from '@pipeline/components/HoverCard/HoverCard'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 
 const getProps = (): HoverCardProps => ({

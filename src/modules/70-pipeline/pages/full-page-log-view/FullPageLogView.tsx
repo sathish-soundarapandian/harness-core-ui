@@ -17,7 +17,8 @@ import { logBlobPromise, useGetToken } from 'services/logs'
 
 import { useDeepCompareEffect } from '@common/hooks'
 import { createSections } from '@pipeline/components/LogsContent/LogsState/createSections'
-import { ActionType, LogLineData } from '@pipeline/components/LogsContent/LogsState/types'
+import type { LogLineData } from '@pipeline/components/LogsContent/LogsState/types';
+import { ActionType } from '@pipeline/components/LogsContent/LogsState/types'
 import { getDefaultReducerState } from '@pipeline/components/LogsContent/LogsState/utils'
 import { processLogsData } from '@pipeline/components/LogsContent/LogsState/updateSectionData'
 

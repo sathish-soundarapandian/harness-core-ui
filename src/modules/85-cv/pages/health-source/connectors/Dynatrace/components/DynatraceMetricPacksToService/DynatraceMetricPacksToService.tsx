@@ -8,6 +8,8 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { isNull } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Container,
   FormError,
@@ -16,7 +18,6 @@ import {
   Layout,
   MultiTypeInput,
   MultiTypeInputType,
-  SelectOption,
   Text,
   Utils
 } from '@harness/uicore'
@@ -36,10 +37,11 @@ import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/Valida
 import MetricPackCustom from '@cv/pages/health-source/connectors/MetricPackCustom'
 import MetricsVerificationModal from '@cv/components/MetricsVerificationModal/MetricsVerificationModal'
 import { Connectors } from '@connectors/constants'
-import {
+import type {
   MetricPackDTO,
   MetricPackValidationResponse,
-  TimeSeriesMetricPackDTO,
+  TimeSeriesMetricPackDTO} from 'services/cv';
+import {
   useGetDynatraceServices
 } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

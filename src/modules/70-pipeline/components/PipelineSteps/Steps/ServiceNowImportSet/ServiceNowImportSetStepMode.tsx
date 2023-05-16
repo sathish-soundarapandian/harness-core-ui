@@ -12,7 +12,8 @@ import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, sortBy } from 'lodash-es'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type {

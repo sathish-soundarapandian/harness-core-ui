@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useEffect } from 'react'
+import type { ReactElement} from 'react';
+import React, { useEffect } from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 
 import { defaultTo, fromPairs } from 'lodash-es'
@@ -16,15 +17,11 @@ import { PageSpinner, useToaster } from '@harness/uicore'
 
 import { useQueryParams } from '@common/hooks'
 import {
-  Project,
   getProjectPromise,
   useGetCurrentUserInfo,
-  UserInfo,
   isGitSyncEnabledPromise,
-  GitEnabledDTO,
-  Organization,
   useGetOrganization
-} from 'services/cd-ng'
+, type Error } from 'services/cd-ng'
 import { useGetFeatureFlags } from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { FeatureFlag } from '@common/featureFlags'
@@ -32,7 +29,11 @@ import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import type { Module } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import routes from '@common/RouteDefinitions'
-import type { Error } from 'services/cd-ng'
+import type {
+  Project,
+  UserInfo,
+  GitEnabledDTO,
+  Organization} from 'services/cd-ng'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUtil'
 

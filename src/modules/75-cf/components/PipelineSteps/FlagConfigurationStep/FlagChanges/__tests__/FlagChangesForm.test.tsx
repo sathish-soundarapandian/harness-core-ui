@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { get } from 'lodash-es'
-import { act, getByRole, getByTestId, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, getByRole, getByTestId, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -24,7 +25,8 @@ import {
   mockTargets,
   mockVariations
 } from '../subSections/__tests__/utils.mocks'
-import FlagChangesForm, { allSubSections, FlagChangesFormProps } from '../FlagChangesForm'
+import type { FlagChangesFormProps } from '../FlagChangesForm';
+import FlagChangesForm, { allSubSections } from '../FlagChangesForm'
 
 const mockFeature = {
   name: 'f1',

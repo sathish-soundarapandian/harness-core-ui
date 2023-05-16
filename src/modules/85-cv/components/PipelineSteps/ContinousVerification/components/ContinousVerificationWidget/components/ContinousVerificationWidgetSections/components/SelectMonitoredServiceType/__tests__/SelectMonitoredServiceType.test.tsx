@@ -11,7 +11,8 @@ import type { AllowedTypesWithRunTime } from '@harness/uicore'
 import * as formik from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as templateService from 'services/template-ng'
-import SelectMonitoredServiceType, { SelectMonitoredServiceTypeProps } from '../SelectMonitoredServiceType'
+import type { SelectMonitoredServiceTypeProps } from '../SelectMonitoredServiceType';
+import SelectMonitoredServiceType from '../SelectMonitoredServiceType'
 import {
   mockedFormikWithTemplatesData,
   mockedTemplateData,

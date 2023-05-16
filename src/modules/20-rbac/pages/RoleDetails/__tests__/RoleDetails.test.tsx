@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { act, fireEvent, queryByAttribute, render, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { act, fireEvent, queryByAttribute, render } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import {

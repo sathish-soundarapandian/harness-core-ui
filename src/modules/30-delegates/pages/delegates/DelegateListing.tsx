@@ -10,14 +10,15 @@ import type { GetDataError } from 'restful-react'
 import { get, set, pick, debounce } from 'lodash-es'
 import type { FormikErrors } from 'formik'
 import { useParams } from 'react-router-dom'
+import type {
+  SelectOption,
+  MultiSelectOption} from '@harness/uicore';
 import {
   Container,
   Layout,
   FlexExpander,
   ExpandingSearchInput,
-  SelectOption,
   FormInput,
-  MultiSelectOption,
   PageError,
   shouldShowError,
   ListHeader,
@@ -32,7 +33,8 @@ import { Dialog } from '@blueprintjs/core'
 import { PageSpinner } from '@common/components'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import type { FilterInterface, FilterDataInterface } from '@common/components/Filter/Constants'
 import {
@@ -43,10 +45,12 @@ import {
 } from '@common/components/Filter/utils/FilterUtils'
 
 import { useStrings } from 'framework/strings'
-import {
+import type {
   GetDelegateGroupsNGV2WithFilterQueryParams,
-  useGetDelegateGroupsNGV2WithFilter,
   DelegateGroupDetails
+} from 'services/portal';
+import {
+  useGetDelegateGroupsNGV2WithFilter
 } from 'services/portal'
 import { usePostFilter, useUpdateFilter, useDeleteFilter, useGetFilterList } from 'services/cd-ng'
 import type { FilterDTO, ResponsePageFilterDTO, Failure, DelegateFilterProperties } from 'services/cd-ng'

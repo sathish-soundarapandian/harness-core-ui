@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import * as yup from 'yup'
 import { Formik, FormikForm } from '@harness/uicore'
 import type { ObjectSchema } from 'yup'

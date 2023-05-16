@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { SelectOption } from '@harness/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -16,7 +17,8 @@ import {
   shouldFetchFieldOptions
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useStrings } from 'framework/strings'
-import { ConnectorConfigDTO, Failure, useGetHelmChartVersionDetailsV1 } from 'services/cd-ng'
+import type { ConnectorConfigDTO, Failure} from 'services/cd-ng';
+import { useGetHelmChartVersionDetailsV1 } from 'services/cd-ng'
 import { getConnectorRefOrConnectorId } from '../../Manifesthelper'
 
 interface DependentFields {

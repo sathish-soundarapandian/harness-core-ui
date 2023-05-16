@@ -6,17 +6,18 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  SelectOption,
+  ModalErrorHandlerBinding,
+  MultiSelectOption} from '@harness/uicore';
 import {
   Formik,
   FormikForm,
   FormInput,
   Button,
-  SelectOption,
   Text,
-  ModalErrorHandlerBinding,
   ModalErrorHandler,
   ButtonVariation,
-  MultiSelectOption,
   Popover,
   PageSpinner,
   getErrorInfoFromErrorObject
@@ -30,19 +31,20 @@ import {
   usePostSecretFileV2,
   usePostSecret,
   useGetConnectorList,
+  useGetConnector,
+  useGetSecretV2
+} from 'services/cd-ng'
+import type { SecretTextSpecDTO, SecretFileSpecDTO ,
   SecretDTOV2,
   SecretResponseWrapper,
   SecretRequestWrapper,
   ConnectorInfoDTO,
   ConnectorResponse,
   VaultConnectorDTO,
-  useGetConnector,
-  useGetSecretV2,
   ResponseSecretResponseWrapper,
   ListSecretsV2QueryParams,
   JsonNode
 } from 'services/cd-ng'
-import type { SecretTextSpecDTO, SecretFileSpecDTO } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
 import { IdentifierSchema, NameSchema, VariableSchemaWithoutHook } from '@common/utils/Validation'
 import type { UseGetMockData } from '@common/utils/testUtils'

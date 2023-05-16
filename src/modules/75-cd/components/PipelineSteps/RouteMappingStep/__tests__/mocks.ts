@@ -7,7 +7,8 @@
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { RouteMappingStepData, RouteType } from '../RouteMappingStep'
+import type { RouteMappingStepData} from '../RouteMappingStep';
+import { RouteType } from '../RouteMappingStep'
 
 export const initialValues: RouteMappingStepData = {
   type: StepType.RouteMapping,

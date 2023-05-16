@@ -23,7 +23,8 @@ import {
 import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions, ConfigureOptionsProps } from '../ConfigureOptions'
+import type { ConfigureOptionsProps } from '../ConfigureOptions';
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '../ConfigureOptions'
 
 const onChange = jest.fn()
 

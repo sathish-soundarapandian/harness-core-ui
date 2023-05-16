@@ -11,10 +11,11 @@ import { Container, FormInput } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
 import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   ChangeSourceDTO,
   HealthSource,
-  MonitoredServiceResponse,
+  MonitoredServiceResponse} from 'services/cv';
+import {
   useGetMonitoredServiceFromServiceAndEnvironment
 } from 'services/cv'
 import { useStrings } from 'framework/strings'

@@ -7,28 +7,31 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
-import {
+import type {
   StepProps,
+  SelectOption,
+  ModalErrorHandlerBinding} from '@harness/uicore';
+import {
   Container,
   Text,
-  SelectOption,
   FormInput,
   Formik,
   FormikForm,
   Layout,
   Button,
-  ModalErrorHandlerBinding,
   ModalErrorHandler,
   ButtonVariation
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { setupAwsSecretManagerFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import {
+import type {
   AwsSecretManagerConfigFormData,
   ConnectorDetailsProps,
-  CredTypeValues,
   StepDetailsProps
+} from '@connectors/interfaces/ConnectorInterface';
+import {
+  CredTypeValues
 } from '@connectors/interfaces/ConnectorInterface'
 import { PageSpinner } from '@common/components'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState } from 'react'
+import type React from 'react';
+import { useCallback, useState } from 'react'
 import { useGlobalEventListener } from './useGlobalEventListener'
 
 const CACHE: Map<string, any> = new Map()

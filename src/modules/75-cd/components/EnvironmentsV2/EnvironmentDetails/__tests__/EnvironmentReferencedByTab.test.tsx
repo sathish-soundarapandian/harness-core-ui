@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
-import { TestWrapper, UseGetMockData } from '@common/utils/testUtils'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
+import type { UseGetMockData } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { environmentPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
 import EntityUsage from '@common/pages/entityUsage/EntityUsage'

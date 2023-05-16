@@ -8,7 +8,8 @@
 import React, { useMemo } from 'react'
 import { Color } from '@harness/design-system'
 import { Layout, Button, Text, FormInput, FormikForm, Container } from '@harness/uicore'
-import { Formik, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -18,9 +19,11 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import type { ConnectionConfigProps } from '../CommonCVConnector/constants'
 import { cvConnectorHOC } from '../CommonCVConnector/CVConnectorHOC'
-import {
-  ConnectorSecretField,
+import type {
   ConnectorSecretFieldProps
+} from '../CommonCVConnector/components/ConnectorSecretField/ConnectorSecretField';
+import {
+  ConnectorSecretField
 } from '../CommonCVConnector/components/ConnectorSecretField/ConnectorSecretField'
 import { initializeElkConnector } from './utils'
 import { StepDetailsHeader } from '../CommonCVConnector/components/CredentialsStepHeader/CredentialsStepHeader'

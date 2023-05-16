@@ -9,7 +9,8 @@ import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 
-import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'

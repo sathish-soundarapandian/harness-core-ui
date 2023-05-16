@@ -1,8 +1,10 @@
 import React from 'react'
-import { Formik, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { Formik } from 'formik'
 import { findByText, getByText, queryByAttribute, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AllowedTypesWithRunTime, FormikForm } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { FormikForm } from '@harness/uicore'
 
 import type { ManifestConfig, ManifestConfigWrapper, ServiceSpec } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'

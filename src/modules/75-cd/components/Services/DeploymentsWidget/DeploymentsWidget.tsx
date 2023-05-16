@@ -20,13 +20,14 @@ import type { TimeSeriesAreaChartProps } from '@common/components/TimeSeriesArea
 import { DeploymentsTimeRangeContext, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { numberFormatter } from '@common/utils/utils'
 import DeploymentsEmptyState from '@cd/icons/DeploymentsEmptyState.svg'
-import {
+import type {
   ChangeRate,
   GetServiceDeploymentsInfoV2QueryParams,
   ServiceDeployment,
   ServiceDeploymentListInfo,
   ServiceDeploymentListInfoV2,
-  ServiceDeploymentV2,
+  ServiceDeploymentV2} from 'services/cd-ng';
+import {
   useGetServiceDeploymentsInfoV2
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

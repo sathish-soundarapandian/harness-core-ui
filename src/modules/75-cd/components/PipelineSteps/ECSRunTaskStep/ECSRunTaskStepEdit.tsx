@@ -10,9 +10,10 @@ import { isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import type { IOptionProps } from '@blueprintjs/core'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
   Accordion,
-  AllowedTypes,
   Button,
   ButtonVariation,
   Container,
@@ -29,7 +30,8 @@ import { Color, FontVariation } from '@harness/design-system'
 import type { ManifestConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'

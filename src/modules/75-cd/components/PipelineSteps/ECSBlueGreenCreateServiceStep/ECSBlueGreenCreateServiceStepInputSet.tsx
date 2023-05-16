@@ -9,14 +9,17 @@ import React, { useState } from 'react'
 import cx from 'classnames'
 import produce from 'immer'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
-import { connect, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { connect } from 'formik'
 import { useParams } from 'react-router-dom'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption } from '@harness/uicore'
+import type { AllowedTypes, SelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import {
+import type {
   DeploymentStageConfig,
+  ResponseListString} from 'services/cd-ng';
+import {
   listenerRulesPromise,
-  ResponseListString,
   useElasticLoadBalancers,
   useListeners
 } from 'services/cd-ng'

@@ -9,7 +9,8 @@ import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { connect } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, Layout } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, Layout } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeCheckboxField } from '@common/components'

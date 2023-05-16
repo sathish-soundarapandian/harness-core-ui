@@ -28,7 +28,8 @@ import { ModuleName } from 'framework/types/ModuleName'
 import type { StringsMap } from 'stringTypes'
 import { RestoreCacheGCSStepBaseWithRef } from './RestoreCacheGCSStepBase'
 import { RestoreCacheGCSStepInputSet } from './RestoreCacheGCSStepInputSet'
-import { RestoreCacheGCSStepVariables, RestoreCacheGCSStepVariablesProps } from './RestoreCacheGCSStepVariables'
+import type { RestoreCacheGCSStepVariablesProps } from './RestoreCacheGCSStepVariables';
+import { RestoreCacheGCSStepVariables } from './RestoreCacheGCSStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './RestoreCacheGCSStepFunctionConfigs'
 import { getConnectorSuggestions } from '../EditorSuggestionUtils'
 

@@ -10,7 +10,8 @@ import { Layout, RUNTIME_INPUT_VALUE, shouldShowError, useToaster } from '@harne
 
 import { useParams } from 'react-router-dom'
 import { get, isEmpty } from 'lodash-es'
-import { useGetConnectorListV2, PageConnectorResponse } from 'services/cd-ng'
+import type { PageConnectorResponse } from 'services/cd-ng';
+import { useGetConnectorListV2 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'

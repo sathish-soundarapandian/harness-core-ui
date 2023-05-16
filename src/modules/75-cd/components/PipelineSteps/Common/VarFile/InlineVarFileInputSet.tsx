@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { get } from 'lodash-es'
-import { AllowedTypes, Container, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'

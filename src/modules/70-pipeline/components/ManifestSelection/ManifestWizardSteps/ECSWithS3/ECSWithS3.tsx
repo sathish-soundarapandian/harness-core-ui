@@ -14,35 +14,38 @@ import cx from 'classnames'
 import { Menu } from '@blueprintjs/core'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import produce from 'immer'
+import type {
+  StepProps,
+  SelectOption,
+  AllowedTypes} from '@harness/uicore';
 import {
   Text,
   Layout,
   Button,
   FormInput,
   Formik,
-  StepProps,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  SelectOption,
   ButtonVariation,
-  AllowedTypes,
   FormikForm
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ConnectorConfigDTO,
   ManifestConfig,
   ManifestConfigWrapper,
-  StoreConfig,
+  StoreConfig} from 'services/cd-ng';
+import {
   useGetV2BucketListForS3
 } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import {
   checkIfQueryParamsisNotEmpty,

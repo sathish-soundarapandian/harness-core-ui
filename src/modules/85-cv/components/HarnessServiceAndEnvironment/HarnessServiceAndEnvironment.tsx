@@ -6,33 +6,43 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { FormInput, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { FormInput } from '@harness/uicore'
 import type { CustomRenderProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+import type {
+  GetServiceListForProjectQueryParams} from 'services/cd-ng';
 import {
   useGetServiceListForProject,
-  GetServiceListForProjectQueryParams,
   useGetEnvironmentListForProject
 } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
-import {
-  ServiceSelectOrCreate,
+import type {
   ServiceSelectOrCreateProps
+} from './components/ServiceSelectOrCreate/ServiceSelectOrCreate';
+import {
+  ServiceSelectOrCreate
 } from './components/ServiceSelectOrCreate/ServiceSelectOrCreate'
-import {
-  EnvironmentSelectOrCreate,
+import type {
   EnvironmentSelectOrCreateProps
+} from './components/EnvironmentSelectOrCreate/EnvironmentSelectOrCreate';
+import {
+  EnvironmentSelectOrCreate
 } from './components/EnvironmentSelectOrCreate/EnvironmentSelectOrCreate'
-import {
-  EnvironmentMultiSelectOrCreate,
+import type {
   EnvironmentMultiSelectOrCreateProps
-} from './components/EnvironmentMultiSelectAndEnv/EnvironmentMultiSelectAndEnv'
+} from './components/EnvironmentMultiSelectAndEnv/EnvironmentMultiSelectAndEnv';
 import {
-  ServiceMultiSelectOrCreate,
+  EnvironmentMultiSelectOrCreate
+} from './components/EnvironmentMultiSelectAndEnv/EnvironmentMultiSelectAndEnv'
+import type {
   ServiceMultiSelectOrCreateProps
+} from './components/ServiceMultiSelectOrCreate/ServiceMultiSelectOrCreate';
+import {
+  ServiceMultiSelectOrCreate
 } from './components/ServiceMultiSelectOrCreate/ServiceMultiSelectOrCreate'
 import { getQueryParams, getScopedServiceEnvironmentOption } from './HarnessServiceAndEnvironment.utils'
 import css from './HarnessServiceAndEnvironment.module.scss'

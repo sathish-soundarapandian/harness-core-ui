@@ -10,8 +10,9 @@ import { isEqual } from 'lodash-es'
 import type { CellProps, Renderer } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { NotificationsHeader } from '@pipeline/components/Notifications/NotificationHeader'
+import type {
+  NotificationRulesItem as _NotificationRulesItem} from '@pipeline/components/Notifications/NotificationTable';
 import NotificationTable, {
-  NotificationRulesItem as _NotificationRulesItem,
   RenderColumnEventsContent
 } from '@pipeline/components/Notifications/NotificationTable'
 import { Actions } from '@pipeline/components/Notifications/NotificationUtils'

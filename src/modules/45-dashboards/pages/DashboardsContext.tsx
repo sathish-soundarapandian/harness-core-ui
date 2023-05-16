@@ -10,7 +10,8 @@ import { useParams } from 'react-router-dom'
 import type { Breadcrumb } from '@harness/uicore'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { FolderModel, useSearchFolders, useGetModelTags } from 'services/custom-dashboards'
+import type { FolderModel} from 'services/custom-dashboards';
+import { useSearchFolders, useGetModelTags } from 'services/custom-dashboards'
 
 export interface DashboardsContextProps {
   breadcrumbs: Breadcrumb[]

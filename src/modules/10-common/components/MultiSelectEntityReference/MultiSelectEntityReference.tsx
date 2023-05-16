@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import cx from 'classnames'
+import type { IconName } from '@harness/uicore'
 import {
   Container,
   TextInput,
@@ -16,7 +17,6 @@ import {
   Tabs,
   Tab,
   Icon,
-  IconName,
   Checkbox,
   PageError,
   ButtonVariation,
@@ -471,5 +471,3 @@ export function MultiSelectEntityReference<T extends Identifier>(
     </Container>
   )
 }
-
-export default MultiSelectEntityReferenceProps

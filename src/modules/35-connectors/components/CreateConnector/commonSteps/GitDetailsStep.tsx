@@ -7,12 +7,13 @@
 
 import React, { useRef, useState } from 'react'
 import cx from 'classnames'
+import type {
+  StepProps,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Layout,
   Button,
   Formik,
-  StepProps,
-  ModalErrorHandlerBinding,
   ModalErrorHandler,
   FormikForm,
   Container,
@@ -25,12 +26,14 @@ import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import type { IOptionProps } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
-import {
+import type {
   ConnectorConfigDTO,
   ConnectorInfoDTO,
   ResponseBoolean,
-  validateTheIdentifierIsUniquePromise,
   Failure
+} from 'services/cd-ng';
+import {
+  validateTheIdentifierIsUniquePromise
 } from 'services/cd-ng'
 import { GitAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { String, useStrings } from 'framework/strings'

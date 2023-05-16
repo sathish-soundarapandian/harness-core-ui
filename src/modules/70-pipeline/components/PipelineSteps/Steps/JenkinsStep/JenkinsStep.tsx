@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
+import type { IconName, AllowedTypes } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
-import { connect, FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { connect, yupToFormErrors } from 'formik'
 import { isArray, isEmpty } from 'lodash-es'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -23,7 +25,8 @@ import type { StringsMap } from 'stringTypes'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { JenkinsStepBaseWithRef } from './JenkinsStepBase'
 import JenkinsStepInputSetBasic from './JenkinsStepInputSet'
-import { JenkinsStepVariables, JenkinsStepVariablesProps } from './JenkinsStepVariables'
+import type { JenkinsStepVariablesProps } from './JenkinsStepVariables';
+import { JenkinsStepVariables } from './JenkinsStepVariables'
 import type { JenkinsStepSpec, JenkinsStepData } from './types'
 import { variableSchema } from './helper'
 

@@ -15,14 +15,16 @@ import { useDeepCompareEffect } from '@common/hooks'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 
-import { PageConnectorResponse, useGetConnectorListV2 } from 'services/cd-ng'
+import type { PageConnectorResponse} from 'services/cd-ng';
+import { useGetConnectorListV2 } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import ApplicationConfigListView from './ApplicationConfigListView/ApplicationConfigListView'
+import type {
+  ApplicationConfigSelectionProps} from './ApplicationConfig.types';
 import {
-  ApplicationConfigSelectionProps,
   ApplicationConfigSelectionTypes,
   ModalViewOption
 } from './ApplicationConfig.types'

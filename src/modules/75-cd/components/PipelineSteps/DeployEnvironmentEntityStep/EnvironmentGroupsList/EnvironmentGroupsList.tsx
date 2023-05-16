@@ -8,7 +8,8 @@
 import React, { useEffect } from 'react'
 import { Intent, Spinner } from '@blueprintjs/core'
 
-import { AllowedTypes, ConfirmationDialog, Container, ModalDialog, useToggleOpen } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { ConfirmationDialog, Container, ModalDialog, useToggleOpen } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 

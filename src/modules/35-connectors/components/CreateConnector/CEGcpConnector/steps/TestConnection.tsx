@@ -7,14 +7,16 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  StepProps,
+  ModalErrorHandlerBinding
+} from '@harness/uicore';
 import {
   Button,
   Layout,
-  StepProps,
   StepsProgress,
   Heading,
-  ModalErrorHandler,
-  ModalErrorHandlerBinding
+  ModalErrorHandler
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

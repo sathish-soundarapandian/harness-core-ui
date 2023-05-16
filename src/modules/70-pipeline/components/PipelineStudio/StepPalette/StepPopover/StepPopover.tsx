@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Text, Popover, Container, Layout, Card, Icon } from '@harness/uicore'
-import { Classes, IPopoverProps, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import type { IPopoverProps} from '@blueprintjs/core';
+import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty, isNil } from 'lodash-es'
 import cx from 'classnames'

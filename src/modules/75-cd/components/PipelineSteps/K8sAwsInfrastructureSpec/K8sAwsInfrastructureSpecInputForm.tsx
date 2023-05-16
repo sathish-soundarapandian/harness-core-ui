@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { set, defaultTo, isEmpty } from 'lodash-es'
 import { useGetEKSClusterNames } from 'services/cd-ng'

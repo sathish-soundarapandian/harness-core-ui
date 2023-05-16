@@ -7,7 +7,8 @@
 
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
-import { AllowedTypes, Container, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import type { AllowedTypes, SelectOption } from '@harness/uicore';
+import { Container, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import produce from 'immer'
 import { debounce, defaultTo, get, isEmpty, isEqual, isNil, pick, set, unset } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'

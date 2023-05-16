@@ -8,6 +8,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import classnames from 'classnames'
 import { defaultTo, noop } from 'lodash-es'
+import type {
+  IconName} from '@harness/uicore';
 import {
   Text,
   Formik,
@@ -18,7 +20,6 @@ import {
   CardSelect,
   FormInput,
   Button,
-  IconName,
   ButtonSize,
   useToaster,
   ExpandingSearchInput,
@@ -35,8 +36,9 @@ import { TestStatus } from '@common/components/TestConnectionWidget/TestConnecti
 import type { ResponseMessage } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  Servicev1Cluster} from 'services/gitops';
 import {
-  Servicev1Cluster,
   useAgentClusterServiceCreate,
   useAgentClusterServiceCreateHosted,
   useAgentClusterServiceGet,
@@ -48,9 +50,10 @@ import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { AuthTypeForm, CREDENTIALS_TYPE } from './AuthTypeForm'
 import InfoContainer from '../InfoContainer/InfoContainer'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import {
+import type {
   APIError,
-  ClusterInterface,
+  ClusterInterface} from '../CDOnboardingUtils';
+import {
   DeploymentType,
   getFullAgentWithScope,
   SUBMIT_HANDLER_MAP_FOR_CLUSTER

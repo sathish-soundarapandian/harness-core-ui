@@ -11,8 +11,10 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import type { Module, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import type { EntityDetail, EntityReference } from 'services/cd-ng'
-import { getPipelineSummaryPromise, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
-import { getTemplateMetadataListPromise, TemplateMetadataSummaryResponse } from 'services/template-ng'
+import type { ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng';
+import { getPipelineSummaryPromise } from 'services/pipeline-ng'
+import type { TemplateMetadataSummaryResponse } from 'services/template-ng';
+import { getTemplateMetadataListPromise } from 'services/template-ng'
 
 export interface EntityScope {
   accountIdentifier?: string

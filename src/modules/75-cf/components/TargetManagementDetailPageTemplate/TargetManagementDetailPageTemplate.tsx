@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ReactNode, useMemo } from 'react'
+import type { FC, ReactNode} from 'react';
+import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Breadcrumb } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -16,7 +17,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { formatDate, formatTime } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { DetailPageTemplate, DetailPageTemplateProps } from '../DetailPageTemplate/DetailPageTemplate'
+import type { DetailPageTemplateProps } from '../DetailPageTemplate/DetailPageTemplate';
+import { DetailPageTemplate } from '../DetailPageTemplate/DetailPageTemplate'
 
 import css from './TargetManagementDetailPageTemplate.module.scss'
 

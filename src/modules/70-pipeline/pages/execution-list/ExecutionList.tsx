@@ -6,7 +6,8 @@
  */
 
 import React, { useRef, useState } from 'react'
-import { Container, ExpandingSearchInputHandle, Icon, PageSpinner, Text } from '@harness/uicore'
+import type { ExpandingSearchInputHandle} from '@harness/uicore';
+import { Container, Icon, PageSpinner, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
@@ -25,7 +26,8 @@ import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYam
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useStrings } from 'framework/strings'
-import { GetListOfExecutionsQueryParams, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
+import type { GetListOfExecutionsQueryParams, PipelineExecutionSummary} from 'services/pipeline-ng';
+import { useGetListOfExecutions } from 'services/pipeline-ng'
 import { ExecutionListEmpty, ExecutionListEmptyWithoutCta } from './ExecutionListEmpty/ExecutionListEmpty'
 import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
 import { MemoisedExecutionListTable } from './ExecutionListTable/ExecutionListTable'

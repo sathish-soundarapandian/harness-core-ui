@@ -6,31 +6,37 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import {
+import type {
   IconName,
+  SelectOption,
+  AllowedTypes
+} from '@harness/uicore';
+import {
   Layout,
   Formik,
   FormikForm,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  SelectOption,
-  AllowedTypes
+  MultiTypeInputType
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, isEmpty, get, set, defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { FormikErrors, FormikProps} from 'formik';
+import { yupToFormErrors } from 'formik'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
+import type {
+  K8sGcpInfrastructure,
+  ExecutionElementConfig
+} from 'services/cd-ng';
 import {
   getConnectorListV2Promise,
-  K8sGcpInfrastructure,
   useGetClusterNamesForGcp,
   getClusterNamesForGcpPromise,
-  useGetClusterNamesForGcpInfra,
-  ExecutionElementConfig
+  useGetClusterNamesForGcpInfra
 } from 'services/cd-ng'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -47,15 +53,19 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 import { getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
+import type {
+  K8sGcpInfrastructureUI
+} from '../Common/CommonKuberetesInfraSpec/CommonKuberetesInfraSpecEditable';
 import {
   CommonKuberetesInfraSpecEditable,
   getValidationSchema,
-  getClusterValue,
-  K8sGcpInfrastructureUI
+  getClusterValue
 } from '../Common/CommonKuberetesInfraSpec/CommonKuberetesInfraSpecEditable'
-import {
-  CommonKuberetesInfraInputForm,
+import type {
   K8sGcpInfrastructureTemplate
+} from '../Common/CommonKuberetesInfraSpec/CommonKuberetesInfraInputForm';
+import {
+  CommonKuberetesInfraInputForm
 } from '../Common/CommonKuberetesInfraSpec/CommonKuberetesInfraInputForm'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 

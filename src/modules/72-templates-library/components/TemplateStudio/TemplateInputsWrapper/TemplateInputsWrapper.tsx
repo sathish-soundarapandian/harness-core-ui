@@ -11,8 +11,9 @@ import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
+import type {
+  TemplateSummaryResponse} from 'services/template-ng';
 import {
-  TemplateSummaryResponse,
   useGetTemplateInputSetYaml,
   useGetYamlWithTemplateRefsResolved
 } from 'services/template-ng'

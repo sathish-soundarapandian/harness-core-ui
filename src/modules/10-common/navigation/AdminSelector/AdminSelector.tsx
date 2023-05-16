@@ -8,7 +8,8 @@
 import React from 'react'
 import { Position, Classes, PopoverInteractionKind } from '@blueprintjs/core'
 import cx from 'classnames'
-import { Container, Heading, Icon, Text, IconName, Popover } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Container, Heading, Icon, Text, Popover } from '@harness/uicore'
 import { NavLink } from 'react-router-dom'
 import i18n from './AdminSelector.i18n'
 import css from './AdminSelector.module.scss'

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AllowedTypes, FormInput } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { FormInput } from '@harness/uicore'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'

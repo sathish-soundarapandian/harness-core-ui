@@ -6,6 +6,8 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Text,
@@ -14,7 +16,6 @@ import {
   FormInput,
   Icon,
   Button,
-  StepProps,
   Container,
   ButtonSize,
   ButtonVariation
@@ -33,7 +34,8 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import ConnectorInstructionList from '@connectors/common/ConnectorCreationInstructionList/ConnectorCreationInstructionList'
 import ShowExistingBillingExports from './AzureExistingBillingExports'
-import { CEAzureDTO, guidRegex } from '../Overview/AzureConnectorOverview'
+import type { CEAzureDTO} from '../Overview/AzureConnectorOverview';
+import { guidRegex } from '../Overview/AzureConnectorOverview'
 import css from '../../CreateCeAzureConnector_new.module.scss'
 
 const storageAccountNameTest = (value: string) => {

@@ -33,23 +33,19 @@ import { isWinRmDeploymentType } from '@pipeline/utils/stageHelpers'
 import { FormInstanceDropdown } from '@common/components'
 import { InstanceTypes } from '@common/components/InstanceDropdownField/InstanceDropdownField'
 import type { InstanceFieldValue } from '@common/components/InstanceDropdownField/InstanceDropdownField'
-import {
-  usePostExecutionStrategyYaml,
-  GetExecutionStrategyYamlQueryParams,
-  StrategyParameters,
-  DeploymentStageConfig
-} from 'services/cd-ng'
+import type { GetExecutionStrategyYamlQueryParams, StrategyParameters, DeploymentStageConfig } from 'services/cd-ng'
+import { usePostExecutionStrategyYaml } from 'services/cd-ng'
 import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   packageTypeItems,
   ExecutionType,
-  PackageTypeItem,
   PackageTypeItems,
   onPhaseFieldChange,
   packageTypeItemsWinrm,
-  getPackageLabel
+  getPackageLabel,
+  type PackageTypeItem
 } from './ExecutionStrategyHelpers'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'

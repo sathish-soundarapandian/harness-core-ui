@@ -6,16 +6,19 @@
  */
 
 /* eslint-disable react/display-name */
-import React, { ReactNode } from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { ReactNode } from 'react';
+import React from 'react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { merge } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Segment, Target } from 'services/cf'
 import * as useDocumentTitle from '@common/hooks/useDocumentTitle'
-import TargetManagementDetailPageTemplate, {
+import type {
   TargetManagementDetailPageTemplateProps
-} from '../TargetManagementDetailPageTemplate'
+} from '../TargetManagementDetailPageTemplate';
+import TargetManagementDetailPageTemplate from '../TargetManagementDetailPageTemplate'
 
 const mockTargetGroup = {
   name: 'Target Group 1',

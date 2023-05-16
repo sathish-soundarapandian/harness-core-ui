@@ -10,7 +10,8 @@ import { Formik, FormikForm } from '@harness/uicore'
 import { render, waitFor } from '@testing-library/react'
 import * as secretUtils from '@secrets/utils/SecretField'
 import { TestWrapper } from '@common/utils/testUtils'
-import { ConnectorSecretField, ConnectorSecretFieldProps } from '../ConnectorSecretField'
+import type { ConnectorSecretFieldProps } from '../ConnectorSecretField';
+import { ConnectorSecretField } from '../ConnectorSecretField'
 
 const orgIdentifier = '1234_orgIdentifier'
 const projectIdentifier = '1234_identifier'

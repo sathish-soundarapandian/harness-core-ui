@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { AllowedTypes, StepWizard } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { StepWizard } from '@harness/uicore'
 import React from 'react'
 import { get } from 'lodash-es'
 import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'

@@ -31,15 +31,18 @@ import { get, noop, omit, debounce } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
-import {
+import type {
   TestSuiteSummaryQueryParams,
-  useTestSuiteSummary,
-  useVgSearch,
   TestSuite,
   TestSuites,
   TestReportSummary
+} from 'services/ti-service';
+import {
+  useTestSuiteSummary,
+  useVgSearch
 } from 'services/ti-service'
-import { CallGraphAPIResponse, TestsCallgraph } from './TestsCallgraph'
+import type { CallGraphAPIResponse} from './TestsCallgraph';
+import { TestsCallgraph } from './TestsCallgraph'
 import { TestsExecutionItem } from './TestsExecutionItem'
 import {
   SortByKey,

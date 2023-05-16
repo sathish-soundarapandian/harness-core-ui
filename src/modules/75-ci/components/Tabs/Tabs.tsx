@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Tabs as BpTabs, Tab, ITabsProps } from '@blueprintjs/core'
+import type { ITabsProps } from '@blueprintjs/core';
+import { Tabs as BpTabs, Tab } from '@blueprintjs/core'
 import css from './Tabs.module.scss'
 
 export interface TabsProps extends Omit<ITabsProps, 'renderActiveTabPanelOnly'> {

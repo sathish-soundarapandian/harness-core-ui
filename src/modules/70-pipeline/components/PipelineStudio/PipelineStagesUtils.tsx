@@ -7,7 +7,8 @@
 
 import React from 'react'
 import type { UseStringsReturn } from 'framework/strings'
-import { PipelineStages, PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
+import type { PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages';
+import { PipelineStages } from '@pipeline/components/PipelineStages/PipelineStages'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { Module } from '@common/interfaces/RouteInterfaces'

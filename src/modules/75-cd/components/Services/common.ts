@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { createContext, createRef, Dispatch, MutableRefObject, SetStateAction, useContext } from 'react'
+import type { Dispatch, MutableRefObject, SetStateAction} from 'react';
+import { createContext, createRef, useContext } from 'react'
 import { noop } from 'lodash-es'
 import type { DateRange } from '@blueprintjs/datetime'
 import type { Module } from '@common/interfaces/RouteInterfaces'

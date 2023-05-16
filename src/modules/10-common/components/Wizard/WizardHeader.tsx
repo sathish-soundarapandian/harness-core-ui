@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { SetStateAction, Dispatch } from 'react'
-import { Heading, VisualYamlSelectedView as SelectedView, VisualYamlToggle } from '@harness/uicore'
+import type { SetStateAction, Dispatch } from 'react';
+import React from 'react'
+import type { VisualYamlSelectedView as SelectedView} from '@harness/uicore';
+import { Heading, VisualYamlToggle } from '@harness/uicore'
 import cx from 'classnames'
 import { parse } from 'yaml'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'

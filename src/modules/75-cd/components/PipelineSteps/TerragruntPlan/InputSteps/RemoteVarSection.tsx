@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { Container, Text } from '@harness/uicore'

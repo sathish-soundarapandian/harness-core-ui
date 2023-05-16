@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { BrakemanStepBaseWithRef } from './BrakemanStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { BrakemanStepVariables, BrakemanStepVariablesProps } from './BrakemanStepVariables'
+import type { BrakemanStepVariablesProps } from './BrakemanStepVariables';
+import { BrakemanStepVariables } from './BrakemanStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './BrakemanStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

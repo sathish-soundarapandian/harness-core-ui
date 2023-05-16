@@ -13,9 +13,10 @@ import { debounce, defaultTo, get, isEmpty, isUndefined } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 import { isNodeTypeMatrixOrFor, STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
+import type {
+  ExecutionStatus} from '@pipeline/utils/statusHelpers';
 import {
   isExecutionRunning,
-  ExecutionStatus,
   isExecutionSkipped,
   isExecutionNotStarted,
   isExecutionComplete
@@ -28,7 +29,8 @@ import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
-import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
+import type { BaseReactComponentProps, PipelineGraphState } from '../../types';
+import { NodeType } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { getBaseFqnWithoutEntityIdentifier, getPositionOfAddIcon } from '../utils'
 import { useNodeDimensionContext } from '../NodeDimensionStore'

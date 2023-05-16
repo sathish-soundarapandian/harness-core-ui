@@ -8,7 +8,8 @@
 import React from 'react'
 import { get, isEmpty, unset } from 'lodash-es'
 import cx from 'classnames'
-import { IconName, Intent } from '@blueprintjs/core'
+import type { IconName} from '@blueprintjs/core';
+import { Intent } from '@blueprintjs/core'
 import { Button, Container, HarnessDocTooltip, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useFormikContext } from 'formik'
@@ -24,11 +25,12 @@ import type { StringsMap } from 'stringTypes'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 
 import type { ConfigureServiceInterface } from '../ConfigureService'
+import type {
+  ServiceDataType} from '../../CDOnboardingUtils';
 import {
   allowedArtifactTypesForOnboarding,
   ArtifactIconByType,
   BinaryValue,
-  ServiceDataType,
   CustomType,
   DeploymentType
 } from '../../CDOnboardingUtils'

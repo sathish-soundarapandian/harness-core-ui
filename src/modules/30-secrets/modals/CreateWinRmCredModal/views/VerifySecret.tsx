@@ -5,12 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { StepsProgress, ModalErrorHandler, ModalErrorHandlerBinding } from '@harness/uicore'
+import type { ModalErrorHandlerBinding } from '@harness/uicore';
+import { StepsProgress, ModalErrorHandler } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { SSHKeyValidationMetadata, useValidateSecret, ResponseSecretValidationResultDTO } from 'services/cd-ng'
-import { useGetDelegatesStatus, RestResponseDelegateStatus } from 'services/portal'
+import type { SSHKeyValidationMetadata, ResponseSecretValidationResultDTO } from 'services/cd-ng';
+import { useValidateSecret } from 'services/cd-ng'
+import type { RestResponseDelegateStatus } from 'services/portal';
+import { useGetDelegatesStatus } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

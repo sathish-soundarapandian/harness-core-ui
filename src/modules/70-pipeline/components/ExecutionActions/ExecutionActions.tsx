@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
+import type { ButtonProps } from '@harness/uicore'
 import {
   Button,
   Popover,
-  ButtonProps,
   useConfirmationDialog,
   Layout,
   ButtonSize,
@@ -21,21 +21,17 @@ import { Classes, Intent, Menu, MenuItem, Position } from '@blueprintjs/core'
 import { Link } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
-import {
-  HandleInterruptQueryParams,
-  HandleStageInterruptQueryParams,
-  useHandleInterrupt,
-  useHandleStageInterrupt
-} from 'services/pipeline-ng'
+import type { HandleInterruptQueryParams, HandleStageInterruptQueryParams } from 'services/pipeline-ng'
+import { useHandleInterrupt, useHandleStageInterrupt } from 'services/pipeline-ng'
 import routes from '@common/RouteDefinitions'
 import { useToaster } from '@common/exports'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import {
   isExecutionComplete,
   isExecutionActive,
   isExecutionPaused,
   isExecutionPausing,
-  ExecutionStatus,
   isRetryPipelineAllowed
 } from '@pipeline/utils/statusHelpers'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'

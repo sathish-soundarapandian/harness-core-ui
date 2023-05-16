@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
+import type {
+  RenderResult} from '@testing-library/react';
 import {
   render,
-  RenderResult,
   waitFor,
   fireEvent,
   getByText,

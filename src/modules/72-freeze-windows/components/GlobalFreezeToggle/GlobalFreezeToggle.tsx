@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { Classes, Intent, Spinner, Switch } from '@blueprintjs/core'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Dialog, OverlaySpinner, useConfirmationDialog, useToaster, Text, Layout, Icon } from '@harness/uicore'
@@ -17,7 +18,8 @@ import { useStrings, String } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FreezeWindow, useGetGlobalFreeze, useGlobalFreeze } from 'services/cd-ng'
+import type { FreezeWindow} from 'services/cd-ng';
+import { useGetGlobalFreeze, useGlobalFreeze } from 'services/cd-ng'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { getReadableDateFromDateString, scopeText } from '@freeze-windows/utils/freezeWindowUtils'
 import { usePermission } from '@rbac/hooks/usePermission'

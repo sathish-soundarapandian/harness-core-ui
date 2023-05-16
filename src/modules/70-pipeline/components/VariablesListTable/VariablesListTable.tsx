@@ -13,9 +13,10 @@ import { Text, useNestedAccordion } from '@harness/uicore'
 import type { VariableResponseMapValue } from 'services/pipeline-ng'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 
+import type {
+  SearchResult} from '../PipelineVariablesContext/PipelineVariablesContext';
 import {
   getTextWithSearchMarkers,
-  SearchResult,
   usePipelineVariables
 } from '../PipelineVariablesContext/PipelineVariablesContext'
 import css from './VariablesListTable.module.scss'

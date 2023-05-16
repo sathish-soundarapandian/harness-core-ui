@@ -13,7 +13,8 @@ import routes from '@common/RouteDefinitions'
 import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { ProjectSelector, ProjectSelectorProps } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
+import type { ProjectSelectorProps } from '@projects-orgs/components/ProjectSelector/ProjectSelector';
+import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 
 export default function ETSideNav(): React.ReactElement {

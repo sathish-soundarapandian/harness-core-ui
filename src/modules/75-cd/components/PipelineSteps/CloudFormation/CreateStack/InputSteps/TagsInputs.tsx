@@ -10,14 +10,16 @@ import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikContextType } from 'formik'
-import { FormInput, Text, Container, MultiSelectOption } from '@harness/uicore'
+import type { MultiSelectOption } from '@harness/uicore';
+import { FormInput, Text, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useListAwsRegions } from 'services/portal'
-import { ConnectorMap, isRuntime, ConnectorLabelMap, ConnectorTypes } from '../../CloudFormationHelper'
+import type { ConnectorTypes } from '../../CloudFormationHelper';
+import { ConnectorMap, isRuntime, ConnectorLabelMap } from '../../CloudFormationHelper'
 import type { CreateStackData, CreateStackProps, Tags } from '../../CloudFormationInterfaces.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 

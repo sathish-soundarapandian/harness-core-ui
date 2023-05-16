@@ -6,7 +6,8 @@
  */
 
 import React, { useRef } from 'react'
-import { DateRange, DateRangePicker } from '@blueprintjs/datetime'
+import type { DateRange} from '@blueprintjs/datetime';
+import { DateRangePicker } from '@blueprintjs/datetime'
 import { Button, ButtonVariation } from '@harness/uicore'
 import { FormGroup, InputGroup } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

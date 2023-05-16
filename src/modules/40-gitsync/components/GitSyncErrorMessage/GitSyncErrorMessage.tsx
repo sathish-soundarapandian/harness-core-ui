@@ -10,12 +10,16 @@ import ReactTimeago from 'react-timeago'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
-import { Card, Icon, IconName, Layout, Text, useToaster } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Card, Icon, Layout, Text, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { GitSyncErrorDTO, listGitToHarnessErrorsForCommitPromise } from 'services/cd-ng'
-import {
-  GitSyncErrorMessageItem,
+import type { GitSyncErrorDTO} from 'services/cd-ng';
+import { listGitToHarnessErrorsForCommitPromise } from 'services/cd-ng'
+import type {
   GitSyncErrorMessageProps
+} from '@gitsync/components/GitSyncErrorMessage/GitSyncErrorMessageItem';
+import {
+  GitSyncErrorMessageItem
 } from '@gitsync/components/GitSyncErrorMessage/GitSyncErrorMessageItem'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

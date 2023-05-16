@@ -7,7 +7,8 @@
 
 import React from 'react'
 import type { Column } from 'react-table'
-import { Text, TableV2, Icon, Layout, PaginationProps } from '@harness/uicore'
+import type { PaginationProps } from '@harness/uicore';
+import { Text, TableV2, Icon, Layout } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'

@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Target } from 'services/cf'
-import LeftBar, { LeftBarProps } from '../LeftBar'
+import type { LeftBarProps } from '../LeftBar';
+import LeftBar from '../LeftBar'
 
 const mockTarget = {
   identifier: 't1',

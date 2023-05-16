@@ -6,10 +6,12 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { ExpandingSearchInput, Text, Icon, Layout, Button, IconName, Heading, Container, Card } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { ExpandingSearchInput, Text, Icon, Layout, Button, Heading, Container, Card } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { cloneDeep, noop, uniqBy } from 'lodash-es'
-import { Drawer, IDrawerProps, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import type { IDrawerProps} from '@blueprintjs/core';
+import { Drawer, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import { FeatureWarningWithTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import { useStrings } from 'framework/strings'

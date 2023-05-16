@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Layout, Select, SelectOption, StepProps, Text } from '@harness/uicore'
+import type { SelectOption, StepProps} from '@harness/uicore';
+import { Layout, Select, Text } from '@harness/uicore'
 import React, { useState } from 'react'
 import { Color } from '@harness/design-system'
 import { noop } from 'lodash-es'

@@ -8,9 +8,11 @@
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import { ALLOWED_VALUES_TYPE } from '@common/components/ConfigureOptions/constants'
-import {
-  getDurationValidationSchema,
+import type {
   GetDurationValidationSchemaProps
+} from '@common/components/MultiTypeDuration/helper';
+import {
+  getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/helper'
 import { getNumberFieldValidationSchema } from '@common/utils/Validation'
 

@@ -8,9 +8,11 @@
 import React from 'react'
 import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'
+import type { UseGetReturnData } from '@common/utils/testUtils';
+import { findPopoverContainer } from '@common/utils/testUtils'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { BackgroundStep } from '../BackgroundStep'

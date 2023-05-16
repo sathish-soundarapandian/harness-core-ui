@@ -8,8 +8,10 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { isUndefined, noop } from 'lodash-es'
-import { FormikContextType, yupToFormErrors } from 'formik'
-import { FormInput, MultiSelectOption } from '@harness/uicore'
+import type { FormikContextType} from 'formik';
+import { yupToFormErrors } from 'formik'
+import type { MultiSelectOption } from '@harness/uicore';
+import { FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StringKeys } from 'framework/strings/StringsContext'
 import { ALLOWED_VALUES_TYPE } from './constants'

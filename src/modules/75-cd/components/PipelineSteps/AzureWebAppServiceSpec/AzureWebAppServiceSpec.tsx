@@ -7,14 +7,17 @@
 
 import React from 'react'
 import { get, isEmpty, set } from 'lodash-es'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { FormikErrors } from 'formik'
-import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
+import type { ValidateInputSetProps, StepProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType, Step } from '@pipeline/components/AbstractSteps/Step'
+import type {
+  ServiceSpec} from 'services/cd-ng';
 import {
-  ServiceSpec,
   getConnectorListV2Promise,
   getBuildDetailsForDockerPromise,
   getBuildDetailsForGcrPromise,

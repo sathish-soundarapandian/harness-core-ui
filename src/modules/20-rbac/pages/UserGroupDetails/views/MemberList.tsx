@@ -27,7 +27,8 @@ import {
 import { FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Position, PopoverInteractionKind, MenuItem } from '@blueprintjs/core'
 import type { ProjectPathProps, UserGroupPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetUsersInUserGroup, useRemoveMember, UserInfo } from 'services/cd-ng'
+import type { UserInfo } from 'services/cd-ng';
+import { useGetUsersInUserGroup, useRemoveMember } from 'services/cd-ng'
 import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'

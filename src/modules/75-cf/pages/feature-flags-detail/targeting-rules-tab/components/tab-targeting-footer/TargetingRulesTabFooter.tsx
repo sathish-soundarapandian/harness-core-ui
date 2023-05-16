@@ -6,7 +6,8 @@
  */
 
 import { Button, ButtonVariation, Layout } from '@harness/uicore'
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import { useStrings } from 'framework/strings'
 import css from './TargetingRulesTabFooter.module.scss'
 

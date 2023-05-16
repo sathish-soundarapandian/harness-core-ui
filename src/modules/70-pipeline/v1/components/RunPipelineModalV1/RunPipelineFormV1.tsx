@@ -23,17 +23,19 @@ import { useHistory } from 'react-router-dom'
 import { isEmpty, defaultTo } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import {
+import type {
   ResponseJsonNode,
-  useGetPipeline,
-  usePostPipelineExecuteWithInputSetYaml,
-  useRePostPipelineExecuteWithInputSetYaml,
-  useDebugPipelineExecuteWithInputSetYaml,
   FlowControlConfig,
   NotificationRules,
   JsonNode,
   TemplateLinkConfig,
   NGVariable
+} from 'services/pipeline-ng';
+import {
+  useGetPipeline,
+  usePostPipelineExecuteWithInputSetYaml,
+  useRePostPipelineExecuteWithInputSetYaml,
+  useDebugPipelineExecuteWithInputSetYaml
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -55,7 +57,8 @@ import { yamlStringify, yamlParse } from '@common/utils/YamlHelperMethods'
 import { PipelineActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { InputSetDTO } from '@pipeline/utils/types'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
 import { PreFlightCheckModal } from '../../../components/PreFlightCheckModal/PreFlightCheckModal'
@@ -64,7 +67,8 @@ import { PipelineInvalidRequestContent } from '../../../components/RunPipelineMo
 import RunModalHeaderV1 from './RunModalHeaderV1'
 import CheckBoxActions from '../../../components/RunPipelineModal/CheckBoxActions'
 import VisualViewV1 from './VisualViewV1'
-import { useInputSetsV1, InputsYaml } from './useInputSetsV1'
+import type { InputsYaml } from './useInputSetsV1';
+import { useInputSetsV1 } from './useInputSetsV1'
 import { ActiveFreezeWarning } from '../../../components/RunPipelineModal/ActiveFreezeWarning'
 import css from '../../../components/RunPipelineModal/RunPipelineForm.module.scss'
 

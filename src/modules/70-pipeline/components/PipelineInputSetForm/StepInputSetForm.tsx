@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { AllowedTypes, Container, FormInput, Icon, Label, Layout, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Container, FormInput, Icon, Label, Layout, Text } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import React from 'react'

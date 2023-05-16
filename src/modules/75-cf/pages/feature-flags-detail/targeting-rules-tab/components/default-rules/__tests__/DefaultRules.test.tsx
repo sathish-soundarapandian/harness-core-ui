@@ -11,7 +11,8 @@ import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { StringsMap } from 'framework/strings/StringsContext'
-import DefaultRules, { DefaultRulesProps } from '../DefaultRules'
+import type { DefaultRulesProps } from '../DefaultRules';
+import DefaultRules from '../DefaultRules'
 
 const renderComponent = (props: Partial<DefaultRulesProps> = {}): void => {
   render(

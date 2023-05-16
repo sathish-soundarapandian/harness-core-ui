@@ -9,20 +9,23 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
-import { IDrawerProps, Position, Drawer } from '@blueprintjs/core'
+import type { IDrawerProps} from '@blueprintjs/core';
+import { Position, Drawer } from '@blueprintjs/core'
 import cx from 'classnames'
 import { Container, Utils, useConfirmationDialog, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { GetMetricNamesQueryParams, ResponseListPrometheusSampleData, useGetSampleData } from 'services/cv'
+import type { GetMetricNamesQueryParams, ResponseListPrometheusSampleData} from 'services/cv';
+import { useGetSampleData } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Records } from '@cv/components/Records/Records'
 import { QueryContent } from '@cv/components/QueryViewer/QueryViewer'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import CVMultiTypeQuery from '@cv/components/CVMultiTypeQuery/CVMultiTypeQuery'
 import { transformPrometheusSampleData, createPrometheusQuery } from './PrometheusQueryViewer.utils'
+import type {
+  MapPrometheusQueryToService} from '../../PrometheusHealthSource.constants';
 import {
-  MapPrometheusQueryToService,
   PrometheusMonitoringSourceFieldNames
 } from '../../PrometheusHealthSource.constants'
 import css from './PrometheusQueryViewer.module.scss'

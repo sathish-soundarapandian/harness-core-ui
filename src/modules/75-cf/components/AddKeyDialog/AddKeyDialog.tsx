@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode } from 'react'
+import type { ReactNode } from 'react';
+import React from 'react'
 import { Spinner } from '@blueprintjs/core'
 import * as yup from 'yup'
+import type {
+  ButtonProps} from '@harness/uicore';
 import {
   Button,
-  ButtonProps,
   ButtonVariation,
   CardSelect,
   Container,
@@ -25,7 +27,8 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import type { FormikErrors } from 'formik'
 import { NameSchema } from '@common/utils/Validation'
-import { AddAPIKeyQueryParams, ApiKey, useAddAPIKey } from 'services/cf/index'
+import type { AddAPIKeyQueryParams, ApiKey} from 'services/cf/index';
+import { useAddAPIKey } from 'services/cf/index'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
 import { getIdentifierFromName } from '@common/utils/StringUtils'

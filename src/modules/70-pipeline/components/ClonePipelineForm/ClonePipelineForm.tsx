@@ -10,6 +10,8 @@ import { defaultTo, set, get, pick } from 'lodash-es'
 import produce from 'immer'
 import { useHistory, useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   Dialog,
@@ -17,7 +19,6 @@ import {
   FormikForm,
   FormInput,
   Layout,
-  SelectOption,
   useToaster,
   Text,
   Icon,
@@ -28,10 +29,12 @@ import { Divider } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
-import { PMSPipelineSummaryResponse, useClonePipeline } from 'services/pipeline-ng'
-import {
+import type { PMSPipelineSummaryResponse} from 'services/pipeline-ng';
+import { useClonePipeline } from 'services/pipeline-ng'
+import type {
   OrganizationResponse,
-  ProjectAggregateDTO,
+  ProjectAggregateDTO} from 'services/cd-ng';
+import {
   useGetOrganizationList,
   useGetProjectAggregateDTOList,
   useGetSettingValue
@@ -41,7 +44,8 @@ import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInt
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
@@ -52,7 +56,8 @@ import { isSimplifiedYAMLEnabledForCI } from '@pipeline/utils/CIUtils'
 import type { Evaluation } from 'services/pm'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import { SettingType } from '@common/constants/Utils'
-import { getValidationSchema, FormState, getInitialValues, processFormData } from './ClonePipelineFormUtils'
+import type { FormState} from './ClonePipelineFormUtils';
+import { getValidationSchema, getInitialValues, processFormData } from './ClonePipelineFormUtils'
 
 import css from './ClonePipelineForm.module.scss'
 

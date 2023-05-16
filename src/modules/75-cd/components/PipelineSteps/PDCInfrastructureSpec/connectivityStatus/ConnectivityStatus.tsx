@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MouseEvent } from 'react'
+import type { MouseEvent } from 'react';
+import React from 'react'
 
-import { Text, Layout, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Text, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 import { defaultTo } from 'lodash-es'

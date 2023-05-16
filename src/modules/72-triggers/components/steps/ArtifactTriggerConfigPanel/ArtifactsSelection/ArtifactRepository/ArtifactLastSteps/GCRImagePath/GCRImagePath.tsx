@@ -6,15 +6,16 @@
  */
 
 import React from 'react'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   FormInput,
   Layout,
   MultiTypeInputType,
   Button,
-  StepProps,
   Text,
-  SelectOption,
   ButtonVariation
 } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'

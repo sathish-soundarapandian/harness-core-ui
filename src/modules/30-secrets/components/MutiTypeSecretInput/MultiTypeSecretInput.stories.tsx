@@ -11,7 +11,8 @@ import { Formik } from 'formik'
 
 import { TestWrapper } from '@common/utils/testUtils'
 
-import MultiTypeSecretInput, { MultiTypeSecretInputProps } from './MultiTypeSecretInput'
+import type { MultiTypeSecretInputProps } from './MultiTypeSecretInput';
+import MultiTypeSecretInput from './MultiTypeSecretInput'
 
 import secretsListsMockData from './__test__/secretsListMockData.json'
 

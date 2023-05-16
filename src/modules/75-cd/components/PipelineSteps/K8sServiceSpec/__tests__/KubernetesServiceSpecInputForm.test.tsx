@@ -13,7 +13,8 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { CustomVariables } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariables'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { imagesListData } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ECRArtifact/__tests__/mock'
 import {
   TestStepWidget,

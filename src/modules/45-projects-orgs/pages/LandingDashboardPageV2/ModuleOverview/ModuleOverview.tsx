@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { CSSProperties } from 'react'
+import type { CSSProperties } from 'react';
+import React from 'react'
 import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import type { TimeRangeFilterType } from '@common/types'
 import { ModuleName } from 'framework/types/ModuleName'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import type { ModuleOverviewBaseProps } from './Grid/ModuleOverviewGrid'
 import CDModuleOverview from './modules/CDModuleOverview'

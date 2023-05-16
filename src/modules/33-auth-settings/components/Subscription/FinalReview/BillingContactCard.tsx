@@ -11,7 +11,8 @@ import { FontVariation } from '@harness/design-system'
 import { CreditCard, Category } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { Module } from 'framework/types/ModuleName'
-import { SubscribeViews, BillingContactProps } from '@common/constants/SubscriptionTypes'
+import type { BillingContactProps } from '@common/constants/SubscriptionTypes';
+import { SubscribeViews } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
 
 interface BillingContactCardProps {

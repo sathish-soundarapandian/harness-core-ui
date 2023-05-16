@@ -7,6 +7,9 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
+import type {
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Layout,
   Text,
@@ -16,17 +19,18 @@ import {
   Label,
   FormikTooltipContext,
   HarnessDocTooltip,
-  ButtonVariation,
-  AllowedTypes
+  ButtonVariation
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, MenuItem, Popover, PopoverInteractionKind, Menu, Dialog } from '@blueprintjs/core'
-import { FieldArray, FieldArrayRenderProps } from 'formik'
-import type { FormikProps } from 'formik'
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
+import { FieldArray } from 'formik'
+import type { FormikProps , FieldArrayRenderProps } from 'formik'
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { get, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { RemoteVar, TerraformStoreTypes } from '../Terraform/TerraformInterfaces'
+import type { RemoteVar} from '../Terraform/TerraformInterfaces';
+import { TerraformStoreTypes } from '../Terraform/TerraformInterfaces'
 import InlineVarFile from './InlineVarFile'
 import { DIALOG_PROPS } from './helper'
 import { RemoteVarStore } from './RemoteVarStore'

@@ -10,8 +10,10 @@ import { Route } from 'react-router-dom'
 
 import { noop, pick } from 'lodash-es'
 
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
-import { GitSyncStoreContext, GitSyncStoreProps } from '../../../framework/GitRepoStore/GitSyncStoreContext'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
+import type { GitSyncStoreProps } from '../../../framework/GitRepoStore/GitSyncStoreContext';
+import { GitSyncStoreContext } from '../../../framework/GitRepoStore/GitSyncStoreContext'
 import gitSyncListResponse from './__tests__/mocks/gitSyncRepoListMock.json'
 
 export interface GitSyncTestWrapperProps extends TestWrapperProps {

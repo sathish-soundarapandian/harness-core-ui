@@ -6,12 +6,14 @@
  */
 
 import React, { useState } from 'react'
-import { Formik, FormikForm as Form, ModalErrorHandlerBinding, ModalErrorHandler } from '@harness/uicore'
+import type { ModalErrorHandlerBinding} from '@harness/uicore';
+import { Formik, FormikForm as Form, ModalErrorHandler } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { useToaster } from '@common/components'
-import { usePostRoleAssignments, RoleAssignment as RBACRoleAssignment } from 'services/rbac'
+import type { RoleAssignment as RBACRoleAssignment } from 'services/rbac';
+import { usePostRoleAssignments } from 'services/rbac'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getScopeBasedDefaultAssignment, isNewRoleAssignment, PrincipalType } from '@rbac/utils/utils'

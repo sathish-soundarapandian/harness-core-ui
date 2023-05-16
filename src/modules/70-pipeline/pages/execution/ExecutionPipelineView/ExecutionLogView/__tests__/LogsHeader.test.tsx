@@ -10,7 +10,8 @@ import React from 'react'
 import { render } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import LogsHeader, { LogsHeaderProps as LogsHeaderPropsInterface } from '../LogsHeader'
+import type { LogsHeaderProps as LogsHeaderPropsInterface } from '../LogsHeader';
+import LogsHeader from '../LogsHeader'
 
 const LogsHeaderProps: LogsHeaderPropsInterface = {
   onNext: jest.fn(),

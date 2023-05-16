@@ -9,6 +9,10 @@ import React, { useState, useMemo } from 'react'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { map, isEmpty, find } from 'lodash-es'
+import type {
+  MultiSelectOption,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -18,9 +22,7 @@ import {
   FormInput,
   Text,
   useToaster,
-  MultiSelectOption,
-  PageSpinner,
-  AllowedTypes
+  PageSpinner
 } from '@harness/uicore'
 import { Form, FieldArray } from 'formik'
 import { Classes, Dialog } from '@blueprintjs/core'

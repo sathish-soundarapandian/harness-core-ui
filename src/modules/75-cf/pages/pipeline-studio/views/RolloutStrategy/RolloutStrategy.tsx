@@ -7,11 +7,12 @@
 
 import React from 'react'
 import { set } from 'lodash-es'
-import ExecutionGraph, {
+import type {
   ExecutionGraphAddStepEvent,
   ExecutionGraphEditStepEvent,
   ExecutionGraphRefObj
-} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph';
+import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 

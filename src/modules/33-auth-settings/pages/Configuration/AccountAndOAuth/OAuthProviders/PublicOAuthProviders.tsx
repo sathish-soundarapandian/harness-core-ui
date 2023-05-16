@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Collapse, Text, Container, Card, Switch, useConfirmationDialog } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -14,7 +15,8 @@ import { useStrings } from 'framework/strings'
 import type { AuthenticationSettingsResponse, OAuthSettings } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useUpdateOauthProviders, useUpdateAuthMechanism, useRemoveOauthMechanism } from 'services/cd-ng'
-import { OAuthProviders, Providers } from '@common/constants/OAuthProviders'
+import type { Providers } from '@common/constants/OAuthProviders';
+import { OAuthProviders } from '@common/constants/OAuthProviders'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import FeatureSwitch from '@rbac/components/Switch/Switch'

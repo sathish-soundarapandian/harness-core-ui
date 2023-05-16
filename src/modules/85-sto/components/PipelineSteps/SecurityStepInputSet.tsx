@@ -6,14 +6,17 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
 import { connect } from 'formik'
 import { isEmpty } from 'lodash-es'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
-import {
-  CIStepOptionalConfig,
+import type {
   CIStepOptionalConfigProps
+} from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig';
+import {
+  CIStepOptionalConfig
 } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'

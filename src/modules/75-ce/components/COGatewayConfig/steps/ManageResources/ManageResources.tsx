@@ -16,8 +16,10 @@ import { CONFIG_STEP_IDS, CONFIG_TOTAL_STEP_COUNTS, DEFAULT_ACCESS_DETAILS, RESO
 import type { GatewayDetails, InstanceDetails } from '@ce/components/COCreateGateway/models'
 import type { StringsMap } from 'stringTypes'
 import COK8sClusterSelector from '@ce/components/COK8sClusterSelector/COK8sClusterSelector'
-import { ConnectorInfoDTO, ConnectorResponse, useGetConnectorListV2 } from 'services/cd-ng'
-import { ASGMinimal, PortConfig, useAllResourcesOfAccount, useGetAllASGs, ContainerSvc, RDSDatabase } from 'services/lw'
+import type { ConnectorInfoDTO, ConnectorResponse} from 'services/cd-ng';
+import { useGetConnectorListV2 } from 'services/cd-ng'
+import type { ASGMinimal, PortConfig, ContainerSvc, RDSDatabase } from 'services/lw';
+import { useAllResourcesOfAccount, useGetAllASGs } from 'services/lw'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'

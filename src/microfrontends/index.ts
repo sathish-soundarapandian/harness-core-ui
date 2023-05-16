@@ -116,12 +116,11 @@ export interface ChildAppProps extends ChildComponentProps {
 export type ChildAppComponent = React.ComponentType<ChildAppProps>
 export type ChildComponent = React.ComponentType<ChildComponentProps>
 
-export {
+export { ResourceType, PermissionIdentifier }
+export type {
   AppStoreContextProps,
   LicenseStoreContextProps,
   PermissionsContextProps,
-  ResourceType,
-  PermissionIdentifier,
   GitOpsCustomMicroFrontendProps,
   STOAppCustomProps,
   CCMUIAppCustomProps,

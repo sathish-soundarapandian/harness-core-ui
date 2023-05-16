@@ -6,12 +6,16 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Form, FormikValues } from 'formik'
+import type { FormikValues } from 'formik';
+import { Form } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, memoize } from 'lodash-es'
 import * as Yup from 'yup'
 import { Menu } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
+import type {
+  SelectOption,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -20,15 +24,15 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  SelectOption,
-  StepProps,
   Text
 } from '@harness/uicore'
 import type { AmazonS3RegistrySpec } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { ArtifactConfig, BucketResponse, ConnectorConfigDTO, useGetV2BucketListForS3 } from 'services/cd-ng'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { ArtifactConfig, BucketResponse, ConnectorConfigDTO} from 'services/cd-ng';
+import { useGetV2BucketListForS3 } from 'services/cd-ng'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ArtifactIdentifierValidation } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useListAwsRegions } from 'services/portal'
 import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'

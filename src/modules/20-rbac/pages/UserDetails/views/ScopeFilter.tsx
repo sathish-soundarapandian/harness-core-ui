@@ -6,12 +6,13 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  SelectOption,
+  MultiSelectOption} from '@harness/uicore';
 import {
   Layout,
   DropDown,
-  SelectOption,
   MultiSelectDropDown,
-  MultiSelectOption,
   Text,
   Page,
   Button,
@@ -21,7 +22,8 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { getOrganizationListPromise, useGetProjectList, UserAggregate } from 'services/cd-ng'
+import type { UserAggregate } from 'services/cd-ng';
+import { getOrganizationListPromise, useGetProjectList } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ScopeSelector } from 'services/rbac'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'

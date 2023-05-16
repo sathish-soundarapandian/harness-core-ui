@@ -9,14 +9,16 @@ import { useState } from 'react'
 import { omit, noop } from 'lodash-es'
 import { shouldShowError } from '@harness/uicore'
 import { useToaster } from '@common/exports'
-import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
+import type { UseSaveSuccessResponse} from '@common/modals/SaveToGitDialog/useSaveToGitDialog';
+import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
-import {
+import type {
   Connector,
   ConnectorConfigDTO,
   ConnectorInfoDTO,
   CreateConnectorQueryParams,
-  EntityGitDetails,
+  EntityGitDetails} from 'services/cd-ng';
+import {
   useCreateConnector,
   useUpdateConnector
 } from 'services/cd-ng'

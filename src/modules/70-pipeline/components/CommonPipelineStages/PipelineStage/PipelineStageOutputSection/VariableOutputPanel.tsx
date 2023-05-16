@@ -7,7 +7,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { cloneDeep, debounce, isEmpty, noop } from 'lodash-es'
-import { Formik, FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { Formik, FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
 import {
   Button,

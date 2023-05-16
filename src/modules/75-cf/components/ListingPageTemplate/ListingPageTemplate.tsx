@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode, useMemo } from 'react'
-import { Breadcrumb, Page } from '@harness/uicore'
+import type { ReactNode} from 'react';
+import React, { useMemo } from 'react'
+import type { Breadcrumb} from '@harness/uicore';
+import { Page } from '@harness/uicore'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'

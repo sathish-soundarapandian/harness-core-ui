@@ -14,17 +14,18 @@ import type {
 
 import type { RequiredField } from '@common/interfaces/RouteInterfaces'
 import { useServiceOverridesContext } from '@cd/components/ServiceOverrides/context/ServiceOverrideContext'
-import {
+import type {
   ApplicationSettingsOverrideDetails,
   ConfigFileOverrideDetails,
   ConnectionStringsOverrideDetails,
   ManifestOverrideDetails,
   OverrideDetails,
-  OverrideTypes,
   PartiallyRequired,
   ServiceOverrideRowFormState,
   ServiceOverrideRowProps,
-  VariableOverrideDetails,
+  VariableOverrideDetails} from '@cd/components/ServiceOverrides/ServiceOverridesUtils';
+import {
+  OverrideTypes,
   headerConfigMap
 } from '@cd/components/ServiceOverrides/ServiceOverridesUtils'
 import type {

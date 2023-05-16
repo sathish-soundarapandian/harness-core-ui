@@ -19,7 +19,8 @@ import { MultiTypeInputType } from '@harness/uicore'
 
 import type { StepElementConfig } from 'services/cd-ng'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
-import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { GenericExecutionStepEditRef } from '../GenericExecutionStepEdit'
 

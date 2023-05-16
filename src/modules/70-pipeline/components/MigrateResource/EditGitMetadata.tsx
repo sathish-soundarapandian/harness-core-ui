@@ -11,15 +11,18 @@ import { isEmpty } from 'lodash-es'
 import { Container, Formik, FormikForm, Button, ButtonVariation, useToaster, PageSpinner } from '@harness/uicore'
 import type { HideModal } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   Error,
   ResponseMoveConfigResponse,
   ResponseInputSetMoveConfigResponseDTO,
-  updatePipelineGitDetailsPromise,
-  updateInputSetGitDetailsPromise,
   UpdatePipelineGitDetailsQueryParams
+} from 'services/pipeline-ng';
+import {
+  updatePipelineGitDetailsPromise,
+  updateInputSetGitDetailsPromise
 } from 'services/pipeline-ng'
-import { GitSyncForm, GitSyncFormFields } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import type { GitSyncFormFields } from '@gitsync/components/GitSyncForm/GitSyncForm';
+import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'

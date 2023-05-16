@@ -8,10 +8,12 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import type {
+  UseCreateConnectorProps
+} from '../CreateConnector';
 import useCreateConnector, {
   NoConnectorDataHandling,
-  useCreateConnectorMinimal,
-  UseCreateConnectorProps
+  useCreateConnectorMinimal
 } from '../CreateConnector'
 
 const params = {

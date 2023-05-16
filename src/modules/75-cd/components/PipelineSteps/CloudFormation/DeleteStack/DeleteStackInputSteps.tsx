@@ -9,13 +9,16 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty, map, get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
-import { FormikForm, Text, MultiSelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { MultiSelectOption} from '@harness/uicore';
+import { FormikForm, Text, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  ConnectorReferenceDTO} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField';
 import {
-  ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'

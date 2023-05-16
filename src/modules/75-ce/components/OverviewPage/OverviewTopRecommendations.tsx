@@ -10,9 +10,10 @@ import { Link, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { Container, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import {
+import type {
   K8sRecommendationFilterDtoInput,
-  RecommendationItemDto,
+  RecommendationItemDto} from 'services/ce/services';
+import {
   ResourceType,
   useRecommendationsQuery
 } from 'services/ce/services'

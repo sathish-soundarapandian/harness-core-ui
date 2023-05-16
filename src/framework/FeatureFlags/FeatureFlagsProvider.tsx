@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { PropsWithChildren, ReactElement, useMemo } from 'react'
+import type { PropsWithChildren, ReactElement} from 'react';
+import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { FFContextProvider, FFContextProviderProps } from '@harnessio/ff-react-client-sdk'
+import type { FFContextProviderProps } from '@harnessio/ff-react-client-sdk';
+import { FFContextProvider } from '@harnessio/ff-react-client-sdk'
 import { PageSpinner } from '@harness/uicore'
 
 export function FeatureFlagsProvider({ children }: PropsWithChildren<unknown>): ReactElement {

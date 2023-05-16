@@ -1,6 +1,7 @@
 import React from 'react'
 import cx from 'classnames'
-import { NavLink as Link, NavLinkProps } from 'react-router-dom'
+import type { NavLinkProps } from 'react-router-dom';
+import { NavLink as Link } from 'react-router-dom'
 import { Text, Icon, Layout, useToggleOpen } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'

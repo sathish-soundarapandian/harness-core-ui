@@ -7,12 +7,13 @@
 
 import React, { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Button,
   Text,
   Formik,
-  StepProps,
   getMultiTypeFromValue,
   MultiTypeInputType,
   ThumbnailSelect,
@@ -34,13 +35,15 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type {
+  ConnectorTypes,
+  ApplicationConfigWizardInitData,
+  ApplicationConfigWizardStepOneProps
+} from '../../ApplicationConfig.types';
 import {
   ConnectorIcons,
   ConnectorMap,
-  ConnectorTypes,
-  ConnectorLabelMap,
-  ApplicationConfigWizardInitData,
-  ApplicationConfigWizardStepOneProps
+  ConnectorLabelMap
 } from '../../ApplicationConfig.types'
 
 import css from '../../ApplicationConfig.module.scss'

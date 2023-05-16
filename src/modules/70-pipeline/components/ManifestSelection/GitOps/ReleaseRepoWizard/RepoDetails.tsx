@@ -6,6 +6,10 @@
  */
 
 import React, { useCallback } from 'react'
+import type {
+  StepProps,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -14,10 +18,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  StepProps,
   ButtonVariation,
-  RUNTIME_INPUT_VALUE,
-  AllowedTypes
+  RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'

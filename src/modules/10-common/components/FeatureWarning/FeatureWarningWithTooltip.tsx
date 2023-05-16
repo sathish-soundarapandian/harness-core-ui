@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
-import { ButtonSize, Layout, Text, Popover } from '@harness/uicore'
+import type { ReactElement } from 'react';
+import React from 'react'
+import type { ButtonSize} from '@harness/uicore';
+import { Layout, Text, Popover } from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import { capitalize } from 'lodash-es'

@@ -31,11 +31,12 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import {
+import type {
   CustomDeploymentConnectorNGVariable,
   DeploymentStageConfig,
   InfrastructureConfig,
-  InfrastructureDefinitionConfig,
+  InfrastructureDefinitionConfig} from 'services/cd-ng';
+import {
   useCreateInfrastructure,
   useGetYamlSchema,
   useUpdateInfrastructure,
@@ -44,14 +45,16 @@ import {
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { TemplateSummaryResponse, useGetTemplate } from 'services/template-ng'
+import type { TemplateSummaryResponse} from 'services/template-ng';
+import { useGetTemplate } from 'services/template-ng'
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
-import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
+import type { ButtonProps } from '@rbac/components/Button/Button';
+import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

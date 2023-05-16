@@ -12,11 +12,13 @@ import { defaultTo } from 'lodash-es'
 import { Container, Layout, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { EnvironmentGroupResponseDTO, useGetEnvironmentGroupList } from 'services/cd-ng'
+import type { EnvironmentGroupResponseDTO} from 'services/cd-ng';
+import { useGetEnvironmentGroupList } from 'services/cd-ng'
 
-import ResourceHandlerTable, {
+import type {
   ResourceHandlerTableData
-} from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
+} from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable';
+import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 
 import { PageSpinner } from '@common/components'

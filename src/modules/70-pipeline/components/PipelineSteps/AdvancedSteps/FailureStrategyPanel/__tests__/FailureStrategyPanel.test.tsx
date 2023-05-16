@@ -12,7 +12,8 @@ import { get, times } from 'lodash-es'
 
 import { parse } from '@common/utils/YamlHelperMethods'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
-import { ErrorType, Strategy, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
+import type { StrategyType } from '@pipeline/utils/FailureStrategyUtils';
+import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import type { AbortFailureActionConfig, ManualInterventionFailureActionConfig } from 'services/pipeline-ng'
 import { Basic } from '../FailureStrategyPanel.stories'
 

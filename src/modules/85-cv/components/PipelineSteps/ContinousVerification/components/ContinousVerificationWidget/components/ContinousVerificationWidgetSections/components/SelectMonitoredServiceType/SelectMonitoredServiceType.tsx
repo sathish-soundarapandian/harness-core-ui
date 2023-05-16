@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { AllowedTypes, ButtonVariation, Container, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
+import type { AllowedTypes, SelectOption} from '@harness/uicore';
+import { ButtonVariation, Container, FormInput, Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
 
 import type { FormikProps } from 'formik'
@@ -15,7 +16,8 @@ import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import Card from '@cv/components/Card/Card'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
-import { TemplateSummaryResponse, useGetTemplateInputSetYaml } from 'services/template-ng'
+import type { TemplateSummaryResponse} from 'services/template-ng';
+import { useGetTemplateInputSetYaml } from 'services/template-ng'
 import type {
   ContinousVerificationData,
   TemplateInputs

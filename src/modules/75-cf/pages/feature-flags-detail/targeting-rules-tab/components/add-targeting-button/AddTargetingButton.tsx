@@ -7,7 +7,8 @@
 
 import { Icon, PopoverPosition } from '@blueprintjs/core'
 import { ButtonVariation } from '@harness/uicore'
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import { useStrings } from 'framework/strings'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'

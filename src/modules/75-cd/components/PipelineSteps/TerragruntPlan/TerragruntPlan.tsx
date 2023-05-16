@@ -6,6 +6,10 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  IconName,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Accordion,
   Button,
@@ -14,17 +18,16 @@ import {
   FormInput,
   getMultiTypeFromValue,
   HarnessDocTooltip,
-  IconName,
   Icon,
   Label,
   Layout,
   MultiTypeInputType,
   Text,
-  StepWizard,
-  AllowedTypes
+  StepWizard
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { Classes, Dialog, IOptionProps } from '@blueprintjs/core'
+import type { IOptionProps } from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { v4 as uuid } from 'uuid'
 
@@ -32,8 +35,10 @@ import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 
 import { cloneDeep, isEmpty, set, unset, get, defaultTo } from 'lodash-es'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
-import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { FormikErrors, FormikProps} from 'formik';
+import { yupToFormErrors } from 'formik'
+import type { StepProps } from '@pipeline/components/PipelineSteps/PipelineStep';
+import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import {
@@ -41,11 +46,13 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
+import type {
+  StepFormikFowardRef,
+  ValidateInputSetProps
+} from '@pipeline/components/AbstractSteps/Step';
 import {
   setFormikRef,
-  StepFormikFowardRef,
-  StepViewType,
-  ValidateInputSetProps
+  StepViewType
 } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
@@ -81,9 +88,10 @@ import { isMultiTypeRuntime } from '@common/utils/utils'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type {
+  ConnectorTypes} from '../Common/ConfigFileStore/ConfigFileStoreHelper';
 import {
   ConnectorMap,
-  ConnectorTypes,
   getBuildPayload,
   getConfigFilePath,
   getPath

@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { AllowedTypes, Formik } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Formik } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { defaultTo } from 'lodash-es'
-import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'

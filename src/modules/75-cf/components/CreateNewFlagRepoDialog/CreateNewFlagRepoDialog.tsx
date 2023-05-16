@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useEffect } from 'react'
+import type { ReactElement} from 'react';
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { GitRepoRequestRequestBody, useCreateGitRepo } from 'services/cf'
+import type { GitRepoRequestRequestBody} from 'services/cf';
+import { useCreateGitRepo } from 'services/cf'
 import useCreateGitSyncModal from '@gitsync/modals/useCreateGitSyncModal'
 import { useToaster } from '@common/exports'
 import { getErrorMessage } from '@cf/utils/CFUtils'

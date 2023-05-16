@@ -11,8 +11,8 @@ import { Spinner, Tabs } from '@blueprintjs/core'
 import { Layout, Button, PageError } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { ApprovalInstanceResponse, ExecutionNode, ExecutionGraph } from 'services/pipeline-ng'
-import { useGetApprovalInstance, ResponseApprovalInstanceResponse } from 'services/pipeline-ng'
+import type { ApprovalInstanceResponse, ExecutionNode, ExecutionGraph , ResponseApprovalInstanceResponse } from 'services/pipeline-ng'
+import { useGetApprovalInstance } from 'services/pipeline-ng'
 import {
   isExecutionWaiting,
   isExecutionFailed,

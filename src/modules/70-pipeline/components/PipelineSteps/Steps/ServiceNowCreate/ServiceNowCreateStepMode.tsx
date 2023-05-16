@@ -11,10 +11,12 @@ import { useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { FieldArray } from 'formik'
 import { Intent } from '@harness/design-system'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
-  AllowedTypes,
   Button,
   FormError,
   Formik,
@@ -26,16 +28,19 @@ import {
   Text
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { String, StringKeys, useStrings } from 'framework/strings'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StringKeys} from 'framework/strings';
+import { String, useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import {
+import type {
   ServiceNowFieldNG,
-  ServiceNowTicketTypeDTO,
+  ServiceNowTicketTypeDTO} from 'services/cd-ng';
+import {
   useGetServiceNowIssueMetadata,
   useGetServiceNowTemplateMetadata,
   useGetServiceNowTicketTypes,

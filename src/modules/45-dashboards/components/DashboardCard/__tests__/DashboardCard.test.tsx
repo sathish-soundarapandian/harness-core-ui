@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, RenderResult, screen, within } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { DashboardModel } from 'services/custom-dashboards'
 import { DashboardType } from '@dashboards/types/DashboardTypes.types'
@@ -14,7 +15,8 @@ import { DashboardsContextProvider } from '@dashboards/pages/DashboardsContext'
 import { FolderType } from '@dashboards/constants/FolderType'
 import type { StringKeys } from 'framework/strings'
 import * as customDashboardServices from 'services/custom-dashboards'
-import DashboardCard, { DashboardCardProps } from '../DashboardCard'
+import type { DashboardCardProps } from '../DashboardCard';
+import DashboardCard from '../DashboardCard'
 
 const testTitle = 'test title'
 

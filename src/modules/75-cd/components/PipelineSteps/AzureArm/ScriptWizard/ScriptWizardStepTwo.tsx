@@ -6,6 +6,10 @@
  */
 
 import React, { useCallback } from 'react'
+import type {
+  AllowedTypes as MultiTypeAllowedTypes,
+  StepProps
+} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -14,9 +18,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  ButtonVariation,
-  AllowedTypes as MultiTypeAllowedTypes,
-  StepProps
+  ButtonVariation
 } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -33,7 +35,8 @@ import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelp
 import type { ConnectorTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import { HarnessOption } from '@pipeline/components/StartupScriptSelection/HarnessOption'
 
-import { gitFetchTypeList, GitFetchTypes, StartupScriptDataType } from '../AzureArm.types'
+import type { StartupScriptDataType } from '../AzureArm.types';
+import { gitFetchTypeList, GitFetchTypes } from '../AzureArm.types'
 
 import css from './ScriptWizard.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

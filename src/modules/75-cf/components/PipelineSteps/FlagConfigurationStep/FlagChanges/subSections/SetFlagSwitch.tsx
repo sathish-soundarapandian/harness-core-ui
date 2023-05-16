@@ -5,13 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect } from 'react'
+import type { FC} from 'react';
+import React, { useEffect } from 'react'
 import * as Yup from 'yup'
 import { FormInput } from '@harness/uicore'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
 import { CFPipelineInstructionType } from '../../types'
-import SubSection, { SubSectionProps } from '../SubSection'
+import type { SubSectionProps } from '../SubSection';
+import SubSection from '../SubSection'
 import css from './SetFlagSwitch.module.scss'
 
 export const setFlagSwitchSchema = (getString: UseStringsReturn['getString']): Yup.Schema<any> =>

@@ -9,16 +9,19 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
-import { Text, Container, Layout, Button, Icon, Select, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Text, Container, Layout, Button, Icon, Select } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { GatewayDetails, InstanceDetails } from '@ce/components/COCreateGateway/models'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import {
+import type {
   ResourceGroup,
+  GetInstancesTagsQueryParams
+} from 'services/lw';
+import {
   useAllResourceGroups,
   useAllZones,
-  useGetInstancesTags,
-  GetInstancesTagsQueryParams
+  useGetInstancesTags
 } from 'services/lw'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import useRegionsForSelection from '@ce/common/hooks/useRegionsForSelection'

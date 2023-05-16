@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react'
+import type { MutableRefObject} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 const DEFAULT_PAGE_SIZE = 10
 

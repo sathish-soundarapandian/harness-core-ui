@@ -12,8 +12,10 @@ import { useStrings } from 'framework/strings'
 
 import type { FileStorePopoverItem } from '@filestore/common/FileStorePopover/FileStorePopover'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
-import { FileStoreNodeTypes, FileUsage } from '@filestore/interfaces/FileStore'
-import { FileStoreActionTypes, FILE_STORE_ROOT, ExtensionType } from '@filestore/utils/constants'
+import type { FileUsage } from '@filestore/interfaces/FileStore';
+import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
+import type { ExtensionType } from '@filestore/utils/constants';
+import { FileStoreActionTypes, FILE_STORE_ROOT } from '@filestore/utils/constants'
 import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { checkSupportedMime } from '@filestore/utils/FileStoreUtils'
 

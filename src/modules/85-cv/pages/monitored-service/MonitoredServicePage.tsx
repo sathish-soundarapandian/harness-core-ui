@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Container, Tabs, PageError, Page, FlexExpander, Views } from '@harness/uicore'
+import type { Views } from '@harness/uicore';
+import { Container, Tabs, PageError, Page, FlexExpander } from '@harness/uicore'
 import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

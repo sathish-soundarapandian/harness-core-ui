@@ -12,9 +12,11 @@ import { set } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import {
-  TemplateVariablesContext,
+import type {
   TemplateVariablesData
+} from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext';
+import {
+  TemplateVariablesContext
 } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import TemplateVariablesWrapper from '@templates-library/components/TemplateStudio/TemplateVariables/TemplateVariables'
 import {

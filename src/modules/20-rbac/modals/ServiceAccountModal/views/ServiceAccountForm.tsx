@@ -6,6 +6,8 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   Container,
@@ -14,7 +16,6 @@ import {
   FormInput,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   ButtonVariation
 } from '@harness/uicore'
 import * as Yup from 'yup'
@@ -25,7 +26,8 @@ import { DescriptionTags } from '@common/components/NameIdDescriptionTags/NameId
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NameSchema, IdentifierSchema, EmailSchema } from '@common/utils/Validation'
-import { ServiceAccountDTO, useCreateServiceAccount, useUpdateServiceAccount } from 'services/cd-ng'
+import type { ServiceAccountDTO} from 'services/cd-ng';
+import { useCreateServiceAccount, useUpdateServiceAccount } from 'services/cd-ng'
 import css from '@rbac/modals/ServiceAccountModal/useServiceAccountModal.module.scss'
 
 interface ServiceAccountModalData {

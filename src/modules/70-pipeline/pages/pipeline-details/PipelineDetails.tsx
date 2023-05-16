@@ -15,10 +15,12 @@ import routes from '@common/RouteDefinitions'
 import { useGlobalEventListener, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Error } from 'services/pipeline-ng'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
+import type {
+  ResponseEOLBannerResponseDTO
+} from 'services/cd-ng';
 import {
   useGetListOfBranchesWithStatus,
-  useCheckIfPipelineUsingV1Stage,
-  ResponseEOLBannerResponseDTO
+  useCheckIfPipelineUsingV1Stage
 } from 'services/cd-ng'
 import { NavigatedToPage } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'

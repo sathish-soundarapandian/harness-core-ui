@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { get, set } from 'lodash-es'
 
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import type { DeploymentStageConfig } from 'services/cd-ng'
 
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'

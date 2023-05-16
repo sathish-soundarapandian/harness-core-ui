@@ -8,7 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import ArtifactsComponent, { ArtifactGroup } from '../ArtifactsComponent'
+import type { ArtifactGroup } from '../ArtifactsComponent';
+import ArtifactsComponent from '../ArtifactsComponent'
 import artifacts from './artifacts-mock.json'
 
 describe('ArtifactsComponent snapshot test', () => {

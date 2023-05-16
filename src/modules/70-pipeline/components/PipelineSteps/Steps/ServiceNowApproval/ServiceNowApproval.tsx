@@ -7,13 +7,16 @@
 
 import React from 'react'
 
-import { connect, FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import type { FormikErrors} from 'formik';
+import { connect, yupToFormErrors } from 'formik'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { StringsMap } from 'stringTypes'
 import ServiceNowApprovalStepModeWithRef from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/ServiceNowApprovalStepMode'
 import {

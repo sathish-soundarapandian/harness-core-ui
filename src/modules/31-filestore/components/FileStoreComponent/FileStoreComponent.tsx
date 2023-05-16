@@ -7,7 +7,8 @@
 
 import React, { useState } from 'react'
 import { useModalHook } from '@harness/use-modal'
-import { Container, Button, Layout, Text, Tabs, Tab, Icon, IconName, ButtonVariation } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Container, Button, Layout, Text, Tabs, Tab, Icon, ButtonVariation } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import { Dialog, Classes } from '@blueprintjs/core'

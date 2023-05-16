@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonProps } from '@harness/uicore'
+import type { ButtonProps } from '@harness/uicore';
+import { Button } from '@harness/uicore'
 import copy from 'clipboard-copy'
 import { useStrings } from 'framework/strings'
 

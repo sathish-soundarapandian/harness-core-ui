@@ -6,24 +6,30 @@
  */
 
 import React from 'react'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
+import type {
+  DataTooltipInterface,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   FormikTooltipContext,
-  DataTooltipInterface,
   MultiTypeInputType,
   HarnessDocTooltip,
-  Container,
-  AllowedTypes
+  Container
 } from '@harness/uicore'
 import { get, compact } from 'lodash-es'
-import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
+import type { IFormGroupProps} from '@blueprintjs/core';
+import { FormGroup, Intent } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { errorCheck } from '@common/utils/formikHelpers'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ExpressionsListInput } from '@common/components/ExpressionsListInput/ExpressionsListInput'
-import {
-  DelegateSelectorsV2Container,
+import type {
   DelegateSelectorsV2ContainerProps
+} from '@common/components/DelegateSelectors/DelegateSelectorsV2Container';
+import {
+  DelegateSelectorsV2Container
 } from '@common/components/DelegateSelectors/DelegateSelectorsV2Container'
 
 import css from './MultiTypeDelegateSelector.module.scss'

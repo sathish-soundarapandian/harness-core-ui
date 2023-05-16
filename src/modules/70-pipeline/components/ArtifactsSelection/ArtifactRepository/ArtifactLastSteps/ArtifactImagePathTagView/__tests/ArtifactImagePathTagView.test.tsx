@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import { findByText, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cdng from 'services/cd-ng'

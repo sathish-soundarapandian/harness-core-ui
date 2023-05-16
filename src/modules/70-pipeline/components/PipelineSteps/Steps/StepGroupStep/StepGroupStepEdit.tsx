@@ -12,11 +12,13 @@ import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { defaultTo, isUndefined, uniqBy } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { Switch } from '@blueprintjs/core'
-import { AllowedTypes, Formik, FormikForm, FormInput } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Formik, FormikForm, FormInput } from '@harness/uicore'
 
 import type { Toleration } from 'services/cd-ng'
 import type { EmptyDirYaml, HostPathYaml, PersistentVolumeClaimYaml } from 'services/pipeline-ng'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'

@@ -8,7 +8,8 @@
 import { useEffect, useState } from 'react'
 import type { Entry, Asset } from 'contentful'
 import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
-import Contentful, { ContentfulEnvironment } from './Contentful'
+import type { ContentfulEnvironment } from './Contentful';
+import Contentful from './Contentful'
 
 const CONTENT_TYPE = 'module'
 

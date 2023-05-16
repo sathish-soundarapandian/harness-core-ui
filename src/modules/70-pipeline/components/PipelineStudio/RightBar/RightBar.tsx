@@ -8,10 +8,13 @@
 import React from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
+import type {
+  IconName,
+  SelectOption
+} from '@harness/uicore';
 import {
   Accordion,
   Button,
-  IconName,
   Formik,
   FormikForm,
   RUNTIME_INPUT_VALUE,
@@ -21,8 +24,7 @@ import {
   MultiTypeInputType,
   ButtonVariation,
   VisualYamlSelectedView as SelectedView,
-  Container,
-  SelectOption
+  Container
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { isEmpty, get, set, unset } from 'lodash-es'
@@ -32,8 +34,9 @@ import { Classes, Dialog } from '@blueprintjs/core'
 import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import type { MultiTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
+import type {
+  ConnectorInfoDTO} from 'services/cd-ng';
 import {
-  ConnectorInfoDTO,
   getConnectorPromise,
   getTestConnectionResultPromise,
   getTestGitRepoConnectionResultPromise,

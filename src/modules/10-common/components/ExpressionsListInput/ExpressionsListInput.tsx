@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect } from 'react'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { isEmpty } from 'lodash-es'
 import { FormGroup } from '@blueprintjs/core'
 import { ExpressionInput, EXPRESSION_INPUT_PLACEHOLDER } from '@harness/uicore'

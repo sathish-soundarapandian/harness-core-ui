@@ -6,13 +6,16 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
-import userEvent, { TargetElement } from '@testing-library/user-event'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
+import type { TargetElement } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as ffServices from 'services/cf'
 import mockFeatureFlags from '@cf/pages/feature-flags/__tests__/mockFeatureFlags'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
-import { CreateAFlagView, CreateAFlagViewProps } from '../views/CreateAFlagView'
+import type { CreateAFlagViewProps } from '../views/CreateAFlagView';
+import { CreateAFlagView } from '../views/CreateAFlagView'
 import mockCreateFlagResp from './mockCreateFlagResp'
 
 const setSelectedFlag = jest.fn()

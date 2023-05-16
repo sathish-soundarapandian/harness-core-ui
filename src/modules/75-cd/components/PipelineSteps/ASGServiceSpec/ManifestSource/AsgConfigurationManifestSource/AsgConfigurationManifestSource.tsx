@@ -1,5 +1,6 @@
 import React from 'react'
-import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
+import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase';
+import { ManifestSourceBase } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { ManifestContent } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceRuntimeFields/ManifestContent'
 

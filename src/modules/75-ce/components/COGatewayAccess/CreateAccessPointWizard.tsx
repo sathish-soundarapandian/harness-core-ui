@@ -9,6 +9,9 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty as _isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -17,12 +20,11 @@ import {
   FormikForm,
   FormInput,
   Heading,
-  StepProps,
-  SelectOption,
   Icon
 } from '@harness/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
-import { AccessPoint, useAllHostedZones, useCreateAccessPoint, useGetAccessPoint } from 'services/lw'
+import type { AccessPoint} from 'services/lw';
+import { useAllHostedZones, useCreateAccessPoint, useGetAccessPoint } from 'services/lw'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
 import { Utils } from '@ce/common/Utils'

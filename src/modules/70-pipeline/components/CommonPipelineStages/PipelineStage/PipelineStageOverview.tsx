@@ -8,7 +8,8 @@
 import React, { useRef, useContext, useEffect, useMemo } from 'react'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { Formik, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { Formik } from 'formik'
 import { debounce, noop, get } from 'lodash-es'
 import { Accordion, Card, Container, Text, FormikForm, HarnessDocTooltip, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'

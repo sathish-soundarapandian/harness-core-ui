@@ -9,7 +9,8 @@ import React from 'react'
 import { Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { isStatusError, isStatusFailure, isStatusLoading, isStatusSuccess, ValidationStatus } from './ValidationUtils'
+import type { ValidationStatus } from './ValidationUtils';
+import { isStatusError, isStatusFailure, isStatusLoading, isStatusSuccess } from './ValidationUtils'
 import css from './ValidationBadge.module.scss'
 
 interface ValidationPopoverContentProps {

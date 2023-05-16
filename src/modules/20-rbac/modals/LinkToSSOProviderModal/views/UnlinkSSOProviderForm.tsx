@@ -6,6 +6,8 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   Container,
@@ -13,7 +15,6 @@ import {
   FormikForm as Form,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   Text,
   FormInput,
   ButtonVariation,
@@ -25,7 +26,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useToaster } from '@common/components'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { UserGroupDTO, useUnlinkSsoGroup } from 'services/cd-ng'
+import type { UserGroupDTO} from 'services/cd-ng';
+import { useUnlinkSsoGroup } from 'services/cd-ng'
 import css from '../useLinkToSSOProviderModal.module.scss'
 
 interface UnlinkSSOProviderModalData {

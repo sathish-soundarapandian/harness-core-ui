@@ -17,13 +17,15 @@ import { useValidationErrors } from '@pipeline/components/PipelineStudio/Pipline
 import { useDeepCompareEffect } from '@common/hooks'
 import { isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { BaseReactComponentProps, NodeType, PipelineGraphState, PipelineGraphType } from '../../types'
+import type { BaseReactComponentProps, PipelineGraphState} from '../../types';
+import { NodeType, PipelineGraphType } from '../../types'
+import type {
+  LayoutStyles} from '../utils';
 import {
   COLLAPSED_MATRIX_NODE_LENGTH,
   DEFAULT_MATRIX_PARALLELISM,
   getMatrixHeight,
   getPositionOfAddIcon,
-  LayoutStyles,
   MAX_ALLOWED_MATRIX_COLLAPSED_NODES
 } from '../utils'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'

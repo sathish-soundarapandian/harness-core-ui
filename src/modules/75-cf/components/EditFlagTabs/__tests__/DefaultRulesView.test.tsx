@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { FormikProps } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Variation } from 'services/cf'
 import type { FlagActivationFormValues } from '@cf/components/FlagActivation/FlagActivation'
-import { DefaultRulesView, DefaultRulesViewProps } from '../DefaultRulesView'
+import type { DefaultRulesViewProps } from '../DefaultRulesView';
+import { DefaultRulesView } from '../DefaultRulesView'
 
 const mockVariations: Variation[] = [
   { name: 'Variation 1', identifier: 'var1', value: 'var1' },

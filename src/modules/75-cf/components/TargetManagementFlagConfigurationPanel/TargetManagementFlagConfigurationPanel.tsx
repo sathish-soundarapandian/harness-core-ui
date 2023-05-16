@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import type { FC} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Form, Formik } from 'formik'
 import type { ObjectSchema } from 'yup'
 import * as yup from 'yup'
@@ -16,13 +17,15 @@ import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import usePercentageRolloutValidationSchema from '@cf/hooks/usePercentageRolloutValidationSchema'
 import TargetManagementFlagsListing from '../TargetManagementFlagsListing/TargetManagementFlagsListing'
 import NoSearchResults from '../NoData/NoSearchResults'
-import NoFlags, { NoFlagsProps } from './NoFlags'
+import type { NoFlagsProps } from './NoFlags';
+import NoFlags from './NoFlags'
 import AllFlagsRemoved from './AllFlagsRemoved'
 import useProcessedFlags from './useProcessedFlags'
 import useFormDisabled from './useFormDisabled'
 import FormButtons from './FormButtons'
 import AddFlagButton from './AddFlagButton'
-import { STATUS, TargetManagementFlagConfigurationPanelFormValues as FormValues } from './types'
+import type { TargetManagementFlagConfigurationPanelFormValues as FormValues } from './types';
+import { STATUS } from './types'
 import TargetManagementToolbar from '../TargetManagementToolbar/TargetManagementToolbar'
 
 import css from './TargetManagementFlagConfigurationPanel.module.scss'

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Ref, useRef } from 'react'
+import type { Ref} from 'react';
+import React, { useRef } from 'react'
 import { noop } from 'lodash-es'
 import { Container, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { FormikProps } from 'formik'

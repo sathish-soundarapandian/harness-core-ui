@@ -5,11 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { FC } from 'react';
+import React from 'react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import SubSectionSelector, { SubSectionSelectorProps } from '../SubSectionSelector'
+import type { SubSectionSelectorProps } from '../SubSectionSelector';
+import SubSectionSelector from '../SubSectionSelector'
 
 const SetFlagSwitch: FC = () => <span />
 const DefaultRules: FC = () => <span />

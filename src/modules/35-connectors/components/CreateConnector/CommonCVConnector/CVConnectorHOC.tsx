@@ -6,10 +6,12 @@
  */
 
 import React, { useEffect } from 'react'
-import { StepWizard, Container, StepProps } from '@harness/uicore'
+import type { StepProps } from '@harness/uicore';
+import { StepWizard, Container } from '@harness/uicore'
+import type {
+  CreateConnectorModalProps} from '@connectors/constants';
 import {
   CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
-  CreateConnectorModalProps,
   TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
@@ -17,7 +19,8 @@ import type { ConnectorInfoDTO, ConnectorConfigDTO } from 'services/cd-ng'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { getConnectorIconByType, getConnectorIconPropsByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
-import DelegateSelectorStep, { DelegateSelectorProps } from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import type { DelegateSelectorProps } from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep';
+import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import type { ConnectionConfigProps } from './constants'
 
 export interface CVConnectorHOCInput {

@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Text, Container, Layout, Icon, Button, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Text, Container, Layout, Icon, Button } from '@harness/uicore'
 import cx from 'classnames'
 import { TimeSelect } from '@common/components'
 import { useStrings } from 'framework/strings'
@@ -14,10 +15,11 @@ import type { StringKeys } from 'framework/strings'
 import ExpressionBreakdown, { ActiveInputs } from './ExpressionBreakdown'
 import Expression from './Expression'
 import Spacer from './Spacer'
+import type {
+  DaysOfWeek} from './ScheduleUtils';
 import {
   defaultScheduleValues,
   shortDays,
-  DaysOfWeek,
   getUpdatedExpression,
   getDayOfWeekStr,
   getMilitaryHours

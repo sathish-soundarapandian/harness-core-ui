@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { act, getByPlaceholderText, getByRole, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, getByPlaceholderText, getByRole, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { Feature } from 'services/cf'
 import * as cfServices from 'services/cf'
@@ -16,9 +17,10 @@ import * as gitSync from '@cf/hooks/useGitSync'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import type { TargetManagementFlagConfigurationPanelFormValues as FormValues } from '../types'
-import TargetManagementFlagConfigurationPanel, {
+import type {
   TargetManagementFlagConfigurationPanelProps
-} from '../TargetManagementFlagConfigurationPanel'
+} from '../TargetManagementFlagConfigurationPanel';
+import TargetManagementFlagConfigurationPanel from '../TargetManagementFlagConfigurationPanel'
 
 const buildTestFlags = (numberOfFlags = 20, offset = 0): Feature[] =>
   [...new Array(numberOfFlags + offset)].slice(offset, offset + numberOfFlags).map(

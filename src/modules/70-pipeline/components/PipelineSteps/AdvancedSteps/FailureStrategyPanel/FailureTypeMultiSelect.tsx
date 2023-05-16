@@ -7,14 +7,16 @@
 
 import React from 'react'
 import { FormGroup, Menu, Intent, Checkbox } from '@blueprintjs/core'
-import { MultiSelect as BPMultiSelect, ItemRenderer } from '@blueprintjs/select'
+import type { ItemRenderer } from '@blueprintjs/select';
+import { MultiSelect as BPMultiSelect } from '@blueprintjs/select'
 import { useFormikContext } from 'formik'
 import { get } from 'lodash-es'
 
 import { errorCheck } from '@common/utils/formikHelpers'
 import { useStrings } from 'framework/strings'
 import type { StringKeys } from 'framework/strings'
-import { FailureErrorType, ErrorType } from '@pipeline/utils/FailureStrategyUtils'
+import type { FailureErrorType} from '@pipeline/utils/FailureStrategyUtils';
+import { ErrorType } from '@pipeline/utils/FailureStrategyUtils'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 
 import { errorTypesForStages } from './StrategySelection/StrategyConfig'

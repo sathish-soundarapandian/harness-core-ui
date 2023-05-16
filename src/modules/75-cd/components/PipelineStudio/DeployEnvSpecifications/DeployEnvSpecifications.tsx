@@ -5,16 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, {
-  MutableRefObject,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  Ref,
-  useRef
-} from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import type { MutableRefObject, PropsWithChildren, Ref } from 'react'
 import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'

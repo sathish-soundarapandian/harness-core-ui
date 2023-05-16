@@ -10,7 +10,8 @@ import { render, waitFor } from '@testing-library/react'
 import { Container, Button } from '@harness/uicore'
 import * as useFeatureFlag from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import * as cvServices from 'services/cv'
 import {

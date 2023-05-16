@@ -7,6 +7,9 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import { Popover, Position } from '@blueprintjs/core'
+import type {
+  SelectOption,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Container,
   Text,
@@ -15,12 +18,10 @@ import {
   FormikForm,
   FormInput,
   Button,
-  SelectOption,
   Radio,
   Icon,
   Avatar,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   PageSpinner
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -28,14 +29,16 @@ import * as Yup from 'yup'
 import { debounce, isEmpty, pick, defaultTo } from 'lodash-es'
 import type { FormikContextType } from 'formik'
 import { Link } from 'react-router-dom'
-import {
+import type {
   GitSyncConfig,
   GitSyncEntityDTO,
   GitSyncFolderConfigDTO,
   EntityGitDetails,
   GitBranchDTO,
-  getListOfBranchesWithStatusPromise,
   ResponseGitBranchListDTO
+} from 'services/cd-ng';
+import {
+  getListOfBranchesWithStatusPromise
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'

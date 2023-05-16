@@ -6,7 +6,8 @@
  */
 
 import type { IconName } from '@harness/uicore'
-import { DrawerContext, AddDrawerProps } from '../AddDrawer'
+import type { AddDrawerProps } from '../AddDrawer';
+import { DrawerContext } from '../AddDrawer'
 
 const triggerDrawerMap = {
   drawerLabel: 'Triggers',

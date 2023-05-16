@@ -7,7 +7,8 @@
 import type { GetDataError } from 'restful-react'
 
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
-import { ResponseAzureSubscriptionsDTO, Failure, useGetAzureSubscriptionsForAcrArtifactWithYaml } from 'services/cd-ng'
+import type { ResponseAzureSubscriptionsDTO, Failure} from 'services/cd-ng';
+import { useGetAzureSubscriptionsForAcrArtifactWithYaml } from 'services/cd-ng'
 
 export interface Params {
   connectorRef?: string

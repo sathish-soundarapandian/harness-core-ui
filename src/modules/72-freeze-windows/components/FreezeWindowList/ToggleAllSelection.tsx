@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { Checkbox } from '@harness/uicore'
 import { useFreezeWindowListContext } from '@freeze-windows/context/FreezeWindowListContext'
 import type { FreezeSummaryResponse } from 'services/cd-ng'

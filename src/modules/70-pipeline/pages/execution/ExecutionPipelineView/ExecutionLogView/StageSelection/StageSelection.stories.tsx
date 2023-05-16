@@ -10,7 +10,8 @@ import type { Meta, Story } from '@storybook/react'
 import { noop } from 'lodash-es'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { ExecutionContext, ExecutionContextParams } from '@pipeline/context/ExecutionContext'
+import type { ExecutionContextParams } from '@pipeline/context/ExecutionContext';
+import { ExecutionContext } from '@pipeline/context/ExecutionContext'
 import { StageSelection } from './StageSelection'
 
 const contextValue: ExecutionContextParams = {

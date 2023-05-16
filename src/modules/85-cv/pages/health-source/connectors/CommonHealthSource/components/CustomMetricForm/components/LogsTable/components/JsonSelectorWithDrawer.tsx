@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from 'react'
 import { useFormikContext } from 'formik'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
-  AllowedTypes,
   Container,
   Layout,
   MultiTypeInputType,

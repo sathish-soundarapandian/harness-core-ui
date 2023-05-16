@@ -9,12 +9,15 @@ import React from 'react'
 import * as Yup from 'yup'
 import { isEmpty, get, compact, set } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { connect, FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import type { FormikErrors} from 'formik';
+import { connect, yupToFormErrors } from 'formik'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getUserGroupListPromise } from 'services/cd-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'

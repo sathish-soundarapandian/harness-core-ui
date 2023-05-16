@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
 

@@ -9,10 +9,12 @@ import React from 'react'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { Layout, MultiTypeInputType, shouldShowError, useToaster } from '@harness/uicore'
-import { useGetConnectorListV2, PageConnectorResponse } from 'services/cd-ng'
+import type { PageConnectorResponse } from 'services/cd-ng';
+import { useGetConnectorListV2 } from 'services/cd-ng'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useDeepCompareEffect } from '@common/hooks'
 import { getConnectorPath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ManifestUtils'
 import {

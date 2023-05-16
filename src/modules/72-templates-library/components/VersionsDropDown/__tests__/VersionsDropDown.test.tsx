@@ -8,10 +8,12 @@
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
+import type {
+  VersionsDropDownProps
+} from '@templates-library/components/VersionsDropDown/VersionsDropDown';
 import {
   DefaultStableVersionValue,
-  VersionsDropDown,
-  VersionsDropDownProps
+  VersionsDropDown
 } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 
 const baseProps: VersionsDropDownProps = {

@@ -7,13 +7,14 @@
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import cx from 'classnames'
+import type {
+  ExpandingSearchInputHandle} from '@harness/uicore';
 import {
   Button,
   ButtonSize,
   ButtonVariation,
   Container,
   ExpandingSearchInput,
-  ExpandingSearchInputHandle,
   Icon,
   Tab,
   Text,
@@ -35,7 +36,8 @@ import type {
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import type { ModulePathParams, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
-import { ExecutionStatus, isExecutionComplete, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
+import type { ExecutionStatus} from '@pipeline/utils/statusHelpers';
+import { isExecutionComplete, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import { useLogsContent } from './useLogsContent'

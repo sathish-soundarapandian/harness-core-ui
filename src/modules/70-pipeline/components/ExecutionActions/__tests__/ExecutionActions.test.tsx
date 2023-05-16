@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, fireEvent, findByText, act, RenderResult, waitFor, screen, within } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, fireEvent, findByText, act, waitFor, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeaturesLib from '@common/hooks/useFeatures'
@@ -14,7 +15,8 @@ import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import mockImport from 'framework/utils/mockImport'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { HandleInterruptQueryParams, useHandleInterrupt, useHandleStageInterrupt } from 'services/pipeline-ng'
+import type { HandleInterruptQueryParams} from 'services/pipeline-ng';
+import { useHandleInterrupt, useHandleStageInterrupt } from 'services/pipeline-ng'
 import { accountPathProps, executionPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import ExecutionActions from '../ExecutionActions'

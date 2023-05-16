@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useMemo, FormEvent } from 'react'
+import type { FormEvent } from 'react';
+import React, { useState, useEffect, useMemo } from 'react'
 import { useFormikContext } from 'formik'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -32,10 +33,11 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import dataCollectionFailure from '@cv/assets/dataCollectionFailure.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  SLOObjective,
+  SLOV2Form} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types';
 import {
   SLOFormulaType,
-  SLOObjective,
-  SLOV2Form,
   SLOV2FormFields
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import DataCollectionFailureTooltip from '@cv/pages/slos/common/DataCollectionFailureTooltip/DataCollectionFailureTooltip'

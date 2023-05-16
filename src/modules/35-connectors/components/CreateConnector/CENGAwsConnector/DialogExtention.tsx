@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { createContext, ReactElement, useState } from 'react'
+import type { ReactElement} from 'react';
+import React, { createContext, useState } from 'react'
 import { Icon } from '@harness/uicore'
 import CostUsageReportExtention from './steps/CostUsageReportExtenstion'
 import CrossAccountRoleExtension from './steps/CrossAccountRoleExtension'

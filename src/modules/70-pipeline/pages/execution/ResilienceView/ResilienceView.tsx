@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Container } from '@harness/uicore'
 import qs from 'qs'
 import { defaultTo, isEqual } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'

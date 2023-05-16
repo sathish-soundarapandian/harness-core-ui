@@ -8,7 +8,8 @@
 import React from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
-import { Icon, Text, Button, ButtonVariation, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Icon, Text, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import SVGMarker from '../SVGMarker'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'

@@ -13,18 +13,20 @@ import { Container, Icon, Layout, Text, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
-import useNavModuleInfo, {
+import type {
   GroupConfig,
+  NavModuleName} from '@common/hooks/useNavModuleInfo';
+import useNavModuleInfo, {
   moduleGroupConfig,
-  NavModuleName,
   useNavModuleInfoMap
 } from '@common/hooks/useNavModuleInfo'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import NavModule from './NavModule/NavModule'
 import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
+import type {
+  ModulesPreferenceStoreData} from '../ModuleConfigurationScreen/ModuleSortableList/ModuleSortableList';
 import {
-  ModulesPreferenceStoreData,
   MODULES_CONFIG_PREFERENCE_STORE_KEY
 } from '../ModuleConfigurationScreen/ModuleSortableList/ModuleSortableList'
 import css from './ModuleList.module.scss'

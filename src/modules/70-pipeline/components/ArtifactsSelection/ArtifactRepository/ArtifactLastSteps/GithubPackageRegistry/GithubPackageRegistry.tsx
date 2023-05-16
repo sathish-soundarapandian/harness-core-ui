@@ -6,15 +6,16 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
   MultiTypeInputType,
-  SelectOption,
   getMultiTypeFromValue,
   FormInput,
   FormikForm,
@@ -33,17 +34,19 @@ import {
   getArtifactFormData,
   shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import {
+import type {
   ArtifactType,
   GithubPackageRegistryProps,
-  GithubPackageRegistryInitialValuesType,
+  GithubPackageRegistryInitialValuesType} from '@pipeline/components/ArtifactsSelection/ArtifactInterface';
+import {
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import {
+import type {
   BuildDetails,
   ConnectorConfigDTO,
-  GithubPackageDTO,
+  GithubPackageDTO} from 'services/cd-ng';
+import {
   useGetPackagesFromGithub,
   useGetVersionsFromPackages
 } from 'services/cd-ng'

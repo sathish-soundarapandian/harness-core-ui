@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ComponentPropsWithRef, createRef, useImperativeHandle } from 'react'
+import type { ComponentPropsWithRef } from 'react'
+import React, { createRef, useImperativeHandle } from 'react'
 import { act, render, screen, waitFor, within } from '@testing-library/react'
-import { IconName, MultiTypeInputType } from '@harness/uicore'
+import type { IconName } from '@harness/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import type { RenderResult } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { FormikErrors } from 'formik'
@@ -22,7 +24,8 @@ import mockImport from 'framework/utils/mockImport'
 import { StepGroupStep } from '@pipeline/components/PipelineSteps/Steps/StepGroupStep/StepGroupStep'
 import type { SaveTemplateButtonProps } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { StepCommandsWithRef, StepFormikRef } from '../StepCommands'
+import type { StepFormikRef } from '../StepCommands'
+import { StepCommandsWithRef } from '../StepCommands'
 import { StepCommandsViews } from '../StepCommandTypes'
 
 mockImport('@pipeline/components/PipelineStudio/TemplateBar/TemplateBar', {

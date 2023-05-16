@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { LegacyRef, useRef } from 'react'
+import type { LegacyRef} from 'react';
+import React, { useRef } from 'react'
 import styled from '@emotion/styled'
 import { Container, Layout, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'

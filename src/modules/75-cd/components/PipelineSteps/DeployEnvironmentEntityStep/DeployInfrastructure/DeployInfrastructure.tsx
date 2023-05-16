@@ -11,8 +11,10 @@ import { useFormikContext } from 'formik'
 import produce from 'immer'
 import { v4 as uuid } from 'uuid'
 
-import {
+import type {
   AllowedTypes,
+  SelectOption} from '@harness/uicore';
+import {
   ButtonSize,
   ButtonVariation,
   FormInput,
@@ -21,7 +23,6 @@ import {
   ModalDialog,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
-  SelectOption,
   useToaster,
   useToggleOpen
 } from '@harness/uicore'
@@ -34,7 +35,8 @@ import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMu
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
 
-import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
+import type { ButtonProps } from '@rbac/components/Button/Button';
+import RbacButton from '@rbac/components/Button/Button'
 
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'

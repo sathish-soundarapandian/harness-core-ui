@@ -10,9 +10,11 @@ import { useHistory, useParams } from 'react-router-dom'
 import { pick } from 'lodash-es'
 import { PageError, PageSpinner } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { Module, ModuleName } from 'framework/types/ModuleName'
+import type { Module} from 'framework/types/ModuleName';
+import { ModuleName } from 'framework/types/ModuleName'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { Project, useGetLicensesAndSummary } from 'services/cd-ng'
+import type { Project} from 'services/cd-ng';
+import { useGetLicensesAndSummary } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { HomePageTemplate } from '@projects-orgs/pages/HomePageTemplate/HomePageTemplate'

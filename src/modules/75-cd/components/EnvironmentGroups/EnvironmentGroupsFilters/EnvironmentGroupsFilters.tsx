@@ -10,21 +10,25 @@ import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { isEmpty, pick } from 'lodash-es'
 
-import { SelectOption, useToaster, MultiSelectOption } from '@harness/uicore'
+import type { SelectOption, MultiSelectOption } from '@harness/uicore';
+import { useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import type {
+  FilterDTO,
+  NGTag
+} from 'services/cd-ng';
 import {
   usePostFilter,
   useUpdateFilter,
   useDeleteFilter,
-  FilterDTO,
-  useGetEnvironmentListForProject,
-  NGTag
+  useGetEnvironmentListForProject
 } from 'services/cd-ng'
 
 import { StringUtils } from '@common/exports'
 import { useBooleanStatus, useUpdateQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import {
   isObjectEmpty,
@@ -40,9 +44,10 @@ import { PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '@cd/components/EnvironmentsV2/
 
 import EnvironmentGroupsFilterForm from './EnvironmentGroupsFilterForm'
 import type { EnvironmentGroupListQueryParams } from '../utils'
+import type {
+  EnvironmentGroupFilterFormType} from './filterUtils';
 import {
   createRequestBodyPayload,
-  EnvironmentGroupFilterFormType,
   getFilterByIdentifier,
   getMultiSelectFromOptions
 } from './filterUtils'

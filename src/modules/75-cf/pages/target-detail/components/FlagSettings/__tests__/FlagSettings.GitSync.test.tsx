@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as uuid from 'uuid'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
@@ -17,7 +18,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import mockTarget from '@cf/utils/testData/data/mockTarget'
 import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
-import FlagSettings, { FlagSettingsProps } from '../FlagSettings'
+import type { FlagSettingsProps } from '../FlagSettings';
+import FlagSettings from '../FlagSettings'
 
 const mockFlags = [
   {

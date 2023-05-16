@@ -9,8 +9,10 @@ import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import cx from 'classnames'
-import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
-import { AllowedTypes, Button, IconProps, StepProps, StepWizard } from '@harness/uicore'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Dialog, Classes } from '@blueprintjs/core'
+import type { AllowedTypes, IconProps, StepProps} from '@harness/uicore';
+import { Button, StepWizard } from '@harness/uicore'
 
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, StoreConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

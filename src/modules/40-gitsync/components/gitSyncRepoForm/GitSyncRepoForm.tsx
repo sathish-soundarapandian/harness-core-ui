@@ -6,6 +6,11 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  IconName,
+  SelectOption
+} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -13,30 +18,32 @@ import {
   Text,
   ModalErrorHandler,
   FormikForm,
-  ModalErrorHandlerBinding,
   Container,
   Icon,
   FormInput,
-  IconName,
-  Card,
-  SelectOption
+  Card
 } from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { FontVariation, Color } from '@harness/design-system'
 import { noop, pick, defaultTo } from 'lodash-es'
 import { useToaster, StringUtils } from '@common/exports'
-import { usePostGitSync, GitSyncConfig, ConnectorInfoDTO } from 'services/cd-ng'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { GitSyncConfig, ConnectorInfoDTO } from 'services/cd-ng';
+import { usePostGitSync } from 'services/cd-ng'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
 import { getConnectorDisplayName, GitUrlType } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import {
-  ConnectorReferenceField,
+import type {
   ConnectorSelectedValue
+} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField';
+import {
+  ConnectorReferenceField
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
+import type {
+  ConnectorCardInterface} from '@gitsync/common/gitSyncUtils';
 import {
-  ConnectorCardInterface,
   getCompleteGitPath,
   getHarnessFolderPathWithSuffix,
   gitCards as supportedProviders,
@@ -45,7 +52,8 @@ import {
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
 import { HARNESS_FOLDER_NAME_PLACEHOLDER, HARNESS_FOLDER_SUFFIX } from '@gitsync/common/Constants'
-import { getScopeFromDTO, ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference';
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import SCMCheck from '@common/components/SCMCheck/SCMCheck'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { StringsMap } from 'framework/strings/StringsContext'

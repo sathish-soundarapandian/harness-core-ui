@@ -6,14 +6,17 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { IconName, SelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { v4 as uuid } from 'uuid'
 import { isArray, isEmpty, set } from 'lodash-es'
 
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { HttpHeaderConfig, StringNGVariable } from 'services/pipeline-ng'
 
@@ -24,7 +27,8 @@ import { isMultiTypeRuntime } from '@common/utils/utils'
 import { httpStepType } from './HttpStepBase'
 import HttpInputSetStep from './HttpInputSetStep'
 import { HttpStepWidgetWithRef } from './HttpStepWidget'
-import { HttpStepVariablesView, HttpStepVariablesViewProps } from './HttpStepVariablesView'
+import type { HttpStepVariablesViewProps } from './HttpStepVariablesView';
+import { HttpStepVariablesView } from './HttpStepVariablesView'
 import type { HttpStepData, HttpStepFormData, HttpStepHeaderConfig, HttpStepOutputVariable } from './types'
 
 export class HttpStep extends PipelineStep<HttpStepData> {

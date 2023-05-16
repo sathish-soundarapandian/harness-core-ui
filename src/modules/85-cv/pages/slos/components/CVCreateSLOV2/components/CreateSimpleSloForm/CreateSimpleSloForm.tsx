@@ -13,9 +13,10 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
-import {
+import type {
   NotificationRuleResponse,
-  ServiceLevelIndicatorDTO,
+  ServiceLevelIndicatorDTO} from 'services/cv';
+import {
   useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetMetricOnboardingGraph,
   useGetNotificationRuleData,

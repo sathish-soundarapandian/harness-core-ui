@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import React from 'react'
 import { get } from 'lodash-es'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Container } from '@harness/uicore'
 import type { FormSelectWithSubmenuTypeInputProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions';
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 export interface MultiSelectWithSubmenuTypeInputProps extends FormSelectWithSubmenuTypeInputProps {
   className?: string

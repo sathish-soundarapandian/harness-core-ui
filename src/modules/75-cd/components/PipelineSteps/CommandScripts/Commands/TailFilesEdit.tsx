@@ -8,9 +8,12 @@
 import React, { useRef } from 'react'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
-import { FieldArray, FieldArrayRenderProps, FormikProps } from 'formik'
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
-import { Button, ButtonVariation, Container, FormInput, Icon, Layout, AllowedTypes, Text } from '@harness/uicore'
+import type { FieldArrayRenderProps, FormikProps } from 'formik';
+import { FieldArray } from 'formik'
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import type { AllowedTypes} from '@harness/uicore';
+import { Button, ButtonVariation, Container, FormInput, Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'

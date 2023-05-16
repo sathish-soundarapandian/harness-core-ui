@@ -7,6 +7,8 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Dialog, Classes } from '@blueprintjs/core'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   Formik,
@@ -15,7 +17,6 @@ import {
   ButtonVariation,
   PageSpinner,
   VisualYamlSelectedView as SelectedView,
-  SelectOption,
   OverlaySpinner
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -26,19 +27,21 @@ import { isEmpty, defaultTo, keyBy, omitBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import {
+import type {
   PipelineConfig,
   PipelineInfoConfig,
   ResponseJsonNode,
+  StageExecutionResponse,
+  Failure
+} from 'services/pipeline-ng';
+import {
   useGetPipeline,
   usePostPipelineExecuteWithInputSetYaml,
   useRePostPipelineExecuteWithInputSetYaml,
-  StageExecutionResponse,
   useRunStagesWithRuntimeInputYaml,
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
-  useDebugPipelineExecuteWithInputSetYaml,
-  Failure
+  useDebugPipelineExecuteWithInputSetYaml
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -56,14 +59,16 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
+import type {
+  SelectedStageData,
+  StageSelectionData
+} from '@pipeline/utils/runPipelineUtils';
 import {
   ALL_STAGE_VALUE,
   clearRuntimeInput,
   getAllStageData,
   getAllStageItem,
-  getFeaturePropsForRunPipelineButton,
-  SelectedStageData,
-  StageSelectionData
+  getFeaturePropsForRunPipelineButton
 } from '@pipeline/utils/runPipelineUtils'
 import { useQueryParams } from '@common/hooks'
 import { yamlStringify, yamlParse } from '@common/utils/YamlHelperMethods'
@@ -76,7 +81,8 @@ import {
   getPipelineWithoutCodebaseInputs
 } from '@pipeline/utils/CIUtils'
 import { useDeepCompareEffect } from '@common/hooks/useDeepCompareEffect'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
@@ -88,8 +94,9 @@ import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '../AbstractSteps/Step'
 import SaveAsInputSet from './SaveAsInputSet'
 import ReplacedExpressionInputForm from './ReplacedExpressionInputForm'
+import type {
+  KVPair} from '../PipelineVariablesContext/PipelineVariablesContext';
 import {
-  KVPair,
   LexicalContext,
   PipelineVariablesContextProvider,
   usePipelineVariables

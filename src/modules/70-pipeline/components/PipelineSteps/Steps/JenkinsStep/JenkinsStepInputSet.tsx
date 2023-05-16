@@ -8,18 +8,20 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   FormikForm,
   FormInput,
-  SelectOption,
   Button,
   ButtonVariation
 } from '@harness/uicore'
 import { cloneDeep, get, isArray, isEmpty, memoize, set } from 'lodash-es'
 import { FieldArray } from 'formik'
-import { IconName, Spinner } from '@blueprintjs/core'
+import type { IconName} from '@blueprintjs/core';
+import { Spinner } from '@blueprintjs/core'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
@@ -27,11 +29,13 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { JobDetails, useGetJobDetailsForJenkins, useGetJobParametersForJenkins } from 'services/cd-ng'
+import type { JobDetails} from 'services/cd-ng';
+import { useGetJobDetailsForJenkins, useGetJobParametersForJenkins } from 'services/cd-ng'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { ConnectorRefType, getScopedConnectorValue } from '@pipeline/utils/stepUtils'
+import type { ConnectorRefType} from '@pipeline/utils/stepUtils';
+import { getScopedConnectorValue } from '@pipeline/utils/stepUtils'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import type { jobParameterInterface } from './types'
 import { resetForm } from './helper'

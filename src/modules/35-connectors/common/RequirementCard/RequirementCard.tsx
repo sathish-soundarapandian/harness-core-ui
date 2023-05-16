@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Icon, IconName, Layout, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Container, Icon, Layout, Text } from '@harness/uicore'
 import css from './RequirementCard.module.scss'
 
 export enum Features {

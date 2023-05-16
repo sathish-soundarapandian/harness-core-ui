@@ -28,7 +28,8 @@ import { ModuleName } from 'framework/types/ModuleName'
 import type { StringsMap } from 'stringTypes'
 import { RestoreCacheS3StepBaseWithRef } from './RestoreCacheS3StepBase'
 import { RestoreCacheS3StepInputSet } from './RestoreCacheS3StepInputSet'
-import { RestoreCacheS3StepVariables, RestoreCacheS3StepVariablesProps } from './RestoreCacheS3StepVariables'
+import type { RestoreCacheS3StepVariablesProps } from './RestoreCacheS3StepVariables';
+import { RestoreCacheS3StepVariables } from './RestoreCacheS3StepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './RestoreCacheS3StepFunctionConfigs'
 import { getConnectorSuggestions } from '../EditorSuggestionUtils'
 

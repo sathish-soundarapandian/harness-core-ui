@@ -20,9 +20,10 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import type {
+  ConnectorTypes} from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types';
 import {
   ConnectorLabelMap,
-  ConnectorTypes,
   ConnectorMap
 } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { AzureArmProps } from '../AzureArm.types'

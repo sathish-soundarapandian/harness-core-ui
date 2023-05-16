@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
-import { getByTestId, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { getByTestId, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { SelectOption } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfConstants from '@cf/constants'
 import type { OperatorOption } from '@cf/constants'
-import RuleRow, { RuleRowProps } from '../RuleRow'
+import type { RuleRowProps } from '../RuleRow';
+import RuleRow from '../RuleRow'
 
 const renderComponent = (props: Partial<RuleRowProps> = {}): RenderResult =>
   render(

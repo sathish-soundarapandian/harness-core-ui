@@ -5,29 +5,33 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useState } from 'react'
+import type { FormEvent} from 'react';
+import React, { useState } from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import {
+import type {
   AllowedTypes,
+  SelectOption} from '@harness/uicore';
+import {
   Container,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  SelectOption,
   Text
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import type { ScriptType} from '@common/components/ShellScriptMonaco/ShellScriptMonaco';
+import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import { FileUsage } from '@filestore/interfaces/FileStore'
-import { CommandUnitType, CustomScriptCommandUnit, LocationType, scriptTypeOptions } from '../CommandScriptsTypes'
+import type { CommandUnitType, CustomScriptCommandUnit} from '../CommandScriptsTypes';
+import { LocationType, scriptTypeOptions } from '../CommandScriptsTypes'
 import { TailFilesEdit } from './TailFilesEdit'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CommandEdit.module.scss'

@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { Layout, Container, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Layout, Container } from '@harness/uicore'
 import { isEmpty, get } from 'lodash-es'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import cx from 'classnames'
 import type { StageElementConfig } from 'services/pipeline-ng'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'

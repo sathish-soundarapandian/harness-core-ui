@@ -17,7 +17,8 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TFMonaco } from '../../../Common/Terraform/Editview/TFMonacoEditor'
-import { ConnectorMap, isRuntime, ConnectorLabelMap, ConnectorTypes } from '../../CloudFormationHelper'
+import type { ConnectorTypes } from '../../CloudFormationHelper';
+import { ConnectorMap, isRuntime, ConnectorLabelMap } from '../../CloudFormationHelper'
 import type { CreateStackData, CreateStackProps } from '../../CloudFormationInterfaces.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 

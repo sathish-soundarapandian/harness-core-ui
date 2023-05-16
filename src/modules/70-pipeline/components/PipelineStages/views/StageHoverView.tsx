@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Icon, IconName, Layout, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { SelectedAddStageTypeData } from './AddStageView'

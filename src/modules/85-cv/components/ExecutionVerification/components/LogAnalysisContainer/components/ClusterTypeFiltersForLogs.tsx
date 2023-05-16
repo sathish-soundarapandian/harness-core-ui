@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
-import { Checkbox, Container, Layout, MultiSelectDropDown, MultiSelectOption } from '@harness/uicore'
+import type { MultiSelectOption } from '@harness/uicore';
+import { Checkbox, Container, Layout, MultiSelectDropDown } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ClusterTypeFiltersForLogsProps } from './ClusterTypeFiltersForLogs.types'
 import { getDropdownItems, getFilterDisplayText } from '../../DeploymentMetrics/DeploymentMetrics.utils'

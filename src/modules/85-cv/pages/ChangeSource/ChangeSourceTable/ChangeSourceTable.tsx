@@ -20,7 +20,8 @@ import WebhookIcon from '@cv/assets/webhook.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuActions'
 import type { ChangeSourceTableInterface } from './ChangeSourceTable.types'
-import { ChangeSourceTypes, CustomChangeSourceList } from '../ChangeSourceDrawer/ChangeSourceDrawer.constants'
+import type { ChangeSourceTypes} from '../ChangeSourceDrawer/ChangeSourceDrawer.constants';
+import { CustomChangeSourceList } from '../ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { getIconBySource } from '../ChangeSource.utils'
 import css from './ChangeSourceTable.module.scss'
 

@@ -22,11 +22,12 @@ import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Classes, Intent, Menu, Position } from '@blueprintjs/core'
 import { noop } from 'lodash-es'
-import {
+import type {
   PageServiceAccountAggregateDTO,
   RoleAssignmentMetadataDTO,
   ServiceAccountAggregateDTO,
-  ServiceAccountDTO,
+  ServiceAccountDTO} from 'services/cd-ng';
+import {
   useDeleteServiceAccount
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

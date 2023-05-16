@@ -21,7 +21,8 @@ import { accountPathProps } from '@common/utils/routeUtils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
-import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
+import type { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory';
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import type { ResourceDTO } from 'services/audit'

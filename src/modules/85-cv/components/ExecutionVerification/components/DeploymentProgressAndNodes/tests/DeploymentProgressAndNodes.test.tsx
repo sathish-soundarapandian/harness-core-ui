@@ -12,7 +12,8 @@ import userEvent from '@testing-library/user-event'
 import { Classes } from '@blueprintjs/core'
 import * as cvServices from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
-import { DeploymentProgressAndNodes, DeploymentProgressAndNodesProps } from '../DeploymentProgressAndNodes'
+import type { DeploymentProgressAndNodesProps } from '../DeploymentProgressAndNodes'
+import { DeploymentProgressAndNodes } from '../DeploymentProgressAndNodes'
 import { BaselineDeploymentMockData } from './DeploymentProgressAndNodes.mock'
 
 const showError = jest.fn()

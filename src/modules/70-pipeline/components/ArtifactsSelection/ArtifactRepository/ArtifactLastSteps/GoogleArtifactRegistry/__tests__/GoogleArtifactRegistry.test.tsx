@@ -16,15 +16,18 @@ import {
   getByText as getElementByText
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE, StepProps } from '@harness/uicore'
+import type { AllowedTypesWithRunTime, StepProps } from '@harness/uicore';
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type * as cdng from 'services/cd-ng'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import {
+import type {
   ArtifactType,
-  TagTypes,
   GoogleArtifactRegistryInitialValuesType,
   GoogleArtifactRegistryProps
+} from '@pipeline/components/ArtifactsSelection/ArtifactInterface';
+import {
+  TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { GoogleArtifactRegistry } from '../GoogleArtifactRegistry'

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Formik, FormInput, AllowedTypes, FormikForm } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Formik, FormInput, FormikForm } from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
@@ -16,7 +17,8 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { ServerlessDeployCommandOptions } from './ServerlessDeployCommandOptions/ServerlessDeployCommandOptions'

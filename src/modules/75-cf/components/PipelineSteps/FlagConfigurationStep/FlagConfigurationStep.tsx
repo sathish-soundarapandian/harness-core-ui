@@ -5,25 +5,31 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import * as Yup from 'yup'
 import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { IconName } from '@harness/icons'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { isEmpty, set } from 'lodash-es'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StepElementConfig } from 'services/cd-ng'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import flagChangesValidationSchema from './FlagChanges/flagChangesValidationSchema'
 import FlagConfigurationInputSetStep from './FlagConfigurationInputSetStep'
-import {
-  FlagConfigurationStepVariablesView,
+import type {
   FlagConfigurationStepVariablesViewProps
+} from './FlagConfigurationStepVariablesView';
+import {
+  FlagConfigurationStepVariablesView
 } from './FlagConfigurationStepVariablesView'
 import type { FlagConfigurationStepData } from './types'
-import FlagConfigurationStepWidget, { FlagConfigurationStepWidgetProps } from './FlagConfigurationStepWidget'
+import type { FlagConfigurationStepWidgetProps } from './FlagConfigurationStepWidget';
+import FlagConfigurationStepWidget from './FlagConfigurationStepWidget'
 
 export class FlagConfigurationStep extends PipelineStep<FlagConfigurationStepData> {
   protected type = StepType.FlagConfiguration

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'

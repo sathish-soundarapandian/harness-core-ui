@@ -7,21 +7,25 @@
 
 import React from 'react'
 import type { IFormGroupProps } from '@blueprintjs/core'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
+import type {
+  MultiTextInputProps,
+  DataTooltipInterface} from '@harness/uicore';
 import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  MultiTextInputProps,
-  DataTooltipInterface,
   HarnessDocTooltip
 } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+import type {
+  ConfigureOptionsProps
+} from '@common/components/ConfigureOptions/ConfigureOptions';
 import {
   ALLOWED_VALUES_TYPE,
-  ConfigureOptions,
-  ConfigureOptionsProps
+  ConfigureOptions
 } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 // TODO: Need to import from uikit but right now it is not being exported from there

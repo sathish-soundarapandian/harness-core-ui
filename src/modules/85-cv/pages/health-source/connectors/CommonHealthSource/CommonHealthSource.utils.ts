@@ -7,7 +7,8 @@
 
 import type { FormikErrors, FormikProps } from 'formik'
 import { cloneDeep, isNumber, set } from 'lodash-es'
-import { RUNTIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { RUNTIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { HealthSource, NextGenHealthSourceSpec, QueryRecordsRequest } from 'services/cv'
 import { isMultiTypeRuntime } from '@common/utils/utils'

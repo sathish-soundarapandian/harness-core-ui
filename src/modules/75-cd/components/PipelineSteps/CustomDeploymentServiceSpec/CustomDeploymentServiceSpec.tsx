@@ -11,15 +11,19 @@ import { parse } from 'yaml'
 import type { FormikErrors } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
-import {
+import type { ValidateInputSetProps, StepProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType, Step } from '@pipeline/components/AbstractSteps/Step'
+import type {
   ServiceSpec,
-  getConnectorListV2Promise,
-  getBuildDetailsForArtifactoryArtifactWithYamlPromise,
   ResponsePageConnectorResponse,
   ConnectorResponse
+} from 'services/cd-ng';
+import {
+  getConnectorListV2Promise,
+  getBuildDetailsForArtifactoryArtifactWithYamlPromise
 } from 'services/cd-ng'
 import {
   ArtifactToConnectorMap,
@@ -37,8 +41,9 @@ import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/Artif
 import type { K8SDirectServiceStep } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import CustomDeploymentServiceSpecEditable from './CustomDeploymentServiceSpecEditable'
+import type {
+  CustomDeploymentServiceSpecVariablesFormProps} from './CustomDeploymentServiceSpecVariablesForm';
 import {
-  CustomDeploymentServiceSpecVariablesFormProps,
   CustomDeploymentSpecVariablesForm
 } from './CustomDeploymentServiceSpecVariablesForm'
 import { CustomDeploymentServiceSpecInputSetMode } from './CustomDeploymentServiceSpecInputSetMode'

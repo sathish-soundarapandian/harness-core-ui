@@ -15,8 +15,10 @@ import { HelpPanel } from '@harness/help-panel'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
-import { useStrings, UseStringsReturn } from 'framework/strings'
-import { useAgentServiceForServerCreate, V1AgentType, useAgentServiceForServerList, V1Agent } from 'services/gitops'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
+import type { V1AgentType, V1Agent } from 'services/gitops';
+import { useAgentServiceForServerCreate, useAgentServiceForServerList } from 'services/gitops'
 import { useCDOnboardingContext } from '@cd/pages/get-started-with-cd/CDOnboardingStore'
 import { GitOpsAgentCard } from './GitOpsAgentCard'
 import { AgentProvision } from './AgentProvision'

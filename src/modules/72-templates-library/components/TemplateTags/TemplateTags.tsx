@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Container } from '@harness/uicore'
-import TagsRenderer, { ListTagsProps } from '@common/components/TagsRenderer/TagsRenderer'
+import type { ListTagsProps } from '@common/components/TagsRenderer/TagsRenderer';
+import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import css from './TemplateTags.module.scss'
 
 export const TemplateTags: React.FC<ListTagsProps> = (props): JSX.Element => {

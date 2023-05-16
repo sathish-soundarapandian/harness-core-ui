@@ -10,9 +10,11 @@ import { useParams } from 'react-router-dom'
 import { useToaster, useConfirmationDialog, Checkbox, Button, ButtonVariation, Layout } from '@harness/uicore'
 import React, { useState } from 'react'
 import { useStrings } from 'framework/strings'
-import { Project, useDeleteProject } from 'services/cd-ng'
+import type { Project} from 'services/cd-ng';
+import { useDeleteProject } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { useAppStore, SavedProjectDetails } from 'framework/AppStore/AppStoreContext'
+import type { SavedProjectDetails } from 'framework/AppStore/AppStoreContext';
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 

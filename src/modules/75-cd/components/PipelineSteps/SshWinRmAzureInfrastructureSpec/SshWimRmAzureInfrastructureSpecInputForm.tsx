@@ -6,15 +6,17 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Text, Layout, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Text, Layout, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get, defaultTo, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
-import {
+import type {
   AzureSubscriptionDTO,
-  AzureTagDTO,
+  AzureTagDTO} from 'services/cd-ng';
+import {
   useGetAzureResourceGroupsBySubscription,
   useGetAzureSubscriptions,
   useGetSubscriptionTags,
@@ -38,8 +40,9 @@ import MultiTypeSecretInput, {
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import type {
+  AzureInfrastructureSpecEditableProps} from './SshWinRmAzureInfrastructureInterface';
 import {
-  AzureInfrastructureSpecEditableProps,
   subscriptionLabel,
   resourceGroupLabel
 } from './SshWinRmAzureInfrastructureInterface'

@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import GetStartedWithFF, { GetStartedWithFFProps } from '../GetStartedWithFF'
+import type { GetStartedWithFFProps } from '../GetStartedWithFF';
+import GetStartedWithFF from '../GetStartedWithFF'
 
 const renderComponent = (props: GetStartedWithFFProps = {}): RenderResult =>
   render(

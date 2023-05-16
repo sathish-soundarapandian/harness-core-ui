@@ -11,16 +11,20 @@ import { parse } from 'yaml'
 import type { FormikErrors } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
-import {
+import type { ValidateInputSetProps, StepProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType, Step } from '@pipeline/components/AbstractSteps/Step'
+import type {
   ServiceSpec,
-  getConnectorListV2Promise,
-  getBuildDetailsForArtifactoryArtifactWithYamlPromise,
   ResponsePageConnectorResponse,
   ConnectorResponse,
   ManifestConfigWrapper
+} from 'services/cd-ng';
+import {
+  getConnectorListV2Promise,
+  getBuildDetailsForArtifactoryArtifactWithYamlPromise
 } from 'services/cd-ng'
 import { ArtifactToConnectorMap, allowedArtifactTypes } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 
@@ -33,9 +37,11 @@ import { getConnectorName, getConnectorValue } from '@triggers/pages/triggers/ut
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import type { K8SDirectServiceStep } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
-import {
-  GenericServiceSpecVariablesForm,
+import type {
   K8sServiceSpecVariablesFormProps
+} from '../Common/GenericServiceSpec/GenericServiceSpecVariablesForm';
+import {
+  GenericServiceSpecVariablesForm
 } from '../Common/GenericServiceSpec/GenericServiceSpecVariablesForm'
 import { GenericServiceSpecInputSetMode } from '../Common/GenericServiceSpec/GenericServiceSpecInputSetMode'
 import GenericServiceSpecEditable from '../Common/GenericServiceSpec/GenericServiceSpecEditable'

@@ -29,8 +29,9 @@ import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import RbacButton from '@rbac/components/Button/Button'
 import { TagsPopover } from '@common/components'
+import type {
+  SavePipelineHandle} from '@pipeline/components/PipelineStudio/SavePipelinePopover/SavePipelinePopover';
 import {
-  SavePipelineHandle,
   SavePipelinePopoverWithRef
 } from '@pipeline/components/PipelineStudio/SavePipelinePopover/SavePipelinePopover'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
@@ -58,11 +59,13 @@ import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
-import { EntityCachedCopy, EntityCachedCopyHandle } from './EntityCachedCopy/EntityCachedCopy'
+import type { EntityCachedCopyHandle } from './EntityCachedCopy/EntityCachedCopy';
+import { EntityCachedCopy } from './EntityCachedCopy/EntityCachedCopy'
 import { getDuplicateIdentifiers } from './PipelineCanvasUtils'
 import { ValidationBadge } from '../AsyncValidation/ValidationBadge'
 import css from './PipelineCanvas.module.scss'

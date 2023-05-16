@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import React, { useCallback, useMemo, useState } from 'react'
 import cx from 'classnames'
 import { Collapse, Container, Dialog, ExpandingSearchInput, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'

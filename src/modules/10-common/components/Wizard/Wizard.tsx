@@ -5,7 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useRef, createRef, RefObject } from 'react'
+import type { RefObject } from 'react';
+import React, { useEffect, useRef, createRef } from 'react'
+import type {
+  IconName
+} from '@harness/uicore';
 import {
   Layout,
   Tabs,
@@ -13,8 +17,7 @@ import {
   Formik,
   FormikForm,
   Icon,
-  VisualYamlSelectedView as SelectedView,
-  IconName
+  VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
 import stableStringify from 'fast-json-stable-stringify'
 import { useHistory } from 'react-router-dom'
@@ -27,14 +30,17 @@ import type {
   YamlBuilderProps,
   InvocationMapFunction
 } from '@common/interfaces/YAMLBuilderProps'
+import type {
+  FormikPropsInterface
+} from './WizardUtils';
 import {
   renderTitle,
   setNewTouchedPanel,
   shouldBlockNavigation,
-  renderYamlBuilder,
-  FormikPropsInterface
+  renderYamlBuilder
 } from './WizardUtils'
-import { FormikEffect, FormikEffectProps } from '../FormikEffect/FormikEffect'
+import type { FormikEffectProps } from '../FormikEffect/FormikEffect';
+import { FormikEffect } from '../FormikEffect/FormikEffect'
 import { WizardHeader } from './WizardHeader'
 import { WizardFooter } from './WizardFooter'
 import useTriggerView from './useTriggerView'

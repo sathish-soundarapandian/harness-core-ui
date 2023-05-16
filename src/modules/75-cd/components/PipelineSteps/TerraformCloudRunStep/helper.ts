@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import * as Yup from 'yup'
 import { defaultTo, flatMap, isEmpty, omit, get } from 'lodash-es'

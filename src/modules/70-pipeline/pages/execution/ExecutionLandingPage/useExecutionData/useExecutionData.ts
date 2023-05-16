@@ -13,10 +13,11 @@ import type { GetDataError } from 'restful-react'
 
 import { useQueryParams } from '@common/hooks'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
-import {
+import type {
   Failure,
   PipelineExecutionDetail,
-  ResponsePipelineExecutionDetail,
+  ResponsePipelineExecutionDetail} from 'services/pipeline-ng';
+import {
   useGetExecutionDetailV2
 } from 'services/pipeline-ng'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'

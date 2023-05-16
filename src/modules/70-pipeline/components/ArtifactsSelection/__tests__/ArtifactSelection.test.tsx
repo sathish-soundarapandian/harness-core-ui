@@ -18,9 +18,11 @@ import {
 import userEvent from '@testing-library/user-event'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import {
-  PipelineContext,
+import type {
   PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
+import {
+  PipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactsSelection from '../ArtifactsSelection'

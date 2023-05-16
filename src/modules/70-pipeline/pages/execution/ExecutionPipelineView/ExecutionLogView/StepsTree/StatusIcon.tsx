@@ -1,6 +1,7 @@
 import React from 'react'
 import { mapKeys } from 'lodash-es'
-import { IconName, Icon, IconProps } from '@harness/icons'
+import type { IconName, IconProps } from '@harness/icons';
+import { Icon } from '@harness/icons'
 import cx from 'classnames'
 
 import { ExecutionStatusIconMap } from '@pipeline/utils/executionUtils'

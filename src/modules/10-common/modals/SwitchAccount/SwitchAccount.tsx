@@ -24,11 +24,11 @@ import { get } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
 import {
   useSetDefaultAccountForCurrentUser,
-  RestResponseUser,
   useRestrictedSwitchAccount,
   useGetUserAccounts
 } from 'services/portal'
-import type { Account } from 'services/portal'
+import type { Account ,
+  RestResponseUser} from 'services/portal'
 import { PageSpinner } from '@common/components'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'

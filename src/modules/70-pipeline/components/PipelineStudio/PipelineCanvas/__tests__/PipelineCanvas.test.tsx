@@ -8,12 +8,15 @@
 import React from 'react'
 import { render, act, fireEvent, waitFor, screen } from '@testing-library/react'
 import { set } from 'lodash-es'
-import { putPipelinePromise, createPipelineV2Promise, PipelineInfoConfig } from 'services/pipeline-ng'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { PipelineInfoConfig } from 'services/pipeline-ng';
+import { putPipelinePromise, createPipelineV2Promise } from 'services/pipeline-ng'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { useMutateAsGet } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import * as cdngServices from 'services/cd-ng'
-import { PipelineCanvas, PipelineCanvasProps } from '../PipelineCanvas'
+import type { PipelineCanvasProps } from '../PipelineCanvas';
+import { PipelineCanvas } from '../PipelineCanvas'
 import { PipelineContext } from '../../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../../PipelineContext/PipelineActions'
 import {

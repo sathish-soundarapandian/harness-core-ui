@@ -10,7 +10,8 @@ import { Container, Layout, Text, Utils, PageError, TableV2 } from '@harness/uic
 import type { Column } from 'react-table'
 import { FontVariation, Color, Intent } from '@harness/design-system'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
-import { ApiKey, ApiKeys, useDeleteAPIKey, UseGetAllAPIKeysProps } from 'services/cf'
+import type { ApiKey, ApiKeys, UseGetAllAPIKeysProps } from 'services/cf';
+import { useDeleteAPIKey } from 'services/cf'
 import { useToaster } from '@common/exports'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { getErrorMessage, showToaster } from '@cf/utils/CFUtils'

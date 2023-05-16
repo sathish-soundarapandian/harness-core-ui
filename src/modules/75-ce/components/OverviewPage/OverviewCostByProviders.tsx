@@ -12,14 +12,16 @@ import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtil
 import type { TimeRange } from '@ce/pages/overview/OverviewPage'
 import { CCM_CHART_TYPES } from '@ce/constants'
 import { getTimeFilters } from '@ce/utils/perspectiveUtils'
+import type {
+  QlceViewGroupByInput,
+  TimeSeriesDataPoints} from 'services/ce/services';
 import {
   QlceViewAggregateOperation,
-  QlceViewGroupByInput,
-  TimeSeriesDataPoints,
   useFetchOverviewTimeSeriesQuery
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
-import { ChartConfigType, transformTimeSeriesData } from '../CloudCostInsightChart/chartUtils'
+import type { ChartConfigType} from '../CloudCostInsightChart/chartUtils';
+import { transformTimeSeriesData } from '../CloudCostInsightChart/chartUtils'
 import CEChart from '../CEChart/CEChart'
 import { ChartTypes, Loader } from './OverviewPageLayout'
 import css from './OverviewPage.module.scss'

@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   ButtonSize,
   ButtonVariation,
@@ -14,7 +16,6 @@ import {
   Layout,
   PageBody,
   PageError,
-  SelectOption,
   Tab,
   Tabs,
   Text
@@ -36,12 +37,13 @@ import {
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 
 import { useDeepCompareEffect, useMutateAsGet } from '@common/hooks'
-import {
+import type {
   CacheResponseMetadata,
   Error,
   TemplateMetadataSummaryResponse,
   TemplateResponse,
-  TemplateSummaryResponse,
+  TemplateSummaryResponse} from 'services/template-ng';
+import {
   useGetTemplate,
   useGetTemplateInputSetYaml,
   useGetTemplateList,
@@ -60,7 +62,8 @@ import { getVersionLabelText, TemplateType } from '@templates-library/utils/temp
 import { TemplateReferenceByTabPanel } from '@templates-library/components/TemplateDetails/TemplateReferenceByTabPanel'
 import NoEntityFound, { ErrorPlacement } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
-import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
+import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler';
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import {
   DefaultStableVersionValue,
   VersionsDropDown

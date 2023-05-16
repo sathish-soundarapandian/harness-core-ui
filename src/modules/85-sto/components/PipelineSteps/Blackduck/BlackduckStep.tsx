@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { BlackduckStepBaseWithRef } from './BlackduckStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { BlackduckStepVariables, BlackduckStepVariablesProps } from './BlackduckStepVariables'
+import type { BlackduckStepVariablesProps } from './BlackduckStepVariables';
+import { BlackduckStepVariables } from './BlackduckStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './BlackduckStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 import { API_KEY_AUTH_TYPE, API_VERSION_5_0_2 } from '../constants'

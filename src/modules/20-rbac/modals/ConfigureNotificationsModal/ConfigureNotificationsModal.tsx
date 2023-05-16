@@ -10,12 +10,14 @@ import { Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog } from '@blueprintjs/core'
 
-import {
-  NotificationType,
+import type {
   EmailNotificationConfiguration,
   SlackNotificationConfiguration,
   PagerDutyNotificationConfiguration,
   MSTeamsNotificationConfiguration
+} from '@rbac/interfaces/Notifications';
+import {
+  NotificationType
 } from '@rbac/interfaces/Notifications'
 
 import ConfigureEmailNotifications from './views/ConfigureEmailNotifications/ConfigureEmailNotifications'

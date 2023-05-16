@@ -9,6 +9,8 @@ import React, { useRef, useState } from 'react'
 import * as Yup from 'yup'
 import { pick, defaultTo } from 'lodash-es'
 import type { FormikContextType } from 'formik'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Container,
   Text,
@@ -17,7 +19,6 @@ import {
   FormikForm,
   FormInput,
   Button,
-  SelectOption,
   Radio,
   Icon
 } from '@harness/uicore'

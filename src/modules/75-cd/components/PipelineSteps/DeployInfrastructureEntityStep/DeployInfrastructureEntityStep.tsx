@@ -11,7 +11,8 @@ import { noop } from 'lodash-es'
 
 import type { IconName } from '@harness/uicore'
 
-import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps } from '@pipeline/components/AbstractSteps/Step';
+import { Step } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 

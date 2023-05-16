@@ -8,7 +8,8 @@
 import { defaultTo, get, isEmpty, isUndefined, unset } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
 import * as Yup from 'yup'
-import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'

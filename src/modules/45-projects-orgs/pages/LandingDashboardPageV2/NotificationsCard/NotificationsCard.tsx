@@ -11,11 +11,13 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { String, useStrings } from 'framework/strings'
-import {
+import type {
   DeploymentsOverview,
-  useGetDeploymentStatsOverview,
   GetDeploymentStatsOverviewQueryParams,
   PipelineExecutionInfo
+} from 'services/dashboard-service';
+import {
+  useGetDeploymentStatsOverview
 } from 'services/dashboard-service'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { TimeRangeFilterType } from '@common/types'

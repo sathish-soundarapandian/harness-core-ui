@@ -8,7 +8,8 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { SLIMetricChart, SLIMetricChartProps } from '../SLIMetricChart'
+import type { SLIMetricChartProps } from '../SLIMetricChart';
+import { SLIMetricChart } from '../SLIMetricChart'
 
 const Wrapper = (props: SLIMetricChartProps) => (
   <TestWrapper>

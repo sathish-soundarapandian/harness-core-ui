@@ -28,7 +28,8 @@ import {
   hasSTOStage,
   StageType
 } from '@pipeline/utils/stageHelpers'
-import { ExecutionStatus, isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
+import type { ExecutionStatus} from '@pipeline/utils/statusHelpers';
+import { isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { String, useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'

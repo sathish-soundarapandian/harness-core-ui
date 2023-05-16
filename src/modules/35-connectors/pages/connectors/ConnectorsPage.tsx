@@ -6,11 +6,12 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react'
+import type {
+  SelectOption,
+  MultiSelectOption} from '@harness/uicore';
 import {
   Layout,
-  SelectOption,
   FormInput,
-  MultiSelectOption,
   ExpandingSearchInput,
   Container,
   ButtonVariation,
@@ -25,30 +26,32 @@ import { pick } from 'lodash-es'
 import type { FormikErrors } from 'formik'
 import {
   useGetConnectorListV2,
-  ResponsePageConnectorResponse,
-  ResponseConnectorCatalogueResponse,
   useGetConnectorStatistics,
   useGetFilterList,
-  FilterDTO,
   usePostFilter,
   useUpdateFilter,
-  PageConnectorResponse,
   useDeleteFilter,
+  useGetSettingValue
+} from 'services/cd-ng'
+import type { ConnectorFilterProperties ,
+  ResponsePageConnectorResponse,
+  ResponseConnectorCatalogueResponse,
+  FilterDTO,
+  PageConnectorResponse,
   ResponsePageFilterDTO,
   ResponseConnectorStatistics,
   GetConnectorListV2QueryParams,
   Failure,
-  ConnectorInfoDTO,
-  useGetSettingValue
-} from 'services/cd-ng'
-import type { ConnectorFilterProperties } from 'services/cd-ng'
+  ConnectorInfoDTO} from 'services/cd-ng'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { Page, useToaster, StringUtils } from '@common/exports'
 import { AddDrawer, PageSpinner } from '@common/components'
-import { DrawerContext, ItemInterface } from '@common/components/AddDrawer/AddDrawer'
+import type { ItemInterface } from '@common/components/AddDrawer/AddDrawer';
+import { DrawerContext } from '@common/components/AddDrawer/AddDrawer'
 import routes from '@common/RouteDefinitions'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
 import {
   removeNullAndEmpty,
   isObjectEmpty,
@@ -66,7 +69,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import type { GitFilterScope } from '@common/components/GitFilters/GitFilters';
+import GitFilters from '@common/components/GitFilters/GitFilters'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -84,9 +88,10 @@ import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { CDActions, Category } from '@common/constants/TrackingConstants'
 import ConnectorsListView from './views/ConnectorsListView'
+import type {
+  ConnectorFormType} from './utils/RequestUtils';
 import {
   createRequestBodyPayload,
-  ConnectorFormType,
   getValidFilterArguments,
   renderItemByType,
   ConnectorStatCategories,
@@ -95,9 +100,10 @@ import {
 } from './utils/RequestUtils'
 import ConnectorsEmptyState from './images/connectors-empty-state.png'
 import { useGetConnectorsListHook } from './hooks/useGetConnectorsListHook/useGetConectorsListHook'
+import type {
+  ConnectorsQueryParams} from './utils/ConnectorListViewUtils';
 import {
   CONNECTORS_PAGE_INDEX,
-  ConnectorsQueryParams,
   useConnectorsQueryParamOptions
 } from './utils/ConnectorListViewUtils'
 import css from './ConnectorsPage.module.scss'

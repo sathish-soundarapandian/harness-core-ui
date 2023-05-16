@@ -6,13 +6,14 @@
  */
 
 import React from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Formik,
   FormInput,
   Layout,
   MultiTypeInputType,
   Button,
-  StepProps,
   Text,
   ButtonVariation
 } from '@harness/uicore'

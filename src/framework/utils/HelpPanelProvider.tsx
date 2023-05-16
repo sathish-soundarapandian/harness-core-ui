@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { HelpPanelContextProvider, HelpPanelEnvironment } from '@harness/help-panel'
+import type { HelpPanelEnvironment } from '@harness/help-panel';
+import { HelpPanelContextProvider } from '@harness/help-panel'
 
 const HelpPanelProvider: React.FC = props => {
   return (

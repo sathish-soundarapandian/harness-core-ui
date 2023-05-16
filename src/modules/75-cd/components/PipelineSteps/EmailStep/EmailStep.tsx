@@ -6,12 +6,15 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { defaultTo, isEmpty, set } from 'lodash-es'
 
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -21,7 +24,8 @@ import { EmailStepWidgetWithRef } from './EmailStepWidget'
 import type { EmailStepData } from './emailStepTypes'
 import EmailStepInputSet from './EmailStepInputSet'
 import { EmailValidationSchema, EmailValidationSchemaWithoutRequired } from './emailStepUtils'
-import { EmailStepVariablesView, EmailStepVariablesViewProps } from './EmailStepVariablesView'
+import type { EmailStepVariablesViewProps } from './EmailStepVariablesView';
+import { EmailStepVariablesView } from './EmailStepVariablesView'
 
 export class EmailStep extends PipelineStep<EmailStepData> {
   constructor() {

@@ -7,7 +7,8 @@
 
 import { Heading, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 
 import { useStrings } from 'framework/strings'
 import type { JiraIssue } from 'services/cf'

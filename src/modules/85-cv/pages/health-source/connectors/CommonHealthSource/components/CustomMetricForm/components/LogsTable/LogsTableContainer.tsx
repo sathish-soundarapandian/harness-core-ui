@@ -4,7 +4,8 @@ import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { HealthSourceParamValuesRequest, LogRecord, QueryRecordsRequest, useGetSampleLogData } from 'services/cv'
+import type { HealthSourceParamValuesRequest, LogRecord, QueryRecordsRequest} from 'services/cv';
+import { useGetSampleLogData } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import {
   getFieldsDefaultValuesFromConfig,

@@ -12,15 +12,16 @@ import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
 import produce from 'immer'
 
-import {
+import type {
   AllowedTypes,
   ExpressionAndRuntimeTypeProps,
+  MultiTypeInputValue,
+  SelectOption} from '@harness/uicore';
+import {
   FormInput,
   Layout,
   MultiTypeInputType,
-  MultiTypeInputValue,
   RUNTIME_INPUT_VALUE,
-  SelectOption,
   Text,
   useToaster
 } from '@harness/uicore'

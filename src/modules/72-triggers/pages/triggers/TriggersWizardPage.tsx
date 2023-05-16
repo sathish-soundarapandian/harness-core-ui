@@ -8,9 +8,10 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import type { FormikErrors, FormikProps } from 'formik'
 import { useHistory, useParams } from 'react-router-dom'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
-  SelectOption,
   Text,
   Switch,
   PageSpinner,
@@ -23,26 +24,29 @@ import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
 import { isEmpty, isUndefined, merge, defaultTo, noop, get, omitBy, omit } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { getPipelineInputs, InputsResponseBody } from '@harnessio/react-pipeline-service-client'
+import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client';
+import { getPipelineInputs } from '@harnessio/react-pipeline-service-client'
 import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import { connectorUrlType } from '@connectors/constants'
 import routes from '@common/RouteDefinitions'
 import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import type { Pipeline } from '@pipeline/utils/types'
-import { useGetConnector, GetConnectorQueryParams, getConnectorListV2Promise, Failure } from 'services/cd-ng'
-import {
+import type { GetConnectorQueryParams, Failure } from 'services/cd-ng';
+import { useGetConnector, getConnectorListV2Promise } from 'services/cd-ng'
+import type {
   PipelineInfoConfig,
+  NGTriggerConfigV2,
+  NGTriggerSourceV2,
+  ResponseNGTriggerResponse,
+  GetTriggerQueryParams} from 'services/pipeline-ng';
+import {
   useGetPipeline,
   useGetTemplateFromPipeline,
   useCreateTrigger,
   useGetTrigger,
   useUpdateTrigger,
-  NGTriggerConfigV2,
-  NGTriggerSourceV2,
   useGetSchemaYaml,
-  ResponseNGTriggerResponse,
-  GetTriggerQueryParams,
   useGetMergeInputSetFromPipelineTemplateWithListInput
 } from 'services/pipeline-ng'
 import {

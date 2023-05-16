@@ -9,6 +9,9 @@ import React, { useEffect, useState } from 'react'
 
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -16,22 +19,24 @@ import {
   FormikForm,
   FormInput,
   Heading,
-  StepProps,
-  SelectOption,
   Container
 } from '@harness/uicore'
-import {
-  ConnectorReferenceField,
+import type {
   ConnectorReferenceFieldProps
-} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField';
 import {
+  ConnectorReferenceField
+} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type {
   AccessPoint,
+  ALBAccessPointCore
+} from 'services/lw';
+import {
   useAllCertificates,
   useAllRegions,
   useAllSecurityGroups,
   useAllVPCs,
-  useAccessPointResources,
-  ALBAccessPointCore
+  useAccessPointResources
 } from 'services/lw'
 import { useStrings } from 'framework/strings'
 import { Scope } from '@common/interfaces/SecretsInterface'

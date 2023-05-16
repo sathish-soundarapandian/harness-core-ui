@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { IPopoverProps, PopoverInteractionKind } from '@blueprintjs/core'
+import type { IPopoverProps} from '@blueprintjs/core';
+import { PopoverInteractionKind } from '@blueprintjs/core'
 import { Text, Popover, Icon, Container } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import React from 'react'

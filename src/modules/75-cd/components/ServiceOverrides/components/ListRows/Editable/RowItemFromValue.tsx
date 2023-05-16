@@ -1,7 +1,8 @@
 import React from 'react'
 import { noop } from 'lodash-es'
 import { FormInput } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import OverrideTypeInput from './OverrideTypeInput'

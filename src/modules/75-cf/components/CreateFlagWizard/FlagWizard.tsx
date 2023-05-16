@@ -7,12 +7,14 @@
 
 import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { StepWizard, SelectOption, ModalErrorHandlerBinding } from '@harness/uicore'
-import {
-  useCreateFeatureFlag,
+import type { SelectOption, ModalErrorHandlerBinding } from '@harness/uicore';
+import { StepWizard } from '@harness/uicore'
+import type {
   FeatureFlagRequestRequestBody,
   CreateFeatureFlagQueryParams,
-  GitSyncErrorResponse,
+  GitSyncErrorResponse} from 'services/cf';
+import {
+  useCreateFeatureFlag,
   usePatchFeature
 } from 'services/cf'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'

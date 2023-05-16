@@ -7,15 +7,16 @@
 
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
   MultiTypeInputType,
-  SelectOption,
   FormInput,
   FormikForm
 } from '@harness/uicore'

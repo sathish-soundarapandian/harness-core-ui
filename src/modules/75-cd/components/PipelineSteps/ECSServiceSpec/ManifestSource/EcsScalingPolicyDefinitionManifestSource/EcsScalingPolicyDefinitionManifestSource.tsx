@@ -9,7 +9,8 @@ import React from 'react'
 import { get } from 'lodash-es'
 
 import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
+import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase';
+import { ManifestSourceBase } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { ManifestContent } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceRuntimeFields/ManifestContent'
 import { S3ManifestStoreRuntimeView } from '../S3ManifestStoreRuntimeView'
 export class EcsScalingPolicyDefinitionManifestSource extends ManifestSourceBase<ManifestSourceRenderProps> {

@@ -7,7 +7,8 @@
 
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import moment from 'moment'
-import { RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'

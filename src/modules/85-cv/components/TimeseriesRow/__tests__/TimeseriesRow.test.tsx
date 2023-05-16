@@ -8,7 +8,8 @@
 import React from 'react'
 import { renderHook } from '@testing-library/react-hooks'
 import { render } from '@testing-library/react'
-import TimeseriesRow, { useTimeseriesDetailsModal, extractTimeRange, SeriesConfig } from '../TimeseriesRow'
+import type { SeriesConfig } from '../TimeseriesRow';
+import TimeseriesRow, { useTimeseriesDetailsModal, extractTimeRange } from '../TimeseriesRow'
 
 jest.mock('@harness/uicore', () => ({
   ...(jest.requireActual('@harness/uicore') as any),

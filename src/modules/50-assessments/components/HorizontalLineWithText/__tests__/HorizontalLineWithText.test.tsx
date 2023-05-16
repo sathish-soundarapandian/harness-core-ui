@@ -1,6 +1,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import HorizontalLineWithText, { HorizontalLineWithTextProps } from '../HorizontalLineWithText'
+import type { HorizontalLineWithTextProps } from '../HorizontalLineWithText';
+import HorizontalLineWithText from '../HorizontalLineWithText'
 
 describe('HorizontalLineWithText component', () => {
   const props: HorizontalLineWithTextProps = {

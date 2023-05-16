@@ -12,7 +12,8 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import type { EntityConfig, FreezeObj, ResourcesInterface, ValidationErrorType } from '@freeze-windows/types'
-import { FieldVisibility, getFieldsVisibility } from '@freeze-windows/utils/FreezeWindowStudioUtil'
+import type { FieldVisibility} from '@freeze-windows/utils/FreezeWindowStudioUtil';
+import { getFieldsVisibility } from '@freeze-windows/utils/FreezeWindowStudioUtil'
 import { ConfigsSectionWithRef } from './ConfigSection'
 import css from './FreezeWindowStudioConfigSection.module.scss'
 

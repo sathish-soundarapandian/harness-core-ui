@@ -2,6 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikHelpers } from 'formik'
+import type {
+  SelectOption
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -10,8 +13,7 @@ import {
   useToaster,
   Container,
   Icon,
-  FormikForm,
-  SelectOption
+  FormikForm
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -27,7 +29,8 @@ import type {
   ListProjectsResponse,
   Project
 } from 'services/ticket-service/ticketServiceSchemas'
-import { LogFeedback, TicketRequestDto, useCreateTicketForFeedback } from 'services/cv'
+import type { LogFeedback, TicketRequestDto} from 'services/cv';
+import { useCreateTicketForFeedback } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import type { JiraFormType } from '../JiraCreationDrawer.types'
 import {

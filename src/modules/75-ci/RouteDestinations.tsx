@@ -51,7 +51,8 @@ import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineS
 import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import featureFactory from 'framework/featureStore/FeaturesFactory'
-import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext';
+import { LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { CIExecutionCardSummary } from './components/CIExecutionCardSummary/CIExecutionCardSummary'

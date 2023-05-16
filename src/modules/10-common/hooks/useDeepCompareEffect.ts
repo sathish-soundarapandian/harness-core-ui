@@ -8,7 +8,8 @@
 /**
  * Based on https://github.com/contiamo/restful-react/blob/7aa3d75694f919d0317981a128b139abe163e08e/src/util/useDeepCompareEffect.ts
  */
-import React, { useEffect, useRef } from 'react'
+import type React from 'react';
+import { useEffect, useRef } from 'react'
 import { isEqualWith } from 'lodash-es'
 
 /**

@@ -8,10 +8,13 @@
 import React from 'react'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { get, isEmpty, isNil, noop, set } from 'lodash-es'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import { Formik, FormikErrors } from 'formik'
-import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { FormikErrors } from 'formik';
+import { Formik } from 'formik'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { Step, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { getServiceListPromise } from 'services/cd-ng'
@@ -21,7 +24,8 @@ import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProp
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 
-import { DeployServiceEntityCustomProps, DeployServiceEntityData, ServiceRegex } from './DeployServiceEntityUtils'
+import type { DeployServiceEntityCustomProps, DeployServiceEntityData} from './DeployServiceEntityUtils';
+import { ServiceRegex } from './DeployServiceEntityUtils'
 import { DeployServiceEntityInputStep } from './DeployServiceEntityInputStep'
 import DeployServiceEntityWidget from './DeployServiceEntityWidget'
 

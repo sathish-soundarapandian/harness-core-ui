@@ -10,14 +10,17 @@ import type { FormikErrors } from 'formik'
 import { isEmpty, get } from 'lodash-es'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import { AwsLambdaInfrastructure, getConnectorListV2Promise } from 'services/cd-ng'
+import type { AwsLambdaInfrastructure} from 'services/cd-ng';
+import { getConnectorListV2Promise } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
@@ -25,7 +28,8 @@ import { connectorTypes } from '@pipeline/utils/constants'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { AwsLambdaInfraSpecInputSetMode } from './AwsLambdaInfraSpecInputForm'
-import { AwsLambdaInfraSpecEditable, AwsLambdaInfraSpecEditableProps } from './AwsLambdaInfraSpecEditable'
+import type { AwsLambdaInfraSpecEditableProps } from './AwsLambdaInfraSpecEditable';
+import { AwsLambdaInfraSpecEditable } from './AwsLambdaInfraSpecEditable'
 
 const logger = loggerFor(ModuleName.CD)
 

@@ -9,11 +9,13 @@ import React, { useRef, useState, useLayoutEffect, useMemo, useCallback } from '
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
 import cx from 'classnames'
-import { Container, Button, ButtonVariation, Accordion, Text, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Container, Button, ButtonVariation, Accordion, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { AnalysedDeploymentTestDataNode, MetricsAnalysis, NodeRiskCountDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'
-import { getRiskColorValue, getSecondaryRiskColorValue, RiskValues } from '@cv/utils/CommonUtils'
+import type { RiskValues } from '@cv/utils/CommonUtils';
+import { getRiskColorValue, getSecondaryRiskColorValue } from '@cv/utils/CommonUtils'
 import { chartsConfig } from './DeeploymentMetricsChartConfig'
 import {
   filterRenderCharts,
@@ -22,10 +24,11 @@ import {
   transformControlAndTestDataToHighChartsSeries
 } from './DeploymentMetricsAnalysisRow.utils'
 import type { DeploymentMetricsAnalysisRowChartSeries } from './DeploymentMetricsAnalysisRow.types'
+import type {
+  HostTestData,
+  HostControlTestData} from './DeploymentMetricsAnalysisRow.constants';
 import {
   widthPercentagePerGraph,
-  HostTestData,
-  HostControlTestData,
   getAnalysisReason,
   MINIMUM_DEVIATION
 } from './DeploymentMetricsAnalysisRow.constants'

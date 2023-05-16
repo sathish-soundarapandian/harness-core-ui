@@ -13,8 +13,9 @@ import { Classes } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
+import type {
+  TemplateMenuItem} from '@templates-library/components/TemplatesActionPopover/TemplatesActionPopover';
 import {
-  TemplateMenuItem,
   TemplatesActionPopover
 } from '@templates-library/components/TemplatesActionPopover/TemplatesActionPopover'
 

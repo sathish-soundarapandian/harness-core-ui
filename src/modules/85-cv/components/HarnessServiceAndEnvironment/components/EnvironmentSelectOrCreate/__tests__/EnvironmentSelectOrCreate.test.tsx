@@ -10,7 +10,8 @@ import { render, waitFor } from '@testing-library/react'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useCreateService } from 'services/cd-ng'
-import { EnvironmentSelectOrCreate, EnvironmentSelectOrCreateProps } from '../EnvironmentSelectOrCreate'
+import type { EnvironmentSelectOrCreateProps } from '../EnvironmentSelectOrCreate';
+import { EnvironmentSelectOrCreate } from '../EnvironmentSelectOrCreate'
 
 jest.mock('services/cd-ng')
 const useCreateServiceMock = useCreateService as jest.MockedFunction<any>

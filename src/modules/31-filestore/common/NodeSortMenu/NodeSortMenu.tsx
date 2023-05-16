@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { DropDown, SelectOption, Container } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { DropDown, Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { defaultSortItems } from '@filestore/utils/constants'

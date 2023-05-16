@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { PatchSegmentQueryParams, usePatchSegment } from 'services/cf'
+import type { PatchSegmentQueryParams} from 'services/cf';
+import { usePatchSegment } from 'services/cf'
 
 export interface TargetSegmentParams {
   accountIdentifier: string

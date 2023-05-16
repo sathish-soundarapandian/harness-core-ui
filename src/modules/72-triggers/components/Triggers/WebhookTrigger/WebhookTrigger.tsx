@@ -11,7 +11,8 @@ import WebhookConditionsPanel from '@triggers/components/steps/WebhookConditions
 import WebhookPipelineInputPanel from '@triggers/components/steps/WebhookPipelineInputPanel/WebhookPipelineInputPanel'
 import WebhookTriggerConfigPanel from '@triggers/components/steps/WebhookTriggerConfigPanel/WebhookTriggerConfigPanel'
 import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
-import { Trigger, TriggerProps } from '../Trigger'
+import type { TriggerProps } from '../Trigger';
+import { Trigger } from '../Trigger'
 import { TriggerBaseType } from '../TriggerInterface'
 import WebhookTriggerWizard from './WebhookTriggerWizard'
 

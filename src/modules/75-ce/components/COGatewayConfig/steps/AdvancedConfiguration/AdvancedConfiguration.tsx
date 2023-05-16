@@ -8,7 +8,8 @@
 import React, { useState } from 'react'
 import { Layout, Toggle, Tabs, Tab, HarnessDocTooltip } from '@harness/uicore'
 import { defaultTo as _defaultTo } from 'lodash-es'
-import { AdvancedConfigTabs, CONFIG_STEP_IDS, RESOURCES } from '@ce/constants'
+import type { RESOURCES } from '@ce/constants';
+import { AdvancedConfigTabs, CONFIG_STEP_IDS } from '@ce/constants'
 import { useStrings } from 'framework/strings'
 import { Utils } from '@ce/common/Utils'
 import type {

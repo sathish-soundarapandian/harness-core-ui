@@ -31,7 +31,8 @@ import {
 
 import { PageSpinner } from '@common/components'
 
-import { useGetDelegateTokens, GetDelegateTokensQueryParams, DelegateTokenDetails } from 'services/cd-ng'
+import type { GetDelegateTokensQueryParams, DelegateTokenDetails } from 'services/cd-ng';
+import { useGetDelegateTokens } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'

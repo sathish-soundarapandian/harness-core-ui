@@ -22,10 +22,11 @@ import {
   getUpdatedNotificationRules,
   validateNotificationConditions
 } from '@cv/components/Notifications/NotificationsContainer.utils'
-import {
+import type {
   ConfigureSLOAlertConditionsProps,
   NotificationConditions,
-  NotificationRule,
+  NotificationRule} from '@cv/components/Notifications/NotificationsContainer.types';
+import {
   SRMNotificationType
 } from '@cv/components/Notifications/NotificationsContainer.types'
 import SLONotificationRuleRow from '../SLONotificationRuleRow/SLONotificationRuleRow'

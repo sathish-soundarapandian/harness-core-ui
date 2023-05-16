@@ -13,10 +13,12 @@ import type { ModulePathParams, PipelinePathProps } from '@common/interfaces/Rou
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
 import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import routes from '@common/RouteDefinitions'
-import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { queryByNameAttribute } from '@common/utils/testUtils'
-import { GoogleCloudFunctionInfraSpec, GoogleCloudFunctionInfrastructure } from '../GoogleCloudFunctionInfraSpec'
+import type { GoogleCloudFunctionInfrastructure } from '../GoogleCloudFunctionInfraSpec';
+import { GoogleCloudFunctionInfraSpec } from '../GoogleCloudFunctionInfraSpec'
 import { getGcfYaml, invalidGcfYaml, testConnectorRefChangeForGcp } from './helper'
 import { gcfTypeRegions, gcpConnectorListResponse, gcpProjectListResponse } from './mocks'
 

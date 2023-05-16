@@ -12,6 +12,9 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, get, memoize, merge, omit } from 'lodash-es'
 import * as Yup from 'yup'
 import { Menu } from '@blueprintjs/core'
+import type {
+  SelectOption,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -21,27 +24,28 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  SelectOption,
-  StepProps,
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
-import {
+import type {
   BucketResponse,
   ConnectorConfigDTO,
-  FilePaths,
+  FilePaths} from 'services/cd-ng';
+import {
   useGetFilePathsForS3,
   useGetV2BucketListForS3
 } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
-import {
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import type {
   AmazonS3ArtifactProps,
-  AmazonS3InitialValuesType,
+  AmazonS3InitialValuesType} from '@pipeline/components/ArtifactsSelection/ArtifactInterface';
+import {
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import {

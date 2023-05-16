@@ -5,10 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { CSSProperties, useState } from 'react'
+import type { CSSProperties } from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { FormGroup, IFormGroupProps, Intent, PopoverInteractionKind } from '@blueprintjs/core'
+import type { IFormGroupProps } from '@blueprintjs/core'
+import { FormGroup, Intent, PopoverInteractionKind } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
+import type { DataTooltipInterface } from '@harness/uicore'
 import {
   Layout,
   Icon,
@@ -18,7 +21,6 @@ import {
   MultiTypeInputType,
   FormError,
   FormikTooltipContext,
-  DataTooltipInterface,
   HarnessDocTooltip,
   ButtonVariation,
   Container,
@@ -28,34 +30,33 @@ import {
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty, merge } from 'lodash-es'
-import {
+import type {
   Failure,
   ConnectorInfoDTO,
   ConnectorConfigDTO,
   GetConnectorListQueryParams,
   ConnectorResponse,
-  getConnectorListV2Promise,
   ConnectorFilterProperties,
-  useGetConnector,
   EntityGitDetails,
-  ResponsePageConnectorResponse,
-  getTestConnectionResultPromise
+  ResponsePageConnectorResponse
 } from 'services/cd-ng'
+import { getConnectorListV2Promise, useGetConnector, getTestConnectionResultPromise } from 'services/cd-ng'
+import type { EntityReferenceResponse } from '@common/components/EntityReference/EntityReference'
 import {
-  EntityReferenceResponse,
   getIdentifierFromValue,
   getScopeFromValue,
   getScopeLabelfromScope
 } from '@common/components/EntityReference/EntityReference'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import useCreateConnectorModal, {
-  UseCreateConnectorModalReturn
-} from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import type { UseCreateConnectorModalReturn } from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import useCreateConnectorMultiTypeModal from '@connectors/modals/ConnectorModal/useCreateConnectorMultiTypeModal'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { String, useStrings, UseStringsReturn } from 'framework/strings'
-import { ReferenceSelect, ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
+import type { UseStringsReturn } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
+import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
+import { ReferenceSelect } from '@common/components/ReferenceSelect/ReferenceSelect'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -66,10 +67,8 @@ import { getReadableDateTime } from '@common/utils/dateUtils'
 import { Connectors } from '@connectors/constants'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import RbacButton from '@rbac/components/Button/Button'
-import {
-  getScopeFromDTO,
-  ScopeAndIdentifier
-} from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
+import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
+import { getScopeFromDTO } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

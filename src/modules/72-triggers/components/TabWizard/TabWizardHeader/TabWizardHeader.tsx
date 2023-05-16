@@ -7,7 +7,8 @@
 
 import React from 'react'
 
-import { VisualYamlSelectedView as SelectedView, VisualYamlToggle } from '@harness/uicore'
+import type { VisualYamlSelectedView as SelectedView} from '@harness/uicore';
+import { VisualYamlToggle } from '@harness/uicore'
 
 import { useTabWizardContext } from '../context/TabWizardContext'
 

@@ -11,9 +11,11 @@ import { useParams } from 'react-router-dom'
 import { useStripe, useElements } from '@stripe/react-stripe-js'
 import { getErrorMessage } from '@auth-settings/utils'
 import { useStrings } from 'framework/strings'
-import { useUpdateBilling, InvoiceDetailDTO } from 'services/cd-ng/index'
+import type { InvoiceDetailDTO } from 'services/cd-ng/index';
+import { useUpdateBilling } from 'services/cd-ng/index'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { SubscribeViews, BillingContactProps, PaymentMethodProps } from '@common/constants/SubscriptionTypes'
+import type { BillingContactProps, PaymentMethodProps } from '@common/constants/SubscriptionTypes';
+import { SubscribeViews } from '@common/constants/SubscriptionTypes'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 interface FooterProps {

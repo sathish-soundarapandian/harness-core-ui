@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, SelectOption, Text, Container, Select } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, Text, Container, Select } from '@harness/uicore'
 import { zeroFiftyNineDDOptions, amPmOptions, oneTwelveDDOptions } from './TimeSelectUtils'
 import css from './TimeSelect.module.scss'
 

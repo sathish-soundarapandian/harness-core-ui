@@ -7,9 +7,11 @@
 
 import React from 'react'
 import type { IconName } from '@harness/uicore'
-import { connect, FormikErrors } from 'formik'
+import type { FormikErrors } from 'formik';
+import { connect } from 'formik'
 import { omit } from 'lodash-es'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'

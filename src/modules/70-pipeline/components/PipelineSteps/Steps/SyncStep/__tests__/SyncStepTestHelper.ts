@@ -8,7 +8,8 @@
 import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '../../../PipelineStepInterface'
-import { POLICY_OPTIONS, SyncStepDeploymentModeProps, SyncStepStepModeProps } from '../types'
+import type { SyncStepDeploymentModeProps, SyncStepStepModeProps } from '../types';
+import { POLICY_OPTIONS } from '../types'
 
 export const getSyncStepInputVariableModeProps = () => ({
   customStepProps: {

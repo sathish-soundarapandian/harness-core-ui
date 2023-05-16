@@ -7,7 +7,8 @@
 
 /* eslint-disable react/display-name */
 import React from 'react'
-import { getByRole, getByText, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { getByRole, getByText, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'

@@ -14,9 +14,11 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
-import {
-  getMultiSelectFormOptions,
+import type {
   PipelineExecutionFormType
+} from '@pipeline/utils/PipelineExecutionFilterRequestUtils';
+import {
+  getMultiSelectFormOptions
 } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
 import deploymentTypes from '@pipeline/pages/pipeline-list/__tests__/mocks/deploymentTypes.json'

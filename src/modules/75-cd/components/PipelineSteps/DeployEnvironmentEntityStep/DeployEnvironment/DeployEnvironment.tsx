@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MutableRefObject, useEffect, useMemo, useState } from 'react'
+import type { MutableRefObject} from 'react';
+import React, { useEffect, useMemo, useState } from 'react'
 import { unstable_batchedUpdates } from 'react-dom'
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
@@ -13,8 +14,10 @@ import produce from 'immer'
 import { Divider } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
 
-import {
+import type {
   AllowedTypes,
+  SelectOption} from '@harness/uicore';
+import {
   ButtonSize,
   ButtonVariation,
   FormInput,
@@ -23,7 +26,6 @@ import {
   ModalDialog,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
-  SelectOption,
   useToaster,
   useToggleOpen
 } from '@harness/uicore'
@@ -70,8 +72,9 @@ import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../DeployCluster/DeployCluster'
 
+import type {
+  InlineEntityFiltersProps} from '../components/InlineEntityFilters/InlineEntityFiltersUtils';
 import {
-  InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 import { DeployProvisioner } from '../DeployProvisioner/DeployProvisioner'

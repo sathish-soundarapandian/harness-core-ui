@@ -182,4 +182,5 @@ const DiagramNodes = {
   [NodeType.StepGroupNode]: StepGroupNode
 }
 
-export { DiagramNodes, NodeType, BaseReactComponentProps, CANVAS_CLICK_EVENT }
+export { DiagramNodes, NodeType, CANVAS_CLICK_EVENT }
+export type { BaseReactComponentProps }

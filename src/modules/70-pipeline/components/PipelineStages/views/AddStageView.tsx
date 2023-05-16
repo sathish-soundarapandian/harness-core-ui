@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect } from 'react'
-import { ButtonSize, ButtonVariation, Card, Icon, IconName, Layout, Heading } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { ButtonSize, ButtonVariation, Card, Icon, Layout, Heading } from '@harness/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

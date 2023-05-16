@@ -11,7 +11,8 @@ import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import * as pipelineng from 'services/pipeline-ng'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
-import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
+import type { InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector';
+import { InputSetSelector } from '@pipeline/components/InputSetSelector/InputSetSelector'
 import * as cdngServices from 'services/cd-ng'
 import {
   GetInputSetYamlDiffInpSelector,

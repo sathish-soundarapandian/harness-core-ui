@@ -5,10 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useState } from 'react'
+import type { FormEvent} from 'react';
+import React, { useState } from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'

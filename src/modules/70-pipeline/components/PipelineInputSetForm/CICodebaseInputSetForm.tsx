@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useRef, Dispatch, SetStateAction, useMemo, useCallback } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { debounce, get, isEmpty, isUndefined, set, omit } from 'lodash-es'
 import produce from 'immer'
@@ -19,14 +20,15 @@ import {
   Icon,
   TextInput,
   RUNTIME_INPUT_VALUE,
-  SelectOption,
-  AllowedTypesWithRunTime,
-  MultiSelectOption,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  type SelectOption,
+  type MultiSelectOption,
+  type AllowedTypesWithRunTime
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
-import { StringKeys, useStrings, UseStringsReturn } from 'framework/strings'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
@@ -37,12 +39,8 @@ import { getReference, isMultiTypeRuntime } from '@common/utils/utils'
 import { Connectors } from '@connectors/constants'
 import { getCompleteConnectorUrl, GitAuthenticationProtocol } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import {
-  ConnectorInfoDTO,
-  getListOfBranchesByRefConnectorV2Promise,
-  ResponseGitBranchesResponseDTO,
-  useGetConnector
-} from 'services/cd-ng'
+import type { ConnectorInfoDTO, ResponseGitBranchesResponseDTO } from 'services/cd-ng'
+import { getListOfBranchesByRefConnectorV2Promise, useGetConnector } from 'services/cd-ng'
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { ConnectorRefWidthKeys, getPrCloneStrategyOptions, sslVerifyOptions } from '@pipeline/utils/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'

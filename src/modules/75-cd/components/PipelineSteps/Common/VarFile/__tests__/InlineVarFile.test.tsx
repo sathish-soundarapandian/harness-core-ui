@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { render, waitFor, getByText as getByTextBody, act, fireEvent, queryByAttribute } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import InlineVarFile from '../InlineVarFile'

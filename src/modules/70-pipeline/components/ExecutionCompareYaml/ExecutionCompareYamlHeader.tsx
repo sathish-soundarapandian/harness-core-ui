@@ -7,7 +7,8 @@
 
 import { FontVariation } from '@harness/design-system'
 import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import { useStrings } from 'framework/strings'
 import { useBooleanStatus } from '@common/hooks'
 import { useExecutionCompareContext } from './ExecutionCompareContext'

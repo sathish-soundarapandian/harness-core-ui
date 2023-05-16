@@ -9,7 +9,8 @@ import React from 'react'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
 import { connect } from 'formik'
-import { DataTooltipInterface, MultiTypeInputType, FormInput, getMultiTypeFromValue } from '@harness/uicore'
+import type { DataTooltipInterface} from '@harness/uicore';
+import { MultiTypeInputType, FormInput, getMultiTypeFromValue } from '@harness/uicore'
 import type { FormMultiTypeInputProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import type { FormikContextProps, FormikExtended } from '@harness/uicore/dist/components/FormikForm/utils'
 

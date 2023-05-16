@@ -7,28 +7,33 @@
 
 import React, { useEffect, useState } from 'react'
 import type { FormikProps } from 'formik'
+import type {
+  ModalErrorHandlerBinding,
+  SelectOption,
+  MultiSelectOption
+} from '@harness/uicore';
 import {
   Formik,
   FormikForm as Form,
-  ModalErrorHandlerBinding,
-  SelectOption,
   FormInput,
-  ModalErrorHandler,
-  MultiSelectOption
+  ModalErrorHandler
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import UserTagRenderer from '@common/components/UserTagRenderer/UserTagRenderer'
 import { useToaster } from '@common/components'
-import { usePostRoleAssignments, RoleAssignment as RBACRoleAssignment } from 'services/rbac'
+import type { RoleAssignment as RBACRoleAssignment } from 'services/rbac';
+import { usePostRoleAssignments } from 'services/rbac'
 import { useStrings } from 'framework/strings'
-import { UserMetadataDTO, RoleAssignmentMetadataDTO, useGetUsers, useAddUsers, AddUsers } from 'services/cd-ng'
+import type { UserMetadataDTO, RoleAssignmentMetadataDTO, AddUsers } from 'services/cd-ng';
+import { useGetUsers, useAddUsers } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  InvitationStatus} from '@rbac/utils/utils';
 import {
   handleInvitationResponse,
   getScopeBasedDefaultAssignment,
-  InvitationStatus,
   isNewRoleAssignment,
   isAccountBasicRole
 } from '@rbac/utils/utils'

@@ -8,10 +8,12 @@
 import React from 'react'
 import { render, act, screen } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { StepViewType, StepFormikRef, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { SscaEnforcementStep, SscaEnforcementStepData } from '../SscaEnforcementStep/SscaEnforcementStep'
+import type { SscaEnforcementStepData } from '../SscaEnforcementStep/SscaEnforcementStep';
+import { SscaEnforcementStep } from '../SscaEnforcementStep/SscaEnforcementStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 

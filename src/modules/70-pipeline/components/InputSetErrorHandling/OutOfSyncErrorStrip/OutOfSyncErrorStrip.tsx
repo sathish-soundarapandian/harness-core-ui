@@ -21,9 +21,10 @@ import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isNil, pick } from 'lodash-es'
 import type { InputSetDTO } from '@pipeline/utils/types'
 import { ReconcileInputSetDialog } from '@pipeline/components/InputSetErrorHandling/ReconcileInputSetDialog/ReconcileInputSetDialog'
-import {
+import type {
   EntityGitDetails,
-  InputSetResponse,
+  InputSetResponse} from 'services/pipeline-ng';
+import {
   useDeleteInputSetForPipeline,
   useUpdateInputSetForPipeline,
   useUpdateOverlayInputSetForPipeline,

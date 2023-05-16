@@ -7,14 +7,16 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { Container, FormInput, AllowedTypes, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Container, FormInput, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isWinRmDeploymentType } from '@pipeline/utils/stageHelpers'
-import { CommandUnitType, sourceTypeOptions } from '../CommandScriptsTypes'
+import type { CommandUnitType} from '../CommandScriptsTypes';
+import { sourceTypeOptions } from '../CommandScriptsTypes'
 import css from './CommandEdit.module.scss'
 
 interface CopyCommandEditProps {

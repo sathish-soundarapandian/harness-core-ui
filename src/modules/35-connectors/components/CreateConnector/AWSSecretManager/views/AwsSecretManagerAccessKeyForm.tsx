@@ -7,11 +7,13 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { FormInput, Text, ModalErrorHandlerBinding, Icon } from '@harness/uicore'
+import type { ModalErrorHandlerBinding} from '@harness/uicore';
+import { FormInput, Text, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
-import { AwsSecretManagerConfigFormData, CredTypeValues } from '@connectors/interfaces/ConnectorInterface'
+import type { AwsSecretManagerConfigFormData} from '@connectors/interfaces/ConnectorInterface';
+import { CredTypeValues } from '@connectors/interfaces/ConnectorInterface'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import { Connectors } from '@connectors/constants'
 

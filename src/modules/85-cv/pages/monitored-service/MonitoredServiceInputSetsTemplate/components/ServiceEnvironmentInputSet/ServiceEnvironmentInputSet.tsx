@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { isUndefined } from 'lodash-es'
-import { Card, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Card, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'

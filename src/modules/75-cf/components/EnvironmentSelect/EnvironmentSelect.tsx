@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, Select, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, Select, Text } from '@harness/uicore'
 
 export interface EnvironmentSelectProps {
   label: string

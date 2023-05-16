@@ -8,7 +8,8 @@
 import React from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { ModuleName } from 'framework/types/ModuleName'
-import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
+import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext';
+import { LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
 import routes from '@common/RouteDefinitions'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 

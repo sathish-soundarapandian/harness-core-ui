@@ -7,7 +7,8 @@
 
 /* eslint-disable jest-no-mock */
 import { renderHook } from '@testing-library/react-hooks'
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useGovernance } from '../useGovernance'
 

@@ -6,6 +6,10 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  StepProps,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -13,18 +17,17 @@ import {
   Container,
   Formik,
   Layout,
-  StepProps,
   FormInput,
   MultiTypeInputType,
   getMultiTypeFromValue,
-  FormikForm,
-  AllowedTypes
+  FormikForm
 } from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
-import { ServiceHookWrapper, useHookActions } from 'services/cd-ng'
+import type { ServiceHookWrapper} from 'services/cd-ng';
+import { useHookActions } from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'

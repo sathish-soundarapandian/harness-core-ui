@@ -6,29 +6,34 @@
  */
 
 import React from 'react'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { FieldArray } from 'formik'
 import cx from 'classnames'
 import { v4 as uuid } from 'uuid'
-import {
+import type {
   AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
+import {
   Button,
   ButtonVariation,
   Container,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco';
+import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
+import type {
+  CustomApprovalOutputStepVariable} from '@pipeline/components/PipelineSteps/Steps/CustomApproval/types';
 import {
-  CustomApprovalOutputStepVariable,
   scriptOutputType
 } from '@pipeline/components/PipelineSteps/Steps/CustomApproval/types'
 import { ApprovalRejectionCriteria } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalRejectionCriteria'

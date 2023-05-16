@@ -6,12 +6,15 @@
  */
 
 import React from 'react'
-import { Layout, StepProps, Text, ButtonVariation, Button, Icon, FormInput, SelectOption } from '@harness/uicore'
+import type { StepProps, SelectOption } from '@harness/uicore';
+import { Layout, Text, ButtonVariation, Button, Icon, FormInput } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { FieldArray } from 'formik'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { channels, notificationChannelsList } from '@ce/constants'
+import type { channels} from '@ce/constants';
+import { notificationChannelsList } from '@ce/constants'
 import type { StringsMap } from 'stringTypes'
 import css from './AnomaliesAlertDialog.module.scss'
 

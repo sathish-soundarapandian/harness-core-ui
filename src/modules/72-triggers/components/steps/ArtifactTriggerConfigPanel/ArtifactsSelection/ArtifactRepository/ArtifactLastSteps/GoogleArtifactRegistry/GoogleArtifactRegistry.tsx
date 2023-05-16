@@ -6,14 +6,15 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
-  SelectOption,
   FormInput,
   FormikForm,
   MultiTypeInputType
@@ -23,7 +24,8 @@ import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { ConnectorConfigDTO, RegionGar, useGetRegionsForGoogleArtifactRegistry } from 'services/cd-ng'
+import type { ConnectorConfigDTO, RegionGar} from 'services/cd-ng';
+import { useGetRegionsForGoogleArtifactRegistry } from 'services/cd-ng'
 import type { GarSpec } from 'services/pipeline-ng'
 import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ImagePathProps } from '../../../ArtifactInterface'

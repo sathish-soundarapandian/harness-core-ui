@@ -11,14 +11,16 @@ import { Formik } from 'formik'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { Link } from 'react-router-dom'
-import {
-  useAddHarnessApprovalActivity,
+import type {
   ApprovalInstanceResponse,
   HarnessApprovalActivityRequest,
   HarnessApprovalInstanceDetails,
   ResponseHarnessApprovalInstanceAuthorization,
   ApprovalUserGroupDTO,
   ExecutionGraph
+} from 'services/pipeline-ng';
+import {
+  useAddHarnessApprovalActivity
 } from 'services/pipeline-ng'
 import { String, useStrings } from 'framework/strings'
 import { Duration } from '@common/exports'

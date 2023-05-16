@@ -18,7 +18,8 @@ import type { MultiTypeConnectorRef, Resources } from '@pipeline/components/Pipe
 import type { StringsMap } from 'stringTypes'
 import { GitCloneStepBaseWithRef } from './GitCloneStepBase'
 import { GitCloneStepInputSet } from './GitCloneStepInputSet'
-import { GitCloneStepVariables, GitCloneStepVariablesProps } from './GitCloneStepVariables'
+import type { GitCloneStepVariablesProps } from './GitCloneStepVariables';
+import { GitCloneStepVariables } from './GitCloneStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './GitCloneStepFunctionConfigs'
 
 type BuildInterface = {

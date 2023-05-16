@@ -9,7 +9,8 @@ import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { TestWrapper } from '@common/utils/testUtils'
-import { RunPipelineModalV1Params, useRunPipelineModalV1 } from '../useRunPipelineModalV1'
+import type { RunPipelineModalV1Params} from '../useRunPipelineModalV1';
+import { useRunPipelineModalV1 } from '../useRunPipelineModalV1'
 import { getMockFor_Generic_useMutate, getMockFor_useGetTemplateFromPipeline } from './mocks'
 
 const props: RunPipelineModalV1Params & GitQueryParams = {

@@ -12,7 +12,8 @@ import { getServiceLevelObjectiveLogsPromise, useGetServiceLevelObjectiveLogs } 
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { LogTypes, SLOLogContentProps, TimeRange } from '../useLogContentHook.types'
+import type { SLOLogContentProps, TimeRange } from '../useLogContentHook.types';
+import { LogTypes } from '../useLogContentHook.types'
 import ExecutionLog from './ExecutionLog/ExecutionLog'
 import { downloadJson, getDateRangeShortcuts, parseResponseBody } from '../useLogContentHook.utils'
 import ExternalAPICall from './ExternalAPICall/ExternalAPICall'

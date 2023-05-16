@@ -5,10 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useEffect, useState } from 'react'
+import type { ReactElement} from 'react';
+import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
-import { NavLink as Link, NavLinkProps, useParams } from 'react-router-dom'
-import { Text, Layout, IconName, Icon, Container, TextProps, Popover } from '@harness/uicore'
+import type { NavLinkProps} from 'react-router-dom';
+import { NavLink as Link, useParams } from 'react-router-dom'
+import type { IconName, TextProps} from '@harness/uicore';
+import { Text, Layout, Icon, Container, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import { useGetAccountNG } from 'services/cd-ng'

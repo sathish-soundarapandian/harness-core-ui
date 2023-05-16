@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import type { FC} from 'react';
+import React, { useEffect, useMemo, useState } from 'react'
 import * as Yup from 'yup'
 import { get } from 'lodash-es'
 import { useFormikContext } from 'formik'
@@ -15,8 +16,10 @@ import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollou
 import usePercentageRolloutEqualiser from '@cf/hooks/usePercentageRolloutEqualiser'
 import type { UseStringsReturn } from 'framework/strings'
 import { useStrings } from 'framework/strings'
-import SubSection, { SubSectionProps } from '../SubSection'
-import { CFPipelineInstructionType, FlagConfigurationStepFormDataValues } from '../../types'
+import type { SubSectionProps } from '../SubSection';
+import SubSection from '../SubSection'
+import type { FlagConfigurationStepFormDataValues } from '../../types';
+import { CFPipelineInstructionType } from '../../types'
 
 export const servePercentageRolloutSchema = (getString: UseStringsReturn['getString']): Yup.Schema<any> =>
   Yup.object({

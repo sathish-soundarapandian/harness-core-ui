@@ -7,25 +7,29 @@
  */
 
 import React, { useCallback, useState } from 'react'
+import type {
+  StepProps,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Layout,
   Icon,
   StepWizard,
-  StepProps,
   Button,
   Text,
   ButtonSize,
-  ButtonVariation,
-  AllowedTypes
+  ButtonVariation
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Dialog, IDialogProps, Classes, Label } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Dialog, Classes, Label } from '@blueprintjs/core'
 import { defaultTo, get, set } from 'lodash-es'
 import type { IconProps } from '@harness/icons'
 
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'

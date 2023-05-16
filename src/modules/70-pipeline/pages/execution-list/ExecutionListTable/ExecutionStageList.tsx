@@ -6,7 +6,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Fragment, ReactElement, useMemo } from 'react'
+import type { ReactElement} from 'react';
+import React, { Fragment, useMemo } from 'react'
 import type { Row } from 'react-table'
 import { defaultTo, get } from 'lodash-es'
 import cx from 'classnames'
@@ -27,7 +28,8 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 
 import { useQueryParams } from '@common/hooks'
-import { ExecutionStage, ExecutionStageProps } from './ExecutionStage'
+import type { ExecutionStageProps } from './ExecutionStage';
+import { ExecutionStage } from './ExecutionStage'
 import { MultiTypeDeploymentSummary } from './MultiTypeDeploymentSummary'
 
 import css from './ExecutionListTable.module.scss'

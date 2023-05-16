@@ -10,17 +10,19 @@ import type Highcharts from 'highcharts'
 import { get } from 'lodash-es'
 import type { ViewRule, ViewIdCondition, CEView, BusinessMapping } from 'services/ce'
 import type { UseStringsReturn } from 'framework/strings'
-import {
-  QlceViewTimeFilterOperator,
-  ViewFieldIdentifier,
+import type {
   QlceViewFilterWrapperInput,
   QlceViewFieldInputInput,
   QlceViewGroupByInput,
-  QlceViewTimeGroupType,
   QlceViewFilterInput,
-  ViewTimeRangeType,
-  ViewChartType,
   QlceViewRuleInput
+} from 'services/ce/services';
+import {
+  QlceViewTimeFilterOperator,
+  ViewFieldIdentifier,
+  QlceViewTimeGroupType,
+  ViewTimeRangeType,
+  ViewChartType
 } from 'services/ce/services'
 import type { PerspectiveQueryParams } from '@ce/types'
 import { CCM_CHART_TYPES } from '@ce/constants'

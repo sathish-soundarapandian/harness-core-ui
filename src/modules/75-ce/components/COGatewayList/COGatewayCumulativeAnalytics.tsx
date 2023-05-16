@@ -14,7 +14,8 @@ import { Container, HarnessDocTooltip, Icon, Layout, Text } from '@harness/uicor
 import { Color, FontVariation } from '@harness/design-system'
 import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from '@common/utils/momentUtils'
 import { String, useStrings } from 'framework/strings'
-import { CumulativeSavings, FilterDTO, useCumulativeServiceSavingsV2 } from 'services/lw'
+import type { CumulativeSavings, FilterDTO} from 'services/lw';
+import { useCumulativeServiceSavingsV2 } from 'services/lw'
 import { RulesMode } from '@ce/constants'
 import EmptyView from '@ce/images/empty-state.svg'
 import { getEmissionsValue } from '@ce/utils/formatResourceValue'

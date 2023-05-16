@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { StepProps, Container, Text } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import VerifyConnection from './VerifyConnection'

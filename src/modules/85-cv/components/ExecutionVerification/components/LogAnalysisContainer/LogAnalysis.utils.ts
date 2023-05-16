@@ -7,7 +7,8 @@
 
 import { isEmpty } from 'lodash-es'
 import type { SeriesColumnOptions } from 'highcharts'
-import { MultiSelectOption, Utils } from '@harness/uicore'
+import type { MultiSelectOption} from '@harness/uicore';
+import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { getEventTypeChartColor } from '@cv/utils/CommonUtils'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'

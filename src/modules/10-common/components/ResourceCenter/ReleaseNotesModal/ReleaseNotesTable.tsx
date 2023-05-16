@@ -7,9 +7,10 @@
 
 import React from 'react'
 import { HTMLTable } from '@blueprintjs/core'
-import {
+import type {
   ModuleVersionsListResponseResponse,
-  ModuleVersionsResponse,
+  ModuleVersionsResponse} from 'services/cd-ng-open-api';
+import {
   useListModuleVersions
 } from 'services/cd-ng-open-api'
 import { useStrings } from 'framework/strings'

@@ -1,9 +1,11 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import {
-  ReconcileDialog,
+import type {
   ReconcileDialogProps
+} from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog';
+import {
+  ReconcileDialog
 } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
 import type { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 

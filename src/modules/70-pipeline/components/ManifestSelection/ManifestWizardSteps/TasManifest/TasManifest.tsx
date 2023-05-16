@@ -6,6 +6,11 @@
  */
 
 import React from 'react'
+import type {
+  StepProps,
+  AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -13,12 +18,9 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  StepProps,
   ButtonVariation,
-  AllowedTypes,
   FormikForm,
-  FormInput,
-  SelectOption
+  FormInput
 } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'

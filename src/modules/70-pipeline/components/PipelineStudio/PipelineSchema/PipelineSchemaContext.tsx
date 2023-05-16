@@ -7,9 +7,10 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import {
+import type {
   ResponseJsonNode,
-  ResponseYamlSchemaResponse,
+  ResponseYamlSchemaResponse} from 'services/pipeline-ng';
+import {
   useGetSchemaYaml,
   useGetStepYamlSchema
 } from 'services/pipeline-ng'

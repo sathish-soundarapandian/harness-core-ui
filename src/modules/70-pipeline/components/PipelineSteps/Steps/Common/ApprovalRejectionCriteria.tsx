@@ -9,6 +9,8 @@ import React, { useEffect, useState } from 'react'
 import { FieldArray } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import { Color } from '@harness/design-system'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   FormInput,
@@ -17,18 +19,19 @@ import {
   Layout,
   MultiTypeInputType,
   Radio,
-  SelectOption,
   Text
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { JiraFieldNG } from 'services/cd-ng'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import {
+import type {
   ApprovalRejectionCriteriaCondition,
   ApprovalRejectionCriteriaProps,
-  ApprovalRejectionCriteriaType,
   ConditionsInterface
+} from '@pipeline/components/PipelineSteps/Steps/Common/types';
+import {
+  ApprovalRejectionCriteriaType
 } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { errorCheck } from '@common/utils/formikHelpers'

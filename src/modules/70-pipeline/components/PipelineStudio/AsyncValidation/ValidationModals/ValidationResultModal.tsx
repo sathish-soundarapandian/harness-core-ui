@@ -18,14 +18,16 @@ import { useStrings } from 'framework/strings'
 import type { Evaluation } from 'services/pm'
 import type { TemplateValidationResponseDTO } from 'services/pipeline-ng'
 import { RevalidateFooter } from './RevalidateFooter'
+import type {
+  ValidationStatus,
+  ValidationArea,
+  ValidationAreaStatus
+} from '../ValidationUtils';
 import {
   isStatusFailure,
   isStatusSuccess,
   useValidationErrorCount,
-  ValidationStatus,
-  ValidationArea,
-  useValidationSummary,
-  ValidationAreaStatus
+  useValidationSummary
 } from '../ValidationUtils'
 import css from '../ValidationBadge.module.scss'
 

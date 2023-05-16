@@ -9,7 +9,8 @@ import React from 'react'
 import { render, waitFor, fireEvent, findByText, act } from '@testing-library/react'
 import type { MultiSelectOption } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import { EnvironmentMultiSelectOrCreate, EnvironmentMultiSelectOrCreateProps } from '../EnvironmentMultiSelectAndEnv'
+import type { EnvironmentMultiSelectOrCreateProps } from '../EnvironmentMultiSelectAndEnv';
+import { EnvironmentMultiSelectOrCreate } from '../EnvironmentMultiSelectAndEnv'
 import environments from './mock.json'
 import inputSetEnvironments from './env.mock'
 jest.mock('services/cd-ng', () => ({

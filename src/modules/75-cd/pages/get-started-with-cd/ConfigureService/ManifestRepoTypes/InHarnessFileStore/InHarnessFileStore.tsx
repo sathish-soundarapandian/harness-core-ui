@@ -13,9 +13,10 @@ import { get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ManifestConfigWrapper,
-  ResponseFileDTO,
+  ResponseFileDTO} from 'services/cd-ng';
+import {
   useCreate,
   useGetFolderNodes,
   useListFilesAndFolders
@@ -28,7 +29,8 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
-import { DrawerMode, SAMPLE_MANIFEST_FOLDER, ServiceDataType } from '../../../CDOnboardingUtils'
+import type { ServiceDataType } from '../../../CDOnboardingUtils';
+import { DrawerMode, SAMPLE_MANIFEST_FOLDER } from '../../../CDOnboardingUtils'
 import { manifestFileContents } from '../../../sampleManifests'
 import { RightDrawer } from '../RightDrawer/RightDrawer'
 import { useCDOnboardingContext } from '../../../CDOnboardingStore'

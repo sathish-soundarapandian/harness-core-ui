@@ -6,6 +6,10 @@
  */
 
 import React, { useEffect } from 'react'
+import type {
+  StepProps,
+  AllowedTypes as MultiTypeAllowedTypes
+} from '@harness/uicore';
 import {
   Button,
   Formik,
@@ -17,9 +21,7 @@ import {
   ButtonVariation,
   ButtonSize,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  StepProps,
-  AllowedTypes as MultiTypeAllowedTypes
+  MultiTypeInputType
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
@@ -31,12 +33,13 @@ import { useStrings } from 'framework/strings'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type {
+  ConnectorTypes} from './ConfigFileStoreHelper';
 import {
   AllowedTypes,
   tfVarIcons,
   ConnectorMap,
   ConnectorLabelMap,
-  ConnectorTypes,
   getPath,
   TerragruntAllowedTypes
 } from './ConfigFileStoreHelper'

@@ -13,9 +13,11 @@ import { useParams } from 'react-router-dom'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { Connectors, connectorUrlType } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
-import {
-  ConnectorReferenceField,
+import type {
   ConnectorReferenceDTO
+} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField';
+import {
+  ConnectorReferenceField
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { getCompleteConnectorUrl } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'

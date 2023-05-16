@@ -29,26 +29,29 @@ import {
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo, get, capitalize } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
-import { Classes, Drawer, IconName, Menu, Position } from '@blueprintjs/core'
+import type { IconName} from '@blueprintjs/core';
+import { Classes, Drawer, Menu, Position } from '@blueprintjs/core'
 import routes from '@common/RouteDefinitions'
 import { StringUtils, useToaster } from '@common/exports'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   Service,
   ServiceSavings,
+  ServiceError,
+  FetchRulesResponseRecords,
+  FetchRulesBody,
+  FilterDTO,
+  ServiceDiagnostics
+} from 'services/lw';
+import {
   useAllServiceResources,
   useHealthOfService,
   useRequestsOfService,
   useSavingsOfService,
   useGetServiceDiagnostics,
-  ServiceError,
   useDescribeServiceInContainerServiceCluster,
   useRouteDetails,
-  useFetchRules,
-  FetchRulesResponseRecords,
-  FetchRulesBody,
-  FilterDTO,
-  ServiceDiagnostics
+  useFetchRules
 } from 'services/lw'
 import { String, useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'

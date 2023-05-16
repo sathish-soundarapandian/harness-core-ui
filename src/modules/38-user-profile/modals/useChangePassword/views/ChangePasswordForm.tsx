@@ -7,6 +7,8 @@
 
 import React from 'react'
 import * as yup from 'yup'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   Layout,
@@ -16,7 +18,6 @@ import {
   Container,
   Text,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   ButtonVariation
 } from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'

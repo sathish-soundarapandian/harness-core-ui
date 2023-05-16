@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { MetasploitStepBaseWithRef } from './MetasploitStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { MetasploitStepVariables, MetasploitStepVariablesProps } from './MetasploitStepVariables'
+import type { MetasploitStepVariablesProps } from './MetasploitStepVariables';
+import { MetasploitStepVariables } from './MetasploitStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './MetasploitStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 import { METASPLOIT_DEFAULT_CONFIG } from '../constants'

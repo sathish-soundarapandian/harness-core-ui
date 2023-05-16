@@ -11,7 +11,8 @@ import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType } from '@harness/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ECSBlueGreenSwapTargetGroupsStepEditRef } from '../ECSBlueGreenSwapTargetGroupsStepEdit'
 import type { ECSBlueGreenSwapTargetGroupsStepValues } from '../ECSBlueGreenSwapTargetGroupsStep'

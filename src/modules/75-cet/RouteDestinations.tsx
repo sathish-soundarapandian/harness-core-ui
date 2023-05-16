@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { Redirect, useParams } from 'react-router-dom'
 import { RouteWithLayout } from '@common/router'
 import { MinimalLayout } from '@common/layouts'
@@ -15,8 +16,10 @@ import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
-import { Module, ModuleName } from 'framework/types/ModuleName'
+import type { LicenseRedirectProps} from 'framework/LicenseStore/LicenseStoreContext';
+import { LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
+import type { Module} from 'framework/types/ModuleName';
+import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import PolicyManagementMFE from '@governance/GovernanceApp'
 import ConnectorsPage from '@connectors/pages/connectors/ConnectorsPage'

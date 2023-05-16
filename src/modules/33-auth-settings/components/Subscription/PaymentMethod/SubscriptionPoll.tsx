@@ -15,7 +15,8 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { Module } from 'framework/types/ModuleName'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { SubscriptionProps } from '@common/constants/SubscriptionTypes'
-import { InvoiceDetailDTO, ItemDTO, useRetrieveSubscription } from 'services/cd-ng'
+import type { InvoiceDetailDTO, ItemDTO} from 'services/cd-ng';
+import { useRetrieveSubscription } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { getDollarAmount } from '@auth-settings/utils'
 

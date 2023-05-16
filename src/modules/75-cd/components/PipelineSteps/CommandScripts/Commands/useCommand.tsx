@@ -10,15 +10,17 @@ import { isUndefined } from 'lodash-es'
 import type { FieldArrayRenderProps } from 'formik'
 import { Dialog } from '@blueprintjs/core'
 import type { AllowedTypes } from '@harness/uicore'
-import { HideModal, useModalHook } from '@harness/use-modal'
+import type { HideModal} from '@harness/use-modal';
+import { useModalHook } from '@harness/use-modal'
 import { isWinRmDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
-import {
-  CommandType,
+import type {
   CommandUnitType,
   CustomScriptCommandUnit,
   CopyCommandUnit,
-  DownloadArtifactCommandUnit,
+  DownloadArtifactCommandUnit} from '../CommandScriptsTypes';
+import {
+  CommandType,
   SourceType
 } from '../CommandScriptsTypes'
 import { CommandEdit } from './CommandEdit'

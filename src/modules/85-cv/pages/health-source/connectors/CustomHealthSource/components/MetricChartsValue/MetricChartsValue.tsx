@@ -15,7 +15,8 @@ import MetricLineChart from '@cv/pages/health-source/common/MetricLineChart/Metr
 import { QueryType } from '@cv/pages/health-source/common/HealthSourceQueryType/HealthSourceQueryType.types'
 import Button from '@rbac/components/Button/Button'
 import { useStrings } from 'framework/strings'
-import { TimeSeriesSampleDTO, useFetchParsedSampleData } from 'services/cv'
+import type { TimeSeriesSampleDTO} from 'services/cv';
+import { useFetchParsedSampleData } from 'services/cv'
 import type { MetricChartsValueInterface } from './MetricChartsValue.types'
 import { CustomHealthSourceFieldNames } from '../../CustomHealthSource.constants'
 import { getOptionsForChart } from '../../../NewRelic/components/NewRelicCustomMetricForm/NewRelicCustomMetricForm.utils'

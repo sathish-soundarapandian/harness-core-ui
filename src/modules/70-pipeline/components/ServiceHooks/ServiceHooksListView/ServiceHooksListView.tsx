@@ -8,7 +8,8 @@
 import React, { useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { Layout, Button, ButtonSize, ButtonVariation, IconProps, StepProps, Text, Icon } from '@harness/uicore'
+import type { IconProps, StepProps} from '@harness/uicore';
+import { Layout, Button, ButtonSize, ButtonVariation, Text, Icon } from '@harness/uicore'
 import type { IDialogProps } from '@blueprintjs/core'
 import { Dialog, Classes } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'

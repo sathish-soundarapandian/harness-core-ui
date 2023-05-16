@@ -7,9 +7,11 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { AllowedTypes, Button, PageSpinner, StepProps, StepWizard } from '@harness/uicore'
+import type { AllowedTypes, StepProps} from '@harness/uicore';
+import { Button, PageSpinner, StepWizard } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 import { defaultTo, get, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -71,14 +73,15 @@ import type { EnvironmentPathProps, GitQueryParams, ProjectPathProps } from '@co
 import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
 import HelmRepoOverrideManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HelmRepoOverrideManifest/HelmRepoOverrideManifest'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
-import {
+import type {
   OverrideManifestTypes,
+  OverrideManifestStoresTypes} from '@cd/components/EnvironmentsV2/EnvironmentDetails/ServiceOverrides/ServiceManifestOverride/ServiceManifestOverrideUtils';
+import {
   OverrideManifestStores,
   OverrideManifestStoreMap,
   ManifestLabels,
   ManifestIcons,
   OverrideManifests,
-  OverrideManifestStoresTypes,
   getAllowedOverrideManifests,
   AllowedManifestOverrideTypes,
   TASOverrideManifests

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Strategy, StrategyType, ErrorType, FailureErrorType } from '@pipeline/utils/FailureStrategyUtils'
+import type { StrategyType, FailureErrorType } from '@pipeline/utils/FailureStrategyUtils';
+import { Strategy, ErrorType } from '@pipeline/utils/FailureStrategyUtils'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 

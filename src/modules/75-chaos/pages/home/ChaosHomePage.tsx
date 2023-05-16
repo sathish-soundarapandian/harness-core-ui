@@ -15,8 +15,10 @@ import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStor
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useQueryParams } from '@common/hooks'
-import { Project, useGetLicensesAndSummary } from 'services/cd-ng'
-import { Module, ModuleName } from 'framework/types/ModuleName'
+import type { Project} from 'services/cd-ng';
+import { useGetLicensesAndSummary } from 'services/cd-ng'
+import type { Module} from 'framework/types/ModuleName';
+import { ModuleName } from 'framework/types/ModuleName'
 import routes from '@common/RouteDefinitions'
 import { HomePageTemplate } from '@projects-orgs/pages/HomePageTemplate/HomePageTemplate'
 import { useStrings } from 'framework/strings'

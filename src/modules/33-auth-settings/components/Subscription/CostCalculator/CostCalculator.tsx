@@ -10,17 +10,19 @@ import { Layout, PageError, Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { cloneDeep, defaultTo, isEmpty } from 'lodash-es'
 import type { Module, ModuleName } from 'framework/types/ModuleName'
+import type {
+  RetrieveProductPricesQueryParams} from 'services/cd-ng/index';
 import {
-  RetrieveProductPricesQueryParams,
   useRetrieveProductPrices,
   useRetrieveRecommendationRc,
   useGetAccountLicenses
 } from 'services/cd-ng/index'
-import {
-  Editions,
+import type {
   SubscribeViews,
   SubscriptionProps,
-  ProductPricesProp,
+  ProductPricesProp} from '@common/constants/SubscriptionTypes';
+import {
+  Editions,
   TimeType,
   LookUpKeyFrequencyType
 } from '@common/constants/SubscriptionTypes'

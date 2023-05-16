@@ -7,7 +7,8 @@
 
 import { Color, FontVariation } from '@harness/design-system'
 import { Button, ButtonVariation, Heading, Layout, Text, useToaster } from '@harness/uicore'
-import React, { FC, ReactNode } from 'react'
+import type { FC, ReactNode } from 'react';
+import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import type { ResponseModuleLicenseDTO } from 'services/cd-ng'
 import type { Module } from 'framework/types/ModuleName'

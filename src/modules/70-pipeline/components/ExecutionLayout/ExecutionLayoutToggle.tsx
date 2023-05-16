@@ -7,9 +7,11 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Icon, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Icon } from '@harness/uicore'
 
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 
 import { ExecutionLayoutState, useExecutionLayoutContext } from './ExecutionLayoutContext'
 

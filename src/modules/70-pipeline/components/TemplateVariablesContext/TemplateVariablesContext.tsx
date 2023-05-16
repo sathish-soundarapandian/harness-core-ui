@@ -11,12 +11,14 @@ import { defaultTo, get } from 'lodash-es'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitQueryParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
-import {
+import type {
   Failure,
   NGTemplateInfoConfig,
-  useCreateVariablesV2,
-  useGetYamlWithTemplateRefsResolved,
   VariableMergeServiceResponse
+} from 'services/template-ng';
+import {
+  useCreateVariablesV2,
+  useGetYamlWithTemplateRefsResolved
 } from 'services/template-ng'
 import type { UseMutateAsGetReturn } from '@common/hooks/useMutateAsGet'
 import type { StageElementConfig, StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'

@@ -6,14 +6,15 @@
  */
 
 import React, { useEffect } from 'react'
+import type {
+  SelectOption,
+  StepProps} from '@harness/uicore';
 import {
   Formik,
   FormInput,
   Layout,
   MultiTypeInputType,
   Button,
-  SelectOption,
-  StepProps,
   Text,
   ButtonVariation
 } from '@harness/uicore'
@@ -22,12 +23,14 @@ import { Form } from 'formik'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import {
+import type {
   ConnectorConfigDTO,
+  AzureSubscriptionDTO
+} from 'services/cd-ng';
+import {
   useGetAzureSubscriptions,
   useGetACRRegistriesBySubscription,
-  useGetACRRepositories,
-  AzureSubscriptionDTO
+  useGetACRRepositories
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

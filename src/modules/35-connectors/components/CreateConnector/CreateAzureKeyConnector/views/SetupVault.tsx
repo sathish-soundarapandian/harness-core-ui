@@ -7,6 +7,10 @@
 
 import React, { useState, useEffect } from 'react'
 import * as Yup from 'yup'
+import type {
+  StepProps,
+  SelectOption,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Container,
   Text,
@@ -15,9 +19,6 @@ import {
   Layout,
   FormInput,
   Button,
-  StepProps,
-  SelectOption,
-  ModalErrorHandlerBinding,
   ModalErrorHandler,
   ButtonVariation,
   shouldShowError
@@ -25,13 +26,15 @@ import {
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
-import {
+import type {
   ConnectorConfigDTO,
-  useGetMetadata,
   AzureKeyVaultMetadataSpecDTO,
-  useCreateConnector,
-  useUpdateConnector,
   ConnectorRequestBody
+} from 'services/cd-ng';
+import {
+  useGetMetadata,
+  useCreateConnector,
+  useUpdateConnector
 } from 'services/cd-ng'
 import type { StepDetailsProps, ConnectorDetailsProps } from '@connectors/interfaces/ConnectorInterface'
 import { PageSpinner } from '@common/components'

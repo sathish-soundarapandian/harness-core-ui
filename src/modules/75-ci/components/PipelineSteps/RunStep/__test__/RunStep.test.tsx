@@ -10,8 +10,10 @@ import { render, act, fireEvent, waitFor, queryByAttribute, screen } from '@test
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import mockImport from 'framework/utils/mockImport'
-import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'
-import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { UseGetReturnData } from '@common/utils/testUtils';
+import { findPopoverContainer } from '@common/utils/testUtils'
+import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'

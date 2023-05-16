@@ -7,10 +7,12 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, StepWizard, StepProps, AllowedTypes } from '@harness/uicore'
+import type { StepProps, AllowedTypes } from '@harness/uicore';
+import { Button, StepWizard } from '@harness/uicore'
 import cx from 'classnames'
 import { useModalHook } from '@harness/use-modal'
-import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 
 import type { ConnectionStringsConfiguration, ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
@@ -35,13 +37,15 @@ import {
 import { ApplicationConfigWizard } from '@pipeline/components/ApplicationConfig/ApplicationConfigListView/ApplicationConfigWizard/ApplicationConfigWizard'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ApplicationConfigWizardStepTwo from '@pipeline/components/ApplicationConfig/ApplicationConfigListView/ApplicationConfigWizard/ApplicationConfigWizardStepTwo'
-import {
-  AllowedTypes as AllowedTypeas,
+import type {
   ApplicationConfigWizardInitData,
-  ConnectorMap,
   ConnectorTypes,
   LastStepProps,
   WizardStepNames
+} from '@pipeline/components/ApplicationConfig/ApplicationConfig.types';
+import {
+  AllowedTypes as AllowedTypeas,
+  ConnectorMap
 } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
 import css from '@pipeline/components/ApplicationConfig/ApplicationConfig.module.scss'
 

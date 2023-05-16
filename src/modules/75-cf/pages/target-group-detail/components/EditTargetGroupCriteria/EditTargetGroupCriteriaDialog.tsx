@@ -5,23 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback } from 'react'
+import type { FC} from 'react';
+import React, { useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Formik,
   FormikForm,
   Layout,
-  SelectOption,
   useToaster,
   ModalDialog
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { Clause, Segment, usePatchSegment } from 'services/cf'
+import type { Clause, Segment} from 'services/cf';
+import { usePatchSegment } from 'services/cf'
 import targetToSelectOption from '@cf/utils/targetToSelectOption'
-import patch, { Instruction } from '@cf/utils/instructions'
+import type { Instruction } from '@cf/utils/instructions';
+import patch from '@cf/utils/instructions'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import SpecifyIndividualTargets from './SpecifyIndividualTargets'
 import TargetBasedOnConditions from './TargetBasedOnConditions'

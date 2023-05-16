@@ -9,12 +9,14 @@ import React from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import { Layout } from '@harness/uicore'
 import cx from 'classnames'
-import { ProjectSelector, ProjectSelectorProps } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
+import type { ProjectSelectorProps } from '@projects-orgs/components/ProjectSelector/ProjectSelector';
+import { ProjectSelector } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import routes, { CODEPathProps } from '../../RouteDefinitions'
+import type { CODEPathProps } from '../../RouteDefinitions';
+import routes from '../../RouteDefinitions'
 import css from './SideNav.module.scss'
 
 export default function CODESideNav(): React.ReactElement {

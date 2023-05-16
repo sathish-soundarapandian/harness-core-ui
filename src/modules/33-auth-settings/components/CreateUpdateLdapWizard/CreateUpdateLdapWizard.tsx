@@ -5,23 +5,26 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useEffect, useState } from 'react'
+import type { ReactElement} from 'react';
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, StepWizard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   LdapConnectionSettings,
   LdapGroupSettings,
   LDAPSettings,
   LDAPSettingsRequestBody,
-  LdapUserSettings,
+  LdapUserSettings} from 'services/cd-ng';
+import {
   useCreateLdapSettings,
   useUpdateLdapSettings
 } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
-import StepOverview, { LdapOverview } from './views/StepOverview'
+import type { LdapOverview } from './views/StepOverview';
+import StepOverview from './views/StepOverview'
 import StepConnectionSettings from './views/StepConnectionSettings'
 import StepUserQueries from './views/StepUserQueries'
 import StepGroupQueries from './views/StepGroupQueries'

@@ -5,13 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, Fragment, useMemo } from 'react'
+import type { FC} from 'react';
+import React, { Fragment, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, ButtonVariation, Heading, PageError, SelectOption, Tag } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Button, ButtonVariation, Heading, PageError, Tag } from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useGetAllTargetAttributes, Clause, Segment } from 'services/cf'
+import type { Clause, Segment } from 'services/cf';
+import { useGetAllTargetAttributes } from 'services/cf'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { FeatureFlagBucketBy, getErrorMessage } from '@cf/utils/CFUtils'
 import RuleRow from './RuleRow'

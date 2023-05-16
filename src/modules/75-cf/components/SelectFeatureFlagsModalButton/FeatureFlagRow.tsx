@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Container, Select, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Container, Select } from '@harness/uicore'
 import { ItemBriefInfo } from '@cf/components/ItemBriefInfo/ItemBriefInfo'
 import { CFVariationColors } from '@cf/constants'
 import type { Feature } from 'services/cf'

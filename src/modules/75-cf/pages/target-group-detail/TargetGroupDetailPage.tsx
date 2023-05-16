@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Page, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { Feature, Segment, useGetSegment } from 'services/cf'
+import type { Feature, Segment} from 'services/cf';
+import { useGetSegment } from 'services/cf'
 import { useGetEnvironment } from 'services/cd-ng'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'

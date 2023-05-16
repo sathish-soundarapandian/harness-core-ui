@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { StepWizard } from '@harness/uicore'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { ServiceDefinition } from 'services/cd-ng'
 import type { ConnectorTypes, StartupScriptWizardStepsProps } from './StartupScriptInterface.types'

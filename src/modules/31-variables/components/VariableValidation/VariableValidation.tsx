@@ -9,7 +9,8 @@ import React from 'react'
 import { FormInput } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
-import { Validation, VariableFormData } from '@variables/utils/VariablesUtils'
+import type { VariableFormData } from '@variables/utils/VariablesUtils';
+import { Validation } from '@variables/utils/VariablesUtils'
 import AllowedValuesField from '../AllowedValues/AllowedValuesField'
 
 interface VariableValidationProps {

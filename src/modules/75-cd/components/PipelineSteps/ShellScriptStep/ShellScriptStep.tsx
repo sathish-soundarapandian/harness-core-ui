@@ -6,18 +6,22 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, set, get, isArray, defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { v4 as uuid } from 'uuid'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { parse } from 'yaml'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-import { listSecretsV2Promise, SecretResponseWrapper } from 'services/cd-ng'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { SecretResponseWrapper } from 'services/cd-ng';
+import { listSecretsV2Promise } from 'services/cd-ng'
 import type { ShellScriptStepInfo } from 'services/pipeline-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -28,10 +32,12 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StringsMap } from 'stringTypes'
 import { shellScriptType } from './BaseShellScript'
 
-import { ShellScriptData, ShellScriptFormData, variableSchema } from './shellScriptTypes'
+import type { ShellScriptData, ShellScriptFormData} from './shellScriptTypes';
+import { variableSchema } from './shellScriptTypes'
 import ShellScriptInputSetStep from './ShellScriptInputSetStep'
 import { ShellScriptWidgetWithRef } from './ShellScriptWidget'
-import { ShellScriptVariablesView, ShellScriptVariablesViewProps } from './ShellScriptVariablesView'
+import type { ShellScriptVariablesViewProps } from './ShellScriptVariablesView';
+import { ShellScriptVariablesView } from './ShellScriptVariablesView'
 
 const logger = loggerFor(ModuleName.CD)
 const ConnectorRefRegex = /^.+step\.spec\.executionTarget\.connectorRef$/

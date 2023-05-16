@@ -10,7 +10,8 @@ import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { DefineHealthSourceFormInterface } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.types'
-import CommonHealthSourceContainer, { CommonHealthSourceContainerProps } from '../CommonHealthSource.container'
+import type { CommonHealthSourceContainerProps } from '../CommonHealthSource.container';
+import CommonHealthSourceContainer from '../CommonHealthSource.container'
 import { createHealthSourceConfigurationsData, createHealthSourcePayload } from '../CommonHealthSource.utils'
 
 import {

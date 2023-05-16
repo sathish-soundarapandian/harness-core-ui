@@ -10,7 +10,8 @@ import { projectPathProps } from '@common/utils/routeUtils'
 import type { TestWrapperProps } from '@common/utils/testUtils'
 import { cvModuleParams } from '@cv/RouteDestinations'
 import type { ServiceLevelIndicatorDTO } from 'services/cv'
-import { Comparators, EvaluationType, SLIEventTypes, SLIMetricTypes, SLOV2Form } from '../CVCreateSLOV2.types'
+import type { SLOV2Form } from '../CVCreateSLOV2.types';
+import { Comparators, EvaluationType, SLIEventTypes, SLIMetricTypes } from '../CVCreateSLOV2.types'
 import { getSLOV2InitialFormData } from '../CVCreateSLOV2.utils'
 
 export const errorMessage = 'TEST ERROR MESSAGE'

@@ -9,6 +9,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { find } from 'lodash-es'
 import { Classes } from '@blueprintjs/core'
+import type {
+  PillToggleProps} from '@harness/uicore';
 import {
   Button,
   ButtonSize,
@@ -17,16 +19,17 @@ import {
   Layout,
   NoDataCard,
   PillToggle,
-  PillToggleProps,
   Text
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { MonitoredServiceChangeDetailSLO, useGetMonitoredServiceChangeDetails } from 'services/cv'
+import type { MonitoredServiceChangeDetailSLO} from 'services/cv';
+import { useGetMonitoredServiceChangeDetails } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import SLOTargetChartWrapper from './SLOTargetChartWrapper'
-import { SLOAndErrorBudgetProps, SLOCardToggleViews } from './SLOAndErrorBudget.types'
+import type { SLOAndErrorBudgetProps} from './SLOAndErrorBudget.types';
+import { SLOCardToggleViews } from './SLOAndErrorBudget.types'
 import css from './SLOAndErrorBudget.module.scss'
 
 const SLOAndErrorBudget: React.FC<SLOAndErrorBudgetProps> = ({

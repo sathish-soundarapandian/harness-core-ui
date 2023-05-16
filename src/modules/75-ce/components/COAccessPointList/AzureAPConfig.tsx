@@ -8,15 +8,18 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Heading } from '@harness/uicore'
-import { AccessPoint, useCreateAccessPoint, useEditAccessPoint } from 'services/lw'
+import type { AccessPoint} from 'services/lw';
+import { useCreateAccessPoint, useEditAccessPoint } from 'services/lw'
 // import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
 import { Utils } from '@ce/common/Utils'
 import type { AccessPointScreenMode } from '@ce/types'
 import { PROVIDER_TYPES } from '@ce/constants'
 import { useStrings } from 'framework/strings'
-import AzureAccessPointForm, { AzureApFormVal } from './AzureAccessPointForm'
-import AzureApDnsMapping, { AzureDnsFormVal } from './AzureDnsMapping'
+import type { AzureApFormVal } from './AzureAccessPointForm';
+import AzureAccessPointForm from './AzureAccessPointForm'
+import type { AzureDnsFormVal } from './AzureDnsMapping';
+import AzureApDnsMapping from './AzureDnsMapping'
 import css from '../COGatewayAccess/COGatewayAccess.module.scss'
 
 interface AzureAPConfigProps {

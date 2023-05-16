@@ -1,7 +1,8 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import LogsDetailLegendForChart, { LogsDetailLegendForChartPropsType } from '../LogsDetailLegendForChart'
+import type { LogsDetailLegendForChartPropsType } from '../LogsDetailLegendForChart';
+import LogsDetailLegendForChart from '../LogsDetailLegendForChart'
 
 describe('LogsDetailLegendForChart', () => {
   const WrapperComponent = ({ clusterType }: LogsDetailLegendForChartPropsType): JSX.Element => {

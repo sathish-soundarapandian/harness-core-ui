@@ -10,17 +10,19 @@ import type { ITagInputProps } from '@blueprintjs/core'
 import { useModalHook } from '@harness/use-modal'
 import { useParams } from 'react-router-dom'
 import { debounce, defaultTo, get, isEmpty, pick } from 'lodash-es'
+import type {
+  MultiSelectOption,
+  SelectOption} from '@harness/uicore';
 import {
   Container,
   FormInput,
   getErrorInfoFromErrorObject,
   Icon,
-  MultiSelectOption,
-  SelectOption,
   useToaster
 } from '@harness/uicore'
+import type {
+  FilterDTO} from 'services/lw';
 import {
-  FilterDTO,
   useDeleteRuleFilter,
   useGetRulesMetadata,
   useSaveRuleFilter,
@@ -29,14 +31,17 @@ import {
 } from 'services/lw'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
-import {
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
+import type {
   GetAggregatedUsersQueryParams,
   GetConnectorListV2QueryParams,
-  useGetAggregatedUsers,
-  useGetConnectorListV2,
   UserAggregate,
   ConnectorResponse
+} from 'services/cd-ng';
+import {
+  useGetAggregatedUsers,
+  useGetConnectorListV2
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { allCloudProvidersList, GatewayKindType } from '@ce/constants'

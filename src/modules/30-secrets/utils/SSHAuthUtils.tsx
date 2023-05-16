@@ -10,7 +10,7 @@ import { pick } from 'lodash-es'
 import { String } from 'framework/strings'
 import type { SSHConfigFormData } from '@secrets/modals/CreateSSHCredModal/views/StepAuthentication'
 import type { DetailsForm } from '@secrets/modals/CreateSSHCredModal/views/StepDetails'
-import {
+import type {
   KerberosConfigDTO,
   TGTPasswordSpecDTO,
   TGTKeyTabFilePathSpecDTO,
@@ -20,7 +20,8 @@ import {
   SSHKeyReferenceCredentialDTO,
   SSHPasswordCredentialDTO,
   SSHKeySpecDTO,
-  SSHAuthDTO,
+  SSHAuthDTO} from 'services/cd-ng';
+import {
   getSecretV2Promise
 } from 'services/cd-ng'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'

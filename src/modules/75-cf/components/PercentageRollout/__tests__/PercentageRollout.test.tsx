@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Segment, TargetAttributesResponse, Variation } from 'services/cf'
-import PercentageRollout, { PercentageRolloutProps } from '@cf/components/PercentageRollout/PercentageRollout'
+import type { PercentageRolloutProps } from '@cf/components/PercentageRollout/PercentageRollout';
+import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollout'
 
 const mockTargetGroups: Segment[] = [
   { name: 'Group 1', identifier: 'g1' },

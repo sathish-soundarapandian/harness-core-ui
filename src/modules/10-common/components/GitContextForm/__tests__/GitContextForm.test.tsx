@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, waitFor, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import * as cdng from 'services/cd-ng'
 import mockBranches from './branchStatusMock.json'
-import GitContextForm, { GitContextFormProps, GitContextProps } from '../GitContextForm'
+import type { GitContextFormProps, GitContextProps } from '../GitContextForm';
+import GitContextForm from '../GitContextForm'
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(mockBranches))
 const pathParams = { accountId: 'dummy', orgIdentifier: 'default', projectIdentifier: 'dummyProject' }

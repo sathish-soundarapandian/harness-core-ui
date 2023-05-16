@@ -11,12 +11,15 @@ import type { AllowedTypes } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import React from 'react'
 import { defaultTo } from 'lodash-es'
-import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps } from '@pipeline/components/PipelineSteps/PipelineStep';
+import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
-import { VariableListTableProps, VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
+import type { VariableListTableProps} from '@pipeline/components/VariablesListTable/VariablesListTable';
+import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { flatObject } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { SbomOrchestrationTool, SbomSource, SyftSbomOrchestration } from 'services/ci'

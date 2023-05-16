@@ -7,7 +7,8 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { Button, Card, Heading, Layout, Icon, IconName, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Button, Card, Heading, Layout, Icon, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'

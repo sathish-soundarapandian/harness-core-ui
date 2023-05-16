@@ -10,7 +10,8 @@ import { StepWizard } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
-import { deploymentTypeIcon, deploymentTypeLabel, ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils'
+import type { ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils'
+import { deploymentTypeIcon, deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import ConfigFilesStore from './ConfigFilesSteps/ConfigFilesStore'
 import css from './ConfigFilesWizard.module.scss'
 

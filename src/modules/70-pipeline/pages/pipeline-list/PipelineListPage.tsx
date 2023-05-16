@@ -6,11 +6,12 @@
  */
 
 import { Color } from '@harness/design-system'
+import type {
+  ExpandingSearchInputHandle} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   ExpandingSearchInput,
-  ExpandingSearchInputHandle,
   HarnessDocTooltip,
   Layout,
   Text,
@@ -33,14 +34,16 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   FilterDTO,
-  PMSPipelineSummaryResponse,
+  PMSPipelineSummaryResponse} from 'services/pipeline-ng';
+import {
   useGetPipelineList,
   useGetRepositoryList,
   useSoftDeletePipeline
 } from 'services/pipeline-ng'
-import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import type { GitFilterScope } from '@common/components/GitFilters/GitFilters';
+import GitFilters from '@common/components/GitFilters/GitFilters'
 import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'

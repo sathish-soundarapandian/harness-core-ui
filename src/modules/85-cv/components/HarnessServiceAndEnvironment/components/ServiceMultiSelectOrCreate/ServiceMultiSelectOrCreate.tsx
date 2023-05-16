@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, MultiSelectDropDown, MultiSelectOption } from '@harness/uicore'
+import type { MultiSelectOption } from '@harness/uicore';
+import { Container, MultiSelectDropDown } from '@harness/uicore'
 import type { ServiceResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { ADD_NEW_VALUE } from '@cv/constants'

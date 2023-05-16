@@ -5,15 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { CSSProperties, FC, ReactNode, useMemo, useRef, useState } from 'react'
+import type { CSSProperties, FC, ReactNode} from 'react';
+import React, { useMemo, useRef, useState } from 'react'
+import type {
+  ExpressionAndRuntimeTypeProps,
+  FixedTypeComponentProps} from '@harness/uicore';
 import {
   Button,
-  ExpressionAndRuntimeTypeProps,
   ExpressionAndRuntimeType,
   MultiTypeInputValue,
   Layout,
   Text,
-  FixedTypeComponentProps,
   MultiTypeInputType,
   ButtonVariation,
   Container,
@@ -25,12 +27,14 @@ import { Classes, Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   EntityReferenceProps,
+  ScopedObjectDTO
+} from '../EntityReference/EntityReference';
+import {
   EntityReference,
   getScopeFromValue,
-  getIdentifierFromValue,
-  ScopedObjectDTO
+  getIdentifierFromValue
 } from '../EntityReference/EntityReference'
 import type { ScopeAndIdentifier } from '../MultiSelectEntityReference/MultiSelectEntityReference'
 import css from './ReferenceSelect.module.scss'

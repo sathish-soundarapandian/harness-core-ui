@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { OWASPStepBaseWithRef } from './OWASPStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { OWASPStepVariables, OWASPStepVariablesProps } from './OWASPStepVariables'
+import type { OWASPStepVariablesProps } from './OWASPStepVariables';
+import { OWASPStepVariables } from './OWASPStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './OWASPStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

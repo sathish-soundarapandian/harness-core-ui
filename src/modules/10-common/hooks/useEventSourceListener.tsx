@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import qs, { IStringifyOptions } from 'qs'
+import type { IStringifyOptions } from 'qs';
+import qs from 'qs'
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { useHistory, useParams } from 'react-router-dom'
 import SessionToken from 'framework/utils/SessionToken'

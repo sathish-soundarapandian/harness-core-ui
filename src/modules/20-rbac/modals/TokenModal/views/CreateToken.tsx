@@ -11,10 +11,12 @@ import { omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { TokenDTO, useCreateToken } from 'services/cd-ng'
+import type { TokenDTO} from 'services/cd-ng';
+import { useCreateToken } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import TokenForm, { TokenFormData } from './TokenForm'
+import type { TokenFormData } from './TokenForm';
+import TokenForm from './TokenForm'
 
 export interface TokenModalProps {
   data?: TokenDTO

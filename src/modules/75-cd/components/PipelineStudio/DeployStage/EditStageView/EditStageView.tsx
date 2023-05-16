@@ -6,6 +6,8 @@
  */
 
 import React, { useRef, useState } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Accordion,
   Button,
@@ -16,7 +18,6 @@ import {
   FormikForm,
   FormInput,
   HarnessDocTooltip,
-  SelectOption,
   Text,
   useConfirmationDialog
 } from '@harness/uicore'

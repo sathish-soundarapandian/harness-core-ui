@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useState } from 'react'
+import type { ReactElement} from 'react';
+import React, { useState } from 'react'
 import { TableV2, Text, Layout, Avatar, Icon, Container, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Column, Renderer, CellProps } from 'react-table'

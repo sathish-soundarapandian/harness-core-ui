@@ -12,7 +12,8 @@ import { Color } from '@harness/design-system'
 import type { NotificationRuleResponse } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import ImageDeleteService from '@cv/assets/delete-service.svg'
-import { SRMNotification, SRMNotificationType } from '../../NotificationsContainer.types'
+import type { SRMNotification} from '../../NotificationsContainer.types';
+import { SRMNotificationType } from '../../NotificationsContainer.types'
 import { sloConditionOptions } from '../SLONotificationRuleRow/SLONotificationRuleRow.constants'
 import {
   changeTypeOptions,

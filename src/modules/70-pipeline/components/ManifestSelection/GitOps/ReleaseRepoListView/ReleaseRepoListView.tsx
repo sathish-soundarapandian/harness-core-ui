@@ -15,7 +15,8 @@ import { Layout, ButtonSize, ButtonVariation, Text, Icon, Button, StepWizard } f
 import { FontVariation, Color } from '@harness/design-system'
 
 import { useModalHook } from '@harness/use-modal'
-import { Classes, IDialogProps, Dialog } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core'
 import produce from 'immer'
 import { defaultTo, get, set } from 'lodash-es'
 
@@ -54,7 +55,8 @@ import { getConnectorPath } from '../../ManifestWizardSteps/ManifestUtils'
 import ConnectorField from '../../ManifestListView/ConnectorField'
 
 import ReleaseRepoWizard from '../ReleaseRepoWizard/ReleaseRepoWizard'
-import { ReleaseRepoListViewProps, ReleaseRepoManifestToConnectorMap } from '../ReleaseRepoInterface'
+import type { ReleaseRepoListViewProps} from '../ReleaseRepoInterface';
+import { ReleaseRepoManifestToConnectorMap } from '../ReleaseRepoInterface'
 
 import css from '../../ManifestSelection.module.scss'
 

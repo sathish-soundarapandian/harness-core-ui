@@ -6,11 +6,14 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, isEmpty, set } from 'lodash-es'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -21,10 +24,12 @@ import type { StepElementConfig, TasCanaryAppSetupStepInfo } from 'services/cd-n
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { TasCanaryAppSetupWidgetWithRef } from './TasCanaryAppSetupWidget'
+import type {
+  TASBasicAppSetupTemplate
+} from '../TASBasicAppSetupStep/TASBasicAppSetupTypes';
 import {
   InstancesType,
-  ResizeStrategyType,
-  TASBasicAppSetupTemplate
+  ResizeStrategyType
 } from '../TASBasicAppSetupStep/TASBasicAppSetupTypes'
 import { checkEmptyOrLessThan } from '../PipelineStepsUtil'
 import TasBasicAppSetupInputSet from '../TASBasicAppSetupStep/TasBasicAppSetupInputSet'

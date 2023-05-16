@@ -6,12 +6,14 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMutate, UseMutateProps } from 'restful-react'
+import type { UseMutateProps } from 'restful-react';
+import { useMutate } from 'restful-react'
 // eslint-disable-next-line no-restricted-imports
 import type { DebounceSettings } from 'lodash'
 import { omit } from 'lodash-es'
 
-import { useMutateAsGet, UseMutateAsGetReturn } from './useMutateAsGet'
+import type { UseMutateAsGetReturn } from './useMutateAsGet';
+import { useMutateAsGet } from './useMutateAsGet'
 
 type UseGraphQLQueryProps<TData, TError, TQueryParams, TRequestBody, TPathParams> = Omit<
   UseMutateProps<TData, TError, TQueryParams, TRequestBody, TPathParams>,

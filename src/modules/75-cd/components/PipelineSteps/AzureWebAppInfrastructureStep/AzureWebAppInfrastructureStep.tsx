@@ -6,18 +6,22 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 
 import { get, defaultTo, isEmpty } from 'lodash-es'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type {
+  AzureWebAppInfrastructure
+} from 'services/cd-ng';
 import {
   getAzureResourceGroupsBySubscriptionPromise,
   getAzureSubscriptionsPromise,
-  getConnectorListV2Promise,
-  AzureWebAppInfrastructure
+  getConnectorListV2Promise
 } from 'services/cd-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { Connectors } from '@connectors/constants'
@@ -28,12 +32,14 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 
-import {
+import type {
   AzureWebAppInfrastructureSpecEditableProps,
   AzureWebAppInfrastructureTemplate,
-  subscriptionLabel,
-  resourceGroupLabel,
   AzureFieldTypes
+} from './AzureWebAppInfrastructureInterface';
+import {
+  subscriptionLabel,
+  resourceGroupLabel
 } from './AzureWebAppInfrastructureInterface'
 import { AzureWebAppInfrastructureSpecInputForm } from './AzureWebAppInfrastructureSpecInputForm'
 import { AzureWebAppInfrastructureSpecEditable } from './AzureWebAppInfrastructureSpecEditable'

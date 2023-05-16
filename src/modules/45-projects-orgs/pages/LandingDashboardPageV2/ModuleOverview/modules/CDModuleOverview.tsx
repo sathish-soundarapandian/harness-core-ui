@@ -11,10 +11,12 @@ import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import {
-  useGetDeploymentStatsOverview,
+import type {
   GetDeploymentStatsOverviewQueryParams,
   TimeBasedStats
+} from 'services/dashboard-service';
+import {
+  useGetDeploymentStatsOverview
 } from 'services/dashboard-service'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'

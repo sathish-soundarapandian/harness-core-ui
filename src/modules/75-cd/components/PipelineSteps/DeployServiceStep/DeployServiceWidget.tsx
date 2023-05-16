@@ -6,6 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   ButtonSize,
   ButtonVariation,
@@ -15,7 +17,6 @@ import {
   Dialog,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   shouldShowError,
   FormikForm
 } from '@harness/uicore'
@@ -25,7 +26,8 @@ import { defaultTo, isEmpty, isNil, noop, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikProps, FormikValues } from 'formik'
 import type { IDialogProps } from '@blueprintjs/core'
-import { ServiceRequestDTO, ServiceYaml, useGetServiceList } from 'services/cd-ng'
+import type { ServiceRequestDTO, ServiceYaml} from 'services/cd-ng';
+import { useGetServiceList } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'

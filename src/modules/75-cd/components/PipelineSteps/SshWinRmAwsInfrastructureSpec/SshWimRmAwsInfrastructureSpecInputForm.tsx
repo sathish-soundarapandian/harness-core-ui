@@ -6,20 +6,23 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
+import type {
+  SelectOption,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Layout,
   FormInput,
   Text,
-  SelectOption,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  AllowedTypes
+  MultiTypeInputType
 } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { useParams } from 'react-router-dom'
 import { get, defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { SshWinRmAwsInfrastructure, useRegionsForAws, useTagsV2 } from 'services/cd-ng'
+import type { SshWinRmAwsInfrastructure} from 'services/cd-ng';
+import { useRegionsForAws, useTagsV2 } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import { useStrings } from 'framework/strings'

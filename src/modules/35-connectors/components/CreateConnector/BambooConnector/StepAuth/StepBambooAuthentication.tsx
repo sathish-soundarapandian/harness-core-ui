@@ -6,13 +6,14 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Button,
   Formik,
   FormInput,
   Text,
-  StepProps,
   Container,
   ButtonVariation,
   PageSpinner
@@ -25,7 +26,8 @@ import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { ConnectorConfigDTO, ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
+import type { TextReferenceInterface} from '@secrets/components/TextReference/TextReference';
+import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { setupBambooFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference.types'

@@ -9,7 +9,8 @@ import React, { useEffect, useMemo } from 'react'
 import { Intent, Spinner } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
 
-import { AllowedTypes, ConfirmationDialog, Layout, ModalDialog, useToggleOpen } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { ConfirmationDialog, Layout, ModalDialog, useToggleOpen } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'

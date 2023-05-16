@@ -10,8 +10,9 @@ import { Container, Text, Icon, Layout, Pagination } from '@harness/uicore'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import type {
+  LogAnalysisRadarChartListDTO} from 'services/cv';
 import {
-  LogAnalysisRadarChartListDTO,
   useGetAllRadarChartLogsData,
   useGetVerifyStepDeploymentLogAnalysisRadarChartResult
 } from 'services/cv'

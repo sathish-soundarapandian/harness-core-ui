@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { defaultTo } from 'lodash-es'
-import { ansiToJson, AnserJsonEntry } from 'anser'
+import type { AnserJsonEntry } from 'anser';
+import { ansiToJson } from 'anser'
 import { tokenize } from 'linkifyjs'
 
 import { getAnserClasses } from '@common/components/LogViewer/LogLine'

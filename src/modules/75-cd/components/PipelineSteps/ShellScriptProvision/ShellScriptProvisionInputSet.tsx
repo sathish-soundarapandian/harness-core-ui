@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, AllowedTypes, FormInput, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, FormInput, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { isArray, isEmpty, defaultTo } from 'lodash-es'
@@ -22,12 +23,14 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import ShellScriptProvisionConfig from './ShellScriptProvisionConfig'
 
-import {
-  scriptInputType,
+import type {
   ShellScriptProvisionData,
   ShellScriptProvisionFileStore,
   ShellScriptProvisionFormData,
   ShellScriptProvisionInline
+} from './types';
+import {
+  scriptInputType
 } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScriptProvision.module.scss'

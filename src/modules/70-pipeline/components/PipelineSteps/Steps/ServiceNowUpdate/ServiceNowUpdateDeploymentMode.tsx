@@ -18,7 +18,8 @@ import {
   MultiTypeInputType,
   PageSpinner
 } from '@harness/uicore'
-import { useStrings, StringKeys } from 'framework/strings'
+import type { StringKeys } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
   GitQueryParams,
@@ -30,15 +31,17 @@ import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import type {
+  ServiceNowTicketTypeDTO} from 'services/cd-ng';
 import {
-  ServiceNowTicketTypeDTO,
   useGetServiceNowIssueMetadata,
   useGetServiceNowTicketTypes,
   useGetServiceNowTicketTypesV2
 } from 'services/cd-ng'
-import {
+import type {
   ServiceNowCreateFieldType,
-  ServiceNowFieldNGWithValue,
+  ServiceNowFieldNGWithValue} from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types';
+import {
   ServiceNowStaticFields
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import { EXPANDABLE_INPUT_SUPPORTED_FIELDS } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'

@@ -8,6 +8,9 @@
 import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { set } from 'lodash-es'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   Formik,
@@ -17,35 +20,39 @@ import {
   Container,
   CardSelect,
   Text,
-  StepProps,
-  SelectOption,
   HarnessDocTooltip
 } from '@harness/uicore'
 import type { FormikProps, FormikHelpers } from 'formik'
-import {
+import type {
   DelegateSizeDetails,
-  useGetDelegateSizes,
-  useValidateKubernetesYaml,
   DelegateSetupDetails,
   DelegateTokenDetails
+} from 'services/portal';
+import {
+  useGetDelegateSizes,
+  useValidateKubernetesYaml
 } from 'services/portal'
 
-import { useListDelegateProfilesNg, useGetDelegateTokens, GetDelegateTokensQueryParams } from 'services/cd-ng'
+import type { GetDelegateTokensQueryParams } from 'services/cd-ng';
+import { useListDelegateProfilesNg, useGetDelegateTokens } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import type { DelegateProfile } from '@delegates/DelegateInterface'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  AddDescriptionAndKVTagsWithIdentifier,
+import type {
   FormikForAddDescriptionandKVTags
+} from '@common/components/AddDescriptionAndTags/AddDescriptionAndTags';
+import {
+  AddDescriptionAndKVTagsWithIdentifier
 } from '@common/components/AddDescriptionAndTags/AddDescriptionAndTags'
 
 import { DelegateNameLengthLimit, DelegateSize, isHelmDelegateEnabled } from '@delegates/constants'
 import { useCreateTokenModal } from '@delegates/components/DelegateTokens/modals/useCreateTokenModal'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
-import SelectDelegateType, { FormikForSelectDelegateType } from './components/SelectDelegateType'
+import type { FormikForSelectDelegateType } from './components/SelectDelegateType';
+import SelectDelegateType from './components/SelectDelegateType'
 import DelegateSizes from '../../components/DelegateSizes/DelegateSizes'
 import { DelegateType, k8sPermissionType } from './DelegateSetupStep.types'
 import { validateDelegateSetupDetails } from './DelegateSetupStep.utils'

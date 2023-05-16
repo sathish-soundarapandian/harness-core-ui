@@ -6,7 +6,8 @@
  */
 
 import React, { useState, useContext, useMemo } from 'react'
-import { Container, Formik, FormikForm, Layout, SelectOption, Accordion } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Container, Formik, FormikForm, Layout, Accordion } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
@@ -22,10 +23,12 @@ import {
   transformPrometheusSetupSourceToHealthSource,
   transformPrometheusHealthSourceToSetupSource
 } from './SplunkMetricsHealthSource.utils'
-import {
-  PrometheusMonitoringSourceFieldNames,
+import type {
   MapSplunkMetricQueryToService,
   PrometheusSetupSource
+} from './SplunkMetricsHealthSource.constants';
+import {
+  PrometheusMonitoringSourceFieldNames
 } from './SplunkMetricsHealthSource.constants'
 import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'

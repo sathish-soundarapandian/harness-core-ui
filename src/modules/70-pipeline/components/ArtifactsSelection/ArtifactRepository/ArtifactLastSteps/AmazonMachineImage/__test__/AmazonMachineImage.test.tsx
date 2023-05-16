@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { MultiTypeInputType, AllowedTypesWithRunTime } from '@harness/uicore'
+import type { AllowedTypesWithRunTime } from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 
 import { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'

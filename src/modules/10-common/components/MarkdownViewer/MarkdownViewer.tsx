@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { CodeBlock, Container, Text } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 
 enum BlockType {
   HEADING = 'HEADING',

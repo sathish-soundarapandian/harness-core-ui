@@ -27,7 +27,8 @@ import { useGetSmtpConfig, useDeleteSmtpConfig } from 'services/cd-ng'
 
 import useCreateSmtpModal from '@common/components/Smtp/useCreateSmtpModal'
 import routes from '@common/RouteDefinitions'
-import { ActivityDetailsRowInterface, RenderDetailsTable } from '../RenderDetailsTable/RenderDetailsTable'
+import type { ActivityDetailsRowInterface} from '../RenderDetailsTable/RenderDetailsTable';
+import { RenderDetailsTable } from '../RenderDetailsTable/RenderDetailsTable'
 import css from './useCreateSmtpModal.module.scss'
 const SmtpDetails: React.FC = () => {
   const { getString } = useStrings()

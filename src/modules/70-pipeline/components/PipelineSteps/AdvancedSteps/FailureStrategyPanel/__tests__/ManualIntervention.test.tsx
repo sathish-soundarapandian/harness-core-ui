@@ -14,7 +14,8 @@ import {
   queryAllByAttribute as queryAllByAttributeGlobal
 } from '@testing-library/react'
 
-import { Strategy, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
+import type { StrategyType } from '@pipeline/utils/FailureStrategyUtils';
+import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { Basic } from '../FailureStrategyPanel.stories'
 

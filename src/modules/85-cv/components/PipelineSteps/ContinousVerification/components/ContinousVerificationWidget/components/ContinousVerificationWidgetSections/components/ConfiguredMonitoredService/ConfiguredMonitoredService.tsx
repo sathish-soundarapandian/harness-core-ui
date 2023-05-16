@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, FormInput, AllowedTypes, useToaster } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Container, FormInput, useToaster } from '@harness/uicore'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -13,10 +14,11 @@ import type { FormikProps } from 'formik'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import Card from '@cv/components/Card/Card'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   ChangeSourceDTO,
   MonitoredServiceDTO,
-  MonitoredServiceResponse,
+  MonitoredServiceResponse} from 'services/cv';
+import {
   useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetMonitoredService
 } from 'services/cv'

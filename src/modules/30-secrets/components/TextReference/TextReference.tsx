@@ -9,9 +9,11 @@ import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { get, isPlainObject } from 'lodash-es'
-import { FormikContextType, connect } from 'formik'
+import type { FormikContextType} from 'formik';
+import { connect } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
-import { FormInput, Layout, Container, FormikTooltipContext, DataTooltipInterface } from '@harness/uicore'
+import type { DataTooltipInterface } from '@harness/uicore';
+import { FormInput, Layout, Container, FormikTooltipContext } from '@harness/uicore'
 import type { StringsMap } from 'stringTypes'
 
 import { useStrings } from 'framework/strings'

@@ -6,8 +6,10 @@
  */
 
 import { FontVariation } from '@harness/design-system'
-import { Container, Text, Button, SelectOption } from '@harness/uicore'
-import React, { ReactElement, useMemo } from 'react'
+import type { SelectOption } from '@harness/uicore';
+import { Container, Text, Button } from '@harness/uicore'
+import type { ReactElement} from 'react';
+import React, { useMemo } from 'react'
 import PercentageRollout from '@cf/components/PercentageRollout/PercentageRollout'
 import usePercentageRolloutEqualiser from '@cf/hooks/usePercentageRolloutEqualiser'
 import type { Segment, Variation } from 'services/cf'

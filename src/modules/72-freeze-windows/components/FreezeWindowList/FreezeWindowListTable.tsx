@@ -13,14 +13,16 @@ import type { SortBy } from '@freeze-windows/types'
 import type { FreezeSummaryResponse, PageFreezeSummaryResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
+import type {
+  FreezeWindowListColumnActions
+} from './FreezeWindowListCells';
 import {
   MenuCell,
   LastModifiedCell,
   FreezeWindowCell,
   ScheduleCell,
   StatusCell,
-  RowSelectCell,
-  FreezeWindowListColumnActions
+  RowSelectCell
 } from './FreezeWindowListCells'
 import { ToggleAllSelection } from './ToggleAllSelection'
 import css from './FreezeWindowList.module.scss'

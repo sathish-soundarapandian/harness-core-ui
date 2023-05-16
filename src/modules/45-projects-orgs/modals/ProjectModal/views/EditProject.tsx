@@ -7,7 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { StepProps, SelectOption, ModalErrorHandlerBinding, useToaster } from '@harness/uicore'
+import type { StepProps, SelectOption, ModalErrorHandlerBinding} from '@harness/uicore';
+import { useToaster } from '@harness/uicore'
 import { useGetOrganization, useGetProject, usePutProject } from 'services/cd-ng'
 import type { Project } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

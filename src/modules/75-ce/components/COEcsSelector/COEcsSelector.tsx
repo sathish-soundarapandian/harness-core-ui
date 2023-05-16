@@ -25,13 +25,14 @@ import type { CellProps } from 'react-table'
 import { Color, FontVariation } from '@harness/design-system'
 import type { SelectOption } from '@harness/uicore'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   ContainerClusterMinimal,
   Region,
+  ContainerServiceServiceMinimal} from 'services/lw';
+import {
   useAllRegions,
   useGetContainerClustersOfRegion,
   useListOfServicesInContainerServiceCluster,
-  ContainerServiceServiceMinimal,
   useDescribeServiceInContainerServiceCluster
 } from 'services/lw'
 import { useStrings } from 'framework/strings'

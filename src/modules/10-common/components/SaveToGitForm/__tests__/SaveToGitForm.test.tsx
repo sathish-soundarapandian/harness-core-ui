@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, waitFor, act, fireEvent, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { render, waitFor, act, fireEvent } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import SaveToGitForm from '../SaveToGitForm'

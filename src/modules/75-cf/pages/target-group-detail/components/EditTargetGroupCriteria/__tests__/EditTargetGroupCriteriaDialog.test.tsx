@@ -7,13 +7,15 @@
 
 /* eslint-disable react/display-name */
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { omit } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
 import type { Segment, Target } from 'services/cf'
-import EditTargetGroupCriteriaDialog, { EditTargetGroupCriteriaDialogProps } from '../EditTargetGroupCriteriaDialog'
+import type { EditTargetGroupCriteriaDialogProps } from '../EditTargetGroupCriteriaDialog';
+import EditTargetGroupCriteriaDialog from '../EditTargetGroupCriteriaDialog'
 
 const mockTargets = [
   { identifier: 't1', name: 'Target 1' },

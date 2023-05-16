@@ -8,7 +8,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { useToggleOpen, ConfirmationDialog, AllowedTypes, ModalDialog } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { useToggleOpen, ConfirmationDialog, ModalDialog } from '@harness/uicore'
 import type { ModalDialogProps } from '@harness/uicore/dist/components/ModalDialog/ModalDialog'
 import { Intent } from '@harness/design-system'
 import { Spinner } from '@blueprintjs/core'

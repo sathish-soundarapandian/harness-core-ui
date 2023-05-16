@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { act, fireEvent, getByText, queryByText, render, RenderResult, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, fireEvent, getByText, queryByText, render, waitFor } from '@testing-library/react'
 
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import type { ResponseBoolean } from 'services/cd-ng'

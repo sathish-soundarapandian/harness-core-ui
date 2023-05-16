@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { IconName, Text, Icon, Layout } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Text, Icon, Layout } from '@harness/uicore'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Color } from '@harness/design-system'
 import type { GitSyncEntityListDTO, GitSyncEntityDTO } from 'services/cd-ng'

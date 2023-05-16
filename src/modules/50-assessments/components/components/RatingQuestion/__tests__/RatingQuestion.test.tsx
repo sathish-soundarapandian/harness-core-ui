@@ -2,7 +2,8 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
-import RatingQuestion, { RatingQuestionProps } from '../RatingQuestion'
+import type { RatingQuestionProps } from '../RatingQuestion';
+import RatingQuestion from '../RatingQuestion'
 
 jest.mock('formik')
 jest.mock('framework/strings')

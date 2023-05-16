@@ -7,14 +7,15 @@
 
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  StepProps,
+  AllowedTypes} from '@harness/uicore';
 import {
   Layout,
   Button,
   Text,
   Formik,
-  StepProps,
   getMultiTypeFromValue,
-  AllowedTypes,
   MultiTypeInputType,
   ThumbnailSelect,
   ButtonVariation,
@@ -36,11 +37,13 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type {
+  ConnectorTypes
+} from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types';
 import {
   ConnectorIcons,
   ConnectorLabelMap,
-  ConnectorMap,
-  ConnectorTypes
+  ConnectorMap
 } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { AzureBlueprintData } from '../AzureBlueprintTypes.types'
 

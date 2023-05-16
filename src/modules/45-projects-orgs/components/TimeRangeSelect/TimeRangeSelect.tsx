@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { SelectOption, Select } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Select } from '@harness/uicore'
 import { DashboardTimeRange, useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
 import { useStrings } from 'framework/strings'
 

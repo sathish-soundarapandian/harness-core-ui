@@ -6,7 +6,8 @@
  */
 
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import { get, compact, isEmpty, map, merge } from 'lodash-es'
 import type { EntityGitDetails, TemplateSummaryResponse } from 'services/template-ng'
 import { sanitize } from '@common/utils/JSONUtils'

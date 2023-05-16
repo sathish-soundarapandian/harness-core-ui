@@ -10,9 +10,10 @@ import { omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   MonitoredServiceDTO,
-  MonitoredServiceResponse,
+  MonitoredServiceResponse} from 'services/cv';
+import {
   useSaveMonitoredService,
   useUpdateMonitoredService
 } from 'services/cv'

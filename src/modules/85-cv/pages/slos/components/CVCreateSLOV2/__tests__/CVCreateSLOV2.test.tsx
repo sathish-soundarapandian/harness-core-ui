@@ -42,7 +42,8 @@ import {
 } from '../CVCreateSLOV2.utils'
 import { SLOType } from '../CVCreateSLOV2.constants'
 import { SLOV2FormMock } from '../components/CreateSimpleSloForm/__tests__/CreateSimpleSloForm.utils.mock'
-import { SLOFormulaType, SLOV2Form } from '../CVCreateSLOV2.types'
+import type { SLOV2Form } from '../CVCreateSLOV2.types';
+import { SLOFormulaType } from '../CVCreateSLOV2.types'
 
 jest.useFakeTimers()
 

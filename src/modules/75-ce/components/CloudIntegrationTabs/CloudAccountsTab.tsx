@@ -24,7 +24,8 @@ import ReactTimeago from 'react-timeago'
 import { defaultTo, isUndefined } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
-import { ConnectorResponse, PageConnectorResponse, useDeleteConnector, useGetConnectorListV2 } from 'services/cd-ng'
+import type { ConnectorResponse, PageConnectorResponse} from 'services/cd-ng';
+import { useDeleteConnector, useGetConnectorListV2 } from 'services/cd-ng'
 import type { CcmMetaData } from 'services/ce/services'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Connectors } from '@connectors/constants'
@@ -34,9 +35,10 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { ConnectorStatus } from '@ce/constants'
-import {
+import type {
   CustomCloudCell,
-  CustomCloudColumn,
+  CustomCloudColumn} from '@ce/utils/cloudIntegrationUtils';
+import {
   getCloudViewCostsLink,
   getConnectorStatusIcon
 } from '@ce/utils/cloudIntegrationUtils'

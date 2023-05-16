@@ -7,7 +7,8 @@
 
 import { useMemo } from 'react'
 import { capitalize } from 'lodash-es'
-import { Editions, RestrictionType } from '@common/constants/SubscriptionTypes'
+import type { Editions} from '@common/constants/SubscriptionTypes';
+import { RestrictionType } from '@common/constants/SubscriptionTypes'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useFeaturesContext } from 'framework/featureStore/FeaturesContext'
 import type { AvailabilityRestrictionDTO } from 'services/cd-ng'

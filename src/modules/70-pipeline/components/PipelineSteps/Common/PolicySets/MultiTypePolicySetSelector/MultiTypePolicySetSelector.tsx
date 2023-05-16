@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { FormikContextType, useFormikContext } from 'formik'
+import type { FormikContextType} from 'formik';
+import { useFormikContext } from 'formik'
 import { get } from 'lodash-es'
 
-import { AllowedTypes, Button, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Button, MultiTypeInputType } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import type { IFormGroupProps } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

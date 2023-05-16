@@ -25,7 +25,8 @@ import type {
 import type { StringsMap } from 'stringTypes'
 import { GCRStepBaseWithRef } from './GCRStepBase'
 import { GCRStepInputSet } from './GCRStepInputSet'
-import { GCRStepVariables, GCRStepVariablesProps } from './GCRStepVariables'
+import type { GCRStepVariablesProps } from './GCRStepVariables';
+import { GCRStepVariables } from './GCRStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './GCRStepFunctionConfigs'
 
 export interface GCRStepSpec {

@@ -10,7 +10,8 @@ import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvServices from 'services/cv'
-import ErrorBudgetReset, { ErrorBudgetResetProps } from '../ErrorBudgetReset'
+import type { ErrorBudgetResetProps } from '../ErrorBudgetReset';
+import ErrorBudgetReset from '../ErrorBudgetReset'
 import { SLO_WIDGETS } from '../../../TimelineRow.constants'
 import { mockedSecondaryEventsDetailsResponse } from './ErrorBudgetReset.mock'
 

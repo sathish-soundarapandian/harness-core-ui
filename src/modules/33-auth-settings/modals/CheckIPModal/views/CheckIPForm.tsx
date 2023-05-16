@@ -12,6 +12,8 @@ import { Intent } from '@blueprintjs/core'
 import { Form } from 'formik'
 import type { Column, Renderer, CellProps } from 'react-table'
 
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Layout,
   Formik,
@@ -21,7 +23,6 @@ import {
   Icon,
   Container,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   ButtonVariation,
   TableV2
 } from '@harness/uicore'

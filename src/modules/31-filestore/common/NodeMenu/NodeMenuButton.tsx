@@ -5,9 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, Fragment, useState } from 'react'
-import { Classes, IMenuItemProps, Menu, PopoverPosition } from '@blueprintjs/core'
-import { Button, ButtonProps, Popover } from '@harness/uicore'
+import type { ReactElement} from 'react';
+import React, { Fragment, useState } from 'react'
+import type { IMenuItemProps, PopoverPosition } from '@blueprintjs/core';
+import { Classes, Menu } from '@blueprintjs/core'
+import type { ButtonProps} from '@harness/uicore';
+import { Button, Popover } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
 

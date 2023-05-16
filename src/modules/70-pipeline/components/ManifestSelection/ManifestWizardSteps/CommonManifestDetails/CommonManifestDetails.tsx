@@ -10,6 +10,9 @@ import { get, set, isEmpty, defaultTo } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
+import type {
+  StepProps,
+  AllowedTypes} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -17,9 +20,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  StepProps,
   ButtonVariation,
-  AllowedTypes,
   FormikForm
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'

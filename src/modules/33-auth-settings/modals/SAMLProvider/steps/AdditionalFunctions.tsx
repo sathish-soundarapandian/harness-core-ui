@@ -5,6 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type {
+  ModalErrorHandlerBinding,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -13,8 +16,6 @@ import {
   FormikForm,
   FormInput,
   Layout,
-  ModalErrorHandlerBinding,
-  StepProps,
   Text,
   ModalErrorHandler
 } from '@harness/uicore'
@@ -26,10 +27,12 @@ import { useParams } from 'react-router-dom'
 import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
 import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { SAMLSettings, useUpdateSamlMetaDataForSamlSSOId, useUploadSamlMetaData } from 'services/cd-ng'
+import type { SAMLSettings} from 'services/cd-ng';
+import { useUpdateSamlMetaDataForSamlSSOId, useUploadSamlMetaData } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { createFormData, FormValues, Providers } from '../utils'
+import type { FormValues} from '../utils';
+import { createFormData, Providers } from '../utils'
 import css from '../useSAMLProvider.module.scss'
 
 interface AdditionalFunctionsForm {

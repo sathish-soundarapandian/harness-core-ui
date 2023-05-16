@@ -27,7 +27,8 @@ import type {
 import type { StringsMap } from 'stringTypes'
 import { RunTestsStepBaseWithRef } from './RunTestsStepBase'
 import { RunTestsStepInputSet } from './RunTestsStepInputSet'
-import { RunTestsStepVariables, RunTestsStepVariablesProps } from './RunTestsStepVariables'
+import type { RunTestsStepVariablesProps } from './RunTestsStepVariables';
+import { RunTestsStepVariables } from './RunTestsStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './RunTestsStepFunctionConfigs'
 
 export interface RunTestsStepSpec {

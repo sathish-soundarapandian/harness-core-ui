@@ -6,13 +6,14 @@
  */
 
 import React from 'react'
+import type {
+  PopoverProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Container,
   Heading,
   Icon,
-  PopoverProps,
   useToaster,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
@@ -28,7 +29,8 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import type { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
-import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
+import type { UseSaveSuccessResponse} from '@common/modals/SaveToGitDialog/useSaveToGitDialog';
+import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { PipelineActions } from '@common/constants/TrackingConstants'
 import { validateCICodebaseConfiguration } from '@pipeline/components/PipelineStudio/StepUtil'
@@ -43,7 +45,8 @@ import type {
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { GovernanceMetadata, PipelineInfoConfig } from 'services/pipeline-ng'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import type { AccessControlCheckError } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'

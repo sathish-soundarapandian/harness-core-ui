@@ -8,7 +8,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { connect, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { connect } from 'formik'
 import cx from 'classnames'
 import type { AllowedTypes } from '@harness/uicore'
 

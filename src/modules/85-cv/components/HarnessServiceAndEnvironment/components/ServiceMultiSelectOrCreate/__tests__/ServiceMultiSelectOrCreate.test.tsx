@@ -10,7 +10,8 @@ import { render, waitFor, fireEvent, findByText, act } from '@testing-library/re
 import type { MultiSelectOption } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ADD_NEW_VALUE } from '@cv/constants'
-import { ServiceMultiSelectOrCreate, ServiceMultiSelectOrCreateProps } from '../ServiceMultiSelectOrCreate'
+import type { ServiceMultiSelectOrCreateProps } from '../ServiceMultiSelectOrCreate';
+import { ServiceMultiSelectOrCreate } from '../ServiceMultiSelectOrCreate'
 
 const onNewCreated = jest.fn()
 

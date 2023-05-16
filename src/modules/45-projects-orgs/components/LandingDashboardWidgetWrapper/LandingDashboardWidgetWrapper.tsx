@@ -7,7 +7,8 @@
 
 import React from 'react'
 
-import { Icon, IconName, Layout, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 import type { StringsMap } from 'framework/strings/StringsContext'

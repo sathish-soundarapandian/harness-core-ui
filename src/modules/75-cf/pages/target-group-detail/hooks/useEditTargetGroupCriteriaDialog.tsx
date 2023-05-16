@@ -1,8 +1,9 @@
 import React from 'react'
 import { useModalHook } from '@harness/use-modal'
-import EditTargetGroupCriteriaDialog, {
+import type {
   EditTargetGroupCriteriaDialogProps
-} from '../components/EditTargetGroupCriteria/EditTargetGroupCriteriaDialog'
+} from '../components/EditTargetGroupCriteria/EditTargetGroupCriteriaDialog';
+import EditTargetGroupCriteriaDialog from '../components/EditTargetGroupCriteria/EditTargetGroupCriteriaDialog'
 
 const useEditTargetGroupCriteriaDialog = (
   targetGroup: EditTargetGroupCriteriaDialogProps['targetGroup'],

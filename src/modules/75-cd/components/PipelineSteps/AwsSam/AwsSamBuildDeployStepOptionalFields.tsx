@@ -8,7 +8,8 @@
 import React from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { AllowedTypes, Container, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Container, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeCheckboxField } from '@common/components'

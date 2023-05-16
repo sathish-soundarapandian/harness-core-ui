@@ -29,7 +29,8 @@ import {
 } from '@common/Redirects'
 
 import { String as LocaleString } from 'framework/strings'
-import featureFactory, { RenderMessageReturn } from 'framework/featureStore/FeaturesFactory'
+import type { RenderMessageReturn } from 'framework/featureStore/FeaturesFactory';
+import featureFactory from 'framework/featureStore/FeaturesFactory'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import CDSideNav from '@cd/components/CDSideNav/CDSideNav'
 import CDHomePage from '@cd/pages/home/CDHomePage'
@@ -58,7 +59,8 @@ import { TriggerFormType } from '@pipeline/factories/ArtifactTriggerInputFactory
 import TriggerFactory from '@pipeline/factories/ArtifactTriggerInputFactory/index'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
+import type { LicenseRedirectProps} from 'framework/LicenseStore/LicenseStoreContext';
+import { LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
 import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { useGetCommunity } from '@common/utils/utils'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'

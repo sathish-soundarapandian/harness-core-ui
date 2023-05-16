@@ -15,13 +15,15 @@ import type { StringKeys } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
-import {
+import type {
   DeleteFeatureFlagQueryParams,
   Feature,
   PatchFeatureQueryParams,
-  useDeleteFeatureFlag,
-  usePatchFeature,
   Variation
+} from 'services/cf';
+import {
+  useDeleteFeatureFlag,
+  usePatchFeature
 } from 'services/cf'
 import { VariationWithIcon } from '@cf/components/VariationWithIcon/VariationWithIcon'
 import { ResourceType } from '@rbac/interfaces/ResourceType'

@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, MultiSelectOption } from '@harness/uicore'
+import type { IconName, AllowedTypes, MultiSelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
-import { connect, FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { connect, yupToFormErrors } from 'formik'
 import { cloneDeep } from 'lodash-es'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -22,8 +24,10 @@ import type {
 import type { StringsMap } from 'stringTypes'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { SyncStepBaseWithRef } from './SyncStepBase'
-import { SyncStepSpec, SyncStepData, POLICY_OPTIONS, applicationListItemInterface } from './types'
-import { SyncStepVariables, SyncStepVariablesProps } from './SyncStepVariables'
+import type { SyncStepSpec, SyncStepData, applicationListItemInterface } from './types';
+import { POLICY_OPTIONS } from './types'
+import type { SyncStepVariablesProps } from './SyncStepVariables';
+import { SyncStepVariables } from './SyncStepVariables'
 import SyncStepInputSet from './SyncStepInputSet'
 
 const SyncStepInputSetBasic = connect(SyncStepInputSet)

@@ -14,7 +14,8 @@ import { Color } from '@harness/design-system'
 import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
 import { PageSpinner } from '@common/components'
 import routes from '@common/RouteDefinitions'
-import { FolderModel, useGetFoldersWithHidden } from 'services/custom-dashboards'
+import type { FolderModel} from 'services/custom-dashboards';
+import { useGetFoldersWithHidden } from 'services/custom-dashboards'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 import StaticResourceRenderer from '../StaticResourceRenderer/StaticResourceRenderer'

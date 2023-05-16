@@ -6,17 +6,18 @@
  */
 
 import React, { useMemo } from 'react'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  SelectOption,
   FormikForm,
   Accordion,
   ThumbnailSelect
@@ -35,7 +36,8 @@ import type {
   CustomArtifactSource,
   VariableInterface
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { BuildDetails, ConnectorConfigDTO, useGetJobDetailsForCustom } from 'services/cd-ng'
+import type { BuildDetails, ConnectorConfigDTO} from 'services/cd-ng';
+import { useGetJobDetailsForCustom } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import {
   customArtifactDefaultSpec,
@@ -48,7 +50,8 @@ import {
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import type { ScriptType} from '@common/components/ShellScriptMonaco/ShellScriptMonaco';
+import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import type {
   AccountPathProps,
   GitQueryParams,

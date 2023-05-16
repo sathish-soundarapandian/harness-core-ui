@@ -7,6 +7,9 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -14,9 +17,7 @@ import {
   FormInput,
   Text,
   FormikForm as Form,
-  StepProps,
   Container,
-  SelectOption,
   ButtonVariation,
   PageSpinner
 } from '@harness/uicore'
@@ -28,7 +29,8 @@ import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { ConnectorConfigDTO, ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
+import type { TextReferenceInterface} from '@secrets/components/TextReference/TextReference';
+import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { GitAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'

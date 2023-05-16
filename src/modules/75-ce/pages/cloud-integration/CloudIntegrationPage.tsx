@@ -29,7 +29,8 @@ import useK8sQuickCreateModal from '@ce/components/K8sQuickCreate/K8sQuickCreate
 
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { CcmMetaData, useFetchCcmMetaDataQuery } from 'services/ce/services'
+import type { CcmMetaData} from 'services/ce/services';
+import { useFetchCcmMetaDataQuery } from 'services/ce/services'
 import { useGetCCMK8SConnectorList } from 'services/cd-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -39,8 +40,9 @@ import CloudAccountsTab from '@ce/components/CloudIntegrationTabs/CloudAccountsT
 import NoConnectors from '@ce/components/CloudIntegrationTabs/NoConnectors'
 import { Connectors } from '@connectors/constants'
 import { CloudProviderList } from '@ce/components/CreateConnector/CreateConnector'
+import type {
+  CustomK8sPageConnectorResponse} from '@ce/utils/cloudIntegrationUtils';
 import {
-  CustomK8sPageConnectorResponse,
   getSuccesfullCCMConnectorIds,
   mapCCMK8sMetadataToConnector
 } from '@ce/utils/cloudIntegrationUtils'

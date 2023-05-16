@@ -5,13 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { fireEvent, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 import * as rbacHooksMock from '@rbac/hooks/usePermission'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeaturesMock from '@common/hooks/useFeatures'
 import * as useFeatureEnabled from '@cf/pages/feature-flags-detail/targeting-rules-tab/hooks/useFeatureEnabled'
-import FlagToggleSwitch, { FlagToggleSwitchProps } from '../FlagToggleSwitch'
+import type { FlagToggleSwitchProps } from '../FlagToggleSwitch';
+import FlagToggleSwitch from '../FlagToggleSwitch'
 
 const renderComponent = (props: Partial<FlagToggleSwitchProps> = {}): RenderResult => {
   return render(

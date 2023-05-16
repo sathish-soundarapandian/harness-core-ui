@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, getByText, getAllByText, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, getByText, getAllByText, screen, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import * as cfServices from 'services/cf'

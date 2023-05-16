@@ -8,7 +8,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { NotificationRuleRefDTO, useGetNotificationRulesForMonitoredService } from 'services/cv'
+import type { NotificationRuleRefDTO} from 'services/cv';
+import { useGetNotificationRulesForMonitoredService } from 'services/cv'
 import { GET_NOTIFICATIONS_PAGE_SIZE } from '@cv/components/Notifications/NotificationsContainer.constants'
 import MonitoredServiceNotifications from './MonitoredServiceNotifications'
 

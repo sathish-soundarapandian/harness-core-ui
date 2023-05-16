@@ -7,7 +7,8 @@
 
 import React, { useMemo } from 'react'
 import HighchartsReact from 'highcharts-react-official'
-import Highcharts, { PlotOptions } from 'highcharts'
+import type { PlotOptions } from 'highcharts';
+import Highcharts from 'highcharts'
 import { clone, merge } from 'lodash-es'
 
 const chartDefaultOptions: Highcharts.Options = {

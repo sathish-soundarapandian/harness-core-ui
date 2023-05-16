@@ -5,15 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { BaseSyntheticEvent, useEffect, useRef, useState } from 'react'
+import type { BaseSyntheticEvent} from 'react';
+import React, { useEffect, useRef, useState } from 'react'
 import { isEmpty, noop, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import produce from 'immer'
 import { RadioGroup } from '@blueprintjs/core'
 import cx from 'classnames'
 
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
-  AllowedTypes,
   ConfirmationDialog,
   Formik,
   FormikForm,
@@ -26,7 +28,8 @@ import {
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { isMultiTypeExpression } from '@common/utils/utils'
@@ -44,8 +47,9 @@ import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 import { getValidationSchema } from './utils/utils'
 
+import type {
+  InlineEntityFiltersProps} from './components/InlineEntityFilters/InlineEntityFiltersUtils';
 import {
-  InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from './components/InlineEntityFilters/InlineEntityFiltersUtils'
 

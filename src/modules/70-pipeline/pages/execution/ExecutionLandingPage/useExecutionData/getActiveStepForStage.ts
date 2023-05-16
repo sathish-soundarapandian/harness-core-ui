@@ -8,7 +8,8 @@
 import { defaultTo, get, has } from 'lodash-es'
 import type { ExecutionGraph, ExecutionNode, ExecutionNodeAdjacencyList } from 'services/pipeline-ng'
 import { isExecutionSuccess, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
-import { NonSelectableStepNodes, StepNodeType } from '@pipeline/utils/executionUtils'
+import type { StepNodeType } from '@pipeline/utils/executionUtils';
+import { NonSelectableStepNodes } from '@pipeline/utils/executionUtils'
 
 import { isExecutionActiveOrCompletedWitBadState, preOrderTraversal, postOrderTraversal } from './treeSearchUtils'
 

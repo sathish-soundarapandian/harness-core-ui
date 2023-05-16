@@ -16,11 +16,14 @@ import { Route } from 'react-router-dom'
 
 import { pick } from 'lodash-es'
 
-import { GitSyncTestWrapper, GitSyncTestWrapperProps } from '@common/utils/gitSyncTestUtils'
+import type { GitSyncTestWrapperProps } from '@common/utils/gitSyncTestUtils';
+import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 
-import {
-  PipelineContext,
+import type {
   PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
+import {
+  PipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 import pipelineContextProviderProps from './__tests__/mockJson/pipelineContextProvider.json'

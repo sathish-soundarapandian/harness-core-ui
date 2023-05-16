@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { SelectOption, Layout, Icon, Select, Button, Text, Container } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, Icon, Select, Button, Text, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useParams } from 'react-router-dom'
@@ -15,7 +16,8 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { Menu, Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { GitBranchDTO, GitSyncConfig, syncGitBranchPromise, useGetListOfBranchesWithStatus } from 'services/cd-ng'
+import type { GitBranchDTO, GitSyncConfig} from 'services/cd-ng';
+import { syncGitBranchPromise, useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'

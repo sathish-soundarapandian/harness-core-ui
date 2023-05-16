@@ -5,14 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent } from 'react'
+import type { FormEvent } from 'react';
+import React from 'react'
 import { Checkbox, FormInput, FormError, Layout, MultiTypeInputType, Toggle } from '@harness/uicore'
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { useStrings } from 'framework/strings'
-import {
-  FormMultiTypeDurationField,
+import type {
   MultiTypeDurationProps
+} from '@common/components/MultiTypeDuration/MultiTypeDuration';
+import {
+  FormMultiTypeDurationField
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import css from './SettingsCategorySection.module.scss'
 

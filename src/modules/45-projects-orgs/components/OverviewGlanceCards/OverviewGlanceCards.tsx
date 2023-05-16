@@ -10,9 +10,11 @@ import { Card, Icon, Layout, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import GlanceCard, { GlanceCardProps } from '@common/components/GlanceCard/GlanceCard'
+import type { GlanceCardProps } from '@common/components/GlanceCard/GlanceCard';
+import GlanceCard from '@common/components/GlanceCard/GlanceCard'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { CountChangeDetails, ResponseExecutionResponseCountOverview, useGetCounts } from 'services/dashboard-service'
+import type { CountChangeDetails, ResponseExecutionResponseCountOverview} from 'services/dashboard-service';
+import { useGetCounts } from 'services/dashboard-service'
 import { TimeRangeToDays, useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'

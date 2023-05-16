@@ -9,10 +9,12 @@ import React from 'react'
 import { render, act } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
-import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { BrakemanStep, BrakemanStepData } from '../BrakemanStep'
+import type { BrakemanStepData } from '../BrakemanStep';
+import { BrakemanStep } from '../BrakemanStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 

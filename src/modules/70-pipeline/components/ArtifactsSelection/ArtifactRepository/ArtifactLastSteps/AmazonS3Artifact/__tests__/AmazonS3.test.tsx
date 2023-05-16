@@ -17,16 +17,19 @@ import {
   queryAllByAttribute
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE, StepProps } from '@harness/uicore'
+import type { AllowedTypesWithRunTime, StepProps } from '@harness/uicore';
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import * as cdng from 'services/cd-ng'
 import * as portalng from 'services/portal'
 import { TestWrapper } from '@common/utils/testUtils'
-import {
+import type {
   AmazonS3ArtifactProps,
   ArtifactType,
-  TagTypes,
   AmazonS3InitialValuesType
+} from '@pipeline/components/ArtifactsSelection/ArtifactInterface';
+import {
+  TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { AmazonS3 } from '../AmazonS3'

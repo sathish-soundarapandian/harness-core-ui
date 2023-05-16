@@ -18,13 +18,16 @@ import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet } from '@common/hooks'
 import type { Failure } from 'services/cd-ng'
-import { BuildActiveInfo, BuildFailureInfo, CIWebhookInfoDTO, useGetBuilds, useGetRepositoryBuild } from 'services/ci'
+import type { BuildActiveInfo, BuildFailureInfo, CIWebhookInfoDTO} from 'services/ci';
+import { useGetBuilds, useGetRepositoryBuild } from 'services/ci'
 import { useStrings } from 'framework/strings'
 import { OverviewExecutionListEmpty } from '@pipeline/pages/execution-list/ExecutionListEmpty/OverviewExecutionListEmpty'
+import type {
+  TimeRangeSelectorProps
+} from '@common/components/TimeRangeSelector/TimeRangeSelector';
 import {
   startOfDay,
-  TimeRangeSelector,
-  TimeRangeSelectorProps
+  TimeRangeSelector
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import CIDashboardSummaryCards from '@pipeline/components/Dashboards/CIDashboardSummaryCards/CIDashboardSummaryCards'
 import CardRailView from '@pipeline/components/Dashboards/CardRailView/CardRailView'
@@ -40,7 +43,8 @@ import {
 } from '@pipeline/components/Dashboards/shared'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
-import { ExecutionTriggerInfo, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
+import type { ExecutionTriggerInfo, PipelineExecutionSummary} from 'services/pipeline-ng';
+import { useGetListOfExecutions } from 'services/pipeline-ng'
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
 import { useExecutionListQueryParams } from '@pipeline/pages/execution-list/utils/executionListUtil'
 import bgImage from './images/CI-OverviewImageBG.png'

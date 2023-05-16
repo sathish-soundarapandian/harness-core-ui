@@ -11,31 +11,35 @@ import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikContextType } from 'formik'
 import { noop, set } from 'lodash-es'
+import type {
+  IconName,
+  SelectOption} from '@harness/uicore';
 import {
   Text,
   Layout,
   Card,
   Icon,
-  IconName,
   Container,
   FormError,
   Formik,
   FormikForm,
   FormInput,
-  SelectOption,
   Collapse
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import {
+import type {
   ConnectorInfoDTO,
-  getListOfBranchesByRefConnectorV2Promise,
   ResponseGitBranchesResponseDTO
+} from 'services/cd-ng';
+import {
+  getListOfBranchesByRefConnectorV2Promise
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { Separator } from '@common/components'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
+import type { ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types';
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { Status } from '@common/utils/Constants'
 import { isValidYAMLFilePath } from '@common/constants/Utils'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'

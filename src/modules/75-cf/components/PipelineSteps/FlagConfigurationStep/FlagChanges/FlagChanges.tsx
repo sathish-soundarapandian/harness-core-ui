@@ -5,10 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback, useEffect, useMemo } from 'react'
+import type { FC} from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { get } from 'lodash-es'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
-  AllowedTypes,
   Container,
   getMultiTypeFromValue,
   Heading,
@@ -23,7 +25,8 @@ import type { Feature } from 'services/cf'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { FeatureFlagConfigurationInstruction, FlagConfigurationStepFormDataValues } from '../types'
-import FlagChangesForm, { FlagChangesFormProps } from './FlagChangesForm'
+import type { FlagChangesFormProps } from './FlagChangesForm';
+import FlagChangesForm from './FlagChangesForm'
 
 import subSectionCSS from './SubSection.module.scss'
 import css from './FlagChanges.module.scss'

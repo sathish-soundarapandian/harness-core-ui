@@ -30,7 +30,8 @@ import HelmChartCommands from '@delegates/pages/delegates/delegateCommandLineCre
 import VerifyDelegateConnection from '@delegates/pages/delegates/delegateCommandLineCreation/components/VerifyDelegateConnection'
 import { delegateNameRegex } from '@delegates/components/CreateDelegate/DockerDelegate/Step1Setup/Step1Setup'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
-import { DelegateSuccessHandler, DeploymentType } from '../CDOnboardingUtils'
+import type { DelegateSuccessHandler} from '../CDOnboardingUtils';
+import { DeploymentType } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import css from './CreateK8sDelegate.module.scss'
 export interface CreateK8sDelegateProps {

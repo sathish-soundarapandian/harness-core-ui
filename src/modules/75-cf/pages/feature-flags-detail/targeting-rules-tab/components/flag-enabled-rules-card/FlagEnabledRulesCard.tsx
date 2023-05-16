@@ -5,19 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Container, Heading, Layout, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Card, Container, Heading, Layout } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 
 import { useStrings } from 'framework/strings'
 import type { Segment, Target, Variation } from 'services/cf'
 import DefaultRules from '../default-rules/DefaultRules'
 import SpecificTargetingItem from '../specific-targeting-item/SpecificTargetingItem'
-import {
+import type {
   FormVariationMap,
   VariationPercentageRollout,
+  VariationColorMap} from '../../types';
+import {
   TargetingRuleItemType,
-  VariationColorMap,
   TargetingRuleItemStatus
 } from '../../types'
 import PercentageRolloutItem from '../percentage-rollout-item/PercentageRolloutItem'

@@ -7,8 +7,10 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ResponseSetupStatus, useProvisionResourcesForCI } from 'services/cd-ng'
-import { DelegateGroupDetails, useGetDelegateGroupsNGV2 } from 'services/portal'
+import type { ResponseSetupStatus} from 'services/cd-ng';
+import { useProvisionResourcesForCI } from 'services/cd-ng'
+import type { DelegateGroupDetails} from 'services/portal';
+import { useGetDelegateGroupsNGV2 } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   DELEGATE_INSTALLATION_REFETCH_DELAY,

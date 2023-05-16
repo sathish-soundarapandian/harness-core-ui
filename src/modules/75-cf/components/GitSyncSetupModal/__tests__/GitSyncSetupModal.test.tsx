@@ -6,12 +6,14 @@
  */
 
 import React, { useEffect } from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as GitSyncFormModule from '@gitsync/components/GitSyncForm/GitSyncForm'
 import * as cfServices from 'services/cf'
-import { GitSyncSetupModal, GitSyncSetupModalProps } from '../GitSyncSetupModal'
+import type { GitSyncSetupModalProps } from '../GitSyncSetupModal';
+import { GitSyncSetupModal } from '../GitSyncSetupModal'
 
 const renderComponent = (props: Partial<GitSyncSetupModalProps> = {}): RenderResult =>
   render(

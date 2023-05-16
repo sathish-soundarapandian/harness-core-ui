@@ -6,10 +6,11 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Button,
   Layout,
-  StepProps,
   Formik,
   FormikForm,
   FormInput,
@@ -26,9 +27,11 @@ import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { LdapConnectionSettings, ResponseMessage, useValidateLdapConnectionSettings } from 'services/cd-ng'
+import type { LdapConnectionSettings, ResponseMessage} from 'services/cd-ng';
+import { useValidateLdapConnectionSettings } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
-import { RawLdapConnectionSettings, updateLDAPConnectionSettingsFormData } from '../utils'
+import type { RawLdapConnectionSettings} from '../utils';
+import { updateLDAPConnectionSettingsFormData } from '../utils'
 import type { CreateUpdateLdapWizardProps, LdapWizardStepProps } from '../CreateUpdateLdapWizard'
 import type { LdapOverview } from './StepOverview'
 import css from '../CreateUpdateLdapWizard.module.scss'

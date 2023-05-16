@@ -10,7 +10,8 @@ import type { Story, Meta } from '@storybook/react'
 // import styled from '@emotion/styled'
 import { TestWrapper } from '@common/utils/testUtils'
 
-import { HarnessApprovalTab, HarnessApprovalTabProps } from './HarnessApprovalTab'
+import type { HarnessApprovalTabProps } from './HarnessApprovalTab';
+import { HarnessApprovalTab } from './HarnessApprovalTab'
 import harnessApprovalData from './__tests__/HarnessApprovalData.json'
 
 export default {

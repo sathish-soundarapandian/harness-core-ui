@@ -7,9 +7,11 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useToaster, UseConfirmationDialogReturn } from '@harness/uicore'
+import type { UseConfirmationDialogReturn } from '@harness/uicore';
+import { useToaster } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
-import { useDeleteSegment, Segment } from 'services/cf'
+import type { Segment } from 'services/cf';
+import { useDeleteSegment } from 'services/cf'
 import { useStrings, String } from 'framework/strings'
 import { useConfirmAction } from '@common/hooks'
 import { getErrorMessage, showToaster } from '@cf/utils/CFUtils'

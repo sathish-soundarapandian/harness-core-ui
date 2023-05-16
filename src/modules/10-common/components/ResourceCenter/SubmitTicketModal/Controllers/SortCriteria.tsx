@@ -1,4 +1,5 @@
-import { SortCriterion, buildRelevanceSortCriterion, buildDateSortCriterion, SortOrder } from '@coveo/headless'
+import type { SortCriterion} from '@coveo/headless';
+import { buildRelevanceSortCriterion, buildDateSortCriterion, SortOrder } from '@coveo/headless'
 
 export const criteria: [string, SortCriterion][] = [
   ['Relevance', buildRelevanceSortCriterion()],

@@ -6,18 +6,21 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
 
+import type {
+  SelectOption
+} from '@harness/uicore';
 import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   FormInput,
   Container,
   Text,
-  useToaster,
-  SelectOption
+  useToaster
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'

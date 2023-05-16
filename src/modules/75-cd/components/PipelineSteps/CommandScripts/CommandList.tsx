@@ -6,11 +6,14 @@
  */
 
 import React, { useRef } from 'react'
-import { FieldArray, FieldArrayRenderProps, useFormikContext } from 'formik'
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
+import type { FieldArrayRenderProps} from 'formik';
+import { FieldArray, useFormikContext } from 'formik'
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { defaultTo } from 'lodash-es'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
-  AllowedTypes,
   Button,
   ButtonVariation,
   FormikTooltipContext,

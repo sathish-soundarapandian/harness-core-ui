@@ -8,14 +8,16 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Switch } from '@blueprintjs/core'
-import { Text, Icon, Layout, Button, Card, IconName, ButtonVariation, Container, PageError } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Text, Icon, Layout, Button, Card, ButtonVariation, Container, PageError } from '@harness/uicore'
 import { defaultTo, isEmpty, set, startCase } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import produce from 'immer'
-import {
+import type {
   DeploymentStageConfig,
-  GetExecutionStrategyYamlQueryParams,
+  GetExecutionStrategyYamlQueryParams} from 'services/cd-ng';
+import {
   useGetExecutionStrategyList,
   useGetExecutionStrategyYaml
 } from 'services/cd-ng'

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { fireEvent, getByText, render, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { fireEvent, getByText, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import * as cdng from 'services/cd-ng'

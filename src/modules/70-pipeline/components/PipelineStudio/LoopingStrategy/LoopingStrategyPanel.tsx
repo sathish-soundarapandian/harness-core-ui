@@ -27,7 +27,8 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 
 import { usePipelineSchema } from '../PipelineSchema/PipelineSchemaContext'
-import { getAvailableStrategies, LoopingStrategy, LoopingStrategyEnum } from './LoopingStrategyUtils'
+import type { LoopingStrategy, LoopingStrategyEnum } from './LoopingStrategyUtils';
+import { getAvailableStrategies } from './LoopingStrategyUtils'
 
 import css from './LoopingStrategy.module.scss'
 

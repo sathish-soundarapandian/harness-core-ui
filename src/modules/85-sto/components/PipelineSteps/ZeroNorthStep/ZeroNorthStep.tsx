@@ -24,7 +24,8 @@ import type {
 import type { StringsMap } from 'stringTypes'
 import { ZeroNorthStepBaseWithRef } from './ZeroNorthStepBase'
 import { ZeroNorthStepInputSet } from './ZeroNorthStepInputSet'
-import { ZeroNorthStepVariables, ZeroNorthStepVariablesProps } from './ZeroNorthStepVariables'
+import type { ZeroNorthStepVariablesProps } from './ZeroNorthStepVariables';
+import { ZeroNorthStepVariables } from './ZeroNorthStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './ZeroNorthStepFunctionConfigs'
 
 export interface ZeroNorthStepSpec {

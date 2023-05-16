@@ -7,12 +7,14 @@
  */
 
 import React, { useEffect, useMemo, useRef } from 'react'
-import { Layout, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Layout } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import { isObjectEmpty, UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
@@ -20,11 +22,13 @@ import { StringUtils, useToaster } from '@common/exports'
 import { useBooleanStatus, useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import { getBuildType, getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
+import type {
+  PipelineFormType
+} from '@pipeline/utils/PipelineFilterRequestUtils';
 import {
   createRequestBodyPayload,
   getMultiSelectFormOptions,
-  getValidFilterArguments,
-  PipelineFormType
+  getValidFilterArguments
 } from '@pipeline/utils/PipelineFilterRequestUtils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'

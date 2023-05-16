@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import type { TargetManagementFlagConfigurationPanelFormValues as FormValues } from '@cf/components/TargetManagementFlagConfigurationPanel/types'
-import DialogFooter, { DialogFooterProps } from '../DialogFooter'
+import type { DialogFooterProps } from '../DialogFooter';
+import DialogFooter from '../DialogFooter'
 import { STATUS } from '../types'
 
 const renderComponent = (

@@ -19,10 +19,11 @@ import type {
 import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import {
+import type {
   JiraFieldNG,
   JiraProjectBasicNG,
-  JiraProjectNG,
+  JiraProjectNG} from 'services/cd-ng';
+import {
   useGetJiraIssueCreateMetadata,
   useGetJiraProjects
 } from 'services/cd-ng'

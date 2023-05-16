@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, FormInput, Icon, Layout, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Container, FormInput, Icon, Layout, Text } from '@harness/uicore'
 import { isEmpty, set } from 'lodash-es'
 import type { FormikContextType } from 'formik'
 import React from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import produce from 'immer'
-import { GitSyncConfig, EntityGitDetails, useGetListOfBranchesWithStatus, GitBranchDTO } from 'services/cd-ng'
+import type { GitSyncConfig, EntityGitDetails, GitBranchDTO } from 'services/cd-ng';
+import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

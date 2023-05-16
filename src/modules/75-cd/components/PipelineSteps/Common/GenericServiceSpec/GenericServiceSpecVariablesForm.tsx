@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AllowedTypes, NestedAccordionPanel, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { NestedAccordionPanel, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty, omit } from 'lodash-es'

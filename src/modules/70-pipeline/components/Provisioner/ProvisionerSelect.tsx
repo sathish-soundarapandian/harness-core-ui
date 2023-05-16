@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { FormInput, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { FormInput } from '@harness/uicore'
 import { connect } from 'formik'
 
 import { useStrings } from 'framework/strings'

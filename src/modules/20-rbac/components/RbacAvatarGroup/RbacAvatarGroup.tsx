@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
-import { AvatarGroup, AvatarGroupProps } from '@harness/uicore'
-import { usePermission, PermissionsRequest } from '@rbac/hooks/usePermission'
+import type { AvatarGroupProps } from '@harness/uicore';
+import { AvatarGroup } from '@harness/uicore'
+import type { PermissionsRequest } from '@rbac/hooks/usePermission';
+import { usePermission } from '@rbac/hooks/usePermission'
 import { useFeature } from '@common/hooks/useFeatures'
 import type { FeatureProps } from 'framework/featureStore/featureStoreUtil'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

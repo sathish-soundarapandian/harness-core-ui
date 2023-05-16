@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { FormInput } from '@harness/uicore'
 import type { Segment } from 'services/cf'
 import { useStrings } from 'framework/strings'

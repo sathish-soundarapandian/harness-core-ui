@@ -13,7 +13,8 @@ import { FILE_STORE_ROOT } from '@filestore/utils/constants'
 import type { FileUsage, SortType, NodeSortDTO } from '@filestore/interfaces/FileStore'
 import { sortNodesByType } from '@filestore/utils/FileStoreUtils'
 
-import { ScopedObjectDTO, useFileStoreScope } from '../../common/useFileStoreScope/useFileStoreScope'
+import type { ScopedObjectDTO} from '../../common/useFileStoreScope/useFileStoreScope';
+import { useFileStoreScope } from '../../common/useFileStoreScope/useFileStoreScope'
 
 export interface FileContentDTO extends FileDTO {
   content: string

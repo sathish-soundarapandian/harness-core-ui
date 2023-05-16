@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MutableRefObject } from 'react'
+import type { MutableRefObject } from 'react';
+import React from 'react'
 import { MonacoDiffEditor as ReactMonacoDiffEditor } from 'react-monaco-editor'
 import type { MonacoDiffEditorProps, DiffEditorWillMount } from 'react-monaco-editor'
 import { setupMonacoEnvironment } from '@common/utils/MonacoEditorUtils'

@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Feature } from 'services/cf'
-import FlagChanges, { FlagChangesProps } from '../FlagChanges'
+import type { FlagChangesProps } from '../FlagChanges';
+import FlagChanges from '../FlagChanges'
 import { mockVariations } from '../subSections/__tests__/utils.mocks'
 
 const mockFeature = {

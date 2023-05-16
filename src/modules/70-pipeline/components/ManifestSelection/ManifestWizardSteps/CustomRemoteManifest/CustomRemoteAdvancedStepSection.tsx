@@ -6,26 +6,30 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  SelectOption,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Layout,
   Button,
   FormInput,
   MultiTypeInputType,
   getMultiTypeFromValue,
-  ButtonVariation,
-  SelectOption,
-  AllowedTypes
+  ButtonVariation
 } from '@harness/uicore'
 import cx from 'classnames'
 
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { FieldArray, FormikValues } from 'formik'
+import type { FormikValues } from 'formik';
+import { FieldArray } from 'formik'
 import { defaultTo, get, isBoolean } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { ManifestConfig, useHelmCmdFlags } from 'services/cd-ng'
+import type { ManifestConfig} from 'services/cd-ng';
+import { useHelmCmdFlags } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'

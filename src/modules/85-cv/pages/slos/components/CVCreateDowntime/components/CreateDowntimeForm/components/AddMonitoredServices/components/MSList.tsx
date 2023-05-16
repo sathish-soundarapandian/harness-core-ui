@@ -8,6 +8,8 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Column, Row } from 'react-table'
+import type {
+  MultiSelectOption} from '@harness/uicore';
 import {
   Text,
   TableV2,
@@ -21,16 +23,16 @@ import {
   Button,
   ButtonVariation,
   MultiSelect,
-  MultiSelectOption,
   Label
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { getEnvironmentOptions, getErrorMessage, prepareFilterInfo } from '@cv/utils/CommonUtils'
 import noServiceAvailableImage from '@cv/assets/noMonitoredServices.svg'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   MonitoredServiceDetail,
-  MonitoredServiceListItemDTO,
+  MonitoredServiceListItemDTO} from 'services/cv';
+import {
   useGetMonitoredServiceListEnvironments,
   useListMonitoredService
 } from 'services/cv'

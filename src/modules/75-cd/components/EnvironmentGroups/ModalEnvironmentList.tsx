@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useEffect, useMemo, useRef, useState } from 'react'
+import type { FormEvent} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty, noop } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 
 import { Checkbox, Container, Heading, Layout, Text, ModalDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { EnvironmentResponse, getEnvironmentListPromise } from 'services/cd-ng'
+import type { EnvironmentResponse} from 'services/cd-ng';
+import { getEnvironmentListPromise } from 'services/cd-ng'
 
 import { useInfiniteScroll } from '@common/hooks/useInfiniteScroll'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'

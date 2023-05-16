@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useEffect } from 'react'
+import type { FormEvent} from 'react';
+import React, { useEffect } from 'react'
 import { RadioGroup, Radio } from '@blueprintjs/core'
 
 import { get } from 'lodash-es'

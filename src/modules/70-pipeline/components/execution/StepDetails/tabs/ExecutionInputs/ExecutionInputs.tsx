@@ -23,13 +23,14 @@ import { Intent, Spinner } from '@blueprintjs/core'
 import type { FormikErrors } from 'formik'
 import cx from 'classnames'
 
-import {
+import type {
   ExecutionGraph,
   ExecutionNode,
   PipelineInfoConfig,
   PipelineStageConfig,
   StageElementConfig,
-  StageElementWrapperConfig,
+  StageElementWrapperConfig} from 'services/pipeline-ng';
+import {
   useGetExecutionInputTemplate,
   useHandleInterrupt,
   useSubmitExecutionInput
@@ -42,7 +43,8 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import type { StepElementConfig } from 'services/cd-ng'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { StepNodeType, NonSelectableStepNodes } from '@pipeline/utils/executionUtils'
 import { StageForm, StageFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'

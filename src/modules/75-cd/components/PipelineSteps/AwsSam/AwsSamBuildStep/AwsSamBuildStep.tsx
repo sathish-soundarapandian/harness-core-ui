@@ -14,15 +14,18 @@ import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { ListValue } from '@common/components/MultiTypeList/MultiTypeList'
 import type { MapValue } from '@common/components/MultiTypeMap/MultiTypeMap'
-import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps, InputSetData } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { AwsSamBuildStepInitialValues } from '@pipeline/utils/types'
-import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
+import type { ConnectorRefFormValueType} from '@cd/utils/connectorUtils';
+import { getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
 import { AwsSamBuildStepInputSetMode } from './AwsSamBuildStepInputSet'
-import { AwsSamBuildStepEditRef, AwsSamBuildStepFormikValues } from './AwsSamBuildStepEdit'
+import type { AwsSamBuildStepFormikValues } from './AwsSamBuildStepEdit';
+import { AwsSamBuildStepEditRef } from './AwsSamBuildStepEdit'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 export interface AwsSamBuildStepEditProps {

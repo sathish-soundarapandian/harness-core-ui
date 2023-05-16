@@ -27,9 +27,10 @@ import {
   usePipelineVariables
 } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { VariablesHeader } from '@pipeline/components/PipelineStudio/PipelineVariables/VariablesHeader/VariablesHeader'
-import PipelineCard, {
+import type {
   PipelineCardProps
-} from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/PipelineCard'
+} from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/PipelineCard';
+import PipelineCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/PipelineCard'
 import StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'

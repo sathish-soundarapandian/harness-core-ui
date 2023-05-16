@@ -15,17 +15,19 @@ import AccessTokenOAuth, { getRepoProviderLabelKey } from '@common/components/Ac
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useSourceCodeModal } from '@user-profile/modals/SourceCodeManager/useSourceCodeManager'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   DeleteUserSourceCodeManagerQueryParams,
   SourceCodeManagerDTO,
-  UserSourceCodeManagerResponseDTO,
+  UserSourceCodeManagerResponseDTO} from 'services/cd-ng';
+import {
   useDeleteSourceCodeManagers,
   useDeleteUserSourceCodeManager,
   useGetSourceCodeManagers,
   useGetUserSourceCodeManagers
 } from 'services/cd-ng'
 import { Table, useToaster } from '@common/components'
-import { getIconBySCM, SourceCodeTypes } from '@user-profile/utils/utils'
+import type { SourceCodeTypes } from '@user-profile/utils/utils';
+import { getIconBySCM } from '@user-profile/utils/utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 

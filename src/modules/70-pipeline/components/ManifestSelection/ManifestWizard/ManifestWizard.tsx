@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Text, Icon, StepWizard, StepProps, AllowedTypes } from '@harness/uicore'
+import type { StepProps, AllowedTypes } from '@harness/uicore';
+import { Text, Icon, StepWizard } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 

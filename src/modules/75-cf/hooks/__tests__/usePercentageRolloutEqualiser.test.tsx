@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useMemo } from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { FC} from 'react';
+import React, { useMemo } from 'react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import { Form, Formik } from 'formik'
 import { FormInput } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'

@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { Formik, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { Formik } from 'formik'
 import { noop } from 'lodash-es'
 import * as Yup from 'yup'
 import { GroupedThumbnailSelect } from '@harness/uicore'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsUtil'

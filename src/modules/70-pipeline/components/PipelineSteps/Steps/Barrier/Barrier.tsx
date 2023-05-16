@@ -6,32 +6,39 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import {
+import type {
   AllowedTypes,
+  IconName,
+  SelectOption
+} from '@harness/uicore';
+import {
   Formik,
   FormInput,
   getMultiTypeFromValue,
-  IconName,
-  MultiTypeInputType,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 import * as Yup from 'yup'
-import { FormikProps, yupToFormErrors } from 'formik'
+import type { FormikProps} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { parse } from '@common/utils/YamlHelperMethods'
-import {
+import type {
   StepFormikFowardRef,
-  setFormikRef,
-  StepViewType,
   ValidateInputSetProps
-} from '@pipeline/components/AbstractSteps/Step'
+} from '@pipeline/components/AbstractSteps/Step';
 import {
+  setFormikRef,
+  StepViewType
+} from '@pipeline/components/AbstractSteps/Step'
+import type {
   PipelineInfoConfig,
-  useGetPipeline,
   VariableMergeServiceResponse,
   StepElementConfig
+} from 'services/pipeline-ng';
+import {
+  useGetPipeline
 } from 'services/pipeline-ng'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -43,7 +50,8 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { StepProps } from '@pipeline/components/PipelineSteps/PipelineStep';
+import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 

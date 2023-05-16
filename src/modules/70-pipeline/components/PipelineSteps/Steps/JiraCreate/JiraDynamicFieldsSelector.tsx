@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { FieldArray } from 'formik'
 import { useParams } from 'react-router-dom'
 import { Intent } from '@blueprintjs/core'
 import {
@@ -25,10 +26,11 @@ import { isEmpty } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   JiraFieldNG,
   JiraProjectNG,
-  ResponseMessage,
+  ResponseMessage} from 'services/cd-ng';
+import {
   useGetJiraIssueCreateMetadata,
   useGetJiraIssueUpdateMetadata
 } from 'services/cd-ng'
@@ -39,11 +41,13 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { setIssueTypeOptions } from '../JiraApproval/helper'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { JiraFieldSelector } from './JiraFieldSelector'
-import {
+import type {
   JiraCreateFieldType,
-  JiraCreateFormFieldSelector,
   JiraDynamicFieldsSelectorContentInterface,
   JiraDynamicFieldsSelectorInterface
+} from './types';
+import {
+  JiraCreateFormFieldSelector
 } from './types'
 import css from './JiraDynamicFieldsSelector.module.scss'
 

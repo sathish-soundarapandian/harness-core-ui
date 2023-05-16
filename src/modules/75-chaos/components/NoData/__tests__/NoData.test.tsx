@@ -5,11 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode } from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { ReactNode } from 'react';
+import React from 'react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import { NoData, NoDataProps } from '../NoData'
+import type { NoDataProps } from '../NoData';
+import { NoData } from '../NoData'
 
 const imageURL = 'test-image-url'
 const message = 'test-message'

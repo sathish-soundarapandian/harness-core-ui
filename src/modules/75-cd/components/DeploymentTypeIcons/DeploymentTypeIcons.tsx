@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { Icon, IconName, Layout, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Icon, Layout, Text } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
-import { deploymentTypeIcon, ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils'
+import type { ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils';
+import { deploymentTypeIcon } from '@pipeline/utils/DeploymentTypeUtils'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import type { IconDTO } from 'services/cd-ng'
 

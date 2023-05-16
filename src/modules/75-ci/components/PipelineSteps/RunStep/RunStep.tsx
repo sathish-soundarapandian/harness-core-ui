@@ -31,7 +31,8 @@ import { ModuleName } from 'framework/types/ModuleName'
 import type { StringsMap } from 'stringTypes'
 import { RunStepBaseWithRef } from './RunStepBase'
 import { RunStepInputSet } from './RunStepInputSet'
-import { RunStepVariables, RunStepVariablesProps } from './RunStepVariables'
+import type { RunStepVariablesProps } from './RunStepVariables';
+import { RunStepVariables } from './RunStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './RunStepFunctionConfigs'
 import { getConnectorSuggestions } from '../EditorSuggestionUtils'
 

@@ -7,12 +7,13 @@
 
 import React, { useState, useMemo } from 'react'
 import { get } from 'lodash-es'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Button,
   Formik,
   Text,
-  StepProps,
   Container,
   ButtonVariation,
   HarnessDocTooltip,

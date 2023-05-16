@@ -6,21 +6,24 @@
  */
 import React, { useMemo, useState } from 'react'
 import cx from 'classnames'
-import {
+import type {
   ExpressionAndRuntimeTypeProps,
+  DataTooltipInterface,
+  SelectOption
+} from '@harness/uicore';
+import {
   getMultiTypeFromValue,
   MultiTypeInputValue,
   MultiTypeInputType,
-  DataTooltipInterface,
   HarnessDocTooltip,
   Container,
   FormError,
   FormikTooltipContext,
   useToaster,
-  ButtonVariation,
-  SelectOption
+  ButtonVariation
 } from '@harness/uicore'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
 import { get, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
@@ -29,11 +32,12 @@ import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreate
 import useCreateConnectorMultiTypeModal from '@connectors/modals/ConnectorModal/useCreateConnectorMultiTypeModal'
 import { useGetSecretsManagerConnectorsHook } from '@connectors/pages/connectors/hooks/useGetSecretsManagerConnectors/useGetSecretsManagerConnectors'
 
-import {
+import type {
   ConnectorConfigDTO,
   ConnectorInfoDTO,
   ConnectorResponse,
-  ResponsePageConnectorResponse,
+  ResponsePageConnectorResponse} from 'services/cd-ng';
+import {
   useGetConnector
 } from 'services/cd-ng'
 import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -45,10 +49,12 @@ import {
   getScopeFromDTO,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
-import {
-  MultiTypeReferenceInput,
+import type {
   MultiTypeReferenceInputProps,
   ReferenceSelectProps
+} from '@common/components/ReferenceSelect/ReferenceSelect';
+import {
+  MultiTypeReferenceInput
 } from '@common/components/ReferenceSelect/ReferenceSelect'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -56,12 +62,13 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import type { ItemInterface } from '@common/components/AddDrawer/AddDrawer'
 import { InputSetFunction, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
-import {
+import type {
   ConnectorReferenceFieldProps,
+  InlineSelectionInterface,
+  ConnectorSelectedValue} from './ConnectorReferenceField';
+import {
   getReferenceFieldProps,
   getEditRenderer,
-  InlineSelectionInterface,
-  ConnectorSelectedValue,
   getSelectedRenderer,
   getConnectorStatusCall
 } from './ConnectorReferenceField'

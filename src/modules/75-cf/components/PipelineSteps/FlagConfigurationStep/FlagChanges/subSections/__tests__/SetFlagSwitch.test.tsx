@@ -7,11 +7,13 @@
 
 import React from 'react'
 import { get } from 'lodash-es'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
-import SetFlagSwitch, { SetFlagSwitchProps, setFlagSwitchSchema } from '../SetFlagSwitch'
+import type { SetFlagSwitchProps} from '../SetFlagSwitch';
+import SetFlagSwitch, { setFlagSwitchSchema } from '../SetFlagSwitch'
 import { prefixInstructionField } from './utils.mocks'
 
 let formValues = {}

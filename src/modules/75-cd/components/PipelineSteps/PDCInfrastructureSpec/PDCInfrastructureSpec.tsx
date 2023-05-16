@@ -5,9 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
-import {
+import type { FormEvent} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import type {
   AllowedTypes,
+  IconName} from '@harness/uicore';
+import {
   Button,
   ButtonSize,
   ButtonVariation,
@@ -16,7 +19,6 @@ import {
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
-  IconName,
   Label,
   Layout,
   MultiTypeInputType,
@@ -37,17 +39,18 @@ import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ConnectorResponse,
   ErrorDetail,
-  getConnectorListV2Promise,
   HostAttributesFilter,
   HostDTO,
   HostNamesFilter,
   HostValidationDTO,
-  listSecretsV2Promise,
   PdcInfrastructure,
-  SecretResponseWrapper,
+  SecretResponseWrapper} from 'services/cd-ng';
+import {
+  getConnectorListV2Promise,
+  listSecretsV2Promise,
   useFilterHostsByConnector,
   useValidateHosts
 } from 'services/cd-ng'
@@ -59,7 +62,8 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -83,6 +87,11 @@ import {
   getHostNames,
   PDCInfrastructureSpecInputForm
 } from './PDCInfrastructureSpecInputForm'
+import type {
+  PDCInfrastructureUI,
+  PDCInfrastructureYAML,
+  PdcInfraTemplate
+} from './PDCInfrastructureInterface';
 import {
   getKeyValueHostAttributes,
   getValidationSchemaAll,
@@ -93,10 +102,7 @@ import {
   HOSTS_TYPE,
   HostScope,
   parseAttributes,
-  parseHosts,
-  PDCInfrastructureUI,
-  PDCInfrastructureYAML,
-  PdcInfraTemplate
+  parseHosts
 } from './PDCInfrastructureInterface'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import css from './PDCInfrastructureSpec.module.scss'

@@ -26,7 +26,8 @@ import type { TemplateStepNode } from 'services/pipeline-ng'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { getStepDataFromValues } from '@pipeline/utils/stepUtils'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import { StepCommandsProps, StepCommandsViews, StepGroupWithStageElementConfig, Values } from './StepCommandTypes'
+import type { StepCommandsProps, StepGroupWithStageElementConfig, Values } from './StepCommandTypes'
+import { StepCommandsViews } from './StepCommandTypes'
 import css from './StepCommands.module.scss'
 
 export type StepFormikRef<T = unknown> = {

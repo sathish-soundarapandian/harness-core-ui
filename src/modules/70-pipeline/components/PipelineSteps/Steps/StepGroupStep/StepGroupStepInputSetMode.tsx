@@ -9,8 +9,10 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { connect, FormikProps } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
+import type { FormikProps } from 'formik';
+import { connect } from 'formik'
+import type { AllowedTypes } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'

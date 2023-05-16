@@ -6,12 +6,13 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Button,
   Formik,
   Text,
-  StepProps,
   Container,
   ButtonVariation,
   FormikForm,
@@ -24,7 +25,8 @@ import * as Yup from 'yup'
 import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import { useStrings } from 'framework/strings'
-import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
+import type { TextReferenceInterface} from '@secrets/components/TextReference/TextReference';
+import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'

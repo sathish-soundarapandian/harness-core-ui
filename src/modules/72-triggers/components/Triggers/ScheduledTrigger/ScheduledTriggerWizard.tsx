@@ -24,11 +24,12 @@ import {
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 
-import {
+import type {
   NGTriggerConfigV2,
   NGTriggerSourceV2,
   PipelineInfoConfig,
-  ResponseNGTriggerResponse,
+  ResponseNGTriggerResponse} from 'services/pipeline-ng';
+import {
   useCreateTrigger,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   useGetPipeline,
@@ -91,10 +92,11 @@ import {
   ResponseStatus
 } from '../utils'
 import type { FlatValidFormikValuesInterface, TriggerConfigDTO } from '../TriggerWizardInterface'
-import {
+import type {
   FlatInitialValuesInterface,
   FlatOnEditValuesInterface,
-  FlatValidScheduleFormikValuesInterface,
+  FlatValidScheduleFormikValuesInterface} from './utils';
+import {
   getValidationSchema,
   getPanels
 } from './utils'

@@ -24,9 +24,10 @@ import * as Yup from 'yup'
 import { useModalHook } from '@harness/use-modal'
 import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+import type {
+  QlceViewEntityStatsDataPoint} from 'services/ce/services';
 import {
   FetchperspectiveGridDocument,
-  QlceViewEntityStatsDataPoint,
   useFetchPerspectiveTotalCountQuery
 } from 'services/ce/services'
 import { useToaster } from '@common/exports'

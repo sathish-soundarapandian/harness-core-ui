@@ -6,9 +6,12 @@
  */
 
 import React from 'react'
-import { IMenuItemProps, Menu, MenuItem, PopoverInteractionKind, MaybeElement } from '@blueprintjs/core'
-import { Icon, Popover, IconName } from '@harness/uicore'
-import { usePermission, PermissionsRequest } from '@rbac/hooks/usePermission'
+import type { IMenuItemProps, MaybeElement } from '@blueprintjs/core';
+import { Menu, MenuItem, PopoverInteractionKind } from '@blueprintjs/core'
+import type { IconName } from '@harness/uicore';
+import { Icon, Popover } from '@harness/uicore'
+import type { PermissionsRequest } from '@rbac/hooks/usePermission';
+import { usePermission } from '@rbac/hooks/usePermission'
 import { useGetFirstDisabledFeature } from '@common/hooks/useFeatures'
 import type { FeaturesProps } from 'framework/featureStore/featureStoreUtil'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

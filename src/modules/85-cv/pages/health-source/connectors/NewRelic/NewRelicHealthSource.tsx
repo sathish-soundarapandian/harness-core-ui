@@ -7,6 +7,8 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Text,
   Container,
@@ -14,7 +16,6 @@ import {
   FormikForm,
   FormInput,
   Layout,
-  SelectOption,
   Utils,
   useToaster,
   Button,
@@ -27,7 +28,8 @@ import { defaultTo, noop } from 'lodash-es'
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetNewRelicApplications, MetricPackValidationResponse, TimeSeriesMetricPackDTO } from 'services/cv'
+import type { MetricPackValidationResponse, TimeSeriesMetricPackDTO } from 'services/cv';
+import { useGetNewRelicApplications } from 'services/cv'
 import { Connectors } from '@connectors/constants'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'

@@ -7,12 +7,14 @@
 
 import React, { useMemo, useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Container, ExpandingSearchInput, ExpandingSearchInputHandle, Pagination } from '@harness/uicore'
+import type { ExpandingSearchInputHandle} from '@harness/uicore';
+import { Container, ExpandingSearchInput, Pagination } from '@harness/uicore'
 import { defer } from 'lodash-es'
-import {
+import type {
   FeatureMetric,
   GetAllFeaturesQueryParams,
-  GetFeatureMetricsQueryParams,
+  GetFeatureMetricsQueryParams} from 'services/cf';
+import {
   useDeleteFeatureFlag,
   useGetAllFeatures,
   useGetFeatureMetrics

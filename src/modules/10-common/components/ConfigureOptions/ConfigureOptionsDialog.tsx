@@ -9,6 +9,8 @@ import React, { useRef } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
+import type {
+  MultiSelectOption} from '@harness/uicore';
 import {
   Button,
   Formik,
@@ -17,7 +19,6 @@ import {
   Layout,
   ButtonVariation,
   useToaster,
-  MultiSelectOption,
   FormikForm
 } from '@harness/uicore'
 import { FormGroup } from '@blueprintjs/core'
@@ -26,13 +27,14 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings, String } from 'framework/strings'
 import AllowedValuesFields from './AllowedValuesField'
 import { ALLOWED_VALUES_TYPE } from './constants'
+import type {
+  FormValues,
+  AllowedValuesCustomComponentProps} from './ConfigureOptionsUtils';
 import {
   Validation,
   ValidationSchema,
-  FormValues,
   parseInput,
   getInputStr,
-  AllowedValuesCustomComponentProps,
   getStringValueWithComma,
   parseInputStringWithCommas
 } from './ConfigureOptionsUtils'

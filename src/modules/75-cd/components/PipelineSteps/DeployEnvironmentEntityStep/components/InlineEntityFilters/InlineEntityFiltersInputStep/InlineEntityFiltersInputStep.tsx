@@ -8,7 +8,8 @@
 import React from 'react'
 import { defaultTo, get } from 'lodash-es'
 
-import { AllowedTypes, Container, FormInput, Layout, TagsPopover, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Container, FormInput, Layout, TagsPopover, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
@@ -19,9 +20,11 @@ import { isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import {
-  entityFilterMatchTypeStringsMap,
+import type {
   EntityFilterMatchType
+} from '../AddEditEntityFilterModal/AddEditEntityFilterModal.types';
+import {
+  entityFilterMatchTypeStringsMap
 } from '../AddEditEntityFilterModal/AddEditEntityFilterModal.types'
 import { TagsPopoverTarget } from '../EntityFiltersList/EntityFilterSpec'
 

@@ -6,13 +6,14 @@
  */
 
 import React from 'react'
+import type {
+  RenderResult} from '@testing-library/react';
 import {
   act,
   fireEvent,
   getByText,
   queryByText,
   render,
-  RenderResult,
   waitFor,
   queryAllByText
 } from '@testing-library/react'

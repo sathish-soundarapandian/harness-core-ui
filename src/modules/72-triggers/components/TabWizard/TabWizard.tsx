@@ -5,10 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef, createRef, RefObject, useMemo, useState, Dispatch, SetStateAction } from 'react'
+import type { RefObject, Dispatch, SetStateAction } from 'react';
+import React, { useRef, createRef, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { defaultTo, noop } from 'lodash-es'
 
+import type {
+  IconName} from '@harness/uicore';
 import {
   Layout,
   Tabs,
@@ -16,14 +19,14 @@ import {
   Formik,
   FormikForm,
   Icon,
-  IconName,
   VisualYamlSelectedView as SelectedView,
   Container
 } from '@harness/uicore'
 import stableStringify from 'fast-json-stable-stringify'
 import { Color } from '@harness/design-system'
 
-import { FormikEffect, FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
+import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect';
+import { FormikEffect } from '@common/components/FormikEffect/FormikEffect'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
 import type {
   YamlBuilderHandlerBinding,
@@ -31,12 +34,14 @@ import type {
   InvocationMapFunction
 } from '@common/interfaces/YAMLBuilderProps'
 
+import type {
+  FormikPropsInterface
+} from './TabWizardUtils';
 import {
   renderTitle,
   setNewTouchedPanel,
   shouldBlockNavigation,
-  renderYamlBuilder,
-  FormikPropsInterface
+  renderYamlBuilder
 } from './TabWizardUtils'
 import TabWizardHeader from './TabWizardHeader/TabWizardHeader'
 import TabWizardFooter from './TabWizardFooter/TabWizardFooter'

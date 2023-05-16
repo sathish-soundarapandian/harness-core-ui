@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { fireEvent, screen, render, RenderResult, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { fireEvent, screen, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockFeature from '@cf/utils/testData/data/mockFeature'

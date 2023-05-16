@@ -8,7 +8,8 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { DashboardSelected, ServiceExecutionsCard, ServiceExecutionsCardProps } from '../ServiceExecutionsCard'
+import type { ServiceExecutionsCardProps } from '../ServiceExecutionsCard';
+import { DashboardSelected, ServiceExecutionsCard } from '../ServiceExecutionsCard'
 
 const props: ServiceExecutionsCardProps = {
   envIdentifiers: [

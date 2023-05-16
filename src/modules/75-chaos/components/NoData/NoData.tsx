@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode } from 'react'
-import { Button, ButtonProps, ButtonVariation, Container, Heading, Layout, Text } from '@harness/uicore'
+import type { ReactNode } from 'react';
+import React from 'react'
+import type { ButtonProps} from '@harness/uicore';
+import { Button, ButtonVariation, Container, Heading, Layout, Text } from '@harness/uicore'
 import type { LayoutProps } from '@harness/uicore/dist/layouts/Layout'
 import { Color, FontVariation } from '@harness/design-system'
 import css from './NoData.module.scss'

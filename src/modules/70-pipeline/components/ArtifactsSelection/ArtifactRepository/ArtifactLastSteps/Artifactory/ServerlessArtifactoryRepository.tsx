@@ -11,11 +11,13 @@ import { defaultTo, get, map, memoize } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { Menu } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
-import { AllowedTypes, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import type { AllowedTypes, SelectOption} from '@harness/uicore';
+import { getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   Failure,
-  ServiceSpec,
+  ServiceSpec} from 'services/cd-ng';
+import {
   useGetRepositoriesDetailsForArtifactory,
   useGetRepositoriesDetailsV2ForArtifactory
 } from 'services/cd-ng'

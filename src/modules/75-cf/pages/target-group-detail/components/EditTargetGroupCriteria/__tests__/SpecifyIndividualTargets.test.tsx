@@ -1,8 +1,10 @@
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Segment } from 'services/cf'
-import SpecifyIndividualTargets, { SpecifyIndividualTargetsProps } from '../SpecifyIndividualTargets'
+import type { SpecifyIndividualTargetsProps } from '../SpecifyIndividualTargets';
+import SpecifyIndividualTargets from '../SpecifyIndividualTargets'
 
 const renderComponent = (props: Partial<SpecifyIndividualTargetsProps> = {}): RenderResult =>
   render(

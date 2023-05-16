@@ -5,17 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useMemo } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import React, { useMemo } from 'react'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import {
+import type {
   SelectOption,
+  AllowedTypes
+} from '@harness/uicore';
+import {
   FormInput,
   MultiTypeInputType,
   FormError,
   MultiTypeInput,
-  Text,
-  AllowedTypes
+  Text
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

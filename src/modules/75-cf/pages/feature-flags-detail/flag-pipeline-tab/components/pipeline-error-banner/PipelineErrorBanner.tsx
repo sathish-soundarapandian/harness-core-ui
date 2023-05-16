@@ -7,7 +7,8 @@
 
 import { FontVariation, Color } from '@harness/design-system'
 import { Container, ButtonVariation, Button, Text } from '@harness/uicore'
-import React, { FC, useState } from 'react'
+import type { FC} from 'react';
+import React, { useState } from 'react'
 import { useStrings } from 'framework/strings'
 import css from './PipelineErrorBanner.module.scss'
 

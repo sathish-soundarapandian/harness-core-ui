@@ -12,7 +12,8 @@ import { Form } from 'formik'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
-import AnnotationDetails, { AnnotationDetailsProps } from '../AnnotationDetails'
+import type { AnnotationDetailsProps } from '../AnnotationDetails';
+import AnnotationDetails from '../AnnotationDetails'
 import { AnnotationDetailsFields } from '../AnnotationDetails.constants'
 
 function WrapperComponent(props: AnnotationDetailsProps): JSX.Element {

@@ -8,7 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import * as hooks from '@common/hooks/useFeatureFlag'
 import { CVCodeErrors } from '../CVCodeErrors'

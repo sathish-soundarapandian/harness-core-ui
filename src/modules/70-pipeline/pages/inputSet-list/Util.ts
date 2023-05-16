@@ -9,7 +9,8 @@ import { SortMethod } from '@harness/uicore'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
+import type { UseQueryParamsOptions } from '@common/hooks/useQueryParams';
+import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 
 export type InputSetListQueryParams = {

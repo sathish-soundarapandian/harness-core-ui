@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Text, FormikCollapsableSelect, CollapsableSelectType, CollapsableSelectOptions } from '@harness/uicore'
+import type { CollapsableSelectOptions } from '@harness/uicore';
+import { Text, FormikCollapsableSelect, CollapsableSelectType } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { FormikContextType } from 'formik'
 import DelegatesGit from '@common/icons/DelegatesGit.svg'

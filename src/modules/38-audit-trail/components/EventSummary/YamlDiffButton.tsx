@@ -7,7 +7,8 @@
 
 import { Text, Layout, Icon, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import React, { ReactElement, useMemo, useState } from 'react'
+import type { ReactElement} from 'react';
+import React, { useMemo, useState } from 'react'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import { useStrings } from 'framework/strings'
 import { useGetYamlDiff } from 'services/audit'

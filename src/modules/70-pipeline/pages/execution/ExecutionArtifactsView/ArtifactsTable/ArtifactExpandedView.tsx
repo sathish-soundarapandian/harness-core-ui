@@ -7,7 +7,8 @@
  */
 
 import { Text } from '@harness/uicore'
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import type { Row } from 'react-table'
 
 import type { Artifact } from './ArtifactsTable'

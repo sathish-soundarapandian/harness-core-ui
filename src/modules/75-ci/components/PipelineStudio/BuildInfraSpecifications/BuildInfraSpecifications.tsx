@@ -8,6 +8,8 @@
 import React, { useMemo, useState } from 'react'
 import * as yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
+import type {
+  ThumbnailSelectProps} from '@harness/uicore';
 import {
   Layout,
   Formik,
@@ -17,7 +19,6 @@ import {
   Card,
   Accordion,
   ThumbnailSelect,
-  ThumbnailSelectProps,
   Container,
   getMultiTypeFromValue,
   MultiTypeInputType,
@@ -32,7 +33,8 @@ import cx from 'classnames'
 import { produce } from 'immer'
 import type { FormikProps } from 'formik'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
-import { DelegateGroupDetails, useGetDelegateGroupsNGV2 } from 'services/portal'
+import type { DelegateGroupDetails} from 'services/portal';
+import { useGetDelegateGroupsNGV2 } from 'services/portal'
 import Volumes, { VolumesTypes } from '@pipeline/components/Volumes/Volumes'
 import MultiTypeCustomMap from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
@@ -41,7 +43,8 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'

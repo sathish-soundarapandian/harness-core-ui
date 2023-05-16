@@ -30,13 +30,15 @@ import {
 import { useQueryParams } from '@common/hooks'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Connectors } from '@connectors/constants'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { ScriptWizard } from './ScriptWizard/ScriptWizard'
-import { ScopeTypes, AzureBlueprintProps } from './AzureBlueprintTypes.types'
+import type { AzureBlueprintProps } from './AzureBlueprintTypes.types';
+import { ScopeTypes } from './AzureBlueprintTypes.types'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './AzureBlueprint.module.scss'

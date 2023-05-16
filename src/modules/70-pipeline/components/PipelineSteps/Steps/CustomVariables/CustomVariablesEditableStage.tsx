@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { debounce, defaultTo, isEmpty } from 'lodash-es'
-import { Formik, FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { Formik, FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
 import {
   Button,
@@ -41,7 +42,8 @@ import { SecretConfigureOptions } from '@secrets/components/SecretConfigureOptio
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { CustomVariableEditableProps, CustomVariablesData } from './CustomVariableEditable'
 import { VariableType, labelStringMap } from './CustomVariableUtils'
-import AddEditCustomVariable, { VariableState } from './AddEditCustomVariable'
+import type { VariableState } from './AddEditCustomVariable';
+import AddEditCustomVariable from './AddEditCustomVariable'
 import css from './CustomVariables.module.scss'
 
 export type VariablesCustomValidationSchemaType = (

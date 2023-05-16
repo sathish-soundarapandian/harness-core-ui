@@ -20,7 +20,8 @@ import * as templateServices from 'services/template-ng'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import * as cdNgServices from 'services/cd-ng'
-import { DeleteTemplateModal, DeleteTemplateProps } from '../DeleteTemplateModal'
+import type { DeleteTemplateProps } from '../DeleteTemplateModal';
+import { DeleteTemplateModal } from '../DeleteTemplateModal'
 
 const mockTemplatesSuccessResponseUpdated = {
   ...mockTemplatesSuccessResponse,

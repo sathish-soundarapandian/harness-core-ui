@@ -10,6 +10,7 @@ import cx from 'classnames'
 import { capitalize, defaultTo, isEmpty, isUndefined } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
+import type { ExpandingSearchInputHandle } from '@harness/uicore'
 import {
   Button,
   ButtonSize,
@@ -18,7 +19,6 @@ import {
   Collapse,
   Container,
   ExpandingSearchInput,
-  ExpandingSearchInputHandle,
   getErrorInfoFromErrorObject,
   Icon,
   Layout,
@@ -27,13 +27,14 @@ import {
   useToaster
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useStrings, UseStringsReturn } from 'framework/strings'
-import {
+import type { UseStringsReturn } from 'framework/strings'
+import { useStrings } from 'framework/strings'
+import { useGetActiveServiceInstanceDetailsGroupedByPipelineExecution } from 'services/cd-ng'
+import type {
   GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
   InstanceDetailGroupedByPipelineExecution,
   InstanceDetailsDTO,
-  NGServiceConfig,
-  useGetActiveServiceInstanceDetailsGroupedByPipelineExecution
+  NGServiceConfig
 } from 'services/cd-ng'
 import type {
   ExecutionPathProps,

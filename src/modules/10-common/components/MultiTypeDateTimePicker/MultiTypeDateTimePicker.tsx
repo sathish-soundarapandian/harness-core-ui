@@ -5,16 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
-import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
+import React from 'react'
+import type { ReactElement } from 'react'
+import type { IFormGroupProps } from '@blueprintjs/core'
+import { FormGroup, Intent } from '@blueprintjs/core'
+import type { ExpressionAndRuntimeTypeProps, MultiTypeInputType } from '@harness/uicore'
 import {
   DateInput,
   ExpressionAndRuntimeType,
-  ExpressionAndRuntimeTypeProps,
   FormError,
   getFormFieldLabel,
   getMultiTypeFromValue,
-  MultiTypeInputType,
   MultiTypeInputValue
 } from '@harness/uicore'
 import { connect } from 'formik'
@@ -23,7 +24,8 @@ import { get, isEmpty } from 'lodash-es'
 import moment from 'moment'
 import type { DateInputProps } from '@harness/uicore/dist/components/DateInput/DateInput'
 import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime } from '@common/utils/utils'
-import { DATE_PARSE_FORMAT, FormikContextProps } from '../DateTimePicker/DateTimePicker'
+import type { FormikContextProps } from '../DateTimePicker/DateTimePicker'
+import { DATE_PARSE_FORMAT } from '../DateTimePicker/DateTimePicker'
 import css from './MultiTypeDateTimePicker.module.scss'
 
 export interface MultiTypeDateTimePickerProps

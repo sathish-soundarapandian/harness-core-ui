@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { StepProps, Text, Layout } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Text, Layout } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'

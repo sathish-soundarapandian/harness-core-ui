@@ -8,14 +8,16 @@
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { getStageFromPipeline, getStagePathFromPipeline } from '../helpers'
-import {
+import type {
   ActionResponse,
+  PipelineViewData
+} from '../PipelineActions';
+import {
   DrawerTypes,
   initialState,
   PipelineActions,
   PipelineContextActions,
-  PipelineReducer,
-  PipelineViewData
+  PipelineReducer
 } from '../PipelineActions'
 
 describe('PipelineActions test', () => {

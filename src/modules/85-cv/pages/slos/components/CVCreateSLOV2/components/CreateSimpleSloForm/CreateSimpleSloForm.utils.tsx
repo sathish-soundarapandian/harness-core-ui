@@ -13,18 +13,21 @@ import type {
   ServiceLevelIndicatorDTO,
   WindowBasedServiceLevelIndicatorSpec
 } from 'services/cv'
-import { EvaluationType, SLIMetricTypes, SLOV2Form, SLOV2FormFields } from '../../CVCreateSLOV2.types'
+import type { SLOV2Form} from '../../CVCreateSLOV2.types';
+import { EvaluationType, SLIMetricTypes, SLOV2FormFields } from '../../CVCreateSLOV2.types'
 import {
   validateErrorBudgetPolicy,
   validateSetSLOTarget,
   validateSetSLOTimeWindow
 } from '../CreateCompositeSloForm/CreateCompositeSloForm.utils'
-import {
-  CreateSimpleSLOSteps,
+import type {
   GetMetricDefinitionsValues,
   GetMetricsAndTypeProps,
   GetSLIDerivedProps,
   GetSLIDerivedValues
+} from './CreateSimpleSloForm.types';
+import {
+  CreateSimpleSLOSteps
 } from './CreateSimpleSloForm.types'
 import { MAX_OBJECTIVE_PERCENTAGE } from '../../CVCreateSLOV2.constants'
 import { getSimpleSLOCustomError } from '../../CVCreateSLOV2.utils'

@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { renderHook, RenderHookResult } from '@testing-library/react-hooks'
+import type { RenderHookResult } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks'
 import { TestWrapper } from '@common/utils/testUtils'
-import useActiveEnvironment, { UseActiveEnvironmentPayload } from '../useActiveEnvironment'
+import type { UseActiveEnvironmentPayload } from '../useActiveEnvironment';
+import useActiveEnvironment from '../useActiveEnvironment'
 
 const renderActiveEnvironmentHook = (
   activeEnvironment = 'TEST_ENV'

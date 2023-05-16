@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect } from 'react'
-import { FormInput, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { FormInput } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'

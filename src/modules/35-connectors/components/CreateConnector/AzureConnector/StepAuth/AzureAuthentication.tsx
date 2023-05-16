@@ -7,17 +7,18 @@
 
 import React, { useState, useEffect } from 'react'
 import { FontVariation } from '@harness/design-system'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   Button,
   Formik,
   Text,
-  StepProps,
   Container,
   PageSpinner,
   ThumbnailSelect,
   FormInput,
-  SelectOption,
   ButtonVariation
 } from '@harness/uicore'
 import cx from 'classnames'

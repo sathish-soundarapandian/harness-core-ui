@@ -9,7 +9,8 @@ import type { ApplicationSettingsConfiguration } from 'services/cd-ng'
 import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
 
 import ConnectorField from '@pipeline/components/ApplicationConfig/ApplicationConfigListView/ApplicationConfigConnectorField'
-import { ConnectorIcons, ConnectorTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
+import type { ConnectorTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types';
+import { ConnectorIcons } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
 import { ConfigFilesMap } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { LocationValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesListView/LocationValue'
 

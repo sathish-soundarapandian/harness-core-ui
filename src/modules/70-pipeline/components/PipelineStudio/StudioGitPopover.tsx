@@ -16,7 +16,8 @@ import type { EntityGitDetails, NGTemplateInfoConfig } from 'services/template-n
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useStrings } from 'framework/strings'
 import { getRepoDetailsByIndentifier } from '@common/utils/gitSyncUtils'
-import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import type { GitFilterScope } from '@common/components/GitFilters/GitFilters';
+import GitFilters from '@common/components/GitFilters/GitFilters'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { getEntityUrl, getRepoEntityObject } from '@gitsync/common/gitSyncUtils'

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, waitFor, queryByText, screen, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { render, waitFor, queryByText, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import SavedConnectorDetails, { RenderDetailsSection, getActivityDetails } from '../SavedConnectorDetails'

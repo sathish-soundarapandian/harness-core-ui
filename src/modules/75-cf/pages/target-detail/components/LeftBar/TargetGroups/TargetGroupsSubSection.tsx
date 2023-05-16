@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { Button, ButtonVariation, Layout, Text, useToaster } from '@harness/uicore'
 import { FontVariation, Intent } from '@harness/design-system'
 import type { Target, TargetDetailSegment } from 'services/cf'
-import { String, StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { String, useStrings } from 'framework/strings'
 import TargetGroupRow from '@cf/pages/target-detail/components/LeftBar/TargetGroups/TargetGroupRow'
 import { NoDataFoundRow } from '@cf/components/NoDataFoundRow/NoDataFoundRow'
 import type { useAddTargetsToExcludeList } from '@cf/utils/SegmentUtils'

@@ -7,6 +7,8 @@
 
 import React, { useMemo } from 'react'
 import cx from 'classnames'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Accordion,
   Formik,
@@ -14,22 +16,24 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  SelectOption,
   Text
 } from '@harness/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { defaultTo, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import {
+import type {
   OrganizationDTO,
-  useGetTerraformCloudOrganizations,
-  useGetTerraformCloudWorkspaces,
   WorkspaceDTO
+} from 'services/cd-ng';
+import {
+  useGetTerraformCloudOrganizations,
+  useGetTerraformCloudWorkspaces
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
-import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

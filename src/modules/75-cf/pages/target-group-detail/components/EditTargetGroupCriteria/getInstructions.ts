@@ -8,7 +8,8 @@
 import { isEqual, omit } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
 import type { Clause, Target } from 'services/cf'
-import patch, { getDiff, Instruction } from '@cf/utils/instructions'
+import type { Instruction } from '@cf/utils/instructions';
+import patch, { getDiff } from '@cf/utils/instructions'
 
 export function getTargetInstructions(
   existing: Target[],

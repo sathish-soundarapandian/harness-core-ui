@@ -8,7 +8,8 @@
 import React, { useState } from 'react'
 import { Classes, Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
-import { Layout, Card, Icon, Text, IconName, Button, ButtonVariation } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Layout, Card, Icon, Text, Button, ButtonVariation } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
 import { merge } from 'lodash-es'

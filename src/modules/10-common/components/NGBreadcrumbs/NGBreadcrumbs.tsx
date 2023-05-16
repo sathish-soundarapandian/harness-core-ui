@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Breadcrumbs as UiCoreBreadcrumbs, BreadcrumbsProps, Breadcrumb } from '@harness/uicore'
+import type { BreadcrumbsProps, Breadcrumb } from '@harness/uicore';
+import { Breadcrumbs as UiCoreBreadcrumbs } from '@harness/uicore'
 import { defaults } from 'lodash-es'
 import { useLocation, useParams } from 'react-router-dom'
 

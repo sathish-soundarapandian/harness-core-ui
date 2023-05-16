@@ -7,7 +7,8 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Container, Heading, Layout, Select, SelectOption, Text, Icon, useToaster } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Container, Heading, Layout, Select, Text, Icon, useToaster } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import Card from '@cv/components/Card/Card'
 import { useStrings } from 'framework/strings'

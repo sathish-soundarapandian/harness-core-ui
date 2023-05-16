@@ -7,6 +7,9 @@
 
 import React, { useCallback, useEffect } from 'react'
 import cx from 'classnames'
+import type {
+  SelectOption,
+  StepProps} from '@harness/uicore';
 import {
   Formik,
   FormInput,
@@ -14,8 +17,6 @@ import {
   Layout,
   MultiTypeInputType,
   Button,
-  SelectOption,
-  StepProps,
   Text,
   ButtonVariation,
   RUNTIME_INPUT_VALUE,
@@ -28,14 +29,16 @@ import * as Yup from 'yup'
 import { defaultTo, get, isEmpty, isNil, memoize, merge } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import {
+import type {
   AcrBuildDetailsDTO,
   ConnectorConfigDTO,
+  AzureSubscriptionDTO
+} from 'services/cd-ng';
+import {
   useGetBuildDetailsForACRRepository,
   useGetAzureSubscriptions,
   useGetACRRegistriesBySubscription,
-  useGetACRRepositories,
-  AzureSubscriptionDTO
+  useGetACRRepositories
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'

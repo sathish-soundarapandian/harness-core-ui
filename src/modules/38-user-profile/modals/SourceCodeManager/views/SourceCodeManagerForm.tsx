@@ -8,6 +8,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
+import type {
+  SelectOption,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   Formik,
@@ -18,9 +21,7 @@ import {
   CardSelect,
   CardBody,
   Container,
-  SelectOption,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   ButtonVariation,
   useToaster
 } from '@harness/uicore'
@@ -32,7 +33,10 @@ import { NameSchema } from '@common/utils/Validation'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { PageSpinner } from '@common/components'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
-import { SourceCodeManagerDTO, useSaveSourceCodeManagers, useUpdateSourceCodeManagers } from 'services/cd-ng'
+import type { SourceCodeManagerDTO} from 'services/cd-ng';
+import { useSaveSourceCodeManagers, useUpdateSourceCodeManagers } from 'services/cd-ng'
+import type {
+  SourceCodeType} from '@user-profile/utils/utils';
 import {
   AuthTypes,
   getAuthentication,
@@ -40,7 +44,6 @@ import {
   getDefaultSelected,
   getFormDataBasedOnSCMType,
   getIconBySCM,
-  SourceCodeType,
   SourceCodeTypes
 } from '@user-profile/utils/utils'
 import type { TextReferenceInterface } from '@secrets/components/TextReference/TextReference'

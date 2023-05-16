@@ -6,7 +6,8 @@
  */
 
 import React, { useState, useEffect, useMemo } from 'react'
-import { Dialog, IconName, IDialogProps } from '@blueprintjs/core'
+import type { IconName, IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 import { Button, CardSelect, Carousel, Container, Heading, Icon, Layout, Text } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'

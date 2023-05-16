@@ -11,7 +11,8 @@ import { Formik } from 'formik'
 
 import { TestWrapper } from '@common/utils/testUtils'
 
-import MultiTypeFieldSelector, { MultiTypeFieldSelectorProps } from './MultiTypeFieldSelector'
+import type { MultiTypeFieldSelectorProps } from './MultiTypeFieldSelector';
+import MultiTypeFieldSelector from './MultiTypeFieldSelector'
 
 export default {
   title: 'Forms / MultiTypeFieldSelector',

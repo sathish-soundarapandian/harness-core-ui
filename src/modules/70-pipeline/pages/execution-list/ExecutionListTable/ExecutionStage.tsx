@@ -7,7 +7,8 @@
  */
 
 import { Color, FontVariation } from '@harness/design-system'
-import { Icon, IconProps, Layout, Text } from '@harness/uicore'
+import type { IconProps} from '@harness/uicore';
+import { Icon, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import type { CellProps } from 'react-table'
 import cx from 'classnames'

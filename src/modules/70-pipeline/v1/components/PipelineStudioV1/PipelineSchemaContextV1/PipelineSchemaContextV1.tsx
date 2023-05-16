@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { JsonNode, ResponseJsonNode, ResponseYamlSchemaResponse, useGetStepYamlSchema } from 'services/pipeline-ng'
+import type { JsonNode, ResponseJsonNode, ResponseYamlSchemaResponse} from 'services/pipeline-ng';
+import { useGetStepYamlSchema } from 'services/pipeline-ng'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import pipelineSchemaV1 from './schema/pipeline-schema-v1.json'

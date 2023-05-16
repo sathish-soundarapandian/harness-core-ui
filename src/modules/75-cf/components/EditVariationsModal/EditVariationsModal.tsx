@@ -10,9 +10,11 @@ import { Dialog, Divider, Intent } from '@blueprintjs/core'
 import * as yup from 'yup'
 import { clone, isEqual } from 'lodash-es'
 import { FieldArray } from 'formik'
+import type {
+  ButtonProps,
+  SelectOption} from '@harness/uicore';
 import {
   Button,
-  ButtonProps,
   ButtonVariation,
   Container,
   FlexExpander,
@@ -21,7 +23,6 @@ import {
   FormInput,
   Icon,
   Layout,
-  SelectOption,
   Text
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
@@ -29,15 +30,18 @@ import { Color } from '@harness/design-system'
 import { getErrorMessage, useValidateVariationValues } from '@cf/utils/CFUtils'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
-import { FormikEffect, FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
-import { Feature, GitSyncErrorResponse, PatchFeatureQueryParams, usePatchFeature, Variation } from 'services/cf'
+import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect';
+import { FormikEffect } from '@common/components/FormikEffect/FormikEffect'
+import type { Feature, GitSyncErrorResponse, PatchFeatureQueryParams, Variation } from 'services/cf';
+import { usePatchFeature } from 'services/cf'
 import type { PermissionsRequest } from '@rbac/hooks/usePermission'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 
-import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
+import type { UseGitSync } from '@cf/hooks/useGitSync';
+import { GIT_SYNC_ERROR_CODE } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'

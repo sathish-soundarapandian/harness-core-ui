@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Classes, Dialog, IDialogProps, Intent } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Classes, Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
 import {
   Button,
@@ -22,8 +23,8 @@ import { useModalHook } from '@harness/use-modal'
 import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 import { parse } from '@common/utils/YamlHelperMethods'
-import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
-import { EntityGitDetails, useGetInputsetYaml } from 'services/pipeline-ng'
+import type { Error, PipelineInfoConfig , EntityGitDetails} from 'services/pipeline-ng'
+import { useGetInputsetYaml } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
@@ -44,7 +45,8 @@ import type { IGitContextFormProps } from '@common/components/GitContextForm/Git
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import NoEntityFound, { handleFetchFailure } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import type { Pipeline } from '@pipeline/utils/types'
 import { RunPipelineFormV1 } from '../RunPipelineModalV1/RunPipelineFormV1'
 import { DefaultNewPipelineId } from '../../../components/PipelineStudio/PipelineContext/PipelineActions'

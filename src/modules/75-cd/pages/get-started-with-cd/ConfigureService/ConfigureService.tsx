@@ -5,8 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useEffect, useRef, useState } from 'react'
+import type { FormEvent} from 'react';
+import React, { useEffect, useRef, useState } from 'react'
 
+import type {
+  IconName} from '@harness/uicore';
 import {
   Text,
   Layout,
@@ -16,7 +19,6 @@ import {
   FormInput,
   Button,
   RadioButtonGroup,
-  IconName,
   Icon,
   FormikForm,
   HarnessDocTooltip,
@@ -30,8 +32,9 @@ import produce from 'immer'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { HelpPanel } from '@harness/help-panel'
-import { StringKeys, useStrings } from 'framework/strings'
-import {
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
+import type {
   ArtifactConfig,
   ArtifactListConfig,
   ArtifactSource,
@@ -40,8 +43,9 @@ import {
   ManifestConfig,
   ManifestConfigWrapper,
   ServiceRequestDTO,
+  UserRepoResponse} from 'services/cd-ng';
+import {
   useCreateServiceV2,
-  UserRepoResponse,
   useUpdateServiceV2
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -62,6 +66,9 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { FeatureFlag } from '@common/featureFlags'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import type {
+  ServiceDataType
+} from '../CDOnboardingUtils';
 import {
   BinaryValue,
   cleanServiceDataUtil,
@@ -70,12 +77,12 @@ import {
   DeploymentType,
   getUniqueEntityIdentifier,
   newServiceState,
-  ONBOARDING_PREFIX,
-  ServiceDataType
+  ONBOARDING_PREFIX
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import InHarnessFileStore from './ManifestRepoTypes/InHarnessFileStore/InHarnessFileStore'
-import { SelectGitProvider, SelectGitProviderRefInstance } from './ManifestRepoTypes/SelectGitProvider'
+import type { SelectGitProviderRefInstance } from './ManifestRepoTypes/SelectGitProvider';
+import { SelectGitProvider } from './ManifestRepoTypes/SelectGitProvider'
 import { AllSaaSGitProviders, StepStatus } from '../DeployProvisioningWizard/Constants'
 import { SelectRepository } from './ManifestRepoTypes/SelectRepository'
 import { ProvideManifest } from './ManifestRepoTypes/ProvideManifest'

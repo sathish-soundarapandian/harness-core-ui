@@ -7,7 +7,8 @@
 
 import { Collapse, Container, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import type { FeaturePipelineExecution, Variation } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import useFlagVariation from '../../../hooks/useFlagVariation'

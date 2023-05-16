@@ -6,23 +6,28 @@
  */
 
 import React from 'react'
-import { Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
-import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { FormikErrors, FormikProps} from 'formik';
+import { yupToFormErrors } from 'formik'
+import type { StepProps } from '@pipeline/components/PipelineSteps/PipelineStep';
+import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import {
+import type {
   StepFormikFowardRef,
-  setFormikRef,
-  StepViewType,
   ValidateInputSetProps
+} from '@pipeline/components/AbstractSteps/Step';
+import {
+  setFormikRef,
+  StepViewType
 } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'

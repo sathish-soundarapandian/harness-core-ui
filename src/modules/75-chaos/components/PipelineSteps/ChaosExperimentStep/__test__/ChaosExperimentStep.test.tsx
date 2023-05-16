@@ -7,9 +7,11 @@
 
 import React from 'react'
 import { render, act, fireEvent, queryByAttribute } from '@testing-library/react'
-import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
+import type { UseGetReturnData } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { ChaosExperimentStep } from '../ChaosExperimentStep'

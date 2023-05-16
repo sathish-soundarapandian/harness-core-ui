@@ -20,9 +20,10 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import type {
+  ConnectorTypes} from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types';
 import {
   ConnectorLabelMap,
-  ConnectorTypes,
   ConnectorMap
 } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { AzureBlueprintProps } from '../AzureBlueprintTypes.types'

@@ -13,7 +13,8 @@ import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOu
 import { CompositeSLOContext } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CompositeSLOContext'
 import SRMNotificationTable from '@cv/components/Notifications/components/SRMNotificationTable/SRMNotificationTable'
 import { GET_NOTIFICATIONS_PAGE_SIZE } from './NotificationsContainer.constants'
-import { NotificationsContainerProps, SRMNotificationType } from './NotificationsContainer.types'
+import type { NotificationsContainerProps} from './NotificationsContainer.types';
+import { SRMNotificationType } from './NotificationsContainer.types'
 import { getErrorMessage } from '../ExecutionVerification/components/DeploymentMetrics/DeploymentMetrics.utils'
 import css from './NotificationsContainer.module.scss'
 

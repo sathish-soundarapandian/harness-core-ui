@@ -7,6 +7,8 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Layout,
   Formik,
@@ -14,7 +16,6 @@ import {
   Button,
   Container,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   ButtonVariation
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -22,7 +23,8 @@ import { Form } from 'formik'
 import { useParams } from 'react-router-dom'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useStrings } from 'framework/strings'
-import { ApiKeyDTO, TokenDTO, useCreateApiKey, useUpdateApiKey } from 'services/cd-ng'
+import type { ApiKeyDTO, TokenDTO} from 'services/cd-ng';
+import { useCreateApiKey, useUpdateApiKey } from 'services/cd-ng'
 import type { ProjectPathProps, ServiceAccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'

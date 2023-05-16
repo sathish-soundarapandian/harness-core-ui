@@ -19,15 +19,17 @@ import type {
   Failure,
   Error
 } from 'services/pipeline-ng'
-import {
-  getTemplatePromise,
+import type {
   GetTemplateQueryParams,
   ResponseTemplateResponse,
   TemplateSummaryResponse,
-  getTemplateListPromise,
   GetTemplateListQueryParams,
   ResponsePageTemplateSummaryResponse,
   TemplateResponse
+} from 'services/template-ng';
+import {
+  getTemplatePromise,
+  getTemplateListPromise
 } from 'services/template-ng'
 import {
   getIdentifierFromValue,

@@ -6,15 +6,17 @@
  */
 
 import React from 'react'
-import {
+import type {
   AllowedTypes,
   DataTooltipInterface,
   ExpressionAndRuntimeTypeProps,
-  FormInput,
   MultiSelectOption,
   MultiTypeInputType,
   MultiTypeInputValue,
   SelectOption
+} from '@harness/uicore';
+import {
+  FormInput
 } from '@harness/uicore'
 import { isArray } from 'lodash-es'
 

@@ -6,14 +6,15 @@
  */
 
 import React, { useMemo } from 'react'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
-  SelectOption,
   FormInput,
   FormikForm,
   MultiTypeInputType
@@ -28,14 +29,16 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 
-import {
+import type {
   ConnectorConfigDTO,
-  useListProjectsForAzureArtifacts,
-  useListFeedsForAzureArtifacts,
-  useListPackagesForAzureArtifacts,
   AzureDevopsProject,
   AzureArtifactsFeed,
   AzureArtifactsPackage
+} from 'services/cd-ng';
+import {
+  useListProjectsForAzureArtifacts,
+  useListFeedsForAzureArtifacts,
+  useListPackagesForAzureArtifacts
 } from 'services/cd-ng'
 import { getConnectorIdValue, isFieldFixedAndNonEmpty } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'

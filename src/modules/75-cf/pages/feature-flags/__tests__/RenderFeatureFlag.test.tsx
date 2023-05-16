@@ -7,12 +7,14 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
 import mockGovernance from '@cf/utils/testData/data/mockGovernance'
-import { RenderFeatureFlag, RenderFeatureFlagProps } from '../components/RenderFeatureFlag'
+import type { RenderFeatureFlagProps } from '../components/RenderFeatureFlag';
+import { RenderFeatureFlag } from '../components/RenderFeatureFlag'
 import cellMock from './data/cellMock'
 
 describe('RenderFeatureFlag', () => {

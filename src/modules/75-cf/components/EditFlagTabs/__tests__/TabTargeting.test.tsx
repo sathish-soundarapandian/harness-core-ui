@@ -7,15 +7,18 @@
 
 /* eslint-disable react/display-name */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { ReactElement, ReactNode } from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { ReactElement, ReactNode } from 'react';
+import React from 'react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Feature, FeatureState, ServingRule } from 'services/cf'
 import type { FlagActivationFormValues } from '@cf/components/FlagActivation/FlagActivation'
-import TabTargeting, { TabTargetingProps } from '../TabTargeting'
+import type { TabTargetingProps } from '../TabTargeting';
+import TabTargeting from '../TabTargeting'
 import mockFeatureData from './mockFeature'
 
 const mockFeature: Feature = mockFeatureData as Feature

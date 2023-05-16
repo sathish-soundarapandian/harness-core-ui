@@ -24,10 +24,11 @@ import {
   ExpandingSearchInput
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import type {
+  EnvironmentGroupResponseDTO,
+  EnvironmentResponse} from 'services/cd-ng';
 import {
   createEnvironmentGroupPromise,
-  EnvironmentGroupResponseDTO,
-  EnvironmentResponse,
   updateEnvironmentGroupPromise,
   useGetYamlSchema
 } from 'services/cd-ng'

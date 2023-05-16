@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, FC } from 'react'
+import type { FC } from 'react';
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Icon, Text, Container, Button, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -14,7 +15,8 @@ import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
 import { useGetDelegatesHeartbeatDetailsV2 } from 'services/portal'
-import { DelegateCommonProblemTypes, POLL_INTERVAL, DELEGATE_COMMAND_LINE_TIME_OUT } from '@delegates/constants'
+import type { DelegateCommonProblemTypes} from '@delegates/constants';
+import { POLL_INTERVAL, DELEGATE_COMMAND_LINE_TIME_OUT } from '@delegates/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'

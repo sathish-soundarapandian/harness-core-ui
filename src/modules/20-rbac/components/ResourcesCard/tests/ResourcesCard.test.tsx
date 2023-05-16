@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { fireEvent, queryByAttribute, render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { fireEvent, queryByAttribute, render, screen } from '@testing-library/react'
 import { act } from 'react-test-renderer'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { ResourceType } from '@rbac/interfaces/ResourceType'

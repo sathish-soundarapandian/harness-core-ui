@@ -7,18 +7,20 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
-import { DropDown, Icon, Layout, SelectOption, SelectProps, useToaster } from '@harness/uicore'
+import type { SelectOption, SelectProps} from '@harness/uicore';
+import { DropDown, Icon, Layout, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
 
 import type { GetDataError } from 'restful-react'
 import type { PipelinePathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   Error,
   Failure,
   PMSPipelineListBranchesResponse,
-  ResponsePMSPipelineListBranchesResponse,
+  ResponsePMSPipelineListBranchesResponse} from 'services/pipeline-ng';
+import {
   useGetExecutionBranchesList
 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'

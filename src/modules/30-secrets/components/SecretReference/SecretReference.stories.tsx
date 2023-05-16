@@ -8,7 +8,8 @@
 import React from 'react'
 import type { Meta, Story } from '@storybook/react'
 
-import SecretReference, { SecretReferenceProps } from './SecretReference'
+import type { SecretReferenceProps } from './SecretReference';
+import SecretReference from './SecretReference'
 
 export default {
   title: 'Secrets / SecretReference',

@@ -17,7 +17,8 @@ import { useToaster } from '@common/exports'
 import { NameIdDescriptionTags, PageSpinner } from '@common/components'
 import { NameSchema, IdentifierSchema } from '@common/utils/Validation'
 import { useStrings } from 'framework/strings'
-import { useCreateEnvironmentV2, useUpsertEnvironmentV2, EnvironmentResponseDTO } from 'services/cd-ng'
+import type { EnvironmentResponseDTO } from 'services/cd-ng';
+import { useCreateEnvironmentV2, useUpsertEnvironmentV2 } from 'services/cd-ng'
 import type { HarnessEnvironmentModalProps } from './HarnessEnvironmentModal.types'
 
 export const HarnessEnvironmentModal: React.FC<HarnessEnvironmentModalProps> = ({

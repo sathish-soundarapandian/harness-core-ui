@@ -12,7 +12,8 @@ import { find, get } from 'lodash-es'
 import { ButtonSize, ButtonVariation, Container, ModalDialog, Page, useToggleOpen } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
-import { InfrastructureResponse, useGetInfrastructureList } from 'services/cd-ng'
+import type { InfrastructureResponse} from 'services/cd-ng';
+import { useGetInfrastructureList } from 'services/cd-ng'
 
 import type { EnvironmentPathProps, ProjectPathProps, EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'

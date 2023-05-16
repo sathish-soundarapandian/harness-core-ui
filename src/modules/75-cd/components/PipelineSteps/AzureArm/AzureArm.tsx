@@ -9,8 +9,10 @@ import React, { forwardRef } from 'react'
 import * as Yup from 'yup'
 import { isEmpty, set } from 'lodash-es'
 import type { IconName } from '@harness/uicore'
-import { yupToFormErrors, FormikErrors } from 'formik'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { FormikErrors } from 'formik';
+import { yupToFormErrors } from 'formik'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { StringsMap } from 'stringTypes'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'

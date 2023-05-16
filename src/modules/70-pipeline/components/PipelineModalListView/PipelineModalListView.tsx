@@ -6,18 +6,20 @@
  */
 
 import { Color, FontVariation } from '@harness/design-system'
+import type {
+  ExpandingSearchInputHandle} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Container,
   ExpandingSearchInput,
-  ExpandingSearchInputHandle,
   Layout,
   Text
 } from '@harness/uicore'
 import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import type { GitFilterScope } from '@common/components/GitFilters/GitFilters';
+import GitFilters from '@common/components/GitFilters/GitFilters'
 import { Page } from '@common/exports'
 import { useMutateAsGet } from '@common/hooks'
 import { CreatePipeline } from '@pipeline/pages/pipeline-list/CreatePipeline/CreatePipeline'

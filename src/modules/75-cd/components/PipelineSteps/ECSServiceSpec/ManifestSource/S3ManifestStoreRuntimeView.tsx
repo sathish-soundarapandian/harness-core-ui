@@ -10,16 +10,20 @@ import { defaultTo, get, isNil } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikValues } from 'formik'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 
-import { StringKeys, useStrings } from 'framework/strings'
-import { NameValuePair, useListAwsRegions } from 'services/portal'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
+import type { NameValuePair} from 'services/portal';
+import { useListAwsRegions } from 'services/portal'
 import { useGetBucketsInManifests } from 'services/cd-ng'
 import List from '@common/components/List/List'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useMutateAsGet } from '@common/hooks'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/Manifesthelper'

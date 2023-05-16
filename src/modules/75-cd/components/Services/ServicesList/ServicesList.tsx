@@ -35,18 +35,21 @@ import type {
   PipelineType,
   ProjectPathProps
 } from '@common/interfaces/RouteInterfaces'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { DashboardList } from '@cd/components/DashboardList/DashboardList'
 import type { DashboardListProps } from '@cd/components/DashboardList/DashboardList'
 import type { ChangeValue } from '@cd/components/Services/DeploymentsWidget/DeploymentsWidget'
 import { useStrings } from 'framework/strings'
 import { Ticker } from '@common/components/Ticker/Ticker'
 import { SortOption } from '@common/components/SortOption/SortOption'
-import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
+import type { PieChartProps } from '@cd/components/PieChart/PieChart';
+import { PieChart } from '@cd/components/PieChart/PieChart'
 import { getFixed, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { numberFormatter } from '@common/utils/utils'
 import { SettingType } from '@common/constants/Utils'
-import { ChangeRate, IconDTO, ServiceDetailsDTOV2, useDeleteServiceV2, useGetSettingValue } from 'services/cd-ng'
+import type { ChangeRate, IconDTO, ServiceDetailsDTOV2} from 'services/cd-ng';
+import { useDeleteServiceV2, useGetSettingValue } from 'services/cd-ng'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

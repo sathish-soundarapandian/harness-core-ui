@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { defaultTo } from 'lodash-es'
-import { AllowedTypes, Container, MultiTypeInput, MultiTypeInputType, Select, SelectOption } from '@harness/uicore'
+import type { AllowedTypes, SelectOption } from '@harness/uicore';
+import { Container, MultiTypeInput, MultiTypeInputType, Select } from '@harness/uicore'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { ADD_NEW_VALUE } from '@cv/constants'

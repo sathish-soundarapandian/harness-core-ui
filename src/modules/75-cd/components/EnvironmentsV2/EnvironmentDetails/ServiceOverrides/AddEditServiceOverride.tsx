@@ -11,12 +11,14 @@ import type { FormikProps } from 'formik'
 import { defaultTo, get, isEmpty, isEqual } from 'lodash-es'
 import { parse } from 'yaml'
 import cx from 'classnames'
+import type {
+  SelectOption,
+  AllowedTypesWithRunTime} from '@harness/uicore';
 import {
   Button,
   Formik,
   Layout,
   ButtonVariation,
-  SelectOption,
   Text,
   Container,
   VisualYamlToggle,
@@ -25,18 +27,18 @@ import {
   Tabs,
   Tab,
   MultiTypeInputType,
-  AllowedTypesWithRunTime,
   FormInput
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ApplicationSettingsConfiguration,
   ConfigFileWrapper,
   ConnectionStringsConfiguration,
   ManifestConfigWrapper,
   NGServiceOverrideConfig,
   ServiceOverrideResponseDTO,
-  ServiceResponse,
+  ServiceResponse} from 'services/cd-ng';
+import {
   useUpsertServiceOverride
 } from 'services/cd-ng'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'

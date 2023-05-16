@@ -8,7 +8,8 @@
 import React, { useContext } from 'react'
 import { Layout, Icon, Text, Button } from '@harness/uicore'
 import { Popover, Position, PopoverInteractionKind, Classes } from '@blueprintjs/core'
-import { DialogExtensionContext, ExtentionWindow } from './DialogExtention'
+import type { ExtentionWindow } from './DialogExtention';
+import { DialogExtensionContext } from './DialogExtention'
 import css from './TextInputWithToolTip.module.scss'
 
 const TextInputWithToolTip = ({ label, extentionName }: { label: string; extentionName: ExtentionWindow }) => {

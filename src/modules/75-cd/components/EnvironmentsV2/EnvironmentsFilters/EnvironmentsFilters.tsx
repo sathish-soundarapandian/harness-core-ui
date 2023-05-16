@@ -10,20 +10,23 @@ import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { isEmpty, pick } from 'lodash-es'
 
-import { SelectOption, useToaster, MultiSelectOption, Layout } from '@harness/uicore'
+import type { SelectOption, MultiSelectOption} from '@harness/uicore';
+import { useToaster, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import type {
+  FilterDTO} from 'services/cd-ng';
 import {
   usePostFilter,
   useUpdateFilter,
   useDeleteFilter,
-  FilterDTO,
   useGetEnvironmentListForProject
 } from 'services/cd-ng'
 
 import { StringUtils } from '@common/exports'
 import { useBooleanStatus, useUpdateQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import {
   isObjectEmpty,
@@ -37,13 +40,15 @@ import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelec
 import { useFiltersContext } from '@cd/context/FiltersContext'
 
 import EnvironmentsFilterForm from './EnvironmentsFilterForm'
+import type {
+  EnvironmentsFilterFormType} from './filterUtils';
 import {
   createRequestBodyPayload,
-  EnvironmentsFilterFormType,
   getFilterByIdentifier,
   getMultiSelectFromOptions
 } from './filterUtils'
-import { PageQueryParams, PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '../PageTemplate/utils'
+import type { PageQueryParams} from '../PageTemplate/utils';
+import { PAGE_TEMPLATE_DEFAULT_PAGE_INDEX } from '../PageTemplate/utils'
 
 const UNSAVED_FILTER_IDENTIFIER = StringUtils.getIdentifierFromName(UNSAVED_FILTER)
 

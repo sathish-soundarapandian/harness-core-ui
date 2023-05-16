@@ -8,10 +8,12 @@
 import React from 'react'
 
 import type { StepProps } from '@harness/uicore'
-import GitSyncRepoForm, {
-  gitSyncFormDefaultInitialData,
+import type {
   GitSyncFormInterface,
   GitSyncRepoFormProps
+} from '@gitsync/components/gitSyncRepoForm/GitSyncRepoForm';
+import GitSyncRepoForm, {
+  gitSyncFormDefaultInitialData
 } from '@gitsync/components/gitSyncRepoForm/GitSyncRepoForm'
 import type { GitSyncConfig } from 'services/cd-ng'
 

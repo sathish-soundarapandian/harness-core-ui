@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -15,7 +17,6 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  StepProps,
   ButtonSize
 } from '@harness/uicore'
 import * as Yup from 'yup'

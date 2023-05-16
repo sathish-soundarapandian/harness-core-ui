@@ -6,18 +6,22 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, set, get, isArray, merge } from 'lodash-es'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { v4 as uuid } from 'uuid'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-import { listSecretsV2Promise, SecretResponseWrapper } from 'services/cd-ng'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { SecretResponseWrapper } from 'services/cd-ng';
+import { listSecretsV2Promise } from 'services/cd-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -30,10 +34,12 @@ import type { ApprovalRejectionCriteria } from '@pipeline/components/PipelineSte
 import type { StringsMap } from 'stringTypes'
 import { customApprovalType } from './BaseCustomApproval'
 
-import { CustomApprovalData, CustomApprovalFormData, SCRIPT_DEFAULT_VALUE, variableSchema } from './types'
+import type { CustomApprovalData, CustomApprovalFormData} from './types';
+import { SCRIPT_DEFAULT_VALUE, variableSchema } from './types'
 import CustomApprovalInputSetStep from './CustomApprovalInputSetStep'
 import { CustomApprovalWidgetWithRef } from './CustomApprovalWidget'
-import { CustomApprovalVariablesView, CustomApprovalVariablesViewProps } from './CustomApprovalVariablesView'
+import type { CustomApprovalVariablesViewProps } from './CustomApprovalVariablesView';
+import { CustomApprovalVariablesView } from './CustomApprovalVariablesView'
 
 const logger = loggerFor(ModuleName.CD)
 const ConnectorRefRegex = /^.+step\.spec\.executionTarget\.connectorRef$/

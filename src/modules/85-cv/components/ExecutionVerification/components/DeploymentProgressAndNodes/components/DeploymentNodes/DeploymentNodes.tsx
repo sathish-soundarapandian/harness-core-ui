@@ -13,8 +13,10 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
 import type { AbstractAnalysedNode } from 'services/cv'
-import { HexagonCoordinates, drawGrid, getHexagonSubPartSize } from './DeploymentNodes.utils'
-import { DeploymentNodeSubPartSize, DefaultNodeSubPartSize } from './DeploymentNodes.constants'
+import type { HexagonCoordinates} from './DeploymentNodes.utils';
+import { drawGrid, getHexagonSubPartSize } from './DeploymentNodes.utils'
+import type { DeploymentNodeSubPartSize} from './DeploymentNodes.constants';
+import { DefaultNodeSubPartSize } from './DeploymentNodes.constants'
 import css from './DeploymentNodes.module.scss'
 
 export interface DeploymentNodesProps {

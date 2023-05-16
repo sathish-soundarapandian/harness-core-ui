@@ -9,7 +9,8 @@ import React from 'react'
 import type { Story, Meta } from '@storybook/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import NotificationTable, { NotificationRulesItem, NotificationTableProps } from './NotificationTable'
+import type { NotificationRulesItem, NotificationTableProps } from './NotificationTable';
+import NotificationTable from './NotificationTable'
 import { Actions } from './NotificationUtils'
 
 export default {

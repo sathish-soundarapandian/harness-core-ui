@@ -17,8 +17,9 @@ import { yamlParse } from '@common/utils/YamlHelperMethods'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
+import type {
+  EnvironmentYaml} from 'services/cd-ng';
 import {
-  EnvironmentYaml,
   useGetEnvironmentAccessList,
   useGetEnvironmentsInputYamlAndServiceOverrides
 } from 'services/cd-ng'

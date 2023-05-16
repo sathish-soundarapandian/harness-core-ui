@@ -6,15 +6,19 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import { v4 as uuid } from 'uuid'
 import { get, isEmpty } from 'lodash-es'
-import { yupToFormErrors, FormikErrors } from 'formik'
-import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { FormikErrors } from 'formik';
+import { yupToFormErrors } from 'formik'
+import type { StepProps } from '@pipeline/components/PipelineSteps/PipelineStep';
+import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { InputSetData, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { InputSetData, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { StringsMap } from 'stringTypes'
 import type { StringNGVariable } from 'services/pipeline-ng'
 import TerragruntInputStep from '../Common/Terragrunt/InputSteps/TerragruntInputStep'

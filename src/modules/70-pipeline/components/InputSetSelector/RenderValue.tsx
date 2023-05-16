@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react'
 import { clone, isEmpty, isNil } from 'lodash-es'
 import cx from 'classnames'
 
 import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { getIconByType, InputSetValue, onDragEnd, onDragLeave, onDragOver, onDragStart } from './utils'
+import type { InputSetValue} from './utils';
+import { getIconByType, onDragEnd, onDragLeave, onDragOver, onDragStart } from './utils'
 import css from './InputSetSelector.module.scss'
 
 export function RenderValue({

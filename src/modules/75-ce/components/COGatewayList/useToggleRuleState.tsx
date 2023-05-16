@@ -9,7 +9,8 @@ import { isEmpty as _isEmpty } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
 import { useConfirmationDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useToggleAutostoppingRule, Service } from 'services/lw'
+import type { Service } from 'services/lw';
+import { useToggleAutostoppingRule } from 'services/lw'
 
 interface UseToggleAutostoppingRuleProps {
   accountId: string

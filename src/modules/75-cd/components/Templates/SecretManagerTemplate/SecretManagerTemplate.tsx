@@ -11,7 +11,8 @@ import { Template } from '@templates-library/components/AbstractTemplate/Templat
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { ScriptTemplateCanvasWithRef } from '@cd/components/ScriptTemplateCanvas/ScriptTemplateCanvas'
-import { TemplateInputs, TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
+import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs';
+import { TemplateInputs } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import { Scope } from '@common/interfaces/SecretsInterface'
 
 export class SecretManagerTemplate extends Template {

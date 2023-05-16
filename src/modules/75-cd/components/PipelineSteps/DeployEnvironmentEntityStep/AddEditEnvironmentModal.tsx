@@ -25,12 +25,14 @@ import {
 import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
-import {
-  useUpsertEnvironmentV2,
+import type {
   NGEnvironmentInfoConfig,
   NGEnvironmentConfig,
   EnvironmentResponseDTO,
   EnvironmentResponse
+} from 'services/cd-ng';
+import {
+  useUpsertEnvironmentV2
 } from 'services/cd-ng'
 
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'

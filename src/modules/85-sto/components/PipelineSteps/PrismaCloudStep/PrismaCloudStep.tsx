@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { PrismaCloudStepBaseWithRef } from './PrismaCloudStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { PrismaCloudStepVariables, PrismaCloudStepVariablesProps } from './PrismaCloudStepVariables'
+import type { PrismaCloudStepVariablesProps } from './PrismaCloudStepVariables';
+import { PrismaCloudStepVariables } from './PrismaCloudStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './PrismaCloudStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

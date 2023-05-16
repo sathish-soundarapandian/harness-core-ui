@@ -25,7 +25,8 @@ import type {
 import type { StringsMap } from 'stringTypes'
 import { SaveCacheGCSStepBaseWithRef } from './SaveCacheGCSStepBase'
 import { SaveCacheGCSStepInputSet } from './SaveCacheGCSStepInputSet'
-import { SaveCacheGCSStepVariables, SaveCacheGCSStepVariablesProps } from './SaveCacheGCSStepVariables'
+import type { SaveCacheGCSStepVariablesProps } from './SaveCacheGCSStepVariables';
+import { SaveCacheGCSStepVariables } from './SaveCacheGCSStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SaveCacheGCSStepFunctionConfigs'
 
 export interface SaveCacheGCSStepSpec {

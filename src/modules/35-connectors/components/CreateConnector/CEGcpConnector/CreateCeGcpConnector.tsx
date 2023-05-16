@@ -7,14 +7,16 @@
 
 import React from 'react'
 import { StepWizard } from '@harness/uicore'
-import { Connectors, CreateConnectorModalProps } from '@connectors/constants'
+import type { CreateConnectorModalProps } from '@connectors/constants';
+import { Connectors } from '@connectors/constants'
 import DialogExtention from '@connectors/common/ConnectorExtention/DialogExtention'
 import { getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useStrings } from 'framework/strings'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CCM_CONNECTOR_SAVE_EVENT, CCM_CONNECTOR_SAVE_SUCCESS } from '@connectors/trackingConstants'
-import OverviewStep, { CEGcpConnectorDTO } from './steps/OverviewStep'
+import type { CEGcpConnectorDTO } from './steps/OverviewStep';
+import OverviewStep from './steps/OverviewStep'
 import BillingExport from './steps/BillingExport'
 import GrantPermission from './steps/GrantPermission'
 import ChooseRequirements from './steps/ChooseRequirements'

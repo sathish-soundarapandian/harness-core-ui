@@ -6,16 +6,17 @@
  */
 
 import React from 'react'
+import type {
+  StepProps,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   Text,
-  StepProps,
   FormikForm,
   Formik,
   Container,
   Layout,
   FormInput,
-  ModalErrorHandlerBinding,
   ModalErrorHandler,
   getErrorInfoFromErrorObject,
   ButtonVariation
@@ -23,7 +24,8 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { NgSmtpDTO, SmtpConfigDTO, useValidateName } from 'services/cd-ng'
+import type { NgSmtpDTO, SmtpConfigDTO} from 'services/cd-ng';
+import { useValidateName } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NameSchema } from '@common/utils/Validation'

@@ -27,8 +27,9 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+import type {
+  ServiceLevelObjectiveV2DTO} from 'services/cv';
 import {
-  ServiceLevelObjectiveV2DTO,
   useGetServiceLevelObjectiveV2,
   useSaveSLOV2Data,
   useUpdateSLOV2Data

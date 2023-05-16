@@ -9,7 +9,8 @@ import React from 'react'
 import { render, getByText } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { ProgressOverlay, Stage } from '../ProgressOverlay'
+import type { Stage } from '../ProgressOverlay';
+import { ProgressOverlay } from '../ProgressOverlay'
 
 describe('Test ProgressOverlay overlay component', () => {
   test('Should show correct stage labels and icons', () => {

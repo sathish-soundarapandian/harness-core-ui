@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Button, ButtonVariation, Container, Icon, IconName, Layout, StepProps, Text } from '@harness/uicore'
+import type { IconName, StepProps} from '@harness/uicore';
+import { Button, ButtonVariation, Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { ProgressBar } from '@blueprintjs/core'
@@ -16,13 +17,15 @@ import { useStrings } from 'framework/strings'
 import { usePolling } from '@common/hooks/usePolling'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetDelegatesHeartbeatDetailsV2 } from 'services/portal'
-import {
+import type {
   ConnectorConfigDTO,
   ResponseConnectorResponse,
   ResponseConnectorValidationResult,
-  useCreateConnector,
-  useGetTestConnectionResult,
   Error
+} from 'services/cd-ng';
+import {
+  useCreateConnector,
+  useGetTestConnectionResult
 } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { CCM_CONNECTOR_SAVE_SUCCESS, CE_K8S_QUICK_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'

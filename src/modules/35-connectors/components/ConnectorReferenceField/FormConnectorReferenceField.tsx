@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getReference } from '@common/utils/utils'
-import { ConnectorReferenceFieldProps, ConnectorReferenceField } from './ConnectorReferenceField'
+import type { ConnectorReferenceFieldProps} from './ConnectorReferenceField';
+import { ConnectorReferenceField } from './ConnectorReferenceField'
 export interface FormConnectorFieldProps
   extends Omit<ConnectorReferenceFieldProps, 'onChange' | 'error' | 'onMultiSelectChange'> {
   formik?: FormikContextType<any>

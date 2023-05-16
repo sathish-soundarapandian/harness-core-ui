@@ -9,7 +9,8 @@ import React from 'react'
 import { Icon, Layout, Text } from '@harness/uicore'
 import type { ExecutionSummaryProps, ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
 import { CommitsInfo } from '@pipeline/components/CommitsInfo/CommitsInfo'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { getUIType, UIType } from '../common/getUIType'
 import { CICodebaseHeader } from '../CICodebaseHeader/CICodebaseHeader'
 

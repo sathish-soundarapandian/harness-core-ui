@@ -36,7 +36,8 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { projectsPageQueryParamOptions, ProjectsPageQueryParams } from '@projects-orgs/utils/utils'
+import type { ProjectsPageQueryParams } from '@projects-orgs/utils/utils';
+import { projectsPageQueryParamOptions } from '@projects-orgs/utils/utils'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 

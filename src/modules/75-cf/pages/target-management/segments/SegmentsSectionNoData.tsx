@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, PropsWithChildren } from 'react'
+import type { FC, PropsWithChildren } from 'react';
+import React from 'react'
 import SectionNoData from '@cf/components/NoData/SectionNoData/SectionNoData'
 import { useStrings } from 'framework/strings'
 import accountLevelTargetsImg from '@cf/images/accountLevelTargets.svg'

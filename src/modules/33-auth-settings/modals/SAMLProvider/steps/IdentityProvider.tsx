@@ -1,7 +1,8 @@
 import React from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Container,
-  StepProps,
   Layout,
   Button,
   ButtonVariation,

@@ -6,14 +6,17 @@
  */
 
 import React from 'react'
-import { Layout, Text, IconName, Page, Heading, Container, Breadcrumb } from '@harness/uicore'
+import type { IconName, Breadcrumb } from '@harness/uicore';
+import { Layout, Text, Page, Heading, Container } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { IdentifierText } from '@cf/components/IdentifierText/IdentifierText'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import RbacOptionsMenuButton, {
+import type {
   RbacOptionsMenuButtonProps
-} from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
-import { StringKeys, useStrings } from 'framework/strings'
+} from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton';
+import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 
 import css from './DetailPageTemplate.module.scss'
 

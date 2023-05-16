@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as ffServices from 'services/cf'
@@ -14,7 +15,8 @@ import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import * as cdngServices from 'services/cd-ng'
 import mockFeatureFlags from '@cf/pages/feature-flags/__tests__/mockFeatureFlags'
 import type { Feature } from 'services/cf'
-import FlagConfigurationStepWidget, { FlagConfigurationStepWidgetProps } from '../FlagConfigurationStepWidget'
+import type { FlagConfigurationStepWidgetProps } from '../FlagConfigurationStepWidget'
+import FlagConfigurationStepWidget from '../FlagConfigurationStepWidget'
 import { mockVariations } from '../FlagChanges/subSections/__tests__/utils.mocks'
 
 const mockEnvironment = {

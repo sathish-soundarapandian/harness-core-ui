@@ -6,13 +6,15 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Text, ModalErrorHandler, ModalErrorHandlerBinding, Page, TableV2 } from '@harness/uicore'
+import type { ModalErrorHandlerBinding} from '@harness/uicore';
+import { Text, ModalErrorHandler, Page, TableV2 } from '@harness/uicore'
 import moment from 'moment'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { CellProps } from 'react-table'
 import { useStrings } from 'framework/strings'
-import { Service, SessionReportRow, useGatewaySessionReport } from 'services/lw'
+import type { Service, SessionReportRow} from 'services/lw';
+import { useGatewaySessionReport } from 'services/lw'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getTimestamp } from './Utils'
 import css from './COGatewayList.module.scss'

@@ -13,8 +13,9 @@ import { noop } from 'lodash-es'
 import { Formik } from '@harness/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
+import type {
+  PipelineContextInterface} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
 import {
-  PipelineContextInterface,
   PipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { StageType } from '@pipeline/utils/stageHelpers'

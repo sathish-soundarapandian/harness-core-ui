@@ -7,12 +7,14 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Icon, NoDataCard, PageError, MultiSelectOption } from '@harness/uicore'
+import type { MultiSelectOption } from '@harness/uicore';
+import { Container, Icon, NoDataCard, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   GetAllRadarChartLogsClusterDataQueryParams,
-  GetAllRadarChartLogsDataQueryParams,
+  GetAllRadarChartLogsDataQueryParams} from 'services/cv';
+import {
   useGetAllRadarChartLogsClusterData,
   useGetAllRadarChartLogsData
 } from 'services/cv'

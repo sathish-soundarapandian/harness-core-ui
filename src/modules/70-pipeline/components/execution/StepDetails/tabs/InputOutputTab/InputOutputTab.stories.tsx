@@ -10,7 +10,8 @@ import React from 'react'
 import type { Meta, Story } from '@storybook/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { InputOutputTabProps, InputOutputTab } from './InputOutputTab'
+import type { InputOutputTabProps} from './InputOutputTab';
+import { InputOutputTab } from './InputOutputTab'
 import data from './__tests__/io-1.json'
 
 export default {

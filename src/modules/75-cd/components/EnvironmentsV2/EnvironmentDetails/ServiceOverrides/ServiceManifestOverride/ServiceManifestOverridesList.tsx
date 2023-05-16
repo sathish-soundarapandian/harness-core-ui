@@ -16,12 +16,14 @@ import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStor
 import { getManifestLocation, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { LocationValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesListView/LocationValue'
 
+import type {
+  OverrideManifestStoresTypes,
+  OverrideManifestTypes
+} from './ServiceManifestOverrideUtils';
 import {
   ManifestIcons,
   ManifestLabels,
-  OverrideManifests,
-  OverrideManifestStoresTypes,
-  OverrideManifestTypes
+  OverrideManifests
 } from './ServiceManifestOverrideUtils'
 
 import css from './ServiceManifestOverride.module.scss'

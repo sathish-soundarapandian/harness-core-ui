@@ -5,19 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, Dispatch, SetStateAction, useCallback, useEffect } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import React, { useState, useCallback, useEffect } from 'react'
 import * as yup from 'yup'
 import { isEqual } from 'lodash-es'
 import { Classes } from '@blueprintjs/core'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   FormikForm as Form,
   FormInput,
-  StepProps,
   Text,
   Layout,
   Select,
-  SelectOption,
   Button,
   ButtonVariation,
   Container,
@@ -26,7 +28,8 @@ import {
 } from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { Color } from '@harness/design-system'
-import { FormikEffect, FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
+import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect';
+import { FormikEffect } from '@common/components/FormikEffect/FormikEffect'
 import type { Variation } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { FeatureFlagMutivariateKind, useValidateVariationValues } from '@cf/utils/CFUtils'

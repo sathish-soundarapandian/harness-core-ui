@@ -5,11 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ReactNode, useMemo } from 'react'
+import type { FC, ReactNode} from 'react';
+import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { FormInput, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useGetAllTargets, UseGetAllTargetsProps } from 'services/cf'
+import type { UseGetAllTargetsProps } from 'services/cf';
+import { useGetAllTargets } from 'services/cf'
 import targetToSelectOption from '@cf/utils/targetToSelectOption'
 
 import css from './TargetSelect.module.scss'

@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { Container, Icon, Text, PageError, PageErrorProps } from '@harness/uicore'
+import type { PageErrorProps } from '@harness/uicore';
+import { Container, Icon, Text, PageError } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import cx from 'classnames'
-import { TableFilter, TableFilterProps } from '@cv/components/TableFilter/TableFilter'
+import type { TableFilterProps } from '@cv/components/TableFilter/TableFilter';
+import { TableFilter } from '@cv/components/TableFilter/TableFilter'
 import GroupedSideNav from './components/GroupedSideNav/GroupedSideNav'
 import type { GroupedCreatedMetrics } from './components/GroupedSideNav/GroupedSideNav.types'
 import css from './SelectedAppsSideNav.module.scss'

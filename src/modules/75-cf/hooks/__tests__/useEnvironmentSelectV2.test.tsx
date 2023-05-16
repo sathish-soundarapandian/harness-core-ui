@@ -6,13 +6,16 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cfServices from 'services/cf'
 import * as cdServices from 'services/cd-ng'
 import * as preferenceStoreContext from 'framework/PreferenceStore/PreferenceStoreContext'
-import { CurrentLocation, TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
-import { useEnvironmentSelectV2, UseEnvironmentSelectV2Params } from '../useEnvironmentSelectV2'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { CurrentLocation, TestWrapper } from '@common/utils/testUtils'
+import type { UseEnvironmentSelectV2Params } from '../useEnvironmentSelectV2';
+import { useEnvironmentSelectV2 } from '../useEnvironmentSelectV2'
 
 const renderComponent = (
   envProps?: Partial<UseEnvironmentSelectV2Params>,

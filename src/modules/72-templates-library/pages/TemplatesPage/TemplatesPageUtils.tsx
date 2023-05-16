@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { IconName, Views, SortMethod } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Views, SortMethod } from '@harness/uicore'
 import { get } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
@@ -15,7 +16,8 @@ import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/Sta
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
-import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
+import type { UseQueryParamsOptions } from '@common/hooks/useQueryParams';
+import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 

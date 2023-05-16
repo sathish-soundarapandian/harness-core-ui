@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Target, useGetTarget } from 'services/cf'
+import type { Target} from 'services/cf';
+import { useGetTarget } from 'services/cf'
 import { useGetEnvironment } from 'services/cd-ng'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import TargetManagementDetailPageTemplate from '@cf/components/TargetManagementDetailPageTemplate/TargetManagementDetailPageTemplate'

@@ -6,7 +6,8 @@
  */
 import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Layout, Container, Heading, PillToggle, PillToggleProps, Text, Card, useToaster } from '@harness/uicore'
+import type { PillToggleProps} from '@harness/uicore';
+import { Layout, Container, Heading, PillToggle, Text, Card, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
@@ -14,7 +15,8 @@ import { useQueryParams } from '@common/hooks/useQueryParams'
 import UserHint from '@cv/pages/components/UserHint/UserHint'
 import type { SLODashboardWidget } from 'services/cv'
 import { getErrorBudgetGaugeOptions } from '../CVSLOListingPage.utils'
-import { SLOCardContentProps, SLOCardToggleViews } from '../CVSLOsListingPage.types'
+import type { SLOCardContentProps} from '../CVSLOsListingPage.types';
+import { SLOCardToggleViews } from '../CVSLOsListingPage.types'
 import TimeRangeFilter from './TimeRangeFilter'
 import ErrorBudgetGauge from './ErrorBudgetGauge'
 import SLOTargetChartWithChangeTimeline from './SLOTargetChartWithChangeTimeline'

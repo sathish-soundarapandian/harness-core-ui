@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { CustomIngestionStepBaseWithRef } from './CustomIngestionStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { CustomIngestionStepVariables, CustomIngestionStepVariablesProps } from './CustomIngestionStepVariables'
+import type { CustomIngestionStepVariablesProps } from './CustomIngestionStepVariables';
+import { CustomIngestionStepVariables } from './CustomIngestionStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './CustomIngestionStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

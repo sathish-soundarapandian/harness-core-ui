@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, ComponentType } from 'react'
+import type { ComponentType } from 'react'
+import React, { useCallback } from 'react'
 import { render } from 'mustache'
 import { get } from 'lodash-es'
 
-import { useStringsContext, StringKeys } from './StringsContext'
+import type { StringKeys } from './StringsContext'
+import { useStringsContext } from './StringsContext'
 
 export interface UseStringsReturn {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

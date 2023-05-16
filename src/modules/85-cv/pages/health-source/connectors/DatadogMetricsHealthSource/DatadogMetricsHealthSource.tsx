@@ -36,9 +36,10 @@ import {
   persistCustomMetric
 } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   DatadogDashboardDetail,
-  TimeSeriesSampleDTO,
+  TimeSeriesSampleDTO} from 'services/cv';
+import {
   useGetDatadogActiveMetrics,
   useGetDatadogDashboardDetails,
   useGetDatadogSampleData,

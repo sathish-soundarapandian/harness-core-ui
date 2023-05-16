@@ -7,24 +7,28 @@
 
 import * as React from 'react'
 import cx from 'classnames'
-import { Icon, Layout, Text, Button, ButtonVariation, ButtonProps, ButtonSize } from '@harness/uicore'
+import type { ButtonProps} from '@harness/uicore';
+import { Icon, Layout, Text, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { debounce, defaultTo, get, lowerCase } from 'lodash-es'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useCollapsedNodeStore } from '@pipeline/components/ExecutionNodeList/CollapsedNodeStore'
-import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
+import type { BaseReactComponentProps, PipelineGraphState } from '../../types';
+import { NodeType } from '../../types'
+import type {
+  LayoutStyles} from '../utils';
 import {
   COLLAPSED_MATRIX_NODE_LENGTH,
   DEFAULT_MATRIX_PARALLELISM,
   getMatrixHeight,
   getPositionOfAddIcon,
-  LayoutStyles,
   MAX_ALLOWED_MATRIX_COLLAPSED_NODES
 } from '../utils'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
-import { Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
+import type { Dimensions} from '../NodeDimensionStore';
+import { useNodeDimensionContext } from '../NodeDimensionStore'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import { NodeStatusIndicator } from '../../NodeStatusIndicator/NodeStatusIndicator'
 import css from './MatrixStepNode.module.scss'

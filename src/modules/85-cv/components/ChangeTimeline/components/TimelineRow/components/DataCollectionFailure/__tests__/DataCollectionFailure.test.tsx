@@ -8,7 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import DownTime, { DataCollectionFailureProps } from '../DataCollectionFailure'
+import type { DataCollectionFailureProps } from '../DataCollectionFailure';
+import DownTime from '../DataCollectionFailure'
 import { SLO_WIDGETS } from '../../../TimelineRow.constants'
 
 function WrapperComponent(props: DataCollectionFailureProps): JSX.Element {

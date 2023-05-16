@@ -6,7 +6,8 @@
  */
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, cloneDeep } from 'lodash-es'
-import { string, array, object, ObjectSchema } from 'yup'
+import type { ObjectSchema } from 'yup';
+import { string, array, object } from 'yup'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { ConnectorResponse } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'

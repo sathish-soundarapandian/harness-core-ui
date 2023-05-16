@@ -7,12 +7,14 @@
 import { isEqual } from 'lodash-es'
 import type { FeatureState } from 'services/cf'
 import patch from '@cf/utils/instructions'
-import {
+import type {
   FormVariationMap,
   VariationTargetGroup,
-  TargetingRuleItemType,
   TargetingRulesFormValues,
   VariationPercentageRollout
+} from '../types';
+import {
+  TargetingRuleItemType
 } from '../types'
 
 // Utils class to help encapsulate the complexity around patch instruction creation and hide this from the components.

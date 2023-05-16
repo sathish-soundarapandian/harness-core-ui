@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { StringKeys } from 'framework/strings'
 import type { DashboardModel } from 'services/custom-dashboards'
@@ -14,7 +15,8 @@ import { DashboardLayoutViews, DashboardType } from '@dashboards/types/Dashboard
 import * as customDashboardServices from 'services/custom-dashboards'
 import { DashboardsContextProvider } from '@dashboards/pages/DashboardsContext'
 import { FolderType } from '@dashboards/constants/FolderType'
-import Dashboards, { DashboardsProps } from '../Dashboards'
+import type { DashboardsProps } from '../Dashboards';
+import Dashboards from '../Dashboards'
 
 const defaultProps: DashboardsProps = {
   dashboards: [],

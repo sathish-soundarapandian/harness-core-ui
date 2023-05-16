@@ -14,9 +14,10 @@ import { PageSpinner } from '@harness/uicore'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
+import type {
+  ModuleLicenseDTO} from 'services/cd-ng';
 import {
   getLastModifiedTimeForAllModuleTypesPromise,
-  ModuleLicenseDTO,
   useGetAccountLicenses,
   useGetLastModifiedTimeForAllModuleTypes
 } from 'services/cd-ng'
@@ -28,7 +29,8 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useFeaturesContext } from 'framework/featureStore/FeaturesContext'
-import { VersionMap, LICENSE_STATE_VALUES, defaultLicensesByModule } from './licenseStoreUtil'
+import type { VersionMap} from './licenseStoreUtil';
+import { LICENSE_STATE_VALUES, defaultLicensesByModule } from './licenseStoreUtil'
 
 // Only keep GA modules for now
 export interface LicenseStoreContextProps {

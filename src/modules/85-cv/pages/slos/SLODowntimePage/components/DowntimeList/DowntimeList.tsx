@@ -14,14 +14,16 @@ import cx from 'classnames'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   AffectedEntity,
   DowntimeDuration,
   DowntimeListView,
   ResponsePageDowntimeListView,
-  useDeleteDowntimeData,
-  useEnablesDisablesDowntime,
   UseListDowntimesProps
+} from 'services/cv';
+import {
+  useDeleteDowntimeData,
+  useEnablesDisablesDowntime
 } from 'services/cv'
 import statusScheduled from '@cv/assets/statusScheduled.svg'
 import emptyData from '@cv/assets/emptyData.svg'

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Fragment, ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React, { Fragment } from 'react'
 import type { Row } from 'react-table'
 import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'

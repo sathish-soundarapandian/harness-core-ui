@@ -8,6 +8,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
+import type {
+  ModalErrorHandlerBinding,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   Container,
@@ -16,9 +19,7 @@ import {
   FormInput,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   getErrorInfoFromErrorObject,
-  StepProps,
   Icon,
   Text,
   ButtonSize,
@@ -27,7 +28,8 @@ import {
 import { FontVariation, Color } from '@harness/design-system'
 import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { CrossAccountAccess, useCreateConnector, useUpdateConnector, Failure } from 'services/cd-ng'
+import type { CrossAccountAccess, Failure } from 'services/cd-ng';
+import { useCreateConnector, useUpdateConnector } from 'services/cd-ng'
 import { useAwsaccountconnectiondetail } from 'services/ce/index'
 import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'

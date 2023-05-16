@@ -7,7 +7,8 @@
 
 import { omit } from 'lodash-es'
 import type { GetMetricOnboardingGraphQueryParams } from 'services/cv'
-import { SLIMetricTypes, SLOV2Form } from '../../../CVCreateSLOV2.types'
+import type { SLOV2Form } from '../../../CVCreateSLOV2.types';
+import { SLIMetricTypes } from '../../../CVCreateSLOV2.types'
 import {
   validateConfigureServiceLevelIndicatiors,
   createMetricGraphPayload,

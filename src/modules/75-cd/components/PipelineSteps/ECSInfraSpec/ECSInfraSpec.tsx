@@ -7,19 +7,23 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { isEmpty, get, defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import { EcsInfrastructure, getConnectorListV2Promise, ExecutionElementConfig } from 'services/cd-ng'
+import type { EcsInfrastructure, ExecutionElementConfig } from 'services/cd-ng';
+import { getConnectorListV2Promise } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
@@ -27,7 +31,8 @@ import { connectorTypes } from '@pipeline/utils/constants'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { ECSInfraSpecInputSetMode } from './ECSInfraSpecInputForm'
-import { ECSInfraSpecEditable, ECSInfraSpecEditableProps } from './ECSInfraSpecEditable'
+import type { ECSInfraSpecEditableProps } from './ECSInfraSpecEditable';
+import { ECSInfraSpecEditable } from './ECSInfraSpecEditable'
 
 const logger = loggerFor(ModuleName.CD)
 type EcsInfrastructureTemplate = { [key in keyof EcsInfrastructure]: string }

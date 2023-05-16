@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { IconName, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { VerifyStepSummary } from 'services/cv'
 import { useStrings } from 'framework/strings'

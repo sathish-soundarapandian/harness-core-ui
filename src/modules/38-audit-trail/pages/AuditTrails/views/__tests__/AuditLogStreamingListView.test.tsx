@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor, RenderResult, queryByText, getByText } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, fireEvent, waitFor, queryByText, getByText } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { updateStreamingDestination, deleteDisabledStreamingDestination } from '@harnessio/react-audit-service-client'
 

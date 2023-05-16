@@ -22,9 +22,10 @@ import {
   getEntitySelectOptions,
   getValidationSchema
 } from './AddEditEntityFilterModalUtils'
-import {
+import type {
   AddEditEntityFilterFormState,
-  AddEditEntityFilterModalProps,
+  AddEditEntityFilterModalProps} from './AddEditEntityFilterModal.types';
+import {
   entityFilterTypeStringsMap,
   entityTypeStringsMap
 } from './AddEditEntityFilterModal.types'

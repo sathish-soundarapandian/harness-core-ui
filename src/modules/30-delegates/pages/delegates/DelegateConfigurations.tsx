@@ -11,6 +11,9 @@ import moment from 'moment'
 import type { FormikErrors } from 'formik'
 import { pick, get, debounce } from 'lodash-es'
 import { Classes, Menu } from '@blueprintjs/core'
+import type {
+  SelectOption,
+  MultiSelectOption} from '@harness/uicore';
 import {
   Card,
   Text,
@@ -21,8 +24,6 @@ import {
   Heading,
   Utils,
   FormInput,
-  SelectOption,
-  MultiSelectOption,
   ExpandingSearchInput,
   PageError,
   shouldShowError,
@@ -34,7 +35,8 @@ import { useModalHook } from '@harness/use-modal'
 import { PageSpinner } from '@common/components'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { StringUtils } from '@common/exports'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import type { FilterInterface, FilterDataInterface } from '@common/components/Filter/Constants'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'

@@ -8,7 +8,8 @@
 import React from 'react'
 import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { K8sDeleteStep } from '../K8sDeleteStep'

@@ -6,6 +6,9 @@
  */
 
 import React from 'react'
+import type {
+  StepProps
+} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -14,8 +17,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  ButtonVariation,
-  StepProps
+  ButtonVariation
 } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -26,7 +28,8 @@ import { get, set, isArray } from 'lodash-es'
 import type { ConnectorConfigDTO, StartupCommandConfiguration, StoreConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import { ConnectorTypes, fileTypes, HarnessFileStore } from './StartupScriptInterface.types'
+import type { ConnectorTypes, HarnessFileStore } from './StartupScriptInterface.types';
+import { fileTypes } from './StartupScriptInterface.types'
 import MultiConfigSelectField from './MultiConfigSelectField'
 import css from './StartupScriptSelection.module.scss'
 

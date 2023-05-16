@@ -18,10 +18,14 @@ import { useGetPipelineValidateResult, useValidatePipelineAsync } from 'services
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useBooleanStatus, useQueryParams } from '@common/hooks'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { usePolling } from '@common/hooks/usePolling'
 import type { Evaluation } from 'services/pm'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
+import type {
+  ValidationStatus
+} from './ValidationUtils';
 import {
   getIconPropsByStatus,
   isStatusError,
@@ -29,8 +33,7 @@ import {
   isStatusLoading,
   isStatusSuccess,
   minimalTimeagoFormatter,
-  useValidationErrorCount,
-  ValidationStatus
+  useValidationErrorCount
 } from './ValidationUtils'
 import { ValidationPopoverContent } from './ValidationPopoverContent'
 import { ValidationErrorModal } from './ValidationModals/ValidationErrorModal'

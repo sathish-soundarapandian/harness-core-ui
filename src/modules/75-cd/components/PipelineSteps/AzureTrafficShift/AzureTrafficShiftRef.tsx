@@ -17,7 +17,8 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { AzureTrafficShiftProps } from './AzureTrafficShiftInterface.types'

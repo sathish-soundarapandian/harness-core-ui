@@ -8,11 +8,13 @@
 import React from 'react'
 import { findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { useMutateAsGet } from '@common/hooks'
-import { ArtifactType, TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import type { ArtifactType} from '@pipeline/components/ArtifactsSelection/ArtifactInterface';
+import { TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { ECRArtifact } from '../ECRArtifact'

@@ -18,7 +18,8 @@ import noServiceAvailableImage from '@cv/assets/noMonitoredServices.svg'
 import { getErrorMessage, getCVMonitoringServicesSearchParam } from '@cv/utils/CommonUtils'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import MonitoredServiceListView from './MonitoredServiceListView'
-import { FilterTypes, MonitoredServiceListProps } from '../../CVMonitoredService.types'
+import type { MonitoredServiceListProps } from '../../CVMonitoredService.types';
+import { FilterTypes } from '../../CVMonitoredService.types'
 import css from '../../CVMonitoredService.module.scss'
 
 const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({

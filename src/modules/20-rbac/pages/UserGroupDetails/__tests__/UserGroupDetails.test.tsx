@@ -6,20 +6,22 @@
  */
 
 import React from 'react'
+import type {
+  RenderResult} from '@testing-library/react';
 import {
   act,
   fireEvent,
   getByText,
   queryByText,
   render,
-  RenderResult,
   waitFor,
   queryByAttribute
 } from '@testing-library/react'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, userGroupPathProps } from '@common/utils/routeUtils'
-import { ResponseBoolean, useGetUserGroupAggregate } from 'services/cd-ng'
+import type { ResponseBoolean} from 'services/cd-ng';
+import { useGetUserGroupAggregate } from 'services/cd-ng'
 import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
 import UserGroupDetails from '../UserGroupDetails'
 import {

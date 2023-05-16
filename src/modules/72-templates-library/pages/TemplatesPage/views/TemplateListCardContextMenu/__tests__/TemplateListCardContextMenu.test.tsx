@@ -10,7 +10,8 @@ import { act, fireEvent, getByRole, getByText, render, waitFor } from '@testing-
 import { defaultTo } from 'lodash-es'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { mockTemplates } from '@templates-library/TemplatesTestHelper'
-import { ContextMenuProps, TemplateListCardContextMenu } from '../TemplateListCardContextMenu'
+import type { ContextMenuProps} from '../TemplateListCardContextMenu';
+import { TemplateListCardContextMenu } from '../TemplateListCardContextMenu'
 
 const template = defaultTo(mockTemplates.data?.content?.[0], {})
 

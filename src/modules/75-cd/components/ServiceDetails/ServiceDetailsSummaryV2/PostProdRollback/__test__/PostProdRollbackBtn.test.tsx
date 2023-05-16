@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { RenderResult, getByText, render, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { getByText, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
@@ -14,7 +15,8 @@ import * as cdng from 'services/cd-ng'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { successRollbackValidation, successfullRollabackTrigger, invalidRollbackValidation } from './mocks'
-import PostProdRollbackBtn, { PostProdRollbackBtnProps } from '../PostProdRollbackButton'
+import type { PostProdRollbackBtnProps } from '../PostProdRollbackButton';
+import PostProdRollbackBtn from '../PostProdRollbackButton'
 
 export const findDrawerContainer = (): HTMLElement | null => document.querySelector('.bp3-drawer')
 

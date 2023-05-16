@@ -15,8 +15,9 @@ import { useStrings } from 'framework/strings'
 import { getAllowedTemplateTypes, TemplateType } from '@templates-library/utils/templatesUtils'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  TemplateMenuItem} from '@templates-library/components/TemplatesActionPopover/TemplatesActionPopover';
 import {
-  TemplateMenuItem,
   TemplatesActionPopover
 } from '@templates-library/components/TemplatesActionPopover/TemplatesActionPopover'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'

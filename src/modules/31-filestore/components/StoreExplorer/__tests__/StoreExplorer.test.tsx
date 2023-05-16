@@ -10,7 +10,8 @@ import { render } from '@testing-library/react'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { getDummyFileStoreContextValueWithFolderChildren } from '@filestore/components/FileStoreContext/__tests__/mock'
-import { FileStoreContext, FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
+import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext';
+import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import StoreExplorer from '../StoreExplorer'
 

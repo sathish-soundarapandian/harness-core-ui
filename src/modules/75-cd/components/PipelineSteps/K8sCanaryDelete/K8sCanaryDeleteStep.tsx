@@ -6,14 +6,16 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
+import type { IconName, AllowedTypes } from '@harness/uicore';
+import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+import type { FormikErrors, FormikProps} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
-import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef , StepProps, ValidateInputSetProps} from '@pipeline/components/AbstractSteps/Step'
 import type { K8sCanaryDeleteStepInfo, StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'

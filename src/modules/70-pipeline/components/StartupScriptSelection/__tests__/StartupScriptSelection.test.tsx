@@ -10,9 +10,11 @@ import { findAllByText, findByText, fireEvent, render, waitFor } from '@testing-
 import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cdngservices from 'services/cd-ng'
-import {
-  PipelineContext,
+import type {
   PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
+import {
+  PipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import connectorsData from '@pipeline/components/ManifestSelection/__tests__/connectors_mock.json'
 import { pipelineContextMock } from './mocks'

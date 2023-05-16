@@ -6,14 +6,16 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { FormInput, MultiSelectOption, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import type { MultiSelectOption, SelectOption} from '@harness/uicore';
+import { FormInput, MultiTypeInputType, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
-import { ArtifactSource, GetImagesListForEcrQueryParams, useGetImagesListForEcr } from 'services/cd-ng'
+import type { ArtifactSource, GetImagesListForEcrQueryParams} from 'services/cd-ng';
+import { useGetImagesListForEcr } from 'services/cd-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'

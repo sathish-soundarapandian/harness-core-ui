@@ -8,9 +8,10 @@
 import React, { useMemo, useState } from 'react'
 import { get } from 'lodash-es'
 import type { FormikContextType } from 'formik'
-import {
+import type {
   DataTooltipInterface,
-  ExpressionAndRuntimeTypeProps,
+  ExpressionAndRuntimeTypeProps} from '@harness/uicore';
+import {
   getMultiTypeFromValue,
   MultiTypeInputType
 } from '@harness/uicore'
@@ -19,7 +20,8 @@ import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/
 import { InputSetFunction, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import type { Scope } from '@common/interfaces/SecretsInterface'
-import UserGroupsInput, { FormikUserGroupsInput } from './UserGroupsInput'
+import type { FormikUserGroupsInput } from './UserGroupsInput';
+import UserGroupsInput from './UserGroupsInput'
 import UserGroupExpressionInput from './UserGroupExpressionInput'
 
 export interface FormMultiTypeUserGroupInputProps

@@ -1,7 +1,8 @@
 import React from 'react'
 import { Container, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import css from './EmptyState.module.scss'
 
 interface EmptyStateExpandedViewProps {

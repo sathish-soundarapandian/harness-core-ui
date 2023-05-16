@@ -9,8 +9,10 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { MultiSelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
-import { FilterDTO, FilterStatsDTO, useDeleteFilter, usePostFilter, useUpdateFilter } from 'services/ce'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
+import type { FilterDTO, FilterStatsDTO} from 'services/ce';
+import { useDeleteFilter, usePostFilter, useUpdateFilter } from 'services/ce'
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { StringUtils } from '@common/exports'

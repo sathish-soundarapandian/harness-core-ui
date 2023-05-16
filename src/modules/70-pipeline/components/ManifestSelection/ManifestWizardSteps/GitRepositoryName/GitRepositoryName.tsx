@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { isEmpty } from 'lodash-es'
-import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from '../ManifestWizardSteps.module.scss'

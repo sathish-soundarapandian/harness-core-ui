@@ -12,10 +12,11 @@ import { clone, defaultTo, isEmpty, includes, isNil } from 'lodash-es'
 import cx from 'classnames'
 import { Classes, Position } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import {
+import type {
   EntityGitDetails,
   InputSetErrorWrapper,
-  InputSetSummaryResponse,
+  InputSetSummaryResponse} from 'services/pipeline-ng';
+import {
   useGetInputSetsListForPipeline
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'

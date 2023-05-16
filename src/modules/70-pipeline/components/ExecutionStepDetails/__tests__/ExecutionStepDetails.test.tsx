@@ -10,9 +10,11 @@ import { render, fireEvent, findAllByText as findAllByTextGlobal, queryByAttribu
 
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
-import ExecutionContext, { ExecutionContextParams } from '@pipeline/context/ExecutionContext'
+import type { ExecutionContextParams } from '@pipeline/context/ExecutionContext';
+import ExecutionContext from '@pipeline/context/ExecutionContext'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
-import { ExecutionNode, useGetExecutionNode } from 'services/pipeline-ng'
+import type { ExecutionNode} from 'services/pipeline-ng';
+import { useGetExecutionNode } from 'services/pipeline-ng'
 import ExecutionStepDetails from '../ExecutionStepDetails'
 import data from './data.json'
 

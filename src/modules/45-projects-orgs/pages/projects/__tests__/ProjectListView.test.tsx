@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { fireEvent, getByText, queryByText, render, RenderResult, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { fireEvent, getByText, queryByText, render, waitFor } from '@testing-library/react'
 
 import { act } from 'react-dom/test-utils'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'

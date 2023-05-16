@@ -10,7 +10,8 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import LogoInput, { LogoInputProps } from '../LogoInput'
+import type { LogoInputProps } from '../LogoInput';
+import LogoInput from '../LogoInput'
 
 const commonProps = {
   name: 'logo',

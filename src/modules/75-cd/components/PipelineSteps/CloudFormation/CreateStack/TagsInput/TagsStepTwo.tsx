@@ -10,18 +10,20 @@ import * as Yup from 'yup'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { Form } from 'formik'
+import type {
+  StepProps,
+  SelectOption,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Layout,
   Text,
-  StepProps,
   Formik,
   MultiTypeInputType,
   getMultiTypeFromValue,
-  FormInput,
-  SelectOption,
-  AllowedTypes
+  FormInput
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'

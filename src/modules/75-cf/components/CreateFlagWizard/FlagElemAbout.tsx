@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect } from 'react'
+import type { FC} from 'react';
+import React, { useEffect } from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Formik,
   FormikForm as Form,
   FormInput,
   Layout,
   Container,
-  StepProps,
   Button,
   ButtonVariation,
   Text,

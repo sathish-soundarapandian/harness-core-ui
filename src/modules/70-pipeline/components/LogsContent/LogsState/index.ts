@@ -15,7 +15,8 @@ import { search } from './search'
 import { resetSearch } from './resetSearch'
 import { goToNextSearchResult } from './goToNextSearchResult'
 import { goToPrevSearchResult } from './goToPrevSearchResult'
-import { ActionType, Action, State } from './types'
+import type { Action, State } from './types'
+import { ActionType } from './types'
 import { updateManuallyToggled } from './updateManuallyToggled'
 
 export function reducer<T extends ActionType>(state: State, action: Action<T>): State {

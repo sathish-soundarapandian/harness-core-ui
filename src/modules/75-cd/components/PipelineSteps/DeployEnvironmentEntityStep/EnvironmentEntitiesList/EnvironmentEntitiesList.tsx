@@ -10,7 +10,8 @@ import { Intent, Spinner } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import { defaultTo } from 'lodash-es'
 
-import { AllowedTypes, ConfirmationDialog, Layout, ModalDialog, useToggleOpen } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { ConfirmationDialog, Layout, ModalDialog, useToggleOpen } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 

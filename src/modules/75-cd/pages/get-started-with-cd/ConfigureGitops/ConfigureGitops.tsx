@@ -5,10 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useRef, useState, useEffect } from 'react'
+import type { ReactElement} from 'react';
+import React, { useRef, useState, useEffect } from 'react'
+import type {
+  AccordionHandle,
+  IconName,
+  SelectOption} from '@harness/uicore';
 import {
   Accordion,
-  AccordionHandle,
   Button,
   ButtonSize,
   ButtonVariation,
@@ -20,14 +24,13 @@ import {
   FormInput,
   HarnessDocTooltip,
   Icon,
-  IconName,
   Layout,
   Select,
-  SelectOption,
   Text,
   useToaster
 } from '@harness/uicore'
-import { Color, FontVariation, PopoverProps } from '@harness/design-system'
+import type { PopoverProps } from '@harness/design-system';
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import type { FormikContextType } from 'formik'
@@ -40,11 +43,12 @@ import { TestStatus } from '@common/components/TestConnectionWidget/TestConnecti
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
-import {
+import type {
   RepositoriesRefs,
   RepositoriesRepoAppDetailsResponse,
   RepositoriesRepoAppsResponse,
-  Servicev1Repository,
+  Servicev1Repository} from 'services/gitops';
+import {
   useAgentRepositoryServiceCreateRepository,
   useAgentRepositoryServiceGet,
   useAgentRepositoryServiceGetAppDetails,
@@ -54,12 +58,13 @@ import {
 } from 'services/gitops'
 import { getLastURLPathParam } from '@common/utils/utils'
 import { useDeepCompareEffect } from '@common/hooks'
-import {
+import type {
   APIError,
+  RepositoryInterface} from '../CDOnboardingUtils';
+import {
   DEFAULT_SAMPLE_REPO,
   DeploymentType,
   getFullAgentWithScope,
-  RepositoryInterface,
   RevisionType,
   revisionTypeArray,
   SourceCodeType

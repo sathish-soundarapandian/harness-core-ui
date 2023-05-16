@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import { matchPath, useHistory } from 'react-router-dom'
 import { Page, useToaster, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { NavigationCheck } from '@common/components'
 import routes from '@common/RouteDefinitions'
-import { useStrings, StringKeys } from 'framework/strings'
+import type { StringKeys } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { Error } from 'services/cd-ng'
 import { FreezeWindowContext, FreezeWindowProvider } from '@freeze-windows/context/FreezeWindowContext'
 import { isValidYaml, getContentAndTitleStringKeys, PATH_PARAMS } from '@freeze-windows/utils/FreezeWindowStudioUtil'

@@ -8,7 +8,8 @@
 import type { Dispatch } from 'react'
 import { useMemo } from 'react'
 
-import { Action, ActionType, CreateSectionsPayload, UpdateSectionsPayload } from './types'
+import type { Action, CreateSectionsPayload, UpdateSectionsPayload } from './types';
+import { ActionType } from './types'
 
 export interface UseActionCreatorReturn {
   createSections(payload: CreateSectionsPayload): void

@@ -16,8 +16,9 @@ import type {
   ErrorNodeSummary,
   NGTemplateInfoConfig
 } from 'services/template-ng'
+import type {
+  ActionReturnType} from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions';
 import {
-  ActionReturnType,
   DrawerTypes,
   TemplateActions
 } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'

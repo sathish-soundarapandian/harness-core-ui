@@ -11,9 +11,10 @@ import { Drawer, Position } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, ExpandingSearchInput, Heading, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
-import {
+import type {
   FeatureAvailablePipeline,
-  FeaturePipeline,
+  FeaturePipeline} from 'services/cf';
+import {
   useCreateFlagPipeline,
   useGetAvailableFeaturePipelines,
   usePatchFeaturePipeline

@@ -8,7 +8,8 @@
 import React, { useMemo } from 'react'
 import { Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { Target } from 'services/cf'
 import { ItemContainer } from '@cf/components/ItemContainer/ItemContainer'
 

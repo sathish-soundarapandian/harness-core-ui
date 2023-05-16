@@ -7,7 +7,8 @@
  */
 
 import React from 'react'
-import { fireEvent, getByText, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { fireEvent, getByText, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'

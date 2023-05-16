@@ -2,15 +2,17 @@ import { defaultTo, isEmpty, isNil, omit } from 'lodash-es'
 import type { ConfigFileWrapper, ManifestConfigWrapper, ServiceOverridesSpec } from 'services/cd-ng'
 import type { RequiredField } from '@common/interfaces/RouteInterfaces'
 import type { AllNGVariables } from '@pipeline/utils/types'
-import {
+import type {
   ConfigFileOverrideDetails,
   ManifestOverrideDetails,
   OverrideDetails,
-  OverrideTypes,
   ServiceOverrideRowFormState,
   ServiceOverrideRowProps,
   VariableOverrideDetails,
   ServiceOverridesResponseDTOV2
+} from '../ServiceOverridesUtils';
+import {
+  OverrideTypes
 } from '../ServiceOverridesUtils'
 
 export const formGroupKey = (dataItem: ServiceOverridesResponseDTOV2): string => {

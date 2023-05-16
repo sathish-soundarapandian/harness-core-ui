@@ -9,12 +9,14 @@ import React from 'react'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { FormikForm, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { CommandTypes, IACMTerraformPluginData, IACMTerraformPluginProps } from './StepTypes.types'
+import type { IACMTerraformPluginData, IACMTerraformPluginProps } from './StepTypes.types';
+import { CommandTypes } from './StepTypes.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function IACMTerraformPluginInputStepRef<T extends IACMTerraformPluginData = IACMTerraformPluginData>({

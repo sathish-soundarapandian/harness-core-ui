@@ -6,19 +6,22 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
-import {
+import type {
   AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
+import {
   Container,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  RUNTIME_INPUT_VALUE,
-  SelectOption
+  RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikContextType } from 'formik'
 import produce from 'immer'
-import { PrimaryArtifact, ServiceSpec, useGetArtifactSourceInputs } from 'services/cd-ng'
+import type { PrimaryArtifact, ServiceSpec} from 'services/cd-ng';
+import { useGetArtifactSourceInputs } from 'services/cd-ng'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

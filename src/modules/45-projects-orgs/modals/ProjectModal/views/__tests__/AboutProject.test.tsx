@@ -15,7 +15,8 @@ import type {
   ResponsePageOrganizationResponse,
   ResponseProjectResponse
 } from 'services/cd-ng'
-import { TestWrapper, UseGetMockData, UseMutateMockData } from '@common/utils/testUtils'
+import type { UseGetMockData, UseMutateMockData } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { clickSubmit, InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { orgMockData } from './OrgMockData'
 import StepProject from '../StepAboutProject'

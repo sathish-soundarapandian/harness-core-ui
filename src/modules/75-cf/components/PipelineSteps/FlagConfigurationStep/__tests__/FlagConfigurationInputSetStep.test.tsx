@@ -7,13 +7,15 @@
 
 import React from 'react'
 import { cloneDeep } from 'lodash-es'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik, FormikForm, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Feature } from 'services/cf'
 import * as cfServices from 'services/cf'
-import FlagConfigurationInputSetStep, { FlagConfigurationInputSetStepProps } from '../FlagConfigurationInputSetStep'
+import type { FlagConfigurationInputSetStepProps } from '../FlagConfigurationInputSetStep';
+import FlagConfigurationInputSetStep from '../FlagConfigurationInputSetStep'
 
 const mockFeatures = [
   { name: 'Feature 1', identifier: 'f1' },

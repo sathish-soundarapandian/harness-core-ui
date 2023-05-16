@@ -8,9 +8,11 @@
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import {
-  PipelineContext,
+import type {
   PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
+import {
+  PipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import pipelineContextMock from './pipelineContext.json'
 import ServiceStepBasicInfo from '../ServiceConfiguration/ServiceStepBasicInfo'

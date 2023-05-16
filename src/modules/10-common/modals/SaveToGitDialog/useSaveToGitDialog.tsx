@@ -7,25 +7,31 @@
 
 import React, { useState } from 'react'
 import { Button, getErrorInfoFromErrorObject } from '@harness/uicore'
-import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { defaultTo, noop } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import { Entities, SCHEMA_VALIDATION_FAILED } from '@common/interfaces/GitSyncInterface'
-import SaveToGitForm, {
+import type {
   GitResourceInterface,
   SaveToGitFormInterface
-} from '@common/components/SaveToGitForm/SaveToGitForm'
-import SaveToGitFormV2, { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
+} from '@common/components/SaveToGitForm/SaveToGitForm';
+import SaveToGitForm from '@common/components/SaveToGitForm/SaveToGitForm'
+import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2';
+import SaveToGitFormV2 from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { getEntityNameFromType } from '@common/utils/StringUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import { EntityGitDetails, ResponseMessage, useCreatePR, useCreatePRV2 } from 'services/cd-ng'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { useCreatePR, useCreatePRV2 } from 'services/cd-ng'
 import { String, useStrings } from 'framework/strings'
-import type { GovernanceMetadata } from 'services/cd-ng'
-import { ProgressOverlay, StepStatus } from '../ProgressOverlay/ProgressOverlay'
-import { GitData, useGitDiffEditorDialog } from '../GitDiffEditor/useGitDiffEditorDialog'
+import type { GovernanceMetadata , EntityGitDetails, ResponseMessage} from 'services/cd-ng'
+import type { StepStatus } from '../ProgressOverlay/ProgressOverlay';
+import { ProgressOverlay } from '../ProgressOverlay/ProgressOverlay'
+import type { GitData} from '../GitDiffEditor/useGitDiffEditorDialog';
+import { useGitDiffEditorDialog } from '../GitDiffEditor/useGitDiffEditorDialog'
 import css from './useSaveToGitDialog.module.scss'
 
 export interface UseSaveSuccessResponse {

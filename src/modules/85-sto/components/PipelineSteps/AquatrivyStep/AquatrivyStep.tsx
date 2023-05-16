@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { AquatrivyStepBaseWithRef } from './AquatrivyStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { AquatrivyStepVariables, AquatrivyStepVariablesProps } from './AquatrivyStepVariables'
+import type { AquatrivyStepVariablesProps } from './AquatrivyStepVariables';
+import { AquatrivyStepVariables } from './AquatrivyStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './AquatrivyStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

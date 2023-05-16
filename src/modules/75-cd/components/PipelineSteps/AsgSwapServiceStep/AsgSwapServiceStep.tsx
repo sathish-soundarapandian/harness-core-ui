@@ -9,7 +9,8 @@ import React from 'react'
 import type { IconName, AllowedTypes } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { AsgBlueGreenSwapServiceStepInfo, StepElementConfig } from 'services/cd-ng'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'

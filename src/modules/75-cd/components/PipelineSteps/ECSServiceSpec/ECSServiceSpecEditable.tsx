@@ -26,7 +26,8 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type {
   ManifestConfigWrapper,
   ServiceDefinition,

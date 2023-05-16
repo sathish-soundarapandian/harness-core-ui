@@ -8,7 +8,8 @@
 import React from 'react'
 import { Button } from '@harness/uicore'
 import { Dialog } from '@blueprintjs/core'
-import { HideModal, useModalHook } from '@harness/use-modal'
+import type { HideModal} from '@harness/use-modal';
+import { useModalHook } from '@harness/use-modal'
 import type { IDialogProps } from '@blueprintjs/core'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'

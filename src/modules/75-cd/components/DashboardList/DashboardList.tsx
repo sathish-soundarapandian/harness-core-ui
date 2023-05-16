@@ -8,13 +8,14 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { PopoverPosition } from '@blueprintjs/core'
 import cx from 'classnames'
+import type {
+  TableProps} from '@harness/uicore';
 import {
   ExpandingSearchInput,
   Layout,
   Text,
   PageError,
   TableV2,
-  TableProps,
   Page,
   useToaster,
   Dialog,

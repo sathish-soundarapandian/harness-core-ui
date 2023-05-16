@@ -15,7 +15,8 @@ import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInt
 import { useClonePipeline } from 'services/pipeline-ng'
 import { useGetProjectAggregateDTOList, useGetOrganizationList } from 'services/cd-ng'
 import mockImport from 'framework/utils/mockImport'
-import { ClonePipelineForm, ClonePipelineFormProps } from './ClonePipelineForm'
+import type { ClonePipelineFormProps } from './ClonePipelineForm';
+import { ClonePipelineForm } from './ClonePipelineForm'
 
 jest.mock('@harness/uicore', () => ({
   ...jest.requireActual('@harness/uicore'),

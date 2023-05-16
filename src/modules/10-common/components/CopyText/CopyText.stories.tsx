@@ -10,7 +10,8 @@ import type { Story, Meta } from '@storybook/react'
 import styled from '@emotion/styled'
 import { TestWrapper } from '@common/utils/testUtils'
 
-import { CopyText, CopyTextProps } from './CopyText'
+import type { CopyTextProps } from './CopyText';
+import { CopyText } from './CopyText'
 
 export default {
   title: 'Common / CopyText',

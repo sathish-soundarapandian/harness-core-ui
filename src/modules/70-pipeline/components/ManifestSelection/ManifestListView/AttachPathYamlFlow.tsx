@@ -6,6 +6,9 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes,
+  IconName} from '@harness/uicore';
 import {
   Button,
   Text,
@@ -17,10 +20,8 @@ import {
   Layout,
   MultiTypeInputType,
   Icon,
-  AllowedTypes,
   Heading,
   FormikForm,
-  IconName,
   Container
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'

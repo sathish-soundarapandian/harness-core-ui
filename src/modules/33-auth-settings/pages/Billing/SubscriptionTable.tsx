@@ -7,14 +7,17 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { ButtonVariation, Card, Icon, IconName, Layout, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { ButtonVariation, Card, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, lowerCase } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import moment from 'moment'
 import { getModuleIcon } from '@common/utils/utils'
-import { Module, ModuleName } from 'framework/types/ModuleName'
-import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/exports'
+import type { Module} from 'framework/types/ModuleName';
+import { ModuleName } from 'framework/types/ModuleName'
+import type { DynamicPopoverHandlerBinding } from '@common/exports';
+import { DynamicPopover } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import type { InvoiceDetailDTO, ItemDTO, SubscriptionDetailDTO } from 'services/cd-ng'
 import RbacButton from '@rbac/components/Button/Button'

@@ -20,11 +20,12 @@ import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import type { FreezeSummaryResponse } from 'services/cd-ng'
 import { getFreezeRouteLink } from '@common/utils/freezeWindowUtils'
-import {
+import type {
   CellProps,
   CellType,
+  FrozenExecutionListTableProps} from './FrozenExecutionUtil';
+import {
   FreezeStatus,
-  FrozenExecutionListTableProps,
   getComputedFreezeStatusMap,
   getReadableDateFromDateString
 } from './FrozenExecutionUtil'

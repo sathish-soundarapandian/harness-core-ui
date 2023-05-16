@@ -6,6 +6,11 @@
  */
 
 import React, { useEffect } from 'react'
+import type {
+  SelectOption,
+  StepProps,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Button,
   Formik,
@@ -14,14 +19,11 @@ import {
   ButtonVariation,
   Text,
   FormInput,
-  SelectOption,
   getMultiTypeFromValue,
   Accordion,
   MultiTypeInputType,
   Container,
-  Checkbox,
-  StepProps,
-  AllowedTypes
+  Checkbox
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'

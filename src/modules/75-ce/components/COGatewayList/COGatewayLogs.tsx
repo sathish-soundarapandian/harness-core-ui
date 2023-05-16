@@ -14,7 +14,8 @@ import {
   getStaticSchedulePeriodTime,
   getTimePeriodString
 } from '@common/utils/momentUtils'
-import { Service, ServiceLog, useLogsOfService } from 'services/lw'
+import type { Service, ServiceLog} from 'services/lw';
+import { useLogsOfService } from 'services/lw'
 import { SimpleLogViewer } from '@common/components/LogViewer/SimpleLogViewer'
 import type { RefreshFunction } from '@ce/types'
 import css from './COGatewayList.module.scss'

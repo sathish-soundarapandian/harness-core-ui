@@ -22,7 +22,8 @@ import {
 
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { Role, RoleResponse, useGetRoleList } from 'services/rbac'
+import type { Role, RoleResponse} from 'services/rbac';
+import { useGetRoleList } from 'services/rbac'
 import RoleCard from '@rbac/components/RoleCard/RoleCard'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useRoleModal } from '@rbac/modals/RoleModal/useRoleModal'
@@ -35,8 +36,10 @@ import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { isAccountBasicRole } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
+import type { CommonPaginationQueryParams} from '@common/hooks/useDefaultPaginationProps';
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import type { UseQueryParamsOptions } from '@common/hooks/useQueryParams';
+import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'

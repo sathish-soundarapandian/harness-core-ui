@@ -8,7 +8,8 @@
 import React, { useCallback, useState } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { StepWizard, Dialog, AllowedTypes as MultiTypeAllowedTypes } from '@harness/uicore'
+import type { AllowedTypes as MultiTypeAllowedTypes } from '@harness/uicore';
+import { StepWizard, Dialog } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'

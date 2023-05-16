@@ -8,7 +8,8 @@
 import React, { useCallback, useState } from 'react'
 import { StepWizard, Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 import type { ModuleName } from 'framework/types/ModuleName'
 import type { Project } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

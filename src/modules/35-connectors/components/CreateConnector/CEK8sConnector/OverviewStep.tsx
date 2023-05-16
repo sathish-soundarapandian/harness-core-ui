@@ -10,6 +10,11 @@ import { useParams, Link } from 'react-router-dom'
 import * as Yup from 'yup'
 import { pick, omit as _omit, defaultTo as _defaultTo } from 'lodash-es'
 import cx from 'classnames'
+import type {
+  ModalErrorHandlerBinding,
+  SelectOption,
+  StepProps
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -18,21 +23,19 @@ import {
   FormikForm,
   FormInput,
   Layout,
-  ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  SelectOption,
-  StepProps
+  ModalErrorHandler
 } from '@harness/uicore'
 import { NameIdDescriptionTags } from '@common/components'
 import { StringUtils, useToaster } from '@common/exports'
 import { getHeadingIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import routes from '@common/RouteDefinitions'
 import { String, useStrings } from 'framework/strings'
-import {
+import type {
   ConnectorConfigDTO,
   ConnectorInfoDTO,
   Failure,
-  ResponseBoolean,
+  ResponseBoolean} from 'services/cd-ng';
+import {
   useGetConnectorListV2,
   validateTheIdentifierIsUniquePromise
 } from 'services/cd-ng'

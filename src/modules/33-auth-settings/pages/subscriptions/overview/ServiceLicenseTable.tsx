@@ -9,16 +9,20 @@ import React, { useState, useEffect } from 'react'
 import type { Column } from 'react-table'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Text, TableV2, Layout, Card, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Text, TableV2, Layout, Card, NoDataCard, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
-import { String, useStrings, StringKeys } from 'framework/strings'
+import type { StringKeys } from 'framework/strings';
+import { String, useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   PageActiveServiceDTO,
   LicenseUsageDTO,
-  useDownloadActiveServiceCSVReport,
   ActiveServiceDTO
+} from 'services/cd-ng';
+import {
+  useDownloadActiveServiceCSVReport
 } from 'services/cd-ng'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'

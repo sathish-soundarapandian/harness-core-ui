@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import type { MouseEvent} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 import type { FormikHelpers } from 'formik'
@@ -24,7 +25,7 @@ import {
   Text
 } from '@harness/uicore'
 import * as yup from 'yup'
-import {
+import type {
   Clause,
   Feature,
   FeatureState,
@@ -34,8 +35,10 @@ import {
   Serve,
   ServingRule,
   TargetMap,
-  usePatchFeature,
   VariationMap
+} from 'services/cf';
+import {
+  usePatchFeature
 } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { extraOperatorReference } from '@cf/constants'
@@ -48,7 +51,8 @@ import routes from '@common/RouteDefinitions'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import type { FeatureFlagPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
-import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
+import type { UseGitSync } from '@cf/hooks/useGitSync';
+import { GIT_SYNC_ERROR_CODE } from '@cf/hooks/useGitSync'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import TargetingRulesTab from '@cf/pages/feature-flags-detail/targeting-rules-tab/TargetingRulesTab'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
@@ -56,7 +60,8 @@ import FlagPipelineTab from '@cf/pages/feature-flags-detail/flag-pipeline-tab/Fl
 import TabTargeting from '../EditFlagTabs/TabTargeting'
 import TabActivity from '../EditFlagTabs/TabActivity'
 import { CFEnvironmentSelect } from '../CFEnvironmentSelect/CFEnvironmentSelect'
-import patch, { ClauseData, getDiff } from '../../utils/instructions'
+import type { ClauseData} from '../../utils/instructions';
+import patch, { getDiff } from '../../utils/instructions'
 import { MetricsView } from './views/MetricsView'
 import { NoEnvironment } from '../NoEnvironment/NoEnvironment'
 import SaveFlagToGitSubFormModal from '../SaveFlagToGitSubFormModal/SaveFlagToGitSubFormModal'

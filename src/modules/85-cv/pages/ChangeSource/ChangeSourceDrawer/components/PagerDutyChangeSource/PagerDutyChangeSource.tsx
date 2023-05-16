@@ -7,7 +7,8 @@
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { debounce, isEqual } from 'lodash-es'
-import { Container, FormInput, Layout, SelectOption, Utils, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Container, FormInput, Layout, Utils, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'

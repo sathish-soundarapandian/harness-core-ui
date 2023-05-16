@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
+import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase';
+import { ManifestSourceBase } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { ManifestContent } from '../ManifestSourceRuntimeFields/ManifestContent'

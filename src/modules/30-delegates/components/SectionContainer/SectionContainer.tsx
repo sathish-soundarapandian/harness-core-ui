@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode } from 'react'
+import type { ReactNode } from 'react';
+import React from 'react'
 import cx from 'classnames'
-import { Container, Text, TextProps, HarnessDocTooltip } from '@harness/uicore'
+import type { TextProps} from '@harness/uicore';
+import { Container, Text, HarnessDocTooltip } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { ContainerProps } from '@harness/uicore/dist/components/Container/Container'
 import css from './SectionContainer.module.scss'

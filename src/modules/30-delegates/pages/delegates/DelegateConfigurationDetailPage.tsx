@@ -22,7 +22,8 @@ import type {
   ModulePathParams,
   AccountPathProps
 } from '@common/interfaces/RouteInterfaces'
-import { useUpdateDelegateConfigNgV2, useGetDelegateConfigNgV2, DelegateProfileDetailsNg } from 'services/cd-ng'
+import type { DelegateProfileDetailsNg } from 'services/cd-ng';
+import { useUpdateDelegateConfigNgV2, useGetDelegateConfigNgV2 } from 'services/cd-ng'
 import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
 import { fullSizeContentStyle } from '@delegates/constants'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'

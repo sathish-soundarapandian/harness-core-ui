@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { CheckmarxStepBaseWithRef } from './CheckmarxStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { CheckmarxStepVariables, CheckmarxStepVariablesProps } from './CheckmarxStepVariables'
+import type { CheckmarxStepVariablesProps } from './CheckmarxStepVariables';
+import { CheckmarxStepVariables } from './CheckmarxStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './CheckmarxStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

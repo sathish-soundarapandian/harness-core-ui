@@ -6,11 +6,12 @@
  */
 
 import React from 'react'
+import type {
+  RenderResult} from '@testing-library/react';
 import {
   render,
   fireEvent,
   waitFor,
-  RenderResult,
   queryByText,
   getByText as getByTextFromRTL,
   queryByAttribute

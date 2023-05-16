@@ -7,6 +7,9 @@
 
 import React from 'react'
 import userEvent from '@testing-library/user-event'
+import type {
+  RenderResult
+} from '@testing-library/react';
 import {
   act,
   findByText,
@@ -14,8 +17,7 @@ import {
   getByText,
   queryByAttribute,
   render,
-  waitFor,
-  RenderResult
+  waitFor
 } from '@testing-library/react'
 import { Formik, FormikForm, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 

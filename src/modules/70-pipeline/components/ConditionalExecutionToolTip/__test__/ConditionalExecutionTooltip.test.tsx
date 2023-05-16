@@ -9,9 +9,10 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
-import ConditionalExecutionTooltipWrapper, {
+import type {
   ConditionalExecutionToolTipWrapperProps
-} from '../ConditionalExecutionTooltipWrapper'
+} from '../ConditionalExecutionTooltipWrapper';
+import ConditionalExecutionTooltipWrapper from '../ConditionalExecutionTooltipWrapper'
 
 const getProps = (): ConditionalExecutionToolTipWrapperProps => ({
   mode: Modes.STAGE,

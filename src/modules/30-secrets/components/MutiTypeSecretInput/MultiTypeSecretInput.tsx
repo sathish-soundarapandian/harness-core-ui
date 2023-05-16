@@ -6,25 +6,28 @@
  */
 
 import React, { useMemo } from 'react'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import cx from 'classnames'
-import {
-  Button,
+import type {
   FixedTypeComponentProps,
-  ExpressionAndRuntimeType,
   ButtonProps,
   ExpressionAndRuntimeTypeProps,
-  Text,
   AllowedTypes,
+  DataTooltipInterface} from '@harness/uicore';
+import {
+  Button,
+  ExpressionAndRuntimeType,
+  Text,
   HarnessDocTooltip,
   FormikTooltipContext,
-  DataTooltipInterface,
   getMultiTypeFromValue,
   MultiTypeInputType,
   Layout
 } from '@harness/uicore'
 import { defaultTo, get, pick } from 'lodash-es'
-import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
+import type { IFormGroupProps} from '@blueprintjs/core';
+import { FormGroup, Intent } from '@blueprintjs/core'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'
 import useCreateOrSelectSecretModal from '@secrets/modals/CreateOrSelectSecretModal/useCreateOrSelectSecretModal'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
@@ -41,7 +44,8 @@ import { InputSetFunction, parseInput } from '@common/components/ConfigureOption
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
 import type { SecretRef } from '@secrets/components/SecretReference/SecretReference'
-import { SecretConfigureOptions, SecretConfigureOptionsProps } from '../SecretConfigureOptions/SecretConfigureOptions'
+import type { SecretConfigureOptionsProps } from '../SecretConfigureOptions/SecretConfigureOptions';
+import { SecretConfigureOptions } from '../SecretConfigureOptions/SecretConfigureOptions'
 import css from './MultiTypeSecretInput.module.scss'
 
 export function getMultiTypeSecretInputType(serviceType: string): SecretResponseWrapper['secret']['type'] {

@@ -12,7 +12,8 @@ import React from 'react'
 import { useStrings } from 'framework/strings'
 import { CommonRecords } from '@cv/components/CommonRecords/CommonRecords'
 import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
-import { CommonQueryViewDialogProps, DrawerProps } from '../../types'
+import type { CommonQueryViewDialogProps} from '../../types';
+import { DrawerProps } from '../../types'
 import css from './CommonQueryViewDialog.module.scss'
 
 export function CommonQueryViewDialog(props: CommonQueryViewDialogProps): JSX.Element {

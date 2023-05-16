@@ -8,7 +8,8 @@
 import React from 'react'
 import { FieldArray } from 'formik'
 import { isArray, isEmpty } from 'lodash-es'
-import { AllowedTypes, FormInput } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { FormInput } from '@harness/uicore'
 
 import type { StepElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

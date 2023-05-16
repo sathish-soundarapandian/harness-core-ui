@@ -10,7 +10,8 @@ import type { Asset } from 'contentful'
 import { Layout, Text } from '@harness/uicore'
 import { Icon } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
-import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo';
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import css from './CarousellmageAndDescription.module.scss'
 
 interface CarouselImageAndDescriptionProps {

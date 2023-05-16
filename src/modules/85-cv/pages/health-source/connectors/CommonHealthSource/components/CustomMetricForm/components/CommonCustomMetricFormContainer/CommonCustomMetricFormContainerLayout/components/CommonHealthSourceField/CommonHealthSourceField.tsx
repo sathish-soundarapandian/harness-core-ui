@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { FormInput, MultiTypeInputType, SelectOption, useToaster } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, MultiTypeInputType, useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import type {
@@ -9,7 +10,8 @@ import type {
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { useStrings } from 'framework/strings'
 import { FIELD_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
-import { HealthSourceParamValuesRequest, useGetParamValues } from 'services/cv'
+import type { HealthSourceParamValuesRequest} from 'services/cv';
+import { useGetParamValues } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 

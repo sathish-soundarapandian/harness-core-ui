@@ -9,7 +9,8 @@ import React from 'react'
 import { useModalHook } from '@harness/use-modal'
 import { Button, StepWizard, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { Classes, IDialogProps, Dialog } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'

@@ -8,13 +8,15 @@
 import React from 'react'
 import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
-import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { NoTrafficShiftExecutionStepEditRef } from '../NoTrafficShiftExecutionStepEdit'
 import { DeployCloudFunctionNoTrafficShiftStep } from '../GenTwo/DeployCloudFunctionNoTrafficShiftStep/DeployCloudFunctionNoTrafficShiftStep'
 

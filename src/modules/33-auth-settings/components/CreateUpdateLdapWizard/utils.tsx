@@ -7,7 +7,8 @@
 
 import { Text, Icon, Layout } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import { useStrings } from 'framework/strings'
 import type { LdapConnectionSettings, ResponseMessage } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'

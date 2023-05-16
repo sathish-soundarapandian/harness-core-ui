@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { fireEvent, render, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import ContextMenu from '@projects-orgs/components/Menu/ContextMenu'
 import routes from '@common/RouteDefinitions'

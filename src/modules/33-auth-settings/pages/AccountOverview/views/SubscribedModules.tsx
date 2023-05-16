@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { capitalize, clone } from 'lodash-es'
-import { Container, Text, Card, Layout, Icon, PageError, PageSpinner, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore'
+import { Container, Text, Card, Layout, Icon, PageError, PageSpinner } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { useParams, Link } from 'react-router-dom'

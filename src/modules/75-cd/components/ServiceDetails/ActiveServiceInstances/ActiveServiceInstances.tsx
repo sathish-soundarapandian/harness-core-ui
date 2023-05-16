@@ -11,10 +11,11 @@ import { defaultTo } from 'lodash-es'
 import { Card, Layout, Tab, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { ActiveServiceInstancesHeader } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancesHeader'
-import {
+import type {
   GetEnvArtifactDetailsByServiceIdQueryParams,
   GetEnvBuildInstanceCountQueryParams,
-  NGServiceConfig,
+  NGServiceConfig} from 'services/cd-ng';
+import {
   useGetEnvArtifactDetailsByServiceId,
   useGetEnvBuildInstanceCount
 } from 'services/cd-ng'

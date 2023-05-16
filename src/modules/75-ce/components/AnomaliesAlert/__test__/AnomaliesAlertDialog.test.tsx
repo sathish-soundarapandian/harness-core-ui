@@ -18,7 +18,8 @@ import { FetchPerspectiveListDocument } from 'services/ce/services'
 import type { CCMPerspectiveNotificationChannelsDTO } from 'services/ce'
 import PerspectiveList from './PerspectiveList.json'
 import PerspectiveSelection from '../PerspectiveSelection'
-import NotificationMethod, { NotificationValues } from '../NotificationMethod'
+import type { NotificationValues } from '../NotificationMethod';
+import NotificationMethod from '../NotificationMethod'
 import useAnomaliesAlertDialog from '../AnomaliesAlertDialog'
 
 const selectedAlert: CCMPerspectiveNotificationChannelsDTO = {

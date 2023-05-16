@@ -30,7 +30,8 @@ import type {
 } from 'services/cf'
 import { showToaster } from '@cf/utils/CFUtils'
 
-import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
+import type { UseGitSync } from '@cf/hooks/useGitSync';
+import { GIT_SYNC_ERROR_CODE } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import { useStrings } from 'framework/strings'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'

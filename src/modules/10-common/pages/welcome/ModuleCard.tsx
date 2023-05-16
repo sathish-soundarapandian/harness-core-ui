@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Icon, IconName, Card, Container, Text, Button } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Icon, Card, Container, Text, Button } from '@harness/uicore'
 import cx from 'classnames'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import css from './WelcomePage.module.scss'

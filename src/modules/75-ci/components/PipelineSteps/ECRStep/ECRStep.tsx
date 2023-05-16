@@ -25,7 +25,8 @@ import type {
 import type { StringsMap } from 'stringTypes'
 import { ECRStepBaseWithRef } from './ECRStepBase'
 import { ECRStepInputSet } from './ECRStepInputSet'
-import { ECRStepVariables, ECRStepVariablesProps } from './ECRStepVariables'
+import type { ECRStepVariablesProps } from './ECRStepVariables';
+import { ECRStepVariables } from './ECRStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './ECRStepFunctionConfigs'
 
 export interface ECRStepSpec {

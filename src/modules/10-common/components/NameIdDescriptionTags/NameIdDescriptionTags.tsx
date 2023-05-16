@@ -6,10 +6,12 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, FormInput, Icon, Label, DataTooltipInterface, HarnessDocTooltip } from '@harness/uicore'
+import type { DataTooltipInterface} from '@harness/uicore';
+import { Container, FormInput, Icon, Label, HarnessDocTooltip } from '@harness/uicore'
 import type { InputWithIdentifierProps } from '@harness/uicore/dist/components/InputWithIdentifier/InputWithIdentifier'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { Classes, IInputGroupProps, ITagInputProps } from '@blueprintjs/core'
+import type { IInputGroupProps, ITagInputProps } from '@blueprintjs/core';
+import { Classes } from '@blueprintjs/core'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'

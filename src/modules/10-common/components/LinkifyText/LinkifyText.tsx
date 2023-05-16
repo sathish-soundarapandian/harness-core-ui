@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Text, TextProps } from '@harness/uicore'
+import type { TextProps } from '@harness/uicore';
+import { Text } from '@harness/uicore'
 import { tokenize } from 'linkifyjs'
 
 interface BrokenText {

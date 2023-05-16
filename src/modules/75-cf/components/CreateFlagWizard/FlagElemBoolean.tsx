@@ -5,16 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useState, useEffect } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import React, { useState, useEffect } from 'react'
 import * as yup from 'yup'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   FormikForm,
   FormInput,
-  StepProps,
   Text,
   Layout,
-  SelectOption,
   Container,
   Button,
   ButtonVariation,
@@ -23,7 +25,8 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { FormikEffect, FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
+import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect';
+import { FormikEffect } from '@common/components/FormikEffect/FormikEffect'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { FlagTypeVariations } from '../CreateFlagDialog/FlagDialogUtils'

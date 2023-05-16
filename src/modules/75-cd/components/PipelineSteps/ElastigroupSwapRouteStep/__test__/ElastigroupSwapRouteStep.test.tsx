@@ -11,10 +11,12 @@ import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE, MultiTypeInputType } from '@harness/uicore'
 
 import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
-import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { ElastigroupSwapRouteStep, ElastigroupSwapRouteStepValues } from '../ElastigroupSwapRouteStep'
+import type { ElastigroupSwapRouteStepValues } from '../ElastigroupSwapRouteStep';
+import { ElastigroupSwapRouteStep } from '../ElastigroupSwapRouteStep'
 import { ElastigroupSwapRouteStepEditRef } from '../ElastigroupSwapRouteStepEdit'
 
 factory.registerStep(new ElastigroupSwapRouteStep())

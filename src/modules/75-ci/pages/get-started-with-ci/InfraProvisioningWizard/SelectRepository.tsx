@@ -9,6 +9,10 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { debounce } from 'lodash-es'
 import type { Column, CellProps } from 'react-table'
+import type {
+  SelectOption,
+  IconProps,
+  IconName} from '@harness/uicore';
 import {
   Text,
   Layout,
@@ -19,14 +23,12 @@ import {
   FormError,
   Icon,
   Select,
-  SelectOption,
-  IconProps,
-  IconName,
   Toggle,
   Label
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { ConnectorInfoDTO, useGetListOfAllReposByRefConnector, UserRepoResponse, Error } from 'services/cd-ng'
+import type { ConnectorInfoDTO, UserRepoResponse, Error } from 'services/cd-ng';
+import { useGetListOfAllReposByRefConnector } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { DropDown, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { DropDown } from '@harness/uicore'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { listActiveDevelopersPromise } from 'services/ci'

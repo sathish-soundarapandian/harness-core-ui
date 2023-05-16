@@ -8,7 +8,8 @@
 import React, { useState } from 'react'
 import { Button, Text, Card, Icon, Layout } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
@@ -17,7 +18,8 @@ import type { IGitContextFormProps } from '@common/components/GitContextForm/Git
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
 import type { ConnectorModaldata } from '@connectors/interfaces/ConnectorInterface'
-import useCreateConnectorModal, { UseCreateConnectorModalProps } from './useCreateConnectorModal'
+import type { UseCreateConnectorModalProps } from './useCreateConnectorModal';
+import useCreateConnectorModal from './useCreateConnectorModal'
 import wizardCss from '../../components/CreateConnectorWizard/CreateConnectorWizard.module.scss'
 import css from './useCreateConnectorMultiTypeModal.module.scss'
 export interface UseCreateConnectorMultiTypeModalProps {

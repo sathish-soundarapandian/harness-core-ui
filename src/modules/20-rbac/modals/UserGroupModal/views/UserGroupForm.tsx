@@ -6,6 +6,9 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  MultiSelectOption} from '@harness/uicore';
 import {
   Button,
   Container,
@@ -13,8 +16,6 @@ import {
   FormikForm as Form,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  MultiSelectOption,
   FormInput,
   ButtonVariation
 } from '@harness/uicore'
@@ -23,15 +24,18 @@ import { useParams } from 'react-router-dom'
 import { pick, cloneDeep } from 'lodash-es'
 import { NameIdDescriptionTags, useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { UserGroupDTO, usePostUserGroup, usePutUserGroup, useGetUsers } from 'services/cd-ng'
+import type { UserGroupDTO} from 'services/cd-ng';
+import { usePostUserGroup, usePutUserGroup, useGetUsers } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet } from '@common/hooks'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import UserItemRenderer, { UserItem } from '@common/components/UserItemRenderer/UserItemRenderer'
+import type { UserItem } from '@common/components/UserItemRenderer/UserItemRenderer';
+import UserItemRenderer from '@common/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@common/components/UserTagRenderer/UserTagRenderer'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
-import { getScopeFromDTO, ScopedObjectDTO } from '@common/components/EntityReference/EntityReference.types'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference.types';
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import css from '@rbac/modals/UserGroupModal/useUserGroupModal.module.scss'
 
 interface UserGroupModalData {

@@ -9,7 +9,8 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import { DefineYourMonitoringSource, DefineYourMonitoringSourceProps } from '../DefineYourMonitoringSource'
+import type { DefineYourMonitoringSourceProps } from '../DefineYourMonitoringSource';
+import { DefineYourMonitoringSource } from '../DefineYourMonitoringSource'
 
 function WrapperComponent(props: Omit<DefineYourMonitoringSourceProps, 'formikProps'>): JSX.Element {
   return (

@@ -5,12 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type {
+  tagsType} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Layout,
   Text,
-  tagsType,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
   HarnessDocTooltip
@@ -20,8 +21,10 @@ import React, { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { isEmpty, get, pickBy } from 'lodash-es'
 import { parse } from 'yaml'
-import { NGTriggerConfigV2, useGetTriggerDetails, useGetSchemaYaml, useGetPipelineSummary } from 'services/pipeline-ng'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { NGTriggerConfigV2} from 'services/pipeline-ng';
+import { useGetTriggerDetails, useGetSchemaYaml, useGetPipelineSummary } from 'services/pipeline-ng'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { TagsPopover, PageSpinner } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
@@ -29,7 +32,8 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import DetailPageCard, { ContentType, Content } from '@common/components/DetailPageCard/DetailPageCard'
+import type { Content } from '@common/components/DetailPageCard/DetailPageCard';
+import DetailPageCard, { ContentType } from '@common/components/DetailPageCard/DetailPageCard'
 import routes from '@common/RouteDefinitions'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'

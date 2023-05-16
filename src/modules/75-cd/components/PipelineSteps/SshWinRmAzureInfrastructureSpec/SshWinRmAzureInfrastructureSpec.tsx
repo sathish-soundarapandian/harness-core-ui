@@ -6,23 +6,26 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   getAzureResourceGroupsBySubscriptionPromise,
   getAzureSubscriptionsPromise,
   getConnectorListV2Promise,
-  getSubscriptionTagsPromise,
+  getSubscriptionTagsPromise
+} from 'services/cd-ng'
+import type { AzureSubscriptionDTO ,
   SshWinRmAzureInfrastructure,
   ConnectorResponse,
   AzureResourceGroupDTO,
   AzureTagDTO
 } from 'services/cd-ng'
-import type { AzureSubscriptionDTO } from 'services/cd-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -31,9 +34,10 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
-import {
+import type {
   AzureInfrastructureSpecEditableProps,
-  SshWinRmAzureInfrastructureTemplate,
+  SshWinRmAzureInfrastructureTemplate} from './SshWinRmAzureInfrastructureInterface';
+import {
   subscriptionLabel,
   resourceGroupLabel
 } from './SshWinRmAzureInfrastructureInterface'

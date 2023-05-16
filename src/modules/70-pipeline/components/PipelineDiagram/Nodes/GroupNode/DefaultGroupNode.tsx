@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { CSSProperties } from 'react'
+import type { CSSProperties } from 'react';
+import React from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
 import { Icon, Text } from '@harness/uicore'

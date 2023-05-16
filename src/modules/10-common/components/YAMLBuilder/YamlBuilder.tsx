@@ -11,7 +11,7 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 import ReactMonacoEditor from 'react-monaco-editor'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
-import { IKeyboardEvent, languages, Position } from 'monaco-editor/esm/vs/editor/editor.api'
+import { type IKeyboardEvent, languages, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import {
@@ -44,7 +44,7 @@ import type {
   CompletionItemInterface,
   Theme
 } from '@common/interfaces/YAMLBuilderProps'
-import { PluginAddUpdateMetadata, PluginType } from '@common/interfaces/YAMLBuilderProps'
+import { type PluginAddUpdateMetadata, PluginType } from '@common/interfaces/YAMLBuilderProps'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
 import { Status } from '@common/utils/Constants'

@@ -7,12 +7,14 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { FormInput, Text, SelectOption, Icon } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, Text, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
 import { useToaster } from '@common/exports'
-import { AwsKmsConfigFormData, CredTypeValues } from '@connectors/interfaces/ConnectorInterface'
+import type { AwsKmsConfigFormData} from '@connectors/interfaces/ConnectorInterface';
+import { CredTypeValues } from '@connectors/interfaces/ConnectorInterface'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 
 interface AwsKmsAccessKeyFormProps {

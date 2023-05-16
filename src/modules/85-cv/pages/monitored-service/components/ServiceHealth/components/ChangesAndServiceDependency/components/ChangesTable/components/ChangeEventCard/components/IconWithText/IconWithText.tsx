@@ -1,5 +1,6 @@
 import React from 'react'
-import { Container, Icon, IconName, Layout, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 export const IconWithText = ({ icon, text = '' }: { icon?: IconName; text?: string }): JSX.Element => {

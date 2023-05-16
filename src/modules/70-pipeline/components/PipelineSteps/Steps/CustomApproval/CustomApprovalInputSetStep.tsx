@@ -6,14 +6,16 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm } from '@harness/uicore'
 import { isEmpty, get, isArray } from 'lodash-es'
 import cx from 'classnames'
 
 import { FieldArray } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco';
+import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
@@ -21,7 +23,8 @@ import { isApprovalStepFieldDisabled } from '@pipeline/components/PipelineSteps/
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { scriptInputType, scriptOutputType, CustomApprovalData, CustomApprovalFormData } from './types'
+import type { CustomApprovalData, CustomApprovalFormData } from './types';
+import { scriptInputType, scriptOutputType } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CustomApproval.module.scss'
 

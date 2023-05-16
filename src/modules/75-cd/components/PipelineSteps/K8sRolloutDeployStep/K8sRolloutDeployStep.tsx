@@ -6,25 +6,27 @@
  */
 
 import React from 'react'
-import {
+import type {
   IconName,
+  AllowedTypes} from '@harness/uicore';
+import {
   Formik,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  AllowedTypes,
   Accordion
 } from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+import type { FormikErrors, FormikProps} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
-import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { K8sRollingStepInfo, StepElementConfig } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
 
-import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef , StepProps, ValidateInputSetProps} from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,

@@ -9,7 +9,8 @@ import React from 'react'
 import { render, act, fireEvent, waitFor, screen } from '@testing-library/react'
 import { set } from 'lodash-es'
 import { putPipelinePromise, createPipelinePromise } from 'services/pipeline-ng'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { useMutateAsGet } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
@@ -20,7 +21,8 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineCanvas/__tests__/PipelineCanvasTestHelper'
 import mockImport from 'framework/utils/mockImport'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
-import { PipelineCanvasV1, PipelineCanvasProps } from '../PipelineCanvasV1'
+import type { PipelineCanvasProps } from '../PipelineCanvasV1';
+import { PipelineCanvasV1 } from '../PipelineCanvasV1'
 import { PipelineContextV1 } from '../../PipelineStudioV1/PipelineContextV1/PipelineContextV1'
 const getProps = (): PipelineCanvasProps => ({
   toPipelineStudio: jest.fn(),

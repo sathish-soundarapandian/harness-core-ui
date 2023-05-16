@@ -7,13 +7,17 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { connect, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { connect } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, FormInput, Layout } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, Layout } from '@harness/uicore'
 
-import { ConnectorInfoDTO, useGetBucketListForS3 } from 'services/cd-ng'
-import { NameValuePair, useListAwsRegions } from 'services/portal'
+import type { ConnectorInfoDTO} from 'services/cd-ng';
+import { useGetBucketListForS3 } from 'services/cd-ng'
+import type { NameValuePair} from 'services/portal';
+import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'

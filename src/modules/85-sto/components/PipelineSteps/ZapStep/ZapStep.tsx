@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { ZapStepBaseWithRef } from './ZapStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { ZapStepVariables, ZapStepVariablesProps } from './ZapStepVariables'
+import type { ZapStepVariablesProps } from './ZapStepVariables';
+import { ZapStepVariables } from './ZapStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './ZapStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

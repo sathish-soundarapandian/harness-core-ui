@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import pipelineContextMock from '@pipeline/components/ManifestSelection/__tests__/pipeline_mock.json'
 import connectorsData from '@pipeline/components/ManifestSelection/__tests__/connectors_mock.json'
 import type { ServiceDefinition } from 'services/cd-ng'

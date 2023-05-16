@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { Text, Popover, Container, TextProps, Layout, IconName } from '@harness/uicore'
+import type { TextProps, IconName } from '@harness/uicore';
+import { Text, Popover, Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { Classes, IPopoverProps, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import type { IPopoverProps} from '@blueprintjs/core';
+import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 
 import ReactTimeago from 'react-timeago'
 

@@ -5,20 +5,25 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { CSSProperties, ReactChild } from 'react'
+import type { CSSProperties, ReactChild } from 'react';
+import React from 'react'
+import type {
+  DataTooltipInterface,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   FormError,
   FormikTooltipContext,
-  DataTooltipInterface,
   HarnessDocTooltip,
   FormInput,
-  Container,
-  AllowedTypes
+  Container
 } from '@harness/uicore'
-import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
-import { FormikContextType, connect } from 'formik'
+import type { IFormGroupProps} from '@blueprintjs/core';
+import { Intent, FormGroup } from '@blueprintjs/core'
+import type { FormikContextType} from 'formik';
+import { connect } from 'formik'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'

@@ -6,7 +6,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Feature, GetAllFeaturesQueryParams, Segment, useGetAllFeatures, useGetSegmentFlags } from 'services/cf'
+import type { Feature, GetAllFeaturesQueryParams, Segment} from 'services/cf';
+import { useGetAllFeatures, useGetSegmentFlags } from 'services/cf'
 
 export interface UseGetTargetGroupFlagsArgs {
   targetGroup: Segment

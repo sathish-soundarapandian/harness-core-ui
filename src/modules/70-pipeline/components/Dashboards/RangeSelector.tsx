@@ -7,7 +7,8 @@
 
 import React, { useState } from 'react'
 import { MenuItem } from '@blueprintjs/core'
-import { SelectV2, SelectOption, Text, Container } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { SelectV2, Text, Container } from '@harness/uicore'
 import styles from './RangeSelector.module.scss'
 
 export const rangeOptions = [

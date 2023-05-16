@@ -6,6 +6,9 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import type {
+  SelectOption
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -13,17 +16,18 @@ import {
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { FieldArray } from 'formik'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { isArray, memoize } from 'lodash-es'
 import type { IItemRendererProps } from '@blueprintjs/select'
 
-import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 
 import { useStrings } from 'framework/strings'
 
@@ -44,7 +48,8 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@connectors/constants'
-import { BambooPlanNames, useGetPlansKey } from 'services/cd-ng'
+import type { BambooPlanNames} from 'services/cd-ng';
+import { useGetPlansKey } from 'services/cd-ng'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'

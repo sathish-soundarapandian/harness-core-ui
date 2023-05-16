@@ -7,8 +7,8 @@
 
 import { defaultTo, get, isEmpty, omit, pick, set } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
-import type { SelectOption } from '@harness/uicore'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import type { SelectOption , IconName} from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type {
   GraphLayoutNode,
   PipelineExecutionSummary,

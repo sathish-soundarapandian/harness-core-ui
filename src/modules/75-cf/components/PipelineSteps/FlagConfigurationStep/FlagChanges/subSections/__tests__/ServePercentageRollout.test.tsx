@@ -5,14 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Children, cloneElement, FC, ReactElement } from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { FC, ReactElement } from 'react';
+import React, { Children, cloneElement } from 'react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Variation } from 'services/cf'
+import type {
+  ServePercentageRolloutProps} from '../ServePercentageRollout';
 import ServePercentageRollout, {
-  ServePercentageRolloutProps,
   servePercentageRolloutSchema
 } from '../ServePercentageRollout'
 import {

@@ -7,14 +7,16 @@
 
 /* eslint-disable react/display-name */
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockTarget from '@cf/utils/testData/data/mockTarget'
 import * as cfServices from 'services/cf'
 import type { InclusionSubSectionProps } from '../InclusionSubSection'
 import type { ExclusionSubSectionProps } from '../ExclusionSubSection'
-import TargetGroups, { TargetGroupsProps } from '../TargetGroups'
+import type { TargetGroupsProps } from '../TargetGroups';
+import TargetGroups from '../TargetGroups'
 
 jest.mock('@common/components/ContainerSpinner/ContainerSpinner', () => ({
   ContainerSpinner: () => <span data-testid="container-spinner">Container Spinner</span>

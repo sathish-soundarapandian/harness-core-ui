@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, lazy } from 'react'
+import type { FC} from 'react';
+import React, { lazy } from 'react'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import type { FFCustomMicroFrontendProps } from '@cf/FFCustomMicroFrontendProps.types'
 import * as ffServices from 'services/cf'

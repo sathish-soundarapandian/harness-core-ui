@@ -7,7 +7,8 @@
 
 import { defaultTo, isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
-import { EXECUTION_TIME_INPUT_VALUE, MultiSelectOption, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { MultiSelectOption} from '@harness/uicore';
+import { EXECUTION_TIME_INPUT_VALUE, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { NGVariable } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
 import { yamlParse } from '@common/utils/YamlHelperMethods'

@@ -10,7 +10,8 @@ import { useFormikContext } from 'formik'
 import { getAllByRole, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 

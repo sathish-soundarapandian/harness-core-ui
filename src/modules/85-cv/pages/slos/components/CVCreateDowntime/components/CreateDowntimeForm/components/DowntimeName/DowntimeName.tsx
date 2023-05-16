@@ -11,7 +11,8 @@ import { FontVariation } from '@harness/design-system'
 import { useFormikContext } from 'formik'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { DowntimeForm, DowntimeFormFields } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'
+import type { DowntimeForm} from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types';
+import { DowntimeFormFields } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'
 import { getDowntimeCategoryOptions } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
 
 const DowntimeName = ({ identifier }: { identifier?: string }): JSX.Element => {

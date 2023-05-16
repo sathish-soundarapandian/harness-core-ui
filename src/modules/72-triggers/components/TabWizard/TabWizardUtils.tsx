@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { RefObject, SetStateAction, Dispatch } from 'react'
-import { Icon, IconName, PageSpinner } from '@harness/uicore'
+import type { RefObject, SetStateAction, Dispatch } from 'react';
+import React from 'react'
+import type { IconName} from '@harness/uicore';
+import { Icon, PageSpinner } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { parse } from 'yaml'

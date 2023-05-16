@@ -5,14 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { PropsWithChildren, ReactElement } from 'react'
+import type { PropsWithChildren, ReactElement } from 'react';
+import React from 'react'
 import * as Yup from 'yup'
-import { Drawer, IDrawerProps } from '@blueprintjs/core'
-import { Formik, FormikProps, FormikErrors, FormikValues } from 'formik'
+import type { IDrawerProps } from '@blueprintjs/core';
+import { Drawer } from '@blueprintjs/core'
+import type { FormikProps, FormikErrors, FormikValues } from 'formik';
+import { Formik } from 'formik'
 import { truncate } from 'lodash-es'
 import { FormikForm, Button, Layout, OverlaySpinner, ButtonVariation, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { CrudOperation, FilterCRUD, FilterCRUDFowardRef } from './FilterCRUD/FilterCRUD'
+import type { CrudOperation, FilterCRUDFowardRef } from './FilterCRUD/FilterCRUD';
+import { FilterCRUD } from './FilterCRUD/FilterCRUD'
 import type { FilterInterface, FilterDataInterface } from './Constants'
 import { isObjectEmpty } from './utils/FilterUtils'
 

@@ -7,8 +7,10 @@
 
 import React from 'react'
 import { Checkbox, Layout } from '@harness/uicore'
-import { useStrings, StringKeys } from 'framework/strings'
-import { DashboardTags, MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types'
+import type { StringKeys } from 'framework/strings';
+import { useStrings } from 'framework/strings'
+import type { MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types';
+import { DashboardTags } from '@dashboards/types/DashboardTypes.types'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
 import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 

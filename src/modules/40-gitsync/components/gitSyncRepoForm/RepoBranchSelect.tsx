@@ -6,14 +6,15 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  SelectOption} from '@harness/uicore';
 import {
   Dialog,
   FormInput,
   getErrorInfoFromErrorObject,
   Icon,
   Layout,
-  ModalErrorHandlerBinding,
-  SelectOption,
   Text,
   useToggleOpen
 } from '@harness/uicore'
@@ -21,7 +22,8 @@ import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { Error, useGetListOfBranchesByConnector } from 'services/cd-ng'
+import type { Error} from 'services/cd-ng';
+import { useGetListOfBranchesByConnector } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import css from './GitSyncRepoForm.module.scss'

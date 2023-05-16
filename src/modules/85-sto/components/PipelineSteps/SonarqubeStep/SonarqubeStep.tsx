@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { SonarqubeStepBaseWithRef } from './SonarqubeStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { SonarqubeStepVariables, SonarqubeStepVariablesProps } from './SonarqubeStepVariables'
+import type { SonarqubeStepVariablesProps } from './SonarqubeStepVariables';
+import { SonarqubeStepVariables } from './SonarqubeStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SonarqubeStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

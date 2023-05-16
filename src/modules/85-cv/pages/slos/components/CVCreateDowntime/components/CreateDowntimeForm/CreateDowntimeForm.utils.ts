@@ -10,7 +10,8 @@ import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import moment from 'moment'
 import type { UseStringsReturn } from 'framework/strings'
-import { DowntimeForm, DowntimeFormFields, EndTimeMode, EntitiesRuleType } from '../../CVCreateDowntime.types'
+import type { DowntimeForm} from '../../CVCreateDowntime.types';
+import { DowntimeFormFields, EndTimeMode, EntitiesRuleType } from '../../CVCreateDowntime.types'
 import { CreateDowntimeSteps, DowntimeWindowToggleViews } from './CreateDowntimeForm.types'
 
 export const getDurationOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [

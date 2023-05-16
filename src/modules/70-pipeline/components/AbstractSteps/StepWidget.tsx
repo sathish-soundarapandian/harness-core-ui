@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AllowedTypes, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Text } from '@harness/uicore'
 
 import { String } from 'framework/strings'
 import type { AbstractStepFactory } from './AbstractStepFactory'

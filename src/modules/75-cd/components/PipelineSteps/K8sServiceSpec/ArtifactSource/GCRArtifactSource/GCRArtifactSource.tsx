@@ -8,10 +8,12 @@
 import React, { useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase';
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { SidecarArtifact, useGetBuildDetailsForGcr, useGetBuildDetailsForGcrWithYaml } from 'services/cd-ng'
+import type { SidecarArtifact} from 'services/cd-ng';
+import { useGetBuildDetailsForGcr, useGetBuildDetailsForGcrWithYaml } from 'services/cd-ng'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'

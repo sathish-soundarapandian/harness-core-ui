@@ -6,6 +6,8 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  ButtonProps} from '@harness/uicore';
 import {
   FormikForm,
   FormInput,
@@ -14,7 +16,6 @@ import {
   Icon,
   Text,
   Heading,
-  ButtonProps,
   Formik,
   ButtonVariation,
   MultiTypeInputType,
@@ -27,8 +28,10 @@ import { isEmpty } from 'lodash-es'
 import { URLValidationSchema, URLValidationSchemaWithoutRequired } from '@common/utils/Validation'
 import { useToaster } from '@common/components'
 import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
-import { useTestNotificationSetting, SlackSettingDTO } from 'services/notifications'
-import { NotificationType, SlackNotificationConfiguration, TestStatus } from '@rbac/interfaces/Notifications'
+import type { SlackSettingDTO } from 'services/notifications';
+import { useTestNotificationSetting } from 'services/notifications'
+import type { SlackNotificationConfiguration} from '@rbac/interfaces/Notifications';
+import { NotificationType, TestStatus } from '@rbac/interfaces/Notifications'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import css from '../../ConfigureNotificationsModal.module.scss'

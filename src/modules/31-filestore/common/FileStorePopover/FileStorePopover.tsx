@@ -7,7 +7,8 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
-import { Popover, ButtonVariation, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Popover, ButtonVariation } from '@harness/uicore'
 import { Menu, Position } from '@blueprintjs/core'
 import type { FileStoreActionTypes } from '@filestore/utils/constants'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'

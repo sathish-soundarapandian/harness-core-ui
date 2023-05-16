@@ -29,7 +29,8 @@ import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import type { ExecutorInfoDTO } from 'services/pipeline-ng'
 import { INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
-import { calcTrendCaret, calcTrendColor, RateTrend, TrendPopover } from '../dashboardUtils'
+import type { RateTrend} from '../dashboardUtils';
+import { calcTrendCaret, calcTrendColor, TrendPopover } from '../dashboardUtils'
 
 import styles from './CardWithChart.module.scss'
 

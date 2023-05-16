@@ -7,14 +7,15 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  SelectOption,
+  MultiSelectOption} from '@harness/uicore';
 import {
   AvatarGroup,
   Layout,
   Text,
-  SelectOption,
   Select,
   MultiSelect,
-  MultiSelectOption,
   TextInput,
   Icon,
   Button,
@@ -27,24 +28,28 @@ import { Dialog, Menu, Spinner } from '@blueprintjs/core'
 import { assoc, compose, prop } from 'lodash/fp'
 import { uniq } from 'lodash-es'
 import cx from 'classnames'
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
+import type {
   DropResult,
   DraggableStateSnapshot,
   DroppableStateSnapshot
-} from 'react-beautiful-dnd'
+} from 'react-beautiful-dnd';
 import {
+  DragDropContext,
+  Droppable,
+  Draggable
+} from 'react-beautiful-dnd'
+import type {
   Clause,
   Feature,
   Variation,
   Serve,
   VariationMap,
-  useGetAllTargets,
   ServingRule,
   TargetMap,
   GetAllTargetsQueryParams
+} from 'services/cf';
+import {
+  useGetAllTargets
 } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'

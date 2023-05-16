@@ -9,18 +9,20 @@ import { useState } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
 import { useGetLicenseUsage as useGetCETUsage } from 'services/cet/cetComponents'
-import {
-  useGetLicensesAndSummary,
+import type {
   GetLicensesAndSummaryQueryParams,
   CILicenseSummaryDTO,
   CFLicenseSummaryDTO,
   CELicenseSummaryDTO,
   CDLicenseSummaryDTO,
   STOLicenseSummaryDTO,
-  useGetCDLicenseUsageForServiceInstances,
-  useGetCDLicenseUsageForServices,
   CVLicenseSummaryDTO,
   ChaosModuleLicenseDTO
+} from 'services/cd-ng';
+import {
+  useGetLicensesAndSummary,
+  useGetCDLicenseUsageForServiceInstances,
+  useGetCDLicenseUsageForServices
 } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetLicenseUsage as useGetFFUsage } from 'services/cf'

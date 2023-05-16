@@ -8,6 +8,8 @@
 import React from 'react'
 import * as yup from 'yup'
 import { useParams } from 'react-router-dom'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Layout,
   Text,
@@ -17,7 +19,6 @@ import {
   Checkbox,
   Button,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   ButtonVariation
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'

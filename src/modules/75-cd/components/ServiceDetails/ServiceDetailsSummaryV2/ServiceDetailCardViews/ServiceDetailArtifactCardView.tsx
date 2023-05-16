@@ -14,7 +14,8 @@ import { Popover, Position } from '@blueprintjs/core'
 import ReactTimeago from 'react-timeago'
 import { useStrings } from 'framework/strings'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
-import { ArtifactCardProps, getLatestTimeAndArtifact } from '../ServiceDetailUtils'
+import type { ArtifactCardProps} from '../ServiceDetailUtils';
+import { getLatestTimeAndArtifact } from '../ServiceDetailUtils'
 import ServiceDetailDriftTable from '../ServiceDetailDriftTable'
 
 import css from '../ServiceDetailsSummaryV2.module.scss'

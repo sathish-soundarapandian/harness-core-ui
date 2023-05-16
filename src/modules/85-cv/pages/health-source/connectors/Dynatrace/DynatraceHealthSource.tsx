@@ -10,7 +10,8 @@ import { Button, Container, Formik, FormikForm, getMultiTypeFromValue, MultiType
 import { PopoverInteractionKind } from '@blueprintjs/core'
 import { noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { TimeSeriesMetricPackDTO, useGetMetricPacks, useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
+import type { TimeSeriesMetricPackDTO} from 'services/cv';
+import { useGetMetricPacks, useGetRiskCategoryForCustomHealthMetric } from 'services/cv'
 import type {
   DynatraceFormDataInterface,
   DynatraceHealthSourceProps

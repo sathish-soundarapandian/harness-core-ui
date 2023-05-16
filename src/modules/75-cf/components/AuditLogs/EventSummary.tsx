@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Drawer, IDrawerProps, Classes } from '@blueprintjs/core'
+import type { IDrawerProps} from '@blueprintjs/core';
+import { Drawer, Classes } from '@blueprintjs/core'
 import { get } from 'lodash-es'
 import cx from 'classnames'
 import { Layout, Container, Text, Button, useToggle, Heading, PageError } from '@harness/uicore'
@@ -25,7 +26,8 @@ import { useLocalStorage } from '@common/hooks'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { AuditTrail, Feature, useGetOSByID } from 'services/cf'
+import type { AuditTrail, Feature} from 'services/cf';
+import { useGetOSByID } from 'services/cf'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { translateEvents } from './AuditLogsUtils'
 import css from './EventSummary.module.scss'

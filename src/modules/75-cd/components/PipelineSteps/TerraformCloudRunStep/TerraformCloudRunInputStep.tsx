@@ -6,16 +6,19 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, Text } from '@harness/uicore'
 import { isEmpty, get, isEqual, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   OrganizationDTO,
-  useGetTerraformCloudOrganizations,
-  useGetTerraformCloudWorkspaces,
   WorkspaceDTO
+} from 'services/cd-ng';
+import {
+  useGetTerraformCloudOrganizations,
+  useGetTerraformCloudWorkspaces
 } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
 import List from '@common/components/List/List'
@@ -25,7 +28,8 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Connectors } from '@connectors/constants'
-import { getSelectedConnectorValue, SelectedConnectorType } from '@cd/utils/connectorUtils'
+import type { SelectedConnectorType } from '@cd/utils/connectorUtils';
+import { getSelectedConnectorValue } from '@cd/utils/connectorUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'

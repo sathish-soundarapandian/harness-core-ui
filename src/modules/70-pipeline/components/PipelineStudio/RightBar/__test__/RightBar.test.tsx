@@ -7,13 +7,15 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import { RightBar } from '../RightBar'
-import { PipelineContext, PipelineContextInterface } from '../../PipelineContext/PipelineContext'
+import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext';
+import { PipelineContext } from '../../PipelineContext/PipelineContext'
 
 jest.mock('services/cd-ng', () => ({
   getConnectorPromise: () => Promise.resolve(connectorMock),

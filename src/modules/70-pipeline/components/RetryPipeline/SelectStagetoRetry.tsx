@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, FormEvent } from 'react'
-import { Layout, Select, SelectOption, Text } from '@harness/uicore'
+import type { FormEvent } from 'react';
+import React, { useState, useEffect } from 'react'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, Select, Text } from '@harness/uicore'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

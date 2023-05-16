@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Position, IDrawerProps } from '@blueprintjs/core'
+import type { IDrawerProps } from '@blueprintjs/core';
+import { Position } from '@blueprintjs/core'
 import { merge } from 'lodash-es'
 import { DRAWER_OFFSET_LEFT } from './useDrawerHook.constant'
 

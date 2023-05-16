@@ -6,7 +6,8 @@
  */
 
 import { noop } from 'lodash-es'
-import { FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
+import type { ResourcesInterface } from '@freeze-windows/types';
+import { FreezeWindowLevels } from '@freeze-windows/types'
 
 export const defaultContext = {
   state: { freezeObj: { identifier: '-1' }, isYamlEditable: false, oldFreezeObj: {}, isUpdated: false },

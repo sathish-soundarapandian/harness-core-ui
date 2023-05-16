@@ -15,8 +15,9 @@ import type { FilterSpec, FilterYaml } from 'services/cd-ng'
 
 import { isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 
+import type {
+  EntityFilterMatchType} from '../AddEditEntityFilterModal/AddEditEntityFilterModal.types';
 import {
-  EntityFilterMatchType,
   entityFilterMatchTypeStringsMap
 } from '../AddEditEntityFilterModal/AddEditEntityFilterModal.types'
 

@@ -6,14 +6,15 @@
  */
 
 import React, { useContext, useEffect, useState } from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   getErrorInfoFromErrorObject,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  StepProps,
   StepsProgress,
   Text,
   useConfirmationDialog
@@ -23,9 +24,10 @@ import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ConnectorInfoDTO,
-  ResponseConnectorValidationResult,
+  ResponseConnectorValidationResult} from 'services/cd-ng';
+import {
   useCreateConnector,
   useDeleteConnector,
   useGetTestConnectionResult

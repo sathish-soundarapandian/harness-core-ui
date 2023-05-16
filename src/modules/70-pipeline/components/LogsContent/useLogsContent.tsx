@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Reducer } from 'react'
+import type { Reducer } from 'react';
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, throttle } from 'lodash-es'
 import { EventSourcePolyfill } from 'event-source-polyfill'
@@ -19,7 +20,8 @@ import { useDeepCompareEffect } from '@common/hooks'
 
 import type { ActionType, State, Action } from './LogsState/types'
 import { reducer } from './LogsState'
-import { useActionCreator, UseActionCreatorReturn } from './LogsState/actions'
+import type { UseActionCreatorReturn } from './LogsState/actions';
+import { useActionCreator } from './LogsState/actions'
 import { getDefaultReducerState, logsCache } from './LogsState/utils'
 
 type LogsReducer = Reducer<State, Action<ActionType>>

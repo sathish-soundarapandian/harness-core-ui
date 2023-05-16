@@ -10,16 +10,17 @@ import * as Yup from 'yup'
 import cx from 'classnames'
 import { map, isNumber, isEmpty } from 'lodash-es'
 import { FieldArray, Form } from 'formik'
+import type {
+  StepProps,
+  AllowedTypes as MultiTypeAllowedTypes} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Layout,
   Text,
-  StepProps,
   Formik,
   MultiTypeInputType,
   getMultiTypeFromValue,
-  AllowedTypes as MultiTypeAllowedTypes,
   FormInput,
   Icon
 } from '@harness/uicore'

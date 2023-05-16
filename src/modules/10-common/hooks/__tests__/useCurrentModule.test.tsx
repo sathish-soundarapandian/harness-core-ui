@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { renderHook, RenderHookResult } from '@testing-library/react-hooks'
+import type { RenderHookResult } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks'
 import React from 'react'
-import useCurrentModule, { UseCurrentModulePayload } from '@common/hooks/useCurrentModule'
+import type { UseCurrentModulePayload } from '@common/hooks/useCurrentModule';
+import useCurrentModule from '@common/hooks/useCurrentModule'
 import { TestWrapper } from '@common/utils/testUtils'
 
 const renderUseCurrentModuleHook = (module = ''): RenderHookResult<undefined, UseCurrentModulePayload> =>

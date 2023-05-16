@@ -10,7 +10,8 @@ import cx from 'classnames'
 
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'

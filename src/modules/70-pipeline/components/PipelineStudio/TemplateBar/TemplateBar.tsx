@@ -8,7 +8,8 @@
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Container, Icon, IconName, Layout, Popover, Text, useConfirmationDialog } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Container, Icon, Layout, Popover, Text, useConfirmationDialog } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Classes, Dialog, Intent, Menu, Position } from '@blueprintjs/core'
@@ -19,7 +20,8 @@ import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { TemplateSummaryResponse, useGetTemplate } from 'services/template-ng'
+import type { TemplateSummaryResponse} from 'services/template-ng';
+import { useGetTemplate } from 'services/template-ng'
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
@@ -29,7 +31,8 @@ import { TemplateYaml } from '@pipeline/components/PipelineStudio/TemplateYaml/T
 import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import css from './TemplateBar.module.scss'
 

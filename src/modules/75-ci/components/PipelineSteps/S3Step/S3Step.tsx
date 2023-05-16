@@ -18,7 +18,8 @@ import type { MultiTypeConnectorRef, Resources } from '@pipeline/components/Pipe
 import type { StringsMap } from 'stringTypes'
 import { S3StepBaseWithRef } from './S3StepBase'
 import { S3StepInputSet } from './S3StepInputSet'
-import { S3StepVariables, S3StepVariablesProps } from './S3StepVariables'
+import type { S3StepVariablesProps } from './S3StepVariables';
+import { S3StepVariables } from './S3StepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './S3StepFunctionConfigs'
 
 export interface S3StepSpec {

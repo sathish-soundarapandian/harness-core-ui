@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import type {
+  ModalErrorHandlerProps} from '@harness/uicore';
 import {
   Button,
   Container,
@@ -18,7 +20,6 @@ import {
   DateInput,
   Label,
   Text,
-  ModalErrorHandlerProps,
   FormError
 } from '@harness/uicore'
 import * as Yup from 'yup'

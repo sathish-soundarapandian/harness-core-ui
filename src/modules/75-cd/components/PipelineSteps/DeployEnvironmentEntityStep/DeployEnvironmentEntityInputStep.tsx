@@ -11,16 +11,17 @@ import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
 
-import {
+import type {
   AllowedTypes,
   ExpressionAndRuntimeTypeProps,
+  MultiTypeInputValue,
+  SelectOption} from '@harness/uicore';
+import {
   FormInput,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  MultiTypeInputValue,
   RUNTIME_INPUT_VALUE,
-  SelectOption,
   useToaster
 } from '@harness/uicore'
 

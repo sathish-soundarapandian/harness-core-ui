@@ -7,9 +7,10 @@
 
 import React from 'react'
 import { useModalHook } from '@harness/use-modal'
-import AddTargetToTargetGroupsDialog, {
+import type {
   AddTargetToTargetGroupsDialogProps
-} from '../components/LeftBar/TargetGroups/AddTargetToTargetGroupsDialog/AddTargetToTargetGroupsDialog'
+} from '../components/LeftBar/TargetGroups/AddTargetToTargetGroupsDialog/AddTargetToTargetGroupsDialog';
+import AddTargetToTargetGroupsDialog from '../components/LeftBar/TargetGroups/AddTargetToTargetGroupsDialog/AddTargetToTargetGroupsDialog'
 
 const useAddTargetToTargetGroupsDialog = (
   target: AddTargetToTargetGroupsDialogProps['target'],

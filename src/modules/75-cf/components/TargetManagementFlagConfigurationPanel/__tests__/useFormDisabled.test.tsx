@@ -5,13 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { renderHook as render, RenderHookResult } from '@testing-library/react-hooks'
+import type { RenderHookResult } from '@testing-library/react-hooks';
+import { renderHook as render } from '@testing-library/react-hooks'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import mockTarget from '@cf/utils/testData/data/mockTarget'
 import * as useFeaturesHook from '@common/hooks/useFeatures'
 import * as usePermissionHook from '@rbac/hooks/usePermission'
 import * as usePlanEnforcementHook from '@cf/hooks/usePlanEnforcement'
-import useFormDisabled, { UseFormDisabledPayload } from '../useFormDisabled'
+import type { UseFormDisabledPayload } from '../useFormDisabled';
+import useFormDisabled from '../useFormDisabled'
 
 const renderHook = (): RenderHookResult<any, UseFormDisabledPayload> => render(() => useFormDisabled(mockTarget))
 

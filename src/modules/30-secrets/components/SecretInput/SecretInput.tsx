@@ -7,13 +7,15 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
+import type {
+  DataTooltipInterface} from '@harness/uicore';
 import {
   Layout,
   Icon,
   Container,
   Text,
-  DataTooltipInterface,
   FormikTooltipContext,
   HarnessDocTooltip,
   FormError
@@ -33,11 +35,13 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useStrings } from 'framework/strings'
 import { getReference } from '@common/utils/utils'
+import type {
+  ScopedObjectDTO
+} from '@common/components/EntityReference/EntityReference';
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
-  getScopeFromValue,
-  ScopedObjectDTO
+  getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { MultiReferenceSelectPlaceholder } from '@common/components/ReferenceSelect/ReferenceSelect'

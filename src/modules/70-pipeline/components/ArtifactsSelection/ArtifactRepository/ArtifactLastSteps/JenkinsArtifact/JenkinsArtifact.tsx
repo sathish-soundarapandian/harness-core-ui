@@ -7,20 +7,22 @@
 
 import React, { useEffect, useState, useRef } from 'react'
 import cx from 'classnames'
+import type {
+  StepProps,
+  SelectOption,
+  MultiSelectOption,
+  SelectWithSubmenuOption
+} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
   MultiTypeInputType,
-  SelectOption,
   getMultiTypeFromValue,
   FormInput,
-  MultiSelectOption,
-  FormikForm,
-  SelectWithSubmenuOption
+  FormikForm
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -33,13 +35,15 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 
-import {
+import type {
   ConnectorConfigDTO,
   JobDetails,
+  BuildDetails
+} from 'services/cd-ng';
+import {
   useGetArtifactPathForJenkins,
   useGetJobDetailsForJenkins,
-  useGetBuildsForJenkins,
-  BuildDetails
+  useGetBuildsForJenkins
 } from 'services/cd-ng'
 import {
   getConnectorIdValue,

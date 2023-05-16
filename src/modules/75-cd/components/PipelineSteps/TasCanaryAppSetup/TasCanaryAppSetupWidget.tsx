@@ -8,23 +8,28 @@
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import React, { FormEvent } from 'react'
-import {
+import type { FormEvent } from 'react';
+import React from 'react'
+import type {
   AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
+import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Formik,
   FormInput,
-  Text,
-  SelectOption
+  Text
 } from '@harness/uicore'
 import { toString } from 'lodash-es'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

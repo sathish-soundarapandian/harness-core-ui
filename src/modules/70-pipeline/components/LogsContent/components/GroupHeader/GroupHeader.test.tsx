@@ -8,7 +8,8 @@
 import React from 'react'
 import { fireEvent, render, act } from '@testing-library/react'
 
-import { GroupHeader, GroupHeaderProps } from './GroupHeader'
+import type { GroupHeaderProps } from './GroupHeader';
+import { GroupHeader } from './GroupHeader'
 
 jest.mock('@common/components/Duration/Duration', () => ({
   // eslint-disable-next-line react/display-name

@@ -7,7 +7,8 @@
 
 import { Button, Container, FormInput, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import { v4 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import type { Segment, Target } from 'services/cf'

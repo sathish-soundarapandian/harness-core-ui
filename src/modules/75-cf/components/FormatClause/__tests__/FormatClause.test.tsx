@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { render, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Clause } from 'services/cf'
-import FormatClause, { FormatClauseProps } from '../FormatClause'
+import type { FormatClauseProps } from '../FormatClause';
+import FormatClause from '../FormatClause'
 
 const sampleClause: Clause = {
   id: 'test1',

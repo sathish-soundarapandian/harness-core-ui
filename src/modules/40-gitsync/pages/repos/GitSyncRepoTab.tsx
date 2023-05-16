@@ -6,6 +6,8 @@
  */
 
 import React, { useMemo, useState } from 'react'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   Layout,
@@ -16,7 +18,6 @@ import {
   FormikForm,
   FormInput,
   Popover,
-  ModalErrorHandlerBinding,
   ModalErrorHandler,
   Tag,
   useToaster,
@@ -31,10 +32,11 @@ import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { pick, capitalize, defaultTo } from 'lodash-es'
 import { Menu, Classes, Position, Dialog } from '@blueprintjs/core'
-import {
+import type {
   GitSyncConfig,
   GitSyncFolderConfigDTO,
-  ResponseConnectorValidationResult,
+  ResponseConnectorValidationResult} from 'services/cd-ng';
+import {
   useGetTestGitRepoConnectionResult,
   usePutGitSync
 } from 'services/cd-ng'

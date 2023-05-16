@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useRef, DragEvent, useCallback } from 'react'
+import type { DragEvent} from 'react';
+import React, { useState, useRef, useCallback } from 'react'
 import type { FormikProps } from 'formik'
 import { Icon, Text, Button, ButtonVariation, FormInput } from '@harness/uicore'
 import { debounce } from 'lodash-es'

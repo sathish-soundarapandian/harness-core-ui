@@ -8,12 +8,13 @@
 import React, { useMemo, useEffect, useState, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
+import type {
+  IconName} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Container,
   Icon,
-  IconName,
   Layout,
   PageHeader,
   PageSpinner,
@@ -24,14 +25,16 @@ import {
 import { FontVariation, Color } from '@harness/design-system'
 import type { StringsMap } from 'stringTypes'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { Service, useRouteDetails } from 'services/lw'
+import type { Service} from 'services/lw';
+import { useRouteDetails } from 'services/lw'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useStrings } from 'framework/strings'
-import { useGetAggregatedUsers, useGetConnector, UserAggregate } from 'services/cd-ng'
+import type { UserAggregate } from 'services/cd-ng';
+import { useGetAggregatedUsers, useGetConnector } from 'services/cd-ng'
 import { allProviders, ceConnectorTypes } from '@ce/constants'
 import { getRelativeTime, getRuleType } from '@ce/components/COGatewayList/Utils'
 import {

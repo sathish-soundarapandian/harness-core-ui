@@ -19,14 +19,17 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { merge, cloneDeep, isEmpty, defaultTo, get, debounce, remove } from 'lodash-es'
-import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
-import {
+import type { InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector';
+import { InputSetSelector } from '@pipeline/components/InputSetSelector/InputSetSelector'
+import type {
   PipelineInfoConfig,
-  useGetTemplateFromPipeline,
-  getInputSetForPipelinePromise,
-  useGetMergeInputSetFromPipelineTemplateWithListInput,
   InputSetResponse,
   ResponseInputSetResponse
+} from 'services/pipeline-ng';
+import {
+  useGetTemplateFromPipeline,
+  getInputSetForPipelinePromise,
+  useGetMergeInputSetFromPipelineTemplateWithListInput
 } from 'services/pipeline-ng'
 import { PipelineInputSetForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'

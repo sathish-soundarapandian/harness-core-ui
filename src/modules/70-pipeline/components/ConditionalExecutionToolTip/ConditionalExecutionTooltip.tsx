@@ -8,12 +8,15 @@
 import React from 'react'
 import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
+import type {
+  WhenConditionStatus
+} from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils';
 import {
   ModeEntityNameMap,
   ParentModeEntityNameMap,
-  PipelineOrStageStatus,
-  WhenConditionStatus
+  PipelineOrStageStatus
 } from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import type { ResolvedVariableInterface } from './ConditionalExecutionTooltipWrapper'

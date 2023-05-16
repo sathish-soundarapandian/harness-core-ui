@@ -1,4 +1,5 @@
-import { AllowedTypesWithExecutionTime, AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithExecutionTime, AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import type { SscaOrchestrationStepData } from './SscaOrchestrationStep/SscaOrchestrationStep'
 
 export const AllMultiTypeInputTypesForStep: AllowedTypesWithRunTime[] = [

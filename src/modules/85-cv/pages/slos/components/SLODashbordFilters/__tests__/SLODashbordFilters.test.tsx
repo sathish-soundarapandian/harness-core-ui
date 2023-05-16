@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { initialState } from '@cv/pages/slos/CVSLOListingPage.utils'
 import type { SLOFilterState } from '@cv/pages/slos/CVSLOsListingPage.types'
 import SLODashbordFilters from '../SLODashbordFilters'

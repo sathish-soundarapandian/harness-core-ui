@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render, RenderResult, screen, waitFor, fireEvent } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeaturesMock from '@common/hooks/useFeatures'
@@ -13,7 +14,8 @@ import * as usePlanEnforcementMock from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { CheckFeatureReturn } from 'framework/featureStore/featureStoreUtil'
 
-import CreateFlagButton, { CreateFlagButtonProps } from '../CreateFlagButton'
+import type { CreateFlagButtonProps } from '../CreateFlagButton';
+import CreateFlagButton from '../CreateFlagButton'
 
 const renderComponent = (props: Partial<CreateFlagButtonProps> = {}): RenderResult => {
   return render(

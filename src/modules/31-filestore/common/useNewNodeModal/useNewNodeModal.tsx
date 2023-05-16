@@ -18,7 +18,8 @@ import { FileStoreActionTypes } from '@filestore/utils/constants'
 
 import NewFolderModalForm from '@filestore/common/useNewNodeModal/views/NewFolderModalForm'
 import NewFileModalForm from '@filestore/common/useNewNodeModal/views/NewFileModalForm'
-import { FileStoreNodeTypes, NewNodeModal } from '@filestore/interfaces/FileStore'
+import type { NewNodeModal } from '@filestore/interfaces/FileStore';
+import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
 
 import css from './useNewNodeModal.module.scss'
 

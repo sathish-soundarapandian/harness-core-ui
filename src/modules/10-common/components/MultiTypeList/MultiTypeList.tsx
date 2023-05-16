@@ -8,15 +8,19 @@
 import React from 'react'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import cx from 'classnames'
-import { FormInput, Button, getMultiTypeFromValue, MultiTypeInputType, MultiTextInputProps } from '@harness/uicore'
-import { FieldArray, connect, FormikContextType } from 'formik'
+import type { MultiTextInputProps } from '@harness/uicore';
+import { FormInput, Button, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { FormikContextType } from 'formik';
+import { FieldArray, connect } from 'formik'
 import { get } from 'lodash-es'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions';
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
-import MultiTypeFieldSelector, {
+import type {
   MultiTypeFieldSelectorProps
-} from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+} from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector';
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import css from './MultiTypeList.module.scss'
 
 export type ListValue = { id: string; value: string }[]

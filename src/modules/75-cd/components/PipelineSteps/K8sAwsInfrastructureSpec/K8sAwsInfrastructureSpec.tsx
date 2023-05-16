@@ -6,15 +6,19 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
+import type { IconName, AllowedTypes } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import { isEmpty, get, defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { FormikErrors, yupToFormErrors } from 'formik'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
-import { getConnectorListV2Promise, K8sAwsInfrastructure, getEKSClusterNamesPromise } from 'services/cd-ng'
+import type { K8sAwsInfrastructure} from 'services/cd-ng';
+import { getConnectorListV2Promise, getEKSClusterNamesPromise } from 'services/cd-ng'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 

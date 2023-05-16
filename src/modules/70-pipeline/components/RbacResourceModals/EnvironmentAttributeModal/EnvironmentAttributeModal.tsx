@@ -9,9 +9,10 @@ import React from 'react'
 import { Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
-import ResourceHandlerTable, {
+import type {
   ResourceHandlerTableData
-} from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
+} from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable';
+import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 import type { RbacAttributeModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
 

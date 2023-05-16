@@ -13,10 +13,12 @@ import cx from 'classnames'
 
 import { Button, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { LinkedPolicy, useGetPolicySet } from 'services/pm'
+import type { LinkedPolicy} from 'services/pm';
+import { useGetPolicySet } from 'services/pm'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import { PolicySetType } from '../utils'
 

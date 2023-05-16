@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, ExpandingSearchInput, ExpandingSearchInputHandle } from '@harness/uicore'
+import type { ExpandingSearchInputHandle } from '@harness/uicore';
+import { Container, ExpandingSearchInput } from '@harness/uicore'
 import { useGlobalEventListener } from '@common/hooks'
 import type { ExecutionLogSearchProps } from './ExecutionLog.types'
 import { getKeyDownListener, handleKeyDown, handleSearchChange } from './ExecutionLog.utils'

@@ -12,9 +12,11 @@ import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import pipelineContextMock from '@pipeline/components/ManifestSelection/__tests__/pipeline_mock.json'
 import * as cdngservices from 'services/cd-ng'
-import {
-  PipelineContext,
+import type {
   PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
+import {
+  PipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import connectorsData from '@pipeline/components/ManifestSelection/__tests__/connectors_mock.json'
 import ApplicationConfigSelection from '../ApplicationConfigSelection'

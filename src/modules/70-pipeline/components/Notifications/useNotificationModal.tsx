@@ -7,7 +7,8 @@
 
 import React, { useCallback, useState } from 'react'
 import { isNil } from 'lodash-es'
-import { StepWizard, Button, MultiSelectOption, StepProps } from '@harness/uicore'
+import type { MultiSelectOption, StepProps } from '@harness/uicore';
+import { StepWizard, Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, Classes } from '@blueprintjs/core'
 import cx from 'classnames'

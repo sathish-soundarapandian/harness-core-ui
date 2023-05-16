@@ -6,11 +6,13 @@
  */
 
 import React, { useCallback } from 'react'
-import { AllowedTypesWithRunTime, MultiTypeInputType, NestedAccordionProvider, PageError } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType, NestedAccordionProvider, PageError } from '@harness/uicore'
 import { isEmpty, omit, set } from 'lodash-es'
 import { produce } from 'immer'
+import type {
+  MonitoredServiceConfig} from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext';
 import {
-  MonitoredServiceConfig,
   useTemplateVariables
 } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import { PageSpinner } from '@common/components'

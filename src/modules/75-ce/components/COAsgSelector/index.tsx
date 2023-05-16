@@ -10,6 +10,8 @@ import { useParams } from 'react-router-dom'
 import type { CellProps, Column } from 'react-table'
 import { isEmpty as _isEmpty, defaultTo } from 'lodash-es'
 import { Radio } from '@blueprintjs/core'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Text,
   Container,
@@ -18,13 +20,13 @@ import {
   Button,
   Icon,
   TableV2,
-  SelectOption,
   Select
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { GatewayDetails } from '@ce/components/COCreateGateway/models'
 import { useStrings } from 'framework/strings'
-import { ASGMinimal, PortConfig, TargetGroupMinimal, useAllZones } from 'services/lw'
+import type { ASGMinimal, PortConfig, TargetGroupMinimal} from 'services/lw';
+import { useAllZones } from 'services/lw'
 import { Utils } from '@ce/common/Utils'
 import useRegionsForSelection from '@ce/common/hooks/useRegionsForSelection'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'

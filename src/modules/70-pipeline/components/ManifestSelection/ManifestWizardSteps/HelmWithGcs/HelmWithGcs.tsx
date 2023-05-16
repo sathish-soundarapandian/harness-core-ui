@@ -6,20 +6,18 @@
  */
 
 import React, { useState } from 'react'
+import type { StepProps, SelectOption, AllowedTypes } from '@harness/uicore'
 import {
   Accordion,
   Layout,
   Button,
   FormInput,
   Formik,
-  StepProps,
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
   ButtonVariation,
-  AllowedTypes,
-  FormikForm,
-  SelectOption
+  FormikForm
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
@@ -29,7 +27,8 @@ import { defaultTo, get, isEmpty } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
-import { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, useGetGCSBucketList } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import { useGetGCSBucketList } from 'services/cd-ng'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/components'
@@ -39,7 +38,8 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { HelmWithGcsDataType, HelmWithGcsManifestLastStepPrevStepData } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 

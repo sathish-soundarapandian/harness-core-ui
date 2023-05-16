@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode, useMemo } from 'react'
+import type { ReactNode} from 'react';
+import React, { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Container, Icon, Layout, Text, Utils } from '@harness/uicore'

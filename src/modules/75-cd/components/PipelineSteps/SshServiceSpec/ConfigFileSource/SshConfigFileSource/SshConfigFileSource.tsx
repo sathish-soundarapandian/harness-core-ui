@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import {
-  ConfigFileSourceBase,
+import type {
   ConfigFileSourceRenderProps
+} from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase';
+import {
+  ConfigFileSourceBase
 } from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBase'
 
 import { ENABLE_CONFIG_FILES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'

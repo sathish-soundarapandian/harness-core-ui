@@ -5,16 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useMemo } from 'react'
+import type { ReactElement} from 'react';
+import React, { useMemo } from 'react'
 import type { DateRange } from '@blueprintjs/datetime'
 import { isUndefined } from 'lodash-es'
+import type {
+  ExpandingSearchInputHandle} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   DateRangePickerButton,
   DropDown,
   ExpandingSearchInput,
-  ExpandingSearchInputHandle,
   FlexExpander,
   Layout,
   Page

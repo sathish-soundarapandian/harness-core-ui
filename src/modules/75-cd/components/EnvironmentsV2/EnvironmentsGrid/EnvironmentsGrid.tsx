@@ -12,7 +12,8 @@ import { defaultTo } from 'lodash-es'
 import { Container, Layout, useToaster } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import { EnvironmentResponse, PageEnvironmentResponse, useDeleteEnvironmentV2 } from 'services/cd-ng'
+import type { EnvironmentResponse, PageEnvironmentResponse} from 'services/cd-ng';
+import { useDeleteEnvironmentV2 } from 'services/cd-ng'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'

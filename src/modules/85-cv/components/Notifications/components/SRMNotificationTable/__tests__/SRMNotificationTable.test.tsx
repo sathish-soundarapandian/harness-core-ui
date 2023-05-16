@@ -8,12 +8,13 @@
 // Inspired by src/modules/70-pipeline/components/Notifications/__tests__/NotificationTable.test.tsx
 
 import React from 'react'
+import type {
+  RenderResult} from '@testing-library/react';
 import {
   act,
   fireEvent,
   getAllByText as getAllByTextGlobal,
   render,
-  RenderResult,
   waitFor
 } from '@testing-library/react'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'

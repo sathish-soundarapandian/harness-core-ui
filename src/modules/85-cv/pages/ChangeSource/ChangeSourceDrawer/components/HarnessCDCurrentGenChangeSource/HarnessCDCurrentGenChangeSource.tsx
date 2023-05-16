@@ -12,8 +12,9 @@ import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  GetListApplicationsQueryParams} from 'services/portal';
 import {
-  GetListApplicationsQueryParams,
   useGetListApplications,
   useGetListEnvironments,
   useGetListServices

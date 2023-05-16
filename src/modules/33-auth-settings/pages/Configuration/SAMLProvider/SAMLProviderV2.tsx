@@ -5,9 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
+import type {
+  IconName
+} from '@harness/uicore';
 import {
   Radio,
   Container,
@@ -21,8 +25,7 @@ import {
   useConfirmationDialog,
   Layout,
   Icon,
-  Switch,
-  IconName
+  Switch
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem } from '@blueprintjs/core'
@@ -30,9 +33,10 @@ import { isNull, omitBy } from 'lodash-es'
 import { useToaster } from '@common/components'
 import { useStrings, String } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   AuthenticationSettingsResponse,
-  SAMLSettings,
+  SAMLSettings} from 'services/cd-ng';
+import {
   useEnableDisableAuthenticationForSAMLSetting,
   useUpdateAuthMechanism,
   useDeleteSamlMetaDataForSamlSSOId,

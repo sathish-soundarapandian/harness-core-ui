@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor, RenderResult, queryByAttribute, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, fireEvent, waitFor, queryByAttribute, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils'
 import {

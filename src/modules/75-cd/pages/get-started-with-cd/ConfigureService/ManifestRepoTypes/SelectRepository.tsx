@@ -9,9 +9,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { Text, Layout, Container, FormError, DropDown, SelectOption, Button } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Text, Layout, Container, FormError, DropDown, Button } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { useGetListOfAllReposByRefConnector, UserRepoResponse } from 'services/cd-ng'
+import type { UserRepoResponse } from 'services/cd-ng';
+import { useGetListOfAllReposByRefConnector } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ACCOUNT_SCOPE_PREFIX, getFullRepoName } from '../../DeployProvisioningWizard/Constants'

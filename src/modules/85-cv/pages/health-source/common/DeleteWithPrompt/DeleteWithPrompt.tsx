@@ -1,4 +1,5 @@
-import React, { MouseEventHandler, useCallback } from 'react'
+import type { MouseEventHandler} from 'react';
+import React, { useCallback } from 'react'
 import { Icon } from '@harness/icons'
 import { useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'

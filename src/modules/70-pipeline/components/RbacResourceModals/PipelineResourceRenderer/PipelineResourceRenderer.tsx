@@ -10,10 +10,11 @@ import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
 import StaticResourceRenderer from '@rbac/components/StaticResourceRenderer/StaticResourceRenderer'
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   PagePMSPipelineSummaryResponse,
   PipelineFilterProperties,
-  PMSPipelineSummaryResponse,
+  PMSPipelineSummaryResponse} from 'services/pipeline-ng';
+import {
   useGetPipelineList
 } from 'services/pipeline-ng'
 import type { ResourceHandlerTableData } from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'

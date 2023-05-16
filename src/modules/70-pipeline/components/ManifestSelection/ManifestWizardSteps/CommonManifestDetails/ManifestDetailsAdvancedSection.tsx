@@ -7,7 +7,8 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { Accordion, Layout, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Accordion, Layout, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import cx from 'classnames'
 import { isBoolean } from 'lodash-es'
 import { useStrings } from 'framework/strings'

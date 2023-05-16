@@ -7,9 +7,11 @@
  */
 
 import React from 'react'
-import {
-  ApplicationConfigBase,
+import type {
   ApplicationConfigRenderProps
+} from '@cd/factory/ApplicationConfigFactory/ApplicationConfigBase';
+import {
+  ApplicationConfigBase
 } from '@cd/factory/ApplicationConfigFactory/ApplicationConfigBase'
 import { Connectors } from '@connectors/constants'
 import RuntimeGitApplicationConfigContent from './RuntimeGitApplicationConfigContent'

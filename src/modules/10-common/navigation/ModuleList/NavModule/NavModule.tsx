@@ -12,7 +12,8 @@ import { Color } from '@harness/design-system'
 import { Checkbox, Layout, Text, Container } from '@harness/uicore'
 import { ModuleName } from 'framework/types/ModuleName'
 import { String } from 'framework/strings'
-import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo';
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import css from './NavModule.module.scss'
 
 interface CheckboxProps {

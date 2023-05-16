@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react'
 import { Button, Layout, TableV2, Text } from '@harness/uicore'
 import { RadioGroup, Radio } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'

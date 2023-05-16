@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { FormInput, Formik, FormikForm, Text, Container, Layout, Button, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { FormInput, Formik, FormikForm, Text, Container, Layout, Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { CreateGroupName, DialogProps, GroupNameProps } from './GroupName.types'
+import type { CreateGroupName, GroupNameProps } from './GroupName.types';
+import { DialogProps } from './GroupName.types'
 import { validate } from './GroupName.utils'
 import { defaultGroupName } from './GroupName.constants'
 

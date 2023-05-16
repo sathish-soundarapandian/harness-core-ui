@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ChangeEvent, FC, useCallback, useState } from 'react'
+import type { ChangeEvent, FC} from 'react';
+import React, { useCallback, useState } from 'react'
 import { Button, ButtonVariation, Container, Layout, SimpleTagInput, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'

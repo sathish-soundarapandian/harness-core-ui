@@ -13,7 +13,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import StepCommonFields, { StepCommonFieldsProps } from '../StepCommonFields'
+import type { StepCommonFieldsProps } from '../StepCommonFields';
+import StepCommonFields from '../StepCommonFields'
 
 interface TestProps {
   initialValues?: any

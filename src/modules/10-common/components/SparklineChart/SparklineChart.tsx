@@ -7,7 +7,8 @@
 
 import React, { useMemo } from 'react'
 import HighchartsReact from 'highcharts-react-official'
-import Highcharts, { SeriesLineOptions } from 'highcharts'
+import type { SeriesLineOptions } from 'highcharts';
+import Highcharts from 'highcharts'
 import { merge, noop } from 'lodash-es'
 import cx from 'classnames'
 

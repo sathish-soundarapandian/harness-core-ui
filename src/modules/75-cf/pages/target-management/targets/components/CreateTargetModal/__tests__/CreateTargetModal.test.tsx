@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { fireEvent, render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react'
 import { waitFor } from '@testing-library/dom'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -14,7 +15,8 @@ import * as useFeaturesMock from '@common/hooks/useFeatures'
 import * as usePlanEnforcementMock from '@cf/hooks/usePlanEnforcement'
 import type { CheckFeatureReturn } from 'framework/featureStore/featureStoreUtil'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import CreateTargetModal, { CreateTargetModalProps } from '../CreateTargetModal'
+import type { CreateTargetModalProps } from '../CreateTargetModal';
+import CreateTargetModal from '../CreateTargetModal'
 
 const renderComponent = (props: Partial<CreateTargetModalProps> = {}): RenderResult =>
   render(

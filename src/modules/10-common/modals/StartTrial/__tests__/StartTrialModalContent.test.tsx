@@ -14,7 +14,8 @@ import type { Module } from '@common/interfaces/RouteInterfaces'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
-import StartTrialModalContent, { StartTrialModalContentProps } from '../StartTrialModalContent'
+import type { StartTrialModalContentProps } from '../StartTrialModalContent';
+import StartTrialModalContent from '../StartTrialModalContent'
 
 jest.mock('framework/LicenseStore/LicenseStoreContext')
 const useLicenseStoreMock = useLicenseStore as jest.MockedFunction<any>

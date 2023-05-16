@@ -11,7 +11,8 @@ import type { DateRange } from '@blueprintjs/datetime'
 import { Button, ButtonSize, ButtonVariation, Container, DateRangePickerButton, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { SLOCardToggleViews, SLOTargetChartWithChangeTimelineProps } from '../CVSLOsListingPage.types'
+import type { SLOTargetChartWithChangeTimelineProps } from '../CVSLOsListingPage.types';
+import { SLOCardToggleViews } from '../CVSLOsListingPage.types'
 import css from '../CVSLOsListingPage.module.scss'
 
 const TimeRangeFilter: React.FC<SLOTargetChartWithChangeTimelineProps> = ({

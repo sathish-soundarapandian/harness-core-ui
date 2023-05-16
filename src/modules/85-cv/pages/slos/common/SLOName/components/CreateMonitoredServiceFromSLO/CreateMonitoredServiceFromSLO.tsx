@@ -7,7 +7,8 @@
 
 import React, { useCallback, useMemo } from 'react'
 import type { FormikProps } from 'formik'
-import { Button, ButtonVariation, Layout, SelectOption, useToaster, Utils } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Button, ButtonVariation, Layout, useToaster, Utils } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {

@@ -6,13 +6,16 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isArray } from 'lodash-es'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { v4 as uuid } from 'uuid'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -22,7 +25,8 @@ import type { StringsMap } from 'stringTypes'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { getSanitizedflatObjectForVariablesView } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
-import { CommandScriptsData, variableSchema, CommandScriptsFormData, commandUnitSchema } from './CommandScriptsTypes'
+import type { CommandScriptsData, CommandScriptsFormData} from './CommandScriptsTypes';
+import { variableSchema, commandUnitSchema } from './CommandScriptsTypes'
 import { CommandScriptsEdit } from './CommandScriptsEdit'
 import { CommandScriptsInputSet } from './CommandScriptsInputSet'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'

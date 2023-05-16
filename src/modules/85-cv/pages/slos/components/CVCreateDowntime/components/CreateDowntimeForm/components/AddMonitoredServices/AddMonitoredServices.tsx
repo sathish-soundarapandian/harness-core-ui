@@ -13,8 +13,9 @@ import { Divider } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import { useStrings } from 'framework/strings'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
+import type {
+  DowntimeForm} from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types';
 import {
-  DowntimeForm,
   DowntimeFormFields,
   EntitiesRuleType
 } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'

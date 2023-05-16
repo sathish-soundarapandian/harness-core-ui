@@ -5,12 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { renderHook, RenderHookResult } from '@testing-library/react-hooks'
+import type { RenderHookResult } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks'
+import type {
+  UseGetEntityUrlProp
+} from '@common/hooks/useGetEntityMetadata';
 import {
   getPipelineMetadataByIdentifier,
   getTemplateMetadataByIdentifier,
-  useGetEntityMetadata,
-  UseGetEntityUrlProp
+  useGetEntityMetadata
 } from '@common/hooks/useGetEntityMetadata'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { EntityReference } from 'services/cd-ng'

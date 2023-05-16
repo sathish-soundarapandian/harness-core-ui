@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Container, Text } from '@harness/uicore'
-import { TableFilter, TableFilterProps } from '@cv/components/TableFilter/TableFilter'
+import type { TableFilterProps } from '@cv/components/TableFilter/TableFilter';
+import { TableFilter } from '@cv/components/TableFilter/TableFilter'
 import GroupedSideNav from './components/GroupedSideNav/GroupedSideNav'
 import type { GroupedCreatedMetrics } from './components/GroupedSideNav/GroupedSideNav.types'
 import css from './CommonSelectedAppsSideNav.module.scss'

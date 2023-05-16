@@ -7,7 +7,8 @@
 
 import { isEqual, defaultTo, pick, isUndefined, isBoolean, isNumber } from 'lodash-es'
 import * as Yup from 'yup'
-import { SelectOption, Utils } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import type {
@@ -27,20 +28,21 @@ import type {
   UserJourneyResponse,
   WindowBasedServiceLevelIndicatorSpec
 } from 'services/cv'
-import {
-  PeriodLengthTypes,
-  PeriodTypes,
+import type {
   SLOObjective,
   SLOV2Form,
-  SLOV2FormFields,
-  SLITypes,
-  SLIMetricTypes,
   GetMetricFormValueBySLIMetricTypeProps,
   GetSLOIdentifierWithOrgAndProjectProps,
   GetMetricRequestValuesBySLIMetricTypeProps,
-  EvaluationType,
   GetSimpleSLOCustomErrorProps,
-  GetSimpleSLOCustomErrorValues,
+  GetSimpleSLOCustomErrorValues} from './CVCreateSLOV2.types';
+import {
+  PeriodLengthTypes,
+  PeriodTypes,
+  SLOV2FormFields,
+  SLITypes,
+  SLIMetricTypes,
+  EvaluationType,
   SLOFormulaType
 } from './CVCreateSLOV2.types'
 import {

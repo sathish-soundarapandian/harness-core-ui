@@ -8,7 +8,8 @@
 import { useEffect, useState } from 'react'
 import { useInterval } from '@common/hooks/useInterval'
 import type { FreezeSummaryResponse } from 'services/cd-ng'
-import { FreezeStatus, getComputedFreezeStatusMap } from '@freeze-windows/utils/freezeWindowUtils'
+import type { FreezeStatus} from '@freeze-windows/utils/freezeWindowUtils';
+import { getComputedFreezeStatusMap } from '@freeze-windows/utils/freezeWindowUtils'
 
 const ONE_MINUTE = 60_000
 

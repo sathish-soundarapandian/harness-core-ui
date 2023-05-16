@@ -13,13 +13,15 @@ import type { CellProps, Column, Renderer } from 'react-table'
 import { Color, FontVariation } from '@harness/design-system'
 import { Position } from '@blueprintjs/core'
 import { Container, getErrorInfoFromErrorObject, Icon, PageError, Text } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/EnvironmentDetailsUtils'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { Table } from '@common/components'
-import {
+import type {
   GetActiveInstanceGroupedByEnvironmentQueryParams,
-  InstanceGroupedByEnvironment,
+  InstanceGroupedByEnvironment} from 'services/cd-ng';
+import {
   useGetActiveInstanceGroupedByEnvironment
 } from 'services/cd-ng'
 import { EnvironmentType } from '@common/constants/EnvironmentType'

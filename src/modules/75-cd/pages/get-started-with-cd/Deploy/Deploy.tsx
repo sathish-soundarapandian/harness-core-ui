@@ -12,9 +12,10 @@ import { Text, Formik, FormikForm, Layout, Container, Button, ButtonVariation, u
 import { Color, FontVariation } from '@harness/design-system'
 import type { FormikContextType } from 'formik'
 import routes from '@common/RouteDefinitions'
-import {
+import type {
   RepositoriesRepoAppDetailsResponse,
-  Servicev1Application,
+  Servicev1Application} from 'services/gitops';
+import {
   useAgentApplicationServiceCreate,
   useAgentApplicationServiceSync
 } from 'services/gitops'

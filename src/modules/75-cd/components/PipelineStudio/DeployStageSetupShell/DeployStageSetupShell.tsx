@@ -19,25 +19,28 @@ import {
   IconProps
 } from '@harness/uicore'
 import cx from 'classnames'
-import { Expander, IconName } from '@blueprintjs/core'
+import type { IconName } from '@blueprintjs/core';
+import { Expander } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty, set, debounce } from 'lodash-es'
 import type { ValidationError } from 'yup'
 import YAML from 'yaml'
 import produce from 'immer'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import {
+import type {
   GetExecutionStrategyYamlQueryParams,
   GoogleCloudFunctionDeploymentMetaData,
-  StageElementConfig,
+  StageElementConfig} from 'services/cd-ng';
+import {
   useGetExecutionStrategyYaml,
   useGetFailureStrategiesYaml
 } from 'services/cd-ng'
-import ExecutionGraph, {
+import type {
   ExecutionGraphAddStepEvent,
   ExecutionGraphEditStepEvent,
   ExecutionGraphRefObj
-} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph';
+import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'

@@ -7,13 +7,16 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { connect, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { connect } from 'formik'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { Layout, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption, Text } from '@harness/uicore'
+import type { AllowedTypes, SelectOption} from '@harness/uicore';
+import { Layout, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 
-import { EcsInfrastructure, useClusters } from 'services/cd-ng'
+import type { EcsInfrastructure} from 'services/cd-ng';
+import { useClusters } from 'services/cd-ng'
 
 import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
@@ -21,7 +24,8 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import type { EntityReferenceResponse } from '@common/components/EntityReference/EntityReference.types'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

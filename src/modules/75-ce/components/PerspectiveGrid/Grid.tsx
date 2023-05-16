@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { useTable, usePagination, Column, useBlockLayout, Row } from 'react-table'
+import type { Column, Row } from 'react-table';
+import { useTable, usePagination, useBlockLayout } from 'react-table'
 import { useSticky } from 'react-table-sticky'
 import { Pagination } from '@harness/uicore'
 import css from './Grid.module.scss'

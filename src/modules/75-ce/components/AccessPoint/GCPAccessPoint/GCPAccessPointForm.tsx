@@ -9,9 +9,11 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
-import { Button, Container, Formik, FormikForm, FormInput, Icon, Layout, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Button, Container, Formik, FormikForm, FormInput, Icon, Layout } from '@harness/uicore'
+import type {
+  AccessPoint} from 'services/lw';
 import {
-  AccessPoint,
   useAllSecurityGroups,
   useAllSubnets,
   useAllVPCs,

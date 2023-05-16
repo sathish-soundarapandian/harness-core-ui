@@ -8,8 +8,9 @@
 import type * as React from 'react'
 import type { IconName } from '@harness/uicore'
 import { defaultTo, has, isEmpty } from 'lodash-es'
+import type {
+  ExecutionStatus} from '@pipeline/utils/statusHelpers';
 import {
-  ExecutionStatus,
   ExecutionStatusEnum,
   isExecutionSuccess,
   isExecutionCompletedWithBadState,
@@ -31,16 +32,19 @@ import type {
   ResponsePipelineExecutionDetail,
   InterruptEffectDTO
 } from 'services/pipeline-ng'
-import {
+import type {
   ExecutionPipelineNode,
-  ExecutionPipelineNodeType,
   ExecutionPipelineItem,
   ExecutionPipelineGroupInfo
+} from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel';
+import {
+  ExecutionPipelineNodeType
 } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
-import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
+import type { PipelineGraphState} from '@pipeline/components/PipelineDiagram/types';
+import { PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
 import { getConditionalExecutionFlag } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { isApprovalStep } from './stepUtils'
 import { PriorityByStageStatus, StageType } from './stageHelpers'

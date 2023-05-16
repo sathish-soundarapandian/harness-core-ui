@@ -43,7 +43,8 @@ import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/Exec
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
-import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
+import type { ExecutionStatus} from '@pipeline/utils/statusHelpers';
+import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -55,7 +56,8 @@ import type { PipelineExecutionSummary, PipelineStageInfo, PMSPipelineSummaryRes
 import { useQueryParams } from '@common/hooks'
 import type { PipelineListPagePathParams } from '@pipeline/pages/pipeline-list/types'
 import FrozenExecutionDrawer from './FrozenExecutionDrawer/FrozenExecutionDrawer'
-import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
+import type { CITriggerInfoProps } from './CITriggerInfoCell';
+import { CITriggerInfo } from './CITriggerInfoCell'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
 

@@ -9,7 +9,8 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
-import { TemplateSummaryResponse, useListTemplateUsage } from 'services/template-ng'
+import type { TemplateSummaryResponse} from 'services/template-ng';
+import { useListTemplateUsage } from 'services/template-ng'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import EntityUsageListingPage from '@common/pages/entityUsage/EntityUsageListingPage'

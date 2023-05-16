@@ -15,7 +15,6 @@ import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import MetricsDashboardList from '@cv/components/MetricsDashboardList/MetricsDashboardList'
 import { DefaultObject, MockData, MockParams, testWrapperProps } from '@cv/components/MetricsDashboardList/tests/mock'
-import Mock = jest.Mock
 
 jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
   useIndexedDBHook: jest.fn().mockReturnValue({ isInitializingDB: false, dbInstance: { get: jest.fn() } }),
@@ -34,8 +33,8 @@ function WrapperComponent(content: React.ReactElement): JSX.Element {
 
 describe('MetricDashboardList unit tests', () => {
   let mockedReturnedValue: UseGetReturn<any, any, any>
-  let refetchMock: Mock
-  let tableMapper: Mock
+  let refetchMock: jest.Mock
+  let tableMapper: jest.Mock
 
   beforeEach(() => {
     jest.clearAllMocks()

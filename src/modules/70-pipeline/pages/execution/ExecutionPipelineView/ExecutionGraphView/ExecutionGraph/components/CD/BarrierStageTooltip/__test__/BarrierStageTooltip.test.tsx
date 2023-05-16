@@ -8,7 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import BarrierStageTooltip, { BarrierStageTooltipProps } from '../BarrierStageTooltip'
+import type { BarrierStageTooltipProps } from '../BarrierStageTooltip';
+import BarrierStageTooltip from '../BarrierStageTooltip'
 
 const getProps = (): BarrierStageTooltipProps => ({
   loading: false,

@@ -6,6 +6,10 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
 import {
   Text,
   Layout,
@@ -14,9 +18,7 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  Icon,
-  AllowedTypes,
-  SelectOption
+  Icon
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, defaultTo, noop } from 'lodash-es'
@@ -34,7 +36,8 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { connectorTypes } from '@pipeline/utils/constants'
-import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
+import type { ConnectorRefFormValueType} from '@cd/utils/connectorUtils';
+import { getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getAsgInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import css from './AsgInfraSpec.module.scss'
 

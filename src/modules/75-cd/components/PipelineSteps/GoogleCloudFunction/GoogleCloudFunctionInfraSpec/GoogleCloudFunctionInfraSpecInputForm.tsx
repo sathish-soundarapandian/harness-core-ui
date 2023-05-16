@@ -7,11 +7,13 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { connect, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { connect } from 'formik'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { Layout, AllowedTypes, SelectOption, Text, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes, SelectOption} from '@harness/uicore';
+import { Layout, Text, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { useGetProjects, useGetRegionsForGoogleArtifactRegistry } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -23,7 +25,8 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { connectorTypes, EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'

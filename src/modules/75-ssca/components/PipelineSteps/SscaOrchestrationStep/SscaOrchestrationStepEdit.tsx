@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Accordion,
   Formik,
@@ -14,7 +16,6 @@ import {
   Icon,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   Text
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -23,7 +24,8 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   getFormValuesInCorrectFormat,
   getInitialValuesInCorrectFormat

@@ -31,14 +31,16 @@ import type {
   AzureKeyVaultMetadataRequestSpecDTO,
   SecretManagerMetadataRequestDTO
 } from 'services/cd-ng'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { ValueType } from '@secrets/components/TextReference/TextReference'
 import { setSecretField } from '@secrets/utils/SecretField'
 import { Connectors, ElkAuthType, EntityTypes } from '@connectors/constants'
-import { FormData, CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
+import type { FormData} from '@connectors/interfaces/ConnectorInterface';
+import { CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import { transformStepHeadersAndParamsForPayloadForPrometheus } from '@connectors/components/CreateConnector/PrometheusConnector/utils'
 import { transformStepHeadersAndParamsForPayload } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthHeadersAndParams/CustomHealthHeadersAndParams.utils'
 import type { BambooFormInterface } from '@connectors/components/CreateConnector/BambooConnector/StepAuth/StepBambooAuthentication'

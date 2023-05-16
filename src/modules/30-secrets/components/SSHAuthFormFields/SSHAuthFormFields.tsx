@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { FormInput, Layout, Text, SelectOption, DropDown } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, Layout, Text, DropDown } from '@harness/uicore'
 import type { IOptionProps } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'

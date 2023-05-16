@@ -10,8 +10,9 @@ import { get, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { useFormikContext } from 'formik'
 import { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import type {
+  ArtifactLastStepProps} from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps';
 import {
-  ArtifactLastStepProps,
   useArtifactSelectionLastSteps
 } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -19,7 +20,8 @@ import { useStrings } from 'framework/strings'
 import type { ArtifactConfig } from 'services/cd-ng'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
-import { ALLOWABLE_TYPES, getUniqueEntityIdentifier, ServiceDataType } from '../../CDOnboardingUtils'
+import type { ServiceDataType } from '../../CDOnboardingUtils';
+import { ALLOWABLE_TYPES, getUniqueEntityIdentifier } from '../../CDOnboardingUtils'
 import type { ConfigureServiceInterface } from '../ConfigureService'
 import css from './DockerArtifactory.module.scss'
 

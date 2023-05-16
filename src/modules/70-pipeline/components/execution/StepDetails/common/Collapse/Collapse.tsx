@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Collapse as BPCollpase, Button, ICollapseProps } from '@blueprintjs/core'
+import type { ICollapseProps } from '@blueprintjs/core';
+import { Collapse as BPCollpase, Button } from '@blueprintjs/core'
 import cx from 'classnames'
 
 import css from './Collpase.module.scss'

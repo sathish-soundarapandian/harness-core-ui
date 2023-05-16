@@ -9,6 +9,10 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 
+import type {
+  StepProps,
+  AllowedTypes as MultiTypeAllowedTypes
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -19,10 +23,8 @@ import {
   Layout,
   MultiTypeInputType,
   getMultiTypeFromValue,
-  StepProps,
   Text,
-  ButtonSize,
-  AllowedTypes as MultiTypeAllowedTypes
+  ButtonSize
 } from '@harness/uicore'
 import { Form } from 'formik'
 import { Color } from '@harness/design-system'
@@ -32,11 +34,12 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type {
+  ConnectorTypes} from '../ConfigFileStore/ConfigFileStoreHelper';
 import {
   AllowedTypes,
   ConnectorLabelMap,
   ConnectorMap,
-  ConnectorTypes,
   TerragruntAllowedTypes,
   tfVarIcons
 } from '../ConfigFileStore/ConfigFileStoreHelper'

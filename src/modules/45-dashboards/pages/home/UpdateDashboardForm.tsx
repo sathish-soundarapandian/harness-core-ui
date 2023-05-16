@@ -12,8 +12,10 @@ import { useToaster } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import type { DashboardPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { FolderModel, UpdateDashboardResponse, useUpdateDashboard } from 'services/custom-dashboards'
-import DashboardForm, { DashboardFormRequestProps } from './DashboardForm'
+import type { FolderModel, UpdateDashboardResponse} from 'services/custom-dashboards';
+import { useUpdateDashboard } from 'services/custom-dashboards'
+import type { DashboardFormRequestProps } from './DashboardForm';
+import DashboardForm from './DashboardForm'
 
 interface UpdateDashboardFormProps {
   editableFolders: FolderModel[]

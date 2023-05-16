@@ -1,6 +1,7 @@
 import React from 'react'
 import cx from 'classnames'
-import { Container, Text, Layout, Button, ButtonVariation, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Container, Text, Layout, Button, ButtonVariation } from '@harness/uicore'
 import { cloneDeep } from 'lodash-es'
 import { FieldArray } from 'formik'
 import { AppDynamicsMonitoringSourceFieldNames as FieldName } from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSource.constants'

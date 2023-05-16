@@ -14,7 +14,8 @@ import { NoData } from '@cf/components/NoData/NoData'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { useStrings } from 'framework/strings'
-import { FeaturePipelineResp, useDeleteFeaturePipeline, Variation } from 'services/cf'
+import type { FeaturePipelineResp, Variation } from 'services/cf';
+import { useDeleteFeaturePipeline } from 'services/cf'
 import imageUrl from '@cf/images/pipeline_flags_executions_empty_state.svg'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 

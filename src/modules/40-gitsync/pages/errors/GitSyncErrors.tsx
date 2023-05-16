@@ -8,11 +8,12 @@
 import React, { createRef, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
+import type {
+  ExpandingSearchInputHandle} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   ExpandingSearchInput,
-  ExpandingSearchInputHandle,
   Layout,
   Tab,
   Tabs,
@@ -21,12 +22,14 @@ import {
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useGetGitSyncErrorsCount } from 'services/cd-ng'
-import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import type { GitFilterScope } from '@common/components/GitFilters/GitFilters';
+import GitFilters from '@common/components/GitFilters/GitFilters'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { GitSyncErrorsPanel } from '@gitsync/pages/errors/GitSyncErrorsPanel/GitSyncErrorsPanel'
+import type {
+  GitSyncErrorStateType} from '@gitsync/pages/errors/GitSyncErrorContext';
 import {
   GitErrorExperienceTab,
-  GitSyncErrorStateType,
   GitSyncErrorState,
   GitErrorExperienceSubTab
 } from '@gitsync/pages/errors/GitSyncErrorContext'

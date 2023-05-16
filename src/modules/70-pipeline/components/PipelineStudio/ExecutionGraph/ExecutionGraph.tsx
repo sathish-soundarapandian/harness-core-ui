@@ -10,7 +10,8 @@ import { cloneDeep, set, isEmpty, get, defaultTo, omit } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
+import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover';
+import { DynamicPopover } from '@common/components/DynamicPopover/DynamicPopover'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StepActions } from '@common/constants/TrackingConstants'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
@@ -26,11 +27,13 @@ import type {
   StepElementConfig
 } from 'services/cd-ng'
 import type { DependencyElement } from 'services/ci'
+import type {
+  BaseReactComponentProps
+} from '@pipeline/components/PipelineDiagram/DiagramFactory';
 import {
   DiagramFactory,
   DiagramNodes,
-  NodeType,
-  BaseReactComponentProps
+  NodeType
 } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
@@ -49,24 +52,25 @@ import type { TemplateIcons } from '@pipeline/utils/types'
 import { DiagramType, Event, StepsType } from '@pipeline/components/PipelineDiagram/Constants'
 import { RollbackToggleSwitch } from '@pipeline/components/PipelineDiagram/RollbackToggleSwitch/RollbackToggleSwitch'
 import { StepType as PipelineStepType } from '../../PipelineSteps/PipelineStepInterface'
-import {
-  addStepOrGroup,
+import type {
   ExecutionGraphState,
   StepState,
+  DependenciesWrapper,
+  ExecutionWrapper} from './ExecutionGraphUtil';
+import {
+  addStepOrGroup,
   getStepsState,
   removeStepOrGroup,
   getStepFromNode,
   generateRandomString,
   getDependenciesState,
   StepType,
-  DependenciesWrapper,
   getDefaultStepState,
   getDefaultStepGroupState,
   getDefaultDependencyServiceState,
   updateStepsState,
   updateDependenciesState,
   applyExistingStates,
-  ExecutionWrapper,
   STATIC_SERVICE_GROUP_NAME,
   getDependencyFromNodeV1,
   isServiceDependenciesSupported,

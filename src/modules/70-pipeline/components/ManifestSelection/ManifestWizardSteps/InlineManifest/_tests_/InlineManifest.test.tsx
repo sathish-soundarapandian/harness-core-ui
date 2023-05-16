@@ -7,7 +7,8 @@
 
 import { fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import React from 'react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'

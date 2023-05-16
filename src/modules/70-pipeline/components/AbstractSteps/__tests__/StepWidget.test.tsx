@@ -10,7 +10,8 @@ import { render, fireEvent } from '@testing-library/react'
 import type { IconName } from '@harness/uicore'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { AbstractStepFactory } from '../AbstractStepFactory'
-import { Step, StepProps } from '../Step'
+import type { StepProps } from '../Step';
+import { Step } from '../Step'
 import { StepWidget } from '../StepWidget'
 
 class StepFactory extends AbstractStepFactory {

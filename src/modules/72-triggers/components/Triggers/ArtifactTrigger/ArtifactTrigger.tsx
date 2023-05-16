@@ -10,7 +10,8 @@ import ArtifactConditionsPanel from '@triggers/components/steps/ArtifactTriggerC
 import ArtifactTriggerInputPanel from '@triggers/components/steps/ArtifactTriggerInputPanel/ArtifactTriggerInputPanel'
 import ArtifactTriggerConfigPanel from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactTriggerConfigPanel'
 import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
-import { Trigger, TriggerProps } from '../Trigger'
+import type { TriggerProps } from '../Trigger';
+import { Trigger } from '../Trigger'
 import { TriggerBaseType } from '../TriggerInterface'
 import ArtifactTriggerWizard from './ArtifactTriggerWizard'
 

@@ -7,7 +7,8 @@
 
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { getSecretV2Promise, GetSecretV2QueryParams } from 'services/cd-ng'
+import type { GetSecretV2QueryParams } from 'services/cd-ng';
+import { getSecretV2Promise } from 'services/cd-ng'
 
 export interface SecretReferenceInterface {
   identifier: string

@@ -10,7 +10,8 @@ import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { defaultTo, get, isEmpty, isNil, pick, set } from 'lodash-es'
 
-import { Container, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import type { DeploymentStageConfig, ServiceSpec } from 'services/cd-ng'

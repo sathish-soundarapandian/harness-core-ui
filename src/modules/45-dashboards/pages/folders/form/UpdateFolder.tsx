@@ -8,9 +8,11 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import FolderForm, { FolderFormikValues } from '@dashboards/components/FolderForm/FolderForm'
+import type { FolderFormikValues } from '@dashboards/components/FolderForm/FolderForm';
+import FolderForm from '@dashboards/components/FolderForm/FolderForm'
 import { useStrings } from 'framework/strings'
-import { FolderModel, usePatchFolder } from 'services/custom-dashboards'
+import type { FolderModel} from 'services/custom-dashboards';
+import { usePatchFolder } from 'services/custom-dashboards'
 
 export interface UpdateFolderProps {
   onFormCompleted: () => void

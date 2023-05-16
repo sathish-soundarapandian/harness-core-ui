@@ -6,14 +6,15 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  IconName,
+  StackedSummaryInterface} from '@harness/uicore';
 import {
   Card,
   Container,
   Icon,
-  IconName,
   Layout,
   Text,
-  StackedSummaryInterface,
   StackedSummaryTable,
   getStackedSummaryBarCount
 } from '@harness/uicore'
@@ -24,18 +25,20 @@ import { TimeRangeToDays, useLandingDashboardContext } from '@common/factories/L
 import { useStrings, String } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   ResponseExecutionResponseCountOverview,
   TopProjectsDashboardInfoCountWithSuccessFailureDetails,
-  TopProjectsPanel,
+  TopProjectsPanel} from 'services/dashboard-service';
+import {
   useGetTopProjects
 } from 'services/dashboard-service'
 import type { StringsMap } from 'stringTypes'
 import routes from '@common/RouteDefinitions'
 import DashboardNoDataWidget from '@projects-orgs/components/DashboardNoDataWidget/DashboardNoDataWidget'
-import DashboardAPIErrorWidget, {
+import type {
   DashboardAPIErrorWidgetProps
-} from '@projects-orgs/components/DashboardAPIErrorWidget/DashboardAPIErrorWidget'
+} from '@projects-orgs/components/DashboardAPIErrorWidget/DashboardAPIErrorWidget';
+import DashboardAPIErrorWidget from '@projects-orgs/components/DashboardAPIErrorWidget/DashboardAPIErrorWidget'
 
 import OverviewGlanceCards from '@projects-orgs/components/OverviewGlanceCards/OverviewGlanceCards'
 import css from './LandingDashboardSummaryWidget.module.scss'

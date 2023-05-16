@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
-import { RenderResult, render, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import mockImport from 'framework/utils/mockImport'
 import { TestWrapper } from '@common/utils/testUtils'
-import EnvironmentDetailsBody, {
+import type {
   EnvironmentDetailsBodyProps
-} from '@cf/pages/environment-details/EnvironmentDetailsBody'
+} from '@cf/pages/environment-details/EnvironmentDetailsBody';
+import EnvironmentDetailsBody from '@cf/pages/environment-details/EnvironmentDetailsBody'
 import * as cfServices from 'services/cf'
 import type { ApiKey, ApiKeys } from 'services/cf'
 import mockApiKeys from './mockApiKeys'

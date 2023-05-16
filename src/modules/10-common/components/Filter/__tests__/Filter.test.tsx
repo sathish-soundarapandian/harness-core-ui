@@ -11,7 +11,8 @@ import { FormInput } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
-import { Filter, FilterProps } from '../Filter'
+import type { FilterProps } from '../Filter';
+import { Filter } from '../Filter'
 import type { FilterInterface } from '../Constants'
 
 const props: FilterProps<unknown, FilterInterface> = {

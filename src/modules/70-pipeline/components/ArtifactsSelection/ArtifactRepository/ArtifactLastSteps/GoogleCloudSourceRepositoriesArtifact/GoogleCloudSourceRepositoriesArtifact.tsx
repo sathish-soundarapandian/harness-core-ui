@@ -12,6 +12,9 @@ import { defaultTo, get, merge, set } from 'lodash-es'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import type { IItemRendererProps } from '@blueprintjs/select'
+import type {
+  SelectOption,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -21,21 +24,21 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  SelectOption,
-  StepProps,
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
-import { ConnectorConfigDTO, GoogleCloudSourceArtifactConfig, useGetProjects } from 'services/cd-ng'
+import type { ConnectorConfigDTO, GoogleCloudSourceArtifactConfig} from 'services/cd-ng';
+import { useGetProjects } from 'services/cd-ng'
 import { useMutateAsGet } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type {
   GoogleCloudSourceRepositoriesArtifactProps,
   GoogleCloudSourceRepositoriesInitialValuesType

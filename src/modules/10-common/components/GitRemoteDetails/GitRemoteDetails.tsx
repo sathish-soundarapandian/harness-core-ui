@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Icon, Text, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Icon, Text } from '@harness/uicore'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'

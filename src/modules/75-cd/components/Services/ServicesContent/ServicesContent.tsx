@@ -11,25 +11,30 @@ import { Card, Container, Layout } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import moment from 'moment'
 import { Page } from '@common/exports'
-import {
+import type {
   GetServiceDetailsV2QueryParams,
   GetServicesGrowthTrendQueryParams,
   ServiceDetailsDTO,
-  ServiceDetailsDTOV2,
+  ServiceDetailsDTOV2} from 'services/cd-ng';
+import {
   useGetServiceDetailsV2,
   useGetServicesGrowthTrend
 } from 'services/cd-ng'
 import { DeploymentsTimeRangeContext, useServiceStore, Views } from '@cd/components/Services/common'
-import {
-  ServiceInstancesWidget,
+import type {
   ServiceInstanceWidgetProps
-} from '@cd/components/Services/ServiceInstancesWidget/ServiceInstancesWidget'
+} from '@cd/components/Services/ServiceInstancesWidget/ServiceInstancesWidget';
 import {
-  MostActiveServicesRef,
+  ServiceInstancesWidget
+} from '@cd/components/Services/ServiceInstancesWidget/ServiceInstancesWidget'
+import type {
+  MostActiveServicesRef} from '@cd/components/Services/MostActiveServicesWidget/MostActiveServicesWidget';
+import {
   MostActiveServicesWidgetRef
 } from '@cd/components/Services/MostActiveServicesWidget/MostActiveServicesWidget'
 import { DeploymentsWidget } from '@cd/components/Services/DeploymentsWidget/DeploymentsWidget'
-import { ServicesList, ServicesListProps } from '@cd/components/Services/ServicesList/ServicesList'
+import type { ServicesListProps } from '@cd/components/Services/ServicesList/ServicesList';
+import { ServicesList } from '@cd/components/Services/ServicesList/ServicesList'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'

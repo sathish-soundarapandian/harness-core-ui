@@ -7,13 +7,17 @@
 
 import React, { useLayoutEffect, useRef } from 'react'
 import { defaultTo, times } from 'lodash-es'
-import { Button, CardSelect, Heading, Layout, StepProps, Text } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
-import {
-  useSelectCards,
-  RequirementCard,
+import type { StepProps} from '@harness/uicore';
+import { Button, CardSelect, Heading, Layout, Text } from '@harness/uicore'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
+import type {
   CardData,
   FeaturesString
+} from '@connectors/common/RequirementCard/RequirementCard';
+import {
+  useSelectCards,
+  RequirementCard
 } from '@connectors/common/RequirementCard/RequirementCard'
 import type { GcpCloudCostConnector } from 'services/ce'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'

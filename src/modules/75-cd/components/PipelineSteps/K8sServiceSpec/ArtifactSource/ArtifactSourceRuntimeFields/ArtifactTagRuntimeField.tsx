@@ -9,7 +9,8 @@ import React, { useEffect, useState } from 'react'
 import { defaultTo, memoize } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 
-import { Layout, SelectOption, Text, useToaster } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, Text, useToaster } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { DockerBuildDetailsDTO, Failure, Error, ArtifactoryBuildDetailsDTO } from 'services/cd-ng'
@@ -17,7 +18,8 @@ import { useStrings } from 'framework/strings'
 import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { BuildDetailsDTO, getTagError, isExecutionTimeFieldDisabled } from '../artifactSourceUtils'
+import type { BuildDetailsDTO} from '../artifactSourceUtils';
+import { getTagError, isExecutionTimeFieldDisabled } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface TagsRenderContent extends ArtifactSourceRenderProps {

@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { Layout, Button, FormInput, ButtonVariation, AllowedTypes, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Layout, Button, FormInput, ButtonVariation, MultiTypeInputType } from '@harness/uicore'
 import cx from 'classnames'
 
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { FieldArray, FormikValues } from 'formik'
+import type { FormikValues } from 'formik';
+import { FieldArray } from 'formik'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'

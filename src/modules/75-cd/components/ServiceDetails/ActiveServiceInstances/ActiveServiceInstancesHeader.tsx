@@ -12,12 +12,14 @@ import { Color } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Layout, Text } from '@harness/uicore'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   ChangeRate,
-  GetActiveServiceInstanceSummaryV2QueryParams,
+  GetActiveServiceInstanceSummaryV2QueryParams} from 'services/cd-ng';
+import {
   useGetActiveServiceInstanceSummaryV2
 } from 'services/cd-ng'
-import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
+import type { PieChartProps } from '@cd/components/PieChart/PieChart';
+import { PieChart } from '@cd/components/PieChart/PieChart'
 import { useStrings } from 'framework/strings'
 import { INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { numberFormatter } from '@common/utils/utils'

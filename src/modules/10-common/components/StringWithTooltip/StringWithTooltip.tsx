@@ -5,10 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import cx from 'classnames'
 import { HarnessDocTooltip } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import css from './StringWithTooltip.module.scss'
 
 export interface StringWithTooltipProps extends React.HTMLAttributes<HTMLSpanElement> {

@@ -7,18 +7,20 @@
 
 import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import cx from 'classnames'
+import type {
+  StepProps,
+  SelectOption
+} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  FormikForm,
-  SelectOption
+  FormikForm
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -30,9 +32,10 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 
-import {
+import type {
   ConnectorConfigDTO,
-  DockerBuildDetailsDTO,
+  DockerBuildDetailsDTO} from 'services/cd-ng';
+import {
   useArtifactIds,
   useGetBuildDetailsForNexusArtifact,
   useGetGroupIds,

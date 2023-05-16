@@ -8,7 +8,8 @@
 import React from 'react'
 import { Color, FontVariation } from '@harness/design-system'
 import { Text } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 
 interface EmptyStateCollapsedViewProps {
   description: StringKeys

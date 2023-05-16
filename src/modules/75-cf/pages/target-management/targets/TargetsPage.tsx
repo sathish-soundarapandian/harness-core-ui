@@ -26,7 +26,8 @@ import { useConfirmAction } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { useToaster } from '@common/exports'
-import { Segment, Target, useDeleteTarget, useGetAllTargets } from 'services/cf'
+import type { Segment, Target} from 'services/cf';
+import { useDeleteTarget, useGetAllTargets } from 'services/cf'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import {
   makeStackedCircleShortName,

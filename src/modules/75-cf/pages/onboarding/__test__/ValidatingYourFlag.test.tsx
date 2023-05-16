@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
-import { act, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SupportPlatforms } from '@cf/components/LanguageSelection/LanguageSelection'
 import mockImport from 'framework/utils/mockImport'
 import * as cfService from 'services/cf'
-import { TestYourFlagViewProps, ValidateYourFlagView } from '../views/ValidatingYourFlagView'
+import type { TestYourFlagViewProps} from '../views/ValidatingYourFlagView';
+import { ValidateYourFlagView } from '../views/ValidatingYourFlagView'
 
 jest.mock('services/cf', () => ({
   useGetFeatureMetrics: jest.fn().mockReturnValue({ data: [], loading: false, refetch: jest.fn() }),

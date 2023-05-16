@@ -6,6 +6,8 @@
  */
 
 import React, { useEffect, useContext, useState, useCallback } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   PageSpinner,
@@ -13,7 +15,6 @@ import {
   ExpandingSearchInput,
   FormInput,
   PageError,
-  SelectOption,
   shouldShowError
 } from '@harness/uicore'
 import SplitPane from 'react-split-pane'
@@ -33,12 +34,13 @@ import StoreView from '@filestore/components/StoreView/StoreView'
 import { FileStoreContext, FileStoreContextProvider } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { FILE_STORE_ROOT, SEARCH_FILES } from '@filestore/utils/constants'
 import { FileStoreNodeTypes, FileUsage } from '@filestore/interfaces/FileStore'
-import {
+import type {
   Failure,
   FilesFilterProperties,
   FileStoreNodeDTO,
   FilterDTO,
-  ListFilesWithFilterQueryParams,
+  ListFilesWithFilterQueryParams} from 'services/cd-ng';
+import {
   useDeleteFilter,
   useGetCreatedByList,
   useGetEntityTypes,
@@ -58,8 +60,10 @@ import {
   removeNullAndEmpty,
   UNSAVED_FILTER
 } from '@common/components/Filter/utils/FilterUtils'
-import { createRequestBodyPayload, FileStoreFilterFormType } from '@filestore/utils/RequestUtils'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
+import type { FileStoreFilterFormType } from '@filestore/utils/RequestUtils';
+import { createRequestBodyPayload } from '@filestore/utils/RequestUtils'
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { getFileUsageNameByType, sortNodesByType } from '@filestore/utils/FileStoreUtils'

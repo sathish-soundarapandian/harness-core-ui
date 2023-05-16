@@ -8,18 +8,20 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   FormikForm,
   FormInput,
-  SelectOption,
   Button,
   ButtonVariation,
   Text
 } from '@harness/uicore'
 import { get, isArray, isEmpty, memoize } from 'lodash-es'
-import { FieldArray, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { FieldArray } from 'formik'
 import type { IItemRendererProps } from '@blueprintjs/select'
 
 import { useStrings } from 'framework/strings'
@@ -30,10 +32,12 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { BambooPlanNames, useGetPlansKey } from 'services/cd-ng'
+import type { BambooPlanNames} from 'services/cd-ng';
+import { useGetPlansKey } from 'services/cd-ng'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
-import { ConnectorRefType, getScopedConnectorValue } from '@pipeline/utils/stepUtils'
+import type { ConnectorRefType} from '@pipeline/utils/stepUtils';
+import { getScopedConnectorValue } from '@pipeline/utils/stepUtils'
 
 import { resetForm } from './helper'
 import type { jobParameterInterface } from '../JenkinsStep/types'

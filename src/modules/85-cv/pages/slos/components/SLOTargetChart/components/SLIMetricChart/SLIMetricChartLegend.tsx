@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, Text, Layout, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Container, Text, Layout } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ThresholdLegend } from './SLIMetricChartLegend.types'

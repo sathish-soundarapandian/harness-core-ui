@@ -11,13 +11,15 @@ import type { CellProps, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
 import { Position } from '@blueprintjs/core'
 import ReactTimeago from 'react-timeago'
-import ResourceHandlerTable, {
+import type {
   ResourceHandlerTableData
-} from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
+} from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable';
+import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 import { PageSpinner, TagsPopover } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
-import { PMSPipelineSummaryResponse, useGetPipelineList } from 'services/pipeline-ng'
+import type { PMSPipelineSummaryResponse} from 'services/pipeline-ng';
+import { useGetPipelineList } from 'services/pipeline-ng'
 import { useMutateAsGet } from '@common/hooks'
 import {
   CodeSourceCell,

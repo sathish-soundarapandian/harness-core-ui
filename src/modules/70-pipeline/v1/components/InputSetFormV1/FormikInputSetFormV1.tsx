@@ -25,14 +25,16 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { NameIdDescriptionTags } from '@common/components'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useQueryParams } from '@common/hooks'
-import GitContextForm, { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
+import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm';
+import GitContextForm from '@common/components/GitContextForm/GitContextForm'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import type { InputSetDTO } from '@pipeline/utils/types'

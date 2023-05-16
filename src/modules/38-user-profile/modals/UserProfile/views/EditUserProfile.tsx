@@ -6,6 +6,8 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   Formik,
@@ -14,7 +16,6 @@ import {
   Text,
   FormInput,
   Container,
-  ModalErrorHandlerBinding,
   ModalErrorHandler,
   ButtonVariation
 } from '@harness/uicore'
@@ -22,7 +23,8 @@ import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { UserInfo, useUpdateUserInfo } from 'services/cd-ng'
+import type { UserInfo} from 'services/cd-ng';
+import { useUpdateUserInfo } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 

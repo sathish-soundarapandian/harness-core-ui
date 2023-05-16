@@ -8,17 +8,20 @@
 import React from 'react'
 import { isEmpty, set } from 'lodash-es'
 import type { FormikErrors } from 'formik'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import type { IconName } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import type { K8sDirectInfra, StepGroupElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
-import { InputSetData, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { InputSetData, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepGroupStepEditRef } from './StepGroupStepEdit'
 import { StepGroupStepInputSetMode } from './StepGroupStepInputSetMode'
-import { getModifiedFormikValues, K8sDirectInfraStepGroupElementConfig, StepGroupFormikValues } from './StepGroupUtil'
+import type { K8sDirectInfraStepGroupElementConfig, StepGroupFormikValues } from './StepGroupUtil'
+import { getModifiedFormikValues } from './StepGroupUtil'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 interface StepGroupStepVariableProps {

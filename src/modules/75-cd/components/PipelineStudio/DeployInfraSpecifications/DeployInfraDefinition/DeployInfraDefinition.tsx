@@ -7,9 +7,10 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import YAML from 'yaml'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
   Accordion,
-  AllowedTypes,
   Card,
   Container,
   HarnessDocTooltip,
@@ -21,8 +22,7 @@ import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import {
-  getProvisionerExecutionStrategyYamlPromise,
+import type {
   Infrastructure,
   K8sAzureInfrastructure,
   AzureWebAppInfrastructure,
@@ -38,6 +38,9 @@ import {
   ElastigroupInfrastructure,
   TanzuApplicationServiceInfrastructure,
   AsgInfrastructure
+} from 'services/cd-ng';
+import {
+  getProvisionerExecutionStrategyYamlPromise
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -62,12 +65,13 @@ import SelectInfrastructureType from '@cd/components/PipelineStudio/DeployInfraS
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { AzureInfrastructureSpec } from '@cd/components/PipelineSteps/AzureInfrastructureStep/AzureInfrastructureStep'
 import type { AzureWebAppInfrastructureSpec } from '@cd/components/PipelineSteps/AzureWebAppInfrastructureStep/AzureWebAppInfrastructureStep'
+import type {
+  ServerlessInfraTypes} from '@pipeline/utils/stageHelpers';
 import {
   detailsHeaderName,
   getCustomStepProps,
   isServerlessDeploymentType,
   isAzureWebAppDeploymentType,
-  ServerlessInfraTypes,
   StageType,
   getServiceDefinitionType,
   isElastigroupDeploymentType
@@ -88,13 +92,14 @@ import type {
 } from '@cd/components/PipelineSteps/GoogleCloudFunction/GoogleCloudFunctionInfraSpec/GoogleCloudFunctionInfraSpec'
 import type { AwsLambdaInfraSpec } from '@cd/components/PipelineSteps/AwsLambda/AwsLambdaInfraSpec/AwsLambdaInfraSpec'
 import type { K8sAwsInfrastructureSpec } from '@cd/components/PipelineSteps/K8sAwsInfrastructureSpec/K8sAwsInfrastructureSpec'
+import type {
+  InfrastructureGroup} from '../deployInfraHelper';
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
   getInfraDefinitionMethodTooltipId,
   getInfraGroups,
   getInfrastructureDefaultValue,
-  InfrastructureGroup,
   isAsgDeploymentInfrastructureType,
   isAzureWebAppInfrastructureType,
   isCustomDeploymentInfrastructureType,

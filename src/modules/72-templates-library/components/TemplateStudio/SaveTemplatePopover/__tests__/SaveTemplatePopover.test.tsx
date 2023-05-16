@@ -18,7 +18,8 @@ import { accountPathProps, pipelineModuleParams, templatePathProps } from '@comm
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
-import { SaveTemplatePopoverWithRef, SaveTemplatePopoverProps } from '../SaveTemplatePopover'
+import type { SaveTemplatePopoverProps } from '../SaveTemplatePopover';
+import { SaveTemplatePopoverWithRef } from '../SaveTemplatePopover'
 
 jest.useFakeTimers()
 jest.mock('@common/hooks/CommentModal/useCommentModal', () => ({

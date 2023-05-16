@@ -7,21 +7,24 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
-import { Dialog, FormInput, Icon, Layout, SelectOption, SelectProps, useToggleOpen } from '@harness/uicore'
+import type { SelectOption, SelectProps} from '@harness/uicore';
+import { Dialog, FormInput, Icon, Layout, useToggleOpen } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   Error,
   Failure,
   GitBranchDetailsDTO,
-  ResponseGitBranchesResponseDTO,
+  ResponseGitBranchesResponseDTO} from 'services/cd-ng';
+import {
   useGetListOfBranchesByRefConnectorV2
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { ErrorHandler, ResponseMessage } from '../ErrorHandler/ErrorHandler'
+import type { ResponseMessage } from '../ErrorHandler/ErrorHandler';
+import { ErrorHandler } from '../ErrorHandler/ErrorHandler'
 import css from './RepoBranchSelectV2.module.scss'
 
 export interface RepoBranchSelectProps {

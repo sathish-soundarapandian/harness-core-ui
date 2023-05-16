@@ -10,7 +10,8 @@ import { Button, ButtonVariation, Container, ExpandingSearchInput, Layout, TagsP
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
 import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
-import { Project, useGetProjectList } from 'services/cd-ng'
+import type { Project} from 'services/cd-ng';
+import { useGetProjectList } from 'services/cd-ng'
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'

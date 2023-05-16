@@ -8,14 +8,16 @@
 import React from 'react'
 import { defaultTo } from 'lodash-es'
 import { Dialog } from '@blueprintjs/core'
-import { HideModal, ShowModal, useModalHook } from '@harness/use-modal'
+import type { HideModal, ShowModal} from '@harness/use-modal';
+import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import ImportResource from './ImportResource'
 import MoveResource from './MoveResource'
-import { ExtraQueryParams, MigrationType } from './MigrateUtils'
+import type { ExtraQueryParams} from './MigrateUtils';
+import { MigrationType } from './MigrateUtils'
 
 interface UseMigrateResourceReturnType {
   showMigrateResourceModal: ShowModal

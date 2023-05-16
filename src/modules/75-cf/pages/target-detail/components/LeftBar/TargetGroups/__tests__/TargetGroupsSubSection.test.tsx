@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as useModal from '@harness/use-modal'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockTarget from '@cf/utils/testData/data/mockTarget'
-import TargetGroupsSubSection, { TargetGroupsSubSectionProps } from '../TargetGroupsSubSection'
+import type { TargetGroupsSubSectionProps } from '../TargetGroupsSubSection';
+import TargetGroupsSubSection from '../TargetGroupsSubSection'
 
 const mockTargetGroups: TargetGroupsSubSectionProps['targetGroups'] = [
   { identifier: 'tg1', name: 'Target Group 1' },

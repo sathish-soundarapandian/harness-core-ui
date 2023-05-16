@@ -45,12 +45,15 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useQueryParams } from '@common/hooks'
 import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
-import {
-  EntityCachedCopy,
+import type {
   EntityCachedCopyHandle
-} from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
+} from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy';
 import {
-  SavePipelineHandleV1,
+  EntityCachedCopy
+} from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
+import type {
+  SavePipelineHandleV1} from '../PipelineStudioV1/SavePipelinePopoverV1/SavePipelinePopoverV1';
+import {
   SavePipelinePopoverWithRefV1
 } from '../PipelineStudioV1/SavePipelinePopoverV1/SavePipelinePopoverV1'
 import { usePipelineContextV1 } from '../PipelineStudioV1/PipelineContextV1/PipelineContextV1'

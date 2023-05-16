@@ -8,7 +8,8 @@
 import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'

@@ -21,10 +21,12 @@ import {
 import { HarnessApprovalTab } from '@pipeline/components/execution/StepDetails/tabs/HarnessApprovalTab/HarnessApprovalTab'
 import { PipelineDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/PipelineDetailsTab/PipelineDetailsTab'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
-import {
-  useHarnessApproval,
+import type {
   AuthMock,
   ApprovalMock
+} from '@pipeline/components/execution/StepDetails/views/HarnessApprovalView/useHarnessApproval';
+import {
+  useHarnessApproval
 } from '@pipeline/components/execution/StepDetails/views/HarnessApprovalView/useHarnessApproval'
 import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
 import { StageType } from '@pipeline/utils/stageHelpers'

@@ -11,13 +11,15 @@ import { Container, Layout, Text, Card, TableV2 } from '@harness/uicore'
 import { pick } from 'lodash-es'
 import { Color } from '@harness/design-system'
 
-import {
+import type {
   GitSyncEntityListDTO,
   GitSyncEntityDTO,
-  useListGitSyncEntitiesSummaryForRepoAndBranch,
   GitSyncConfig,
   GitEntityFilterProperties,
   ListGitSyncEntitiesByTypePathParams
+} from 'services/cd-ng';
+import {
+  useListGitSyncEntitiesSummaryForRepoAndBranch
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { Entities } from '@common/interfaces/GitSyncInterface'

@@ -8,7 +8,8 @@
 import React from 'react'
 import { useParams, Redirect, useLocation } from 'react-router-dom'
 import AuditTrailsPage from '@audit-trail/pages/AuditTrails/AuditTrailsPage'
-import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
+import type { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory';
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
 import {

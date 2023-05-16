@@ -5,14 +5,15 @@ import { Container, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import { useServiceOverridesContext } from '@cd/components/ServiceOverrides/context/ServiceOverrideContext'
-import {
+import type {
   ApplicationSettingsOverrideDetails,
   ConfigFileOverrideDetails,
   ConnectionStringsOverrideDetails,
   ManifestOverrideDetails,
-  OverrideTypes,
   ServiceOverrideRowProps,
-  VariableOverrideDetails,
+  VariableOverrideDetails} from '@cd/components/ServiceOverrides/ServiceOverridesUtils';
+import {
+  OverrideTypes,
   headerConfigMap
 } from '@cd/components/ServiceOverrides/ServiceOverridesUtils'
 

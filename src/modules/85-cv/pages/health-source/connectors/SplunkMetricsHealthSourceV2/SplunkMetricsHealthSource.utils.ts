@@ -11,12 +11,14 @@ import type { FormikProps } from 'formik'
 import type { PrometheusFilter, PrometheusHealthSourceSpec } from 'services/cv'
 import type { StringsMap } from 'stringTypes'
 import type { UseStringsReturn } from 'framework/strings'
-import {
+import type {
   CreatedMetricsWithSelectedIndex,
-  PrometheusMonitoringSourceFieldNames,
   SelectedAndMappedMetrics,
   PrometheusSetupSource,
   MapSplunkMetricQueryToService
+} from './SplunkMetricsHealthSource.constants';
+import {
+  PrometheusMonitoringSourceFieldNames
 } from './SplunkMetricsHealthSource.constants'
 import { HealthSourceTypes } from '../../types'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'

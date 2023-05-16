@@ -13,10 +13,11 @@ import { Dialog } from '@blueprintjs/core'
 
 import type { SecretDTOV2, ConnectorInfoDTO } from 'services/cd-ng'
 
-import CreateUpdateSecret, {
+import type {
   SecretIdentifiers,
   SecretFormData
-} from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
+} from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret';
+import CreateUpdateSecret from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
 
 import { useStrings } from 'framework/strings'
 import css from './useCreateSecretModal.module.scss'

@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import NoFlags, { NoFlagsProps } from '../NoFlags'
+import type { NoFlagsProps } from '../NoFlags';
+import NoFlags from '../NoFlags'
 
 const renderComponent = (props: Partial<NoFlagsProps> = {}): RenderResult =>
   render(

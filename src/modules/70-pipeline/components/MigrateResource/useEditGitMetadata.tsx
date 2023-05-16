@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { HideModal, ShowModal, useModalHook } from '@harness/use-modal'
+import type { HideModal, ShowModal} from '@harness/use-modal';
+import { useModalHook } from '@harness/use-modal'
 import { ModalDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { ResourceType } from '@common/interfaces/GitSyncInterface'

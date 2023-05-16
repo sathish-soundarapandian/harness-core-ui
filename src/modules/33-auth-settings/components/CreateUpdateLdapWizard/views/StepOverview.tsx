@@ -6,12 +6,13 @@
  */
 
 import React from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Text,
   Layout,
-  StepProps,
   Container,
   Formik,
   FormikForm,

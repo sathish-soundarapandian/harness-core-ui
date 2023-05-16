@@ -7,17 +7,19 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
-import { Button, Formik, FormikForm, Layout, StepProps, Container, Text, ButtonVariation } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Button, Formik, FormikForm, Layout, Container, Text, ButtonVariation } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { VaultConnectorDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { URLValidationSchema } from '@common/utils/Validation'
 import { PageSpinner } from '@common/components'
 import { setupVaultFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import {
+import type {
   StepDetailsProps,
   ConnectorDetailsProps,
-  VaultConfigFormData,
+  VaultConfigFormData} from '@connectors/interfaces/ConnectorInterface';
+import {
   HashiCorpVaultAccessTypes
 } from '@connectors/interfaces/ConnectorInterface'
 import { Connectors } from '@connectors/constants'

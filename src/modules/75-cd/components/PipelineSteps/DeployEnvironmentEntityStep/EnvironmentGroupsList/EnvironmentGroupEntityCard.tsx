@@ -10,7 +10,8 @@ import { useFormikContext } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Divider } from '@blueprintjs/core'
 
-import { ButtonVariation, Card, Text, AllowedTypes, Container, Layout, TagsPopover } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { ButtonVariation, Card, Text, Container, Layout, TagsPopover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
@@ -34,8 +35,9 @@ import type {
 } from '../types'
 
 import DeployEnvironment from '../DeployEnvironment/DeployEnvironment'
+import type {
+  InlineEntityFiltersProps} from '../components/InlineEntityFilters/InlineEntityFiltersUtils';
 import {
-  InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 

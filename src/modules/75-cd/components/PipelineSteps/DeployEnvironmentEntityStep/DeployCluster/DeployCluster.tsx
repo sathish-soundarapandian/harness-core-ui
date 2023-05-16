@@ -11,14 +11,16 @@ import { useFormikContext } from 'formik'
 import produce from 'immer'
 import { v4 as uuid } from 'uuid'
 
-import {
+import type {
   AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
+import {
   FormInput,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  RUNTIME_INPUT_VALUE,
-  SelectOption
+  RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'

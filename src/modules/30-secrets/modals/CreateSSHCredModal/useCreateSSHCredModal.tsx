@@ -22,7 +22,8 @@ import type {
 } from 'services/cd-ng'
 import { getSecretReferencesForSSH } from '@secrets/utils/SSHAuthUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import CreateSSHCredWizard, { SSHCredSharedObj } from './CreateSSHCredWizard'
+import type { SSHCredSharedObj } from './CreateSSHCredWizard';
+import CreateSSHCredWizard from './CreateSSHCredWizard'
 import css from './useCreateSSHCredModal.module.scss'
 
 export interface UseCreateSSHCredModalProps {

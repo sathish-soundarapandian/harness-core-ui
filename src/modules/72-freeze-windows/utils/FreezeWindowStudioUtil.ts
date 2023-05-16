@@ -12,13 +12,15 @@ import type { SelectOption } from '@harness/uicore'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { accountPathProps, modulePathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import type { UseStringsReturn, StringKeys } from 'framework/strings'
-import {
+import type {
   EntityConfig,
   EntityType,
+  ResourcesInterface
+} from '@freeze-windows/types';
+import {
   EnvironmentType,
   FIELD_KEYS,
-  FreezeWindowLevels,
-  ResourcesInterface
+  FreezeWindowLevels
 } from '@freeze-windows/types'
 import { DefaultFreezeId } from '@freeze-windows/context/FreezeWindowReducer'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'

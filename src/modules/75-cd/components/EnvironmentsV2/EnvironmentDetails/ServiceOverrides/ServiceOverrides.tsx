@@ -10,6 +10,11 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
 import cx from 'classnames'
 import { parse } from 'yaml'
+import type {
+  IconName,
+  ButtonProps,
+  AllowedTypesWithRunTime
+} from '@harness/uicore';
 import {
   ButtonSize,
   ButtonVariation,
@@ -20,24 +25,22 @@ import {
   Dialog,
   useToaster,
   Accordion,
-  IconName,
   HarnessDocTooltip,
-  ButtonProps,
-  MultiTypeInputType,
-  AllowedTypesWithRunTime
+  MultiTypeInputType
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation, Color } from '@harness/design-system'
-import {
+import type {
   ApplicationSettingsConfiguration,
   ConfigFileWrapper,
   ConnectionStringsConfiguration,
-  deleteServiceOverridePromise,
   ManifestConfigWrapper,
   NGServiceOverrideConfig,
   NGVariable,
   ServiceOverrideResponseDTO,
-  ServiceResponse,
+  ServiceResponse} from 'services/cd-ng';
+import {
+  deleteServiceOverridePromise,
   upsertServiceOverridePromise,
   useGetServiceList,
   useGetServiceOverridesList

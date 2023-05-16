@@ -7,11 +7,13 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Button, ButtonSize, ButtonVariation, StepWizard, Text, StepProps, Icon } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Layout, Button, ButtonSize, ButtonVariation, StepWizard, Text, Icon } from '@harness/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
-import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core'
 import produce from 'immer'
 import { get, isEmpty, set, isArray } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -51,16 +53,17 @@ import { ConfigFilesMap } from '@pipeline/components/ConfigFilesSelection/Config
 import { LocationValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesListView/LocationValue'
 import ApplicationConfigWizardStepTwo from './ApplicationConfigWizard/ApplicationConfigWizardStepTwo'
 import ConnectorField from './ApplicationConfigConnectorField'
-import {
-  AllowedTypes,
+import type {
   ApplicationConfigWizardInitData,
   ApplicationConfigListViewProps,
-  ConnectorIcons,
-  ConnectorMap,
   ConnectorTypes,
   LastStepProps,
+  WizardStepNames} from '../ApplicationConfig.types';
+import {
+  AllowedTypes,
+  ConnectorIcons,
+  ConnectorMap,
   ModalViewOption,
-  WizardStepNames,
   ApplicationConfigSelectionTypes
 } from '../ApplicationConfig.types'
 import css from '../ApplicationConfig.module.scss'

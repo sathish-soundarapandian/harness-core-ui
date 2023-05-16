@@ -8,7 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import ResourceConstraintTooltip, { ResourceConstraintTooltipProps } from '../ResourceConstraints'
+import type { ResourceConstraintTooltipProps } from '../ResourceConstraints';
+import ResourceConstraintTooltip from '../ResourceConstraints'
 
 const getProps = (): ResourceConstraintTooltipProps => ({
   loading: false,

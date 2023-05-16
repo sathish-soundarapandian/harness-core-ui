@@ -5,10 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect, useMemo } from 'react'
+import type { FC} from 'react';
+import React, { useEffect, useMemo } from 'react'
 import { useFormikContext } from 'formik'
 import { get } from 'lodash-es'
-import { FormError, FormInput, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { FormError, FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { Feature } from 'services/cf'
 import { CFVariationColors, PERCENTAGE_ROLLOUT_VALUE } from '@cf/constants'

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { DelegateType, DelegateInstallerDetails } from './DelegateSetupStep.types'
+import type { DelegateInstallerDetails } from './DelegateSetupStep.types';
+import { DelegateType } from './DelegateSetupStep.types'
 
 export const delegateInstaller: DelegateInstallerDetails[] = [
   {

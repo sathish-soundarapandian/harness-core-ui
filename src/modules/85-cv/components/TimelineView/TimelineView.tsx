@@ -11,8 +11,10 @@ import { Classes } from '@blueprintjs/core'
 import { isUndefined } from 'lodash-es'
 import moment from 'moment'
 import classnames from 'classnames'
-import { TimeBasedShadedRegion, TimeBasedShadedRegionProps } from '../TimeBasedShadedRegion/TimeBasedShadedRegion'
-import { TimelineBar, TimelineBarProps } from './TimelineBar'
+import type { TimeBasedShadedRegionProps } from '../TimeBasedShadedRegion/TimeBasedShadedRegion';
+import { TimeBasedShadedRegion } from '../TimeBasedShadedRegion/TimeBasedShadedRegion'
+import type { TimelineBarProps } from './TimelineBar';
+import { TimelineBar } from './TimelineBar'
 import styles from './TimelineView.module.scss'
 
 interface RowItem {

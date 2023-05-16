@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Utils } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import { IdentifierText, IdentifierTextProps } from '../IdentifierText'
+import type { IdentifierTextProps } from '../IdentifierText';
+import { IdentifierText } from '../IdentifierText'
 
 const renderComponent = (props: Partial<IdentifierTextProps> = {}): RenderResult =>
   render(

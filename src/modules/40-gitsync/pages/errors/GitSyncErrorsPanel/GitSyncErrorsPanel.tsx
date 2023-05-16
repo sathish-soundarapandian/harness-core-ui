@@ -5,18 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import React, { useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { Drawer, Position } from '@blueprintjs/core'
+import type {
+  PaginationProps,
+  PillToggleProps} from '@harness/uicore';
 import {
   Layout,
   Pagination,
-  PaginationProps,
   PageError,
   Button,
   PillToggle,
-  PillToggleProps,
   Text,
   Icon
 } from '@harness/uicore'
@@ -27,13 +29,15 @@ import {
   GitErrorExperienceTab,
   GitSyncErrorState
 } from '@gitsync/pages/errors/GitSyncErrorContext'
-import {
+import type {
   ListGitToHarnessErrorsCommitsQueryParams,
-  useListGitToHarnessErrorsCommits,
   GitSyncErrorAggregateByCommitDTO,
-  useListGitSyncErrors,
   GitSyncErrorDTO,
   GetYamlSchemaQueryParams
+} from 'services/cd-ng';
+import {
+  useListGitToHarnessErrorsCommits,
+  useListGitSyncErrors
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'

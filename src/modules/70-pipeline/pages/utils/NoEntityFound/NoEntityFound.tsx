@@ -11,7 +11,8 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { Container, Layout, Text } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
-import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import type { GitFilterScope } from '@common/components/GitFilters/GitFilters';
+import GitFilters from '@common/components/GitFilters/GitFilters'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type {
   InputSetGitQueryParams,
@@ -19,7 +20,8 @@ import type {
   TemplateStudioPathProps,
   TemplateStudioQueryParams
 } from '@common/interfaces/RouteInterfaces'
-import GitRemoteDetails, { GitRemoteDetailsProps } from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import type { GitRemoteDetailsProps } from '@common/components/GitRemoteDetails/GitRemoteDetails';
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'

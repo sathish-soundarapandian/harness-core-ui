@@ -7,6 +7,8 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -16,24 +18,25 @@ import {
   FormInput,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   useToaster
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { NameIdDescription } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 
+import type {
+  StringFormData,
+  VariableFormDataWithScope} from '@variables/utils/VariablesUtils';
 import {
   convertVariableDTOToFormData,
   convertVariableFormDataToDTO,
   getVaribaleTypeOptions,
-  StringFormData,
   Validation,
-  VariableFormDataWithScope,
   VariableType
 } from '@variables/utils/VariablesUtils'
 
-import { useCreateVariable, useUpdateVariable, VariableDTO, VariableRequestDTO } from 'services/cd-ng'
+import type { VariableDTO, VariableRequestDTO } from 'services/cd-ng';
+import { useCreateVariable, useUpdateVariable } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import css from './CreateEditVariable.module.scss'
 

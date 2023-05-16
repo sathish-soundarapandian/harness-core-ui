@@ -6,6 +6,9 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   Container,
@@ -14,8 +17,6 @@ import {
   FormInput,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  StepProps,
   Icon,
   Text,
   Radio
@@ -25,15 +26,17 @@ import * as Yup from 'yup'
 import { defaultTo, get, omit, pick } from 'lodash-es'
 import { useParams, Link } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ConnectorInfoDTO,
   ConnectorFilterProperties,
-  useGetConnectorListV2,
   GetConnectorListV2QueryParams,
   Failure,
   AwsCurAttributes,
   ConnectorResponse,
   CEAwsConnector
+} from 'services/cd-ng';
+import {
+  useGetConnectorListV2
 } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { Description, Tags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'

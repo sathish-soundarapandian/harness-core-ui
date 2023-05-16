@@ -25,15 +25,18 @@ import type { HideModal } from '@harness/use-modal'
 
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
-import { Error, importInputSetPromise, importPipelinePromise, ResponsePipelineSaveResponse } from 'services/pipeline-ng'
-import { importTemplatePromise, ResponseTemplateImportSaveResponse } from 'services/template-ng'
+import type { Error, ResponsePipelineSaveResponse } from 'services/pipeline-ng';
+import { importInputSetPromise, importPipelinePromise } from 'services/pipeline-ng'
+import type { ResponseTemplateImportSaveResponse } from 'services/template-ng';
+import { importTemplatePromise } from 'services/template-ng'
 import { IdentifierSchema, NameSchema, TemplateVersionLabelSchema } from '@common/utils/Validation'
 import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ExtraQueryParams, InitialValuesType, ModifiedInitialValuesType } from './MigrateUtils'
 import css from './MigrateResource.module.scss'
 

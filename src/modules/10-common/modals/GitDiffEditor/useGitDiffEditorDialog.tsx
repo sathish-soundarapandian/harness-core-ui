@@ -9,16 +9,19 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { omit, pick, defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
-import { Button, Layout, Icon, Text, ModalErrorHandlerBinding, ModalErrorHandler } from '@harness/uicore'
+import type { ModalErrorHandlerBinding} from '@harness/uicore';
+import { Button, Layout, Icon, Text, ModalErrorHandler } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import { GitDiffEditor } from '@common/components/GitDiffEditor/GitDiffEditor'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
-import { EntityGitDetails, useGetFileByBranch, useGetFileContent } from 'services/cd-ng'
+import type { EntityGitDetails} from 'services/cd-ng';
+import { useGetFileByBranch, useGetFileContent } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { sanitize } from '@common/utils/JSONUtils'
 

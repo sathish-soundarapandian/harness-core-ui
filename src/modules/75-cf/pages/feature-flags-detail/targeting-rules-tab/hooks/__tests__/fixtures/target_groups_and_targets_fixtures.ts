@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { TargetingRuleItemStatus, TargetingRuleItemType, VariationPercentageRollout } from '../../../types'
+import type { VariationPercentageRollout } from '../../../types';
+import { TargetingRuleItemStatus, TargetingRuleItemType } from '../../../types'
 
 const mockPercentageVariationRollout: VariationPercentageRollout = {
   status: TargetingRuleItemStatus.LOADED,

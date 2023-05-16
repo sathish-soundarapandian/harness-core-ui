@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, Text, SelectOption, MultiSelectOption, Container } from '@harness/uicore'
+import type { SelectOption, MultiSelectOption} from '@harness/uicore';
+import { Layout, Text, Container } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {

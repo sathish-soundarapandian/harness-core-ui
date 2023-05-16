@@ -12,7 +12,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import * as hooks from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
-import { SaveTemplateButton, SaveTemplateButtonProps } from '../SaveTemplateButton'
+import type { SaveTemplateButtonProps } from '../SaveTemplateButton';
+import { SaveTemplateButton } from '../SaveTemplateButton'
 
 const saveMock = jest.fn()
 

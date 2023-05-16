@@ -11,13 +11,15 @@ import { FontVariation, Color } from '@harness/design-system'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import SLOTargetChartWrapper from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart'
-import {
-  PeriodTypes,
-  PeriodLengthTypes,
-  SLOV2FormFields,
+import type {
   ErrorBudgetInterface,
   SLOTargetAndBudgetPolicyProps,
   SLOV2Form
+} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types';
+import {
+  PeriodTypes,
+  PeriodLengthTypes,
+  SLOV2FormFields
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { flexStart } from './SLOTargetAndBudgetPolicy.constants'
 import { convertSLOFormDataToServiceLevelIndicatorDTO } from '../../components/CVCreateSLOV2/CVCreateSLOV2.utils'

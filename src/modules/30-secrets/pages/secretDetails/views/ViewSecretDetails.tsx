@@ -30,8 +30,9 @@ import { getKeyForCredentialType, getStringForType } from '@secrets/utils/SSHAut
 import VerifyConnectionSSH from '@secrets/modals/CreateSSHCredModal/views/VerifyConnection'
 import VerifyConnectionWinRM from '@secrets/modals/CreateWinRmCredModal/views/VerifyConnection'
 import ConnectorStats from '@common/components/ConnectorStats/ConnectorStats'
+import type {
+  ActivityDetailsRowInterface} from '@common/components/RenderDetailsTable/RenderDetailsTable';
 import {
-  ActivityDetailsRowInterface,
   RenderDetailsTable
 } from '@common/components/RenderDetailsTable/RenderDetailsTable'
 import { useStrings } from 'framework/strings'

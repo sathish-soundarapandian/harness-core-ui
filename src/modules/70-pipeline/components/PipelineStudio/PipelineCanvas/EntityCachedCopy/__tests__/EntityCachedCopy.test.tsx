@@ -8,12 +8,15 @@
 import React from 'react'
 import { fireEvent, render, waitFor, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import {
-  PipelineContext,
+import type {
   PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
+import {
+  PipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { CacheResponseMetadata } from 'services/pipeline-ng'
-import { EntityCachedCopy, EntityCachedCopyHandle } from '../EntityCachedCopy'
+import type { EntityCachedCopyHandle } from '../EntityCachedCopy';
+import { EntityCachedCopy } from '../EntityCachedCopy'
 import { getDummyPipelineCanvasContextValue } from '../../__tests__/PipelineCanvasTestHelper'
 
 jest.mock('services/pipeline-ng', () => ({

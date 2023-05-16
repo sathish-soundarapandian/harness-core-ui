@@ -7,7 +7,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import cx from 'classnames'
-import { Formik, Layout, Button, StepProps, Text, ButtonVariation, FormikForm } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Formik, Layout, Button, Text, ButtonVariation, FormikForm } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
@@ -18,7 +19,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { useQueryParams } from '@common/hooks'
 
-import { ConnectorConfigDTO, DockerBuildDetailsDTO, useGetBuildDetailsForDocker } from 'services/cd-ng'
+import type { ConnectorConfigDTO, DockerBuildDetailsDTO} from 'services/cd-ng';
+import { useGetBuildDetailsForDocker } from 'services/cd-ng'
 import {
   checkIfQueryParamsisNotEmpty,
   getArtifactFormData,

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, isObject, merge } from 'lodash-es'
 import produce from 'immer'
@@ -18,7 +19,7 @@ import type {
   SidecarArtifact
 } from 'services/cd-ng'
 import { ENABLED_ARTIFACT_TYPES, ModalViewFor } from './ArtifactHelper'
-import {
+import type {
   ArtifactTagHelperText,
   ArtifactType,
   GoogleArtifactRegistryInitialValuesType,
@@ -27,10 +28,12 @@ import {
   ImagePathTypes,
   JenkinsArtifactType,
   Nexus2InitialValuesType,
-  RepositoryPortOrServer,
-  TagTypes,
   AmazonMachineImageInitialValuesType,
   AzureArtifactsInitialValues
+} from './ArtifactInterface';
+import {
+  RepositoryPortOrServer,
+  TagTypes
 } from './ArtifactInterface'
 
 export const shellScriptType: SelectOption[] = [

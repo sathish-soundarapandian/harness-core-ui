@@ -8,7 +8,8 @@
 import React from 'react'
 import { render, waitFor, screen, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
 import * as ticketService from 'services/ticket-service/ticketServiceComponents'
 import { LogAnalysisRow } from '../LogAnalysisRow'

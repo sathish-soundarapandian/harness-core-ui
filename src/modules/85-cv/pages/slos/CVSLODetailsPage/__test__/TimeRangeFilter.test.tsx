@@ -6,7 +6,8 @@
  */
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import * as cvServices from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import DetailsPanel from '../DetailsPanel/DetailsPanel'

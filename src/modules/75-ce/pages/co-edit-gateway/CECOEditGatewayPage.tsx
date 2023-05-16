@@ -17,11 +17,12 @@ import type {
   Provider,
   ConnectionMetadata
 } from '@ce/components/COCreateGateway/models'
-import {
+import type {
   HealthCheck,
   Service,
   ServiceDep,
-  ServiceMetadata,
+  ServiceMetadata} from 'services/lw';
+import {
   useAllServiceResources,
   useListStaticSchedules,
   useRouteDetails

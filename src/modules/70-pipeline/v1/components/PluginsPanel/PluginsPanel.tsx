@@ -10,6 +10,8 @@ import { capitalize, get, groupBy, isEmpty } from 'lodash-es'
 import { Classes, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { Color, FontVariation } from '@harness/design-system'
+import type {
+  IconName} from '@harness/uicore';
 import {
   Container,
   Layout,
@@ -24,13 +26,14 @@ import {
   ButtonVariation,
   FormInput,
   Popover,
-  IconName,
   Accordion
 } from '@harness/uicore'
-import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
+import type { Input, PluginMetadataResponse} from 'services/ci';
+import { useListPlugins } from 'services/ci'
 import { useStrings } from 'framework/strings'
 import { Status } from '@common/utils/Constants'
-import { PluginType, PluginAddUpdateMetadata } from '@common/interfaces/YAMLBuilderProps'
+import type { PluginAddUpdateMetadata } from '@common/interfaces/YAMLBuilderProps';
+import { PluginType } from '@common/interfaces/YAMLBuilderProps'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 
 import css from './PluginsPanel.module.scss'

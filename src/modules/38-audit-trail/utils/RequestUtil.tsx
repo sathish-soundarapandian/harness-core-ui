@@ -23,7 +23,8 @@ import type { OrganizationAggregateDTO, ProjectResponse } from 'services/cd-ng'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
-import { UseQueryParamsOptions, useQueryParamsOptions } from '@common/hooks/useQueryParams'
+import type { UseQueryParamsOptions} from '@common/hooks/useQueryParams';
+import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 

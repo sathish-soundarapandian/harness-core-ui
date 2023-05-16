@@ -8,7 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { ExecutionStatusEnum, ExecutionStatus } from '@pipeline/utils/statusHelpers'
+import type { ExecutionStatus } from '@pipeline/utils/statusHelpers';
+import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { ExecutionStatusIcon } from './ExecutionStatusIcon'
 
 describe('ExecutionStatusIcon', () => {

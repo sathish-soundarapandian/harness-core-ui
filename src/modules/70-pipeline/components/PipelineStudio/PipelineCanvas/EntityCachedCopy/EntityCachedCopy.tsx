@@ -8,7 +8,8 @@
 import React, { useEffect } from 'react'
 import type { GetDataError } from 'restful-react'
 import cx from 'classnames'
-import { Icon, IconName, Layout, useToggleOpen, ConfirmationDialog, Button, ButtonVariation } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Icon, Layout, useToggleOpen, ConfirmationDialog, Button, ButtonVariation } from '@harness/uicore'
 import { Intent, Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'

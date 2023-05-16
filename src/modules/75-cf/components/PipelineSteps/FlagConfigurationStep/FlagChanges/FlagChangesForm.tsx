@@ -5,29 +5,38 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, MouseEvent, useCallback, useMemo, useState } from 'react'
+import type { FC, MouseEvent} from 'react';
+import React, { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { Button, ButtonVariation, Container, PageError } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { Feature, useGetAllSegments, useGetAllTargets } from 'services/cf'
+import type { Feature} from 'services/cf';
+import { useGetAllSegments, useGetAllTargets } from 'services/cf'
 import { getErrorMessage } from '@cf/utils/CFUtils'
-import { CFPipelineInstructionType, FeatureFlagConfigurationInstruction, FlagConfigurationStepData } from '../types'
+import type { FeatureFlagConfigurationInstruction, FlagConfigurationStepData } from '../types';
+import { CFPipelineInstructionType } from '../types'
 import SubSectionSelector from './SubSectionSelector'
 import RemoveSubSectionButton from './RemoveSubSectionButton'
 import type { SubSectionProps } from './SubSection'
 
 // sub-sections
-import SetFlagSwitch, { SetFlagSwitchProps } from './subSections/SetFlagSwitch'
-import DefaultRules, { DefaultRulesProps } from './subSections/DefaultRules'
-import ServePercentageRollout, { ServePercentageRolloutProps } from './subSections/ServePercentageRollout'
-import ServeVariationToIndividualTarget, {
+import type { SetFlagSwitchProps } from './subSections/SetFlagSwitch';
+import SetFlagSwitch from './subSections/SetFlagSwitch'
+import type { DefaultRulesProps } from './subSections/DefaultRules';
+import DefaultRules from './subSections/DefaultRules'
+import type { ServePercentageRolloutProps } from './subSections/ServePercentageRollout';
+import ServePercentageRollout from './subSections/ServePercentageRollout'
+import type {
   ServeVariationToIndividualTargetProps
-} from './subSections/ServeVariationToIndividualTarget'
-import ServeVariationToTargetGroup, {
+} from './subSections/ServeVariationToIndividualTarget';
+import ServeVariationToIndividualTarget from './subSections/ServeVariationToIndividualTarget'
+import type {
   ServeVariationToTargetGroupProps
-} from './subSections/ServeVariationToTargetGroup'
+} from './subSections/ServeVariationToTargetGroup';
+import ServeVariationToTargetGroup from './subSections/ServeVariationToTargetGroup'
 
 import subSectionCSS from './SubSection.module.scss'
 

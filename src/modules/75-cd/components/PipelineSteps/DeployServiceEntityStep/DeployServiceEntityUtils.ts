@@ -7,7 +7,8 @@
 
 import { isEmpty, isNil } from 'lodash-es'
 import * as Yup from 'yup'
-import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type {
   ServiceYamlV2,
   ServicesMetadata,

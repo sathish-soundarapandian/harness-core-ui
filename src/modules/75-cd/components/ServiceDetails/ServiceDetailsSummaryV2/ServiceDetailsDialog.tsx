@@ -5,13 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react'
-import { Container, Dialog, ExpandingSearchInput, ExpandingSearchInputHandle, OverlaySpinner } from '@harness/uicore'
+import type { Dispatch, SetStateAction } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
+import type { ExpandingSearchInputHandle } from '@harness/uicore'
+import { Container, Dialog, ExpandingSearchInput, OverlaySpinner } from '@harness/uicore'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
-import ServiceDetailInstanceView, { ServiceDetailInstanceViewProps } from './ServiceDetailsInstanceView'
+import type { ServiceDetailInstanceViewProps } from './ServiceDetailsInstanceView'
+import ServiceDetailInstanceView from './ServiceDetailsInstanceView'
 import ServiceDetailsEnvTable from './ServiceDetailsEnvTable'
 import ServiceDetailsArtifactTable from './ServiceDetailsArtifactTable'
 import css from './ServiceDetailsSummaryV2.module.scss'

@@ -10,6 +10,8 @@ import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   Card,
@@ -18,7 +20,6 @@ import {
   Icon,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   Text
 } from '@harness/uicore'
 import { Collapse } from '@blueprintjs/core'
@@ -28,7 +29,8 @@ import { useStrings } from 'framework/strings'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { listenerRulesPromise, ResponseListString, useElasticLoadBalancers, useListeners } from 'services/cd-ng'
+import type { ResponseListString} from 'services/cd-ng';
+import { listenerRulesPromise, useElasticLoadBalancers, useListeners } from 'services/cd-ng'
 import { shouldFetchFieldData } from '../PipelineStepsUtil'
 
 import type { ElastigroupBGStageSetupData } from './ElastigroupBGStageSetupStepTypes'

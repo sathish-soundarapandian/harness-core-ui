@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
-import { FormikProps, FieldArray } from 'formik'
-import { AllowedTypes, Button, ButtonVariation, FormikForm, FormInput, SelectOption } from '@harness/uicore'
+import type { FormikProps} from 'formik';
+import { FieldArray } from 'formik'
+import type { AllowedTypes, SelectOption } from '@harness/uicore';
+import { Button, ButtonVariation, FormikForm, FormInput } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 
 import { get } from 'lodash-es'

@@ -10,11 +10,13 @@ import { useParams } from 'react-router-dom'
 import { Text, Layout, useToaster } from '@harness/uicore'
 import { Callout } from '@blueprintjs/core'
 import cx from 'classnames'
-import {
-  useGetConnector,
-  useGetUserSourceCodeManagers,
+import type {
   GetUserSourceCodeManagersQueryParams,
   UserSourceCodeManagerResponseDTO
+} from 'services/cd-ng';
+import {
+  useGetConnector,
+  useGetUserSourceCodeManagers
 } from 'services/cd-ng'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'

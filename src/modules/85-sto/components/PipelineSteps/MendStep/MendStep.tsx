@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { MendStepBaseWithRef } from './MendStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { MendStepVariables, MendStepVariablesProps } from './MendStepVariables'
+import type { MendStepVariablesProps } from './MendStepVariables';
+import { MendStepVariables } from './MendStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './MendStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

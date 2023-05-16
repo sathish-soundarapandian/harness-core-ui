@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useGetFoldersWithHidden } from 'services/custom-dashboards'
-import DashboardResourceModalBody, { DashboardResourceModalBodyProps } from '../DashboardResourceModalBody'
+import type { DashboardResourceModalBodyProps } from '../DashboardResourceModalBody';
+import DashboardResourceModalBody from '../DashboardResourceModalBody'
 
 jest.mock('services/custom-dashboards', () => ({
   useGetFoldersWithHidden: jest.fn(),

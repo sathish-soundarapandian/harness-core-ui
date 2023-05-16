@@ -7,14 +7,16 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { DateRangePickerButton, Layout, DropDown, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { DateRangePickerButton, Layout, DropDown } from '@harness/uicore'
 import type { DateRange } from '@blueprintjs/datetime'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { Page } from '@common/exports'
-import {
+import type {
   AuditTrailQueryParams,
-  ShowEventFilterType,
+  ShowEventFilterType} from '@audit-trail/utils/RequestUtil';
+import {
   showEventTypeMap,
   useAuditTrailQueryParamOptions
 } from '@audit-trail/utils/RequestUtil'

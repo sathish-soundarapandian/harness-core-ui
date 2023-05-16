@@ -6,14 +6,15 @@
  */
 
 import React, { useCallback } from 'react'
-import {
+import type {
   AllowedTypes,
+  IconName} from '@harness/uicore';
+import {
   Button,
   ButtonVariation,
   Formik,
   FormInput,
   getMultiTypeFromValue,
-  IconName,
   Label,
   Layout,
   MultiTypeInputType,
@@ -21,18 +22,21 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
-import { FieldArray, FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+import type { FormikErrors, FormikProps} from 'formik';
+import { FieldArray, yupToFormErrors } from 'formik'
 import * as Yup from 'yup'
 import { v4 as uuid } from 'uuid'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
-import {
+import type {
   StepFormikFowardRef,
-  setFormikRef,
   StepProps,
-  StepViewType,
   ValidateInputSetProps
+} from '@pipeline/components/AbstractSteps/Step';
+import {
+  setFormikRef,
+  StepViewType
 } from '@pipeline/components/AbstractSteps/Step'
 import type { GetExecutionStrategyYamlQueryParams, ManifestConfigWrapper } from 'services/cd-ng'
 

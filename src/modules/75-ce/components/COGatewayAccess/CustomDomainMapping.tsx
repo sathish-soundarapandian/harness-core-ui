@@ -8,7 +8,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, get } from 'lodash-es'
-import { Container, Heading, Layout, SelectOption, Text, Checkbox, Select } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Container, Heading, Layout, Text, Checkbox, Select } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Radio } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'

@@ -9,11 +9,13 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Container, NoDataCard } from '@harness/uicore'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
+import type {
+  GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams
+} from 'services/cv';
 import {
   useGetVerifyStepDeploymentRadarChartLogAnalysisClusters,
   useGetVerifyStepDeploymentLogAnalysisRadarChartResult,
-  useGetVerifyStepNodeNames,
-  GetVerifyStepDeploymentRadarChartLogAnalysisClustersQueryParams
+  useGetVerifyStepNodeNames
 } from 'services/cv'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import noDataImage from '@cv/assets/noData.svg'

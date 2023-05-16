@@ -9,22 +9,26 @@ import React, { useCallback } from 'react'
 import { Button, Card, Container, Icon, Layout, Text, ButtonVariation, useToaster } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { Module, ModuleName } from 'framework/types/ModuleName'
+import type { Module} from 'framework/types/ModuleName';
+import { ModuleName } from 'framework/types/ModuleName'
 import { getModuleLink } from '@projects-orgs/components/ModuleListCard/ModuleListCard'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getModuleDescriptionsForModuleSelectionDialog, getModuleFullLengthTitle } from '@projects-orgs/utils/utils'
 import { getModuleIcon, useGetCommunity, isOnPrem } from '@common/utils/utils'
-import {
+import type {
   Project,
   StartFreeLicenseQueryParams,
   StartTrialDTO,
-  startFreeLicensePromise,
-  startTrialLicensePromise,
   ResponseModuleLicenseDTO
+} from 'services/cd-ng';
+import {
+  startFreeLicensePromise,
+  startTrialLicensePromise
 } from 'services/cd-ng'
 import ModuleSelectionFactory from '@projects-orgs/factories/ModuleSelectionFactory'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'

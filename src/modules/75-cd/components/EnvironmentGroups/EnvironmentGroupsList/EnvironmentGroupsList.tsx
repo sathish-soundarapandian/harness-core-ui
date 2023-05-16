@@ -13,7 +13,8 @@ import { defaultTo } from 'lodash-es'
 import { Button, Container, getErrorInfoFromErrorObject, Layout, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { EnvironmentGroupResponse, useDeleteEnvironmentGroup } from 'services/cd-ng'
+import type { EnvironmentGroupResponse} from 'services/cd-ng';
+import { useDeleteEnvironmentGroup } from 'services/cd-ng'
 
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'

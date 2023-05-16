@@ -13,9 +13,11 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-import {
-  TemplateStudioSubHeaderWithRef,
+import type {
   TemplateStudioSubHeaderProps
+} from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/TemplateStudioSubHeader';
+import {
+  TemplateStudioSubHeaderWithRef
 } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/TemplateStudioSubHeader'
 
 const stepTemplateContext = getTemplateContextMock(TemplateType.Step)

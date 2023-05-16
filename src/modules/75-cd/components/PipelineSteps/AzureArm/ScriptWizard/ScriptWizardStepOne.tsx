@@ -33,11 +33,13 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type {
+  ConnectorTypes
+} from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types';
 import {
   ConnectorIcons,
   ConnectorLabelMap,
-  ConnectorMap,
-  ConnectorTypes
+  ConnectorMap
 } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 
 import css from './ScriptWizard.module.scss'

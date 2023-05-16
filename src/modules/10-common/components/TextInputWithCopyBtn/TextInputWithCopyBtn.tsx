@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { IFormGroupProps, IInputGroupProps, HTMLInputProps, Popover, Menu } from '@blueprintjs/core'
+import type { IFormGroupProps, IInputGroupProps, HTMLInputProps} from '@blueprintjs/core';
+import { Popover, Menu } from '@blueprintjs/core'
 import { FormInput, Button, Icon, Utils, TextInput } from '@harness/uicore'
 import cx from 'classnames'
 

@@ -14,8 +14,10 @@ import type { Column } from 'react-table'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog } from '@blueprintjs/core'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
-import { useEnvironmentStore, ParamsType } from '@cd/components/Environments/common'
-import { EnvironmentResponseDTO, useDeleteEnvironmentV2, useGetEnvironmentList } from 'services/cd-ng'
+import type { ParamsType } from '@cd/components/Environments/common';
+import { useEnvironmentStore } from '@cd/components/Environments/common'
+import type { EnvironmentResponseDTO} from 'services/cd-ng';
+import { useDeleteEnvironmentV2, useGetEnvironmentList } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'

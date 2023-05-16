@@ -10,7 +10,8 @@ import type { Story, Meta } from '@storybook/react'
 // import styled from '@emotion/styled'
 import { TestWrapper } from '@common/utils/testUtils'
 
-import { JiraApprovalTab, JiraApprovalTabProps } from './JiraApprovalTab'
+import type { JiraApprovalTabProps } from './JiraApprovalTab';
+import { JiraApprovalTab } from './JiraApprovalTab'
 import jiraApprovalData from './__tests__/JiraAprovalData.json'
 
 export default {

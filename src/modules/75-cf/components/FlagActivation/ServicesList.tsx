@@ -5,8 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import type { FC} from 'react';
+import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   Checkbox,
@@ -18,7 +21,6 @@ import {
   ModalDialog,
   Page,
   Select,
-  SelectOption,
   TableV2,
   Tag,
   Text,

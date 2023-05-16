@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, fireEvent, getByText, waitFor, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { render, fireEvent, getByText, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'

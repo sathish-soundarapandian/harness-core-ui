@@ -8,20 +8,23 @@
 import React from 'react'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-import {
+import type {
   AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
+import {
   Button,
   ButtonVariation,
   Container,
   Formik,
   FormikForm,
-  FormInput,
-  SelectOption
+  FormInput
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
-import { CommandType, commandTypeOptions, CommandUnitType, LocationType } from '../CommandScriptsTypes'
+import type { CommandUnitType} from '../CommandScriptsTypes';
+import { CommandType, commandTypeOptions, LocationType } from '../CommandScriptsTypes'
 import { CopyCommandEdit } from './CopyCommandEdit'
 import { ScriptCommandEdit } from './ScriptCommandEdit'
 import { DownloadArtifactCommandEdit } from './DownloadArtifactCommandEdit'

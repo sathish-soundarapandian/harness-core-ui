@@ -6,13 +6,16 @@
  */
 
 import React, { useState } from 'react'
-import { FormInput, Icon, ModalErrorHandler, ModalErrorHandlerBinding, SelectOption, Text } from '@harness/uicore'
+import type { ModalErrorHandlerBinding, SelectOption} from '@harness/uicore';
+import { FormInput, Icon, ModalErrorHandler, Text } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import { VaultConfigFormData, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
+import type { VaultConfigFormData} from '@connectors/interfaces/ConnectorInterface';
+import { HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import { useListAwsRegions } from 'services/portal'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 

@@ -5,15 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react'
 import type { FormikErrors } from 'formik'
 import { get, isEmpty, set } from 'lodash-es'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
-import {
+import type {
   AllowedTypesWithExecutionTime,
   AllowedTypesWithRunTime,
-  AllowedTypes,
+  AllowedTypes} from '@harness/uicore';
+import {
   FormInput,
   MultiTypeInputType,
   Container,

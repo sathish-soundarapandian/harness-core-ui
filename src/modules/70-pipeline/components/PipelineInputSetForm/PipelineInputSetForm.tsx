@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, getMultiTypeFromValue, MultiTypeInputType, Text, Icon, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Layout, getMultiTypeFromValue, MultiTypeInputType, Text, Icon } from '@harness/uicore'
 import { isEmpty, get, defaultTo, set, omit } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -48,11 +49,13 @@ import type { AbstractStepFactory } from '../AbstractSteps/AbstractStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline, getTemplatePath } from '../PipelineStudio/StepUtil'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import { getFilteredAllowableTypes, StageSelectionData } from '../../utils/runPipelineUtils'
+import type { StageSelectionData } from '../../utils/runPipelineUtils';
+import { getFilteredAllowableTypes } from '../../utils/runPipelineUtils'
+import type {
+  ChainedPipelineInputSetFormProps,
+  ChildPipelineMetadataType} from './ChainedPipelineInputSetUtils';
 import {
   ChainedPipelineInfoPopover,
-  ChainedPipelineInputSetFormProps,
-  ChildPipelineMetadataType,
   getChildPipelineMetadata
 } from './ChainedPipelineInputSetUtils'
 import { OutputPanelInputSetView } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/OutputPanelInputSetView'

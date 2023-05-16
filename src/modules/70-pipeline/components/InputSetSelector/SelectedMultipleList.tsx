@@ -15,7 +15,8 @@ import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { useStrings } from 'framework/strings'
 import type { EntityGitDetails, InputSetErrorWrapper, InputSetSummaryResponse } from 'services/pipeline-ng'
-import { getIconByType, InputSetValue, onDragEnd, onDragLeave, onDragOver, onDragStart } from './utils'
+import type { InputSetValue} from './utils';
+import { getIconByType, onDragEnd, onDragLeave, onDragOver, onDragStart } from './utils'
 import { InputSetGitDetails } from './InputSetGitDetails'
 import css from './InputSetSelector.module.scss'
 

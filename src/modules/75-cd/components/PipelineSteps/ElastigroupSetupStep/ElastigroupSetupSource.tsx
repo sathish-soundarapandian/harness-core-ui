@@ -5,10 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useState } from 'react'
+import type { FormEvent} from 'react';
+import React, { useState } from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 import { toString } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -17,7 +19,8 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
-import { ElastigroupSetupData, InstancesType } from './ElastigroupSetupTypes'
+import type { ElastigroupSetupData} from './ElastigroupSetupTypes';
+import { InstancesType } from './ElastigroupSetupTypes'
 import type { ElastigroupBGStageSetupData } from '../ElastigroupBGStageSetupStep/ElastigroupBGStageSetupStepTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ElastigroupSetupStep.module.scss'

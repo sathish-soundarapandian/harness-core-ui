@@ -6,11 +6,14 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Container, FormInput, MultiSelectOption, Popover, Text, Utils, PageError } from '@harness/uicore'
+import type { MultiSelectOption} from '@harness/uicore';
+import { Container, FormInput, Popover, Text, Utils, PageError } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { ITagInputProps, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
+import type { ITagInputProps} from '@blueprintjs/core';
+import { PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { GetLabeValuesQueryParams, useGetLabeValues } from 'services/cv'
+import type { GetLabeValuesQueryParams} from 'services/cv';
+import { useGetLabeValues } from 'services/cv'
 import { TableFilter } from '@cv/components/TableFilter/TableFilter'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'

@@ -32,13 +32,14 @@ import { Divider } from '@blueprintjs/core'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
-import {
+import type {
   ConnectorInfoDTO,
   ResponseConnectorResponse,
   ResponseMessage,
   ResponseScmConnectorResponse,
   SecretDTOV2,
-  SecretTextSpecDTO,
+  SecretTextSpecDTO} from 'services/cd-ng';
+import {
   useCreateConnector,
   useCreateDefaultScmConnector
 } from 'services/cd-ng'
@@ -58,12 +59,13 @@ import {
   MAX_TIMEOUT_OAUTH
 } from '@common/components/ConnectViaOAuth/OAuthUtils'
 import { getGitUrl } from '@pipeline/utils/CIUtils'
+import type {
+  GitProvider,
+  GitProviderPermission} from './Constants';
 import {
   AllSaaSGitProviders,
   GitAuthenticationMethod,
-  GitProvider,
   GitProviderTypeToAuthenticationMethodMapping,
-  GitProviderPermission,
   Hosting,
   GitProviderPermissions,
   ACCOUNT_SCOPE_PREFIX,

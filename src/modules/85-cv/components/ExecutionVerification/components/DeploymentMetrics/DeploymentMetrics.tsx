@@ -6,6 +6,11 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import type {
+  AccordionHandle,
+  MultiSelectOption,
+  SelectOption
+} from '@harness/uicore';
 import {
   Container,
   Text,
@@ -13,16 +18,13 @@ import {
   PageError,
   NoDataCard,
   Accordion,
-  AccordionHandle,
   Checkbox,
   Layout,
   Button,
   ButtonVariation,
   MultiSelectDropDown,
-  MultiSelectOption,
   Icon,
-  Select,
-  SelectOption
+  Select
 } from '@harness/uicore'
 import cx from 'classnames'
 import { isEqual } from 'lodash-es'
@@ -32,9 +34,10 @@ import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ExecutionNode } from 'services/pipeline-ng'
-import {
+import type {
   AnalysedDeploymentNode,
-  GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+  GetMetricsAnalysisForVerifyStepExecutionIdQueryParams} from 'services/cv';
+import {
   useGetHealthSourcesForVerifyStepExecutionId,
   useGetMetricsAnalysisForVerifyStepExecutionId,
   useGetTransactionGroupsForVerifyStepExecutionId,
@@ -45,9 +48,11 @@ import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSour
 import noDataImage from '@cv/assets/noData.svg'
 import { POLLING_INTERVAL, PAGE_SIZE, DATA_OPTIONS, INITIAL_PAGE_NUMBER } from './DeploymentMetrics.constants'
 import { RefreshViewForNewData } from '../RefreshViewForNewDataButton/RefreshForNewData'
-import {
-  DeploymentMetricsAnalysisRow,
+import type {
   DeploymentMetricsAnalysisRowProps
+} from './components/DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow';
+import {
+  DeploymentMetricsAnalysisRow
 } from './components/DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow'
 import {
   transformMetricData,

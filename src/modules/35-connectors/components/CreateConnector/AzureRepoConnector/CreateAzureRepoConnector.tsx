@@ -8,10 +8,11 @@
 import React from 'react'
 import { StepWizard } from '@harness/uicore'
 import { pick } from 'lodash-es'
+import type {
+  CreateConnectorModalProps} from '@connectors/constants';
 import {
   Connectors,
   CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
-  CreateConnectorModalProps,
   GIT_TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'

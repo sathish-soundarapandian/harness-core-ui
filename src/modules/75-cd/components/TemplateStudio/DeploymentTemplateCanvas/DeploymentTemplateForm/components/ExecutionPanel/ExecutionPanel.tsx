@@ -8,17 +8,18 @@
 import React, { useEffect } from 'react'
 import { Intent, Position } from '@blueprintjs/core'
 import { at, defaultTo, get, isEmpty, map, noop, set } from 'lodash-es'
+import type {
+  IconName,
+  ExpandingSearchInputHandle} from '@harness/uicore';
 import {
   Button,
   Container,
   GridListToggle,
-  IconName,
   Layout,
   Text,
   Views,
   ExpandingSearchInput,
   useToaster,
-  ExpandingSearchInputHandle,
   useConfirmationDialog
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'

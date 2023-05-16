@@ -10,7 +10,8 @@ import { render, act, fireEvent } from '@testing-library/react'
 import { Formik } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
-import SelectDelegateType, { FormikForSelectDelegateType } from './SelectDelegateType'
+import type { FormikForSelectDelegateType } from './SelectDelegateType';
+import SelectDelegateType from './SelectDelegateType'
 import { DelegateType } from '../DelegateSetupStep.types'
 
 describe('Render Select Delegate Type Nested Form', () => {

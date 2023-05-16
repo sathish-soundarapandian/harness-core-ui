@@ -7,6 +7,11 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import cx from 'classnames'
+import type {
+  IconName,
+  NoDataCardProps,
+  PaginationProps
+} from '@harness/uicore';
 import {
   Container,
   TextInput,
@@ -16,27 +21,25 @@ import {
   Tabs,
   Tab,
   Icon,
-  IconName,
   ButtonVariation,
   PageError,
-  NoDataCard,
-  NoDataCardProps,
-  PaginationProps
+  NoDataCard
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Classes } from '@blueprintjs/core'
 import { debounce } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Scope, PrincipalScope } from '@common/interfaces/SecretsInterface'
-import { useStrings, UseStringsReturn } from 'framework/strings'
-import type { StringKeys } from 'framework/strings'
+import { useStrings } from 'framework/strings'
+import type { StringKeys , UseStringsReturn } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { CollapsableList } from '../CollapsableList/CollapsableList'
 import type { ScopeAndIdentifier } from '../MultiSelectEntityReference/MultiSelectEntityReference'
-import { EntityReferenceResponse, getScopeFromDTO, ScopedObjectDTO, TAB_ID } from './EntityReference.types'
+import type { EntityReferenceResponse, ScopedObjectDTO} from './EntityReference.types';
+import { getScopeFromDTO, TAB_ID } from './EntityReference.types'
 import { getCountOfSelectedRecordsInGivenScope } from './Utils'
 import css from './EntityReference.module.scss'
 

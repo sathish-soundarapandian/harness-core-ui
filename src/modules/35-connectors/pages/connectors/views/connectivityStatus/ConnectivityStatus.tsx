@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MouseEvent, ReactElement, useState } from 'react'
-import { Text, Layout, Button, Popover, StepsProgress, ButtonVariation, ButtonSize, IconName } from '@harness/uicore'
+import type { MouseEvent, ReactElement} from 'react';
+import React, { useState } from 'react'
+import type { IconName } from '@harness/uicore';
+import { Text, Layout, Button, Popover, StepsProgress, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Position, Intent, PopoverInteractionKind } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -14,12 +16,14 @@ import ReactTimeago from 'react-timeago'
 import type { IconProps } from '@harness/icons'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import {
-  useGetTestConnectionResult,
+import type {
   ConnectorConnectivityDetails,
   ConnectorValidationResult,
   ConnectorResponse,
   ErrorDetail
+} from 'services/cd-ng';
+import {
+  useGetTestConnectionResult
 } from 'services/cd-ng'
 
 import { StepIndex, STEP } from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'

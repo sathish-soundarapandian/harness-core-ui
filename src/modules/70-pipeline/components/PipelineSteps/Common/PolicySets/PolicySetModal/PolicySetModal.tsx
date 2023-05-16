@@ -10,6 +10,8 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, isEqual } from 'lodash-es'
 import type { FormikProps } from 'formik'
 
+import type {
+  IconName} from '@harness/uicore';
 import {
   Button,
   Layout,
@@ -18,22 +20,25 @@ import {
   useToaster,
   Tabs,
   Text,
-  IconName,
   ExpandingSearchInput
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps, Tab } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Dialog, Tab } from '@blueprintjs/core'
 
-import { useStrings, StringKeys } from 'framework/strings'
-import { GetPolicySetQueryParams, PolicySet, useGetPolicySetList } from 'services/pm'
+import type { StringKeys } from 'framework/strings';
+import { useStrings } from 'framework/strings'
+import type { GetPolicySetQueryParams, PolicySet} from 'services/pm';
+import { useGetPolicySetList } from 'services/pm'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import { PolicyManagementPolicySetWizard } from '@governance/GovernanceApp'
 
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { PolicySetListRenderer } from '../PolicySetListRenderer/PolicySetListRenderer'
 import { NewPolicySetButton } from '../NewPolicySetButton/NewPolicySetButton'
 import { PolicySetType } from '../utils'

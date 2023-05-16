@@ -10,7 +10,8 @@ import { render, fireEvent, findByText, waitFor, getAllByText, findAllByText } f
 
 import { act } from 'react-test-renderer'
 import { MultiTypeInputType } from '@harness/uicore'
-import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
+import type { UseGetReturnData } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'

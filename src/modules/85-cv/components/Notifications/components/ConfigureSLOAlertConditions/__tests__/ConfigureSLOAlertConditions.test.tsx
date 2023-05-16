@@ -9,8 +9,9 @@ import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import type {
+  ConfigureSLOAlertConditionsProps} from '@cv/components/Notifications/NotificationsContainer.types';
 import {
-  ConfigureSLOAlertConditionsProps,
   SRMNotificationType
 } from '@cv/components/Notifications/NotificationsContainer.types'
 import ConfigureSLOAlertConditions from '../ConfigureSLOAlertConditions'

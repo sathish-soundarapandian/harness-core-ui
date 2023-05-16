@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback } from 'react'
+import type { FC} from 'react';
+import React, { useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Formik, Form as FormikForm } from 'formik'
 import * as Yup from 'yup'
 import { Button, ButtonVariation, Layout, ModalDialog, useToaster } from '@harness/uicore'
 import { fullYamlPathRegex } from '@common/utils/StringUtils'
 import { useStrings } from 'framework/strings'
-import { GitSyncForm, GitSyncFormFields } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import type { GitSyncFormFields } from '@gitsync/components/GitSyncForm/GitSyncForm';
+import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useCreateGitRepo } from 'services/cf'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'

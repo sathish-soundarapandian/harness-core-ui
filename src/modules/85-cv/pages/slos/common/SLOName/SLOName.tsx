@@ -6,9 +6,12 @@
  */
 
 import React, { useCallback, useEffect, useMemo } from 'react'
+import type {
+  SelectOption,
+  MultiSelectOption
+} from '@harness/uicore';
 import {
   Container,
-  SelectOption,
   useToaster,
   Utils,
   FormInput,
@@ -16,8 +19,7 @@ import {
   Dialog,
   Formik,
   Text,
-  Layout,
-  MultiSelectOption
+  Layout
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'

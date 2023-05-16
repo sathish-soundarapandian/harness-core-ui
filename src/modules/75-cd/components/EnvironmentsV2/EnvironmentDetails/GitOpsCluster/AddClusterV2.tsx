@@ -15,14 +15,16 @@ import { EntityReference } from '@common/exports'
 import type { ScopeAndIdentifier } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 import { useStrings } from 'framework/strings'
 
-import {
+import type {
   ResponsePageClusterResponse,
-  getClusterListFromSourcePromise,
   ResponsePageClusterFromGitops,
   ClusterFromGitops,
-  useLinkClusters,
   ClusterBasicDTO,
   ClusterResponse
+} from 'services/cd-ng';
+import {
+  getClusterListFromSourcePromise,
+  useLinkClusters
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 

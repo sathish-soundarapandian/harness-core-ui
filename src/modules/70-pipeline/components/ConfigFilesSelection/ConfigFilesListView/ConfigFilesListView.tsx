@@ -12,14 +12,15 @@ import { get, set, noop, isArray } from 'lodash-es'
 import produce from 'immer'
 import type { IDialogProps } from '@blueprintjs/core'
 import { Dialog, Classes } from '@blueprintjs/core'
+import type {
+  IconProps,
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Button,
   ButtonSize,
   ButtonVariation,
-  IconProps,
   StepWizard,
-  StepProps,
   Text,
   Icon,
   MultiTypeInputType,

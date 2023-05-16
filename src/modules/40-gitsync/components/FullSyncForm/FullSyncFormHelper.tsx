@@ -9,10 +9,8 @@ import type { ModalErrorHandlerBinding, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings/String'
-import {
-  createGitFullSyncConfigPromise,
+import type {
   Failure,
-  getListOfBranchesByConnectorPromise,
   GetListOfBranchesByConnectorQueryParams,
   GitFullSyncConfigDTO,
   GitFullSyncConfigRequestDTO,
@@ -20,9 +18,13 @@ import {
   GitSyncFolderConfigDTO,
   ResponseListString,
   ResponseGitFullSyncConfigDTO,
-  triggerFullSyncPromise,
-  updateGitFullSyncConfigPromise,
   UpdateGitFullSyncConfigQueryParams
+} from 'services/cd-ng';
+import {
+  createGitFullSyncConfigPromise,
+  getListOfBranchesByConnectorPromise,
+  triggerFullSyncPromise,
+  updateGitFullSyncConfigPromise
 } from 'services/cd-ng'
 
 export interface FullSyncFormProps {

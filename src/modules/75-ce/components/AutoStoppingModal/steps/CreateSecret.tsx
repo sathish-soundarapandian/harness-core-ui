@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Layout, StepProps, Text } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -16,7 +17,8 @@ import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import CopyCodeSection from '@connectors/components/CreateConnector/CEK8sConnector/components/CopyCodeSection'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { ConnectorInfoDTO, useUpdateConnector } from 'services/cd-ng'
+import type { ConnectorInfoDTO} from 'services/cd-ng';
+import { useUpdateConnector } from 'services/cd-ng'
 import EnableAutoStoppingHeader from '@ce/components/CloudVisibilityModal/steps/EnableAutoStoppingStep'
 
 import css from '../AutoStoppingModal.module.scss'

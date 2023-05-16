@@ -7,10 +7,11 @@
 
 import type { PillToggleOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
+import type {
+  SLOV2Form} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types';
 import {
   EvaluationType,
   SLITypes,
-  SLOV2Form,
   SLOV2FormFields
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import css from './EvaluationType.module.scss'

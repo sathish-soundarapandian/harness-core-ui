@@ -7,11 +7,14 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { MultiTypeInputType, getMultiTypeFromValue, AllowedTypesWithRunTime } from '@harness/uicore'
+import type { AllowedTypesWithRunTime } from '@harness/uicore';
+import { MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
-import {
-  FormMultiTypeDurationField,
+import type {
   FormMultiTypeDurationProps
+} from '@common/components/MultiTypeDuration/MultiTypeDuration';
+import {
+  FormMultiTypeDurationField
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'

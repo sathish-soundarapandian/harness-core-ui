@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import type {
+  RenderResult} from '@testing-library/react';
 import {
   act,
   fireEvent,
@@ -14,7 +16,6 @@ import {
   queryByTestId,
   queryByText,
   render,
-  RenderResult,
   waitFor
 } from '@testing-library/react'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'

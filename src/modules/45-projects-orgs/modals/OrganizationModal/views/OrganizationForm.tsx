@@ -7,6 +7,8 @@
 
 import React from 'react'
 import * as Yup from 'yup'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   Container,
@@ -14,7 +16,6 @@ import {
   FormikForm as Form,
   Heading,
   Layout,
-  ModalErrorHandlerBinding,
   ModalErrorHandler,
   ButtonVariation
 } from '@harness/uicore'

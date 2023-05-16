@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useState } from 'react'
-import { Container, FormikForm, Formik, Button, FormInput, Layout, SelectOption } from '@harness/uicore'
+import type { ReactElement} from 'react';
+import React, { useState } from 'react'
+import type { SelectOption } from '@harness/uicore';
+import { Container, FormikForm, Formik, Button, FormInput, Layout } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 import type { GitRepoRequestRequestBody } from 'services/cf'

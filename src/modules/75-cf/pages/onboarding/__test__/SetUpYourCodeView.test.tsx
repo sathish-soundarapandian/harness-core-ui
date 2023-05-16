@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { SupportPlatforms } from '@cf/components/LanguageSelection/LanguageSelection'
-import { SetUpYourCodeView, SetUpYourCodeViewProps } from '../views/SetUpYourCodeView'
+import type { SetUpYourCodeViewProps } from '../views/SetUpYourCodeView';
+import { SetUpYourCodeView } from '../views/SetUpYourCodeView'
 
 const renderComponent = (props?: Partial<SetUpYourCodeViewProps>): RenderResult => {
   const xamarinLang = SupportPlatforms.find(lang => lang.name === 'Xamarin') as any

@@ -13,10 +13,11 @@ import { Container, Icon, Layout, PageBody, Tab, Tabs, Text, Utils } from '@harn
 import { Color, FontVariation } from '@harness/design-system'
 import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS, getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   Service,
   ServiceDep,
-  ServiceSavings,
+  ServiceSavings} from 'services/lw';
+import {
   useAllServiceResources,
   useGetAccessPoint,
   useHealthOfService,

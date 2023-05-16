@@ -12,7 +12,8 @@ import type { SSHKeyValidationMetadata as ValidationMetadata } from 'services/cd
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
-import VerifySecret, { Status } from './VerifySecret'
+import type { Status } from './VerifySecret';
+import VerifySecret from './VerifySecret'
 import css from './StepDetails.module.scss'
 
 interface VerifyConnectionProps {

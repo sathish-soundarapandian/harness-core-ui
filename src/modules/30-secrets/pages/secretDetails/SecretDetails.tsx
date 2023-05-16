@@ -20,12 +20,14 @@ import {
   VisualYamlToggle
 } from '@harness/uicore'
 
-import {
+import type {
   SecretTextSpecDTO,
-  usePutSecretViaYaml,
   ResponseSecretResponseWrapper,
-  useGetYamlSchema,
   SecretResponseWrapper
+} from 'services/cd-ng';
+import {
+  usePutSecretViaYaml,
+  useGetYamlSchema
 } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'

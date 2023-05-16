@@ -11,8 +11,8 @@ import type { PipelineFilterProperties, FilterDTO, NGTag } from 'services/pipeli
 
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { StringUtils } from '@common/exports'
-import { BUILD_TYPE, getCIModuleProperties } from './PipelineExecutionFilterRequestUtils'
-import type { DeploymentTypeContext, BuildTypeContext } from './PipelineExecutionFilterRequestUtils'
+import { getCIModuleProperties } from './PipelineExecutionFilterRequestUtils'
+import type { DeploymentTypeContext, BuildTypeContext , BUILD_TYPE} from './PipelineExecutionFilterRequestUtils'
 
 const exclusionList = [
   'buildType',

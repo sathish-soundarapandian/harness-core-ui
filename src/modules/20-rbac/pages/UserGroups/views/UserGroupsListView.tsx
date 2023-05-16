@@ -20,19 +20,23 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
-import { Classes, Position, Menu, Intent, PopoverInteractionKind, IconName, MenuItem } from '@blueprintjs/core'
+import type { IconName} from '@blueprintjs/core';
+import { Classes, Position, Menu, Intent, PopoverInteractionKind, MenuItem } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
-import {
+import type {
   UserGroupAggregateDTO,
-  useDeleteUserGroup,
   ResponsePageUserGroupAggregateDTO,
   UserGroupDTO,
   UserMetadataDTO,
   RoleAssignmentMetadataDTO
+} from 'services/cd-ng';
+import {
+  useDeleteUserGroup
 } from 'services/cd-ng'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import { useStrings, String, StringKeys } from 'framework/strings'
+import type { StringKeys } from 'framework/strings';
+import { useStrings, String } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import {
   getUserGroupActionTooltipText,

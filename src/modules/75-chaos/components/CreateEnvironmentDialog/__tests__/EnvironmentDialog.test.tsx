@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
 
-import EnvironmentDialog, { EnvironmentDialogProps } from '../EnvironmentDialog'
+import type { EnvironmentDialogProps } from '../EnvironmentDialog';
+import EnvironmentDialog from '../EnvironmentDialog'
 
 const renderComponent = (props: Partial<EnvironmentDialogProps> = {}): RenderResult => {
   return render(

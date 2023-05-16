@@ -7,11 +7,12 @@
 
 import React, { useEffect, useMemo, useRef } from 'react'
 import type { FormikProps } from 'formik'
+import type {
+  AccordionHandle} from '@harness/uicore';
 import {
   Formik,
   FormikForm,
   Accordion,
-  AccordionHandle,
   RUNTIME_INPUT_VALUE,
   Container,
   Text,
@@ -24,12 +25,15 @@ import { debounce, defaultTo, get, isEmpty, noop, set, unset } from 'lodash-es'
 
 import produce from 'immer'
 import { useStrings, String as LocaleString } from 'framework/strings'
-import {
-  AdvancedPanels,
+import type {
   StepCommandsProps,
   Values
+} from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes';
+import {
+  AdvancedPanels
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
-import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { LoopingStrategyPanel } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategyPanel'
 import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'

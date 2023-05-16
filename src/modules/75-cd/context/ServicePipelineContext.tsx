@@ -7,20 +7,25 @@
 
 import React from 'react'
 import { cloneDeep, defaultTo, isEmpty, isEqual, merge, noop, set } from 'lodash-es'
-import { AllowedTypesWithRunTime, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import produce from 'immer'
-import {
-  PipelineContext,
+import type {
   PipelineContextType
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
+import {
+  PipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
-import {
+import type {
   ActionReturnType,
+  PipelineViewData
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions';
+import {
   DefaultNewPipelineId,
   initialState,
   PipelineContextActions,
-  PipelineReducer,
-  PipelineViewData
+  PipelineReducer
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { useLocalStorage, useQueryParams } from '@common/hooks'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -31,7 +36,8 @@ import {
   getStageFromPipeline as _getStageFromPipeline,
   getStagePathFromPipeline as _getStagePathFromPipeline
 } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import { getServiceV2Promise, GetServiceV2QueryParams, NGServiceConfig, ServiceResponseDTO } from 'services/cd-ng'
+import type { GetServiceV2QueryParams, NGServiceConfig, ServiceResponseDTO } from 'services/cd-ng';
+import { getServiceV2Promise } from 'services/cd-ng'
 import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
 import type {
   GetPipelineQueryParams,
@@ -41,11 +47,13 @@ import type {
 } from 'services/pipeline-ng'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type {
+  ServicePipelineConfig
+} from '../components/Services/utils/ServiceUtils';
 import {
   initialServiceState,
   DefaultNewStageName,
-  DefaultNewStageId,
-  ServicePipelineConfig
+  DefaultNewStageId
 } from '../components/Services/utils/ServiceUtils'
 
 interface FetchServiceBoundProps {

@@ -8,7 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import CDInfo, { CDInfoProps } from '../CDInfo'
+import type { CDInfoProps } from '../CDInfo';
+import CDInfo from '../CDInfo'
 
 const getProps = (): CDInfoProps => ({
   data: null,

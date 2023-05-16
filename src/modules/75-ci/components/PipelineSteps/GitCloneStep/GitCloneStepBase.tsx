@@ -24,11 +24,14 @@ import {
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import {
-  runtimeInputGearWidth,
+import type {
   CodebaseRuntimeInputsInterface
+} from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils';
+import {
+  runtimeInputGearWidth
 } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
-import { useGetConnector, ConnectorInfoDTO } from 'services/cd-ng'
+import type { ConnectorInfoDTO } from 'services/cd-ng';
+import { useGetConnector } from 'services/cd-ng'
 import { getScopeFromValue, getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { Connectors } from '@connectors/constants'

@@ -6,22 +6,24 @@
  */
 
 import React from 'react'
+import type {
+  StepProps,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
-  StepProps,
   FormikForm,
   Formik,
   Container,
   Layout,
   FormInput,
-  ModalErrorHandlerBinding,
   ButtonVariation,
   getErrorInfoFromErrorObject,
   PageSpinner
 } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
-import { NgSmtpDTO, SmtpConfigDTO, useCreateSmtpConfig, useUpdateSmtp } from 'services/cd-ng'
+import type { NgSmtpDTO, SmtpConfigDTO} from 'services/cd-ng';
+import { useCreateSmtpConfig, useUpdateSmtp } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

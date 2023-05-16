@@ -7,15 +7,17 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { get, isEmpty, noop } from 'lodash-es'
-import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Dialog, Classes } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Text,
   Icon,
   StepWizard,
-  StepProps,
   Button,
   ButtonSize,
   ButtonVariation,

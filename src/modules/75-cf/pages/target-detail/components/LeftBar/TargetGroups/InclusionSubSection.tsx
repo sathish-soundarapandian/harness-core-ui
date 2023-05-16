@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useRemoveTargetsFromIncludeList } from '@cf/utils/SegmentUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
-import TargetGroupsSubSection, { TargetGroupsSubSectionProps } from './TargetGroupsSubSection'
+import type { TargetGroupsSubSectionProps } from './TargetGroupsSubSection';
+import TargetGroupsSubSection from './TargetGroupsSubSection'
 
 export type InclusionSubSectionProps = Pick<
   TargetGroupsSubSectionProps,

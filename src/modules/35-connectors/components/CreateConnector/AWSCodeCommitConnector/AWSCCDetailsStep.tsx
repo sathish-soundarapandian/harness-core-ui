@@ -7,8 +7,9 @@
 
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
+import type {
+  StepProps} from '@harness/uicore';
 import {
-  StepProps,
   Formik,
   FormikForm,
   FormInput,

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useMemo, FC } from 'react'
+import type { FC } from 'react';
+import React, { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Text, Dialog, ExpandingSearchInput, Button } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -15,10 +16,12 @@ import { delegateTypeToIcon } from '@common/utils/delegateUtils'
 import { PageSpinner } from '@common/components'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
 
-import {
+import type {
   GetDelegateGroupsUsingTokenQueryParams,
-  useGetDelegateGroupsUsingToken,
   DelegateGroupDetails
+} from 'services/cd-ng';
+import {
+  useGetDelegateGroupsUsingToken
 } from 'services/cd-ng'
 import css from '../DelegateTokens.module.scss'
 

@@ -7,14 +7,14 @@
 
 import React, {
   Component,
-  ComponentType,
-  LazyExoticComponent,
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
+  type ComponentType,
+  type LazyExoticComponent,
+  type PropsWithChildren,
+  type ReactElement,
+  type ReactNode,
   Suspense
 } from 'react'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { type RouteComponentProps, withRouter } from 'react-router-dom'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PermissionsContext } from 'framework/rbac/PermissionsContext'
@@ -27,7 +27,7 @@ import type { ChildComponentProps, Scope } from './index'
 
 const logger = loggerFor(ModuleName.FRAMEWORK)
 
-export { ChildComponentProps }
+export type { ChildComponentProps }
 
 export interface ChildComponentMounterProps extends PropsWithChildren<unknown> {
   ChildComponent: LazyExoticComponent<ComponentType<ChildComponentProps>>

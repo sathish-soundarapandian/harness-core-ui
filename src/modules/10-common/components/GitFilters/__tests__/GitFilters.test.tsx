@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { render, waitFor, RenderResult, queryByAttribute, act, fireEvent, findByText } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, waitFor, queryByAttribute, act, fireEvent, findByText } from '@testing-library/react'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import * as cdService from 'services/cd-ng'
-import GitFilters, { GitFiltersProps } from '../GitFilters'
+import type { GitFiltersProps } from '../GitFilters';
+import GitFilters from '../GitFilters'
 import mockBranches from './branchStatusMock.json'
 
 const filterChangeHandler = jest.fn()

@@ -8,11 +8,13 @@
 /* eslint-disable react/display-name */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Dialog } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import TargetGroupCriteria, { TargetGroupCriteriaProps } from '../TargetGroupCriteria'
+import type { TargetGroupCriteriaProps } from '../TargetGroupCriteria';
+import TargetGroupCriteria from '../TargetGroupCriteria'
 
 jest.mock('../EditTargetGroupCriteria/EditTargetGroupCriteriaDialog', () => ({
   __esModule: true,

@@ -25,7 +25,8 @@ import type {
 import type { StringsMap } from 'stringTypes'
 import { ACRStepBaseWithRef } from './ACRStepBase'
 import { ACRStepInputSet } from './ACRStepInputSet'
-import { ACRStepVariables, ACRStepVariablesProps } from './ACRStepVariables'
+import type { ACRStepVariablesProps } from './ACRStepVariables';
+import { ACRStepVariables } from './ACRStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './ACRStepFunctionConfigs'
 
 export interface ACRStepSpec {

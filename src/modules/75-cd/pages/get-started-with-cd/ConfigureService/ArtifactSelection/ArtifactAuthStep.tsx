@@ -20,29 +20,36 @@ import {
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
-import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
+import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler';
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
-import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
+import type { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector';
+import useCreateEditConnector from '@connectors/hooks/useCreateEditConnector'
 import { ConnectivityModeType, DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import StepDockerAuthentication, {
+import type {
   DockerFormInterface
-} from '@connectors/components/CreateConnector/DockerConnector/StepAuth/StepDockerAuthentication'
-import StepArtifactoryAuthentication, {
+} from '@connectors/components/CreateConnector/DockerConnector/StepAuth/StepDockerAuthentication';
+import StepDockerAuthentication from '@connectors/components/CreateConnector/DockerConnector/StepAuth/StepDockerAuthentication'
+import type {
   ArtifactoryFormInterface
-} from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
+} from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication';
+import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import { ModalViewFor } from '@connectors/components/CreateConnector/CreateConnectorUtils'
-import StepAWSAuthentication, {
+import type {
   AWSFormInterface
-} from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+} from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication';
+import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import { regionValues } from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAuthConstants'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import type {
+  ArtifactoryGenericFormInterface,
+  ServiceDataType
+} from '../../CDOnboardingUtils';
 import {
   ALLOWABLE_TYPES,
-  ArtifactoryGenericFormInterface,
-  getUniqueEntityIdentifier,
-  ServiceDataType
+  getUniqueEntityIdentifier
 } from '../../CDOnboardingUtils'
 import { StepStatus } from '../../DeployProvisioningWizard/Constants'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'

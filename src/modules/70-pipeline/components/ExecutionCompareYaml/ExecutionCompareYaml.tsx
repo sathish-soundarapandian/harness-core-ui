@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import type { MonacoEditorProps } from 'react-monaco-editor'
 import { useParams } from 'react-router-dom'
 import { Drawer, Position } from '@blueprintjs/core'
@@ -13,7 +14,8 @@ import { Color } from '@harness/design-system'
 import { Button, Heading, Icon, Layout } from '@harness/uicore'
 import { PageSpinner } from '@common/components'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
-import { PipelineExecutionSummary, useGetExecutionData } from 'services/pipeline-ng'
+import type { PipelineExecutionSummary} from 'services/pipeline-ng';
+import { useGetExecutionData } from 'services/pipeline-ng'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { String } from 'framework/strings'
 import css from './ExecutionCompareYaml.module.scss'

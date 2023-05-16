@@ -9,15 +9,19 @@ import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
-import { Formik, FormInput, getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { StepElementConfig, TerraformCloudRollbackStepInfo } from 'services/cd-ng'
+import type {
+  StepFormikFowardRef,
+  ValidateInputSetProps
+} from '@pipeline/components/AbstractSteps/Step';
 import {
   setFormikRef,
-  StepFormikFowardRef,
-  StepViewType,
-  ValidateInputSetProps
+  StepViewType
 } from '@pipeline/components/AbstractSteps/Step'
-import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { StepProps } from '@pipeline/components/PipelineSteps/PipelineStep';
+import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
@@ -31,11 +35,13 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
-import {
-  getValidationSchema,
+import type {
   TerraformCloudRollbackData,
   TerraformCloudRollbackProps,
   TerraformCloudRollbackVariableStepProps
+} from './helper';
+import {
+  getValidationSchema
 } from './helper'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

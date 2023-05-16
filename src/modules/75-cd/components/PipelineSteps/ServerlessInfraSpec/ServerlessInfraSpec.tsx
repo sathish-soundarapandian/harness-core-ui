@@ -6,6 +6,9 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Text,
   Layout,
@@ -14,8 +17,7 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  Icon,
-  AllowedTypes
+  Icon
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, defaultTo } from 'lodash-es'

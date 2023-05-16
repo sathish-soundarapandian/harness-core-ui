@@ -6,8 +6,10 @@
  */
 
 import React, { useCallback } from 'react'
-import {
+import type {
   AllowedTypes,
+  StepProps} from '@harness/uicore';
+import {
   Button,
   ButtonVariation,
   Formik,
@@ -15,7 +17,6 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  StepProps,
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'

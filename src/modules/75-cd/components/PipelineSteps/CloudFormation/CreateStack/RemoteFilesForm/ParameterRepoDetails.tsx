@@ -8,13 +8,15 @@
 import React from 'react'
 import cx from 'classnames'
 import { isNumber } from 'lodash-es'
-import {
+import type {
   StepProps,
-  MultiTypeInputType,
-  getMultiTypeFromValue,
-  FormInput,
   SelectOption,
   AllowedTypes
+} from '@harness/uicore';
+import {
+  MultiTypeInputType,
+  getMultiTypeFromValue,
+  FormInput
 } from '@harness/uicore'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'

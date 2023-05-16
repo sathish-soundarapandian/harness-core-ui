@@ -6,7 +6,8 @@
  */
 
 import { isEmpty } from 'lodash-es'
-import { string, array, object, ObjectSchema } from 'yup'
+import type { ObjectSchema } from 'yup';
+import { string, array, object } from 'yup'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import type { PanelInterface } from '@triggers/components/TabWizard/TabWizard'
 import type { UseStringsReturn } from 'framework/strings'

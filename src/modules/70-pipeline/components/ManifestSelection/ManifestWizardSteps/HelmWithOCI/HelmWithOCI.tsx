@@ -6,20 +6,22 @@
  */
 
 import React from 'react'
+import type {
+  StepProps,
+  AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
 import {
   Accordion,
   Layout,
   Button,
   FormInput,
   Formik,
-  StepProps,
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
   ButtonVariation,
-  AllowedTypes,
-  FormikForm,
-  SelectOption
+  FormikForm
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -33,7 +35,8 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import type { HelmWithOCIDataType, HelmWithOCIManifestLastStepPrevStepData } from '../../ManifestInterface'

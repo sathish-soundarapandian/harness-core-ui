@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, Matcher, waitFor } from '@testing-library/react'
+import type { Matcher} from '@testing-library/react';
+import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { findPopoverContainer } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'

@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import cx from 'classnames'
+import type { ExpandingSearchInputHandle } from '@harness/uicore'
 import {
   Dialog,
   Layout,
@@ -17,8 +18,7 @@ import {
   useToaster,
   Heading,
   ButtonVariation,
-  ExpandingSearchInput,
-  ExpandingSearchInputHandle
+  ExpandingSearchInput
 } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
@@ -30,7 +30,8 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 
 import { Page } from '@common/exports'
 import RbacButton from '@rbac/components/Button/Button'
-import { ServiceResponseDTO, useGetServiceList, ServiceResponse, useGetSettingValue } from 'services/cd-ng'
+import type { ServiceResponseDTO, ServiceResponse } from 'services/cd-ng'
+import { useGetServiceList, useGetSettingValue } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useGetCommunity, useGetFreeOrCommunityCD } from '@common/utils/utils'
@@ -46,12 +47,8 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Sort, SortFields } from '@common/utils/listUtils'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
-import {
-  ServicesQueryParams,
-  SERVICES_DEFAULT_PAGE_INDEX,
-  ServiceTabs,
-  useServicesQueryParamOptions
-} from '../utils/ServiceUtils'
+import type { ServicesQueryParams } from '../utils/ServiceUtils'
+import { SERVICES_DEFAULT_PAGE_INDEX, ServiceTabs, useServicesQueryParamOptions } from '../utils/ServiceUtils'
 import css from './ServicesListPage.module.scss'
 
 interface ServicesListPageProps {

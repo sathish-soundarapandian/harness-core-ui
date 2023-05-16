@@ -6,12 +6,13 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Container,
   Formik,
   FormikForm as Form,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   Layout
 } from '@harness/uicore'
 import * as Yup from 'yup'
@@ -24,7 +25,8 @@ import { useStrings } from 'framework/strings'
 import { NameSchema, IdentifierSchema } from '@common/utils/Validation'
 import { FooterRenderer } from '@filestore/common/ModalComponents/ModalComponents'
 import { useCreate, useUpdate } from 'services/cd-ng'
-import { FileStoreNodeTypes, NewFolderDTO } from '@filestore/interfaces/FileStore'
+import type { NewFolderDTO } from '@filestore/interfaces/FileStore';
+import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
 import { SEARCH_FILES, FILE_STORE_ROOT } from '@filestore/utils/constants'
 import type { FileStoreContextState, FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 

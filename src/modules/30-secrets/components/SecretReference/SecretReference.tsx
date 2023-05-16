@@ -6,23 +6,27 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { Icon, SelectOption, Text, Button, Container, Layout } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Icon, Text, Button, Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Select } from '@blueprintjs/select'
 import { MenuItem } from '@blueprintjs/core'
 import cx from 'classnames'
-import {
+import type {
   ListSecretsV2QueryParams,
   Failure,
-  listSecretsV2Promise,
   SecretDTOV2,
   SecretTextSpecDTO,
   ResponsePageSecretResponseWrapper,
   ConnectorInfoDTO
+} from 'services/cd-ng';
+import {
+  listSecretsV2Promise
 } from 'services/cd-ng'
 import { EntityReference } from '@common/exports'
+import type {
+  EntityReferenceResponse} from '@common/components/EntityReference/EntityReference';
 import {
-  EntityReferenceResponse,
   getIdentifierFromValue,
   getScopeFromDTO,
   getScopeFromValue

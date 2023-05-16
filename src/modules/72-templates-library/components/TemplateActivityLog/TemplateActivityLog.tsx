@@ -13,7 +13,8 @@ import { Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { AuditEventDTO, AuditFilterProperties, getAuditEventListPromise } from 'services/audit'
+import type { AuditEventDTO, AuditFilterProperties} from 'services/audit';
+import { getAuditEventListPromise } from 'services/audit'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 
 import { useInfiniteScroll } from '@common/hooks/useInfiniteScroll'

@@ -16,11 +16,11 @@ import {
   Dialog,
   ExpandingSearchInput,
   Pagination,
-  SelectOption,
   useToaster
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import type { Breadcrumb } from '@harness/uicore'
+import type { Breadcrumb ,
+  SelectOption} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Select } from '@blueprintjs/select'
 
@@ -35,10 +35,12 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { PermissionRequest } from '@rbac/hooks/usePermission'
 import ModuleTagsFilter from '@dashboards/components/ModuleTagsFilter/ModuleTagsFilter'
 
-import { ErrorResponse, useDeleteDashboard, useGetFolderDetail, useSearch } from 'services/custom-dashboards'
+import type { ErrorResponse} from 'services/custom-dashboards';
+import { useDeleteDashboard, useGetFolderDetail, useSearch } from 'services/custom-dashboards'
 import routes from '@common/RouteDefinitions'
 
-import { DashboardLayoutViews, DashboardTags, MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types'
+import type { DashboardTags, MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types';
+import { DashboardLayoutViews } from '@dashboards/types/DashboardTypes.types'
 import { SHARED_FOLDER_ID } from '@dashboards/constants'
 import { useStrings } from 'framework/strings'
 import Dashboards from './Dashboards'

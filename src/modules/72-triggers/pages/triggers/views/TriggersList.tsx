@@ -21,7 +21,8 @@ import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
-import { GetTriggerListForTargetQueryParams, useGetTriggerListForTarget } from 'services/pipeline-ng'
+import type { GetTriggerListForTargetQueryParams} from 'services/pipeline-ng';
+import { useGetTriggerListForTarget } from 'services/pipeline-ng'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -37,9 +38,11 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 
-import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
+import type { GoToEditWizardInterface } from './TriggersListSection';
+import { TriggersListSection } from './TriggersListSection'
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
-import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
+import type { ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils';
+import { getCategoryItems } from '../utils/TriggersListUtils'
 import TriggerCatalogDrawer from './TriggerCatalogDrawer'
 import css from './TriggersList.module.scss'
 

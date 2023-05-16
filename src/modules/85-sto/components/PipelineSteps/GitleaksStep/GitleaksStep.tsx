@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { GitleaksStepBaseWithRef } from './GitleaksStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { GitleaksStepVariables, GitleaksStepVariablesProps } from './GitleaksStepVariables'
+import type { GitleaksStepVariablesProps } from './GitleaksStepVariables';
+import { GitleaksStepVariables } from './GitleaksStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './GitleaksStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

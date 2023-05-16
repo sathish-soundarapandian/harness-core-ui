@@ -6,14 +6,16 @@
  */
 
 import React from 'react'
-import { getByRole, queryByRole, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { getByRole, queryByRole, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { merge } from 'lodash-es'
 import type { Segments } from 'services/cf'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import { AddTargetToTargetGroupsDialogStatus } from '@cf/pages/target-detail/TargetDetailPage.types'
-import ListingWithSearchAndPagination, { ListingWithSearchAndPaginationProps } from '../ListingWithSearchAndPagination'
+import type { ListingWithSearchAndPaginationProps } from '../ListingWithSearchAndPagination';
+import ListingWithSearchAndPagination from '../ListingWithSearchAndPagination'
 
 jest.mock('@common/components/ContainerSpinner/ContainerSpinner', () => ({
   ContainerSpinner: () => <span data-testid="container-spinner">Container Spinner</span>

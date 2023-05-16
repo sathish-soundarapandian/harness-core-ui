@@ -26,11 +26,12 @@ import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useInfiniteScroll } from '@common/hooks/useInfiniteScroll'
 
-import {
+import type {
   ClusterFromGitops,
   ClusterResponse,
+  ResponsePageClusterResponse} from 'services/cd-ng';
+import {
   getClusterListFromSourcePromise,
-  ResponsePageClusterResponse,
   useLinkClusters
 } from 'services/cd-ng'
 import ClusterCard from './ClusterCard'

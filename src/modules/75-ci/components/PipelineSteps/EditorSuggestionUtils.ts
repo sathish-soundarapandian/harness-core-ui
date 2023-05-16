@@ -6,7 +6,8 @@
  */
 
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { getConnectorListV2Promise, ConnectorResponse } from 'services/cd-ng'
+import type { ConnectorResponse } from 'services/cd-ng';
+import { getConnectorListV2Promise } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 
 export const getConnectorValue = (connector?: ConnectorResponse): string =>

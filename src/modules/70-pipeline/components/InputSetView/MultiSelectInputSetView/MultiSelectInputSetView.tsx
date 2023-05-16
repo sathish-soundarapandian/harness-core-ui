@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { defaultTo, noop } from 'lodash-es'
-import { DataTooltipInterface, FormInput, MultiSelectOption, MultiTypeInputType } from '@harness/uicore'
+import type { DataTooltipInterface, MultiSelectOption} from '@harness/uicore';
+import { FormInput, MultiTypeInputType } from '@harness/uicore'
 import type { MultiSelectTypeInputProps } from '@harness/uicore/dist/components/MultiTypeInput/MultiTypeInput'
 
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'

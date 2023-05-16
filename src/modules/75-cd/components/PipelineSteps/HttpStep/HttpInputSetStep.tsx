@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput } from '@harness/uicore'
 import { isEmpty, isArray } from 'lodash-es'
 import cx from 'classnames'
 

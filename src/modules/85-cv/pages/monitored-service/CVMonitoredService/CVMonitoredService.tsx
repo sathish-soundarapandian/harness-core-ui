@@ -8,6 +8,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Page,
   ButtonVariation,
@@ -15,7 +17,6 @@ import {
   Select,
   GridListToggle,
   Views,
-  SelectOption,
   Heading,
   HarnessDocTooltip,
   ExpandingSearchInput,

@@ -6,14 +6,17 @@
  */
 
 import * as yup from 'yup'
-import { FormikErrors, validateYupSchema, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { validateYupSchema, yupToFormErrors } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { WeightedVariation } from 'services/cf'
-import {
+import type {
   FormVariationMap,
-  TargetingRuleItemStatus,
   TargetingRulesFormValues,
   VariationPercentageRollout
+} from '../types';
+import {
+  TargetingRuleItemStatus
 } from '../types'
 
 interface UseTargetingRulesFormValidationReturn {

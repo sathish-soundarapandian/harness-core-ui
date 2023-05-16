@@ -5,18 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useContext, useMemo, useState } from 'react'
+import type {
+  IconName,
+  SelectOption
+} from '@harness/uicore';
 import {
   Container,
   ExpandingSearchInput,
   Icon,
-  IconName,
   Layout,
   PageError,
   PageSpinner,
   TableV2,
   Text,
-  FormInput,
-  SelectOption
+  FormInput
 } from '@harness/uicore'
 import { useHistory } from 'react-router-dom'
 
@@ -27,9 +29,11 @@ import ReactTimeago from 'react-timeago'
 import routes from '@common/RouteDefinitions'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { useStrings } from 'framework/strings'
-import { EntityDetail, EntitySetupUsageDTO, Error, useGetReferencedBy } from 'services/cd-ng'
+import type { EntityDetail, EntitySetupUsageDTO, Error} from 'services/cd-ng';
+import { useGetReferencedBy } from 'services/cd-ng'
+import type {
+  EntitySetupUsageDTOColumnData} from '@common/pages/entityUsage/views/EntityUsageListView/EntityUsageList';
 import {
-  EntitySetupUsageDTOColumnData,
   RenderScope
 } from '@common/pages/entityUsage/views/EntityUsageListView/EntityUsageList'
 import css from './ReferencedBy.module.scss'

@@ -10,6 +10,8 @@ import { parse } from 'yaml'
 import ReactTimeago from 'react-timeago'
 import { useParams } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
+import type {
+  tagsType} from '@harness/uicore';
 import {
   Button,
   Layout,
@@ -20,7 +22,6 @@ import {
   Container,
   SparkChart,
   TagsPopover,
-  tagsType,
   useConfirmationDialog,
   useToaster,
   TableV2,
@@ -31,9 +32,10 @@ import copy from 'clipboard-copy'
 import { Classes, Intent, Menu, Position } from '@blueprintjs/core'
 import { isUndefined, isEmpty, sum, get } from 'lodash-es'
 import cx from 'classnames'
-import {
+import type {
   NGTriggerDetailsResponse,
-  PageNGTriggerDetailsResponse,
+  PageNGTriggerDetailsResponse} from 'services/pipeline-ng';
+import {
   useDeleteTrigger,
   useUpdateTrigger
 } from 'services/pipeline-ng'

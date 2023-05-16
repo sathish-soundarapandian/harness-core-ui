@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, FC } from 'react'
+import type { FC } from 'react';
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Icon, Text, useToaster, Button, ButtonVariation } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -19,7 +20,8 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import delegateErrorURL from '../../home/images/delegate-error.svg'
 import delegateSuccessURL from '../../home/images/cd-delegates-success.svg'
-import { DelegateSuccessHandler, DeploymentType } from '../CDOnboardingUtils'
+import type { DelegateSuccessHandler} from '../CDOnboardingUtils';
+import { DeploymentType } from '../CDOnboardingUtils'
 import css from './CreateK8sDelegate.module.scss'
 
 interface StepDelegateData {

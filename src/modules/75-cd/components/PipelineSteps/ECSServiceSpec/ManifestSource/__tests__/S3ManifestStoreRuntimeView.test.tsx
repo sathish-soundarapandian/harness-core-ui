@@ -27,7 +27,8 @@ import { awsRegionsData } from '@pipeline/components/ManifestSelection/ManifestW
 import { ManifestDataType, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ManifestSourceBaseFactory } from '@cd/factory/ManifestSourceFactory/ManifestSourceBaseFactory'
-import { S3ManifestStoreRuntimeView, S3ManifestStoreRuntimeViewProps } from '../S3ManifestStoreRuntimeView'
+import type { S3ManifestStoreRuntimeViewProps } from '../S3ManifestStoreRuntimeView';
+import { S3ManifestStoreRuntimeView } from '../S3ManifestStoreRuntimeView'
 import { S3ManifestStoreRuntimeViewExistingInitialValues, s3ManifestStoreRuntimeViewTemplate } from './helpers/helper'
 import { bucketNameList } from './helpers/mock'
 

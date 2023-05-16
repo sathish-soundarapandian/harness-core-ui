@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { getByTestId, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { getByTestId, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
-import { FilterCard, FilterCardProps } from '../FilterCard'
+import type { FilterCardProps } from '../FilterCard';
+import { FilterCard } from '../FilterCard'
 
 const updateTableFilter = jest.fn()
 const defaultFilter = {

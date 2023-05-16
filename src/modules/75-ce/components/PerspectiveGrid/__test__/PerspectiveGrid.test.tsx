@@ -9,7 +9,8 @@ import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { QlceViewEntityStatsDataPoint } from 'services/ce/services'
-import PerspectiveGrid, { PerspectiveGridProps } from '../PerspectiveGrid'
+import type { PerspectiveGridProps } from '../PerspectiveGrid';
+import PerspectiveGrid from '../PerspectiveGrid'
 import MockResponse from './MockPerspectiveGridResponse.json'
 
 const params = {

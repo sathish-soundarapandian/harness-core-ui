@@ -6,10 +6,11 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  UseConfirmationDialogReturn} from '@harness/uicore';
 import {
   useConfirmationDialog,
   Text,
-  UseConfirmationDialogReturn,
   Button,
   ButtonVariation,
   Layout,

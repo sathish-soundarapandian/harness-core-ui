@@ -7,9 +7,11 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { StepProps, ModalErrorHandlerBinding, useToaster } from '@harness/uicore'
+import type { StepProps, ModalErrorHandlerBinding} from '@harness/uicore';
+import { useToaster } from '@harness/uicore'
 import { pick } from 'lodash-es'
-import { Organization, useGetOrganization, usePutOrganization } from 'services/cd-ng'
+import type { Organization} from 'services/cd-ng';
+import { useGetOrganization, usePutOrganization } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'

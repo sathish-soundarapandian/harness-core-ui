@@ -6,7 +6,8 @@
  */
 
 import React, { useCallback, useContext, useMemo } from 'react'
-import { DatadogDashboardDTO, useGetDatadogDashboards } from 'services/cv'
+import type { DatadogDashboardDTO} from 'services/cv';
+import { useGetDatadogDashboards } from 'services/cv'
 
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import MetricsDashboardList from '@cv/components/MetricsDashboardList/MetricsDashboardList'

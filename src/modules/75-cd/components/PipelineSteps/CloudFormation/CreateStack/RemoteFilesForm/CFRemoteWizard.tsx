@@ -9,26 +9,30 @@ import React, { useState } from 'react'
 import cx from 'classnames'
 import { isNumber } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type {
+  SelectOption,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   StepWizard,
   MultiTypeInputType,
-  SelectOption,
-  getMultiTypeFromValue,
-  AllowedTypes
+  getMultiTypeFromValue
 } from '@harness/uicore'
-import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import type {
+  ConnectorTypes} from '../../CloudFormationHelper';
 import {
   ConnectorMap,
   getBuildPayload,
-  ConnectorTypes,
   GetNewConnector,
   ConnectorStepTitle,
   FileStoreTitle

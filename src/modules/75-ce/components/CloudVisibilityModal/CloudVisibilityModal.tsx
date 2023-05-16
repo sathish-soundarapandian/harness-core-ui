@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Button, StepWizard } from '@harness/uicore'
-import { Dialog, Classes, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog, Classes } from '@blueprintjs/core'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 

@@ -8,7 +8,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty as _isEmpty } from 'lodash-es'
-import { Button, ButtonVariation, Layout, Select, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Button, ButtonVariation, Layout, Select, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import css from './DownloadCLI.module.scss'
 

@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
-import { IconName, Menu } from '@blueprintjs/core'
-import { Layout, MultiSelectOption, SelectOption, Text, TextProps } from '@harness/uicore'
+import type { IconName} from '@blueprintjs/core';
+import { Menu } from '@blueprintjs/core'
+import type { MultiSelectOption, SelectOption, TextProps } from '@harness/uicore';
+import { Layout, Text } from '@harness/uicore'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 interface ItemRendererWithMenuItemProps {

@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ImgHTMLAttributes, useEffect, useState } from 'react'
+import type { FC, ImgHTMLAttributes} from 'react';
+import React, { useEffect, useState } from 'react'
 import classNames from 'classnames'
-import { Icon, IconName } from '@harness/icons'
+import type { IconName } from '@harness/icons';
+import { Icon } from '@harness/icons'
 import css from './ImagePreview.module.scss'
 
 export interface ImagePreviewProps extends ImgHTMLAttributes<HTMLOrSVGImageElement> {

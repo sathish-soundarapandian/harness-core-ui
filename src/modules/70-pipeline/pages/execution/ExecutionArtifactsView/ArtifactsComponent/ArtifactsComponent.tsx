@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { CollapseList, CollapseListPanel, IconName, Text, Icon } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { CollapseList, CollapseListPanel, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { IProps } from '@blueprintjs/core'
 import css from './ArtifactsComponent.module.scss'

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef, useState, useLayoutEffect, ForwardedRef } from 'react'
+import type { ForwardedRef } from 'react';
+import React, { useRef, useState, useLayoutEffect } from 'react'
 import { defaultTo, get, throttle } from 'lodash-es'
 import classNames from 'classnames'
 import { isNodeTypeMatrixOrFor } from '@pipeline/utils/executionUtils'

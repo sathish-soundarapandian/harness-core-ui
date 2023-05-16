@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { IDrawerProps, IPopoverProps, PopoverInteractionKind, PopoverPosition, Position } from '@blueprintjs/core'
+import type { IDrawerProps, IPopoverProps} from '@blueprintjs/core';
+import { PopoverInteractionKind, PopoverPosition, Position } from '@blueprintjs/core'
 import { EVENT_TYPE } from '@cv/utils/CommonUtils'
 import type { StringKeys } from 'framework/strings'
 

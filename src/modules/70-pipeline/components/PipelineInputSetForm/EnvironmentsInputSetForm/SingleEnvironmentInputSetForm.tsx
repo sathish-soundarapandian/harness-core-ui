@@ -9,7 +9,8 @@ import React, { useState } from 'react'
 import { useFormikContext } from 'formik'
 import { get, isEmpty, isNil, omit, pick, set } from 'lodash-es'
 
-import { Container, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
+import type { MultiTypeInputType} from '@harness/uicore';
+import { Container, getMultiTypeFromValue, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'

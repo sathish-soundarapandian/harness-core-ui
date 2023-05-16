@@ -7,7 +7,8 @@
 
 import React from 'react'
 import type { MonacoEditorBaseProps, MonacoEditorProps } from 'react-monaco-editor'
-import { FormikProps, connect } from 'formik'
+import type { FormikProps} from 'formik';
+import { connect } from 'formik'
 import { defaultTo, get } from 'lodash-es'
 import cx from 'classnames'
 import { Dialog, Classes } from '@blueprintjs/core'

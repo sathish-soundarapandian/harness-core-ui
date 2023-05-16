@@ -7,14 +7,16 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cfServices from 'services/cf'
 import * as cdngServices from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PlatformEntryType } from '@cf/components/LanguageSelection/LanguageSelection'
 import mockImport from 'framework/utils/mockImport'
-import { SelectEnvironmentView, SelectEnvironmentViewProps } from '../views/SelectEnvironmentView'
+import type { SelectEnvironmentViewProps } from '../views/SelectEnvironmentView';
+import { SelectEnvironmentView } from '../views/SelectEnvironmentView'
 
 const setApiKey = jest.fn()
 const setSelectedEnvironment = jest.fn()

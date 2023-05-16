@@ -5,17 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import type { ArtifactConfig, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
-import {
+import type {
   ArtifactType,
   GoogleArtifactRegistryInitialValuesType,
   CustomArtifactSource,
   ImagePathTypes,
-  JenkinsArtifactType,
+  JenkinsArtifactType} from './ArtifactInterface';
+import {
   RepositoryPortOrServer,
   TagTypes
 } from './ArtifactInterface'

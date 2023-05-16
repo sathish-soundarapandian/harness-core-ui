@@ -6,7 +6,8 @@
  */
 
 import { noop } from 'lodash-es'
-import { createContext, Dispatch, MutableRefObject, SetStateAction } from 'react'
+import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import { createContext } from 'react'
 
 export enum GitErrorExperienceTab {
   ALL_ERRORS = 'ALL_ERRORS',

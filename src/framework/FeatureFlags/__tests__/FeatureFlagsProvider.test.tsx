@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import * as ffSDK from '@harnessio/ff-react-client-sdk'
 import { FeatureFlagsProvider } from '../FeatureFlagsProvider'
 

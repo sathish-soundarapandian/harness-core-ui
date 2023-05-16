@@ -7,7 +7,8 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { Button, Formik, FormikForm, FormInput, ButtonVariation, Dialog, Layout, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Button, Formik, FormikForm, FormInput, ButtonVariation, Dialog, Layout } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'

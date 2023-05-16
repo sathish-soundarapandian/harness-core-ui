@@ -7,12 +7,15 @@
 
 import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { ModalErrorHandlerBinding, Layout, Container, useToaster } from '@harness/uicore'
-import { CreateDashboardResponse, FolderModel, useCreateDashboard } from 'services/custom-dashboards'
+import type { ModalErrorHandlerBinding} from '@harness/uicore';
+import { Layout, Container, useToaster } from '@harness/uicore'
+import type { CreateDashboardResponse, FolderModel} from 'services/custom-dashboards';
+import { useCreateDashboard } from 'services/custom-dashboards'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { DashboardPathProps } from '@common/interfaces/RouteInterfaces'
-import DashboardForm, { DashboardFormRequestProps } from './DashboardForm'
+import type { DashboardFormRequestProps } from './DashboardForm';
+import DashboardForm from './DashboardForm'
 
 interface CreateDashboardFormProps {
   editableFolders: FolderModel[]

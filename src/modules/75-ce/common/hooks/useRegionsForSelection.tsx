@@ -8,7 +8,8 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { SelectOption } from '@harness/uicore'
-import { Region, useAllRegions, UseAllRegionsProps } from 'services/lw'
+import type { Region, UseAllRegionsProps } from 'services/lw';
+import { useAllRegions } from 'services/lw'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 interface UseRegionsForSelectionProps {

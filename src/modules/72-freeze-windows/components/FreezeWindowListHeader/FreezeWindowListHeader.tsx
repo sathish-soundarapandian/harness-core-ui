@@ -6,13 +6,15 @@
  */
 
 import { HarnessDocTooltip, Page } from '@harness/uicore'
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useStrings } from 'framework/strings'
-import { GlobalFreezeToggle, GlobalFreezeToggleProps } from '../GlobalFreezeToggle/GlobalFreezeToggle'
+import type { GlobalFreezeToggleProps } from '../GlobalFreezeToggle/GlobalFreezeToggle';
+import { GlobalFreezeToggle } from '../GlobalFreezeToggle/GlobalFreezeToggle'
 
 export const FreezeWindowListHeader: FC<GlobalFreezeToggleProps> = ({
   freezeListLoading,

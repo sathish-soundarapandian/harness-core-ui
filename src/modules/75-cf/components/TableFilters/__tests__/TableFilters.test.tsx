@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { getByTestId, render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { getByTestId, render, screen } from '@testing-library/react'
 import type { StringKeys } from 'framework/strings'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
-import { TableFilters, TableFiltersProps } from '../TableFilters'
+import type { TableFiltersProps } from '../TableFilters';
+import { TableFilters } from '../TableFilters'
 
 const filters = [
   {

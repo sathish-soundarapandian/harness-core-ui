@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { BanditStepBaseWithRef } from './BanditStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { BanditStepVariables, BanditStepVariablesProps } from './BanditStepVariables'
+import type { BanditStepVariablesProps } from './BanditStepVariables';
+import { BanditStepVariables } from './BanditStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './BanditStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

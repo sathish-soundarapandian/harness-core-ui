@@ -27,7 +27,8 @@ import { defaultTo, get, isEmpty, noop, capitalize } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 
-import { ClusterResponse, ResponsePageClusterResponse, useDeleteCluster } from 'services/cd-ng'
+import type { ClusterResponse, ResponsePageClusterResponse} from 'services/cd-ng';
+import { useDeleteCluster } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import css from '../EnvironmentDetails.module.scss'

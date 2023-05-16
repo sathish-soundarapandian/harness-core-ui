@@ -9,7 +9,8 @@ import React from 'react'
 import { render, fireEvent, waitFor, act } from '@testing-library/react'
 import { Status } from '@common/utils/Constants'
 import type { StringsMap } from 'stringTypes'
-import { ConnectViaOAuth, ConnectViaOAuthProps } from '../ConnectViaOAuth'
+import type { ConnectViaOAuthProps } from '../ConnectViaOAuth';
+import { ConnectViaOAuth } from '../ConnectViaOAuth'
 
 jest.mock('framework/strings', () => ({
   useStrings: () => ({

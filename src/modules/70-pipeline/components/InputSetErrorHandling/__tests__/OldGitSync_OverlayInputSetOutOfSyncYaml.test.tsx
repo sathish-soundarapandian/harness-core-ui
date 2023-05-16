@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor, findByText as findByTextBody } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor, findByText as findByTextBody } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import userEvent from '@testing-library/user-event'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'

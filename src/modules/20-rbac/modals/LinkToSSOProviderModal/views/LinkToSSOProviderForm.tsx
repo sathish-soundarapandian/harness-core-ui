@@ -6,6 +6,9 @@
  */
 
 import React, { useState, useMemo } from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   Container,
@@ -13,9 +16,7 @@ import {
   FormikForm as Form,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   Text,
-  SelectOption,
   ButtonVariation,
   FormInput,
   PageError,
@@ -29,14 +30,15 @@ import { useToaster } from '@common/components'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   LdapGroupResponse,
   UserGroupDTO,
   SAMLSettings,
+  SSOSettings} from 'services/cd-ng';
+import {
   useGetAuthenticationSettings,
   useLinkToSamlGroup,
   useLinkToLdapGroup,
-  SSOSettings,
   useGetAuthenticationSettingsV2
 } from 'services/cd-ng'
 import { AuthenticationMechanisms } from '@rbac/utils/utils'

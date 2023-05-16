@@ -13,7 +13,8 @@ import produce from 'immer'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockTemplates } from '@templates-library/TemplatesTestHelper'
 import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import TemplatesView, { TemplatesViewProps } from '../TemplatesView'
+import type { TemplatesViewProps } from '../TemplatesView';
+import TemplatesView from '../TemplatesView'
 
 jest.mock('@templates-library/pages/TemplatesPage/views/TemplatesGridView/TemplatesGridView', () => ({
   TemplatesGridView: () => {

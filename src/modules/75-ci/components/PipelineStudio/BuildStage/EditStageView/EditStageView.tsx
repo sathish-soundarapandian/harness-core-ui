@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import type {
+  IconName} from '@harness/uicore';
 import {
   Text,
   Container,
@@ -14,7 +16,6 @@ import {
   Button,
   Switch,
   RUNTIME_INPUT_VALUE,
-  IconName,
   MultiTypeInputType
 } from '@harness/uicore'
 import * as Yup from 'yup'
@@ -25,7 +26,8 @@ import type { FormikErrors } from 'formik'
 import { produce } from 'immer'
 import { parse } from 'yaml'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
+import type { ConnectorInfoDTO} from 'services/cd-ng';
+import { useGetConnector } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -49,9 +51,11 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 
-import {
-  renderConnectorAndRepoName,
+import type {
   CodebaseRuntimeInputsInterface
+} from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils';
+import {
+  renderConnectorAndRepoName
 } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
 import css from './EditStageView.module.scss'
 

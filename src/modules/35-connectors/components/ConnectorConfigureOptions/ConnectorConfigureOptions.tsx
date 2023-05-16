@@ -5,11 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { FC } from 'react';
+import React from 'react'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions';
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
+import type {
+  FormConnectorFieldProps} from '../ConnectorReferenceField/FormConnectorReferenceField';
 import {
-  FormConnectorFieldProps,
   FormConnectorReferenceField
 } from '../ConnectorReferenceField/FormConnectorReferenceField'
 

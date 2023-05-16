@@ -7,19 +7,20 @@
 
 import React, { useMemo, useState, useEffect } from 'react'
 import cx from 'classnames'
+import type {
+  SelectOption,
+  StackedSummaryInterface,
+  IconName} from '@harness/uicore';
 import {
   Card,
   Container,
   Icon,
   Layout,
   Select,
-  SelectOption,
   Text,
-  StackedSummaryInterface,
   StackedSummaryTable,
   handleZeroOrInfinityTrend,
   renderTrend,
-  IconName,
   Popover
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
@@ -36,21 +37,24 @@ import {
   TimeRangeToDays,
   DashboardTimeRange
 } from '@common/factories/LandingDashboardContext'
-import { String, StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { String, useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   ChartType,
   OverviewChartsWithToggle
 } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
 import routes from '@common/RouteDefinitions'
-import {
+import type {
   DeploymentsOverview,
-  useGetDeploymentStatsOverview,
   TimeBasedStats,
   GetDeploymentStatsOverviewQueryParams,
   DeploymentsStatsOverview,
   ActiveServiceInfo,
   PipelineExecutionInfo
+} from 'services/dashboard-service';
+import {
+  useGetDeploymentStatsOverview
 } from 'services/dashboard-service'
 import { useErrorHandler } from '@pipeline/components/Dashboards/shared'
 import DashboardAPIErrorWidget from '@projects-orgs/components/DashboardAPIErrorWidget/DashboardAPIErrorWidget'

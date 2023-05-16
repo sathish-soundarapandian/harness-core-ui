@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { ButtonVariation, IconName, SplitButton, SplitButtonOption } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { ButtonVariation, SplitButton, SplitButtonOption } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'

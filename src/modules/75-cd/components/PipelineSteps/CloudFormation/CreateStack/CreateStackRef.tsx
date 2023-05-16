@@ -10,6 +10,11 @@ import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { FieldArray } from 'formik'
+import type {
+  MultiSelectOption,
+  SelectOption,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Accordion,
   Formik,
@@ -19,12 +24,9 @@ import {
   Layout,
   Label,
   Text,
-  MultiSelectOption,
-  SelectOption,
   Button,
   Icon,
-  useToaster,
-  AllowedTypes
+  useToaster
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { map, get, isEmpty, defaultTo, set } from 'lodash-es'
@@ -39,7 +41,8 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useListAwsRegions } from 'services/portal'
 import { useCFCapabilitiesForAws, useCFStatesForAws, useGetIamRolesForAws } from 'services/cd-ng'

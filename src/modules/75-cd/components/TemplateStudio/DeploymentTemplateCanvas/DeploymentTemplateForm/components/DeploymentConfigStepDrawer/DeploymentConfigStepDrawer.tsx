@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { SyntheticEvent } from 'react'
+import type { SyntheticEvent } from 'react';
+import React from 'react'
 import { Button, Container } from '@harness/uicore'
 import { isEmpty, merge, defaultTo } from 'lodash-es'
 import { Drawer, Position } from '@blueprintjs/core'
@@ -20,13 +21,15 @@ import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentCo
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { DrawerSizes, DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
-import {
-  StepCommandsWithRef as StepCommands,
+import type {
   StepFormikRef
+} from '@pipeline/components/PipelineStudio/StepCommands/StepCommands';
+import {
+  StepCommandsWithRef as StepCommands
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import type { TemplateSummaryResponse } from 'services/template-ng'
-import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
-import { StepCommandsViews, Values } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
+import type { StepOrStepGroupOrTemplateStepData , Values } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
+import { StepCommandsViews } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { getStepDataFromValues } from '@pipeline/utils/stepUtils'
 import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { DeploymentConfigStepDrawerTitle } from './DeploymentConfigStepDrawerTitle'

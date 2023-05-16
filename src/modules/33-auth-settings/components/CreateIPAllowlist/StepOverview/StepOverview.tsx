@@ -9,7 +9,8 @@ import React, { useState } from 'react'
 import * as Yup from 'yup'
 import { pick, defaultTo } from 'lodash-es'
 
-import type { StepProps } from '@harness/uicore'
+import type { StepProps ,
+  ModalErrorHandlerBinding} from '@harness/uicore'
 import {
   Layout,
   Container,
@@ -18,7 +19,6 @@ import {
   FormikForm,
   Button,
   ButtonVariation,
-  ModalErrorHandlerBinding,
   ModalErrorHandler
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'

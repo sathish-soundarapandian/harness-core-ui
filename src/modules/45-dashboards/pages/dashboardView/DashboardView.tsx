@@ -7,7 +7,8 @@
 
 import React, { useMemo } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Breadcrumb, Layout } from '@harness/uicore'
+import type { Breadcrumb} from '@harness/uicore';
+import { Layout } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { Page } from '@common/exports'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
@@ -18,8 +19,9 @@ import LookerEmbeddedDashboard from '@dashboards/components/LookerEmbeddedDashbo
 import { SHARED_FOLDER_ID } from '@dashboards/constants'
 import { LookerEventType } from '@dashboards/constants/LookerEventType'
 import type { DashboardFiltersChangedEvent, LookerEvent, PageChangedEvent } from '@dashboards/types/LookerTypes.types'
+import type {
+  ErrorResponse} from 'services/custom-dashboards';
 import {
-  ErrorResponse,
   useCreateSignedUrl,
   useGetDashboardDetail,
   useGetFolderDetail

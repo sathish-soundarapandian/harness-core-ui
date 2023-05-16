@@ -13,7 +13,8 @@ import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/Resource
 import { PageSpinner } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
-import { ResourceGroupV2Response, useGetFilterResourceGroupListV2 } from 'services/resourcegroups'
+import type { ResourceGroupV2Response} from 'services/resourcegroups';
+import { useGetFilterResourceGroupListV2 } from 'services/resourcegroups'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 
 export type ResourceGroupColumn = ResourceGroupV2Response & { identifier: string }

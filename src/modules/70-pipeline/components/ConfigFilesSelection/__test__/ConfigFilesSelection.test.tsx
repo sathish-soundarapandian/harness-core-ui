@@ -10,9 +10,11 @@ import { render, findByText, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import {
-  PipelineContext,
+import type {
   PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
+import {
+  PipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import ConfigFilesSelection from '../ConfigFilesSelection'
 import { pipelineMock } from './pipelineContext'

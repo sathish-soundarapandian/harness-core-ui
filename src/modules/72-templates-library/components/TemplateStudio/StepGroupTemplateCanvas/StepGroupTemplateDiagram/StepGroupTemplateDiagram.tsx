@@ -11,11 +11,12 @@ import { ModalDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
-import ExecutionGraph, {
+import type {
   ExecutionGraphAddStepEvent,
   ExecutionGraphEditStepEvent,
   ExecutionGraphRefObj
-} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph';
+import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 import { ModuleName } from 'framework/types/ModuleName'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import {

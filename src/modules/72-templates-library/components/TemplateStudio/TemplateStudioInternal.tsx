@@ -23,8 +23,9 @@ import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
 import { NavigationCheck, Page } from '@common/exports'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import type {
+  TemplateStudioSubHeaderHandle} from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/TemplateStudioSubHeader';
 import {
-  TemplateStudioSubHeaderHandle,
   TemplateStudioSubHeaderWithRef
 } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/TemplateStudioSubHeader'
 import { PageSpinner } from '@common/components'
@@ -54,8 +55,10 @@ import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHa
 import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { ErrorNodeSummary, useValidateTemplateInputs } from 'services/template-ng'
-import { useCheckIfTemplateUsingV1Stage, ResponseEOLBannerResponseDTO } from 'services/cd-ng'
+import type { ErrorNodeSummary} from 'services/template-ng';
+import { useValidateTemplateInputs } from 'services/template-ng'
+import type { ResponseEOLBannerResponseDTO } from 'services/cd-ng';
+import { useCheckIfTemplateUsingV1Stage } from 'services/cd-ng'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml, isPipelineOrStageType, isNewTemplate } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'

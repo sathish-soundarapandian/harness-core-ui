@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { JiraIssue } from 'services/cf'
 import * as cfServiceMock from 'services/cf'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import JiraIssueList, { JiraIssueListProps } from '../JiraIssueList'
+import type { JiraIssueListProps } from '../JiraIssueList';
+import JiraIssueList from '../JiraIssueList'
 jest.mock('services/cf')
 jest.mock('@common/hooks/useTelemetry', () => ({
   useTelemetry: jest.fn(() => ({

@@ -7,10 +7,11 @@
 
 import React, { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Container,
   Accordion,
-  SelectOption,
   Utils,
   FormInput,
   useConfirmationDialog,

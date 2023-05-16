@@ -6,14 +6,15 @@
  */
 
 import React, { useEffect } from 'react'
+import type {
+  SelectOption,
+  StepProps} from '@harness/uicore';
 import {
   Formik,
   FormInput,
   Layout,
   MultiTypeInputType,
   Button,
-  SelectOption,
-  StepProps,
   Text,
   ButtonVariation
 } from '@harness/uicore'

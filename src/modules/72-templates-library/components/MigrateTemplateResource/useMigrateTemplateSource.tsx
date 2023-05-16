@@ -10,7 +10,8 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
 import type { SelectOption } from '@harness/uicore'
-import { HideModal, useModalHook } from '@harness/use-modal'
+import type { HideModal} from '@harness/use-modal';
+import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
 import type { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { useQueryParams, useMutateAsGet } from '@common/hooks'
@@ -19,11 +20,13 @@ import { useToaster } from '@common/exports'
 import { StoreType } from '@common/constants/GitSyncTypes'
 
 import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
-import {
+import type {
   TemplateSummaryResponse,
-  useGetTemplateList,
-  useGetTemplateMetadataList,
   TemplateMetadataSummaryResponse
+} from 'services/template-ng';
+import {
+  useGetTemplateList,
+  useGetTemplateMetadataList
 } from 'services/template-ng'
 import { DefaultStableVersionValue } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'

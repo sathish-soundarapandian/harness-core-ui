@@ -13,7 +13,8 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import type { Failure } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
-import { SelectConfigureOptions, SelectConfigureOptionsProps } from '../SelectConfigureOptions'
+import type { SelectConfigureOptionsProps } from '../SelectConfigureOptions';
+import { SelectConfigureOptions } from '../SelectConfigureOptions'
 
 const onChange = jest.fn()
 const listOptions = [

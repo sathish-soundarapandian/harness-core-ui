@@ -7,7 +7,8 @@
 
 import React, { useState } from 'react'
 
-import { Button, Layout, StepProps, Heading, Text, Container } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Button, Layout, Heading, Text, Container } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'

@@ -14,13 +14,15 @@ import { Spinner } from '@blueprintjs/core'
 import { Icon, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
-import { useStrings, StringKeys } from 'framework/strings'
+import type { StringKeys } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { Module } from 'framework/types/ModuleName'
-import {
+import type {
   ExecutionGraph,
   ExecutionNode,
   ResourceConstraintDetail,
-  ResponseResourceConstraintExecutionInfo,
+  ResponseResourceConstraintExecutionInfo} from 'services/pipeline-ng';
+import {
   useGetResourceConstraintsExecutionInfo
 } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'

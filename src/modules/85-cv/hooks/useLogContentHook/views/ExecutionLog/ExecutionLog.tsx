@@ -5,11 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Reducer, useCallback } from 'react'
+import type { Reducer} from 'react';
+import React, { useCallback } from 'react'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
-import { GroupedVirtuosoHandle, Virtuoso, VirtuosoHandle } from 'react-virtuoso'
-import { Button, ButtonSize, ButtonVariation, Container, Layout, SelectOption, Text } from '@harness/uicore'
+import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso';
+import { Virtuoso } from 'react-virtuoso'
+import type { SelectOption} from '@harness/uicore';
+import { Button, ButtonSize, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings, String as StrTemplate } from 'framework/strings'
 
@@ -19,7 +22,8 @@ import ExecutionLogSearch from './ExecutionLogSearch'
 import { reducer, useActionCreator } from './ExecutionLogState'
 import { defaultReducerState } from './ExecutionLog.constants'
 import { isPositiveNumber, isTimeRangeChanged } from '../../useLogContentHook.utils'
-import { ExecutionAndAPICallLogProps, LogTypes, TimeRange } from '../../useLogContentHook.types'
+import type { ExecutionAndAPICallLogProps, TimeRange } from '../../useLogContentHook.types';
+import { LogTypes } from '../../useLogContentHook.types'
 import { MultiLogLine } from '../MultiLogLine/MultiLogLine'
 import { convertLogDataToLogLineData } from './ExecutionLog.utils'
 import type { State, Action, ActionType } from './ExecutionLog.types'

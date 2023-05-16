@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { cloneDeep, omit } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockFeatures } from '@cf/pages/target-group-detail/__tests__/mocks'

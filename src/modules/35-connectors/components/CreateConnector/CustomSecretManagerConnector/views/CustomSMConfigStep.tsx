@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useState } from 'react'
-import {
+import type {
   StepProps,
+  ModalErrorHandlerBinding} from '@harness/uicore';
+import {
   Layout,
   Text,
   Container,
@@ -18,7 +20,6 @@ import {
   FormikForm,
   MultiTypeInputType,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   getErrorInfoFromErrorObject
 } from '@harness/uicore'
 

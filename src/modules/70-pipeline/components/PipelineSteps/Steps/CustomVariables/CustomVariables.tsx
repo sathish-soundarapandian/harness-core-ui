@@ -6,24 +6,28 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { get, set, isEmpty, isNil } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { FormikErrors } from 'formik'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import { listSecretsV2Promise, SecretResponseWrapper } from 'services/cd-ng'
-import { StepViewType, ValidateInputSetProps, Step } from '@pipeline/components/AbstractSteps/Step'
+import type { SecretResponseWrapper } from 'services/cd-ng';
+import { listSecretsV2Promise } from 'services/cd-ng'
+import type { ValidateInputSetProps} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType, Step } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import type { AllNGVariables } from '@pipeline/utils/types'
-import { CustomVariableEditable, CustomVariableEditableExtraProps } from './CustomVariableEditable'
-import { CustomVariableInputSet, CustomVariableInputSetExtraProps } from './CustomVariableInputSet'
+import { CustomVariableEditable } from './CustomVariableEditable'
+import type { CustomVariableInputSetExtraProps } from './CustomVariableInputSet';
+import { CustomVariableInputSet } from './CustomVariableInputSet'
 import { CustomVariablesEditableStage } from './CustomVariablesEditableStage'
-import type { CustomVariablesData } from './CustomVariableEditable'
+import type { CustomVariablesData , CustomVariableEditableExtraProps } from './CustomVariableEditable'
 import type { StepProps } from '../../PipelineStep'
 
 const logger = loggerFor(ModuleName.COMMON)

@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { AWSECRStepBaseWithRef } from './AWSECRStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { AWSECRStepVariables, AWSECRStepVariablesProps } from './AWSECRStepVariables'
+import type { AWSECRStepVariablesProps } from './AWSECRStepVariables';
+import { AWSECRStepVariables } from './AWSECRStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './AWSECRStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

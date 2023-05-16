@@ -13,7 +13,6 @@ import {
   FormInput,
   getMultiTypeFromValue,
   Label,
-  MultiSelectOption,
   MultiTypeInputType
 } from '@harness/uicore'
 import type { FormikProps } from 'formik'
@@ -21,9 +20,11 @@ import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { defaultTo, memoize, pick } from 'lodash-es'
-import type { SelectOption } from '@harness/uicore'
+import type { SelectOption ,
+  MultiSelectOption} from '@harness/uicore'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -34,11 +35,13 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { Servicev1ApplicationQuery, useApplicationServiceListApps } from 'services/gitops'
+import type { Servicev1ApplicationQuery} from 'services/gitops';
+import { useApplicationServiceListApps } from 'services/gitops'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import type { SyncStepProps } from './SyncStep'
-import { SyncStepFormContentInterface, SyncStepData, ApplicationFilters, policyOptions } from './types'
+import type { SyncStepFormContentInterface, SyncStepData, ApplicationFilters} from './types';
+import { policyOptions } from './types'
 import { useApplicationsFilter } from './useApplicationsFilter'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

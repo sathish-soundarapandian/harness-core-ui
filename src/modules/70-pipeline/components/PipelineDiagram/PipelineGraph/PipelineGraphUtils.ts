@@ -24,7 +24,8 @@ import type {
 import { getConditionalExecutionFlag } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import type { TemplateIcons } from '@pipeline/utils/types'
-import { NodeType, PipelineGraphState, SVGPathRecord, PipelineGraphType, KVPair } from '../types'
+import type { PipelineGraphState, SVGPathRecord, KVPair } from '../types'
+import { NodeType, PipelineGraphType } from '../types'
 import { NodeWrapperEntity, getEntityIdentifierBasedFqnPath } from '../Nodes/utils'
 
 const INITIAL_ZOOM_LEVEL = 1

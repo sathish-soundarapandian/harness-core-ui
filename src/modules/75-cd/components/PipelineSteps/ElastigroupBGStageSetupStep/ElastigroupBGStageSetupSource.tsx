@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { FieldArray } from 'formik'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { AllowedTypes, Button, ButtonVariation, FormInput, Layout, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Button, ButtonVariation, FormInput, Layout, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'

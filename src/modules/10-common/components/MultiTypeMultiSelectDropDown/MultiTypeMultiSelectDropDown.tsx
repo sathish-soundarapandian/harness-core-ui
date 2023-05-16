@@ -8,18 +8,19 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { FormGroup, Intent } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
+import type {
+  ExpressionAndRuntimeTypeProps,
+  MultiSelectDropDownProps,
+  SelectOption,
+  MultiSelectOption} from '@harness/uicore';
 import {
   errorCheck,
   ExpressionAndRuntimeType,
-  ExpressionAndRuntimeTypeProps,
   FormError,
   getMultiTypeFromValue,
   MultiSelectDropDown,
   MultiTypeInputType,
-  MultiSelectDropDownProps,
   getFormFieldLabel,
-  SelectOption,
-  MultiSelectOption,
   MultiTypeInputValue,
   Layout,
   Container
@@ -30,10 +31,11 @@ import cx from 'classnames'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
 
-import {
+import type {
   FormMultiTypeMultiSelectDropDownProps,
+  MultiSelectDropDownFixedProps} from './MultiTypeMultiSelectDropDownUtils';
+import {
   getLocalValueFromSelectedOptions,
-  MultiSelectDropDownFixedProps,
   SELECT_ALL_OPTION
 } from './MultiTypeMultiSelectDropDownUtils'
 

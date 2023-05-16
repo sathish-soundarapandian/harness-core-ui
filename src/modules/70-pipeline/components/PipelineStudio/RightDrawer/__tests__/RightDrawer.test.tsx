@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor, getByRole, screen } from '@testing-library/react'
-import { Formik, FormikForm, FormInput, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Formik, FormikForm, FormInput } from '@harness/uicore'
 import type { FormikProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import type { StepElementConfig } from 'services/cd-ng'
 import * as cdng from 'services/cd-ng'
@@ -16,7 +17,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { setFormikRef, Step, StepProps, StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, StepFormikRef } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, Step, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import {

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect, useRef, useState, ReactElement } from 'react'
+import type { FC, ReactElement } from 'react';
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, Container, Heading, Layout, Text, Utils, Popover } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { Classes, Position, Switch, PopoverInteractionKind } from '@blueprintjs/core'
@@ -24,7 +25,8 @@ import { featureFlagHasCustomRules, getErrorMessage, isFeatureFlagOn } from '@cf
 
 import SaveFlagToGitModal from '@cf/components/SaveFlagToGitModal/SaveFlagToGitModal'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
-import { GitDetails, GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
+import type { GitDetails, GitSyncFormValues, UseGitSync } from '@cf/hooks/useGitSync';
+import { GIT_SYNC_ERROR_CODE } from '@cf/hooks/useGitSync'
 import type { UseGovernancePayload } from '@cf/hooks/useGovernance'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'

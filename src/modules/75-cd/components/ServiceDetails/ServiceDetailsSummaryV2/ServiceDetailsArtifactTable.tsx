@@ -11,18 +11,21 @@ import { useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
 import { Container, getErrorInfoFromErrorObject, Icon, PageError, Text } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/EnvironmentDetailsUtils'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { Table } from '@common/components'
-import {
+import type {
   GetActiveInstanceGroupedByArtifactQueryParams,
-  InstanceGroupedOnArtifact,
+  InstanceGroupedOnArtifact} from 'services/cd-ng';
+import {
   useGetActiveInstanceGroupedByArtifact
 } from 'services/cd-ng'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 import type { ServiceDetailInstanceViewProps } from './ServiceDetailsInstanceView'
-import { RenderEnv, RenderEnvType, RenderInstanceCount, TableRowData } from './ServiceDetailsEnvTable'
+import type { TableRowData } from './ServiceDetailsEnvTable';
+import { RenderEnv, RenderEnvType, RenderInstanceCount } from './ServiceDetailsEnvTable'
 
 import css from './ServiceDetailsSummaryV2.module.scss'
 

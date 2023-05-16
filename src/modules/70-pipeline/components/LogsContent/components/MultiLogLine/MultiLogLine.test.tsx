@@ -8,7 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import { MultiLogLine, MultiLogLineProps } from './MultiLogLine'
+import type { MultiLogLineProps } from './MultiLogLine';
+import { MultiLogLine } from './MultiLogLine'
 
 const props: MultiLogLineProps = {
   lineNumber: 100,

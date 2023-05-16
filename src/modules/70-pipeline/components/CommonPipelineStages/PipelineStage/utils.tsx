@@ -8,7 +8,8 @@
 /* eslint-disable react/function-component-definition */
 import React from 'react'
 import type { CellProps, Renderer } from 'react-table'
-import { Text, Layout, Icon, Popover, ButtonSize, ButtonVariation, Button, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Text, Layout, Icon, Popover, ButtonSize, ButtonVariation, Button } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'

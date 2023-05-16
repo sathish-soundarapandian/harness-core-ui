@@ -6,15 +6,16 @@
  */
 
 import React, { useMemo } from 'react'
+import type {
+  IconName,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Text,
   Container,
   Formik,
-  IconName,
   Layout,
-  StepProps,
   ThumbnailSelect
 } from '@harness/uicore'
 import { Form } from 'formik'

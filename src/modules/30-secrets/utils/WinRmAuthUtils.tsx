@@ -6,15 +6,17 @@
  */
 
 import type { WinRmConfigFormData } from '@secrets/modals/CreateWinRmCredModal/views/StepAuthentication'
-import {
+import type {
   KerberosWinRmConfigDTO,
   NTLMConfigDTO,
   TGTKeyTabFilePathSpecDTO,
   TGTPasswordSpecDTO,
   WinRmCredentialsSpecDTO,
-  getSecretV2Promise,
   KerberosConfigDTO,
   SecretDTOV2
+} from 'services/cd-ng';
+import {
+  getSecretV2Promise
 } from 'services/cd-ng'
 
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'

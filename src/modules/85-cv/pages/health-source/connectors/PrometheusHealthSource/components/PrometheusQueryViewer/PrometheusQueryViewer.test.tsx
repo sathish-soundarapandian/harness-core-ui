@@ -10,7 +10,8 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
-import { PrometheusQueryViewer, PrometheusQueryViewerProps } from './PrometheusQueryViewer'
+import type { PrometheusQueryViewerProps } from './PrometheusQueryViewer';
+import { PrometheusQueryViewer } from './PrometheusQueryViewer'
 
 function WrapperComponent(props: PrometheusQueryViewerProps): any {
   return (

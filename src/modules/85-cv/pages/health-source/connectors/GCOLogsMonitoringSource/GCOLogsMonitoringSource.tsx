@@ -12,7 +12,8 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { MapQueriesToHarnessService } from './components/MapQueriesToHarnessService/MapQueriesToHarnessService'
-import { buildGCOMonitoringSourceInfo, GCOMonitoringSourceInfo } from './GoogleCloudOperationsMonitoringSourceUtils'
+import type { GCOMonitoringSourceInfo } from './GoogleCloudOperationsMonitoringSourceUtils';
+import { buildGCOMonitoringSourceInfo } from './GoogleCloudOperationsMonitoringSourceUtils'
 import { createGCOLogsHealthSourcePayload } from './GCOLogsMonitoringSource.utils'
 
 interface GCOLogsMonitoringSourceProps {

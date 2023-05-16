@@ -20,12 +20,14 @@ import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import {
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type {
   ServiceNowApprovalData,
   ServiceNowApprovalStepModeProps,
   ServiceNowFormContentInterface,
-  ServiceNowTicketTypeSelectOption,
+  ServiceNowTicketTypeSelectOption} from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types';
+import {
   resetForm
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -55,7 +57,8 @@ import {
   getApprovalRejectionCriteriaForInitialValues,
   getGenuineValue
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/helper'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@connectors/constants'

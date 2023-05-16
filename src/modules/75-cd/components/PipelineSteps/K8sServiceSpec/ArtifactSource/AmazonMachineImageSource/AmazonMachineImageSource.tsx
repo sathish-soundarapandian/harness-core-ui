@@ -8,15 +8,18 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { defaultTo, get, isNil, memoize } from 'lodash-es'
 
-import { getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase';
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { AMITagObject, BuildDetails, useListVersionsForAMIArtifact } from 'services/cd-ng'
+import type { AMITagObject, BuildDetails} from 'services/cd-ng';
+import { useListVersionsForAMIArtifact } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
 import { amiFilters, isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useMutateAsGet } from '@common/hooks'

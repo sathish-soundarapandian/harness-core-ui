@@ -8,7 +8,8 @@
 import React, { useState } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Slider } from '@blueprintjs/core'
-import { DropDown, Layout, TextInput, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { DropDown, Layout, TextInput } from '@harness/uicore'
 import css from './CostCalculator.module.scss'
 
 interface SliderWrapperProps {

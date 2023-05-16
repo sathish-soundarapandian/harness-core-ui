@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, waitFor, screen, RenderResult, within, getByTestId } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, waitFor, screen, within, getByTestId } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
 import mockImport from 'framework/utils/mockImport'

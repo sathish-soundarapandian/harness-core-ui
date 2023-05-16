@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AnserJsonEntry, ansiToJson } from 'anser'
+import type { AnserJsonEntry} from 'anser';
+import { ansiToJson } from 'anser'
 import cx from 'classnames'
 import { tokenize } from 'linkifyjs'
 

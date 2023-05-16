@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Formik, MultiTypeInputType } from '@harness/uicore'
-import { render, RenderResult, waitFor, within } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Form } from 'formik'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'

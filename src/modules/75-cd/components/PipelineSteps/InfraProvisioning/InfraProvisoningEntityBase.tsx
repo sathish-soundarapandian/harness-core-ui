@@ -7,7 +7,8 @@
 
 import React, { useEffect, useRef } from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { Field, FormikContextType, FormikProps } from 'formik'
+import type { FormikContextType, FormikProps } from 'formik';
+import { Field } from 'formik'
 import { Container, Formik, FormikForm, FormInput } from '@harness/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -16,17 +17,19 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { useStrings } from 'framework/strings'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
-import ExecutionGraph, {
+import type {
   ExecutionGraphAddStepEvent,
   ExecutionGraphEditStepEvent,
   ExecutionGraphRefObj
-} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph';
+import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 import {
   getInitialValuesInCorrectFormat,
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { addStepOrGroup } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
-import { StepCategory, useGetStepsV2 } from 'services/pipeline-ng'
+import type { StepCategory} from 'services/pipeline-ng';
+import { useGetStepsV2 } from 'services/pipeline-ng'
 import { createStepNodeFromTemplate } from '@pipeline/utils/templateUtils'
 import { useMutateAsGet } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'

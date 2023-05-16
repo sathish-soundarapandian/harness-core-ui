@@ -14,13 +14,14 @@ import type { StageElementConfig } from 'services/cd-ng'
 import { DynamicPopover } from '@common/components'
 import { renderPopover } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilder'
 import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
+import type {
+  StageAttributes} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
 import {
-  StageAttributes,
   usePipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useGlobalEventListener } from '@common/hooks'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { getCommonStyles, PopoverData } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import { getCommonStyles, type PopoverData } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { DefaultNewStageId } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'

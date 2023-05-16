@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import { useEffect, useState } from 'react'
 import type { GetDataError } from 'restful-react'
 import { get, isEmpty, isUndefined, memoize, remove, set } from 'lodash-es'
 
@@ -13,16 +14,19 @@ import produce from 'immer'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import {
-  Failure,
   useGetTemplateFromPipeline,
-  useGetMergeInputSetFromPipelineTemplateWithListInput,
+  useGetMergeInputSetFromPipelineTemplateWithListInput
+} from 'services/pipeline-ng'
+import type { PipelineInfoConfig ,
+  Failure,
   ResponseInputSetTemplateWithReplacedExpressionsResponse
 } from 'services/pipeline-ng'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import type {
+  StageSelectionData
+} from '@pipeline/utils/runPipelineUtils';
 import {
   clearRuntimeInput,
-  getStageIdentifierFromStageData,
-  StageSelectionData
+  getStageIdentifierFromStageData
 } from '@pipeline/utils/runPipelineUtils'
 
 import type { Pipeline } from '@pipeline/utils/types'

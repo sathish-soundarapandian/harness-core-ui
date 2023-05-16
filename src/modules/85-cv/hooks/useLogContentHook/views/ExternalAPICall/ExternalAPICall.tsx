@@ -7,12 +7,14 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Layout, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Layout } from '@harness/uicore'
 import LogContentHeader from '../LogContentHeader/LogContentHeader'
 import LogContentToolbar from '../LogContentToolbar/LogContentToolbar'
 import ExternalAPICallContent from './ExternalAPICallContent'
 import { isTimeRangeChanged } from '../../useLogContentHook.utils'
-import { ExecutionAndAPICallLogProps, LogTypes, TimeRange } from '../../useLogContentHook.types'
+import type { ExecutionAndAPICallLogProps, TimeRange } from '../../useLogContentHook.types';
+import { LogTypes } from '../../useLogContentHook.types'
 import css from './ExternalAPICall.module.scss'
 
 const ExternalAPICall: React.FC<ExecutionAndAPICallLogProps> = props => {

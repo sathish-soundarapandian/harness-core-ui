@@ -12,12 +12,14 @@ import { fireEvent, render, waitFor, act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import * as cvService from 'services/cv'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
-import { PrometheusHealthSource, PrometheusHealthSourceProps } from '../PrometheusHealthSource'
+import type { PrometheusHealthSourceProps } from '../PrometheusHealthSource';
+import { PrometheusHealthSource } from '../PrometheusHealthSource'
 import { PrometheusMonitoringSourceFieldNames } from '../PrometheusHealthSource.constants'
 import {
   emptyCustomMetricData,

@@ -6,30 +6,36 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { isEmpty, set, isArray, defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { v4 as uuid } from 'uuid'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import type { StringsMap } from 'stringTypes'
-import {
+import type {
   ShellScriptProvisionData,
   ShellScriptProvisionFileStore,
   ShellScriptProvisionFormData,
-  ShellScriptProvisionInline,
+  ShellScriptProvisionInline} from './types';
+import {
   variableSchema
 } from './types'
 import { ShellScriptProvisionWidgetWithRef } from './ShellScriptProvisionWidget'
 import ShellScriptProvisionInputSetStep from './ShellScriptProvisionInputSet'
-import {
-  ShellScriptProvisionVariablesView,
+import type {
   ShellScriptProvisionVariablesViewProps
+} from './ShellScriptProvisionVariableView';
+import {
+  ShellScriptProvisionVariablesView
 } from './ShellScriptProvisionVariableView'
 
 export class ShellScriptProvisionStep extends PipelineStep<ShellScriptProvisionData> {

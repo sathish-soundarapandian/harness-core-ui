@@ -7,7 +7,8 @@
 
 import React from 'react'
 import EnvironmentSectionNoData from '@cf/pages/environments/EnvironmentSectionNoData'
-import EnvironmentDialog, { EnvironmentDialogProps } from '../CreateEnvironmentDialog/EnvironmentDialog'
+import type { EnvironmentDialogProps } from '../CreateEnvironmentDialog/EnvironmentDialog';
+import EnvironmentDialog from '../CreateEnvironmentDialog/EnvironmentDialog'
 
 export interface NoEnvironmentProps {
   onCreated: EnvironmentDialogProps['onCreate']

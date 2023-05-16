@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Target } from 'services/cf'
-import TargetGroupCriteriaTargetListing, {
+import type {
   TargetGroupCriteriaTargetListingProps
-} from '../TargetGroupCriteriaTargetListing'
+} from '../TargetGroupCriteriaTargetListing';
+import TargetGroupCriteriaTargetListing from '../TargetGroupCriteriaTargetListing'
 
 const renderComponent = (props: Partial<TargetGroupCriteriaTargetListingProps> = {}): RenderResult =>
   render(

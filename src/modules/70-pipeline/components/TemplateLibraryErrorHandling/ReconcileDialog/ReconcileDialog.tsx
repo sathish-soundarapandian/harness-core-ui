@@ -10,26 +10,31 @@ import { Button, ButtonVariation, Container, Layout, Text, useToaster, PageSpinn
 import { Color, FontVariation } from '@harness/design-system'
 import { clone, defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import {
-  refreshAllPromise as refreshAllTemplatePromise,
+import type {
   ErrorNodeSummary,
   TemplateResponse,
   NGTemplateInfoConfig
+} from 'services/template-ng';
+import {
+  refreshAllPromise as refreshAllTemplatePromise
 } from 'services/template-ng'
 import { ErrorNode } from '@pipeline/components/TemplateLibraryErrorHandling/ErrorDirectory/ErrorNode'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String, useStrings } from 'framework/strings'
-import { EntityGitDetails, refreshAllPromise as refreshAllPipelinePromise } from 'services/pipeline-ng'
+import type { EntityGitDetails} from 'services/pipeline-ng';
+import { refreshAllPromise as refreshAllPipelinePromise } from 'services/pipeline-ng'
 import { getScopeBasedProjectPathParams, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { getFirstLeafNode, getTitleFromErrorNodeSummary, TemplateErrorEntity } from '../utils'
 import { TemplateYamlDiffViewWrapper } from './TemplateYamlDiffViewWrapper'
 import css from './ReconcileDialog.module.scss'

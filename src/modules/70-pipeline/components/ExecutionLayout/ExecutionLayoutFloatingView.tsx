@@ -6,7 +6,8 @@
  */
 
 import React, { useRef } from 'react'
-import Draggable, { DraggableData, DraggableEventHandler } from 'react-draggable'
+import type { DraggableData, DraggableEventHandler } from 'react-draggable';
+import Draggable from 'react-draggable'
 import { usePopper } from 'react-popper'
 import { Button, ButtonVariation, Icon } from '@harness/uicore'
 

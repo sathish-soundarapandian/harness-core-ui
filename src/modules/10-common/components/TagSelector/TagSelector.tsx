@@ -6,6 +6,10 @@
  */
 
 import React, { useMemo, useCallback } from 'react'
+import type {
+  AllowedTypes,
+  SelectOption,
+  DataTooltipInterface} from '@harness/uicore';
 import {
   Layout,
   FormInput,
@@ -15,9 +19,6 @@ import {
   ButtonVariation,
   Select,
   Text,
-  AllowedTypes,
-  SelectOption,
-  DataTooltipInterface,
   EXPRESSION_INPUT_PLACEHOLDER
 } from '@harness/uicore'
 import { useFormikContext } from 'formik'

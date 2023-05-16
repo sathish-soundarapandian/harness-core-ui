@@ -6,6 +6,9 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Container,
   FormInput,
@@ -14,10 +17,10 @@ import {
   Layout,
   MultiTypeInputType,
   Text,
-  RUNTIME_INPUT_VALUE,
-  AllowedTypes
+  RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
-import { connect, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { connect } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, get, some, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
@@ -33,7 +36,8 @@ import type {
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeCheckboxField, Separator } from '@common/components'
-import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
+import type { MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText';
+import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeListInputSet from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import { MultiTypeMapInputSet } from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
 import { MultiTypeCustomMap } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'

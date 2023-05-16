@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import type { PropsWithChildren, ReactElement} from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 import { Container, Layout, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -17,14 +18,17 @@ import OpenFolderIcon from '@filestore/images/open-folder.svg'
 import FileIcon from '@filestore/images/file-.svg'
 import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
-import { FileStoreNodeTypes, StoreNodeType, SortType } from '@filestore/interfaces/FileStore'
-import { FILE_STORE_ROOT, ExtensionType, FileStoreActionTypes } from '@filestore/utils/constants'
+import type { StoreNodeType, SortType } from '@filestore/interfaces/FileStore';
+import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
+import type { ExtensionType} from '@filestore/utils/constants';
+import { FILE_STORE_ROOT, FileStoreActionTypes } from '@filestore/utils/constants'
 import NodeMenuButton from '@filestore/common/NodeMenu/NodeMenuButton'
 import useNewNodeModal from '@filestore/common/useNewNodeModal/useNewNodeModal'
 import useUploadFile, { UPLOAD_EVENTS } from '@filestore/common/useUpload/useUpload'
+import type {
+  FileStorePopoverOptionItem} from '@filestore/utils/FileStoreUtils';
 import {
   getMenuOptionItems,
-  FileStorePopoverOptionItem,
   checkSupportedMime,
   sortNodesByType
 } from '@filestore/utils/FileStoreUtils'

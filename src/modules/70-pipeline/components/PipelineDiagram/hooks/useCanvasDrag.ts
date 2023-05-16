@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import { useCallback, useEffect, useRef } from 'react'
 import { unstable_batchedUpdates } from 'react-dom'
 import { rafThrottle } from '@common/utils/rafThrottle'
 import type { Position } from '../types'

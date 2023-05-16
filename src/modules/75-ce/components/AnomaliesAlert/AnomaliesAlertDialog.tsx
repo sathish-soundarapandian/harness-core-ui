@@ -6,26 +6,31 @@
  */
 
 import React, { useEffect } from 'react'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 import { StepWizard, Formik, FormikForm, useToaster, getErrorInfoFromErrorObject } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
-import { QlceView, useFetchPerspectiveListQuery } from 'services/ce/services'
-import { channelNameUrlMapping, channels } from '@ce/constants'
+import type { QlceView} from 'services/ce/services';
+import { useFetchPerspectiveListQuery } from 'services/ce/services'
+import type { channels } from '@ce/constants';
+import { channelNameUrlMapping } from '@ce/constants'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   CCMNotificationChannel,
-  CCMPerspectiveNotificationChannelsDTO,
+  CCMPerspectiveNotificationChannelsDTO} from 'services/ce';
+import {
   useCreateNotificationSetting,
   useUpdateNotificationSetting
 } from 'services/ce'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import PerspectiveSelection from './PerspectiveSelection'
-import NotificationMethod, { NotificationValues } from './NotificationMethod'
+import type { NotificationValues } from './NotificationMethod';
+import NotificationMethod from './NotificationMethod'
 import css from './AnomaliesAlertDialog.module.scss'
 
 const modalPropsLight: IDialogProps = {

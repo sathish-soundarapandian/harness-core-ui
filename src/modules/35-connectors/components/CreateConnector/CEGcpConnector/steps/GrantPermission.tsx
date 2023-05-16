@@ -8,19 +8,21 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { pick } from 'lodash-es'
+import type {
+  StepProps,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   Container,
   Heading,
   Layout,
-  StepProps,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   Icon
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGcpserviceaccount } from 'services/ce'
-import { useCreateConnector, useUpdateConnector, Failure } from 'services/cd-ng'
+import type { Failure } from 'services/cd-ng';
+import { useCreateConnector, useUpdateConnector } from 'services/cd-ng'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { CE_GCP_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'

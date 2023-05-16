@@ -6,6 +6,9 @@
  */
 
 import React from 'react'
+import type {
+  StepProps,
+  AllowedTypes} from '@harness/uicore';
 import {
   Accordion,
   Layout,
@@ -15,9 +18,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  StepProps,
   ButtonVariation,
-  AllowedTypes,
   FormikForm
 } from '@harness/uicore'
 import cx from 'classnames'

@@ -5,11 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode, useMemo, PropsWithChildren, useState, useRef } from 'react'
+import type { ReactNode, PropsWithChildren} from 'react';
+import React, { useMemo, useState, useRef } from 'react'
 import { flushSync } from 'react-dom'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
+import type {
+  ExpandingSearchInputHandle,
+  SelectOption} from '@harness/uicore';
 import {
   Page,
   Heading,
@@ -19,10 +23,8 @@ import {
   Container,
   Layout,
   ExpandingSearchInput,
-  ExpandingSearchInputHandle,
   GridListToggle,
   Pagination,
-  SelectOption,
   Text,
   DropDown,
   useToaster
@@ -30,7 +32,8 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
-import { GetFilterListQueryParams, useGetFilterList, useGetSettingValue } from 'services/cd-ng'
+import type { GetFilterListQueryParams} from 'services/cd-ng';
+import { useGetFilterList, useGetSettingValue } from 'services/cd-ng'
 
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -40,7 +43,8 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { SettingType } from '@common/constants/Utils'
 
-import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
+import type { ButtonProps } from '@rbac/components/Button/Button';
+import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import { FilterContextProvider } from '@cd/context/FiltersContext'
@@ -48,9 +52,10 @@ import { FilterContextProvider } from '@cd/context/FiltersContext'
 import { usePageStore } from './PageContext'
 import NoData from './NoData'
 import { getHasFilterIdentifier, getHasFilters } from '../EnvironmentsFilters/filterUtils'
-import {
+import type {
   PageQueryParams,
-  PageQueryParamsWithDefaults,
+  PageQueryParamsWithDefaults} from './utils';
+import {
   PAGE_TEMPLATE_DEFAULT_PAGE_INDEX,
   usePageQueryParamOptions
 } from './utils'

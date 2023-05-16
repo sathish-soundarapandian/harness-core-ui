@@ -8,9 +8,11 @@
 import React, { useCallback } from 'react'
 import { defaultTo, get, isNil } from 'lodash-es'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 
-import { SidecarArtifact, useGetProjects } from 'services/cd-ng'
+import type { SidecarArtifact} from 'services/cd-ng';
+import { useGetProjects } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -19,7 +21,8 @@ import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRender
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -27,7 +30,8 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isArtifactInMultiService, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { isFixedNonEmptyValue } from '@pipeline/utils/stageHelpers'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase';
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import {
   getFinalQueryParamValue,
   getFqnPath,

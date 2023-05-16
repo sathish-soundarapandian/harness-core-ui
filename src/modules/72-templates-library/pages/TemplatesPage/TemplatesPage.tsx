@@ -7,17 +7,18 @@
 
 import React, { useState } from 'react'
 import { flushSync } from 'react-dom'
+import type {
+  ExpandingSearchInputHandle,
+  SortMethod} from '@harness/uicore';
 import {
   DropDown,
   ExpandingSearchInput,
-  ExpandingSearchInputHandle,
   GridListToggle,
   HarnessDocTooltip,
   Layout,
   sortByCreated,
   sortByLastUpdated,
   sortByName,
-  SortMethod,
   ListHeader
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
@@ -27,20 +28,23 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { TemplateSettingsModal } from '@templates-library/components/TemplateSettingsModal/TemplateSettingsModal'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
+import type {
+  TemplatesQueryParams} from '@templates-library/pages/TemplatesPage/TemplatesPageUtils';
 import {
   TemplateListType,
-  TemplatesQueryParams,
   TEMPLATES_PAGE_INDEX,
   useTemplatesQueryParamOptions
 } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { TemplateDetailsDrawer } from '@templates-library/components/TemplateDetailDrawer/TemplateDetailDrawer'
-import {
+import type {
   TemplateSummaryResponse,
-  useGetRepositoryList,
-  useGetTemplateList,
-  useGetTemplateMetadataList,
   FilterDTO,
   TemplateFilterProperties
+} from 'services/template-ng';
+import {
+  useGetRepositoryList,
+  useGetTemplateList,
+  useGetTemplateMetadataList
 } from 'services/template-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -55,7 +59,8 @@ import TemplatesView from '@templates-library/pages/TemplatesPage/views/Template
 import useMigrateTemplateResource from '@templates-library/components/MigrateTemplateResource/useMigrateTemplateSource'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import type { GitFilterScope } from '@common/components/GitFilters/GitFilters';
+import GitFilters from '@common/components/GitFilters/GitFilters'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import {
   getAllowedTemplateTypes,

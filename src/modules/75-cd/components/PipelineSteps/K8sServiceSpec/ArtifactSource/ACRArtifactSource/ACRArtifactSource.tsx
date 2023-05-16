@@ -8,21 +8,24 @@
 import React, { useEffect } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
 
-import {
+import type {
   ExpressionAndRuntimeTypeProps,
+  MultiTypeInputValue,
+  SelectOption} from '@harness/uicore';
+import {
   FormInput,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  MultiTypeInputValue,
-  SelectOption,
   Text
 } from '@harness/uicore'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { Menu } from '@blueprintjs/core'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase';
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type {
+  SidecarArtifact} from 'services/cd-ng';
 import {
-  SidecarArtifact,
   useGetACRRegistriesForServiceWithYaml,
   useGetACRRepositoriesForServiceWithYaml
 } from 'services/cd-ng'
@@ -32,8 +35,9 @@ import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/Triggers
 import { useGetSubscriptionsForAcrArtifact } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ACRArtifactSource/hooks/useGetSubscriptionsForAcrArtifact'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import type {
+  ConnectorReferenceDTO} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField';
 import {
-  ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getScopeAppendedToIdentifier } from '@common/utils/StringUtils'

@@ -28,12 +28,13 @@ import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import type {
+  ServicePipelineConfig} from '../../utils/ServiceUtils';
 import {
   DefaultNewStageId,
   DefaultNewStageName,
   initialServiceState,
   newServiceState,
-  ServicePipelineConfig,
   setNameIDDescription
 } from '../../utils/ServiceUtils'
 import ServiceStudioDetails from '../ServiceStudioDetails'

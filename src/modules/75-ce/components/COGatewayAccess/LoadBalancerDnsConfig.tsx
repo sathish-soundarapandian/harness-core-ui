@@ -9,14 +9,17 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty as _isEmpty } from 'lodash-es'
 import { Heading } from '@harness/uicore'
-import { AccessPoint, useCreateAccessPoint, useEditAccessPoint, useGetAccessPoint } from 'services/lw'
+import type { AccessPoint} from 'services/lw';
+import { useCreateAccessPoint, useEditAccessPoint, useGetAccessPoint } from 'services/lw'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
 import type { AccessPointScreenMode } from '@ce/types'
 import { Utils } from '@ce/common/Utils'
 import { PROVIDER_TYPES } from '@ce/constants'
-import LBFormStepFirst, { SubmitFormVal } from './LBFormStepFirst'
-import LBFormStepSecond, { FormValue } from './LBFormStepSecond'
+import type { SubmitFormVal } from './LBFormStepFirst';
+import LBFormStepFirst from './LBFormStepFirst'
+import type { FormValue } from './LBFormStepSecond';
+import LBFormStepSecond from './LBFormStepSecond'
 import css from './COGatewayAccess.module.scss'
 
 interface LoadBalancerDnsConfigProps {

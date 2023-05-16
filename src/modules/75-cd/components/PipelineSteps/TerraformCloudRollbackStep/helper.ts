@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
-import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StepElementConfig, TerraformCloudRollbackStepInfo } from 'services/cd-ng'

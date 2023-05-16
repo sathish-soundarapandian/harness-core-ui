@@ -8,7 +8,8 @@
 import React from 'react'
 import { render, waitFor, screen, fireEvent, act } from '@testing-library/react'
 import * as cvServices from 'services/cv'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import { LogAnalysisContent } from '@cv/components/LogsAnalysis/LogAnalysis'

@@ -9,7 +9,8 @@ import React, { useRef, useMemo } from 'react'
 import * as Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import highChartsNetworkGraph from 'highcharts/modules/networkgraph'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { VisEdge, VisGraph, VisNode } from 'services/ti-service'
 import css from './BuildTests.module.scss'
 

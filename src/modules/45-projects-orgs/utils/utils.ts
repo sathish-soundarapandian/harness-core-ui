@@ -6,7 +6,8 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
-import { getScopeFromDTO, ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
+import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference';
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import routes from '@common/RouteDefinitions'
 import type { StringKeys, StringsMap } from 'framework/strings/StringsContext'

@@ -5,17 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { FC } from 'react';
+import React from 'react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PERCENTAGE_ROLLOUT_VALUE } from '@cf/constants'
 import { mockFeatures } from '@cf/pages/target-group-detail/__tests__/mocks'
-import VariationsWithPercentageRolloutCell, {
+import type {
   VariationsWithPercentageRolloutCellProps
-} from '../VariationsWithPercentageRolloutCell'
+} from '../VariationsWithPercentageRolloutCell';
+import VariationsWithPercentageRolloutCell from '../VariationsWithPercentageRolloutCell'
 
 const MockReasonTooltip: FC = ({ children }) => <>{children}</>
 

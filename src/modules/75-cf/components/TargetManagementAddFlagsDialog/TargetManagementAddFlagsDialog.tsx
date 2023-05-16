@@ -5,13 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback, useMemo, useState } from 'react'
+import type { FC} from 'react';
+import React, { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Form, Formik } from 'formik'
 import { Container, ExpandingSearchInput, ModalDialog, Page } from '@harness/uicore'
 import type { ObjectSchema } from 'yup'
 import * as yup from 'yup'
-import { Feature, Features, Segment, Target, useGetAllFeatures } from 'services/cf'
+import type { Feature, Features, Segment, Target} from 'services/cf';
+import { useGetAllFeatures } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { CF_DEFAULT_PAGE_SIZE, getErrorMessage } from '@cf/utils/CFUtils'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'

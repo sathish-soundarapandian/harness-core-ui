@@ -1,6 +1,8 @@
 /* eslint-disable react/display-name */
-import React, { FC } from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { FC } from 'react';
+import React from 'react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Dialog } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'

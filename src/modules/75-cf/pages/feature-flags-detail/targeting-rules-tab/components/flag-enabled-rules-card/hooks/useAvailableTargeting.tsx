@@ -6,13 +6,15 @@
  */
 
 import type { Segment, Target, Variation } from 'services/cf'
-import {
+import type {
   FormVariationMap,
-  TargetingRuleItemStatus,
-  TargetingRuleItemType,
   VariationPercentageRollout,
   VariationTarget,
   VariationTargetGroup
+} from '../../../types';
+import {
+  TargetingRuleItemStatus,
+  TargetingRuleItemType
 } from '../../../types'
 
 // Currently 1 target/target group can be added per targeting rule

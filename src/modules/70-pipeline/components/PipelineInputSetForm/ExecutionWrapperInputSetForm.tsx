@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { identity, pickBy, set, isEmpty, defaultTo } from 'lodash-es'
-import { AllowedTypes, Icon, Label, Layout } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Icon, Label, Layout } from '@harness/uicore'
 import cx from 'classnames'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageConfig, ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'

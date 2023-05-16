@@ -6,14 +6,15 @@
  */
 
 import React, { useContext, useMemo, useState } from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   getErrorInfoFromErrorObject,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  StepProps,
   Text
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -29,7 +30,8 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { DialogExtensionContext } from '@connectors/common/ConnectorExtention/DialogExtention'
 import EnableAutoStoppingHeader from '@ce/components/CloudVisibilityModal/steps/EnableAutoStoppingStep'
 
-import { ConnectorInfoDTO, useUpdateConnector } from 'services/cd-ng'
+import type { ConnectorInfoDTO} from 'services/cd-ng';
+import { useUpdateConnector } from 'services/cd-ng'
 import { useMutateAsGet } from '@common/hooks'
 import { useCloudCostK8sClusterSetup } from 'services/ce'
 import PermissionYAMLPreview from '@connectors/components/CreateConnector/CEK8sConnector/PermissionYAMLPreview'

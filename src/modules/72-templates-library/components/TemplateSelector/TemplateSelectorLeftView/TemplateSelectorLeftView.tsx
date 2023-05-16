@@ -6,15 +6,16 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  ExpandingSearchInputHandle,
+  SelectOption} from '@harness/uicore';
 import {
   Container,
   DropDown,
   ExpandingSearchInput,
-  ExpandingSearchInputHandle,
   GridListToggle,
   Layout,
   PageError,
-  SelectOption,
   Text,
   Views
 } from '@harness/uicore'
@@ -23,8 +24,9 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  TemplateSummaryResponse} from 'services/template-ng';
 import {
-  TemplateSummaryResponse,
   useGetRepositoryList,
   useGetTemplateList,
   useGetTemplateMetadataList

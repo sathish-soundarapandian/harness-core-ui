@@ -10,13 +10,14 @@ import { Link, useParams } from 'react-router-dom'
 import { Text } from '@harness/uicore'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
-import {
-  QlceViewAggregateOperation,
+import type {
   QlceViewEntityStatsDataPoint,
   QlceViewFieldInputInput,
-  QlceViewFilterOperator,
   QlceViewFilterWrapperInput,
-  QlceViewGroupByInput,
+  QlceViewGroupByInput} from 'services/ce/services';
+import {
+  QlceViewAggregateOperation,
+  QlceViewFilterOperator,
   useFetchperspectiveGridQuery,
   ViewFieldIdentifier
 } from 'services/ce/services'
@@ -24,13 +25,14 @@ import type { TimeRange } from '@ce/pages/overview/OverviewPage'
 import routes from '@common/RouteDefinitions'
 import { getTimeFilters } from '@ce/utils/perspectiveUtils'
 import { CE_COLOR_CONST } from '../CEChart/CEChartOptions'
+import type {
+  Stats} from './OverviewPageLayout';
 import {
   FlexList,
   HorizontalLayout,
   LEGEND_LIMIT,
   ListType,
   Loader,
-  Stats,
   TableList,
   VerticalLayout
 } from './OverviewPageLayout'

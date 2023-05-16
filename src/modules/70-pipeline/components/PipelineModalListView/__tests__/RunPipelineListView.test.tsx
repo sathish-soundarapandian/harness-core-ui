@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { screen, render, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { screen, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { TestWrapper } from '@common/utils/testUtils'

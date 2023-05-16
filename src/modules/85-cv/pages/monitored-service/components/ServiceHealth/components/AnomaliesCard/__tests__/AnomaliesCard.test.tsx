@@ -8,7 +8,8 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { RiskData, useGetAnomaliesSummary } from 'services/cv'
+import type { RiskData} from 'services/cv';
+import { useGetAnomaliesSummary } from 'services/cv'
 import { RiskValues } from '@cv/utils/CommonUtils'
 import { ChangeSourceTypes } from '@cv/components/ChangeTimeline/ChangeTimeline.constants'
 import AnomaliesCard from '../AnomaliesCard'

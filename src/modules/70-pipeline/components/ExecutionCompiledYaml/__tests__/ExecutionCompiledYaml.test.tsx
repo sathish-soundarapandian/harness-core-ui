@@ -5,13 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import React from 'react'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useGetExecutionData } from 'services/pipeline-ng'
-import { ExecutionCompiledYaml, ExecutionCompiledYamlProps } from '../ExecutionCompiledYaml'
+import type { ExecutionCompiledYamlProps } from '../ExecutionCompiledYaml';
+import { ExecutionCompiledYaml } from '../ExecutionCompiledYaml'
 jest.mock('services/pipeline-ng')
 
 const TEST_PATH = routes.toExecutionPipelineView({

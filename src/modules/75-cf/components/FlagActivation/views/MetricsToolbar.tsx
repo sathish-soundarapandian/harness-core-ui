@@ -6,11 +6,12 @@
  */
 
 import React from 'react'
+import type {
+  DateRangePickerButtonProps} from '@harness/uicore';
 import {
   Button,
   Container,
   DateRangePickerButton,
-  DateRangePickerButtonProps,
   FlexExpander,
   Layout
 } from '@harness/uicore'

@@ -8,13 +8,15 @@
 import React from 'react'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
+import type {
+  AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
 import {
   Accordion,
-  AllowedTypes,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 import { get } from 'lodash-es'
 
@@ -22,7 +24,8 @@ import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco';
+import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'

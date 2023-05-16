@@ -7,16 +7,17 @@
 
 import React, { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  StepProps,
+  AllowedTypes,
+  IconName} from '@harness/uicore';
 import {
   Layout,
   Button,
   Text,
   Formik,
-  StepProps,
   getMultiTypeFromValue,
-  AllowedTypes,
   ThumbnailSelect,
-  IconName,
   ButtonVariation,
   FormikForm,
   ButtonSize,

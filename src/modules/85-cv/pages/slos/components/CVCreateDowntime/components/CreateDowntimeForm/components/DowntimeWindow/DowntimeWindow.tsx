@@ -6,14 +6,16 @@
  */
 
 import React, { useState } from 'react'
-import { Container, FormInput, Layout, PillToggle, PillToggleProps, SelectOption, Text } from '@harness/uicore'
+import type { PillToggleProps, SelectOption} from '@harness/uicore';
+import { Container, FormInput, Layout, PillToggle, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useFormikContext } from 'formik'
 import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
 import { DateTimePicker } from '@common/components/DateTimePicker/DateTimePicker'
+import type {
+  DowntimeForm} from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types';
 import {
-  DowntimeForm,
   DowntimeFormFields,
   EndTimeMode
 } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'

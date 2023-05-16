@@ -25,7 +25,8 @@ import type {
 import type { StringsMap } from 'stringTypes'
 import { SaveCacheS3StepBaseWithRef } from './SaveCacheS3StepBase'
 import { SaveCacheS3StepInputSet } from './SaveCacheS3StepInputSet'
-import { SaveCacheS3StepVariables, SaveCacheS3StepVariablesProps } from './SaveCacheS3StepVariables'
+import type { SaveCacheS3StepVariablesProps } from './SaveCacheS3StepVariables';
+import { SaveCacheS3StepVariables } from './SaveCacheS3StepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SaveCacheS3StepFunctionConfigs'
 
 export interface SaveCacheS3StepSpec {

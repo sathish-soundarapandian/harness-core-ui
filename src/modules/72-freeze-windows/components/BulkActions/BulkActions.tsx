@@ -7,7 +7,8 @@
 
 import { Button, ButtonSize, ButtonVariation, Layout } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { useStrings } from 'framework/strings'
 import { useFreezeWindowListContext } from '@freeze-windows/context/FreezeWindowListContext'
 import type { FreezeWindowListColumnActions } from '../FreezeWindowList/FreezeWindowListCells'

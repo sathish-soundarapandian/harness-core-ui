@@ -9,7 +9,8 @@ import React from 'react'
 import { Button, Heading, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
-import { EntityConfig, EntityType, EnvironmentType, FIELD_KEYS, ResourcesInterface } from '@freeze-windows/types'
+import type { EntityConfig, EntityType, ResourcesInterface } from '@freeze-windows/types';
+import { EnvironmentType, FIELD_KEYS } from '@freeze-windows/types'
 import type { FieldVisibility } from '@freeze-windows/utils/FreezeWindowStudioUtil'
 import { EnvTypeRenderer, OrgProjAndServiceRenderer } from './FreezeStudioConfigSectionRenderers'
 

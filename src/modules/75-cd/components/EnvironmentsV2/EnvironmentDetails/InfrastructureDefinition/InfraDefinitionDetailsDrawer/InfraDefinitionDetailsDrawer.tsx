@@ -23,9 +23,11 @@ import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { InfrastructureConfig, InfrastructureDefinitionConfig } from 'services/cd-ng'
-import {
-  BootstrapDeployInfraDefinitionWrapperWithRef,
+import type {
   InfraDefinitionWrapperRef
+} from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/BootstrapDeployInfraDefinitionWrapper';
+import {
+  BootstrapDeployInfraDefinitionWrapperWithRef
 } from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/BootstrapDeployInfraDefinitionWrapper'
 import css from '../InfrastructureDefinition.module.scss'
 

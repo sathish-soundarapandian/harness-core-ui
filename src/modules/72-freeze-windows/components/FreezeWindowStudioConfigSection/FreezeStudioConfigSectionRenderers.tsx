@@ -8,12 +8,14 @@
 import React from 'react'
 import classnames from 'classnames'
 import { set, cloneDeep } from 'lodash-es'
-import { Icon, SelectOption, FormInput, Heading } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Icon, FormInput, Heading } from '@harness/uicore'
 import type { ITagInputProps } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import type { UseStringsReturn } from 'framework/strings'
-import { EntityType, EnvironmentType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
+import type { EntityType, ResourcesInterface } from '@freeze-windows/types';
+import { EnvironmentType, FIELD_KEYS, FreezeWindowLevels } from '@freeze-windows/types'
 import {
   allPipelinesObj,
   allProjectsObj,

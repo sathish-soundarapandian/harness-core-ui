@@ -6,7 +6,8 @@
  */
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep, omit } from 'lodash-es'
-import { string, array, object, ObjectSchema, ValidationError, TestContext } from 'yup'
+import type { ObjectSchema, ValidationError, TestContext } from 'yup';
+import { string, array, object } from 'yup'
 import { parse } from 'yaml'
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'

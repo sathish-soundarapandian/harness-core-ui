@@ -1,4 +1,5 @@
-import { IDrawerProps, Position } from '@blueprintjs/core'
+import type { IDrawerProps} from '@blueprintjs/core';
+import { Position } from '@blueprintjs/core'
 import type { SectionsGroupedQuestions } from './AssessmentSurvey'
 
 export const DrawerProps: IDrawerProps = {

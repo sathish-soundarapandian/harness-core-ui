@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import React, { useState } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import {
@@ -25,9 +26,10 @@ import { Menu, MenuItem } from '@blueprintjs/core'
 import { useToaster } from '@common/components'
 import { String, useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   AuthenticationSettingsResponse,
-  LDAPSettings,
+  LDAPSettings} from 'services/cd-ng';
+import {
   syncLdapGroupsPromise,
   useDeleteLdapSettings
 } from 'services/cd-ng'

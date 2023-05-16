@@ -9,11 +9,13 @@ import React from 'react'
 import { useIsMounted } from '@harness/uicore'
 import { defaultTo, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import {
+import type {
   ErrorNodeSummary,
-  getRefreshedYamlPromise,
-  getYamlDiffPromise as getYamlDiffPromiseForTemplate,
   TemplateResponse
+} from 'services/template-ng';
+import {
+  getRefreshedYamlPromise,
+  getYamlDiffPromise as getYamlDiffPromiseForTemplate
 } from 'services/template-ng'
 import {
   getIdentifierFromValue,

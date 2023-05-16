@@ -6,6 +6,9 @@
  */
 
 import React, { useState, useMemo } from 'react'
+import type {
+  SelectOption,
+  SortMethod} from '@harness/uicore';
 import {
   Text,
   Layout,
@@ -18,11 +21,9 @@ import {
   TableV2,
   useConfirmationDialog,
   ButtonVariation,
-  SelectOption,
   ListHeader,
   sortByCreated,
   sortByName,
-  SortMethod,
   sortByLastModified
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
@@ -34,13 +35,15 @@ import classNames from 'classnames'
 import { pick, defaultTo } from 'lodash-es'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ConnectorResponse,
-  useDeleteConnector,
   PageConnectorResponse,
   ConnectorInfoDTO,
   ConnectorValidationResult,
   EntityGitDetails
+} from 'services/cd-ng';
+import {
+  useDeleteConnector
 } from 'services/cd-ng'
 
 import type { UseCreateConnectorModalReturn } from '@connectors/modals/ConnectorModal/useCreateConnectorModal'

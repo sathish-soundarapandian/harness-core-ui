@@ -5,10 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type {
+  TemplateViewData
+} from '@templates-library/components/TemplateStudio/TemplateContext/TemplateReducer';
 import {
   initialState,
-  TemplateReducer,
-  TemplateViewData
+  TemplateReducer
 } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateReducer'
 import {
   DrawerTypes,

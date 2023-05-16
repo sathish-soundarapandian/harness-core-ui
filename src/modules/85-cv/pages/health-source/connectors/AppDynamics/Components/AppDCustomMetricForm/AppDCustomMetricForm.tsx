@@ -6,10 +6,11 @@
  */
 
 import React, { useState, useMemo, useEffect, useContext, useCallback } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Container,
   Accordion,
-  SelectOption,
   FormInput,
   Text,
   Radio,
@@ -31,8 +32,9 @@ import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSo
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
+import type {
+  AppDMetricDefinitions} from 'services/cv';
 import {
-  AppDMetricDefinitions,
   useGetCompleteServiceInstanceMetricPath,
   useGetRiskCategoryForCustomHealthMetric
 } from 'services/cv'

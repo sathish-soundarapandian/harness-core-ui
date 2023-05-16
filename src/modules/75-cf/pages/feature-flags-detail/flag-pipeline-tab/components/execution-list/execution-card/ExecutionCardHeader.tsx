@@ -7,7 +7,8 @@
 
 import { FontVariation, Color } from '@harness/design-system'
 import { Container, Text } from '@harness/uicore'
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Duration, TimeAgo } from '@common/exports'
 import routes from '@common/RouteDefinitions'

@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 import { FolderType } from '@dashboards/constants/FolderType'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useStrings } from 'framework/strings'
 import type { FolderModel } from 'services/custom-dashboards'
-import DashboardForm, { DashboardFormProps } from '../DashboardForm'
+import type { DashboardFormProps } from '../DashboardForm';
+import DashboardForm from '../DashboardForm'
 
 const mockFolderOne: FolderModel = {
   id: '1',

@@ -7,9 +7,10 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import {
+import type {
   ResponsePageEntitySetupUsageDTO,
-  ListReferredByEntitiesQueryParams,
+  ListReferredByEntitiesQueryParams} from 'services/cd-ng';
+import {
   useListAllEntityUsageByFqn
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

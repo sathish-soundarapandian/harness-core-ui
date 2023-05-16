@@ -7,6 +7,8 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
+import type {
+  ButtonProps} from '@harness/uicore';
 import {
   FormikForm,
   FormInput,
@@ -16,7 +18,6 @@ import {
   Text,
   Heading,
   Formik,
-  ButtonProps,
   MultiTypeInputType,
   getMultiTypeFromValue
 } from '@harness/uicore'
@@ -26,7 +27,8 @@ import { isEmpty } from 'lodash-es'
 import { useToaster } from '@common/components'
 import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
 import { useStrings } from 'framework/strings'
-import { useTestNotificationSetting, PagerDutySettingDTO } from 'services/notifications'
+import type { PagerDutySettingDTO } from 'services/notifications';
+import { useTestNotificationSetting } from 'services/notifications'
 import type { PagerDutyNotificationConfiguration } from '@rbac/interfaces/Notifications'
 import { TestStatus, NotificationType } from '@rbac/interfaces/Notifications'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'

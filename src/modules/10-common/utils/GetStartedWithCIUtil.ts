@@ -5,18 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
+import type {
   ResponseOrganizationResponse,
   ResponseProjectResponse,
-  getOrganizationPromise,
   ResponseModuleLicenseDTO,
+  ModuleLicenseDTO
+} from 'services/cd-ng';
+import {
+  getOrganizationPromise,
   postProjectPromise,
   postOrganizationPromise,
   startFreeLicensePromise,
-  startTrialLicensePromise,
-  ModuleLicenseDTO
+  startTrialLicensePromise
 } from 'services/cd-ng'
-import { LicenseStoreContextProps, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import type { LicenseStoreContextProps} from 'framework/LicenseStore/LicenseStoreContext';
+import { handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import {
   DEFAULT_ORG_ID,
   DEFAULT_ORG_NAME,

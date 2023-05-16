@@ -7,16 +7,19 @@
 
 import React from 'react'
 import { cloneDeep, isEqual, noop } from 'lodash-es'
-import { AllowedTypesWithRunTime, MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import {
   PipelineContext,
   PipelineContextType
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import type {
+  PipelineViewData
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions';
 import {
   initialState,
   PipelineContextActions,
-  PipelineReducer,
-  PipelineViewData
+  PipelineReducer
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { useLocalStorage } from '@common/hooks'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'

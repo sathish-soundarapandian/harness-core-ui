@@ -11,7 +11,8 @@ import { FormInput, Text, Icon, Container, HarnessDocTooltip } from '@harness/ui
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { FieldArray } from 'formik'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { mockOperators, inNotInArr, inNotInPlaceholder } from '../utils/TriggersWizardPageUtils'
 import css from './WebhookConditionsPanel.module.scss'
 

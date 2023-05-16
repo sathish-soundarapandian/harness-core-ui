@@ -8,7 +8,8 @@
 import React from 'react'
 import { Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Drawer, IDialogProps, Position } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Drawer, Position } from '@blueprintjs/core'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { DelegateActions, Category } from '@common/constants/TrackingConstants'
 import DelegateCommandLineCreation from '../DelegateCommandLineCreation'

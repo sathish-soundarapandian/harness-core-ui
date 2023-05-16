@@ -11,7 +11,8 @@ import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
 import StaticResourceRenderer from '@rbac/components/StaticResourceRenderer/StaticResourceRenderer'
 import { PageSpinner } from '@common/components'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
-import { useGetBatchUserGroupList, UserGroupDTO } from 'services/cd-ng'
+import type { UserGroupDTO } from 'services/cd-ng';
+import { useGetBatchUserGroupList } from 'services/cd-ng'
 import { UserGroupColumn } from '@rbac/pages/UserGroups/views/UserGroupsListView'
 
 const RenderColumnUserGroup: Renderer<CellProps<UserGroupDTO>> = ({ row }) => {

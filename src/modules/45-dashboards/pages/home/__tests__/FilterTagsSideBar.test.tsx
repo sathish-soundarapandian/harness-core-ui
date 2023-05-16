@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, act, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, act, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { useGetAllTags } from 'services/custom-dashboards'
-import FilterTagsSideBar, { FilterTagsSideBarProps } from '../FilterTagsSideBar'
+import type { FilterTagsSideBarProps } from '../FilterTagsSideBar';
+import FilterTagsSideBar from '../FilterTagsSideBar'
 
 const accountId = 'fmy6_hj3'
 

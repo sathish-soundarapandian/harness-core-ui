@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import TargetGroupInfoCell, { TargetGroupInfoCellProps } from '../TargetGroupInfoCell'
+import type { TargetGroupInfoCellProps } from '../TargetGroupInfoCell';
+import TargetGroupInfoCell from '../TargetGroupInfoCell'
 
 const renderComponent = (props: Partial<TargetGroupInfoCellProps> = {}): RenderResult =>
   render(

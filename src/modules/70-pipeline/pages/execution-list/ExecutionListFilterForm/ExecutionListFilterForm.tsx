@@ -7,15 +7,18 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { FormInput, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { FilterProperties } from 'services/pipeline-ng'
-import {
-  getExecutionStatusOptions,
-  BUILD_TYPE,
+import type {
   DeploymentTypeContext,
   BuildTypeContext
+} from '@pipeline/utils/PipelineExecutionFilterRequestUtils';
+import {
+  getExecutionStatusOptions,
+  BUILD_TYPE
 } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'

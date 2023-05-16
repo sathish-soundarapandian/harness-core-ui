@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { RefObject, Dispatch, SetStateAction } from 'react'
+import type { RefObject, Dispatch, SetStateAction } from 'react';
+import React from 'react'
 import { Layout, Button, ButtonVariation } from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'

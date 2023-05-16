@@ -21,7 +21,8 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
-import { GetOpenTasksQueryParams, useGetOpenTasks } from 'services/cd-ng'
+import type { GetOpenTasksQueryParams } from 'services/cd-ng'
+import { useGetOpenTasks } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { useServiceContext } from '@cd/context/ServiceContext'

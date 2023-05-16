@@ -14,7 +14,8 @@ import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/Resource
 import { PageSpinner } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
-import { ServiceAccountDTO, useListAggregatedServiceAccounts } from 'services/cd-ng'
+import type { ServiceAccountDTO} from 'services/cd-ng';
+import { useListAggregatedServiceAccounts } from 'services/cd-ng'
 
 export type ServiceAccountColumn = ServiceAccountDTO
 export const RenderColumnDetails: Renderer<CellProps<ServiceAccountColumn>> = ({ row }) => {

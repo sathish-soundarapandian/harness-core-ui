@@ -28,10 +28,11 @@ import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 
-import {
+import type {
   EnvironmentRequestDTO,
   InfrastructureRequestDTO,
-  InfrastructureRequestDTORequestBody,
+  InfrastructureRequestDTORequestBody} from 'services/cd-ng';
+import {
   useCreateEnvironmentV2,
   useCreateInfrastructure
 } from 'services/cd-ng'
@@ -40,18 +41,23 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
-import { InfrastructureTypes, InfrastructureType } from '../DeployProvisioningWizard/Constants'
-import {
-  SelectAuthenticationMethod,
+import type { InfrastructureType } from '../DeployProvisioningWizard/Constants';
+import { InfrastructureTypes } from '../DeployProvisioningWizard/Constants'
+import type {
   SelectAuthenticationMethodInterface,
   SelectAuthenticationMethodRefInstance
+} from './SelectAuthenticationMethod';
+import {
+  SelectAuthenticationMethod
 } from './SelectAuthenticationMethod'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
+import type {
+  PipelineRefPayload
+} from '../CDOnboardingUtils';
 import {
   cleanEnvironmentDataUtil,
   getUniqueEntityIdentifier,
-  newEnvironmentState,
-  PipelineRefPayload
+  newEnvironmentState
 } from '../CDOnboardingUtils'
 import defaultCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 import css from './SelectInfrastructure.module.scss'

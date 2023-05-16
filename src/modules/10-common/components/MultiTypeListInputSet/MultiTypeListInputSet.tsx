@@ -8,22 +8,26 @@
 import React from 'react'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import cx from 'classnames'
+import type {
+  MultiTextInputProps} from '@harness/uicore';
 import {
   MultiTextInput,
   Button,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  MultiTextInputProps,
   RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { get, isEmpty } from 'lodash-es'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions';
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
-import MultiTypeFieldSelector, {
+import type {
   MultiTypeFieldSelectorProps
-} from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+} from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector';
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import type { ConnectorReferenceProps } from '../MultiTypeList/MultiTypeList'
 import css from './MultiTypeListInputSet.module.scss'
 

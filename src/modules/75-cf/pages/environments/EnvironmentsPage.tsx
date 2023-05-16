@@ -11,9 +11,10 @@ import type { Column } from 'react-table'
 import { get } from 'lodash-es'
 import { Container, Layout, Pagination, Text, TableV2 } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
-import {
+import type {
   EnvironmentResponseDTO,
-  GetEnvironmentListForProjectQueryParams,
+  GetEnvironmentListForProjectQueryParams} from 'services/cd-ng';
+import {
   useDeleteEnvironmentV2,
   useGetEnvironmentListForProject
 } from 'services/cd-ng'

@@ -17,9 +17,10 @@ import { HealthSourceDropDown } from '@cv/components/HealthSourceDropDown/Health
 import noDataImage from '@cv/assets/noData.svg'
 import { LogAnalysisRow } from '../LogsAnalysis/components/LogAnalysisRow/LogAnalysisRow'
 import { getClusterTypes, getErrorTrackingAnalysisTableData } from './ErrorTrackingAnalysis.utils'
-import {
+import type {
   ErrorTrackingAnalysisContentProps,
-  ErrorTrackingAnalysisProps,
+  ErrorTrackingAnalysisProps} from './ErrorTrackingAnalysis.types';
+import {
   ErrorTrackingEvents
 } from './ErrorTrackingAnalysis.types'
 import { PAGE_SIZE } from './ErrorTrackingAnalysis.constants'

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback, useMemo, useState } from 'react'
+import type { FC} from 'react';
+import React, { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
 import {
@@ -20,13 +21,16 @@ import {
   Page,
   useToaster
 } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { Segments, Target, useGetTargetAvailableSegments, usePatchTarget } from 'services/cf'
+import type { Segments, Target} from 'services/cf';
+import { useGetTargetAvailableSegments, usePatchTarget } from 'services/cf'
 import { CF_DEFAULT_PAGE_SIZE, getErrorMessage } from '@cf/utils/CFUtils'
 import type { Instruction } from '@cf/utils/instructions'
+import type {
+  AddTargetToTargetGroupsDialogFormValues} from '@cf/pages/target-detail/TargetDetailPage.types';
 import {
-  AddTargetToTargetGroupsDialogFormValues,
   AddTargetToTargetGroupsDialogStatus as STATUS
 } from '@cf/pages/target-detail/TargetDetailPage.types'
 import { NoData } from '@cf/components/NoData/NoData'

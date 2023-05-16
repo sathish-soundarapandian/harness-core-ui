@@ -7,14 +7,16 @@
 
 import React from 'react'
 import { connect } from 'formik'
+import type {
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Text,
   getMultiTypeFromValue,
   MultiTypeInputType,
   FormikForm,
   Container,
-  Layout,
-  AllowedTypes
+  Layout
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, startCase } from 'lodash-es'

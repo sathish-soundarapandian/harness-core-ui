@@ -7,7 +7,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Button, Formik, FormInput, Text, StepProps, ButtonVariation } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Layout, Button, Formik, FormInput, Text, ButtonVariation } from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
@@ -18,7 +19,8 @@ import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { PageSpinner } from '@common/components'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, AwsCredential } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
+import type { TextReferenceInterface} from '@secrets/components/TextReference/TextReference';
+import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'
 import type { ConnectorDetailsProps } from '@connectors/interfaces/ConnectorInterface'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'

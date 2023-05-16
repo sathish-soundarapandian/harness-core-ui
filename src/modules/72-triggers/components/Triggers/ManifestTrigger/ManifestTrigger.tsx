@@ -10,7 +10,8 @@ import ManifestConditionsPanel from '@triggers/components/steps/ManifestConditio
 import ManifestPipelineInputPanel from '@triggers/components/steps/ManifestPipelineInputPanel/ManifestPipelineInputPanel'
 import ManifestTriggerConfigPanel from '@triggers/components/steps/ManifestTriggerConfigPanel/ManifestTriggerConfigPanel'
 import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
-import { Trigger, TriggerProps } from '../Trigger'
+import type { TriggerProps } from '../Trigger';
+import { Trigger } from '../Trigger'
 import { TriggerBaseType } from '../TriggerInterface'
 import ManifestTriggerWizard from './ManifestTriggerWizard'
 

@@ -1,7 +1,8 @@
 import React from 'react'
 import { Layout } from '@harness/uicore'
 import { get } from 'lodash-es'
-import { TimeType, Editions, SubscriptionProps, ProductPricesProp } from '@common/constants/SubscriptionTypes'
+import type { Editions, SubscriptionProps, ProductPricesProp } from '@common/constants/SubscriptionTypes';
+import { TimeType } from '@common/constants/SubscriptionTypes'
 import { getDollarAmount } from '@auth-settings/utils'
 import type { UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
 import CIDeveloperCard from './CostCalculator/CIDeveloperCard'

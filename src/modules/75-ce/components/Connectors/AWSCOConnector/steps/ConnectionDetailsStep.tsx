@@ -8,10 +8,12 @@
 import React, { useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
+import type {
+  StepProps,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Heading,
   Layout,
-  StepProps,
   Text,
   Container,
   Formik,
@@ -19,7 +21,6 @@ import {
   FormikForm as Form,
   Button,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   useToaster
 } from '@harness/uicore'
 import type { ConnectorInfoDTO, ConnectorRequestBody } from 'services/cd-ng'

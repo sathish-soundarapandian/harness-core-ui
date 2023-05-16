@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { NiktoStepBaseWithRef } from './NiktoStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { NiktoStepVariables, NiktoStepVariablesProps } from './NiktoStepVariables'
+import type { NiktoStepVariablesProps } from './NiktoStepVariables';
+import { NiktoStepVariables } from './NiktoStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './NiktoStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 import { NIKTO_DEFAULT_CONFIG } from '../constants'

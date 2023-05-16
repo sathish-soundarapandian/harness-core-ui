@@ -5,23 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent } from 'react'
-import {
+import type { FormEvent } from 'react';
+import React from 'react'
+import type {
   IconName,
+  AllowedTypes
+} from '@harness/uicore';
+import {
   Formik,
   FormInput,
   Layout,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  AllowedTypes
+  MultiTypeInputType
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+import type { FormikErrors, FormikProps} from 'formik';
+import { yupToFormErrors } from 'formik'
 
 import { defaultTo, isEmpty, set } from 'lodash-es'
-import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
-import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef , StepProps, ValidateInputSetProps} from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig, TasRouteMappingStepInfo } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'

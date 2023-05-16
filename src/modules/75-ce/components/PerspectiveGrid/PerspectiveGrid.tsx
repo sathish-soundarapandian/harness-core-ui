@@ -14,7 +14,8 @@ import { useDeepCompareEffect } from '@common/hooks'
 import type { QlceViewFieldInputInput, QlceViewEntityStatsDataPoint, Maybe } from 'services/ce/services'
 import { ClusterFieldNames } from '@ce/utils/perspectiveUtils'
 import ColumnSelector from './ColumnSelector'
-import { addLegendColorToRow, GridData, getGridColumnsByGroupBy, DEFAULT_COLS } from './Columns'
+import type { GridData} from './Columns';
+import { addLegendColorToRow, getGridColumnsByGroupBy, DEFAULT_COLS } from './Columns'
 import Grid from './Grid'
 import './test.scss' // will find a alternative
 import css from './PerspectiveGrid.module.scss'

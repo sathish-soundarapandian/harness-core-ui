@@ -7,7 +7,8 @@
 
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import * as cvServices from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import { responseSLODashboardDetail } from '@cv/pages/slos/CVSLODetailsPage/__test__/CVSLODetailsPage.mock'

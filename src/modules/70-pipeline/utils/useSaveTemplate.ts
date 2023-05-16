@@ -8,15 +8,17 @@
 import React from 'react'
 import { cloneDeep, defaultTo, isEmpty, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import {
-  createTemplatePromise,
+import type {
   EntityGitDetails,
   NGTemplateInfoConfig,
-  TemplateSummaryResponse,
+  TemplateSummaryResponse} from 'services/template-ng';
+import {
+  createTemplatePromise,
   updateExistingTemplateVersionPromise
 } from 'services/template-ng'
 import type { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
-import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
+import type { UseSaveSuccessResponse} from '@common/modals/SaveToGitDialog/useSaveToGitDialog';
+import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -24,7 +26,8 @@ import { sanitize } from '@common/utils/JSONUtils'
 import type { GitQueryParams, ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { PromiseExtraArgs } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
-import { SaveTemplateAsType, StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { SaveTemplateAsType, StoreType } from '@common/constants/GitSyncTypes'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
 export interface FetchTemplateUnboundProps {

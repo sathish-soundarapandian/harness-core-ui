@@ -5,19 +5,23 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, MouseEventHandler, SetStateAction } from 'react'
+import type { Dispatch, MouseEventHandler, SetStateAction } from 'react';
+import React from 'react'
 
 import cx from 'classnames'
 
 import type { IconProps } from '@harness/icons'
-import { Collapse, Pagination, PaginationProps } from '@harness/uicore'
+import type { PaginationProps } from '@harness/uicore';
+import { Collapse, Pagination } from '@harness/uicore'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 
-import {
+import type {
   EntityReferenceResponse,
-  getScopeFromDTO,
   ScopedObjectDTO,
   TAB_ID
+} from '../EntityReference/EntityReference.types';
+import {
+  getScopeFromDTO
 } from '../EntityReference/EntityReference.types'
 import type { ScopeAndIdentifier } from '../MultiSelectEntityReference/MultiSelectEntityReference'
 

@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { ModuleName } from 'framework/types/ModuleName'
-import ModuleSelectionFactory, { ModuleSelectionPanel, ModuleSelectionPanelProps } from '../ModuleSelectionFactory'
+import type { ModuleSelectionPanel, ModuleSelectionPanelProps } from '../ModuleSelectionFactory';
+import ModuleSelectionFactory from '../ModuleSelectionFactory'
 
 const TestPanel: ModuleSelectionPanel = ({ projectData }) => (
   <pre data-testid="TestPanel">{JSON.stringify(projectData)}</pre>

@@ -6,14 +6,13 @@
  */
 
 import React from 'react'
-import { Button, IconName, SelectOption } from '@harness/uicore'
+import type { IconName, SelectOption } from '@harness/uicore';
+import { Button } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
-import {
+import type {
   AppdynamicsValidationResponse,
-  getNewRelicMetricDataPromise,
-  getAppDynamicsMetricDataPromise,
   GetNewRelicMetricDataQueryParams,
   GetAppDynamicsMetricDataQueryParams,
   MetricPackDTO,
@@ -23,8 +22,12 @@ import {
   ResponseSetAppdynamicsValidationResponse,
   HealthSource,
   GetDynatraceMetricDataQueryParams,
-  getDynatraceMetricDataPromise,
   DynatraceValidateDataRequestDTO
+} from 'services/cv';
+import {
+  getNewRelicMetricDataPromise,
+  getAppDynamicsMetricDataPromise,
+  getDynatraceMetricDataPromise
 } from 'services/cv'
 import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/ValidationStatus.constants'
 import { StatusState, HealthSoureSupportedConnectorTypes } from './MonitoredServiceConnector.constants'

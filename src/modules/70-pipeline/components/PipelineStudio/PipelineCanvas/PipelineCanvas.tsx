@@ -6,15 +6,17 @@
  */
 
 import React from 'react'
-import { Classes, Dialog, IDialogProps, Intent } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Classes, Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Container,
   Layout,
   PageSpinner,
-  SelectOption,
   useConfirmationDialog,
   useToaster,
   VisualYamlSelectedView as SelectedView,
@@ -25,8 +27,8 @@ import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
-import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
-import { EntityGitDetails, InputSetSummaryResponse, useGetInputsetYaml } from 'services/pipeline-ng'
+import type { Error, PipelineInfoConfig , EntityGitDetails, InputSetSummaryResponse} from 'services/pipeline-ng'
+import { useGetInputsetYaml } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
@@ -54,7 +56,8 @@ import StageBuilder from '@pipeline/components/PipelineStudio/StageBuilder/Stage
 import { TemplatePipelineBuilder } from '@pipeline/components/PipelineStudio/PipelineTemplateBuilder/TemplatePipelineBuilder/TemplatePipelineBuilder'
 
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Pipeline } from '@pipeline/utils/types'
 import { SettingType } from '@common/constants/Utils'

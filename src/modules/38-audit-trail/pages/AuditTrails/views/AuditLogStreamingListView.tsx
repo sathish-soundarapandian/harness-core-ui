@@ -51,7 +51,8 @@ import {
 } from '@audit-trail/interfaces/LogStreamingInterface'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { AUDIT_TRAIL_PAGE_SIZE, buildUpdateSDPayload } from '@audit-trail/utils/RequestUtil'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'

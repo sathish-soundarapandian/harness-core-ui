@@ -6,7 +6,8 @@
  */
 
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, ButtonVariation, Layout, StepProps, Text } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
@@ -14,7 +15,8 @@ import { get } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import type { ConnectorConfigDTO, DelegateSetupDetails } from 'services/cd-ng'
-import { useGenerateKubernetesYaml, GenerateKubernetesYamlQueryParams } from 'services/portal'
+import type { GenerateKubernetesYamlQueryParams } from 'services/portal';
+import { useGenerateKubernetesYaml } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { DialogExtensionContext } from '@connectors/common/ConnectorExtention/DialogExtention'
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'

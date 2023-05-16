@@ -10,7 +10,8 @@ import { Layout, shouldShowError, useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, set } from 'lodash-es'
 import produce from 'immer'
-import { useGetConnectorListV2, PageConnectorResponse, StageElementConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import type { PageConnectorResponse, StageElementConfig, ManifestConfigWrapper } from 'services/cd-ng';
+import { useGetConnectorListV2 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -23,7 +24,8 @@ import type { ManifestSelectionProps, PrimaryManifestType } from './ManifestInte
 import ManifestListView from './ManifestListView/ManifestListView'
 import { getConnectorPath } from './ManifestWizardSteps/ManifestUtils'
 import ReleaseRepoListView from './GitOps/ReleaseRepoListView/ReleaseRepoListView'
-import { ManifestToPathKeyMap, ReleaseRepoPipeline } from './Manifesthelper'
+import type { ReleaseRepoPipeline } from './Manifesthelper';
+import { ManifestToPathKeyMap } from './Manifesthelper'
 
 export default function ManifestSelection({
   isPropagating,

@@ -9,7 +9,8 @@ import React from 'react'
 import { render, screen, waitFor, act, fireEvent } from '@testing-library/react'
 import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
-import { SplunkMetricsHealthSource, SplunkMetricsHealthSourceProps } from '../SplunkMetricsHealthSource'
+import type { SplunkMetricsHealthSourceProps } from '../SplunkMetricsHealthSource';
+import { SplunkMetricsHealthSource } from '../SplunkMetricsHealthSource'
 import { MockManualQueryData } from './SplunkMetricsHealthSource.mock'
 
 function WrapperComponent(props: SplunkMetricsHealthSourceProps): JSX.Element {

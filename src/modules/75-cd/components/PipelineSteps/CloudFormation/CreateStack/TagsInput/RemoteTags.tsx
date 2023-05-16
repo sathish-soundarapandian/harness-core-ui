@@ -8,23 +8,27 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
+import type {
+  MultiSelectOption,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   StepWizard,
   MultiTypeInputType,
-  MultiSelectOption,
-  getMultiTypeFromValue,
-  AllowedTypes
+  getMultiTypeFromValue
 } from '@harness/uicore'
-import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
-import { ConnectorMap, getBuildPayload, ConnectorTypes, GetNewConnector } from '../../CloudFormationHelper'
+import type { ConnectorTypes} from '../../CloudFormationHelper';
+import { ConnectorMap, getBuildPayload, GetNewConnector } from '../../CloudFormationHelper'
 import TagsStepOne from './TagsStepOne'
 import TagsStepTwo from './TagsStepTwo'
 import css from '../../CloudFormation.module.scss'

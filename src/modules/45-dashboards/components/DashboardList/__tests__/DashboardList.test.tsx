@@ -6,14 +6,16 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as customDashboardServices from 'services/custom-dashboards'
 import { DashboardsContextProvider } from '@dashboards/pages/DashboardsContext'
 import { DashboardType } from '@dashboards/types/DashboardTypes.types'
 import { FolderType } from '@dashboards/constants/FolderType'
 import type { StringKeys } from 'framework/strings'
-import DashboardList, { DashboardListProps } from '../DashboardList'
+import type { DashboardListProps } from '../DashboardList';
+import DashboardList from '../DashboardList'
 
 const testTitle = 'test title'
 

@@ -28,7 +28,8 @@ import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRole
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PrincipalType, RbacQueryParams, useRbacQueryParamOptions } from '@rbac/utils/utils'
+import type { RbacQueryParams} from '@rbac/utils/utils';
+import { PrincipalType, useRbacQueryParamOptions } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'

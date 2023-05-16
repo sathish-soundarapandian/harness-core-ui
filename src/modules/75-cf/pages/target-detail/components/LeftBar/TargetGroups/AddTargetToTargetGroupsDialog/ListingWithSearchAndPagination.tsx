@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { get } from 'lodash-es'
 import { Container, ExpandingSearchInput, Pagination, TableV2 } from '@harness/uicore'
 import type { Segment, Segments } from 'services/cf'
@@ -13,8 +14,9 @@ import { useStrings } from 'framework/strings'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { NoData } from '@cf/components/NoData/NoData'
 import imageUrl from '@cf/images/segment.svg'
+import type {
+  AddTargetToTargetGroupsDialogFormValues} from '@cf/pages/target-detail/TargetDetailPage.types';
 import {
-  AddTargetToTargetGroupsDialogFormValues,
   AddTargetToTargetGroupsDialogStatus as STATUS
 } from '@cf/pages/target-detail/TargetDetailPage.types'
 import CheckboxCell from './CheckboxCell'

@@ -6,15 +6,16 @@
  */
 
 import React from 'react'
-import { AllowedTypes, Formik, IconName } from '@harness/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore';
+import { Formik } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
 
 import { defaultTo, get } from 'lodash-es'
 
-import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
-import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef , StepProps, ValidateInputSetProps} from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
@@ -28,7 +29,8 @@ import type { StringsMap } from 'stringTypes'
 import CreatePRScript from './CreatePrScript'
 
 import CreatePRInputStep from './CreatePRInputStep'
-import { CreatePRVariableStepProps, CreatePRVariableView } from './CreatePRVariableStep'
+import type { CreatePRVariableStepProps} from './CreatePRVariableStep';
+import { CreatePRVariableView } from './CreatePRVariableStep'
 import { validateGitOpsExecutionStepForm } from '../PipelineStepsUtil'
 
 export interface CreatePRStepData extends StepElementConfig {

@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Menu, Position } from '@blueprintjs/core'
-import { Popover, Icon, IconName, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Popover, Icon, Text } from '@harness/uicore'
 import type { PopoverProps } from '@harness/uicore/dist/components/Popover/Popover'
 import cx from 'classnames'
 import css from './TemplatesActionPopover.module.scss'

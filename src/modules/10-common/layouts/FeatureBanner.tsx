@@ -14,7 +14,8 @@ import featuresFactory from 'framework/featureStore/FeaturesFactory'
 import type { FeatureProps } from 'framework/featureStore/FeaturesFactory'
 import type { CheckFeatureReturn } from 'framework/featureStore/featureStoreUtil'
 import { isEnterprisePlan, isFreePlan, isTeamPlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { Module, ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import type { Module} from 'framework/types/ModuleName';
+import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { useFeatures } from '@common/hooks/useFeatures'
 import { useLocalStorage } from '@common/hooks/useLocalStorage'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
@@ -22,7 +23,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
-import { useGetUsage, UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit'
+import type { UsageAndLimitReturn } from '@common/hooks/useGetUsageAndLimit';
+import { useGetUsage } from '@common/hooks/useGetUsageAndLimit'
 import type { CEModuleLicenseDTO, SRMModuleLicenseDTO } from 'services/cd-ng'
 import {
   ViewUsageLink,

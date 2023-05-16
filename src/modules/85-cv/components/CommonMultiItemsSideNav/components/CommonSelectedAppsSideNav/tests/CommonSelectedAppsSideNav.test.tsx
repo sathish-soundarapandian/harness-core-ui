@@ -11,7 +11,8 @@ import { render, waitFor } from '@testing-library/react'
 import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { TestWrapper } from '@common/utils/testUtils'
-import { CommonSelectedAppsSideNavProps, CommonSelectedAppsSideNav } from '../CommonSelectedAppsSideNav'
+import type { CommonSelectedAppsSideNavProps} from '../CommonSelectedAppsSideNav';
+import { CommonSelectedAppsSideNav } from '../CommonSelectedAppsSideNav'
 import { groupedSelectedApps } from './CommonSelectedAppsSideNav.mock'
 
 function WrapperComponent(props: CommonSelectedAppsSideNavProps): JSX.Element {

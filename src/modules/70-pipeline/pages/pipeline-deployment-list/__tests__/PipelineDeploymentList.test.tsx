@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import pipelineList from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-list.json'
 import executionList from '@pipeline/pages/execution-list/__tests__/mocks/execution-list.json'

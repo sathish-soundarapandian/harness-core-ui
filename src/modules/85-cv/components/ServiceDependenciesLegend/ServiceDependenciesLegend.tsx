@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Container, Icon, Text, Layout } from '@harness/uicore'
-import { FontVariation, Color, Spacing, MarginProps } from '@harness/design-system'
+import type { Spacing, MarginProps } from '@harness/design-system';
+import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { getServicesStates, getServicesTypes } from './ServiceDependenciesLegend.utils'

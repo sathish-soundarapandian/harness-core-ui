@@ -6,12 +6,13 @@
  */
 
 import React from 'react'
+import type {
+  RenderResult} from '@testing-library/react';
 import {
   act,
   fireEvent,
   getAllByText as getAllByTextGlobal,
   render,
-  RenderResult,
   screen,
   waitFor
 } from '@testing-library/react'
@@ -19,11 +20,13 @@ import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { clickSubmit } from '@common/utils/JestFormHelper'
-import NotificationMethods, {
+import type {
   NotificationMethodsProps
-} from '@pipeline/components/Notifications/Steps/NotificationMethods'
+} from '@pipeline/components/Notifications/Steps/NotificationMethods';
+import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
 import { NotificationTypeSelectOptions } from '@rbac/constants/NotificationConstants'
-import NotificationTable, { NotificationTableProps } from '../NotificationTable'
+import type { NotificationTableProps } from '../NotificationTable';
+import NotificationTable from '../NotificationTable'
 
 const notificationMethodProps: NotificationMethodsProps = {
   typeOptions: NotificationTypeSelectOptions,

@@ -7,15 +7,19 @@
 
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Text, SelectOption, useToaster, Select } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Container, Text, useToaster, Select } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
-import {
-  useHandleManualInterventionInterrupt,
+import type {
   ExecutionNode,
   HandleManualInterventionInterruptQueryParams
+} from 'services/pipeline-ng';
+import {
+  useHandleManualInterventionInterrupt
 } from 'services/pipeline-ng'
-import { Strategy, strategyIconMap, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
+import type { StrategyType } from '@pipeline/utils/FailureStrategyUtils';
+import { Strategy, strategyIconMap } from '@pipeline/utils/FailureStrategyUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { isExecutionWaitingForIntervention } from '@pipeline/utils/statusHelpers'
 import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'

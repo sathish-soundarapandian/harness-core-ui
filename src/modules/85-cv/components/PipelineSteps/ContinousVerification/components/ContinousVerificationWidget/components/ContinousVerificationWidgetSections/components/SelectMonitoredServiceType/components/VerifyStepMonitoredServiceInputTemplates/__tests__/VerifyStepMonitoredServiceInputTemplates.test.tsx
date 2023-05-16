@@ -7,13 +7,15 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import * as formik from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as templateService from 'services/template-ng'
-import VerifyStepMonitoredServiceInputTemplates, {
+import type {
   VerifyStepMonitoredServiceInputTemplatesProps
-} from '../VerifyStepMonitoredServiceInputTemplates'
+} from '../VerifyStepMonitoredServiceInputTemplates';
+import VerifyStepMonitoredServiceInputTemplates from '../VerifyStepMonitoredServiceInputTemplates'
 
 jest.mock('services/cv', () => {
   return {

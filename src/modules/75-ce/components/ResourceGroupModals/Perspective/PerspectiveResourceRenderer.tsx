@@ -10,7 +10,8 @@ import { Text, Icon, Layout, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { CellProps, Column } from 'react-table'
 import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
-import { CEViewFolder, useGetFolders } from 'services/ce'
+import type { CEViewFolder} from 'services/ce';
+import { useGetFolders } from 'services/ce'
 import StaticResourceRenderer from '@rbac/components/StaticResourceRenderer/StaticResourceRenderer'
 import type { ResourceHandlerTableData } from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 

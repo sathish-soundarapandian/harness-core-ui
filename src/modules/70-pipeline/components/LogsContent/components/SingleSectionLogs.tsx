@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Virtuoso, VirtuosoHandle } from 'react-virtuoso'
+import type { VirtuosoHandle } from 'react-virtuoso';
+import { Virtuoso } from 'react-virtuoso'
 import { Button, ButtonSize, ButtonVariation } from '@harness/uicore'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 

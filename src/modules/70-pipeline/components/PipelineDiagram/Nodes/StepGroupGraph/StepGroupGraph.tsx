@@ -11,7 +11,8 @@ import { defaultTo } from 'lodash-es'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useDeepCompareEffect } from '@common/hooks'
-import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
+import type { StageType } from '@pipeline/utils/stageHelpers';
+import { stageGroupTypes } from '@pipeline/utils/stageHelpers'
 import { SVGComponent } from '../../PipelineGraph/PipelineGraph'
 import { PipelineGraphRecursive } from '../../PipelineGraph/PipelineGraphNode'
 import {
@@ -22,8 +23,10 @@ import {
 import type { GetNodeMethod, NodeDetails, NodeIds, PipelineGraphState, SVGPathRecord } from '../../types'
 import { NodeType } from '../../types'
 import GraphConfigStore from '../../PipelineGraph/GraphConfigStore'
-import { Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
-import { getSGDimensions, LayoutStyles } from '../utils'
+import type { Dimensions} from '../NodeDimensionStore';
+import { useNodeDimensionContext } from '../NodeDimensionStore'
+import type { LayoutStyles } from '../utils';
+import { getSGDimensions } from '../utils'
 import { DiagramType, Event } from '../../Constants'
 import css from './StepGroupGraph.module.scss'
 

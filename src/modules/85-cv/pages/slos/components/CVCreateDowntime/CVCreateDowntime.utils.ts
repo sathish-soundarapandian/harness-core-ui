@@ -21,9 +21,10 @@ import type {
   OnetimeSpec,
   RecurringDowntimeSpec
 } from 'services/cv'
+import type {
+  DowntimeForm} from './CVCreateDowntime.types';
 import {
   DowntimeCategory,
-  DowntimeForm,
   DowntimeFormFields,
   EndTimeMode,
   EntitiesRuleType

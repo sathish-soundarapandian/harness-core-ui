@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, MouseEvent } from 'react'
+import type { FC, MouseEvent } from 'react';
+import React from 'react'
 import { Button, ButtonSize, ButtonVariation } from '@harness/uicore'
 
 export interface RemoveSubSectionButtonProps {

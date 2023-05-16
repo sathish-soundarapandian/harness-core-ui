@@ -6,30 +6,36 @@
  */
 
 import React from 'react'
-import { FormGroup, IFormGroupProps, Intent, InputGroup, IInputGroupProps, HTMLInputProps } from '@blueprintjs/core'
-import { connect, FormikContextType } from 'formik'
+import type { IFormGroupProps, IInputGroupProps, HTMLInputProps } from '@blueprintjs/core';
+import { FormGroup, Intent, InputGroup } from '@blueprintjs/core'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
+import type {
+  ExpressionAndRuntimeTypeProps,
+  FixedTypeComponentProps,
+  DataTooltipInterface,
+  AllowedTypesWithExecutionTime
+} from '@harness/uicore';
 import {
   ExpressionAndRuntimeType,
-  ExpressionAndRuntimeTypeProps,
   MultiTypeInputValue,
-  FixedTypeComponentProps,
   DurationInputHelpers,
   parseStringToTime,
   timeToDisplayText,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  DataTooltipInterface,
   HarnessDocTooltip,
   FormError,
-  FormikTooltipContext,
-  AllowedTypesWithExecutionTime
+  FormikTooltipContext
 } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+import type {
+  ConfigureOptionsProps
+} from '@common/components/ConfigureOptions/ConfigureOptions';
 import {
   ALLOWED_VALUES_TYPE,
-  ConfigureOptions,
-  ConfigureOptionsProps
+  ConfigureOptions
 } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { getDurationValidationSchema, isValidTimeString } from './helper'

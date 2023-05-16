@@ -8,6 +8,8 @@
 import React, { useState } from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -16,19 +18,20 @@ import {
   FormInput,
   Icon,
   Layout,
-  SelectOption,
   Text,
   MultiTypeInputType,
   getMultiTypeFromValue
 } from '@harness/uicore'
-import { Form, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { Form } from 'formik'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { TestPagerDutyNotifications } from '@rbac/modals/ConfigureNotificationsModal/views/ConfigurePagerDutyNotifications/ConfigurePagerDutyNotifications'
 import { TestEmailNotifications } from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureEmailNotifications/ConfigureEmailNotifications'
 import { useStrings } from 'framework/strings'
-import { NotificationSettingConfigDTO, usePutUserGroup, UserGroupDTO } from 'services/cd-ng'
+import type { NotificationSettingConfigDTO, UserGroupDTO } from 'services/cd-ng';
+import { usePutUserGroup } from 'services/cd-ng'
 import { TestSlackNotifications } from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureSlackNotifications/ConfigureSlackNotifications'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'

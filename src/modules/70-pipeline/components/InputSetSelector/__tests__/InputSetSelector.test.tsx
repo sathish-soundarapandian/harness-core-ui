@@ -7,10 +7,12 @@
 
 import React from 'react'
 import { render, act, fireEvent, waitFor, within, createEvent } from '@testing-library/react'
-import { InputSetSummaryResponse, useGetInputSetsListForPipeline } from 'services/pipeline-ng'
+import type { InputSetSummaryResponse} from 'services/pipeline-ng';
+import { useGetInputSetsListForPipeline } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
-import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector'
+import type { InputSetSelectorProps } from '../InputSetSelector';
+import { InputSetSelector } from '../InputSetSelector'
 import {
   mockInputSetsList,
   mockInputSetsListEmpty,

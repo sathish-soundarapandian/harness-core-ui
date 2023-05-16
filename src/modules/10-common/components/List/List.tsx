@@ -11,7 +11,8 @@ import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { Text, TextInput, Card, Button, MultiTypeInputType, MultiTextInput } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { get, isEmpty } from 'lodash-es'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { useStrings } from 'framework/strings'
 import css from './List.module.scss'
 

@@ -22,7 +22,8 @@ import type {
 import type { StringsMap } from 'stringTypes'
 import { BitrisePluginStepBaseWithRef } from './BitrisePluginStepBase'
 import { BitrisePluginStepInputSet } from './BitrisePluginStepInputSet'
-import { BitrisePluginStepVariables, BitrisePluginStepVariablesProps } from './BitrisePluginStepVariables'
+import type { BitrisePluginStepVariablesProps } from './BitrisePluginStepVariables';
+import { BitrisePluginStepVariables } from './BitrisePluginStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './BitrisePluginStepFunctionConfigs'
 
 export interface BitrisePluginStepSpec {

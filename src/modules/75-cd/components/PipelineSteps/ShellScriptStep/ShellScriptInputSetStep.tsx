@@ -6,22 +6,16 @@
  */
 
 import React from 'react'
-import {
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  FormInput,
-  FormikForm,
-  AllowedTypes,
-  MultiSelectOption,
-  SelectOption
-} from '@harness/uicore'
+import type { AllowedTypes, MultiSelectOption, SelectOption } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm } from '@harness/uicore'
 import { isEmpty, get, isArray, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import { FieldArray, useFormikContext } from 'formik'
 
 import { useStrings } from 'framework/strings'
 import type { SecretDTOV2 } from 'services/cd-ng'
-import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -37,13 +31,8 @@ import {
   isFixedInput
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/MultiSelectVariableAllowedValues/MultiSelectVariableAllowedValues'
 import { getAllowedValuesFromTemplate, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
-import {
-  scriptInputType,
-  scriptOutputType,
-  ShellScriptData,
-  ShellScriptFormData,
-  ShellScriptStepVariable
-} from './shellScriptTypes'
+import type { ShellScriptData, ShellScriptFormData, ShellScriptStepVariable } from './shellScriptTypes'
+import { scriptInputType, scriptOutputType } from './shellScriptTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScript.module.scss'
 

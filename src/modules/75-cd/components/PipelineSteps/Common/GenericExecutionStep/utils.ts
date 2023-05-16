@@ -5,13 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import * as Yup from 'yup'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import type { StepElementConfig } from 'services/cd-ng'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ValidateInputSetProps, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { ValidateInputSetProps} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 export const validateGenericFields = ({
   data,

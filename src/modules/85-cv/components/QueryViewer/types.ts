@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { IDrawerProps, Position } from '@blueprintjs/core'
+import type { IDrawerProps} from '@blueprintjs/core';
+import { Position } from '@blueprintjs/core'
 import type { TextAreaProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import type { TimeSeriesSampleDTO } from 'services/cv'
 import type { RecordsProps } from '../Records/types'

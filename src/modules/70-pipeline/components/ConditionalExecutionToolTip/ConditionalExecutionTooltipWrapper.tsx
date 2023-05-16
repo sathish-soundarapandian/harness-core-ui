@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
+import type {
+  WhenConditionStatus} from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils';
 import {
   PipelineOrStageStatus,
-  WhenConditionStatus,
   statusToStatusMapping
 } from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils'
 import type { StepMode as Modes } from '@pipeline/utils/stepUtils'

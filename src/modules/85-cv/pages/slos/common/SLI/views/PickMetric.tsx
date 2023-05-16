@@ -5,11 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useEffect, useMemo } from 'react'
+import type { FormEvent} from 'react';
+import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, FormInput, Layout, Text, useToaster, SelectOption, ButtonVariation, Card } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Container, FormInput, Layout, Text, useToaster, ButtonVariation, Card } from '@harness/uicore'
 import type { RadioButtonProps } from '@harness/uicore/dist/components/RadioButton/RadioButton'
-import { ResponseMonitoredServiceResponse, useGetSloMetrics } from 'services/cv'
+import type { ResponseMonitoredServiceResponse} from 'services/cv';
+import { useGetSloMetrics } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -21,8 +24,9 @@ import {
   getEventTypeOptions,
   getMissingDataTypeOptions
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
+import type {
+  SLIProps} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types';
 import {
-  SLIProps,
   SLIMetricTypes,
   SLOV2FormFields,
   SLIEventTypes

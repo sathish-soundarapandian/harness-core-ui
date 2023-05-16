@@ -10,7 +10,8 @@ import { act, fireEvent, queryByAttribute, render } from '@testing-library/react
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { QueueStep } from '../Queue'
 
 describe('Queue Step', () => {

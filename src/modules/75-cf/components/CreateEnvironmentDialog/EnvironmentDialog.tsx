@@ -8,9 +8,10 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
+import type {
+  ButtonProps} from '@harness/uicore';
 import {
   Button,
-  ButtonProps,
   ButtonVariation,
   CardSelect,
   Container,
@@ -25,8 +26,10 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import type { FormikErrors } from 'formik'
 import * as Yup from 'yup'
-import { EnvironmentResponseDTO, ResponseEnvironmentResponseDTO, useCreateEnvironment } from 'services/cd-ng'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { EnvironmentResponseDTO, ResponseEnvironmentResponseDTO} from 'services/cd-ng';
+import { useCreateEnvironment } from 'services/cd-ng'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useToaster } from '@common/exports'

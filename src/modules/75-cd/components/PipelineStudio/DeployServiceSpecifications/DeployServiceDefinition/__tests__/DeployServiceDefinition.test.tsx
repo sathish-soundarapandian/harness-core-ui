@@ -8,11 +8,14 @@
 import React from 'react'
 import { render, fireEvent, waitFor, screen, within } from '@testing-library/react'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
-import {
-  PipelineContext,
+import type {
   PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
+import {
+  PipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { ServiceContext, ServiceContextValues } from '@cd/context/ServiceContext'
+import type { ServiceContextValues } from '@cd/context/ServiceContext';
+import { ServiceContext } from '@cd/context/ServiceContext'
 import DeployServiceDefinition from '../DeployServiceDefinition'
 
 import {

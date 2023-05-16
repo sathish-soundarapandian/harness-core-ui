@@ -22,7 +22,7 @@ export type ArchiveFormatOption = 'Tar' | 'Gzip'
 export type MultiTypeArchiveFormatOption = ArchiveFormatOption | string
 export type ConnectorRef = ConnectorReferenceFieldProps['selected']
 export type MultiTypeConnectorRef = ConnectorRef | string
-export { SelectOption }
+export type { SelectOption }
 export type MultiTypeSelectOption = SelectOption | string
 export interface Limits {
   memory?: string

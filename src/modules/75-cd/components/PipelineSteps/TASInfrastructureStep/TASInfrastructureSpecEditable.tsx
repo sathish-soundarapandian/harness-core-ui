@@ -6,11 +6,12 @@
  */
 
 import React, { useEffect } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Text,
   Layout,
   FormInput,
-  SelectOption,
   Formik,
   FormikForm,
   Icon,
@@ -22,7 +23,8 @@ import { useParams } from 'react-router-dom'
 import { debounce, noop, get, defaultTo } from 'lodash-es'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
-import { TanzuApplicationServiceInfrastructure, useGetTasOrganizations, useGetTasSpaces } from 'services/cd-ng'
+import type { TanzuApplicationServiceInfrastructure} from 'services/cd-ng';
+import { useGetTasOrganizations, useGetTasSpaces } from 'services/cd-ng'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { Connectors } from '@connectors/constants'
@@ -35,8 +37,9 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import type { TASInfrastructureUI } from './TASInfrastructureStep'
+import type {
+  TASInfrastructureSpecEditableProps} from './TASInfrastructureInterface';
 import {
-  TASInfrastructureSpecEditableProps,
   getValidationSchema,
   organizationLabel,
   spaceGroupLabel

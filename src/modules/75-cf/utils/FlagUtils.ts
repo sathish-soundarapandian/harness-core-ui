@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Feature, GitDetails, PatchFeatureQueryParams, usePatchFeature } from 'services/cf'
+import type { Feature, GitDetails, PatchFeatureQueryParams} from 'services/cf';
+import { usePatchFeature } from 'services/cf'
 
 export interface FlagPatchParams {
   accountIdentifier: string

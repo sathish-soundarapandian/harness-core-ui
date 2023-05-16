@@ -8,8 +8,9 @@
 import React, { useState } from 'react'
 import * as Yup from 'yup'
 
+import type {
+  StepProps} from '@harness/uicore';
 import {
-  StepProps,
   Container,
   Text,
   Formik,

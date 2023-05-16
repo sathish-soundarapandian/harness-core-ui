@@ -8,7 +8,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Container, Select, Text, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Container, Select, Text } from '@harness/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetNamespaces, useGetWorkloads } from 'services/cv'
 import { useStrings } from 'framework/strings'

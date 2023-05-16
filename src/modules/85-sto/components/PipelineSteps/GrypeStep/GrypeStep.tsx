@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { GrypeStepBaseWithRef } from './GrypeStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { GrypeStepVariables, GrypeStepVariablesProps } from './GrypeStepVariables'
+import type { GrypeStepVariablesProps } from './GrypeStepVariables';
+import { GrypeStepVariables } from './GrypeStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './GrypeStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

@@ -7,15 +7,17 @@
 
 import React, { useEffect, useMemo } from 'react'
 import type { FormikProps, FormikContextType } from 'formik'
+import type {
+  IconName,
+  AllowedTypesWithRunTime,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   FormikForm,
   ThumbnailSelect,
   Layout,
-  IconName,
   MultiTypeInputType,
-  AllowedTypesWithRunTime,
-  getMultiTypeFromValue,
-  AllowedTypes
+  getMultiTypeFromValue
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'

@@ -14,6 +14,8 @@ import { PageSpinner, Table } from '@common/components'
 import type { InstanceGroupedByArtifactV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
+import type {
+  TableRowData} from '../ActiveServiceInstances/ActiveServiceInstancesContentV2';
 import {
   getFullTableData,
   getPreviewTableData,
@@ -24,7 +26,6 @@ import {
   RenderInfra,
   RenderInfraCount,
   RenderPipelineExecution,
-  TableRowData,
   TableType
 } from '../ActiveServiceInstances/ActiveServiceInstancesContentV2'
 import css from '../ActiveServiceInstances/ActiveServiceInstances.module.scss'

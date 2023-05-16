@@ -9,6 +9,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Position, PopoverInteractionKind, Classes } from '@blueprintjs/core'
 import { useParams, useHistory } from 'react-router-dom'
 import cx from 'classnames'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Text,
   Layout,
@@ -22,7 +24,6 @@ import {
   GridListToggle,
   Views,
   TableV2,
-  SelectOption,
   ListHeader,
   sortByCreated,
   sortByLastModified,
@@ -36,7 +37,8 @@ import {
   RenderColumnOrganization
 } from '@projects-orgs/pages/projects/views/ProjectListView/ProjectListView'
 import routes from '@common/RouteDefinitions'
-import { Project, ProjectAggregateDTO, useGetProjectAggregateDTOList } from 'services/cd-ng'
+import type { Project, ProjectAggregateDTO} from 'services/cd-ng';
+import { useGetProjectAggregateDTOList } from 'services/cd-ng'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'

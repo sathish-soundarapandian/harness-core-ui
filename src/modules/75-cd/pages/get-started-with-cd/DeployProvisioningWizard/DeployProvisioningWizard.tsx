@@ -28,16 +28,19 @@ import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { RepositoriesRepoAppDetailsResponse } from 'services/gitops'
 import { useUpdateQueryParams } from '@common/hooks'
 import { ResourceCategory } from '@rbac/interfaces/ResourceType'
-import {
+import type {
   WizardStep,
+  DeployProvisioningWizardProps} from './Constants';
+import {
   StepStatus,
   DeployProvisiongWizardStepId,
-  DeployProvisioningWizardProps,
   FLOW_TYPES
 } from './Constants'
-import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType'
+import type { SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType';
+import { SelectDeploymentType } from '../SelectWorkload/SelectDeploymentType'
 import type { SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
-import { DelegateSelectorRefInstance, DelegateSelectorWizard } from '../DelegateSelectorWizard/DelegateSelectorWizard'
+import type { DelegateSelectorRefInstance} from '../DelegateSelectorWizard/DelegateSelectorWizard';
+import { DelegateSelectorWizard } from '../DelegateSelectorWizard/DelegateSelectorWizard'
 import { Configure } from '../ConfigureService/ConfigureService'
 import { DOCUMENT_URL, getTelemetryDeploymentType } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'

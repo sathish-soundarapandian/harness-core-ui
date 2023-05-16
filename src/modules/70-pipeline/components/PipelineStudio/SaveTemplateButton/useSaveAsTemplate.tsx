@@ -14,11 +14,12 @@ import { useParams } from 'react-router-dom'
 import classNames from 'classnames'
 import { useToaster } from '@harness/uicore'
 import { DefaultTemplate } from 'framework/Templates/templates'
-import {
+import type {
   ModalProps,
+  TemplateConfigModalHandle} from 'framework/Templates/TemplateConfigModal/TemplateConfigModal';
+import {
   Intent,
   TemplateConfigModalWithRef,
-  TemplateConfigModalHandle,
   Fields
 } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -33,7 +34,8 @@ import { sanitize } from '@common/utils/JSONUtils'
 import type { NGTemplateInfoConfig, TemplateSummaryResponse } from 'services/template-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import css from './SaveAsTemplate.module.scss'
 

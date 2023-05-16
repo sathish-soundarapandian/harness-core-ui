@@ -6,14 +6,16 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
 import mockTarget from '@cf/utils/testData/data/mockTarget'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
-import AddFlagButton, { AddFlagButtonProps } from '../AddFlagButton'
+import type { AddFlagButtonProps } from '../AddFlagButton';
+import AddFlagButton from '../AddFlagButton'
 
 const renderComponent = (props: Partial<AddFlagButtonProps> = {}): RenderResult =>
   render(

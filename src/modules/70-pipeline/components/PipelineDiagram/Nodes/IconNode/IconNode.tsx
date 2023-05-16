@@ -8,9 +8,11 @@
 import * as React from 'react'
 import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { Text, IconName, Icon, Button, ButtonVariation } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Text, Icon, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
+import type { BaseReactComponentProps } from '../../types';
+import { PipelineGraphType, NodeType } from '../../types'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon, attachDragImageToEventHandler } from '../utils'
 import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'

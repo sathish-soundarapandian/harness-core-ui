@@ -7,10 +7,11 @@
 
 import React, { useMemo, useRef, useState } from 'react'
 import produce from 'immer'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Button,
   Text,
-  StepProps,
   Layout,
   ButtonVariation,
   Icon,
@@ -26,10 +27,11 @@ import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   LdapUserSettings,
   ResponseMessage,
-  RestResponseLdapTestResponse,
+  RestResponseLdapTestResponse} from 'services/cd-ng';
+import {
   useValidateLdapUserSettings
 } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'

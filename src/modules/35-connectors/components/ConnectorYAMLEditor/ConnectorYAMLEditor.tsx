@@ -24,13 +24,14 @@ import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToas
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { useStrings } from 'framework/strings'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
-import {
+import type {
   Connector,
   ConnectorInfoDTO,
   ConnectorResponse,
   CreateConnectorQueryParams,
   EntityGitDetails,
-  ResponseJsonNode,
+  ResponseJsonNode} from 'services/cd-ng';
+import {
   useGetYamlSchema,
   useUpdateConnector
 } from 'services/cd-ng'
@@ -38,10 +39,12 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { isSMConnector } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import {
+import type {
   UseSaveSuccessResponse,
-  useSaveToGitDialog,
   UseSaveToGitDialogReturn
+} from '@common/modals/SaveToGitDialog/useSaveToGitDialog';
+import {
+  useSaveToGitDialog
 } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'

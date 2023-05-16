@@ -6,17 +6,20 @@
  */
 
 import React from 'react'
-import { Accordion, Formik, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Accordion, Formik } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { CustomApprovalFormData, SCRIPT_DEFAULT_VALUE, variableSchema } from './types'
+import type { CustomApprovalFormData} from './types';
+import { SCRIPT_DEFAULT_VALUE, variableSchema } from './types'
 import BaseCustomApproval from './BaseCustomApproval'
 import OptionalConfiguration from './OptionalConfiguration'
 

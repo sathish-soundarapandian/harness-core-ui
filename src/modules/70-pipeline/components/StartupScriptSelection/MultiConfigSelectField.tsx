@@ -7,19 +7,22 @@
 
 import React from 'react'
 import cx from 'classnames'
+import type {
+  MultiTextInputProps} from '@harness/uicore';
 import {
   getMultiTypeFromValue,
   MultiTypeInputType,
-  MultiTextInputProps,
   ExpressionInput,
   EXPRESSION_INPUT_PLACEHOLDER
 } from '@harness/uicore'
 
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions';
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'

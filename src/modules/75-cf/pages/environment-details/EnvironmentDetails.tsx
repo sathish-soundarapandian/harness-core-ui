@@ -13,7 +13,8 @@ import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerS
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
-import { ApiKey, useGetAllAPIKeys } from 'services/cf'
+import type { ApiKey} from 'services/cf';
+import { useGetAllAPIKeys } from 'services/cf'
 import { useSyncedEnvironment } from '@cf/hooks/useSyncedEnvironment'
 import { useStrings } from 'framework/strings'
 import { CF_DEFAULT_PAGE_SIZE, getErrorMessage } from '@cf/utils/CFUtils'

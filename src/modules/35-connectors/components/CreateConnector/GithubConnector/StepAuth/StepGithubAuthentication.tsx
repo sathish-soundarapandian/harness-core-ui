@@ -8,6 +8,9 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { get, isEmpty, set } from 'lodash-es'
 import cx from 'classnames'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -15,9 +18,7 @@ import {
   FormInput,
   Text,
   FormikForm as Form,
-  StepProps,
   Container,
-  SelectOption,
   ButtonVariation,
   PageSpinner
 } from '@harness/uicore'
@@ -41,13 +42,15 @@ import type {
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
-import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
+import type { TextReferenceInterface} from '@secrets/components/TextReference/TextReference';
+import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { GitAuthTypes, GitAPIAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { ConnectViaOAuth } from '@common/components/ConnectViaOAuth/ConnectViaOAuth'
 import { Connectors } from '@connectors/constants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
-import { handleOAuthEventProcessing, OAuthEventProcessingResponse } from '@common/components/ConnectViaOAuth/OAuthUtils'
+import type { OAuthEventProcessingResponse } from '@common/components/ConnectViaOAuth/OAuthUtils';
+import { handleOAuthEventProcessing } from '@common/components/ConnectViaOAuth/OAuthUtils'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepGithubAuthentication.module.scss'

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useCallback, useEffect, useMemo, useRef, useState, useContext } from 'react'
+import type { FormEvent} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState, useContext } from 'react'
 import cx from 'classnames'
 import {
   Formik,
@@ -22,10 +23,11 @@ import { isEmpty, defaultTo, get, set, debounce, noop, memoize, isUndefined, isN
 import type { FormikErrors, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import produce from 'immer'
-import {
+import type {
   InputSetSummaryResponse,
   PipelineConfig,
-  PipelineInfoConfig,
+  PipelineInfoConfig} from 'services/pipeline-ng';
+import {
   useGetPipeline,
   useGetTemplateFromPipeline,
   useGetMergeInputSetFromPipelineTemplateWithListInput

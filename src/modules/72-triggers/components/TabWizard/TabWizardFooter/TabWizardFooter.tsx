@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { RefObject, Dispatch, SetStateAction, useMemo } from 'react'
+import type { RefObject, Dispatch, SetStateAction} from 'react';
+import React, { useMemo } from 'react'
 import type { FormikErrors, FormikProps } from 'formik'
 import { parse } from 'yaml'
 import { defaultTo, isEmpty } from 'lodash-es'

@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { FieldArray, FormikProps, useFormikContext } from 'formik'
+import type { FormikProps} from 'formik';
+import { FieldArray, useFormikContext } from 'formik'
 import { get } from 'lodash-es'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
-  AllowedTypes,
   Button,
   ButtonVariation,
   FormInput,

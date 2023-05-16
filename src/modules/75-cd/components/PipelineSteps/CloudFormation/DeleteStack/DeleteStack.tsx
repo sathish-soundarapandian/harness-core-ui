@@ -8,19 +8,24 @@
 import React, { forwardRef } from 'react'
 import * as Yup from 'yup'
 import { isEmpty, set, unset } from 'lodash-es'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { yupToFormErrors, FormikErrors } from 'formik'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { FormikErrors } from 'formik';
+import { yupToFormErrors } from 'formik'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StringsMap } from 'stringTypes'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import {
+import type {
   DeleteStackData,
-  DeleteStackTypes,
   CFDeleteStackStepInfo,
   DeleteStackVariableStepProps,
   Connector
+} from '../CloudFormationInterfaces.types';
+import {
+  DeleteStackTypes
 } from '../CloudFormationInterfaces.types'
 import { CloudFormationDeleteStack } from './DeleteStackRef'
 import DeleteStackInputStep from './DeleteStackInputSteps'

@@ -27,9 +27,10 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CustomVariableEditableExtraProps } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { CustomDeploymentNGVariable } from 'services/cd-ng'
-import {
+import type {
   CustomDeploymentInfrastructureSpecEditableProps,
-  CustomDeploymentInfrastructureStep,
+  CustomDeploymentInfrastructureStep} from './CustomDeploymentInfrastructureInterface';
+import {
   getValidationSchema
 } from './CustomDeploymentInfrastructureInterface'
 import css from './CustomDeploymentInfrastructureSpec.module.scss'

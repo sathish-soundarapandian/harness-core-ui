@@ -5,15 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useMemo } from 'react'
+import type { FC} from 'react';
+import React, { useMemo } from 'react'
 import * as Yup from 'yup'
 import { get } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { FormError } from '@harness/uicore'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { Target, Variation } from 'services/cf'
 import type { FlagConfigurationStepFormDataValues } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
-import SubSection, { SubSectionProps } from '../SubSection'
+import type { SubSectionProps } from '../SubSection';
+import SubSection from '../SubSection'
 import ServeVariationToItem from './ServeVariationToItem'
 import { CFPipelineInstructionType } from '../../types'
 

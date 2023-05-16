@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import flagsImageUrl from '@cf/images/Feature_Flags_Teepee.svg'
-import { NoData, NoDataProps } from './NoData'
+import type { NoDataProps } from './NoData';
+import { NoData } from './NoData'
 
 export interface NoSearchResultsProps {
   imageURL?: NoDataProps['imageURL']

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ComponentType, LazyExoticComponent, ReactElement } from 'react'
+import React, { type ComponentType, type LazyExoticComponent, type ReactElement } from 'react'
 import { useLogout } from 'framework/utils/SessionUtils'
 import RbacButton from '@rbac/components/Button/Button'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
@@ -24,10 +24,10 @@ import LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
 import ParentLink from '@common/components/ParentLink/ParentLink'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { useEventSourceListener } from '@common/hooks/useEventSourceListener'
-import ChildComponentMounter, { ChildComponentMounterProps } from './ChildComponentMounter'
+import ChildComponentMounter, { type ChildComponentMounterProps } from './ChildComponentMounter'
 import type { ChildAppProps } from './index'
 
-export { ChildAppProps }
+export type { ChildAppProps }
 
 interface ChildAppMounterProps extends Omit<ChildComponentMounterProps, 'ChildComponent'> {
   ChildApp: LazyExoticComponent<ComponentType<ChildAppProps>>

@@ -11,10 +11,11 @@ import { defaultTo } from 'lodash-es'
 import { Card, Layout, Tab, Tabs, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   GetEnvArtifactDetailsByServiceIdQueryParams,
   GetEnvBuildInstanceCountQueryParams,
-  NGServiceConfig,
+  NGServiceConfig} from 'services/cd-ng';
+import {
   useGetActiveServiceDeployments,
   useGetActiveServiceInstances
 } from 'services/cd-ng'

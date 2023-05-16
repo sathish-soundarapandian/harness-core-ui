@@ -11,7 +11,8 @@ import type { IconName } from '@harness/uicore'
 import { parse } from 'yaml'
 import { defaultTo, get } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import TemplateInputSetStep from '@templates-library/components/PipelineSteps/TemplateStep/TemplateInputSetStep'
@@ -19,14 +20,16 @@ import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProp
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { getTemplateListPromise, TemplateSummaryResponse } from 'services/template-ng'
+import type { TemplateSummaryResponse } from 'services/template-ng';
+import { getTemplateListPromise } from 'services/template-ng'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import stepFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StepElementConfig } from 'services/cd-ng'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
-import { TemplateStepWidgetProps, TemplateStepWidgetWithRef } from './TemplateStepWidget/TemplateStepWidget'
+import type { TemplateStepWidgetProps} from './TemplateStepWidget/TemplateStepWidget';
+import { TemplateStepWidgetWithRef } from './TemplateStepWidget/TemplateStepWidget'
 
 const logger = loggerFor(ModuleName.TEMPLATES)
 

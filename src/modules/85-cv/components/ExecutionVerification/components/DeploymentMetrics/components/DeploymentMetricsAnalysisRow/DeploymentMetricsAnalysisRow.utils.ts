@@ -8,7 +8,8 @@
 import { getRiskColorValue, RiskValues } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
 import type { AnalysedDeploymentTestDataNode } from 'services/cv'
-import { HostControlTestData, HostTestData, MINIMUM_DEVIATION } from './DeploymentMetricsAnalysisRow.constants'
+import type { HostControlTestData, HostTestData} from './DeploymentMetricsAnalysisRow.constants';
+import { MINIMUM_DEVIATION } from './DeploymentMetricsAnalysisRow.constants'
 import type { DeploymentMetricsAnalysisRowChartSeries } from './DeploymentMetricsAnalysisRow.types'
 
 export function transformControlAndTestDataToHighChartsSeries(

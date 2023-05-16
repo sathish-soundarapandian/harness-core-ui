@@ -7,8 +7,10 @@
 
 /* eslint-disable react/display-name */
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import * as cdServiceMock from 'services/cd-ng'
 import * as cfServiceMock from 'services/cf'
 import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'

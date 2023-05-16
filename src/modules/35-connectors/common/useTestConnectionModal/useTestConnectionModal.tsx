@@ -8,7 +8,8 @@
 import React, { useState } from 'react'
 import { Button, Container } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 
 import type { ConnectorInfoDTO, EntityGitDetails } from 'services/cd-ng'
 import ConnectorTestConnection from '../ConnectorTestConnection/ConnectorTestConnection'

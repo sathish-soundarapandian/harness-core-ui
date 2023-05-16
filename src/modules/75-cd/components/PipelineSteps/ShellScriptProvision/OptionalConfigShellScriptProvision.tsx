@@ -6,15 +6,18 @@
  */
 
 import React from 'react'
-import { FormikProps, FieldArray } from 'formik'
-import { AllowedTypes, Button, ButtonVariation, FormikForm, FormInput } from '@harness/uicore'
+import type { FormikProps} from 'formik';
+import { FieldArray } from 'formik'
+import type { AllowedTypes} from '@harness/uicore';
+import { Button, ButtonVariation, FormikForm, FormInput } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import { isArray } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 
-import { scriptInputType, ShellScriptProvisionFormData, ShellScriptProvisionStepVariable } from './types'
+import type { ShellScriptProvisionFormData, ShellScriptProvisionStepVariable } from './types';
+import { scriptInputType } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScriptProvision.module.scss'
 

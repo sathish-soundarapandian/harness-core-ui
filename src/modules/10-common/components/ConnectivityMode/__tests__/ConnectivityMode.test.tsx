@@ -11,7 +11,8 @@ import { render } from '@testing-library/react'
 import { Formik } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 
-import ConnectivityMode, { ConnectivityModeForm, ConnectivityModeType, DelegateTypes } from '../ConnectivityMode'
+import type { ConnectivityModeForm} from '../ConnectivityMode';
+import ConnectivityMode, { ConnectivityModeType, DelegateTypes } from '../ConnectivityMode'
 
 describe('Test ConnectivityMode', () => {
   test('should render default state for ConnectivityMode', async () => {

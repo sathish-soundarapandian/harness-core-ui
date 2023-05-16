@@ -17,7 +17,8 @@ import {
   MultiTypeInputType,
   PageSpinner
 } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
   GitQueryParams,
@@ -31,18 +32,19 @@ import { EXPANDABLE_INPUT_SUPPORTED_FIELDS } from '@pipeline/components/Pipeline
 import type {
   ServiceNowCreateDeploymentModeFormContentInterface,
   ServiceNowCreateDeploymentModeProps
-} from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
+,
+  ServiceNowCreateFieldType,
+  ServiceNowFieldNGWithValue} from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import type { ServiceNowTicketTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types'
+import type {
+  ServiceNowTicketTypeDTO} from 'services/cd-ng';
 import {
-  ServiceNowTicketTypeDTO,
   useGetServiceNowIssueMetadata,
   useGetServiceNowTicketTypes,
   useGetServiceNowTicketTypesV2
 } from 'services/cd-ng'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import {
-  ServiceNowCreateFieldType,
-  ServiceNowFieldNGWithValue,
   ServiceNowStaticFields
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import {

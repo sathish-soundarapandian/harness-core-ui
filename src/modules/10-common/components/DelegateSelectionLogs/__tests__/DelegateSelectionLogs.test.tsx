@@ -11,7 +11,8 @@ import { render, fireEvent, waitFor, queryByText } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
-import { DelegateTaskData, useDelegateSelectionLogsModal } from '../DelegateSelectionLogs'
+import type { DelegateTaskData} from '../DelegateSelectionLogs';
+import { useDelegateSelectionLogsModal } from '../DelegateSelectionLogs'
 import mock from './logsMock.json'
 
 const TEST_PATH = routes.toExecutionPipelineView({

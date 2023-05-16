@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { PipelineStage } from '@pipeline/components/PipelineStages/PipelineStage'
-import { FeatureAddEditStageView, FeatureAddEditStageViewProps } from './FeatureAddStageView/FeatureAddStageView'
+import type { FeatureAddEditStageViewProps } from './FeatureAddStageView/FeatureAddStageView';
+import { FeatureAddEditStageView } from './FeatureAddStageView/FeatureAddStageView'
 import FeatureStageSetupShell from '../FeatureStageSetupShell/FeatureStageSetupShell'
 
 type DeployStageProps = Omit<FeatureAddEditStageViewProps, 'onChange'>

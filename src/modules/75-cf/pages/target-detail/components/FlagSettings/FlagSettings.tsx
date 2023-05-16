@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback, useMemo } from 'react'
+import type { FC} from 'react';
+import React, { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { Feature, Target, useGetAllFeatures, usePatchTarget } from 'services/cf'
+import { useGetAllFeatures, usePatchTarget } from 'services/cf'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { Page } from '@common/exports'
 import { getErrorMessage } from '@cf/utils/CFUtils'
@@ -19,7 +20,7 @@ import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncC
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import useResponseError from '@cf/hooks/useResponseError'
-import type { PatchOperation } from 'services/cf'
+import type { PatchOperation , Feature, Target} from 'services/cf'
 import buildInstructions from './buildInstructions'
 
 export interface FlagSettingsProps {

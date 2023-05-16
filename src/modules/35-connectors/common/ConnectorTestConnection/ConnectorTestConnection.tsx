@@ -8,12 +8,13 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   StepsProgress,
   Layout,
   Button,
   Text,
-  StepProps,
   Container,
   ButtonVariation,
   ButtonSize,
@@ -21,8 +22,7 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { useGetDelegateFromId } from 'services/portal'
-import {
-  useGetTestConnectionResult,
+import type {
   ResponseConnectorValidationResult,
   ConnectorConfigDTO,
   Error,
@@ -30,6 +30,9 @@ import {
   EntityGitDetails,
   ResponseMessage,
   AccessControlCheckError
+} from 'services/cd-ng';
+import {
+  useGetTestConnectionResult
 } from 'services/cd-ng'
 
 import type { StepDetails } from '@connectors/interfaces/ConnectorInterface'
@@ -46,7 +49,8 @@ import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { connectorsTrackEventMap } from '@connectors/utils/connectorEvents'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import Suggestions from '../ErrorSuggestions/ErrorSuggestionsCe'
 import css from './ConnectorTestConnection.module.scss'

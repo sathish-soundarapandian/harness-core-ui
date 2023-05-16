@@ -8,7 +8,8 @@
 import React, { useMemo } from 'react'
 import { defaultTo, get, isNull, isUndefined, omit, omitBy, remove, set } from 'lodash-es'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
-import { Callout, Classes, Dialog, IDialogProps, Menu, Position } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core'
+import { Callout, Classes, Dialog, Menu, Position } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import {
   Button,
@@ -28,21 +29,13 @@ import { useParams } from 'react-router-dom'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import {
-  OverlayInputSetResponse,
   useGetPipeline,
   useGetInputSetsListForPipeline,
   useGetOverlayInputSetForPipeline,
   useCreateOverlayInputSetForPipeline,
   useUpdateOverlayInputSetForPipeline,
-  ResponseOverlayInputSetResponse,
   useGetSchemaYaml,
-  EntityGitDetails,
-  UpdateOverlayInputSetForPipelineQueryParams,
-  UpdateOverlayInputSetForPipelinePathParams,
-  CreateOverlayInputSetForPipelineQueryParams,
-  useGetMergeInputSetFromPipelineTemplateWithListInput,
-  ResponseMergeInputSetResponse,
-  GitErrorMetadataDTO
+  useGetMergeInputSetFromPipelineTemplateWithListInput
 } from 'services/pipeline-ng'
 import { useGetSettingValue } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
@@ -59,13 +52,16 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import type { InputSetGitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
+import type { UseSaveSuccessResponse } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
+import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import type { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
-import GitContextForm, { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
+import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
+import GitContextForm from '@common/components/GitContextForm/GitContextForm'
 import { useQueryParams } from '@common/hooks'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { CreateUpdateInputSetsReturnType, InputSetDTO } from '@pipeline/utils/types'
@@ -74,12 +70,23 @@ import { getOverlayErrors } from '@pipeline/utils/runPipelineUtils'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { shouldDisableGitDetailsFields, hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import type {
+  PipelineInfoConfig,
+  OverlayInputSetResponse,
+  ResponseOverlayInputSetResponse,
+  EntityGitDetails,
+  UpdateOverlayInputSetForPipelineQueryParams,
+  UpdateOverlayInputSetForPipelinePathParams,
+  CreateOverlayInputSetForPipelineQueryParams,
+  ResponseMergeInputSetResponse,
+  GitErrorMetadataDTO
+} from 'services/pipeline-ng'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
-import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
+import type { InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
+import { InputSetSelector } from '../InputSetSelector/InputSetSelector'
 import {
   anyOneOf,
   constructInputSetYamlObject,

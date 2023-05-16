@@ -5,14 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import React, { useState } from 'react'
+import type {
+  VisualYamlSelectedView as SelectedView,
+  SelectOption
+} from '@harness/uicore';
 import {
   Heading,
   HarnessDocTooltip,
   MultiSelectDropDown,
-  VisualYamlSelectedView as SelectedView,
-  VisualYamlToggle,
-  SelectOption
+  VisualYamlToggle
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
@@ -27,13 +30,15 @@ import type {
   ResponseListStageExecutionResponse,
   ResponsePMSPipelineResponseDTO
 } from 'services/pipeline-ng'
+import type {
+  SelectedStageData,
+  StageSelectionData
+} from '@pipeline/utils/runPipelineUtils';
 import {
   ALL_STAGE_VALUE,
   getAllStageData,
   getAllStageItem,
-  getStageIdentifierFromStageData,
-  SelectedStageData,
-  StageSelectionData
+  getStageIdentifierFromStageData
 } from '@pipeline/utils/runPipelineUtils'
 import type { InputSetDTO } from '@pipeline/utils/types'
 

@@ -10,7 +10,8 @@ import { useParams } from 'react-router-dom'
 import { isEmpty, map, get } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikContextType } from 'formik'
-import { Text, Container, SelectOption, MultiSelectOption, useToaster } from '@harness/uicore'
+import type { SelectOption, MultiSelectOption} from '@harness/uicore';
+import { Text, Container, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -24,7 +25,8 @@ import {
   useGetManagementGroups
 } from 'services/cd-ng'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import { AzureArmProps, isFixed } from '../AzureArm.types'
+import type { AzureArmProps} from '../AzureArm.types';
+import { isFixed } from '../AzureArm.types'
 import { GetSubString } from '../Scopes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 

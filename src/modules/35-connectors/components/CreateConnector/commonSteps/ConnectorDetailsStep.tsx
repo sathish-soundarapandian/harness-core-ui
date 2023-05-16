@@ -6,12 +6,13 @@
  */
 
 import React, { useRef, useState } from 'react'
+import type {
+  StepProps,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Layout,
   Button,
   Formik,
-  StepProps,
-  ModalErrorHandlerBinding,
   ModalErrorHandler,
   FormikForm,
   Container,
@@ -22,18 +23,21 @@ import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { pick } from 'lodash-es'
-import {
+import type {
   ConnectorConfigDTO,
   ConnectorInfoDTO,
   ResponseBoolean,
-  validateTheIdentifierIsUniquePromise,
   Failure
+} from 'services/cd-ng';
+import {
+  validateTheIdentifierIsUniquePromise
 } from 'services/cd-ng'
 import { String, useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import GitContextForm, { GitContextProps, IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
+import type { GitContextProps, IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm';
+import GitContextForm from '@common/components/GitContextForm/GitContextForm'
 import { saveCurrentStepData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'

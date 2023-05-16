@@ -24,15 +24,12 @@ import { useStrings } from 'framework/strings'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
-import {
+import type {
   GetErrorResponse,
-  SaveTemplateHandle,
-  SaveTemplatePopoverWithRef
+  SaveTemplateHandle
 } from '@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'
-import {
-  TemplateStudioSubHeaderLeftViewHandle,
-  TemplateStudioSubHeaderLeftViewWithRef
-} from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/views/TemplateStudioSubHeaderLeftView/TemplateStudioSubHeaderLeftView'
+import { SaveTemplatePopoverWithRef } from '@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'
+import { TemplateStudioSubHeaderLeftViewWithRef, type TemplateStudioSubHeaderLeftViewHandle } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/views/TemplateStudioSubHeaderLeftView/TemplateStudioSubHeaderLeftView'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { stringify } from '@common/utils/YamlHelperMethods'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'

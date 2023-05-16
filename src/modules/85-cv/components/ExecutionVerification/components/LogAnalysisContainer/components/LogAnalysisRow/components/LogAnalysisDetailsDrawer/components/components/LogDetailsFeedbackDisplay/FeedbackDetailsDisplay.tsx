@@ -7,8 +7,9 @@ import moment from 'moment'
 import type { LogFeedback } from 'services/cv'
 import RiskItemIndicator from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/components/LogAnalysisRow/components/UpdateEventPreferenceDrawer/component/component/RiskItemIndicator'
 import { useStrings } from 'framework/strings'
+import type {
+  FeedbackScore} from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/components/LogAnalysisRow/components/UpdateEventPreferenceDrawer/UpdateEventPreferenceDrawer.utils';
 import {
-  FeedbackScore,
   RiskItemDisplayName
 } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/components/LogAnalysisRow/components/UpdateEventPreferenceDrawer/UpdateEventPreferenceDrawer.utils'
 import css from './LogDetailsFeedbackDisplay.module.scss'

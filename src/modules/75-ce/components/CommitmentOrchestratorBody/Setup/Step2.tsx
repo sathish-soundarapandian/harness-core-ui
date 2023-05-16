@@ -10,6 +10,8 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Checkbox,
   Container,
@@ -17,7 +19,6 @@ import {
   Icon,
   Layout,
   Select,
-  SelectOption,
   Table,
   Text
 } from '@harness/uicore'
@@ -25,14 +26,16 @@ import type { Column } from 'react-table'
 import { CE_DATE_FORMAT_INTERNAL, DATE_RANGE_SHORTCUTS } from '@common/utils/momentUtils'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   FiltersResponse,
   SetupInstanceType,
-  SetupInstanceTypesResponse,
+  SetupInstanceTypesResponse} from 'services/lw-co';
+import {
   useFetchFilters,
   useFetchSetupInstanceTypes
 } from 'services/lw-co'
-import { ExcludedInstanceType, useSetupContext } from './SetupContext'
+import type { ExcludedInstanceType} from './SetupContext';
+import { useSetupContext } from './SetupContext'
 import css from './Setup.module.scss'
 
 interface InstanceTypeTableProps {

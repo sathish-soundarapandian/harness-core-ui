@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { DashboardModel } from 'services/custom-dashboards'
 import { DashboardType } from '@dashboards/types/DashboardTypes.types'
 import type { StringKeys } from 'framework/strings'
-import DashboardTags, { DashboardTagProps } from '../DashboardTags'
+import type { DashboardTagProps } from '../DashboardTags';
+import DashboardTags from '../DashboardTags'
 
 const defaultTestDashboard: DashboardModel = {
   id: '1',

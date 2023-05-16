@@ -5,11 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, FormEventHandler, useRef } from 'react'
-import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
+import type { FC, FormEventHandler} from 'react';
+import React, { useRef } from 'react'
+import type { IFormGroupProps} from '@blueprintjs/core';
+import { FormGroup, Intent } from '@blueprintjs/core'
 import { get } from 'lodash-es'
+import type {
+  DataTooltipInterface} from '@harness/uicore';
 import {
-  DataTooltipInterface,
   errorCheck,
   FormError,
   FormikTooltipContext,
@@ -17,7 +20,8 @@ import {
   Icon
 } from '@harness/uicore'
 import classNames from 'classnames'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { ImagePreview } from '../ImagePreview/ImagePreview'
 import css from './LogoInput.module.scss'
 

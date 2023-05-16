@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useToaster } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'

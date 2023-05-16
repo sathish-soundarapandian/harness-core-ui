@@ -8,7 +8,8 @@
 import React from 'react'
 import { defaultTo } from 'lodash-es'
 
-import { FormInput, MultiSelectOption } from '@harness/uicore'
+import type { MultiSelectOption } from '@harness/uicore';
+import { FormInput } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Checkbox, Layout, MultiSelect, MultiSelectOption, PageSpinner } from '@harness/uicore'
+import type { MultiSelectOption} from '@harness/uicore';
+import { Checkbox, Layout, MultiSelect, PageSpinner } from '@harness/uicore'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import produce from 'immer'

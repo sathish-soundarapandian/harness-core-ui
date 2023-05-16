@@ -10,7 +10,8 @@ import type { Meta, Story } from '@storybook/react'
 import styled from '@emotion/styled'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { StepsTree, StepsTreeProps } from './StepsTree'
+import type { StepsTreeProps } from './StepsTree';
+import { StepsTree } from './StepsTree'
 
 import data from './__tests__/data.json'
 

@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { ProwlerStepBaseWithRef } from './ProwlerStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { ProwlerStepVariables, ProwlerStepVariablesProps } from './ProwlerStepVariables'
+import type { ProwlerStepVariablesProps } from './ProwlerStepVariables';
+import { ProwlerStepVariables } from './ProwlerStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './ProwlerStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 import { AWS_ACCOUNT_AUTH_TYPE, PROWLER_DEFAULT_CONFIG } from '../constants'

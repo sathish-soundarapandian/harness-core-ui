@@ -5,12 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useCallback, useState } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import React, { useCallback, useState } from 'react'
 import { useParams, useHistory, matchPath } from 'react-router-dom'
 import { parse } from 'yaml'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
+import type {
+  AllowedTypesWithRunTime
+} from '@harness/uicore';
 import {
   Container,
   Layout,
@@ -25,21 +29,21 @@ import {
   ButtonVariation,
   Tag,
   FormikForm,
-  HarnessDocTooltip,
-  AllowedTypesWithRunTime
+  HarnessDocTooltip
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import { projectPathProps, modulePathProps, environmentPathProps } from '@common/utils/routeUtils'
 import { NavigationCheck } from '@common/exports'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ApplicationSettingsConfiguration,
   ConfigFileWrapper,
   ConnectionStringsConfiguration,
   ManifestConfigWrapper,
   NGEnvironmentInfoConfig,
-  ResponseEnvironmentResponse,
+  ResponseEnvironmentResponse} from 'services/cd-ng';
+import {
   useGetYamlSchema
 } from 'services/cd-ng'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -53,7 +57,8 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { PermissionRequest, usePermission } from '@rbac/hooks/usePermission'
+import type { PermissionRequest} from '@rbac/hooks/usePermission';
+import { usePermission } from '@rbac/hooks/usePermission'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'

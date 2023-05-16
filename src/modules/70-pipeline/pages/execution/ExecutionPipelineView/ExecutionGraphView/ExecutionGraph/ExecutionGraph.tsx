@@ -10,13 +10,14 @@ import { useParams } from 'react-router-dom'
 import { isEmpty, get, defaultTo } from 'lodash-es'
 import { Icon, Layout, Text } from '@harness/uicore'
 import { Intent, Color } from '@harness/design-system'
-import { NodeRunInfo, useGetBarriersExecutionInfo } from 'services/pipeline-ng'
+import { useGetBarriersExecutionInfo } from 'services/pipeline-ng'
 import {
   isNodeTypeMatrixOrFor,
   processExecutionDataForGraph,
   processLayoutNodeMapV1
 } from '@pipeline/utils/executionUtils'
-import { ExecutionStatus, isExecutionIgnoreFailed } from '@pipeline/utils/statusHelpers'
+import type { ExecutionStatus} from '@pipeline/utils/statusHelpers';
+import { isExecutionIgnoreFailed } from '@pipeline/utils/statusHelpers'
 import { useStrings } from 'framework/strings'
 import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { DynamicPopover } from '@common/exports'
@@ -27,10 +28,11 @@ import ConditionalExecutionTooltipWrapper from '@pipeline/components/Conditional
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
+import type {
+  BaseReactComponentProps} from '@pipeline/components/PipelineDiagram/DiagramFactory';
 import {
   DiagramFactory,
   NodeType as DiagramNodeType,
-  BaseReactComponentProps,
   DiagramNodes
 } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
@@ -41,7 +43,7 @@ import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode
 import { getExecutionStageDiagramListeners } from '@pipeline/utils/execUtils'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { MatrixNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixNode/MatrixNode'
-import type { ExecutionGraph as IExecutionGraph } from 'services/pipeline-ng'
+import type { ExecutionGraph as IExecutionGraph , NodeRunInfo} from 'services/pipeline-ng'
 import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
 import CDInfo from './components/CD/CDInfo/CDInfo'
 import css from './ExecutionGraph.module.scss'

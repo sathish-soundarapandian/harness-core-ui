@@ -25,7 +25,8 @@ import FlagOptionsMenuButton from '@cf/components/FlagOptionsMenuButton/FlagOpti
 import { VariationWithIcon } from '@cf/components/VariationWithIcon/VariationWithIcon'
 import type { UseToggleFeatureFlag } from '@cf/hooks/useToggleFeatureFlag'
 import type { UseGovernancePayload } from '@cf/hooks/useGovernance'
-import { FeatureFlagStatus, FlagStatus } from '../FlagStatus'
+import type { FeatureFlagStatus} from '../FlagStatus';
+import { FlagStatus } from '../FlagStatus'
 import { FlagResult } from '../FlagResult'
 import { RenderFeatureFlag } from './RenderFeatureFlag'
 

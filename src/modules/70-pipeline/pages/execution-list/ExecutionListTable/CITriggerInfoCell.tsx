@@ -7,8 +7,10 @@
  */
 
 import { Color, FontVariation } from '@harness/design-system'
-import { Icon, IconName, Layout, Text } from '@harness/uicore'
-import React, { FC } from 'react'
+import type { IconName} from '@harness/uicore';
+import { Icon, Layout, Text } from '@harness/uicore'
+import type { FC } from 'react';
+import React from 'react'
 import { killEvent } from '@common/utils/eventUtils'
 import css from './ExecutionListTable.module.scss'
 

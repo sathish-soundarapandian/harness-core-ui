@@ -6,7 +6,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { SetupSourceTabsProvider } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
-import ServiceInstance, { ServiceInstanceProps } from '../ServiceInstance'
+import type { ServiceInstanceProps } from '../ServiceInstance';
+import ServiceInstance from '../ServiceInstance'
 import {
   serviceInstancePropsMock,
   serviceInstancePropsMockWithDefaultValue,

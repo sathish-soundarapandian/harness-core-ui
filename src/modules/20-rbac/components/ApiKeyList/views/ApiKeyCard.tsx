@@ -20,7 +20,8 @@ import {
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import ReactTimeago from 'react-timeago'
 import { Classes, Menu, Position } from '@blueprintjs/core'
-import { ApiKeyAggregateDTO, ApiKeyDTO, TokenDTO, useDeleteApiKey } from 'services/cd-ng'
+import type { ApiKeyAggregateDTO, ApiKeyDTO, TokenDTO} from 'services/cd-ng';
+import { useDeleteApiKey } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { TagsPopover, useToaster } from '@common/components'
 import TokenList from '@rbac/components/TokenList/TokenList'

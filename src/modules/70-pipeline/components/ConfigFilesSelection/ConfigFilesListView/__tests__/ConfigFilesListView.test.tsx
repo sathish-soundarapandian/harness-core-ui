@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, getByText as getElementByText, waitFor, RenderResult } from '@testing-library/react'
+import { render, fireEvent, getByText as getElementByText, waitFor, type RenderResult } from '@testing-library/react'
 import type { AllowedTypesWithRunTime } from '@harness/uicore'
 
 import type { ServiceDefinition, StoreConfigWrapper } from 'services/cd-ng'

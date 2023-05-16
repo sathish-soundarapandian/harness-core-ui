@@ -10,7 +10,8 @@ import cx from 'classnames'
 import { Expander } from '@blueprintjs/core'
 import { cloneDeep, isEmpty, isEqual, set } from 'lodash-es'
 import produce from 'immer'
-import { Tabs, Tab, Icon, Button, Layout, ButtonVariation, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Tabs, Tab, Icon, Button, Layout, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { HarnessIconName } from '@harness/icons'
 import {
@@ -19,11 +20,12 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
-import ExecutionGraph, {
+import type {
   ExecutionGraphAddStepEvent,
   ExecutionGraphEditStepEvent,
   ExecutionGraphRefObj
-} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph';
+import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 import {
   generateRandomString,
   STATIC_SERVICE_GROUP_NAME,

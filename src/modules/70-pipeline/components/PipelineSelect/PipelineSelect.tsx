@@ -7,11 +7,13 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Select as BPSelect, ItemRenderer, ItemListRenderer, IItemListRendererProps } from '@blueprintjs/select'
+import type { ItemRenderer, ItemListRenderer, IItemListRendererProps } from '@blueprintjs/select';
+import { Select as BPSelect } from '@blueprintjs/select'
 import { Button, Menu, Spinner } from '@blueprintjs/core'
 
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetPipelineList, PMSPipelineSummaryResponse, PagePMSPipelineSummaryResponse } from 'services/pipeline-ng'
+import type { PMSPipelineSummaryResponse, PagePMSPipelineSummaryResponse } from 'services/pipeline-ng';
+import { useGetPipelineList } from 'services/pipeline-ng'
 import { String } from 'framework/strings'
 
 import css from './PipelineSelect.module.scss'

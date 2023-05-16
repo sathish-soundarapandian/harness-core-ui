@@ -7,16 +7,19 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { connect, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { connect } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type {
+  AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
 import {
   Layout,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  AllowedTypes,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 
 import type { AsgInfrastructure } from 'services/cd-ng'

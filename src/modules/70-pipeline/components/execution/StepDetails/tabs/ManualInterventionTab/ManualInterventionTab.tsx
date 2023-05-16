@@ -11,14 +11,17 @@ import { Thumbnail, useToaster } from '@harness/uicore'
 import cx from 'classnames'
 
 import { String, useStrings } from 'framework/strings'
-import {
-  useHandleManualInterventionInterrupt,
+import type {
   ExecutionNode,
   HandleManualInterventionInterruptQueryParams,
   ExecutionGraph
+} from 'services/pipeline-ng';
+import {
+  useHandleManualInterventionInterrupt
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { StrategyType, strategyIconMap, stringsMap, Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import type { StrategyType} from '@pipeline/utils/FailureStrategyUtils';
+import { strategyIconMap, stringsMap, Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
 import { StepMode } from '@pipeline/utils/stepUtils'

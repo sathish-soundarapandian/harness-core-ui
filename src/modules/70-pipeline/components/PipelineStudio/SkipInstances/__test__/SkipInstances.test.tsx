@@ -10,7 +10,8 @@ import { render, findByTestId, fireEvent, waitFor, act } from '@testing-library/
 import { TestWrapper } from '@common/utils/testUtils'
 import MultiTypeSkipInstances from '../MultiTypeSkipInstances'
 
-import { PipelineContext, PipelineContextInterface } from '../../PipelineContext/PipelineContext'
+import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext';
+import { PipelineContext } from '../../PipelineContext/PipelineContext'
 import { getDummyPipelineContextValue, runtimeFnArg } from './mock'
 
 describe('SkipInstances test', () => {

@@ -11,8 +11,10 @@ import { defaultTo, toInteger, isNil } from 'lodash-es'
 import { Text, Layout, Toggle } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { TimeType, SubscriptionProps, CurrencyType } from '@common/constants/SubscriptionTypes'
-import { Module, ModuleName } from 'framework/types/ModuleName'
+import type { SubscriptionProps} from '@common/constants/SubscriptionTypes';
+import { TimeType, CurrencyType } from '@common/constants/SubscriptionTypes'
+import type { Module} from 'framework/types/ModuleName';
+import { ModuleName } from 'framework/types/ModuleName'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { getAmountInCurrency, getDollarAmount } from '@auth-settings/utils'

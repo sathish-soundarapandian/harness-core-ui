@@ -11,7 +11,8 @@ import * as useModal from '@harness/use-modal'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { StoreType } from '@common/constants/GitSyncTypes'
-import { PipelineCanvas, PipelineCanvasProps } from '../PipelineCanvas'
+import type { PipelineCanvasProps } from '../PipelineCanvas';
+import { PipelineCanvas } from '../PipelineCanvas'
 import { PipelineContext } from '../../PipelineContext/PipelineContext'
 import { getGitContext } from './PipelineCanvasTestHelper'
 

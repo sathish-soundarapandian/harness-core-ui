@@ -18,7 +18,8 @@ import type { MultiTypeConnectorRef, Resources } from '@pipeline/components/Pipe
 import type { StringsMap } from 'stringTypes'
 import { GCSStepBaseWithRef } from './GCSStepBase'
 import { GCSStepInputSet } from './GCSStepInputSet'
-import { GCSStepVariables, GCSStepVariablesProps } from './GCSStepVariables'
+import type { GCSStepVariablesProps } from './GCSStepVariables';
+import { GCSStepVariables } from './GCSStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './GCSStepFunctionConfigs'
 
 export interface GCSStepSpec {

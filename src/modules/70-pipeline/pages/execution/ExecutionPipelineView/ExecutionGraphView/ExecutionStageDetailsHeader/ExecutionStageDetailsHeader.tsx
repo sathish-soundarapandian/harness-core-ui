@@ -18,7 +18,8 @@ import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/type
 import factory from '@pipeline/factories/ExecutionFactory'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { Duration } from '@common/components/Duration/Duration'
-import { ExecutionStatus, isExecutionFailed, isExecutionComplete } from '@pipeline/utils/statusHelpers'
+import type { ExecutionStatus} from '@pipeline/utils/statusHelpers';
+import { isExecutionFailed, isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { usePermission } from '@rbac/hooks/usePermission'

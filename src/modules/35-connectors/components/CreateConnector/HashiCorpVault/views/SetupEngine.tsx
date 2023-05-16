@@ -7,6 +7,10 @@
 
 import React, { useState, useEffect } from 'react'
 import * as Yup from 'yup'
+import type {
+  StepProps,
+  SelectOption,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Container,
   Text,
@@ -15,10 +19,7 @@ import {
   Button,
   Layout,
   FormInput,
-  StepProps,
-  SelectOption,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   ButtonVariation,
   shouldShowError,
   getErrorInfoFromErrorObject
@@ -26,27 +27,30 @@ import {
 import type { IOptionProps } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   StepDetailsProps,
   ConnectorDetailsProps,
-  SetupEngineFormData,
+  SetupEngineFormData} from '@connectors/interfaces/ConnectorInterface';
+import {
   HashiCorpVaultAccessTypes
 } from '@connectors/interfaces/ConnectorInterface'
 import { setupEngineFormData, buildVaultPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { PageSpinner } from '@common/components'
-import {
-  useGetMetadata,
+import type {
   VaultMetadataRequestSpecDTO,
   VaultAppRoleCredentialDTO,
   VaultAuthTokenCredentialDTO,
   VaultMetadataSpecDTO,
-  useCreateConnector,
-  useUpdateConnector,
   ConnectorRequestBody,
   ConnectorConfigDTO,
   VaultAwsIamRoleCredentialDTO,
   VaultAgentCredentialDTO,
   VaultK8sCredentialDTO
+} from 'services/cd-ng';
+import {
+  useGetMetadata,
+  useCreateConnector,
+  useUpdateConnector
 } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'

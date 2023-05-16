@@ -6,15 +6,16 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   Button,
   Formik,
   FormInput,
   Text,
-  StepProps,
   Container,
-  SelectOption,
   ButtonVariation
 } from '@harness/uicore'
 import * as Yup from 'yup'
@@ -23,7 +24,8 @@ import { FontVariation } from '@harness/design-system'
 import { setupArtifactoryFormData, useGetHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ConnectorConfigDTO, ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import TextReference, { ValueType, TextReferenceInterface } from '@secrets/components/TextReference/TextReference'
+import type { TextReferenceInterface } from '@secrets/components/TextReference/TextReference';
+import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
@@ -32,7 +34,8 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
-import { ModalViewFor, shouldHideHeaderAndNavBtns } from '../../CreateConnectorUtils'
+import type { ModalViewFor} from '../../CreateConnectorUtils';
+import { shouldHideHeaderAndNavBtns } from '../../CreateConnectorUtils'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../../NexusConnector/StepAuth/StepNexusConnector.module.scss'
 

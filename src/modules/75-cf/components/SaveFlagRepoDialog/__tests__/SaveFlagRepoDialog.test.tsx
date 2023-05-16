@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { render, screen, waitFor, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
-import SaveFlagRepoDialog, { SaveFlagRepoDialogProps } from '../SaveFlagRepoDialog'
+import type { SaveFlagRepoDialogProps } from '../SaveFlagRepoDialog';
+import SaveFlagRepoDialog from '../SaveFlagRepoDialog'
 import gitSyncReposMock from './gitSyncRepos_multi.json'
 
 jest.mock('framework/GitRepoStore/GitSyncStoreContext', () => ({

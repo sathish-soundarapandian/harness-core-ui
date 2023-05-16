@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, RenderResult, queryByAttribute, getByText } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, act, fireEvent, queryByAttribute, getByText } from '@testing-library/react'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps, resourceGroupPathProps } from '@common/utils/routeUtils'

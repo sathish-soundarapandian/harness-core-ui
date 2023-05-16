@@ -6,12 +6,13 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Container,
   Formik,
   FormikForm as Form,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   Layout,
   FormInput
 } from '@harness/uicore'
@@ -24,9 +25,11 @@ import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { IdentifierSchema } from '@common/utils/Validation'
 import { FooterRenderer } from '@filestore/common/ModalComponents/ModalComponents'
-import { NGTag, useCreate, useUpdate } from 'services/cd-ng'
+import type { NGTag} from 'services/cd-ng';
+import { useCreate, useUpdate } from 'services/cd-ng'
 import { getFileUsageNameByType, prepareFileValues } from '@filestore/utils/FileStoreUtils'
-import { FileStoreNodeTypes, FileUsage, NewFileDTO, NewFileFormDTO } from '@filestore/interfaces/FileStore'
+import type { NewFileDTO, NewFileFormDTO } from '@filestore/interfaces/FileStore';
+import { FileStoreNodeTypes, FileUsage } from '@filestore/interfaces/FileStore'
 import type { FileStoreContextState, FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { FILE_STORE_ROOT, SEARCH_FILES } from '@filestore/utils/constants'
 import css from '../useNewNodeModal.module.scss'

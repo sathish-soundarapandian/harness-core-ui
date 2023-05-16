@@ -11,10 +11,11 @@ import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/p
 import { useStrings } from 'framework/strings'
 import { buildGcpKmsPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import type {
+  CreateConnectorModalProps} from '@connectors/constants';
 import {
   Connectors,
   CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
-  CreateConnectorModalProps,
   TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'

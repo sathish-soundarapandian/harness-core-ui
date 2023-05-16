@@ -35,11 +35,12 @@ import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/Exec
 import { checkIfInstanceCanBeRolledBackPromise, triggerRollbackPromise } from 'services/cd-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
-import {
+import type {
   CellProps,
   CellType,
   PostProdRollbackListTableProps,
-  PostProdTableData,
+  PostProdTableData} from './PostProdRollbackUtil';
+import {
   columnWidth
 } from './PostProdRollbackUtil'
 import { RenderArtifact, RenderEnv, RenderInfra, RenderInstanceCount } from '../ServiceDetailsEnvTable'

@@ -5,15 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
+import type {
   StepProps,
+  SelectOption} from '@harness/uicore';
+import {
   Layout,
   Text,
   Container,
   FormInput,
   Formik,
   Button,
-  SelectOption,
   ButtonVariation,
   PageSpinner,
   ThumbnailSelect
@@ -24,7 +25,8 @@ import { FontVariation, Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorConfigDTO } from 'services/cd-ng'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import { setupKubFormData, DelegateCardInterface } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import type { DelegateCardInterface } from '@connectors/pages/connectors/utils/ConnectorUtils';
+import { setupKubFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import { useStrings } from 'framework/strings'
@@ -32,7 +34,8 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
-import TextReference, { ValueType, TextReferenceInterface } from '@secrets/components/TextReference/TextReference'
+import type { TextReferenceInterface } from '@secrets/components/TextReference/TextReference';
+import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'
 import { URLValidationSchema } from '@common/utils/Validation'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'

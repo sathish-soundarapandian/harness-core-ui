@@ -7,12 +7,14 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  ExpandingSearchInputHandle,
+  SelectOption
+} from '@harness/uicore';
 import {
   ButtonVariation,
   Checkbox,
-  ExpandingSearchInput,
-  ExpandingSearchInputHandle,
-  SelectOption
+  ExpandingSearchInput
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -31,7 +33,8 @@ import { getFeaturePropsForRunPipelineButton, getRbacButtonModules } from '@pipe
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { Page } from '@common/exports'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { GetListOfExecutionsQueryParams, useGetExecutionRepositoriesList } from 'services/pipeline-ng'
+import type { GetListOfExecutionsQueryParams} from 'services/pipeline-ng';
+import { useGetExecutionRepositoriesList } from 'services/pipeline-ng'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

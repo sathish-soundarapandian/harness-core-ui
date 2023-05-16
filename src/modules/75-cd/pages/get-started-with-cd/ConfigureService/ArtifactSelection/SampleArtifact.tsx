@@ -14,12 +14,14 @@ import produce from 'immer'
 import { useFormikContext } from 'formik'
 import useCreateEditConnector from '@connectors/hooks/useCreateEditConnector'
 import { buildDockerPayload, DockerProviderType } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { DelegateSelectorStepData } from './ArtifactAuthStep'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
+import type {
+  ServiceDataType} from '../../CDOnboardingUtils';
 import {
-  ServiceDataType,
   SAMPLE_DOCKER_CONNECTOR_NAME,
   getUniqueEntityIdentifier,
   SAMPLE_ARTIFACT_NAME

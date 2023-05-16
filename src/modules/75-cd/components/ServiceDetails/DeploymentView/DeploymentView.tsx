@@ -13,9 +13,10 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
-import {
+import type {
   EnvironmentInfoByServiceId,
-  GetEnvArtifactDetailsByServiceIdQueryParams,
+  GetEnvArtifactDetailsByServiceIdQueryParams} from 'services/cd-ng';
+import {
   useGetEnvArtifactDetailsByServiceId
 } from 'services/cd-ng'
 import css from '@cd/components/ServiceDetails/DeploymentView/DeploymentView.module.scss'

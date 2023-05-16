@@ -8,7 +8,8 @@
 import React, { useCallback } from 'react'
 import cx from 'classnames'
 import { isEmpty, isNull, isUndefined } from 'lodash-es'
-import { Button, FormInput, Layout, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Button, FormInput, Layout } from '@harness/uicore'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import type { ServiceNowFieldNG } from 'services/cd-ng'

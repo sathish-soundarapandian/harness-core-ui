@@ -10,7 +10,8 @@ import { render, screen, within } from '@testing-library/react'
 
 import userEvent from '@testing-library/user-event'
 import type { ResponseWaitStepExecutionDetailsDto } from 'services/pipeline-ng'
-import { TestWrapper, UseGetMockData } from '@common/utils/testUtils'
+import type { UseGetMockData } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 
 import { WaitStepView } from '../WaitStepView/WaitStepView'

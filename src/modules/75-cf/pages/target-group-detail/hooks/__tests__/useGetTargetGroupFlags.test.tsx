@@ -5,13 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { act, renderHook as render, RenderHookResult } from '@testing-library/react-hooks'
+import type { RenderHookResult } from '@testing-library/react-hooks';
+import { act, renderHook as render } from '@testing-library/react-hooks'
 import type { Feature, Features } from 'services/cf'
 import * as cfServices from 'services/cf'
 import { mockFeatures, mockSegmentFlags, mockTargetGroup } from '@cf/pages/target-group-detail/__tests__/mocks'
-import useGetTargetGroupFlags, {
+import type {
   UseGetTargetGroupFlagsPayload
-} from '@cf/pages/target-group-detail/hooks/useGetTargetGroupFlags'
+} from '@cf/pages/target-group-detail/hooks/useGetTargetGroupFlags';
+import useGetTargetGroupFlags from '@cf/pages/target-group-detail/hooks/useGetTargetGroupFlags'
 
 const mockResponse = (flags: Feature[] = mockFeatures): Features =>
   ({

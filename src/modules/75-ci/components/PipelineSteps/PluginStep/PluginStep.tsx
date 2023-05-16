@@ -26,7 +26,8 @@ import type {
 import type { StringsMap } from 'stringTypes'
 import { PluginStepBaseWithRef } from './PluginStepBase'
 import { PluginStepInputSet } from './PluginStepInputSet'
-import { PluginStepVariables, PluginStepVariablesProps } from './PluginStepVariables'
+import type { PluginStepVariablesProps } from './PluginStepVariables';
+import { PluginStepVariables } from './PluginStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './PluginStepFunctionConfigs'
 
 export interface PluginStepSpec {

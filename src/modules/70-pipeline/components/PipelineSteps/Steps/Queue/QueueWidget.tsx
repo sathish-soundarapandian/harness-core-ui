@@ -11,7 +11,8 @@ import * as Yup from 'yup'
 import cx from 'classnames'
 import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -19,7 +20,8 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { QueueProps, QueueData, getScopeOptions } from './helper'
+import type { QueueProps, QueueData} from './helper';
+import { getScopeOptions } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function QueueWidget(props: QueueProps, formikRef: StepFormikFowardRef<QueueData>): React.ReactElement {

@@ -10,27 +10,33 @@ import { defaultTo, set, get, isEmpty } from 'lodash-es'
 import { parse } from 'yaml'
 import type { FormikErrors } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import {
+import type {
   ServiceSpec,
-  getConnectorListV2Promise,
   ResponsePageConnectorResponse,
   ConnectorResponse,
   ResponseArtifactoryResponseDTO,
   ArtifactoryBuildDetailsDTO
+} from 'services/cd-ng';
+import {
+  getConnectorListV2Promise
 } from 'services/cd-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
-import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
+import type { ValidateInputSetProps, StepProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType, Step } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { K8SDirectServiceStep } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import { getConnectorName, getConnectorValue } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
-import {
-  GenericServiceSpecVariablesForm,
+import type {
   K8sServiceSpecVariablesFormProps
+} from '../../Common/GenericServiceSpec/GenericServiceSpecVariablesForm';
+import {
+  GenericServiceSpecVariablesForm
 } from '../../Common/GenericServiceSpec/GenericServiceSpecVariablesForm'
 import { GenericServiceSpecInputSetMode } from '../../Common/GenericServiceSpec/GenericServiceSpecInputSetMode'
 import type { ValidateInputSetFieldArgs } from '../../Common/types'

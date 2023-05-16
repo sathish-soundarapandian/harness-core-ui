@@ -6,15 +6,16 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
   MultiTypeInputType,
-  SelectOption,
   getMultiTypeFromValue,
   FormInput,
   FormikForm
@@ -26,19 +27,21 @@ import { defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import type { FormikProps } from 'formik'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 
-import {
+import type {
   ConnectorConfigDTO,
   BuildDetails,
+  AzureDevopsProject,
+  AzureArtifactsFeed,
+  AzureArtifactsPackage} from 'services/cd-ng';
+import {
   useListProjectsForAzureArtifacts,
   useListFeedsForAzureArtifacts,
   useListPackagesForAzureArtifacts,
-  AzureDevopsProject,
-  AzureArtifactsFeed,
-  AzureArtifactsPackage,
   useListVersionsFromPackage
 } from 'services/cd-ng'
 import {

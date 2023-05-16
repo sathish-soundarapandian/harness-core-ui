@@ -12,9 +12,10 @@ import { Color } from '@harness/design-system'
 import type { Renderer, CellProps, Row } from 'react-table'
 import type { RadioButtonProps } from '@harness/uicore/dist/components/RadioButton/RadioButton'
 import type { SLODashboardApiFilter, SLOError, SLOTargetFilterDTO } from 'services/cv'
-import {
+import type {
   SLOObjective,
-  SLOV2Form,
+  SLOV2Form} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types';
+import {
   PeriodTypes,
   PeriodLengthTypes,
   SLOFormulaType

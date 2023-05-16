@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
-import {
+import type {
   ResponseApprovalInstanceResponse,
-  ResponseHarnessApprovalInstanceAuthorization,
+  ResponseHarnessApprovalInstanceAuthorization} from 'services/pipeline-ng';
+import {
   useGetApprovalInstance,
   useGetHarnessApprovalInstanceAuthorization
 } from 'services/pipeline-ng'

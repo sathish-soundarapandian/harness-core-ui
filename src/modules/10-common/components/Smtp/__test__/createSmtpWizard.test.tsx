@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, fireEvent, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import CreateSmtpWizard from '../CreateSmtpWizard'
 let validateNameCalled = false

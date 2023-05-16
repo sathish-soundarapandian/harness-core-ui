@@ -16,8 +16,9 @@ import { useParams } from 'react-router-dom'
 import type { HideModal } from '@harness/use-modal'
 import DelegatesEmptyState from '@delegates/images/DelegatesEmptyState.svg'
 import { useStrings } from 'framework/strings'
+import type {
+  GenerateKubernetesYamlQueryParams} from 'services/portal';
 import {
-  GenerateKubernetesYamlQueryParams,
   useGenerateKubernetesYaml,
   useGetInstallationCommand
 } from 'services/portal'

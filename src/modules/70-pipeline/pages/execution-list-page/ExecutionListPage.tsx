@@ -9,7 +9,8 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { HarnessDocTooltip } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
 import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'

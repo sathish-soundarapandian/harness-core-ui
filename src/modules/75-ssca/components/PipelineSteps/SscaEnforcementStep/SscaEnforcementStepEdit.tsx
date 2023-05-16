@@ -6,7 +6,8 @@
  */
 
 import { Color, FontVariation } from '@harness/design-system'
-import { Accordion, FormInput, Formik, FormikForm, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore'
+import { Accordion, FormInput, Formik, FormikForm, Text } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import React from 'react'
 import { useParams } from 'react-router-dom'
@@ -16,7 +17,8 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { Connectors } from '@connectors/constants'
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import { FileUsage } from '@filestore/interfaces/FileStore'
-import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import {
   getFormValuesInCorrectFormat,
   getInitialValuesInCorrectFormat

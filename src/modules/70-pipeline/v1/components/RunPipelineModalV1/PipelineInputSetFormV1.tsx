@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Layout, MultiTypeInputType } from '@harness/uicore'
 import cx from 'classnames'
 import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'

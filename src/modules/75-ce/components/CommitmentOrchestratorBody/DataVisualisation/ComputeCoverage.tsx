@@ -10,8 +10,9 @@ import type { Column as TableColumn } from 'react-table'
 import { Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
+import type {
+  Column} from '@ce/components/PerspectiveGrid/Columns';
 import {
-  Column,
   getFixedDecimalData,
   RenderCostCell,
   RenderNameCell,

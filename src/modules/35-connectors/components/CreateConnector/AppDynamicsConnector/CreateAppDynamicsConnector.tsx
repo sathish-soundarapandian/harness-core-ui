@@ -17,9 +17,11 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import type { ConnectionConfigProps } from '../CommonCVConnector/constants'
 import { cvConnectorHOC } from '../CommonCVConnector/CVConnectorHOC'
-import {
-  ConnectorSecretField,
+import type {
   ConnectorSecretFieldProps
+} from '../CommonCVConnector/components/ConnectorSecretField/ConnectorSecretField';
+import {
+  ConnectorSecretField
 } from '../CommonCVConnector/components/ConnectorSecretField/ConnectorSecretField'
 import { initializeAppDConnector } from './utils'
 import { StepDetailsHeader } from '../CommonCVConnector/components/CredentialsStepHeader/CredentialsStepHeader'

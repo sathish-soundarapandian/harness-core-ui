@@ -26,7 +26,11 @@ import type { FormikProps } from 'formik'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import { flushSync } from 'react-dom'
-import type { InputSetResponse, PipelineConfig, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { InputSetResponse, PipelineConfig, PipelineInfoConfig ,
+  ResponseInputSetResponse,
+  ResponsePMSPipelineResponseDTO,
+  ResponseInputSetTemplateWithReplacedExpressionsResponse
+} from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   useGetTemplateFromPipeline,
@@ -34,10 +38,7 @@ import {
   useCreateInputSetForPipeline,
   useGetInputSetForPipeline,
   useUpdateInputSetForPipeline,
-  ResponseInputSetResponse,
-  useGetMergeInputSetFromPipelineTemplateWithListInput,
-  ResponsePMSPipelineResponseDTO,
-  ResponseInputSetTemplateWithReplacedExpressionsResponse
+  useGetMergeInputSetFromPipelineTemplateWithListInput
 } from 'services/pipeline-ng'
 
 import { useToaster } from '@common/exports'
@@ -58,7 +59,8 @@ import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/ho
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
 import { parse, stringify, yamlParse } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
 import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
@@ -75,9 +77,11 @@ import FormikInputSetForm from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
 import { PipelineVariablesContextProvider } from '../PipelineVariablesContext/PipelineVariablesContext'
 import { OutOfSyncErrorStrip } from '../InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
-import {
-  EntityCachedCopy,
+import type {
   EntityCachedCopyHandle
+} from '../PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy';
+import {
+  EntityCachedCopy
 } from '../PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import css from './InputSetForm.module.scss'
 

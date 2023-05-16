@@ -8,11 +8,13 @@
 import type { CVNGNotificationChannel, NotificationRuleCondition, NotificationRuleDTORequestBody } from 'services/cv'
 import { defaultOption } from '../../NotificationsContainer.constants'
 import type { NotificationConditionRow, SRMNotification } from '../../NotificationsContainer.types'
-import {
-  allEventsTypeOption,
+import type {
   ChangeType,
   EventStatus,
   EventType
+} from '../ConfigureMonitoredServiceAlertConditions/ConfigureMonitoredServiceAlertConditions.constants';
+import {
+  allEventsTypeOption
 } from '../ConfigureMonitoredServiceAlertConditions/ConfigureMonitoredServiceAlertConditions.constants'
 
 export const createNotificationsPayload = (

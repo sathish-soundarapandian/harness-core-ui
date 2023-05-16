@@ -6,18 +6,22 @@
  */
 
 import { Card, Container, Formik, FormikForm, Layout } from '@harness/uicore'
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
-import { FieldArray, FieldArrayRenderProps } from 'formik'
+import type { FieldArrayRenderProps } from 'formik';
+import { FieldArray } from 'formik'
 import FlagToggleSwitch from '@cf/components/EditFlagTabs/FlagToggleSwitch'
-import {
+import type {
   Feature,
   GetAllSegmentsQueryParams,
   GetAllTargetsQueryParams,
-  useGetAllSegments,
-  useGetAllTargets,
   Variation
+} from 'services/cf';
+import {
+  useGetAllSegments,
+  useGetAllTargets
 } from 'services/cf'
 import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
@@ -26,7 +30,8 @@ import usePatchFeatureFlag from './hooks/usePatchFeatureFlag'
 import TargetingRulesTabFooter from './components/tab-targeting-footer/TargetingRulesTabFooter'
 
 import FlagEnabledRulesCard from './components/flag-enabled-rules-card/FlagEnabledRulesCard'
-import { FormVariationMap, VariationPercentageRollout, TargetingRuleItemType, TargetingRuleItemStatus } from './types'
+import type { FormVariationMap, VariationPercentageRollout} from './types';
+import { TargetingRuleItemType, TargetingRuleItemStatus } from './types'
 import useFeatureEnabled from './hooks/useFeatureEnabled'
 import DefaultRules from './components/default-rules/DefaultRules'
 import useTargetingRulesFormValidation from './hooks/useTargetingRulesFormValidation'

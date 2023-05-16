@@ -12,7 +12,8 @@ import type { SelectOption } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { FlagTypeVariations } from '@cf/components/CreateFlagDialog/FlagDialogUtils'
 import { FeatureFlagMutivariateKind } from '@cf/utils/CFUtils'
-import FlagElemMultivariate, { FlagElemMultivariateProps } from '../FlagElemMultivariate'
+import type { FlagElemMultivariateProps } from '../FlagElemMultivariate';
+import FlagElemMultivariate from '../FlagElemMultivariate'
 
 const renderComponent = (props: Partial<FlagElemMultivariateProps> = {}): void => {
   const flagTypeOptionsMock: SelectOption[] = [

@@ -8,7 +8,8 @@
 import React from 'react'
 import languageLoader from './languageLoader'
 
-import { StringsContext, StringsContextValue } from './StringsContext'
+import type { StringsContextValue } from './StringsContext';
+import { StringsContext } from './StringsContext'
 
 export interface StringsContextProviderProps extends Pick<StringsContextValue, 'getString'> {
   children: React.ReactNode

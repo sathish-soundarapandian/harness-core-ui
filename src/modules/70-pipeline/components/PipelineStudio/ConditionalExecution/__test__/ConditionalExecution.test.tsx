@@ -8,7 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import ConditionalExecution, { ConditionalExecutionProps } from '../ConditionalExecution'
+import type { ConditionalExecutionProps } from '../ConditionalExecution';
+import ConditionalExecution from '../ConditionalExecution'
 
 const getProps = (hasData: boolean): ConditionalExecutionProps => ({
   onUpdate: jest.fn(),

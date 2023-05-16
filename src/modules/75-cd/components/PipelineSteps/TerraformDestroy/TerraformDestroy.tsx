@@ -6,26 +6,32 @@
  */
 
 import React from 'react'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 
 import { isEmpty } from 'lodash-es'
-import { yupToFormErrors, FormikErrors } from 'formik'
+import type { FormikErrors } from 'formik';
+import { yupToFormErrors } from 'formik'
 
-import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { StepProps } from '@pipeline/components/PipelineSteps/PipelineStep';
+import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { StringsMap } from 'stringTypes'
 import TerraformInputStep from '../Common/Terraform/TerraformInputStep'
 import { TerraformVariableStep } from '../Common/Terraform/TerraformVariableView'
-import {
-  getTerraformInitialValues,
-  onSubmitTerraformData,
+import type {
   TerraformData,
   TerraformVariableStepProps
+} from '../Common/Terraform/TerraformInterfaces';
+import {
+  getTerraformInitialValues,
+  onSubmitTerraformData
 } from '../Common/Terraform/TerraformInterfaces'
 
 import TerraformEditView from '../Common/Terraform/Editview/TerraformEditView'

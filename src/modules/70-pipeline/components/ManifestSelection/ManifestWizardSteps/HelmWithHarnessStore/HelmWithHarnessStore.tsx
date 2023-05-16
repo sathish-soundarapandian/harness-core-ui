@@ -6,9 +6,11 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  AllowedTypes,
+  StepProps} from '@harness/uicore';
 import {
   Accordion,
-  AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
@@ -17,7 +19,6 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  StepProps,
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'

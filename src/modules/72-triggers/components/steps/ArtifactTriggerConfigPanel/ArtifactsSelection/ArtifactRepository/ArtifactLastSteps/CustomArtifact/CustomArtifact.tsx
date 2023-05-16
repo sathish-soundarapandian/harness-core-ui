@@ -6,15 +6,16 @@
  */
 
 import React from 'react'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
   FormInput,
-  SelectOption,
   FormikForm,
   MultiTypeInputType
 } from '@harness/uicore'
@@ -26,7 +27,8 @@ import { useStrings } from 'framework/strings'
 import type { VariableInterface } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import type { ScriptType} from '@common/components/ShellScriptMonaco/ShellScriptMonaco';
+import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import type { CustomArtifactSpec } from 'services/pipeline-ng'
 import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ImagePathProps } from '../../../ArtifactInterface'

@@ -11,7 +11,8 @@ import type { IconProps } from '@harness/icons'
 import type { FormikProps } from 'formik'
 import { Color } from '@harness/design-system'
 import { NameIdDescriptionTags } from '@common/components'
-import { SetupSourceCardHeader, SetupSourceCardHeaderProps } from '../SetupSourceCardHeader/SetupSourceCardHeader'
+import type { SetupSourceCardHeaderProps } from '../SetupSourceCardHeader/SetupSourceCardHeader';
+import { SetupSourceCardHeader } from '../SetupSourceCardHeader/SetupSourceCardHeader'
 import css from './DefineYourMonitoringSource.module.scss'
 
 export interface DefineYourMonitoringSourceProps extends SetupSourceCardHeaderProps {

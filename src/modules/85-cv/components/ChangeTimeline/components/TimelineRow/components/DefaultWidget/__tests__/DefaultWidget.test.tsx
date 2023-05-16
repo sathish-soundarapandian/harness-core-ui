@@ -8,7 +8,8 @@
 import React from 'react'
 import { fireEvent, render, waitFor, act } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import DefaultWidget, { DefaultWidgetProps } from '../DefaultWidget'
+import type { DefaultWidgetProps } from '../DefaultWidget';
+import DefaultWidget from '../DefaultWidget'
 
 function WrapperComponent(props: DefaultWidgetProps): JSX.Element {
   return (

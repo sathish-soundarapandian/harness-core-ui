@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { SnykStepBaseWithRef } from './SnykStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { SnykStepVariables, SnykStepVariablesProps } from './SnykStepVariables'
+import type { SnykStepVariablesProps } from './SnykStepVariables';
+import { SnykStepVariables } from './SnykStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SnykStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

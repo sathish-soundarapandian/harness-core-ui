@@ -1,7 +1,8 @@
 import React from 'react'
-import {
+import type {
   AllowedTypes,
-  AllowedTypesWithRunTime,
+  AllowedTypesWithRunTime} from '@harness/uicore';
+import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE

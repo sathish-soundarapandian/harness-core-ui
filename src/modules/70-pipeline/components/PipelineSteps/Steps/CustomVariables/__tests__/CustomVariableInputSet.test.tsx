@@ -11,10 +11,12 @@ import userEvent from '@testing-library/user-event'
 import { Formik } from 'formik'
 import { MultiTypeInputType } from '@harness/uicore'
 
-import { findPopoverContainer, TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { parseInput, InputSetFunction } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import ipsWithDefaultValues from './inputSetsWithDefaultValues.json'
-import { CustomVariableInputSet, CustomVariablesData } from '../CustomVariableInputSet'
+import type { CustomVariablesData } from '../CustomVariableInputSet';
+import { CustomVariableInputSet } from '../CustomVariableInputSet'
 import {
   concatValuesWithQuotes,
   MultiSelectVariableAllowedValues

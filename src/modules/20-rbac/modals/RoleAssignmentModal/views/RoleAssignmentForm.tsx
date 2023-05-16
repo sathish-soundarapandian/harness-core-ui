@@ -6,13 +6,14 @@
  */
 
 import React, { useMemo, useState } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Container,
   Layout,
   Text,
   FieldArray,
   Select,
-  SelectOption,
   Button,
   ButtonVariation,
   useToaster,

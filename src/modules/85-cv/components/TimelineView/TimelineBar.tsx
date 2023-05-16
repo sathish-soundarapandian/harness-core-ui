@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useRef, useMemo, CSSProperties } from 'react'
-import { extendMoment, DateRange } from 'moment-range'
+import type { CSSProperties } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react'
+import type { DateRange } from 'moment-range';
+import { extendMoment } from 'moment-range'
 import classnames from 'classnames'
 import styles from './TimelineView.module.scss'
 

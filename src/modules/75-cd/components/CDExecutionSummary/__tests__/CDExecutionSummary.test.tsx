@@ -13,7 +13,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { CDExecutionSummary } from '../CDExecutionSummary'
 import { EnvironmentsList } from '../EnvironmentsList'
 import { ServicesList } from '../ServicesList'
-import { ServicesTableProps, ServicesTable } from '../ServicesTable'
+import type { ServicesTableProps} from '../ServicesTable';
+import { ServicesTable } from '../ServicesTable'
 import props from './props.json'
 
 const environmentProps = {

@@ -8,7 +8,8 @@
 import React from 'react'
 import { act, fireEvent, render } from '@testing-library/react'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
-import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
+import type { UseGetReturnData } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { getDummyPipelineContextValue } from '@ci/components/PipelineStudio/BuildStageSpecifications/__test__/BuildStageSpecificationsTestHelpers'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { EditStageView } from '../EditStageView'

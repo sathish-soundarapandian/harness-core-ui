@@ -10,16 +10,20 @@ import { Button, ButtonVariation, Container, Popover, useToaster } from '@harnes
 import { chunk, defaultTo } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { IconName, Menu, Position } from '@blueprintjs/core'
+import type { IconName} from '@blueprintjs/core';
+import { Menu, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import {
-  useHandleManualInterventionInterrupt,
+import type {
   ExecutionNode,
   HandleManualInterventionInterruptQueryParams,
   ExecutionGraph
+} from 'services/pipeline-ng';
+import {
+  useHandleManualInterventionInterrupt
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { Strategy, strategyIconMap, stringsMap, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
+import type { StrategyType } from '@pipeline/utils/FailureStrategyUtils';
+import { Strategy, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
 import { Duration } from '@common/exports'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { StageType } from '@pipeline/utils/stageHelpers'

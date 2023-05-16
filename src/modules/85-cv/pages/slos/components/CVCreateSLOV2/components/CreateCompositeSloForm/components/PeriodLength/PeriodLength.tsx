@@ -8,7 +8,8 @@
 import React, { useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import { Container } from '@harness/uicore'
-import { PeriodTypes, SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import type { SLOV2Form} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types';
+import { PeriodTypes, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { SloPeriodLength } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
 
 interface PeriodInterface {

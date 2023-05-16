@@ -12,13 +12,14 @@ import { defaultTo, get, isEmpty, isUndefined, merge, noop, omit, omitBy } from 
 import { parse } from 'yaml' // Use parse from yaml helper
 import { CompletionItemKind } from 'vscode-languageserver-types'
 
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   Text,
   useConfirmationDialog,
   useToaster,
@@ -26,11 +27,12 @@ import {
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 
-import {
+import type {
   NGTriggerConfigV2,
   NGTriggerSourceV2,
   PipelineInfoConfig,
-  ResponseNGTriggerResponse,
+  ResponseNGTriggerResponse} from 'services/pipeline-ng';
+import {
   useCreateTrigger,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   useGetPipeline,
@@ -38,7 +40,8 @@ import {
   useGetTemplateFromPipeline,
   useUpdateTrigger
 } from 'services/pipeline-ng'
-import { Failure, getConnectorListV2Promise, GetConnectorQueryParams, useGetConnector } from 'services/cd-ng'
+import type { Failure, GetConnectorQueryParams} from 'services/cd-ng';
+import { getConnectorListV2Promise, useGetConnector } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
 import type {
@@ -89,11 +92,12 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import useTriggerView from '@common/components/Wizard/useTriggerView'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
-import {
+import type {
   ConnectorRefInterface,
-  eventTypes,
   FlatInitialValuesInterface,
-  FlatOnEditValuesInterface,
+  FlatOnEditValuesInterface} from './utils';
+import {
+  eventTypes,
   flattenKeys,
   getDefaultPipelineReferenceBranch,
   getModifiedTemplateValues,

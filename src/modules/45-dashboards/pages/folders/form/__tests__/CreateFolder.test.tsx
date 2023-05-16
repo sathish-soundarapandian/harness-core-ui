@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useStrings } from 'framework/strings'
 import * as customDashboardServices from 'services/custom-dashboards'
-import CreateFolder, { CreateFolderProps } from '../CreateFolder'
+import type { CreateFolderProps } from '../CreateFolder';
+import CreateFolder from '../CreateFolder'
 
 const defaultProps: CreateFolderProps = {
   onFormCompleted: jest.fn()

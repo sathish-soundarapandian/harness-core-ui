@@ -7,19 +7,19 @@
 
 import React, { useMemo, useState, useRef, useEffect, useCallback } from 'react'
 import {
-  IconName,
   Layout,
   Formik,
   FormikForm,
   FormInput,
   MultiTypeInputType,
-  SelectOption,
   getMultiTypeFromValue,
   Text,
   RUNTIME_INPUT_VALUE,
   Container
 } from '@harness/uicore'
-import type { AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes ,
+  IconName,
+  SelectOption} from '@harness/uicore'
 import { parse } from 'yaml'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
@@ -28,16 +28,19 @@ import type { FormikContextType, FormikErrors, FormikProps } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import { useStrings, UseStringsReturn } from 'framework/strings'
-import {
-  getConnectorListV2Promise,
-  listSecretsV2Promise,
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
+import type {
   ConnectorResponse,
   SecretResponseWrapper,
   SshWinRmAwsInfrastructure,
-  useRegionsForAws,
-  useTags,
   ExecutionElementConfig
+} from 'services/cd-ng';
+import {
+  getConnectorListV2Promise,
+  listSecretsV2Promise,
+  useRegionsForAws,
+  useTags
 } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -49,11 +52,13 @@ import MultiTypeSecretInput, {
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
+import type {
+  ConnectorReferenceDTO} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField';
 import {
-  ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'

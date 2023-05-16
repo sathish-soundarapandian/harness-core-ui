@@ -10,7 +10,8 @@ import type { Meta, Story } from '@storybook/react'
 
 import { Container } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import CreateOrSelectSecret, { CreateOrSelectSecretProps } from './CreateOrSelectSecret'
+import type { CreateOrSelectSecretProps } from './CreateOrSelectSecret';
+import CreateOrSelectSecret from './CreateOrSelectSecret'
 
 export default {
   title: 'Secrets / CreateOrSelectSecret',

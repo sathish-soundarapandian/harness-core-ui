@@ -6,11 +6,12 @@
  */
 
 import { get } from 'lodash-es'
-import {
-  Utils,
+import type {
   Views,
   SelectOption,
-  MultiSelectOption,
+  MultiSelectOption} from '@harness/uicore';
+import {
+  Utils,
   getMultiTypeFromValue,
   MultiTypeInputType
 } from '@harness/uicore'

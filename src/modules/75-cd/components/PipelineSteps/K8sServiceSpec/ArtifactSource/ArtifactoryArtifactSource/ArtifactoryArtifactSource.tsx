@@ -10,19 +10,14 @@ import { defaultTo, get, memoize, pick } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 
 import { parse } from 'yaml'
-import {
-  AllowedTypes,
-  FormInput,
-  getMultiTypeFromValue,
-  Layout,
-  MultiTypeInputType,
-  SelectOption
-} from '@harness/uicore'
+import type { AllowedTypes, SelectOption } from '@harness/uicore'
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import {
+import type {
   ArtifactoryImagePath,
   DeploymentStageConfig,
   Failure,
@@ -31,12 +26,14 @@ import {
   ResponseArtifactoryResponseDTO,
   ServiceSpec,
   SidecarArtifact,
+  ArtifactSource,
+  ArtifactListConfig
+} from 'services/cd-ng'
+import {
   useGetBuildDetailsForArtifactoryArtifactWithYaml,
   useGetImagePathsForArtifactoryV2,
   useGetBuildDetailsForArtifactoryArtifact,
   useGetImagePathsForArtifactory,
-  ArtifactListConfig,
-  ArtifactSource,
   useGetServiceV2
 } from 'services/cd-ng'
 
@@ -45,12 +42,8 @@ import { isArtifactInMultiService, repositoryFormat } from '@pipeline/components
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import {
-  getHelpeTextForTags,
-  isServerlessDeploymentType,
-  RepositoryFormatTypes,
-  ServiceDeploymentType
-} from '@pipeline/utils/stageHelpers'
+import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getHelpeTextForTags, isServerlessDeploymentType, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ServerlessArtifactoryRepository from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/Artifactory/ServerlessArtifactoryRepository'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'

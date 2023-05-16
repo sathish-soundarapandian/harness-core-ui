@@ -6,7 +6,8 @@
  */
 
 import { Layout, Container, Text, Icon, Heading } from '@harness/uicore'
-import React, { ReactElement, useState } from 'react'
+import type { ReactElement} from 'react';
+import React, { useState } from 'react'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import idleTimeIMG from './images/idleTime.svg'

@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { IconName, SelectOption, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
+import type { IconName, SelectOption, AllowedTypes } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
-import { connect, FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+import type { FormikErrors, FormikProps} from 'formik';
+import { connect, yupToFormErrors } from 'formik'
 import { isArray, isEmpty } from 'lodash-es'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -18,7 +20,8 @@ import type { StringsMap } from 'stringTypes'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { BambooStepBaseWithRef } from './BambooStepBase'
 import BambooStepInputStep from './BambooStepInputSet'
-import { BambooStepVariables, BambooStepVariablesProps } from './BambooStepVariables'
+import type { BambooStepVariablesProps } from './BambooStepVariables';
+import { BambooStepVariables } from './BambooStepVariables'
 import type { BambooStepData } from './types'
 import { variableSchema } from './helper'
 

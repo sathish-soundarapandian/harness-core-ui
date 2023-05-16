@@ -5,21 +5,24 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useState } from 'react'
-import { Classes, FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
+import type { IFormGroupProps} from '@blueprintjs/core';
+import { Classes, FormGroup, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
-import { FormikProps, useFormikContext } from 'formik'
+import type { FormikProps} from 'formik';
+import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
+import type {
+  DataTooltipInterface,
+  SelectOption} from '@harness/uicore';
 import {
   ButtonVariation,
   Container,
-  DataTooltipInterface,
   errorCheck,
   FormError,
   FormikTooltipContext,
   HarnessDocTooltip,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   Tag,
   Text
 } from '@harness/uicore'
@@ -29,11 +32,13 @@ import type { DeploymentMetaData, ResponsePageServiceResponse, ServiceResponseDT
 import RbacButton from '@rbac/components/Button/Button'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import {
+import type {
   Item,
-  MultiTypeReferenceInput,
   MultiTypeReferenceInputProps,
   ReferenceSelectProps
+} from '@common/components/ReferenceSelect/ReferenceSelect';
+import {
+  MultiTypeReferenceInput
 } from '@common/components/ReferenceSelect/ReferenceSelect'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'

@@ -8,12 +8,14 @@
 import React, { useState } from 'react'
 import cx from 'classnames'
 import { Menu } from '@blueprintjs/core'
-import { SelectOption, Layout, Text, Button, Avatar, Container, ButtonVariation } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, Text, Button, Avatar, Container, ButtonVariation } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import { Select } from '@blueprintjs/select'
 import { useToaster } from '@common/exports'
-import { useDeleteInvite, useUpdateInvite, Invite } from 'services/cd-ng'
+import type { Invite } from 'services/cd-ng';
+import { useDeleteInvite, useUpdateInvite } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { InviteType } from '@rbac/modals/RoleAssignmentModal/views/RoleAssignmentForm'

@@ -24,10 +24,12 @@ import { Color } from '@harness/design-system'
 import { Menu, MenuItem, Position } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
-import { getPipelineInputs, InputsResponseBody } from '@harnessio/react-pipeline-service-client'
+import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client';
+import { getPipelineInputs } from '@harnessio/react-pipeline-service-client'
 import { Page } from '@common/exports'
+import type {
+  InputSetSummaryResponse} from 'services/pipeline-ng';
 import {
-  InputSetSummaryResponse,
   useDeleteInputSetForPipeline,
   useGetInputSetsListForPipeline,
   useGetTemplateFromPipeline
@@ -54,7 +56,8 @@ import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { InputSetListView } from './InputSetListView'
-import { InputSetListQueryParams, useInputSetListQueryParamOptions } from './Util'
+import type { InputSetListQueryParams} from './Util';
+import { useInputSetListQueryParamOptions } from './Util'
 import css from './InputSetList.module.scss'
 
 function InputSetList(): React.ReactElement {

@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { deleteDB, IDBPDatabase, openDB } from 'idb'
+import type { IDBPDatabase} from 'idb';
+import { deleteDB, openDB } from 'idb'
 import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map, uniq } from 'lodash-es'
-import {
+import type {
   AllowedTypes,
   AllowedTypesWithRunTime,
-  IconName,
+  IconName} from '@harness/uicore';
+import {
   MultiTypeInputType,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
@@ -21,25 +23,27 @@ import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import SessionToken from 'framework/utils/SessionToken'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import {
+import type {
   PipelineInfoConfig,
   StageElementConfig,
   StageElementWrapperConfig,
   CreatePipelineQueryParams,
-  createPipelineV2Promise,
   EntityGitDetails,
   ErrorNodeSummary,
   EntityValidityDetails,
   Failure,
-  getPipelineSummaryPromise,
-  getPipelinePromise,
   GetPipelineQueryParams,
   PutPipelineQueryParams,
-  putPipelineV2Promise,
   ResponsePMSPipelineResponseDTO,
   YamlSchemaErrorWrapperDTO,
   ResponsePMSPipelineSummaryResponse,
   CacheResponseMetadata
+} from 'services/pipeline-ng';
+import {
+  createPipelineV2Promise,
+  getPipelineSummaryPromise,
+  getPipelinePromise,
+  putPipelineV2Promise
 } from 'services/pipeline-ng'
 import { useGlobalEventListener, useLocalStorage, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -50,31 +54,37 @@ import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import type {
+  TemplateServiceDataType
+} from '@pipeline/utils/templateUtils';
 import {
   getResolvedCustomDeploymentDetailsByRef,
-  getTemplateTypesByRef,
-  TemplateServiceDataType
+  getTemplateTypesByRef
 } from '@pipeline/utils/templateUtils'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import type { Pipeline, TemplateIcons } from '@pipeline/utils/types'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import {
+import type {
   ActionReturnType,
+  PipelineReducerState,
+  PipelineViewData,
+  SelectionState
+} from './PipelineActions';
+import {
   DefaultNewPipelineId,
   DefaultPipeline,
   DrawerTypes,
   initialState,
   PipelineContextActions,
-  PipelineReducer,
-  PipelineReducerState,
-  PipelineViewData,
-  SelectionState
+  PipelineReducer
 } from './PipelineActions'
 import type { AbstractStepFactory } from '../../AbstractSteps/AbstractStepFactory'
 import type { PipelineStagesProps } from '../../PipelineStages/PipelineStages'
-import { PipelineSelectionState, usePipelineQuestParamState } from '../PipelineQueryParamState/usePipelineQueryParam'
+import type { PipelineSelectionState} from '../PipelineQueryParamState/usePipelineQueryParam';
+import { usePipelineQuestParamState } from '../PipelineQueryParamState/usePipelineQueryParam'
 import {
   comparePipelines,
   getStageFromPipeline as _getStageFromPipeline,

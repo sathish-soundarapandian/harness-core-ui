@@ -7,7 +7,8 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { get, set, defaultTo, isEmpty, merge, unset, some, isUndefined } from 'lodash-es'
-import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import produce from 'immer'
@@ -16,19 +17,21 @@ import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 
-import {
+import type {
   ArtifactConfig,
   ArtifactListConfig,
   ArtifactSource,
   PageConnectorResponse,
   PrimaryArtifact,
   SidecarArtifact,
-  SidecarArtifactWrapper,
+  SidecarArtifactWrapper} from 'services/cd-ng';
+import {
   useGetConnectorListV2
 } from 'services/cd-ng'
 import type { TemplateStepNode, TemplateLinkConfig } from 'services/pipeline-ng'
 import { getTemplateInputSetYamlPromise } from 'services/template-ng'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
@@ -40,8 +43,9 @@ import { parse } from '@common/utils/YamlHelperMethods'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import type {
+  ArtifactConnectorStepDataToLastStep} from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps';
 import {
-  ArtifactConnectorStepDataToLastStep,
   useArtifactSelectionLastSteps
 } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'

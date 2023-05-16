@@ -9,7 +9,8 @@ import React, { Fragment, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { EXECUTION_TIME_INPUT_VALUE, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { useStrings, StringKeys } from 'framework/strings'
+import type { StringKeys } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
   GitQueryParams,

@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
-  StepProps,
   Layout,
   Button,
   ButtonVariation,
@@ -21,7 +22,8 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
-import { FormValues, Providers, SAMLProviderType } from '../utils'
+import type { FormValues, SAMLProviderType } from '../utils';
+import { Providers } from '../utils'
 import css from '../useSAMLProvider.module.scss'
 
 interface SelectProviderForm {

@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { SysdigStepBaseWithRef } from './SysdigStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { SysdigStepVariables, SysdigStepVariablesProps } from './SysdigStepVariables'
+import type { SysdigStepVariablesProps } from './SysdigStepVariables';
+import { SysdigStepVariables } from './SysdigStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SysdigStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

@@ -6,6 +6,10 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
 import {
   Text,
   Layout,
@@ -14,9 +18,7 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  Icon,
-  AllowedTypes,
-  SelectOption
+  Icon
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, defaultTo, noop } from 'lodash-es'
@@ -31,12 +33,14 @@ import { SelectConfigureOptions } from '@common/components/ConfigureOptions/Sele
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { connectorTypes } from '@pipeline/utils/constants'
-import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
+import type { ConnectorRefFormValueType} from '@cd/utils/connectorUtils';
+import { getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getAwsLambdaInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import css from './AwsLambdaInfraSpec.module.scss'
 

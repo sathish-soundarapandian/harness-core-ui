@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockTarget from '@cf/utils/testData/data/mockTarget'
-import ExclusionSubSection, { ExclusionSubSectionProps } from '../ExclusionSubSection'
+import type { ExclusionSubSectionProps } from '../ExclusionSubSection';
+import ExclusionSubSection from '../ExclusionSubSection'
 
 const mockTargetGroups: ExclusionSubSectionProps['targetGroups'] = [
   { identifier: 'tg1', name: 'Target Group 1' },

@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useEffect, useState } from 'react'
+import type { ReactElement} from 'react';
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ConnectorCatalogueItem, ResponseConnectorCatalogueResponse, useGetConnectorCatalogue } from 'services/cd-ng'
+import type { ConnectorCatalogueItem, ResponseConnectorCatalogueResponse} from 'services/cd-ng';
+import { useGetConnectorCatalogue } from 'services/cd-ng'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { AddDrawerMapInterface, ItemInterface, CategoryInterface } from '@common/components/AddDrawer/AddDrawer'
 import { Connectors } from '@connectors/constants'

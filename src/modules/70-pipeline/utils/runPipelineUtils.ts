@@ -6,7 +6,8 @@
  */
 
 import { cloneDeep, defaultTo, get, isEmpty, set, unset, uniqBy } from 'lodash-es'
-import { AllowedTypes, MultiTypeInputType, IconName, SelectOption, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { AllowedTypes, MultiTypeInputType, IconName, SelectOption} from '@harness/uicore';
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import produce from 'immer'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'

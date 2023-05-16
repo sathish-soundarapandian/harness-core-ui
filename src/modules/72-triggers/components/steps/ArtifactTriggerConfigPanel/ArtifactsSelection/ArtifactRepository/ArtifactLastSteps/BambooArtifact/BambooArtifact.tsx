@@ -7,17 +7,18 @@
 
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
+import type {
+  StepProps,
+  SelectOption,
+  MultiSelectOption} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
   MultiTypeInputType,
-  SelectOption,
   FormInput,
-  MultiSelectOption,
   FormikForm
 } from '@harness/uicore'
 import * as Yup from 'yup'
@@ -32,12 +33,14 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 
-import {
+import type {
   ConnectorConfigDTO,
-  useGetPlansKey,
-  useGetArtifactPathsForBamboo,
   BambooPlanNames,
   Failure
+} from 'services/cd-ng';
+import {
+  useGetPlansKey,
+  useGetArtifactPathsForBamboo
 } from 'services/cd-ng'
 import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'

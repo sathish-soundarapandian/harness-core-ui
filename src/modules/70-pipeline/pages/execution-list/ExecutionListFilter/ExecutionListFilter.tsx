@@ -8,7 +8,8 @@
 
 import React, { useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, SelectOption, useToaster } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, useToaster } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
@@ -17,13 +18,15 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { FilterDTO, PipelineExecutionFilterProperties } from 'services/pipeline-ng'
 import { usePostFilter, useUpdateFilter, useDeleteFilter, useGetFilterList } from 'services/pipeline-ng'
 import { useGetEnvironmentListV2, useGetServiceDefinitionTypes, useGetServiceList } from 'services/cd-ng'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import type { FilterInterface, FilterDataInterface } from '@common/components/Filter/Constants'
 import { useBooleanStatus, useMutateAsGet, useUpdateQueryParams } from '@common/hooks'
 import type { PipelineType, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  PipelineExecutionFormType} from '@pipeline/utils/PipelineExecutionFilterRequestUtils';
 import {
-  PipelineExecutionFormType,
   getMultiSelectFormOptions,
   BUILD_TYPE,
   getFilterByIdentifier,

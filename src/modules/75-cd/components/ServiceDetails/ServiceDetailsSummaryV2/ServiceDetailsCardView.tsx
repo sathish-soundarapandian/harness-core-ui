@@ -7,6 +7,7 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
+import type { SelectOption } from '@harness/uicore'
 import {
   Button,
   Carousel,
@@ -19,7 +20,6 @@ import {
   getErrorInfoFromErrorObject,
   PageError,
   DropDown,
-  SelectOption,
   useToaster
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -30,19 +30,22 @@ import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import {
-  ArtifactInstanceDetail,
-  EnvironmentGroupInstanceDetail,
-  GetArtifactInstanceDetailsQueryParams,
-  GetEnvironmentInstanceDetailsQueryParams,
   setCustomSequenceStatusPromise,
   useGetArtifactInstanceDetails,
   useGetCustomSequenceStatus,
   useGetEnvironmentInstanceDetails
 } from 'services/cd-ng'
+import type {
+  ArtifactInstanceDetail,
+  EnvironmentGroupInstanceDetail,
+  GetArtifactInstanceDetailsQueryParams,
+  GetEnvironmentInstanceDetailsQueryParams
+} from 'services/cd-ng'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { EnvCardViewEmptyState } from './ServiceDetailEmptyStates'
 import ServiceDetailsDialog from './ServiceDetailsDialog'
-import { CardSortOption, CardView, createGroups, EnvCardProps, ServiceDetailsCardViewProps } from './ServiceDetailUtils'
+import type { EnvCardProps, ServiceDetailsCardViewProps } from './ServiceDetailUtils'
+import { CardSortOption, CardView, createGroups } from './ServiceDetailUtils'
 import { EnvCard } from './ServiceDetailCardViews/ServiceDetailEnvCardView'
 import { ArtifactCard } from './ServiceDetailCardViews/ServiceDetailArtifactCardView'
 import CustomSequenceDrawer from './CustomSequence/CustomSequence'

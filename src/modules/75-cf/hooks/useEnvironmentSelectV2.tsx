@@ -7,10 +7,12 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Select, SelectOption, SelectProps } from '@harness/uicore'
+import type { SelectOption, SelectProps } from '@harness/uicore';
+import { Select } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetProjectFlags } from 'services/cf'
-import { EnvironmentResponseDTO, useGetEnvironmentListForProject } from 'services/cd-ng'
+import type { EnvironmentResponseDTO} from 'services/cd-ng';
+import { useGetEnvironmentListForProject } from 'services/cd-ng'
 import type { FilterProps } from '@cf/components/TableFilters/TableFilters'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'

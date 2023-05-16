@@ -1,4 +1,8 @@
 import React from 'react'
+import type {
+  AllowedTypes,
+  AllowedTypesWithRunTime
+} from '@harness/uicore';
 import {
   Text,
   HarnessDocTooltip,
@@ -6,9 +10,7 @@ import {
   Container,
   MultiTypeInputType,
   getMultiTypeFromValue,
-  AllowedTypes,
-  RUNTIME_INPUT_VALUE,
-  AllowedTypesWithRunTime
+  RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { get, set, unset } from 'lodash-es'
@@ -20,9 +22,10 @@ import { MultiTypeExecutionCondition } from '@common/components/MultiTypeExecuti
 import { useStrings } from 'framework/strings'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
-import ConditionalExecutionPanel, {
+import type {
   ConditionalExecutionPanelProps
-} from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanel'
+} from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanel';
+import ConditionalExecutionPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanel'
 import { isMultiTypeRuntime, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
 import type { StageWhenCondition, StepWhenCondition } from 'services/pipeline-ng'
 import type { StepMode } from '@pipeline/utils/stepUtils'

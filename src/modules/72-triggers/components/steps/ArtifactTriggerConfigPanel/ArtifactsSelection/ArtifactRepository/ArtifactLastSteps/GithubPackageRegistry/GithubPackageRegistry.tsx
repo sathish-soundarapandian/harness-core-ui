@@ -6,15 +6,16 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
   MultiTypeInputType,
-  SelectOption,
   getMultiTypeFromValue,
   FormInput,
   FormikForm,
@@ -27,7 +28,8 @@ import { defaultTo, isNil, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { ConnectorConfigDTO, GithubPackageDTO, useGetPackagesFromGithub } from 'services/cd-ng'
+import type { ConnectorConfigDTO, GithubPackageDTO} from 'services/cd-ng';
+import { useGetPackagesFromGithub } from 'services/cd-ng'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'

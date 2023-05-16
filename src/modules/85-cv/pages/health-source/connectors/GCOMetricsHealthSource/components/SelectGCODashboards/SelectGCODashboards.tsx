@@ -6,7 +6,8 @@
  */
 
 import React, { useCallback, useContext, useMemo } from 'react'
-import { StackdriverDashboardDTO, useGetStackdriverDashboards } from 'services/cv'
+import type { StackdriverDashboardDTO} from 'services/cv';
+import { useGetStackdriverDashboards } from 'services/cv'
 
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import MetricsDashboardList from '@cv/components/MetricsDashboardList/MetricsDashboardList'

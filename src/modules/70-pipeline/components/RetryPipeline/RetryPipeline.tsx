@@ -5,7 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
+import type { FormEvent} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   Text,
@@ -14,7 +17,6 @@ import {
   FormikForm,
   Heading,
   Layout,
-  SelectOption,
   Checkbox,
   PageSpinner,
   VisualYamlSelectedView as SelectedView,
@@ -30,12 +32,13 @@ import { Classes, Dialog, Tooltip } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import {
+import type {
   PipelineInfoConfig,
+  InputSetSummaryResponse,
+  RetryGroup} from 'services/pipeline-ng';
+import {
   useGetTemplateFromPipeline,
   getInputSetForPipelinePromise,
-  InputSetSummaryResponse,
-  RetryGroup,
   useGetInputSetsListForPipeline,
   useGetInputsetYamlV2,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
@@ -83,7 +86,8 @@ import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetFo
 import { StepViewType } from '../AbstractSteps/Step'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import SaveAsInputSet from '../RunPipelineModal/SaveAsInputSet'
-import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
+import type { InputSetSelectorProps } from '../InputSetSelector/InputSetSelector';
+import { InputSetSelector } from '../InputSetSelector/InputSetSelector'
 import SelectExistingInputsOrProvideNew from '../RunPipelineModal/SelectExistingOrProvide'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
 import type { InputSetValue } from '../InputSetSelector/utils'

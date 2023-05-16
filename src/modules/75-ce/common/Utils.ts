@@ -10,7 +10,8 @@ import type { FixedScheduleClient, GatewayDetails, Provider } from '@ce/componen
 import type { CcmMetaData } from 'services/ce/services'
 import type { HealthCheck, PortConfig, Service, ServiceDep } from 'services/lw'
 import type { AccessPointScreenMode, YamlDependency } from '@ce/types'
-import { providerLoadBalancerRefMap, PROVIDER_TYPES } from '@ce/constants'
+import type { PROVIDER_TYPES } from '@ce/constants';
+import { providerLoadBalancerRefMap } from '@ce/constants'
 
 export class Utils {
   static booleanToString(val: boolean): string {

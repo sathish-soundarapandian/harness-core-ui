@@ -9,10 +9,11 @@ import React, { useMemo, useState, useContext, useCallback, useEffect } from 're
 import { noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { GetDataError } from 'restful-react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Container,
   Accordion,
-  SelectOption,
   Utils,
   Button,
   getMultiTypeFromValue,
@@ -28,9 +29,10 @@ import { QueryViewer } from '@cv/components/QueryViewer/QueryViewer'
 import { InputWithDynamicModalForJsonMultiType } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJsonMultiType'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   NewRelicMetricDefinition,
-  TimeSeriesSampleDTO,
+  TimeSeriesSampleDTO} from 'services/cv';
+import {
   useFetchParsedSampleData,
   useGetRiskCategoryForCustomHealthMetric,
   useGetSampleDataForNRQL

@@ -33,7 +33,8 @@ import {
   WebhookDetails,
   Tags
 } from './CodeApp'
-import routes, { CODEPathProps } from './RouteDefinitions'
+import type { CODEPathProps } from './RouteDefinitions';
+import routes from './RouteDefinitions'
 import CODEHomePage from './pages/home/CODEHomePage'
 
 const sidebarProps: SidebarContext = {

@@ -1,10 +1,11 @@
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Container,
   ExpandingSearchInput,
   Layout,
   PageSpinner,
   Select,
-  SelectOption,
   TableV2,
   Text,
   useToaster

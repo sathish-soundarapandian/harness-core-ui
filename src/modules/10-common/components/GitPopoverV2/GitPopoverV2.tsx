@@ -6,14 +6,17 @@
  */
 
 import { PopoverInteractionKind } from '@blueprintjs/core'
-import { Icon, IconName } from '@harness/icons'
-import { FormInput, Layout, Popover, SelectOption, Text } from '@harness/uicore'
+import type { IconName } from '@harness/icons';
+import { Icon } from '@harness/icons'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, Layout, Popover, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import type { EntityGitDetails } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 import { useGetListOfBranchesByRefConnectorV2 } from 'services/cd-ng'

@@ -11,10 +11,13 @@ import { Route } from 'react-router-dom'
 import { pick } from 'lodash-es'
 
 import { VisualYamlSelectedView } from '@harness/uicore'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
-import {
-  TemplateContext,
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
+import type {
   TemplateContextInterface
+} from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext';
+import {
+  TemplateContext
 } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 
 import templateContextProviderProps from './__tests__/mocks/templateContextProvider.json'

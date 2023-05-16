@@ -8,7 +8,8 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import ServiceCardWithChart, { ServiceCardWithChartProps } from '../DeploymentCards/CardWithChart'
+import type { ServiceCardWithChartProps } from '../DeploymentCards/CardWithChart';
+import ServiceCardWithChart from '../DeploymentCards/CardWithChart'
 import type { WorkloadCardProps } from '../DeploymentCards/WorkloadCard'
 import WorkloadCard from '../DeploymentCards/WorkloadCard'
 

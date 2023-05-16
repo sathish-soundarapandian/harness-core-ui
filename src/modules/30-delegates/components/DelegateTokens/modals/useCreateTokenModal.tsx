@@ -27,7 +27,8 @@ import type { IDialogProps } from '@blueprintjs/core'
 import { NameSchema } from '@common/utils/Validation'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { useStrings } from 'framework/strings'
-import { useCreateDelegateToken, CreateDelegateTokenQueryParams } from 'services/cd-ng'
+import type { CreateDelegateTokenQueryParams } from 'services/cd-ng';
+import { useCreateDelegateToken } from 'services/cd-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 

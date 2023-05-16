@@ -10,8 +10,10 @@ import { Button, ButtonVariation, Container, Formik, FormikForm, Layout, PageErr
 import * as Yup from 'yup'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { SubscribeViews, SubscriptionProps, BillingContactProps } from '@common/constants/SubscriptionTypes'
-import { InvoiceDetailDTO, useCreateSubscription } from 'services/cd-ng/index'
+import type { SubscriptionProps, BillingContactProps } from '@common/constants/SubscriptionTypes';
+import { SubscribeViews } from '@common/constants/SubscriptionTypes'
+import type { InvoiceDetailDTO} from 'services/cd-ng/index';
+import { useCreateSubscription } from 'services/cd-ng/index'
 import { useStrings } from 'framework/strings'
 import { CreditCard, Category } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -20,7 +22,8 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { StateByCountryMap } from '@common/hooks/useRegionList'
 import type { Module } from 'framework/types/ModuleName'
-import BillingContact, { InitialBillingInfo } from './BillingContact'
+import type { InitialBillingInfo } from './BillingContact';
+import BillingContact from './BillingContact'
 import { Header } from '../Header'
 import { PLAN_TYPES } from '../subscriptionUtils'
 import css from './BillingInfo.module.scss'

@@ -7,9 +7,11 @@
 
 import { Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import React, { FC, PropsWithChildren } from 'react'
+import type { FC, PropsWithChildren } from 'react';
+import React from 'react'
 import GetStartedWithFF from '@cf/components/GetStartedWithFF/GetStartedWithFF'
-import { NoData, NoDataProps } from '../NoData'
+import type { NoDataProps } from '../NoData';
+import { NoData } from '../NoData'
 
 export interface SectionNoDataProps extends Pick<NoDataProps, 'message' | 'description'> {
   panels: { imageURL: string; description: string }[]

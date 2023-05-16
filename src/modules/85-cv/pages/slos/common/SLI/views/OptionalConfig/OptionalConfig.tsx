@@ -9,7 +9,8 @@ import React, { useMemo } from 'react'
 import { Text, Container, FormInput, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useFormikContext } from 'formik'
-import { SLOV2Form, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import type { SLOV2Form} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types';
+import { SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { useStrings } from 'framework/strings'
 import { EmptySelectOption, consecutiveStartTimeOption, getInputGroupProps } from './OptionalConfig.constants'
 

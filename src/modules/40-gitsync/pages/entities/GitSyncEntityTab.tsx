@@ -6,23 +6,26 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  IconName,
+  SelectOption
+} from '@harness/uicore';
 import {
   Container,
   Collapse,
-  IconName,
   Text,
   Layout,
   FormInput,
   Formik,
-  FormikForm,
-  SelectOption
+  FormikForm
 } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { noop } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { GitBranchDTO, GitSyncConfig, useGetListOfBranchesWithStatus } from 'services/cd-ng'
+import type { GitBranchDTO, GitSyncConfig} from 'services/cd-ng';
+import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { branchSyncStatus } from '@common/components/GitContextForm/GitContextForm'
 import { Page } from '@common/exports'

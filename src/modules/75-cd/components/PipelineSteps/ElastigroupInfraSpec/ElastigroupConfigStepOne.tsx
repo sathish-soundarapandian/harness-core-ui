@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, Button, Text, ButtonVariation, Thumbnail, FormikForm, StepProps, Formik } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Layout, Button, Text, ButtonVariation, Thumbnail, FormikForm, Formik } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { ConnectorConfigDTO, StoreConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

@@ -7,11 +7,13 @@
 
 import React from 'react'
 import { defaultTo, isUndefined } from 'lodash-es'
-import { IconName, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Popover, PopoverInteractionKind, Position, Classes } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { endOfDay, TimeRangeSelectorProps } from '@common/components/TimeRangeSelector/TimeRangeSelector'
+import type { TimeRangeSelectorProps } from '@common/components/TimeRangeSelector/TimeRangeSelector';
+import { endOfDay } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 
 export function getFormattedTimeRange(timeRange: TimeRangeSelectorProps | null): [number, number] {

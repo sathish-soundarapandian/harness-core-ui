@@ -9,7 +9,8 @@ import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import FolderForm, { FolderFormikValues } from '@dashboards/components/FolderForm/FolderForm'
+import type { FolderFormikValues } from '@dashboards/components/FolderForm/FolderForm';
+import FolderForm from '@dashboards/components/FolderForm/FolderForm'
 import { useStrings } from 'framework/strings'
 import { useCreateFolder } from 'services/custom-dashboards'
 

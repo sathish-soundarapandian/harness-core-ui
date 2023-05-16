@@ -11,11 +11,12 @@ import { Link, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import routes from '@common/RouteDefinitions'
-import {
+import type {
   Maybe,
   PerspectiveTrendStats,
+  StatsInfo} from 'services/ce/services';
+import {
   QlceViewAggregateOperation,
-  StatsInfo,
   useFetchPerspectiveDetailsSummaryQuery
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
@@ -25,7 +26,8 @@ import { getEmissionsValue } from '@ce/utils/formatResourceValue'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { CE_COLOR_CONST } from '../CEChart/CEChartOptions'
-import { EfficiencyScore, LEGEND_LIMIT, ListType, Loader, Stats, TableList, VerticalLayout } from './OverviewPageLayout'
+import type { Stats} from './OverviewPageLayout';
+import { EfficiencyScore, LEGEND_LIMIT, ListType, Loader, TableList, VerticalLayout } from './OverviewPageLayout'
 import SustainabilityCard from './SustainabilityCard'
 import css from './OverviewPage.module.scss'
 

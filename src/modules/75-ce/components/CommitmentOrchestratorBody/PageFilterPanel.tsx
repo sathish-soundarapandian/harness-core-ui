@@ -7,13 +7,15 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Layout, Select, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Container, Layout, Select } from '@harness/uicore'
 import TimeRangePicker from '@common/components/TimeRangePicker/TimeRangePicker'
 import type { TimeRangeFilterType } from '@ce/types'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useFetchFilters } from 'services/lw-co'
-import { ApplyFilterOptionsProps, useFilterContext } from './FilterContext'
+import type { ApplyFilterOptionsProps} from './FilterContext';
+import { useFilterContext } from './FilterContext'
 import css from './CommitmentOrchestrationBody.module.scss'
 
 interface PageFilterPanelProps {

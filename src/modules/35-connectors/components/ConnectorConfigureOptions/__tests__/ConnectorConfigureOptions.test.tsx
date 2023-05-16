@@ -9,7 +9,8 @@ import React from 'react'
 import { queryByAttribute, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import { ConnectorConfigureOptions, ConnectorConfigureOptionsProps } from '../ConnectorConfigureOptions'
+import type { ConnectorConfigureOptionsProps } from '../ConnectorConfigureOptions';
+import { ConnectorConfigureOptions } from '../ConnectorConfigureOptions'
 import { connectorListResponse } from './mocks'
 
 jest.mock('services/cd-ng', () => ({

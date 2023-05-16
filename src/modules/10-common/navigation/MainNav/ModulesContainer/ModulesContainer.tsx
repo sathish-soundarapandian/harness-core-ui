@@ -9,8 +9,9 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Container, Icon } from '@harness/uicore'
 import { debounce } from 'lodash-es'
 import cx from 'classnames'
+import type {
+  ModulesPreferenceStoreData} from '@common/navigation/ModuleConfigurationScreen/ModuleConfigurationScreen';
 import {
-  ModulesPreferenceStoreData,
   MODULES_CONFIG_PREFERENCE_STORE_KEY
 } from '@common/navigation/ModuleConfigurationScreen/ModuleConfigurationScreen'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'

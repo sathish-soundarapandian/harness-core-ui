@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { SelectOption, Select, Text, Container } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Select, Text, Container } from '@harness/uicore'
 import css from './Toothpick.module.scss'
 
 interface ToothpickPropsInterface {

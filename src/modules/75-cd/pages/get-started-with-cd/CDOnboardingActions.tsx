@@ -10,17 +10,18 @@ import { DefaultNewPipelineId } from '@templates-library/components/TemplateStud
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { EnvironmentRequestDTO } from 'services/cd-ng'
 import type { Servicev1Application, V1Agent } from 'services/gitops'
+import type {
+  ServiceDataType,
+  InfrastructureDataType,
+  DelegateDataType,
+  RepositoryInterface,
+  ClusterInterface} from './CDOnboardingUtils';
 import {
   newServiceState as initialServiceState,
   newEnvironmentState as initialEnvironmentState,
   newRepositoryData as initialRepositoryData,
-  ServiceDataType,
-  InfrastructureDataType,
   newDelegateState,
-  DelegateDataType,
-  RepositoryInterface,
   intialClusterData,
-  ClusterInterface,
   initialApplicationData
 } from './CDOnboardingUtils'
 

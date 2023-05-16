@@ -10,9 +10,10 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, get } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
   Accordion,
-  AllowedTypes,
   Container,
   FormInput,
   getMultiTypeFromValue,

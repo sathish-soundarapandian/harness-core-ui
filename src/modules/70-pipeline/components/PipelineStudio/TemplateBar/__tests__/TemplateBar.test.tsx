@@ -13,7 +13,8 @@ import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@comm
 import * as useFeaturesMock from '@common/hooks/useFeatures'
 import type { ResponseTemplateResponse } from 'services/template-ng'
 import * as templateServices from 'services/template-ng'
-import { TemplateBar, TemplateBarProps } from '../TemplateBar'
+import type { TemplateBarProps } from '../TemplateBar';
+import { TemplateBar } from '../TemplateBar'
 
 export const stepTemplate: ResponseTemplateResponse = {
   status: 'SUCCESS',

@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo, useCallback } from 'react'
-import { MultiSelectDropDown, MultiSelectOption, SelectOption } from '@harness/uicore'
+import type { MultiSelectOption, SelectOption } from '@harness/uicore';
+import { MultiSelectDropDown } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { getDropdownOptions } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.utils'
 import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.constants'

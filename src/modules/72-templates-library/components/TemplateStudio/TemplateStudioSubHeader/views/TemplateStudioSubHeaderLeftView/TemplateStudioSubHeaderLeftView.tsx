@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   ButtonSize,
@@ -13,7 +15,6 @@ import {
   Container,
   Icon,
   Layout,
-  SelectOption,
   Text,
   useConfirmationDialog,
   VisualYamlSelectedView as SelectedView
@@ -25,15 +26,17 @@ import { isEmpty, isNil } from 'lodash-es'
 import { Dialog, Spinner } from '@blueprintjs/core'
 import classNames from 'classnames'
 
+import type {
+  ModalProps,
+  PromiseExtraArgs} from 'framework/Templates/TemplateConfigModal/TemplateConfigModal';
 import {
   Fields,
-  ModalProps,
-  PromiseExtraArgs,
   Intent,
   TemplateConfigModalWithRef
 } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { TagsPopover, useToaster } from '@common/components'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type {
   GitQueryParams,
@@ -43,7 +46,8 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import routes from '@common/RouteDefinitions'
-import { NGTemplateInfoConfig, useUpdateStableTemplate } from 'services/template-ng'
+import type { NGTemplateInfoConfig} from 'services/template-ng';
+import { useUpdateStableTemplate } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 import type { UseSaveSuccessResponse } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
@@ -53,9 +57,11 @@ import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
 import { VersionsDropDown } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
-import {
-  EntityCachedCopy,
+import type {
   EntityCachedCopyHandle
+} from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy';
+import {
+  EntityCachedCopy
 } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'

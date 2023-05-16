@@ -9,17 +9,20 @@ import React, { useCallback, useState } from 'react'
 import moment from 'moment'
 
 import { Position } from '@blueprintjs/core'
-import { DateRangePicker, DateRange, IDateRangeShortcut } from '@blueprintjs/datetime'
+import type { DateRange, IDateRangeShortcut } from '@blueprintjs/datetime';
+import { DateRangePicker } from '@blueprintjs/datetime'
 import { Container, Layout, Popover, Button, Text, PageSpinner } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   GetActivitiesSummaryQueryParams,
-  useListActivities,
   ResponsePageActivity,
-  useGetConnectivitySummary,
   ResponseConnectivityCheckSummary
+} from 'services/cd-ng';
+import {
+  useListActivities,
+  useGetConnectivitySummary
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { UseGetMockData } from '@common/utils/testUtils'

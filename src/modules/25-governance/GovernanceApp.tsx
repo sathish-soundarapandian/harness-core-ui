@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { lazy, FC } from 'react'
+import type { FC } from 'react';
+import React, { lazy } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import type { GovernanceCustomMicroFrontendProps } from './GovernanceCustomMicroFrontendProps.types'
-import { customComponents, customHooks, RouteMatch } from './GovernanceCustomMicroFrontendProps'
+import type { RouteMatch } from './GovernanceCustomMicroFrontendProps';
+import { customComponents, customHooks } from './GovernanceCustomMicroFrontendProps'
 
 // eslint-disable-next-line import/no-unresolved
 const RemoteGovernanceApp = lazy(() => import('governance/App'))

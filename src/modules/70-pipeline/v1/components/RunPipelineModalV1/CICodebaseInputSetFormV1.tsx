@@ -19,13 +19,15 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { getReference } from '@common/utils/utils'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { CodebaseTypes, GIT_EXTENSION, getCodebaseRepoNameFromConnector } from '@pipeline/utils/CIUtils'
-import {
+import type {
   ConnectorInfoDTO,
+  ResponseGitBranchesResponseDTO} from 'services/cd-ng';
+import {
   getListOfBranchesByRefConnectorV2Promise,
-  ResponseGitBranchesResponseDTO,
   useGetConnector
 } from 'services/cd-ng'
 import type { PipelineV1InfoConfig } from './RunPipelineFormV1'

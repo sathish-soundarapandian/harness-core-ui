@@ -15,9 +15,10 @@ import type {
   MonitoredServiceTemplateVariable,
   VerifyStepMonitoredService
 } from '@cv/components/PipelineSteps/ContinousVerification/types'
-import TemplatisedRunTimeMonitoredService, {
+import type {
   TemplatisedRunTimeMonitoredServiceProps
-} from '../TemplatisedRunTimeMonitoredService'
+} from '../TemplatisedRunTimeMonitoredService';
+import TemplatisedRunTimeMonitoredService from '../TemplatisedRunTimeMonitoredService'
 
 const WrapperComponent = (props: TemplatisedRunTimeMonitoredServiceProps): JSX.Element => {
   return (

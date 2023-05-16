@@ -12,7 +12,8 @@ import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import { executionPathProps, modulePathProps } from '@common/utils/routeUtils'
 
-import { EvaluatedPolicy, PolicyEvaluationContent, PolicyInfo } from '../PolicyEvaluationContent'
+import type { EvaluatedPolicy} from '../PolicyEvaluationContent';
+import { PolicyEvaluationContent, PolicyInfo } from '../PolicyEvaluationContent'
 
 import StepProps from '../__mocks__/StepProps.json'
 import executionMetadata from '../__mocks__/executionMetadata.json'

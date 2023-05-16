@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode } from 'react'
+import type { ReactNode } from 'react';
+import React from 'react'
 import { TabNavigation } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Page } from '@common/exports'

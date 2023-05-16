@@ -7,15 +7,16 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  ModalErrorHandlerBinding,
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Button,
   Formik,
   Text,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   FormikForm as Form,
-  StepProps,
   ButtonVariation
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
@@ -37,7 +38,8 @@ import {
   DelegatesFoundState
 } from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector'
 import { CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
-import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
+import type { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector';
+import useCreateEditConnector from '@connectors/hooks/useCreateEditConnector'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'

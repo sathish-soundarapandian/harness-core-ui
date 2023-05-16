@@ -6,14 +6,16 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
+import type {
+  AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
 import {
   Layout,
   FormInput,
   Utils,
   useConfirmationDialog,
-  MultiTypeInputType,
-  AllowedTypes,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { NameIdDescriptionTags } from '@common/components'

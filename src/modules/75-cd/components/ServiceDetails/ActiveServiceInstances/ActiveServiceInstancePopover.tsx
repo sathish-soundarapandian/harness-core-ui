@@ -13,7 +13,7 @@ import { Card, getErrorInfoFromErrorObject, Layout, Text } from '@harness/uicore
 import { Color } from '@harness/design-system'
 import { Spinner } from '@blueprintjs/core'
 import { capitalize, defaultTo } from 'lodash-es'
-import {
+import type {
   InstanceInfoDTO,
   AzureWebAppInstanceInfoDTO,
   CustomDeploymentInstanceInfoDTO,
@@ -27,15 +27,18 @@ import {
   K8sInstanceInfoDTO,
   NativeHelmInstanceInfoDTO,
   ServiceDefinition,
-  useGetActiveInstancesByServiceIdEnvIdAndBuildIds,
-  useGetInstancesDetails,
   SpotInfrastructureDetails,
   AsgInstanceInfoDTO,
   AsgInfrastructureDetails
+} from 'services/cd-ng';
+import {
+  useGetActiveInstancesByServiceIdEnvIdAndBuildIds,
+  useGetInstancesDetails
 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { getReadableDateTime } from '@common/utils/dateUtils'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import css from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances.module.scss'
 

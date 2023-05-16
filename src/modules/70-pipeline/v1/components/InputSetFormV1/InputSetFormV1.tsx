@@ -25,13 +25,15 @@ import cx from 'classnames'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client'
 import type { FormikProps } from 'formik'
-import {
+import type {
   ResponseInputSetResponse,
+  ResponsePMSPipelineResponseDTO
+} from 'services/pipeline-ng';
+import {
   useGetPipeline,
   useGetInputSetForPipeline,
   useCreateInputSetForPipeline,
-  useUpdateInputSetForPipeline,
-  ResponsePMSPipelineResponseDTO
+  useUpdateInputSetForPipeline
 } from 'services/pipeline-ng'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type {
@@ -51,20 +53,24 @@ import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
-import {
-  EntityCachedCopy,
+import type {
   EntityCachedCopyHandle
+} from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy';
+import {
+  EntityCachedCopy
 } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useSaveInputSetV1 } from './useSaveInputSetV1'
-import { InputsYaml, useInputSetsV1 } from '../RunPipelineModalV1/useInputSetsV1'
+import type { InputsYaml} from '../RunPipelineModalV1/useInputSetsV1';
+import { useInputSetsV1 } from '../RunPipelineModalV1/useInputSetsV1'
 import FormikInputSetFormV1 from './FormikInputSetFormV1'
 import type { PipelineV1InfoConfig } from '../RunPipelineModalV1/RunPipelineFormV1'
 import css from '../../../components/InputSetForm/InputSetForm.module.scss'

@@ -12,10 +12,11 @@ import { isEqual } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
-import {
+import type {
   NotificationRuleResponse,
   SLOTargetFilterDTO,
-  ServiceLevelIndicatorDTO,
+  ServiceLevelIndicatorDTO} from 'services/cv';
+import {
   useGetNotificationRuleData,
   useGetOnboardingGraph,
   useGetSLOHealthListViewV2
@@ -33,8 +34,10 @@ import {
   shouldOpenPeriodUpdateModal
 } from './CreateCompositeSloForm.utils'
 import { AddSLOs } from './components/AddSlos/AddSLOs'
-import { CreateCompositeSLOSteps, CreateCompositeSloFormInterface } from './CreateCompositeSloForm.types'
-import { EvaluationType, SLOFormulaType, SLOV2Form } from '../../CVCreateSLOV2.types'
+import type { CreateCompositeSloFormInterface } from './CreateCompositeSloForm.types';
+import { CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
+import type { SLOV2Form } from '../../CVCreateSLOV2.types';
+import { EvaluationType, SLOFormulaType } from '../../CVCreateSLOV2.types'
 import SLOTarget from './components/SLOTarget/SLOTarget'
 import useCreateCompositeSloWarningModal from './useCreateCompositeSloWarningModal'
 import PeriodLength from './components/PeriodLength/PeriodLength'

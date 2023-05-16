@@ -10,9 +10,10 @@ import { StepWizard } from '@harness/uicore'
 import { pick } from 'lodash-es'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import type {
+  CreateConnectorModalProps} from '@connectors/constants';
 import {
   CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
-  CreateConnectorModalProps,
   TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'

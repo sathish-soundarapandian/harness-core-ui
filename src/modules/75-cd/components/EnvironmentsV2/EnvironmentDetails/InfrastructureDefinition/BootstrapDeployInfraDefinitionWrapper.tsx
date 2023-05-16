@@ -20,7 +20,8 @@ import type {
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { DefaultNewStageId, DefaultNewStageName } from '@cd/components/Services/utils/ServiceUtils'
-import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
+import type { ServiceDeploymentType} from '@pipeline/utils/stageHelpers';
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { Scope } from '@common/interfaces/SecretsInterface'

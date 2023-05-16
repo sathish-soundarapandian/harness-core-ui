@@ -6,15 +6,17 @@
  */
 
 import React, { useState } from 'react'
-import { FormGroup, IFormGroupProps, Intent, ITextAreaProps, TextArea } from '@blueprintjs/core'
+import type { IFormGroupProps, ITextAreaProps} from '@blueprintjs/core';
+import { FormGroup, Intent, TextArea } from '@blueprintjs/core'
+import type {
+  ExpressionAndRuntimeTypeProps,
+  FixedTypeComponentProps,
+  DataTooltipInterface} from '@harness/uicore';
 import {
   ExpressionAndRuntimeType,
-  ExpressionAndRuntimeTypeProps,
   MultiTypeInputValue,
-  FixedTypeComponentProps,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  DataTooltipInterface,
   HarnessDocTooltip,
   FormError,
   FormikTooltipContext,
@@ -24,7 +26,8 @@ import { connect } from 'formik'
 import { get } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions';
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { errorCheck } from '@common/utils/formikHelpers'
 import { isMultiTypeRuntime } from '@common/utils/utils'

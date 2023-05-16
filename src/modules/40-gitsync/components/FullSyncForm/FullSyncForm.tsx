@@ -6,6 +6,9 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react'
+import type {
+  SelectOption,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Container,
   Text,
@@ -14,11 +17,9 @@ import {
   FormikForm,
   FormInput,
   Button,
-  SelectOption,
   Radio,
   Icon,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   PageSpinner,
   useToaster,
   ButtonVariation
@@ -29,25 +30,28 @@ import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
 import type { FormikContextType } from 'formik'
 import { useParams } from 'react-router-dom'
-import {
+import type {
   GitSyncConfig,
   GitFullSyncConfigRequestDTO,
-  useGetGitFullSyncConfig,
   Failure,
   GitSyncFolderConfigDTO
+} from 'services/cd-ng';
+import {
+  useGetGitFullSyncConfig
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import SCMCheck from '@common/components/SCMCheck/SCMCheck'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import type {
+  FullSyncFormProps,
+  ModalConfigureProps} from './FullSyncFormHelper';
 import {
   branchFetchHandler,
   defaultInitialFormData,
-  FullSyncFormProps,
   handleConfigResponse,
   initiliazeConfigForm,
-  ModalConfigureProps,
   saveAndTriggerFullSync,
   getRootFolderSelectOptions
 } from './FullSyncFormHelper'

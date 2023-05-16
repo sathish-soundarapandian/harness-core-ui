@@ -8,7 +8,8 @@
 import React from 'react'
 import { Icon, Text, Container } from '@harness/uicore'
 
-import { OAuthProviderType, OAuthProviders, URLS } from '@common/constants/OAuthProviders'
+import type { OAuthProviderType} from '@common/constants/OAuthProviders';
+import { OAuthProviders, URLS } from '@common/constants/OAuthProviders'
 
 import { useStrings } from 'framework/strings'
 import css from './AuthFooter.module.scss'

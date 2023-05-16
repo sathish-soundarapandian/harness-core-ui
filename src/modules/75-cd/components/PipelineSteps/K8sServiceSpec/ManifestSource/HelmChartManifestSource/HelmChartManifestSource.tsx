@@ -15,12 +15,14 @@ import {
   ManifestStoreMap,
   ManifestToConnectorMap
 } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
+import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase';
+import { ManifestSourceBase } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { NameValuePair, useListAwsRegions } from 'services/portal'
+import type { NameValuePair} from 'services/portal';
+import { useListAwsRegions } from 'services/portal'
 import { useGetBucketsInManifests, useGetGCSBucketList, useGetHelmChartVersionDetailsWithYaml } from 'services/cd-ng'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'

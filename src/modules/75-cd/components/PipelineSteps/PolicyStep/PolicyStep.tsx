@@ -7,22 +7,26 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { isEmpty, set } from 'lodash-es'
 
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { StringsMap } from 'stringTypes'
 
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import type { PolicyStepData, PolicyStepFormData } from './PolicyStepTypes'
 import PolicyInputSetStep from './PolicyInputSetStep'
-import { PolicyStepVariablesView, PolicyStepVariablesViewProps } from './PolicyStepVariablesView'
+import type { PolicyStepVariablesViewProps } from './PolicyStepVariablesView';
+import { PolicyStepVariablesView } from './PolicyStepVariablesView'
 import { PolicyStepWidgetWithRef } from './PolicyStepWidget'
 
 export class PolicyStep extends PipelineStep<PolicyStepData> {

@@ -7,11 +7,12 @@
 
 import React, { useState } from 'react'
 import { Button, Formik, FormikForm, FormInput, Layout, Heading } from '@harness/uicore'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
-import type { AccessPoint } from 'services/lw'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
+import type { AccessPoint , DeleteAccessPointPayload } from 'services/lw'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
-import { useDeleteAccessPoints, DeleteAccessPointPayload } from 'services/lw'
+import { useDeleteAccessPoints } from 'services/lw'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

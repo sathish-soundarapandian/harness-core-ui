@@ -9,7 +9,8 @@ import React from 'react'
 import type { Meta, Story } from '@storybook/react'
 import { TestWrapper } from '@common/utils/testUtils'
 
-import { MultiTypeTextArea, MultiTypeTextAreaProps } from './MultiTypeTextArea'
+import type { MultiTypeTextAreaProps } from './MultiTypeTextArea';
+import { MultiTypeTextArea } from './MultiTypeTextArea'
 
 export default {
   title: 'Forms / MultiTypeTextArea',

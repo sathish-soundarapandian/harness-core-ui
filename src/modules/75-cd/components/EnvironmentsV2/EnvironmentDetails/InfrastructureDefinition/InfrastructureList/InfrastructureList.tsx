@@ -10,7 +10,8 @@ import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { defaultTo } from 'lodash-es'
 import { ButtonVariation, Container, Heading, Layout, TableV2, useToaster } from '@harness/uicore'
-import { InfrastructureResponse, useDeleteInfrastructure, useGetSettingValue } from 'services/cd-ng'
+import type { InfrastructureResponse} from 'services/cd-ng';
+import { useDeleteInfrastructure, useGetSettingValue } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import type { EnvironmentPathProps, ProjectPathProps, EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -21,8 +22,9 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import type {
+  InfraDetails} from './InfrastructureListColumns';
 import {
-  InfraDetails,
   InfrastructureMenu,
   InfrastructureName,
   LastUpdatedBy,

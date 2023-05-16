@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { DeploymentNodeSubPartSize, DefaultNodeSubPartSize, HexagonSizes } from './DeploymentNodes.constants'
+import type { DeploymentNodeSubPartSize} from './DeploymentNodes.constants';
+import { DefaultNodeSubPartSize, HexagonSizes } from './DeploymentNodes.constants'
 
 export type HexagonCoordinates = { x: number; y: number }
 

@@ -9,10 +9,11 @@ import React, { useState, useEffect } from 'react'
 import { Icon, Container, Text, Layout, CardSelect, PillToggle } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import type {
+  SelectBuildLocationProps,
+  BuildLocationDetails} from './Constants';
 import {
   Hosting,
-  SelectBuildLocationProps,
-  BuildLocationDetails,
   AllBuildLocationsForSaaS,
   AllBuildLocationsForOnPrem,
   ProvisioningStatus,

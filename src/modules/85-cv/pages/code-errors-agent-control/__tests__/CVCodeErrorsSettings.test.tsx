@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, RenderResult, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import * as hooks from '@common/hooks/useFeatureFlag'
 import CVCodeErrorsSettings from '../CVCodeErrorsSettings'

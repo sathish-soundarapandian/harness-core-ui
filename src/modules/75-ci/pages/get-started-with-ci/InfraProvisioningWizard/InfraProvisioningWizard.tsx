@@ -20,24 +20,17 @@ import {
 import { useStrings } from 'framework/strings'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import routes from '@common/RouteDefinitions'
-import {
-  ConnectorInfoDTO,
-  generateYamlPromise,
-  ResponseMessage,
-  ResponseString,
-  UserRepoResponse
-} from 'services/cd-ng'
-import {
-  createPipelineV2Promise,
+import type { ConnectorInfoDTO, ResponseMessage, ResponseString, UserRepoResponse } from 'services/cd-ng'
+import { generateYamlPromise } from 'services/cd-ng'
+import type {
   NGTriggerConfigV2,
   ResponseNGTriggerResponse,
   ResponsePipelineSaveResponse,
-  createTriggerPromise,
   CreatePipelineV2QueryParams,
   PipelineConfig,
-  createInputSetForPipelinePromise,
   ResponseInputSetResponse
 } from 'services/pipeline-ng'
+import { createPipelineV2Promise, createTriggerPromise, createInputSetForPipelinePromise } from 'services/pipeline-ng'
 import type { Module } from 'framework/types/ModuleName'
 import type { GitQueryParams, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -55,11 +48,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CIOnboardingActions } from '@common/constants/TrackingConstants'
 import { StoreType } from '@common/constants/GitSyncTypes'
-import {
-  getScopedValueFromDTO,
-  getScopeFromDTO,
-  ScopedValueObjectDTO
-} from '@common/components/EntityReference/EntityReference.types'
+import type { ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
+import { getScopedValueFromDTO, getScopeFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
 import {
   BuildCodebaseType,
@@ -67,25 +57,18 @@ import {
 } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { isSimplifiedYAMLEnabledForCI, YAMLVersion } from '@pipeline/utils/CIUtils'
 import { BuildTabs } from '@ci/components/PipelineStudio/CIPipelineStagesUtils'
-import {
-  InfraProvisioningWizardProps,
-  WizardStep,
-  InfraProvisiongWizardStepId,
-  StepStatus,
-  Hosting,
-  GitAuthenticationMethod,
-  NonGitOption
-} from './Constants'
-import { SelectGitProvider, SelectGitProviderRef, SupportedGitProvidersForCIOnboarding } from './SelectGitProvider'
-import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
-import {
-  ConfigurePipeline,
+import type { InfraProvisioningWizardProps, WizardStep } from './Constants'
+import { InfraProvisiongWizardStepId, StepStatus, Hosting, GitAuthenticationMethod, NonGitOption } from './Constants'
+import type { SelectGitProviderRef } from './SelectGitProvider'
+import { SelectGitProvider, SupportedGitProvidersForCIOnboarding } from './SelectGitProvider'
+import type { SelectRepositoryRef } from './SelectRepository'
+import { SelectRepository } from './SelectRepository'
+import type {
   ConfigurePipelineRef,
   ImportPipelineYAMLInterface,
-  PipelineConfigurationOption,
-  SavePipelineToRemoteInterface,
-  StarterConfigIdToOptionMap
+  SavePipelineToRemoteInterface
 } from './ConfigurePipeline'
+import { ConfigurePipeline, PipelineConfigurationOption, StarterConfigIdToOptionMap } from './ConfigurePipeline'
 import {
   getPRTriggerActions,
   getFullRepoName,

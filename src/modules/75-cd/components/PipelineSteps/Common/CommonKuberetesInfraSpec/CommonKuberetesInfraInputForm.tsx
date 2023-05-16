@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Menu } from '@blueprintjs/core'
-import { Text, Layout, getMultiTypeFromValue, MultiTypeInputType, SelectOption, AllowedTypes } from '@harness/uicore'
+import type { SelectOption, AllowedTypes } from '@harness/uicore';
+import { Text, Layout, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { memoize, defaultTo, isEmpty } from 'lodash-es'
@@ -16,11 +17,13 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import type { K8sGcpInfrastructure, Failure, ExecutionElementConfig } from 'services/cd-ng'
+import type {
+  ConnectorReferenceDTO} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField';
 import {
-  ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
 

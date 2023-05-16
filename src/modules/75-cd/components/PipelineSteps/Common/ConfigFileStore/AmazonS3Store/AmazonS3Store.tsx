@@ -12,8 +12,11 @@ import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, memoize } from 'lodash-es'
 
-import {
+import type {
   AllowedTypes,
+  SelectOption,
+  StepProps} from '@harness/uicore';
+import {
   Button,
   ButtonVariation,
   Formik,
@@ -23,26 +26,27 @@ import {
   Heading,
   Layout,
   MultiTypeInputType,
-  SelectOption,
-  StepProps,
   Text
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
-import { BucketResponse, ConnectorConfigDTO, useGetV2BucketListForS3 } from 'services/cd-ng'
+import type { BucketResponse, ConnectorConfigDTO} from 'services/cd-ng';
+import { useGetV2BucketListForS3 } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import DragnDropPaths from '@pipeline/components/ManifestSelection/DragnDropPaths'
+import type {
+  AmazonS3StoreDataType} from './AmazonS3StoreHelper';
 import {
-  AmazonS3StoreDataType,
   amazonS3ValidationSchema,
   formatInitialValues,
   formatOnSubmitData,

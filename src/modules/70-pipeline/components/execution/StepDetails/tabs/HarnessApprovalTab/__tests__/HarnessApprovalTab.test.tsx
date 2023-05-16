@@ -11,7 +11,8 @@ import { render, fireEvent, waitFor, queryByAttribute } from '@testing-library/r
 import { TestWrapper } from '@common/utils/testUtils'
 import { useAddHarnessApprovalActivity } from 'services/pipeline-ng'
 import executionMetadata from '@pipeline/components/execution/StepDetails/common/ExecutionContent/PolicyEvaluationContent/__mocks__/executionMetadata.json'
-import { HarnessApprovalTab, HarnessApprovalTabProps } from '../HarnessApprovalTab'
+import type { HarnessApprovalTabProps } from '../HarnessApprovalTab';
+import { HarnessApprovalTab } from '../HarnessApprovalTab'
 import approvalData from './HarnessApprovalData.json'
 
 jest.mock('@common/components/Duration/Duration', () => ({

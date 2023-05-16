@@ -11,7 +11,8 @@ import type { FormikProps } from 'formik'
 import type { IconName } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { delegateInstaller } from '../DelegateSetupStep.constants'
-import { DelegateInstallerDetails, DelegateType } from '../DelegateSetupStep.types'
+import type { DelegateInstallerDetails} from '../DelegateSetupStep.types';
+import { DelegateType } from '../DelegateSetupStep.types'
 
 export interface FormikForSelectDelegateType {
   delegateType: string

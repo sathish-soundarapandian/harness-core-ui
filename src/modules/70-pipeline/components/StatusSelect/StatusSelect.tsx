@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { MultiSelectDropDown, MultiSelectOption } from '@harness/uicore'
+import type { MultiSelectOption } from '@harness/uicore';
+import { MultiSelectDropDown } from '@harness/uicore'
 import { defaultTo, flatten, uniqBy, has } from 'lodash-es'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 
 type FilterExecutionStatus = Exclude<
   ExecutionStatus,

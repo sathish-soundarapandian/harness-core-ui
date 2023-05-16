@@ -8,14 +8,16 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { set } from 'lodash-es'
-import { Button, Layout, StepProps, Heading, Text, Container } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Button, Layout, Heading, Text, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 
-import { useGenerateDockerDelegateYAML, DelegateSetupDetails } from 'services/portal'
+import type { DelegateSetupDetails } from 'services/portal';
+import { useGenerateDockerDelegateYAML } from 'services/portal'
 
 import type { DockerDelegateWizardData } from '../CreateDockerDelegate'
 import css from './Step2Script.module.scss'

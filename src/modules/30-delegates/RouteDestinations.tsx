@@ -20,7 +20,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 
 import type { ResourceDTO } from 'services/audit'
-import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
+import type { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory';
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 
 import { String } from 'framework/strings'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'

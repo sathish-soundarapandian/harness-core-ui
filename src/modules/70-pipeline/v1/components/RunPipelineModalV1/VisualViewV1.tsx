@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react'
 import cx from 'classnames'
 import { FormikForm, Layout, Text } from '@harness/uicore'
 import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client'

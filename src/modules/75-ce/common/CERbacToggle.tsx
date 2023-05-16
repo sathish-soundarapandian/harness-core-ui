@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { Popover, StyledProps, Toggle } from '@harness/uicore'
+import type { StyledProps} from '@harness/uicore';
+import { Popover, Toggle } from '@harness/uicore'
 import type { ToggleProps } from '@harness/uicore/dist/components/Toggle/Toggle'
 import { PopoverInteractionKind } from '@blueprintjs/core'
-import { PermissionsRequest, usePermission } from '@rbac/hooks/usePermission'
+import type { PermissionsRequest} from '@rbac/hooks/usePermission';
+import { usePermission } from '@rbac/hooks/usePermission'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 
 interface RbacToggleProps {

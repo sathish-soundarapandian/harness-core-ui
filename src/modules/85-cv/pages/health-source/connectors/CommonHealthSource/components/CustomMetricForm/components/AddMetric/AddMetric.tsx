@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
-import { Button, ButtonVariation, Container, Layout, SelectOption, Text } from '@harness/uicore'
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react'
+import type { SelectOption} from '@harness/uicore';
+import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useFormikContext } from 'formik'
 import GroupName from '@cv/components/GroupName/GroupName'

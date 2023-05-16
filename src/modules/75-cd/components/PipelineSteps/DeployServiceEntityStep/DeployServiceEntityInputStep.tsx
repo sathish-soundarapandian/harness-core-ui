@@ -6,15 +6,8 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import {
-  AllowedTypes,
-  getMultiTypeFromValue,
-  Layout,
-  MultiTypeInputType,
-  RUNTIME_INPUT_VALUE,
-  SelectOption,
-  useToaster
-} from '@harness/uicore'
+import type { AllowedTypes, SelectOption } from '@harness/uicore'
+import { getMultiTypeFromValue, Layout, MultiTypeInputType, RUNTIME_INPUT_VALUE, useToaster } from '@harness/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, isNil, merge, set } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'

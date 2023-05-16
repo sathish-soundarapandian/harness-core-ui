@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { FossaStepBaseWithRef } from './FossaStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { FossaStepVariables, FossaStepVariablesProps } from './FossaStepVariables'
+import type { FossaStepVariablesProps } from './FossaStepVariables';
+import { FossaStepVariables } from './FossaStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './FossaStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type {

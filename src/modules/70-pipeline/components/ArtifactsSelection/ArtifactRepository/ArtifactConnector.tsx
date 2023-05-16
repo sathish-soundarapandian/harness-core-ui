@@ -6,6 +6,10 @@
  */
 
 import React, { useCallback } from 'react'
+import type {
+  StepProps,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -15,9 +19,7 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  StepProps,
-  ButtonSize,
-  AllowedTypes
+  ButtonSize
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'

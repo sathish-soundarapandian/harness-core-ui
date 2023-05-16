@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { fireEvent, render, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react'
 import * as Formik from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { FieldMapping } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'

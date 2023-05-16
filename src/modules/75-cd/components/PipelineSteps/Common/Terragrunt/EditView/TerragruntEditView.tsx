@@ -6,6 +6,10 @@
  */
 
 import React from 'react'
+import type {
+  SelectOption,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Accordion,
   Formik,
@@ -15,13 +19,11 @@ import {
   Label,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   Button,
   Text,
   StepWizard,
   ButtonVariation,
-  Icon,
-  AllowedTypes
+  Icon
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
@@ -37,7 +39,8 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -59,9 +62,10 @@ import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import type {
+  ConnectorTypes} from '../../ConfigFileStore/ConfigFileStoreHelper';
 import {
   ConnectorMap,
-  ConnectorTypes,
   getBuildPayload,
   getConfigFilePath,
   getPath

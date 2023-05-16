@@ -8,7 +8,8 @@
 import React from 'react'
 import { act, fireEvent, render, waitFor, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
+import type { UseGetReturnData } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import type * as pipelineng from 'services/pipeline-ng'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { RightDrawer } from '../../RightDrawer/RightDrawer'

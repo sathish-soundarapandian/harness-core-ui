@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { FormGroup, Intent } from '@blueprintjs/core'
-import { connect, FormikContextType, FieldArray } from 'formik'
+import type { FormikContextType} from 'formik';
+import { connect, FieldArray } from 'formik'
 import { get, difference } from 'lodash-es'
 import { MultiTextInput, Button, MultiTypeInputType } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
@@ -17,7 +18,8 @@ import { errorCheck } from '@common/utils/formikHelpers'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { Strategy, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
+import type { StrategyType } from '@pipeline/utils/FailureStrategyUtils';
+import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
 
 import { StrategyStepsList } from './StrategyStepsList'
 import css from './StrategySelection.module.scss'

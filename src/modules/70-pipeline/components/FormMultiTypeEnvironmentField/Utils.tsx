@@ -12,15 +12,17 @@ import { Color } from '@harness/design-system'
 import { Icon, Layout, Text } from '@harness/uicore'
 import cx from 'classnames'
 import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
-import {
+import type {
   EnvironmentResponse,
   EnvironmentResponseDTO,
   Failure,
-  getEnvironmentAccessListPromise,
-  getEnvironmentListV2Promise,
   PageEnvironmentResponse,
   ResponseListEnvironmentResponse,
   ResponsePageEnvironmentResponse
+} from 'services/cd-ng';
+import {
+  getEnvironmentAccessListPromise,
+  getEnvironmentListV2Promise
 } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import environmentEmptyStateSvg from '@pipeline/icons/emptyServiceDetail.svg'

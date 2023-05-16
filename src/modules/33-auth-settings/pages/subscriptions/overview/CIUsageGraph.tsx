@@ -6,7 +6,8 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { Text, Layout, Card, PageSpinner, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Text, Layout, Card, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { StackedColumnChart } from '@common/components/StackedColumnChart/StackedColumnChart'
@@ -15,7 +16,8 @@ import type { ModuleLicenseDTO, CIModuleLicenseDTO } from 'services/cd-ng'
 import { useGetLicenseHistoryUsage } from 'services/ci'
 import ProjectDropdown from '@common/ProjectDropdown/ProjectDropdown'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
-import { SummaryCardData, getSummaryCardRenderers, getYAxis, getPlotOptions, getSeries } from './ServiceLicenseGraphs'
+import type { SummaryCardData} from './ServiceLicenseGraphs';
+import { getSummaryCardRenderers, getYAxis, getPlotOptions, getSeries } from './ServiceLicenseGraphs'
 import pageCss from '../SubscriptionsPage.module.scss'
 
 interface CIUsageGraphProps {

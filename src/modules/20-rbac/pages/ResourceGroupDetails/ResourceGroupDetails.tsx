@@ -15,15 +15,18 @@ import { defaultTo, uniqWith, isEqual } from 'lodash-es'
 import type { ModulePathParams, ResourceGroupDetailsPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import ResourceTypeList from '@rbac/components/ResourceTypeList/ResourceTypeList'
+import type {
+  ResourceGroupV2,
+  ScopeSelector,
+  ResourceGroupV2Request
+} from 'services/resourcegroups';
 import {
   useUpdateResourceGroupV2,
-  ResourceGroupV2,
   useGetResourceTypes,
-  ScopeSelector,
-  useGetResourceGroupV2,
-  ResourceGroupV2Request
+  useGetResourceGroupV2
 } from 'services/resourcegroups'
-import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
+import type { ResourceCategory } from '@rbac/interfaces/ResourceType';
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
 import RbacFactory from '@rbac/factories/RbacFactory'
@@ -32,10 +35,14 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { SelectionType } from '@rbac/utils/utils'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import ResourcesCardList from '@rbac/components/ResourcesCardList/ResourcesCardList'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useDeepCompareEffect } from '@common/hooks'
+import type {
+  ResourceSelectorValue
+} from './utils';
 import {
   cleanUpResourcesMap,
   computeResourceMapOnChange,
@@ -48,8 +55,7 @@ import {
   getSelectedScopeType,
   getSelectionType,
   SelectorScope,
-  validateResourceSelectors,
-  ResourceSelectorValue
+  validateResourceSelectors
 } from './utils'
 import ResourceGroupScope from './views/ResourceGroupScope'
 import css from './ResourceGroupDetails.module.scss'

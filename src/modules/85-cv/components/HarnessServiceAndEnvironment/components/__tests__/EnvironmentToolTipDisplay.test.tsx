@@ -10,7 +10,8 @@ import { render, findByText } from '@testing-library/react'
 import { Color } from '@harness/design-system'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
-import { EnvironmentToolTipDisplay, ToolTipProps } from '../EnvironmentToolTipDisplay'
+import type { ToolTipProps } from '../EnvironmentToolTipDisplay';
+import { EnvironmentToolTipDisplay } from '../EnvironmentToolTipDisplay'
 
 const Wrapper = (props: ToolTipProps): JSX.Element => {
   return (

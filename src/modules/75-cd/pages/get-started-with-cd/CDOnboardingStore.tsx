@@ -13,19 +13,22 @@ import type { GetPipelineQueryParams } from 'services/pipeline-ng'
 
 import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
 import type { Servicev1Application, V1Agent } from 'services/gitops'
+import type {
+  CDOnboardingReducerState} from './CDOnboardingActions';
 import {
   CDOnboardingContextActions,
   CDOnboardingReducer,
-  CDOnboardingReducerState,
   initialState
 } from './CDOnboardingActions'
-import {
+import type {
   ClusterInterface,
   DelegateDataType,
-  DrawerMode,
   InfrastructureDataType,
   RepositoryInterface,
   ServiceDataType
+} from './CDOnboardingUtils';
+import {
+  DrawerMode
 } from './CDOnboardingUtils'
 
 export interface WizardStepQueryParams {

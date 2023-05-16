@@ -11,10 +11,12 @@ import { Button, Container, Layout, PageSpinner, Text, useToaster } from '@harne
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { get, isEmpty, set } from 'lodash-es'
-import { DelegateSetupDetails, getDelegateTokensPromise, GetDelegateTokensQueryParams } from 'services/cd-ng'
+import type { DelegateSetupDetails, GetDelegateTokensQueryParams } from 'services/cd-ng';
+import { getDelegateTokensPromise } from 'services/cd-ng'
+import type {
+  ValidateDockerDelegateQueryParams} from 'services/portal';
 import {
   validateDockerDelegatePromise,
-  ValidateDockerDelegateQueryParams,
   generateDockerDelegateYAMLPromise,
   createDelegateGroupPromise
 } from 'services/portal'
@@ -27,7 +29,8 @@ import { DelegateTypes } from '@delegates/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import StepProcessing from '../CreateKubernetesDelegateWizard/StepProcessing'
-import { DelegateSuccessHandler, generateDelegateName } from '../CDOnboardingUtils'
+import type { DelegateSuccessHandler} from '../CDOnboardingUtils';
+import { generateDelegateName } from '../CDOnboardingUtils'
 import { RightDrawer } from '../ConfigureService/ManifestRepoTypes/RightDrawer/RightDrawer'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'

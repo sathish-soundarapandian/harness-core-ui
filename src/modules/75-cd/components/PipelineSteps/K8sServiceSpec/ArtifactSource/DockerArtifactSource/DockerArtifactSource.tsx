@@ -9,11 +9,13 @@ import React, { useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
 
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase';
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import type {
+  SidecarArtifact} from 'services/cd-ng';
 import {
-  SidecarArtifact,
   useGetBuildDetailsForDocker,
   useGetBuildDetailsForDockerWithYaml,
   useGetLastSuccessfulBuildForDockerWithYaml

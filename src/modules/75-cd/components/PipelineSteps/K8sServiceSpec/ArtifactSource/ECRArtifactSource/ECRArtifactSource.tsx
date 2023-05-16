@@ -8,16 +8,19 @@
 import React, { useCallback, useMemo } from 'react'
 import { defaultTo, get, isNil, memoize } from 'lodash-es'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 
-import {
+import type {
   GetImagesListForEcrQueryParams,
-  SidecarArtifact,
+  SidecarArtifact} from 'services/cd-ng';
+import {
   useGetBuildDetailsForEcr,
   useGetBuildDetailsForEcrWithYaml,
   useGetImagesListForEcr
 } from 'services/cd-ng'
-import { NameValuePair, useListAwsRegions } from 'services/portal'
+import type { NameValuePair} from 'services/portal';
+import { useListAwsRegions } from 'services/portal'
 import { useMutateAsGet } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
@@ -25,7 +28,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -38,7 +42,8 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase';
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,

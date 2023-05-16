@@ -12,7 +12,8 @@ import * as useFeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { NotificationRuleResponse } from 'services/cv'
 import NotificationsContainer from '../NotificationsContainer'
-import { NotificationsContainerProps, SRMNotification, SRMNotificationType } from '../NotificationsContainer.types'
+import type { NotificationsContainerProps, SRMNotification} from '../NotificationsContainer.types';
+import { SRMNotificationType } from '../NotificationsContainer.types'
 import {
   currentNotificationsInTable,
   getUpdatedNotificationsResponse,

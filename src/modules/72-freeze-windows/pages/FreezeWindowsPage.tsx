@@ -5,10 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type {
+  ExpandingSearchInputHandle} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
-  ExpandingSearchInputHandle,
   Layout,
   Page,
   PageSpinner,
@@ -16,7 +17,8 @@ import {
   useToaster
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import React, { ReactElement, useRef } from 'react'
+import type { ReactElement} from 'react';
+import React, { useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, defer } from 'lodash-es'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -24,11 +26,12 @@ import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/ho
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   GetFreezeListQueryParams,
+  UseUpdateFreezeStatusProps} from 'services/cd-ng';
+import {
   useGetFreezeList,
   useUpdateFreezeStatus,
-  UseUpdateFreezeStatusProps,
   useDeleteManyFreezes
 } from 'services/cd-ng'
 import { FreezeWindowListSubHeader } from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader'

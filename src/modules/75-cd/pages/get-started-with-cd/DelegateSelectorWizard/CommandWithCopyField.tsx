@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Container, CopyToClipboard, Text } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
 function CommandWithCopyField({ label }: { label: StringKeys }): JSX.Element {

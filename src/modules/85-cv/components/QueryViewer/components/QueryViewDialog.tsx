@@ -12,7 +12,8 @@ import React from 'react'
 import { useStrings } from 'framework/strings'
 import { MapGCPLogsToServiceFieldNames } from '@cv/pages/health-source/connectors/GCOLogsMonitoringSource/components/MapQueriesToHarnessService/constants'
 import { Records } from '../../Records/Records'
-import { QueryViewDialogProps, DrawerProps } from '../types'
+import type { QueryViewDialogProps} from '../types';
+import { DrawerProps } from '../types'
 import css from './QueryViewDialog.module.scss'
 
 export function QueryViewDialog(props: QueryViewDialogProps): JSX.Element {

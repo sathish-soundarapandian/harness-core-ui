@@ -8,12 +8,14 @@
 import React from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
-import { FormInput, MultiSelectProps, SelectOption, Text } from '@harness/uicore'
+import type { MultiSelectProps, SelectOption} from '@harness/uicore';
+import { FormInput, Text } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 
 import type { Failure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions, ConfigureOptionsProps } from '../ConfigureOptions'
+import type { ConfigureOptionsProps } from '../ConfigureOptions';
+import { ConfigureOptions } from '../ConfigureOptions'
 import { ALLOWED_VALUES_TYPE } from '../constants'
 import type { AllowedValuesCustomComponentProps } from '../ConfigureOptionsUtils'
 import css from './SelectConfigureOptions.module.scss'

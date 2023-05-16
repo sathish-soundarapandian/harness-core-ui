@@ -15,9 +15,10 @@ import {
   getGMTEndDateTime,
   getGMTStartDateTime
 } from '@common/utils/momentUtils'
-import {
+import type {
   CcmMetaData,
-  StatsInfo,
+  StatsInfo} from 'services/ce/services';
+import {
   useFetchCcmMetaDataQuery,
   useFetchPerspectiveDetailsSummaryQuery
 } from 'services/ce/services'

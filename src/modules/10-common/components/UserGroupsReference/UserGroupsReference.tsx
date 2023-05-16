@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode } from 'react'
+import type { ReactNode } from 'react';
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Text, Container, Layout, AvatarGroup } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import {
+import type {
   UserGroupDTO,
+  UserMetadataDTO} from 'services/cd-ng';
+import {
   getUserGroupAggregateListPromise,
-  UserMetadataDTO,
   getBatchUserGroupListPromise
 } from 'services/cd-ng'
 import { MultiSelectEntityReference, useToaster } from '@common/exports'
@@ -23,7 +25,8 @@ import type {
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { EntityReferenceResponse, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import type { EntityReferenceResponse} from '@common/components/EntityReference/EntityReference';
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { getUserName } from '@common/utils/utils'
 import css from './UserGroupsReference.module.scss'
 

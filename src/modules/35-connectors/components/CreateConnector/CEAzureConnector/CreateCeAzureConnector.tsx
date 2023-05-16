@@ -7,14 +7,16 @@
 
 import React from 'react'
 import { StepWizard } from '@harness/uicore'
-import { Connectors, CreateConnectorModalProps } from '@connectors/constants'
+import type { CreateConnectorModalProps } from '@connectors/constants';
+import { Connectors } from '@connectors/constants'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useStrings } from 'framework/strings'
 
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CCM_CONNECTOR_SAVE_EVENT, CCM_CONNECTOR_SAVE_SUCCESS } from '@connectors/trackingConstants'
-import Overview, { CEAzureDTO } from './Steps/Overview/AzureConnectorOverview'
+import type { CEAzureDTO } from './Steps/Overview/AzureConnectorOverview';
+import Overview from './Steps/Overview/AzureConnectorOverview'
 import Billing from './Steps/Billing/AzureConnectorBilling'
 import ModalExtension from './ModalExtension'
 import AzureConnectorBillingExtension from './Steps/Billing/AzureConnectorBillingExtension'

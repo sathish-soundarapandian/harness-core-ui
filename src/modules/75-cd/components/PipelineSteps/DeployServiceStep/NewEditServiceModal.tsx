@@ -22,9 +22,10 @@ import { defaultTo, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import type { FormikProps } from 'formik'
-import {
+import type {
   ServiceRequestDTO,
-  ServiceResponseDTO,
+  ServiceResponseDTO} from 'services/cd-ng';
+import {
   useUpsertServiceV2,
   useCreateServiceV2,
   useGetYamlSchema

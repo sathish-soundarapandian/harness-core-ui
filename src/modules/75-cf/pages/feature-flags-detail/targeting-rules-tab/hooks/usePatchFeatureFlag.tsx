@@ -7,7 +7,8 @@
 
 import { useParams } from 'react-router-dom'
 import patch from '@cf/utils/instructions'
-import { PatchFeatureQueryParams, PatchOperation, usePatchFeature, Variation } from 'services/cf'
+import type { PatchFeatureQueryParams, PatchOperation, Variation } from 'services/cf';
+import { usePatchFeature } from 'services/cf'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { showToaster } from '@cf/utils/CFUtils'
 import { useStrings } from 'framework/strings'
@@ -15,12 +16,14 @@ import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import useResponseError from '@cf/hooks/useResponseError'
 import { useGovernance } from '@cf/hooks/useGovernance'
-import {
+import type {
   FormVariationMap,
-  TargetingRuleItemStatus,
-  TargetingRuleItemType,
   TargetingRulesFormValues,
   VariationPercentageRollout
+} from '../types';
+import {
+  TargetingRuleItemStatus,
+  TargetingRuleItemType
 } from '../types'
 import { PatchFeatureFlagUtils } from '../utils/PatchFeatureFlagUtils'
 export interface UsePatchFeatureFlagProps {

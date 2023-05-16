@@ -6,6 +6,9 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  IconName,
+  AllowedTypes} from '@harness/uicore';
 import {
   Accordion,
   Button,
@@ -14,25 +17,26 @@ import {
   FormInput,
   getMultiTypeFromValue,
   HarnessDocTooltip,
-  IconName,
   Icon,
   Label,
   Layout,
   MultiTypeInputType,
   Text,
   StepWizard,
-  AllowedTypes,
   Checkbox
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { Classes, Dialog, IOptionProps, IDialogProps } from '@blueprintjs/core'
+import type { IOptionProps, IDialogProps } from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 
 import { cloneDeep, isEmpty, set, unset, get, isUndefined, noop } from 'lodash-es'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
-import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { FormikErrors, FormikProps} from 'formik';
+import { yupToFormErrors } from 'formik'
+import type { StepProps } from '@pipeline/components/PipelineSteps/PipelineStep';
+import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import {
@@ -40,11 +44,13 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 // import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type {
+  StepFormikFowardRef,
+  ValidateInputSetProps
+} from '@pipeline/components/AbstractSteps/Step';
 import {
   setFormikRef,
-  StepFormikFowardRef,
-  StepViewType,
-  ValidateInputSetProps
+  StepViewType
 } from '@pipeline/components/AbstractSteps/Step'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -81,22 +87,25 @@ import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/c
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+import type {
+  TerraformPlanProps,
+  TerraformPlanVariableStepProps,
+  TFPlanFormData
+} from '../Common/Terraform/TerraformInterfaces';
 import {
   BackendConfigurationTypes,
   CommandTypes,
   getTFPlanInitialValues,
   onSubmitTFPlanData,
-  provisionerIdentifierValidation,
-  TerraformPlanProps,
-  TerraformPlanVariableStepProps,
-  TFPlanFormData
+  provisionerIdentifierValidation
 } from '../Common/Terraform/TerraformInterfaces'
 import TerraformInputStep from './TfPlanInputStep'
 import { TerraformVariableStep } from './TfPlanVariableView'
 import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
+import type {
+  ConnectorTypes} from '../Common/ConfigFileStore/ConfigFileStoreHelper';
 import {
   ConnectorMap,
-  ConnectorTypes,
   getBuildPayload,
   getConfigFilePath,
   getPath
@@ -107,7 +116,8 @@ import { AmazonS3Store } from '../Common/ConfigFileStore/AmazonS3Store/AmazonS3S
 
 import VarFileList from '../Common/VarFile/VarFileList'
 import TerraformCommandFlags from '../Common/TerraformCommandFlags/TerraformCommandFlags'
-import { AmazonS3StoreDataType, formatAmazonS3Data } from '../Common/ConfigFileStore/AmazonS3Store/AmazonS3StoreHelper'
+import type { AmazonS3StoreDataType} from '../Common/ConfigFileStore/AmazonS3Store/AmazonS3StoreHelper';
+import { formatAmazonS3Data } from '../Common/ConfigFileStore/AmazonS3Store/AmazonS3StoreHelper'
 
 import { ArtifactoryForm } from '../Common/VarFile/ArtifactoryForm'
 import { formatArtifactoryData } from '../Common/VarFile/helper'

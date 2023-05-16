@@ -16,7 +16,8 @@ import type {
 } from 'services/pipeline-ng'
 import type { InputSetDTO } from '@pipeline/utils/types'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetValue } from '../InputSetSelector/utils'
 
 export const constructInputSetYamlObject = (item: InputSetSummaryResponse) => ({

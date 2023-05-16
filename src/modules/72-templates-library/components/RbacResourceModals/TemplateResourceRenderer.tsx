@@ -10,10 +10,11 @@ import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
 import StaticResourceRenderer from '@rbac/components/StaticResourceRenderer/StaticResourceRenderer'
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   PageTemplateSummaryResponse,
   TemplateFilterProperties,
-  TemplateSummaryResponse,
+  TemplateSummaryResponse} from 'services/template-ng';
+import {
   useGetTemplateList
 } from 'services/template-ng'
 import type { ResourceHandlerTableData } from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'

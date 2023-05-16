@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
-import { ThumbnailSelect, ThumbnailSelectProps } from '@harness/uicore'
+import type { ReactElement } from 'react';
+import React from 'react'
+import type { ThumbnailSelectProps } from '@harness/uicore';
+import { ThumbnailSelect } from '@harness/uicore'
 import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import type { PermissionsRequest } from '@rbac/hooks/usePermission'
 import type { FeatureProps } from 'framework/featureStore/featureStoreUtil'

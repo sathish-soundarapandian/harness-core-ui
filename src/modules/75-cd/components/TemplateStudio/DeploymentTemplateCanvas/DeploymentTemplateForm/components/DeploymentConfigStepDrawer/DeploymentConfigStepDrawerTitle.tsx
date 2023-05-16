@@ -11,9 +11,11 @@ import { FontVariation, Color } from '@harness/design-system'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import {
-  SaveTemplateButton,
+import type {
   TemplateData
+} from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton';
+import {
+  SaveTemplateButton
 } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import type { StepElementConfig, TemplateStepNode } from 'services/pipeline-ng'

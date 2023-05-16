@@ -12,9 +12,11 @@ import * as dbHook from '@cv/hooks/IndexedDBHook/IndexedDBHook'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import * as cvServices from 'services/cv'
-import {
-  TemplateContext,
+import type {
   TemplateContextInterface
+} from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext';
+import {
+  TemplateContext
 } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { yamlResponse } from '@cv/pages/monitored-service/CVMonitoredService/__test__/CVMonitoredService.mock'
 import { MonitoredServiceContext } from '@cv/pages/monitored-service/MonitoredServiceContext'

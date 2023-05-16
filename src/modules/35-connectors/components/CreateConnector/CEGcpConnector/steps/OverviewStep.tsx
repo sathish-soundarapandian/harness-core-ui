@@ -6,6 +6,9 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   Container,
@@ -14,8 +17,6 @@ import {
   FormInput,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  StepProps,
   Icon,
   Text
 } from '@harness/uicore'
@@ -23,12 +24,14 @@ import { FontVariation } from '@harness/design-system'
 import { pick, omit, isEmpty, get } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ConnectorInfoDTO,
   ConnectorFilterProperties,
-  useGetConnectorListV2,
   GetConnectorListV2QueryParams,
   Failure
+} from 'services/cd-ng';
+import {
+  useGetConnectorListV2
 } from 'services/cd-ng'
 import type { GcpBillingExportSpec, GcpCloudCostConnector } from 'services/ce'
 import routes from '@common/RouteDefinitions'

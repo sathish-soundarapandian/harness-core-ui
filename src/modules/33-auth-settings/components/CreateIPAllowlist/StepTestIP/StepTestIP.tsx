@@ -10,7 +10,9 @@ import * as Yup from 'yup'
 import { pick, defaultTo } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
 
-import type { StepProps } from '@harness/uicore'
+import type { StepProps ,
+  ModalErrorHandlerBinding
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import {
   Text,
@@ -22,8 +24,7 @@ import {
   Button,
   ButtonVariation,
   Container,
-  ModalErrorHandler,
-  ModalErrorHandlerBinding
+  ModalErrorHandler
 } from '@harness/uicore'
 import { validateIpAddressAllowlistedOrNot } from '@harnessio/react-ng-manager-client'
 import type { IpAllowlistConfigValidateResponse } from '@harnessio/react-ng-manager-client'

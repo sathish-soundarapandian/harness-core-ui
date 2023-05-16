@@ -17,12 +17,14 @@ import produce from 'immer'
 import classNames from 'classnames'
 import { String, useStrings } from 'framework/strings'
 import type { ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  ModalProps,
+  TemplateConfigModalHandle
+} from 'framework/Templates/TemplateConfigModal/TemplateConfigModal';
 import {
   Fields,
-  ModalProps,
   Intent,
-  TemplateConfigModalWithRef,
-  TemplateConfigModalHandle
+  TemplateConfigModalWithRef
 } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { useTemplateAlreadyExistsDialog } from '@templates-library/hooks/useTemplateAlreadyExistsDialog'
@@ -31,7 +33,8 @@ import type { EntityGitDetails, Failure, NGTemplateInfoConfig, TemplateSummaryRe
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import useCommentModal from '@common/hooks/CommentModal/useCommentModal'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
-import { StoreMetadata, StoreType, SaveTemplateAsType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType, SaveTemplateAsType } from '@common/constants/GitSyncTypes'
 
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'

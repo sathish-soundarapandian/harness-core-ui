@@ -6,22 +6,25 @@
  */
 
 import React from 'react'
-import {
+import type {
   IconName,
-  Formik,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
   SelectOption,
   MultiSelectOption,
   AllowedTypes
+} from '@harness/uicore';
+import {
+  Formik,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType
 } from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+import type { FormikErrors, FormikProps} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { defaultTo, get, has, isEmpty } from 'lodash-es'
-import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
-import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef , StepProps, ValidateInputSetProps} from '@pipeline/components/AbstractSteps/Step'
 
 import type { CountInstanceSelection, K8sScaleStepInfo, StepElementConfig } from 'services/cd-ng'
 

@@ -13,7 +13,8 @@ import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/Resource
 import { PageSpinner } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
-import { useGetUserGroupAggregateList, UserGroupAggregateDTO } from 'services/cd-ng'
+import type { UserGroupAggregateDTO } from 'services/cd-ng';
+import { useGetUserGroupAggregateList } from 'services/cd-ng'
 import { UserGroupColumn } from '@rbac/pages/UserGroups/views/UserGroupsListView'
 
 type UserGroupAggregate = UserGroupAggregateDTO & { identifier: string }

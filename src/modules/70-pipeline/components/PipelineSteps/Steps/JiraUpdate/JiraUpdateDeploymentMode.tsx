@@ -9,13 +9,13 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty, pickBy, set } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
+import type { SelectOption } from '@harness/uicore'
 import {
   EXECUTION_TIME_INPUT_VALUE,
   FormError,
   getMultiTypeFromValue,
   MultiTypeInputType,
   PageSpinner,
-  SelectOption,
   Text
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -33,7 +33,8 @@ import { JiraFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/Jir
 import type { JiraFieldNGWithValue } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/types'
 import { getInitialValueForSelectedField } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/helper'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { JiraFieldNG, JiraStatusNG, useGetJiraIssueUpdateMetadata, useGetJiraStatuses } from 'services/cd-ng'
+import type { JiraFieldNG, JiraStatusNG } from 'services/cd-ng'
+import { useGetJiraIssueUpdateMetadata, useGetJiraStatuses } from 'services/cd-ng'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'

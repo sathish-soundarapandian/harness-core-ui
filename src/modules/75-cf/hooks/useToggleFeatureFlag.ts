@@ -6,7 +6,8 @@
  */
 
 import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
-import { FeatureResponseMetadata, PatchFeatureQueryParams, usePatchFeature } from 'services/cf'
+import type { FeatureResponseMetadata, PatchFeatureQueryParams} from 'services/cf';
+import { usePatchFeature } from 'services/cf'
 import type { GitDetails } from './useGitSync'
 
 export interface UseToggleFeatureFlagProps {

@@ -1,6 +1,7 @@
 import { Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import Highcharts, { SeriesColumnOptions } from 'highcharts'
+import type { SeriesColumnOptions } from 'highcharts';
+import Highcharts from 'highcharts'
 import React from 'react'
 import HighchartsReact from 'highcharts-react-official'
 import moment from 'moment'

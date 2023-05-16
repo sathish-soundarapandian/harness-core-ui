@@ -6,6 +6,8 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   Container,
@@ -14,17 +16,18 @@ import {
   FormInput,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   ButtonVariation
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { NameIdDescriptionTags, useToaster } from '@common/components'
-import {
+import type {
   ResourceGroupV2,
-  useCreateResourceGroupV2,
-  useUpdateResourceGroupV2,
   ResourceGroupV2Request
+} from 'services/resourcegroups';
+import {
+  useCreateResourceGroupV2,
+  useUpdateResourceGroupV2
 } from 'services/resourcegroups'
 import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'

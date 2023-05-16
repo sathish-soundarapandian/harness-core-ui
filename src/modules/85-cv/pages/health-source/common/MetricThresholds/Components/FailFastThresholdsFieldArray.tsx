@@ -1,6 +1,7 @@
 import React from 'react'
 import cx from 'classnames'
-import { Button, ButtonVariation, Container, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Button, ButtonVariation, Container, FormInput, Layout, Text } from '@harness/uicore'
 import { cloneDeep } from 'lodash-es'
 
 import { FieldArray } from 'formik'

@@ -10,10 +10,12 @@ import userEvent from '@testing-library/user-event'
 import { render, waitFor, screen } from '@testing-library/react'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import type { ExecutionNode } from 'services/pipeline-ng'
-import {
-  LogTypes,
+import type {
   SLOLogContentProps,
   VerifyStepLogContentProps
+} from '@cv/hooks/useLogContentHook/useLogContentHook.types';
+import {
+  LogTypes
 } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
 import { ExecutionVerificationView } from '../ExecutionVerificationView'
 import { getActivityId, getDefaultTabId } from '../ExecutionVerificationView.utils'

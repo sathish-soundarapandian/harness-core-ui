@@ -11,7 +11,8 @@ import cx from 'classnames'
 import { Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
-import { Failure, getServiceAccessListPromise, ServiceDefinition, ServiceResponseDTO } from 'services/cd-ng'
+import type { Failure, ServiceDefinition, ServiceResponseDTO } from 'services/cd-ng';
+import { getServiceAccessListPromise } from 'services/cd-ng'
 import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'

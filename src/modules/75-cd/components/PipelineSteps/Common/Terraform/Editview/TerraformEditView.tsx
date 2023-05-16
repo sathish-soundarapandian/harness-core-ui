@@ -6,6 +6,9 @@
  */
 
 import React, { useEffect } from 'react'
+import type {
+  SelectOption,
+  AllowedTypes} from '@harness/uicore';
 import {
   Accordion,
   Formik,
@@ -15,13 +18,11 @@ import {
   Label,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   Button,
   Text,
   StepWizard,
   ButtonVariation,
   Icon,
-  AllowedTypes,
   Checkbox
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
@@ -30,7 +31,8 @@ import * as Yup from 'yup'
 import cx from 'classnames'
 import { cloneDeep, set, unset, get, isUndefined, isEmpty, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Classes, Dialog } from '@blueprintjs/core'
 import type { TerraformVarFileWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import {
@@ -38,7 +40,8 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -66,19 +69,22 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import { TFMonaco } from './TFMonacoEditor'
 
-import {
-  BackendConfigurationTypes,
-  ConfigurationTypes,
-  provisionerIdentifierValidation,
+import type {
   TerraformData,
   TerraformProps,
   TFFormData
+} from '../TerraformInterfaces';
+import {
+  BackendConfigurationTypes,
+  ConfigurationTypes,
+  provisionerIdentifierValidation
 } from '../TerraformInterfaces'
 import { ConfigFileStoreStepOne } from '../../ConfigFileStore/ConfigFileStoreStepOne'
 import { ConfigFileStoreStepTwo } from '../../ConfigFileStore/ConfigFileStoreStepTwo'
+import type {
+  ConnectorTypes} from '../../ConfigFileStore/ConfigFileStoreHelper';
 import {
   ConnectorMap,
-  ConnectorTypes,
   getBuildPayload,
   getConfigFilePath,
   getPath
@@ -86,7 +92,8 @@ import {
 import VarFileList from '../../VarFile/VarFileList'
 import TerraformCommandFlags from '../../TerraformCommandFlags/TerraformCommandFlags'
 import { AmazonS3Store } from '../../ConfigFileStore/AmazonS3Store/AmazonS3Store'
-import { AmazonS3StoreDataType, formatAmazonS3Data } from '../../ConfigFileStore/AmazonS3Store/AmazonS3StoreHelper'
+import type { AmazonS3StoreDataType} from '../../ConfigFileStore/AmazonS3Store/AmazonS3StoreHelper';
+import { formatAmazonS3Data } from '../../ConfigFileStore/AmazonS3Store/AmazonS3StoreHelper'
 import { formatArtifactoryData } from '../../VarFile/helper'
 import { ArtifactoryForm } from '../../VarFile/ArtifactoryForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

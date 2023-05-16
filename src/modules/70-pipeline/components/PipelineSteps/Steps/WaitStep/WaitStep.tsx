@@ -7,21 +7,25 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { StringsMap } from 'stringTypes'
 
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
-import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import type { WaitStepData } from './WaitStepTypes'
 import WaitInputSetStep from './WaitInputSetStep'
-import { WaitStepVariablesView, WaitStepVariablesViewProps } from './WaitStepVariablesView'
+import type { WaitStepVariablesViewProps } from './WaitStepVariablesView';
+import { WaitStepVariablesView } from './WaitStepVariablesView'
 import { WaitStepWidgetWithRef } from './WaitStepWidget'
 
 export class WaitStep extends PipelineStep<WaitStepData> {

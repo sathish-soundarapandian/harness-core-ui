@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Accordion, AccordionHandle, Icon } from '@harness/uicore'
+import type { AccordionHandle} from '@harness/uicore';
+import { Accordion, Icon } from '@harness/uicore'
 import { Divider, Spinner } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 

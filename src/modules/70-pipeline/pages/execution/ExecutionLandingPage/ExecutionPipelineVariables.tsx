@@ -3,10 +3,12 @@ import { unstable_batchedUpdates } from 'react-dom'
 import { defaultTo, noop } from 'lodash-es'
 import { PipelineVariablesContext } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { parse } from '@common/utils/YamlHelperMethods'
-import {
+import type {
   PipelineInfoConfig,
-  useCreateVariablesForPipelineExecution,
   VariableMergeServiceResponse
+} from 'services/pipeline-ng';
+import {
+  useCreateVariablesForPipelineExecution
 } from 'services/pipeline-ng'
 import type { Pipeline } from '@pipeline/utils/types'
 

@@ -11,7 +11,8 @@ import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import { cloneDeep, unset, size, isUndefined, set, get } from 'lodash-es'
 import { IdentifierSchema } from '@common/utils/Validation'
-import { TerraformStoreTypes, PathInterface } from '../Terraform/TerraformInterfaces'
+import type { PathInterface } from '../Terraform/TerraformInterfaces';
+import { TerraformStoreTypes } from '../Terraform/TerraformInterfaces'
 
 export const DIALOG_PROPS: IDialogProps = {
   isOpen: true,

@@ -37,14 +37,16 @@ import {
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   EnvironmentGroupResponse,
   EnvironmentGroupResponseDTO,
   EnvironmentResponse,
+  EnvironmentResponseDTO
+} from 'services/cd-ng';
+import {
   updateEnvironmentGroupPromise,
   useGetEnvironmentGroup,
-  useGetYamlSchema,
-  EnvironmentResponseDTO
+  useGetYamlSchema
 } from 'services/cd-ng'
 
 import type {

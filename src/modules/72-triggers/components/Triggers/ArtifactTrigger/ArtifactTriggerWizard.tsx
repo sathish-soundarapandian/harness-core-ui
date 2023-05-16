@@ -22,27 +22,30 @@ import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
 import { isEmpty, isUndefined, merge, defaultTo, noop, get, omitBy, omit } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { getPipelineInputs, InputsResponseBody } from '@harnessio/react-pipeline-service-client'
+import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client';
+import { getPipelineInputs } from '@harnessio/react-pipeline-service-client'
 import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import routes from '@common/RouteDefinitions'
 import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import type { Pipeline } from '@pipeline/utils/types'
-import { useGetConnector, GetConnectorQueryParams, getConnectorListV2Promise, Failure } from 'services/cd-ng'
-import {
+import type { GetConnectorQueryParams, Failure } from 'services/cd-ng';
+import { useGetConnector, getConnectorListV2Promise } from 'services/cd-ng'
+import type {
   PipelineInfoConfig,
+  NGTriggerConfigV2,
+  NGTriggerSourceV2,
+  ResponseNGTriggerResponse,
+  GetTriggerQueryParams,
+  CreateTriggerQueryParams,
+  UpdateTriggerQueryParams} from 'services/pipeline-ng';
+import {
   useGetPipeline,
   useGetTemplateFromPipeline,
   useCreateTrigger,
   useGetTrigger,
   useUpdateTrigger,
-  NGTriggerConfigV2,
-  NGTriggerSourceV2,
   useGetSchemaYaml,
-  ResponseNGTriggerResponse,
-  GetTriggerQueryParams,
-  CreateTriggerQueryParams,
-  UpdateTriggerQueryParams,
   useGetMergeInputSetFromPipelineTemplateWithListInput
 } from 'services/pipeline-ng'
 import {

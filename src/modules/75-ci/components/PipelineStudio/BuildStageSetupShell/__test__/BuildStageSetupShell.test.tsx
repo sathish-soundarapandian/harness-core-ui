@@ -14,7 +14,8 @@ import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineCon
 import type { ResponseConnectorResponse, ResponseSetupStatus } from 'services/cd-ng'
 import type { PipelineContextInterface } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps } from '@pipeline/components/AbstractSteps/Step';
+import { Step } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'

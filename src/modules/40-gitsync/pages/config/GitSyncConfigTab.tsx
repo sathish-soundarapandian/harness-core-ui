@@ -6,6 +6,9 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
+import type {
+  SelectOption,
+  MultiSelectOption} from '@harness/uicore';
 import {
   Container,
   Layout,
@@ -16,8 +19,6 @@ import {
   ExpandingSearchInput,
   Checkbox,
   MultiSelectDropDown,
-  SelectOption,
-  MultiSelectOption,
   Dialog
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
@@ -26,10 +27,11 @@ import { defaultTo } from 'lodash-es'
 import debounce from 'p-debounce'
 import { useModalHook } from '@harness/use-modal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   GitFullSyncEntityInfoFilterKeys,
   PageGitFullSyncEntityInfoDTO,
-  ResponsePageGitFullSyncEntityInfoDTO,
+  ResponsePageGitFullSyncEntityInfoDTO} from 'services/cd-ng';
+import {
   useListFullSyncFiles
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

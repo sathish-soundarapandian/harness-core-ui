@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode } from 'react'
+import type { ReactNode } from 'react';
+import React from 'react'
 import type { IconName, ModalErrorHandlerBinding, MultiSelectOption, SelectOption } from '@harness/uicore'
 import { defaultTo, pick } from 'lodash-es'
 import type { StringsMap } from 'stringTypes'
@@ -35,7 +36,8 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
 import type { AttributeFilter } from 'services/resourcegroups'
-import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
+import type { UseQueryParamsOptions } from '@common/hooks/useQueryParams';
+import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'

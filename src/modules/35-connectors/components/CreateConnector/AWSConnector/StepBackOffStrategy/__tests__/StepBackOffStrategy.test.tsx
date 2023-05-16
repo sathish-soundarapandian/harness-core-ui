@@ -16,7 +16,8 @@ import routes from '@common/RouteDefinitions'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import type { ConnectorDetailsProps } from '@connectors/interfaces/ConnectorInterface'
 import { BackOffStrategy } from '@connectors/pages/connectors/utils/ConnectorHelper'
-import StepBackOffStrategy, { StepBackOffStrategyProps } from '../StepBackOffStrategy'
+import type { StepBackOffStrategyProps } from '../StepBackOffStrategy';
+import StepBackOffStrategy from '../StepBackOffStrategy'
 
 const nextStepFn = jest.fn()
 const previousStepFn = jest.fn()

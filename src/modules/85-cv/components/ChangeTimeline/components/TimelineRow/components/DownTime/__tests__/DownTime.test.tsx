@@ -9,7 +9,8 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import DownTime, { DownTimeProps } from '../DownTime'
+import type { DownTimeProps } from '../DownTime';
+import DownTime from '../DownTime'
 import { SLO_WIDGETS } from '../../../TimelineRow.constants'
 
 function WrapperComponent(props: DownTimeProps): JSX.Element {

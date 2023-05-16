@@ -23,7 +23,8 @@ import {
   useToaster
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PurposeActions, Category, PLG_ELEMENTS } from '@common/constants/TrackingConstants'
 import { Experiences } from '@common/constants/Utils'
@@ -37,11 +38,13 @@ import {
   LICENSE_STATE_VALUES,
   getModuleToDefaultURLMap
 } from 'framework/LicenseStore/licenseStoreUtil'
-import { moduleToModuleNameMapping, Module } from 'framework/types/ModuleName'
+import type { Module } from 'framework/types/ModuleName'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { StartFreeLicenseQueryParams, ResponseModuleLicenseDTO, ModuleLicenseDTO } from 'services/cd-ng'
 import { useUpdateAccountDefaultExperienceNG, useStartFreeLicense } from 'services/cd-ng'
 import type { PLG_CD_GET_STARTED_VARIANTS } from '@common/components/ConfigureOptions/constants'
-import { modulesInfo, ModuleInfoValue } from './ModulesData'
+import type { ModuleInfoValue } from './ModulesData'
+import { modulesInfo } from './ModulesData'
 import css from './WelcomePage.module.scss'
 
 export default function WelcomePageV2(props: { getStartedVariant?: string }): JSX.Element {

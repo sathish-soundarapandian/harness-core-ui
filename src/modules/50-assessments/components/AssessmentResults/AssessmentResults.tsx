@@ -1,3 +1,5 @@
+import type {
+  MultiSelectOption} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -6,7 +8,6 @@ import {
   Container,
   Icon,
   Layout,
-  MultiSelectOption,
   PageError,
   PageSpinner,
   Text,
@@ -23,7 +24,8 @@ import { get, isEmpty } from 'lodash-es'
 import React, { useCallback, useState } from 'react'
 import copy from 'copy-to-clipboard'
 import { useStrings } from 'framework/strings'
-import { ScoreDTO, useGetAssessmentResults, useSendAssessmentInvite } from 'services/assessments'
+import type { ScoreDTO} from 'services/assessments';
+import { useGetAssessmentResults, useSendAssessmentInvite } from 'services/assessments'
 import { getErrorMessage } from '@auth-settings/utils'
 import { DialogProps, GRID_EFFICIENCY_SCORE, InviteAssessmentModalDialogProps } from './AssessmentResults.constants'
 import PercentageCard from '../PercentageCard/PercentageCard'

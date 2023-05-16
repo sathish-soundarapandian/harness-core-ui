@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useMemo } from 'react'
+import type { FC} from 'react';
+import React, { useMemo } from 'react'
 import { Tabs } from '@harness/uicore'
 import type { Target } from 'services/cf'
 import { useStrings } from 'framework/strings'

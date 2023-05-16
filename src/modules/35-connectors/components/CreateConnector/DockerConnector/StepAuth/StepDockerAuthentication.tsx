@@ -6,15 +6,16 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   Button,
   Formik,
   FormInput,
   Text,
-  StepProps,
   Container,
-  SelectOption,
   ButtonVariation,
   PageSpinner
 } from '@harness/uicore'
@@ -27,14 +28,16 @@ import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { ConnectorConfigDTO, ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
+import type { TextReferenceInterface} from '@secrets/components/TextReference/TextReference';
+import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions, ConnectorTypes } from '@common/constants/TrackingConstants'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
-import { ModalViewFor, shouldHideHeaderAndNavBtns } from '../../CreateConnectorUtils'
+import type { ModalViewFor} from '../../CreateConnectorUtils';
+import { shouldHideHeaderAndNavBtns } from '../../CreateConnectorUtils'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from '../CreateDockerConnector.module.scss'
 

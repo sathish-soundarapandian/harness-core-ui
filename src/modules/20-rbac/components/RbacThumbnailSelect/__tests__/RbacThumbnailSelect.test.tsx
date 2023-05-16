@@ -12,7 +12,8 @@ import { act, render, fireEvent, waitFor } from '@testing-library/react'
 import * as useFeaturesLib from '@common/hooks/useFeatures'
 import { TestWrapper } from '@common/utils/testUtils'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { RbacThumbnailItem, RbacThumbnailSelect } from '../RbacThumbnailSelect'
+import type { RbacThumbnailItem} from '../RbacThumbnailSelect';
+import { RbacThumbnailSelect } from '../RbacThumbnailSelect'
 
 const getNonRbacSampleItems = (): RbacThumbnailItem[] => [{ label: 'I1', value: 'i1', icon: 'nav-organization' }]
 const getRbacSampleItems = (): RbacThumbnailItem[] => [

@@ -11,7 +11,8 @@ import { Label } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { TerraformVarFileWrapper } from 'services/cd-ng'
-import { TerraformPlanProps, TerraformStoreTypes } from '../../Common/Terraform/TerraformInterfaces'
+import type { TerraformPlanProps} from '../../Common/Terraform/TerraformInterfaces';
+import { TerraformStoreTypes } from '../../Common/Terraform/TerraformInterfaces'
 import RemoteVarSection from './RemoteVarSection'
 import InlineVarFileInputSet from '../../Common/VarFile/InlineVarFileInputSet'
 

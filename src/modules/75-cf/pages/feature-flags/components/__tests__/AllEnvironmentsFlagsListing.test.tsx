@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
-import { getAllByRole, getAllByTestId, getByRole, render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { getAllByRole, getAllByTestId, getByRole, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cfServices from 'services/cf'
 import { CurrentLocation, TestWrapper } from '@common/utils/testUtils'
 import mockAllEnvsFlags from './mockGetAllEnvsFlags'
 import mockEnvironments from './mockEnvironments'
-import { AllEnvironmentsFlagsListing, AllEnvironmentsFlagsListingProps } from '../AllEnvironmentsFlagsListing'
+import type { AllEnvironmentsFlagsListingProps } from '../AllEnvironmentsFlagsListing';
+import { AllEnvironmentsFlagsListing } from '../AllEnvironmentsFlagsListing'
 
 const renderComponent = (props?: Partial<AllEnvironmentsFlagsListingProps>): RenderResult =>
   render(

@@ -25,28 +25,23 @@ import type { HideModal } from '@harness/use-modal'
 import type { FormikProps } from 'formik'
 import { Callout } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   Error,
-  inputSetMoveConfigPromise,
-  moveConfigsPromise,
   MoveConfigsQueryParams,
   ResponseMoveConfigResponse,
   ResponseInputSetMoveConfigResponseDTO
 } from 'services/pipeline-ng'
+import { inputSetMoveConfigPromise, moveConfigsPromise } from 'services/pipeline-ng'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { yamlPathRegex } from '@common/utils/StringUtils'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
-import {
-  ExtraQueryParams,
-  getDisableFields,
-  InitialValuesType,
-  MigrationType,
-  ModifiedInitialValuesType
-} from './MigrateUtils'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import type { ExtraQueryParams, InitialValuesType, ModifiedInitialValuesType } from './MigrateUtils'
+import { getDisableFields, MigrationType } from './MigrateUtils'
 import css from './MigrateResource.module.scss'
 
 export interface MoveResourceProps {

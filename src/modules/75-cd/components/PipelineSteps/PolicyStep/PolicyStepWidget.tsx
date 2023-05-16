@@ -10,12 +10,14 @@ import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { defaultTo } from 'lodash-es'
 
-import { AllowedTypes, Formik } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Formik } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
 import type { PolicyStepFormData } from './PolicyStepTypes'

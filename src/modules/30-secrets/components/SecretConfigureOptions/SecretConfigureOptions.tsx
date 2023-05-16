@@ -5,10 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { FC } from 'react';
+import React from 'react'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions';
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
-import SecretInput, { SecretInputProps } from '../SecretInput/SecretInput'
+import type { SecretInputProps } from '../SecretInput/SecretInput';
+import SecretInput from '../SecretInput/SecretInput'
 
 export interface SecretConfigureOptionsProps extends ConfigureOptionsProps {
   secretInputProps?: Omit<SecretInputProps, 'name' | 'isMultiSelect' | 'placeholder'>

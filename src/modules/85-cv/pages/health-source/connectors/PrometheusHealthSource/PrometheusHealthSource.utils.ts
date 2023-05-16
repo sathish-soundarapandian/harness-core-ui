@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
+import type {
   SelectOption,
-  MultiSelectOption,
+  MultiSelectOption} from '@harness/uicore';
+import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE
@@ -17,12 +18,13 @@ import type { FormikProps } from 'formik'
 import type { PrometheusFilter, PrometheusHealthSourceSpec } from 'services/cv'
 import type { StringsMap } from 'stringTypes'
 import type { UseStringsReturn } from 'framework/strings'
-import {
+import type {
   CreatedMetricsWithSelectedIndex,
-  PrometheusMonitoringSourceFieldNames,
   SelectedAndMappedMetrics,
   PrometheusSetupSource,
-  MapPrometheusQueryToService,
+  MapPrometheusQueryToService} from './PrometheusHealthSource.constants';
+import {
+  PrometheusMonitoringSourceFieldNames,
   PrometheusProductNames
 } from './PrometheusHealthSource.constants'
 import { HealthSourceTypes } from '../../types'

@@ -9,18 +9,20 @@ import React, { useMemo } from 'react'
 import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtils'
 import { getTimeFilters } from '@ce/utils/perspectiveUtils'
 import type { TimeRange } from '@ce/pages/overview/OverviewPage'
+import type {
+  QlceViewEntityStatsDataPoint,
+  QlceViewFilterWrapperInput,
+  QlceViewGroupByInput} from 'services/ce/services';
 import {
   QlceViewAggregateOperation,
-  QlceViewEntityStatsDataPoint,
   QlceViewFilterOperator,
-  QlceViewFilterWrapperInput,
-  QlceViewGroupByInput,
   useFetchperspectiveGridQuery,
   ViewFieldIdentifier
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
 import { CE_COLOR_CONST } from '../CEChart/CEChartOptions'
-import { HorizontalLayout, LEGEND_LIMIT, ListType, Loader, Stats, TableList } from './OverviewPageLayout'
+import type { Stats} from './OverviewPageLayout';
+import { HorizontalLayout, LEGEND_LIMIT, ListType, Loader, TableList } from './OverviewPageLayout'
 import css from './OverviewPage.module.scss'
 
 interface TopClusterProps {

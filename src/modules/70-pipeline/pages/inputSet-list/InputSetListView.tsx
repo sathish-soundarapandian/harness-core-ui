@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, ButtonVariation, Container, Icon, IconName, Layout, Popover, TableV2, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Button, ButtonVariation, Container, Icon, Layout, Popover, TableV2, Text } from '@harness/uicore'
 import React from 'react'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
@@ -33,7 +34,8 @@ import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipeline
 import { CodeSourceCell } from '@pipeline/pages/pipeline-list/PipelineListTable/PipelineListCells'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'

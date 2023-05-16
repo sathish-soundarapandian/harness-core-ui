@@ -4,7 +4,11 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { Ref, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import type { Ref} from 'react';
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react'
+import type {
+  IconName,
+  SelectOption} from '@harness/uicore';
 import {
   Card,
   Container,
@@ -13,10 +17,8 @@ import {
   FormInput,
   getMultiTypeFromValue,
   Icon,
-  IconName,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   Text,
   useConfirmationDialog
 } from '@harness/uicore'

@@ -12,10 +12,12 @@ import { useParams } from 'react-router-dom'
 import type { IconProps } from '@harness/icons'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  useListAccountSetting,
+import type {
   ConnectorSettings as ConnectorSettingsDTO,
   AccountSettings as AccountSettingsDTO
+} from 'services/cd-ng';
+import {
+  useListAccountSetting
 } from 'services/cd-ng'
 import ConnectorSettings from './connector/ConnectorSettings'
 

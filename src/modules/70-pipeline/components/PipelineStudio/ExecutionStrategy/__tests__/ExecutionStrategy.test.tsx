@@ -34,7 +34,8 @@ import {
   rollingUpdateStageFnArg,
   rollingUpdateSshStageFnArg
 } from './mocks/mock'
-import { PipelineContext, PipelineContextInterface } from '../../PipelineContext/PipelineContext'
+import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext';
+import { PipelineContext } from '../../PipelineContext/PipelineContext'
 
 jest
   .spyOn(cdngServices, 'usePostExecutionStrategyYaml')

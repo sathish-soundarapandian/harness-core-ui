@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
-  getMultiTypeFromValue,
-  MultiTypeInputType,
+import type {
   AllowedTypes as MultiTypeAllowedTypes,
   SelectOption
+} from '@harness/uicore';
+import {
+  getMultiTypeFromValue,
+  MultiTypeInputType
 } from '@harness/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { StringKeys } from 'framework/strings'

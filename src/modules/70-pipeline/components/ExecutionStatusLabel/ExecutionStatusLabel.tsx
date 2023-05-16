@@ -11,7 +11,8 @@ import { Icon, Text } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 
 import css from './ExecutionStatusLabel.module.scss'
 

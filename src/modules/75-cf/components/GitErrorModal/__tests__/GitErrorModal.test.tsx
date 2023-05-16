@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import GitErrorModal, { GitErrorModalProps } from '../GitErrorModal'
+import type { GitErrorModalProps } from '../GitErrorModal';
+import GitErrorModal from '../GitErrorModal'
 
 const renderComponent = (props: Partial<GitErrorModalProps> = {}): RenderResult => {
   return render(

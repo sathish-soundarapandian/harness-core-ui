@@ -16,7 +16,8 @@ import * as cfServiceMock from 'services/cf'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
 import mockPermission from '@cf/utils/testData/data/mockPermission'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
-import { EditVariationsModal, EditVariationsModalProps } from '../EditVariationsModal'
+import type { EditVariationsModalProps } from '../EditVariationsModal';
+import { EditVariationsModal } from '../EditVariationsModal'
 
 jest.mock('services/cf')
 

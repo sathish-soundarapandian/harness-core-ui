@@ -5,8 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MutableRefObject, useContext, useEffect, useRef, useState } from 'react'
+import type { MutableRefObject} from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useModalHook } from '@harness/use-modal'
+import type {
+  SelectOption
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -14,8 +18,7 @@ import {
   Dialog,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  NoDataCard,
-  SelectOption
+  NoDataCard
 } from '@harness/uicore'
 import { Formik, useFormikContext } from 'formik'
 import { defaultTo } from 'lodash-es'

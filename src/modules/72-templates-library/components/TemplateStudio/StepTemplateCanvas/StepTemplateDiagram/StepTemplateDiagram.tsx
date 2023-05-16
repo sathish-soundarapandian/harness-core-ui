@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { SyntheticEvent, useMemo } from 'react'
+import type { SyntheticEvent} from 'react';
+import React, { useMemo } from 'react'
 import { Button, Container, Layout, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'

@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Layout, Text, NoDataCard, Container, Tabs, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Layout, Text, NoDataCard, Container, Tabs } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { Page } from '@common/exports'

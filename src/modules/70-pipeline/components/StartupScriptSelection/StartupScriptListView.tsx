@@ -6,12 +6,14 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { Layout, Text, StepWizard, StepProps, Button, ButtonSize, ButtonVariation, Icon } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Layout, Text, StepWizard, Button, ButtonSize, ButtonVariation, Icon } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Dialog, Classes } from '@blueprintjs/core'
 import { get, isEmpty, set } from 'lodash-es'
 
 import produce from 'immer'
@@ -53,14 +55,16 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ConnectorField from './StartupScriptConnectorField'
 import StartupScriptWizardStepTwo from './StartupScriptWizardStepTwo'
-import {
-  ConnectorMap,
-  AllowedTypes,
+import type {
   ConnectorTypes,
-  ConnectorIcons,
   StartupScriptListViewProps,
   StartupScriptWizardInitData,
   StartupScriptLastStepProps
+} from './StartupScriptInterface.types';
+import {
+  ConnectorMap,
+  AllowedTypes,
+  ConnectorIcons
 } from './StartupScriptInterface.types'
 import { StartupScriptWizard } from './StartupScriptWizard'
 import css from './StartupScriptSelection.module.scss'

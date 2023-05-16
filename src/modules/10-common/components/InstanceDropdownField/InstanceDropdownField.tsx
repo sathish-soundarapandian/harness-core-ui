@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
-  AllowedTypes,
   Button,
   Container,
   FormikTooltipContext,
@@ -17,11 +18,12 @@ import {
   MultiTextInput,
   MultiTypeInputType
 } from '@harness/uicore'
-import {
-  FormGroup,
+import type {
   HTMLInputProps,
   IFormGroupProps,
-  IInputGroupProps,
+  IInputGroupProps} from '@blueprintjs/core';
+import {
+  FormGroup,
   Intent,
   Menu,
   MenuItem,
@@ -31,14 +33,17 @@ import {
 import { connect } from 'formik'
 import { get, isNil } from 'lodash-es'
 import * as Yup from 'yup'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { errorCheck } from '@common/utils/formikHelpers'
 // import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
+import type {
+  ConfigureOptionsProps
+} from '@common/components/ConfigureOptions/ConfigureOptions';
 import {
   ALLOWED_VALUES_TYPE,
-  ConfigureOptions,
-  ConfigureOptionsProps
+  ConfigureOptions
 } from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from './InstanceDropdownField.module.scss'
 

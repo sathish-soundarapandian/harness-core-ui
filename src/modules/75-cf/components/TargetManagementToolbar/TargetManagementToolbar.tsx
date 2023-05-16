@@ -6,7 +6,8 @@
  */
 
 import { Container } from '@harness/uicore'
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import GitSyncActions from '../GitSyncActions/GitSyncActions'
 
 const TargetManagementToolbar = (): ReactElement => {

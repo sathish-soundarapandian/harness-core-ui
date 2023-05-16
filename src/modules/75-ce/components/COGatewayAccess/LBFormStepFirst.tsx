@@ -8,13 +8,15 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { Button, Formik, FormikForm, FormInput, Icon, Layout, Radio, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Button, Formik, FormikForm, FormInput, Icon, Layout, Radio, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useToaster } from '@common/exports'
 import type { AccessPointScreenMode } from '@ce/types'
 import { useStrings } from 'framework/strings'
 import { VALID_DOMAIN_REGEX } from '@ce/constants'
-import { AccessPoint, useAllHostedZones } from 'services/lw'
+import type { AccessPoint} from 'services/lw';
+import { useAllHostedZones } from 'services/lw'
 import helpTextIcon from './images/OthersHelpText.svg'
 import css from './COGatewayAccess.module.scss'
 

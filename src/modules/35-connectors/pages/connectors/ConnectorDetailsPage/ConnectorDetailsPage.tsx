@@ -6,17 +6,19 @@
  */
 
 import React, { useEffect, useMemo } from 'react'
-import { Layout, Container, Icon, Text, SelectOption, PageSpinner, PageError, useToaster } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, Container, Icon, Text, PageSpinner, PageError, useToaster } from '@harness/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { Page } from '@common/exports'
-import {
-  useGetConnector,
+import type {
   ConnectorResponse,
   EntityGitDetails,
-  useGetListOfBranchesWithStatus,
   GitBranchDTO,
-  ResponseConnectorResponse,
+  ResponseConnectorResponse} from 'services/cd-ng';
+import {
+  useGetConnector,
+  useGetListOfBranchesWithStatus,
   useGetSettingValue
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

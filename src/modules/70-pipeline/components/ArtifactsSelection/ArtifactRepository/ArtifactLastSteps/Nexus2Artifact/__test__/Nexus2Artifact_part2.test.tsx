@@ -8,11 +8,13 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import {
+import type {
   ArtifactType,
-  Nexus2InitialValuesType,
+  Nexus2InitialValuesType} from '@pipeline/components/ArtifactsSelection/ArtifactInterface';
+import {
   RepositoryPortOrServer,
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'

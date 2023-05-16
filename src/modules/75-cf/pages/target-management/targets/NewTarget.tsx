@@ -10,7 +10,8 @@ import { get } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { getErrorMessage } from '@cf/utils/CFUtils'
-import { CreateTargetQueryParams, useCreateTarget, useUploadTargets } from 'services/cf'
+import type { CreateTargetQueryParams} from 'services/cf';
+import { useCreateTarget, useUploadTargets } from 'services/cf'
 import CreateTargetModal from './components/CreateTargetModal/CreateTargetModal'
 import type { TargetData } from './components/CreateTargetModal/types'
 

@@ -7,7 +7,8 @@
 
 import React, { useMemo, useState } from 'react'
 import { Classes } from '@blueprintjs/core'
-import { Layout, Dialog, Text, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Layout, Dialog, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { loadStripe } from '@stripe/stripe-js'
@@ -21,13 +22,15 @@ import { FinalReview } from '@auth-settings/components/Subscription/FinalReview/
 import { Success } from '@auth-settings/components/Subscription/Success/Success'
 import { BillingInfo } from '@auth-settings/components/Subscription/BillingInfo/BillingInfo'
 import type { Module } from 'framework/types/ModuleName'
-import { Editions, SubscribeViews, SubscriptionProps, TimeType } from '@common/constants/SubscriptionTypes'
+import type { SubscriptionProps} from '@common/constants/SubscriptionTypes';
+import { Editions, SubscribeViews, TimeType } from '@common/constants/SubscriptionTypes'
 import type { InvoiceDetailDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import PricePreview from '@auth-settings/components/Subscription/PricePreview/PricePreview'
 import SubscriptionPoll from '@auth-settings/components/Subscription/PaymentMethod/SubscriptionPoll'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import useRegionList, { Country, StateByCountryMap } from '@common/hooks/useRegionList'
+import type { Country, StateByCountryMap } from '@common/hooks/useRegionList';
+import useRegionList from '@common/hooks/useRegionList'
 import PaymentMethodStep from '@auth-settings/components/Subscription/PaymentMethod/PaymentMethodStep'
 import { getTitleByModule } from '../../components/Subscription/subscriptionUtils'
 import { SubscriptionProvider, useSubscriptionContext, getSkewsMap } from './SubscriptionStore'

@@ -12,6 +12,10 @@ import * as Yup from 'yup'
 import cx from 'classnames'
 import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
+import type {
+  StepProps,
+  SelectOption,
+  AllowedTypes} from '@harness/uicore';
 import {
   Text,
   Accordion,
@@ -19,25 +23,24 @@ import {
   Button,
   FormInput,
   Formik,
-  StepProps,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  SelectOption,
   ButtonVariation,
-  AllowedTypes,
   FormikForm
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ConnectorConfigDTO,
   ManifestConfig,
   ManifestConfigWrapper,
-  StoreConfig,
+  StoreConfig} from 'services/cd-ng';
+import {
   useGetBucketListForS3
 } from 'services/cd-ng'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'

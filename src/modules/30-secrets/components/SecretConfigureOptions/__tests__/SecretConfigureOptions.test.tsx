@@ -10,7 +10,8 @@ import { queryByAttribute, render, screen, waitFor } from '@testing-library/reac
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cdNgService from 'services/cd-ng'
-import { SecretConfigureOptions, SecretConfigureOptionsProps } from '../SecretConfigureOptions'
+import type { SecretConfigureOptionsProps } from '../SecretConfigureOptions';
+import { SecretConfigureOptions } from '../SecretConfigureOptions'
 import { projectSecretsResponse } from './mock'
 
 const openConfigureOptionsModal = async (baseElement: HTMLElement): Promise<void> => {

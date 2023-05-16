@@ -7,16 +7,19 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { MultiTypeInputProps, Container, SelectOption, AllowedTypes, Text } from '@harness/uicore'
+import type { MultiTypeInputProps, SelectOption, AllowedTypes} from '@harness/uicore';
+import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { capitalize } from 'lodash-es'
-import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
+import type { MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText';
+import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import type { StringsMap } from 'stringTypes'
 import { renderOptionalWrapper } from '@ci/components/PipelineSteps/CIStep/StepUtils'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import SectionHeader from './SectionHeader'

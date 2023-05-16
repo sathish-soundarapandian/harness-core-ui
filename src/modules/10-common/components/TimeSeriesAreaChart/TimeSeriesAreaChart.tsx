@@ -9,7 +9,8 @@ import React from 'react'
 import { merge } from 'lodash-es'
 
 import HighchartsReact from 'highcharts-react-official'
-import Highcharts, { SeriesColumnOptions, SeriesOptionsType } from 'highcharts'
+import type { SeriesColumnOptions, SeriesOptionsType } from 'highcharts';
+import Highcharts from 'highcharts'
 
 type DataType = Omit<SeriesColumnOptions, 'type'>[]
 

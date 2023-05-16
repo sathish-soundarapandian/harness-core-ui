@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Button, Text, StepProps, FormikForm, Formik, Container, Layout } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Button, Text, FormikForm, Formik, Container, Layout } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import type { SecretDTOV2 } from 'services/cd-ng'

@@ -18,17 +18,19 @@ import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import CardRailView from '@pipeline/components/Dashboards/CardRailView/CardRailView'
-import {
-  useGetDeployments,
+import type {
   ExecutionStatusInfo,
   ServiceDeploymentInfo,
+  WorkloadDeploymentInfoV2} from 'services/cd-ng';
+import {
+  useGetDeployments,
   useGetWorkloadsV2,
-  WorkloadDeploymentInfoV2,
   useGetDeploymentExecution,
   useGetDeploymentHealthV2
 } from 'services/cd-ng'
 import type { CIBuildCommit, CIWebhookInfoDTO } from 'services/ci'
-import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
+import type { PipelineExecutionSummary} from 'services/pipeline-ng';
+import { useGetListOfExecutions } from 'services/pipeline-ng'
 import {
   ActiveStatus,
   FailedStatus,
@@ -39,10 +41,12 @@ import {
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
+import type {
+  TimeRangeSelectorProps
+} from '@common/components/TimeRangeSelector/TimeRangeSelector';
 import {
   startOfDay,
-  TimeRangeSelector,
-  TimeRangeSelectorProps
+  TimeRangeSelector
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
 import { useLocalStorage, useMutateAsGet } from '@common/hooks'

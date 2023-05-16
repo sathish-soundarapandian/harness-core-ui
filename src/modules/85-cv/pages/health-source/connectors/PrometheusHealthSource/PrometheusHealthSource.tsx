@@ -6,13 +6,14 @@
  */
 
 import React, { useState, useContext, useMemo, useCallback } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Container,
   Formik,
   FormikForm,
   Text,
   Layout,
-  SelectOption,
   Utils,
   Accordion,
   getMultiTypeFromValue,
@@ -26,8 +27,9 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import GroupName from '@cv/components/GroupName/GroupName'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
+import type {
+  StackdriverDefinition} from 'services/cv';
 import {
-  StackdriverDefinition,
   useGetLabelNames,
   useGetMetricNames,
   useGetRiskCategoryForCustomHealthMetric
@@ -43,10 +45,12 @@ import {
   transformPrometheusHealthSourceToSetupSource,
   persistCustomMetric
 } from './PrometheusHealthSource.utils'
-import {
-  PrometheusMonitoringSourceFieldNames,
+import type {
   MapPrometheusQueryToService,
   PrometheusSetupSource
+} from './PrometheusHealthSource.constants';
+import {
+  PrometheusMonitoringSourceFieldNames
 } from './PrometheusHealthSource.constants'
 import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'

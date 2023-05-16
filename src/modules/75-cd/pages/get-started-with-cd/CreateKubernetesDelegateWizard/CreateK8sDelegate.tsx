@@ -16,12 +16,14 @@ import {
   DelegateType,
   k8sPermissionType
 } from '@delegates/components/CreateDelegate/K8sDelegate/DelegateSetupStep/DelegateSetupStep.types'
-import { DelegateSetupDetails, getDelegateTokensPromise, GetDelegateTokensQueryParams } from 'services/cd-ng'
+import type { DelegateSetupDetails, GetDelegateTokensQueryParams } from 'services/cd-ng';
+import { getDelegateTokensPromise } from 'services/cd-ng'
+import type {
+  DelegateSizeDetails,
+  GenerateKubernetesYamlQueryParams} from 'services/portal';
 import {
   createDelegateGroupPromise,
-  DelegateSizeDetails,
   generateKubernetesYamlPromise,
-  GenerateKubernetesYamlQueryParams,
   useGetDelegateSizes,
   validateKubernetesYamlPromise
 } from 'services/portal'
@@ -33,7 +35,8 @@ import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import StepProcessing from './StepProcessing'
-import { DelegateSuccessHandler, generateDelegateName } from '../CDOnboardingUtils'
+import type { DelegateSuccessHandler} from '../CDOnboardingUtils';
+import { generateDelegateName } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { RightDrawer } from '../ConfigureService/ManifestRepoTypes/RightDrawer/RightDrawer'
 import css from './CreateK8sDelegate.module.scss'

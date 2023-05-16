@@ -11,6 +11,9 @@ import { defaultTo, get, memoize, merge } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import type { IItemRendererProps } from '@blueprintjs/select'
+import type {
+  SelectOption,
+  StepProps} from '@harness/uicore';
 import {
   Formik,
   FormInput,
@@ -18,8 +21,6 @@ import {
   Layout,
   MultiTypeInputType,
   Button,
-  SelectOption,
-  StepProps,
   Text,
   ButtonVariation,
   FormikForm
@@ -27,9 +28,10 @@ import {
 import { FontVariation } from '@harness/design-system'
 
 import { useListAwsRegions } from 'services/portal'
-import {
+import type {
   ConnectorConfigDTO,
-  GetImagesListForEcrQueryParams,
+  GetImagesListForEcrQueryParams} from 'services/cd-ng';
+import {
   useGetBuildDetailsForEcr,
   useGetImagesListForEcr
 } from 'services/cd-ng'
@@ -39,7 +41,8 @@ import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRender
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   checkIfQueryParamsisNotEmpty,
   getArtifactFormData,

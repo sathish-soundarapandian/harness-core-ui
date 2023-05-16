@@ -9,11 +9,13 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
-import ResilienceView, {
-  MemoizedResilienceViewContent,
-  MemoizedResilienceViewCTA,
+import type {
   ResilienceViewContentProps,
   ResilienceViewCTAProps
+} from '../ResilienceView';
+import ResilienceView, {
+  MemoizedResilienceViewContent,
+  MemoizedResilienceViewCTA
 } from '../ResilienceView'
 import { mockEmptyPipelineContext, mockPipelineContextWithChaosStep } from './mocks/mockData'
 

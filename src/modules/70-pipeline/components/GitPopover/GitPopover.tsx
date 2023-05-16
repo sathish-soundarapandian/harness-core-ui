@@ -7,7 +7,8 @@
 
 import React, { useMemo } from 'react'
 import { defaultTo } from 'lodash-es'
-import { IPopoverProps, PopoverInteractionKind } from '@blueprintjs/core'
+import type { IPopoverProps} from '@blueprintjs/core';
+import { PopoverInteractionKind } from '@blueprintjs/core'
 import { Icon, Layout, Popover, Text } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
@@ -17,7 +18,8 @@ import { useStrings } from 'framework/strings'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { getEntityUrl, getRepoEntityObject } from '@gitsync/common/gitSyncUtils'
 import type { GitSyncEntityDTO } from 'services/cd-ng'
-import GitPopoverInfo, { GitPopoverInfoProps } from './GitPopoverInfo'
+import type { GitPopoverInfoProps } from './GitPopoverInfo';
+import GitPopoverInfo from './GitPopoverInfo'
 
 export interface GitPopoverProps {
   data: EntityGitDetails

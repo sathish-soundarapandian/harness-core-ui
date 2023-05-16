@@ -11,16 +11,19 @@ import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } fr
 import { FieldArray } from 'formik'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase';
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import MultiTypeFieldScriptSelector, {
   MultiTypeFieldSelector
 } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import type { ScriptType} from '@common/components/ShellScriptMonaco/ShellScriptMonaco';
+import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { scriptInputType } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
-import { BuildDetails, SidecarArtifact, useGetJobDetailsForCustom } from 'services/cd-ng'
+import type { BuildDetails, SidecarArtifact} from 'services/cd-ng';
+import { useGetJobDetailsForCustom } from 'services/cd-ng'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'

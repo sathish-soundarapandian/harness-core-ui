@@ -7,7 +7,8 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import { Checkbox, DropDown, DropDownProps, ExpandingSearchInput, TableV2, Text } from '@harness/uicore'
+import type { DropDownProps} from '@harness/uicore';
+import { Checkbox, DropDown, ExpandingSearchInput, TableV2, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
 import type { CellProps, Column, HeaderProps, Renderer } from 'react-table'

@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { DropDown, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { DropDown } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { Sort, SortFields } from '@common/utils/listUtils'

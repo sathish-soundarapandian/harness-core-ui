@@ -6,7 +6,8 @@
  */
 
 import React, { useCallback, useEffect, useRef } from 'react'
-import { Container, Formik, FormikForm, FormInput, Layout, AllowedTypes, Heading, PageError } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Container, Formik, FormikForm, FormInput, Layout, Heading, PageError } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -15,7 +16,8 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, noop, set } from 'lodash-es'
 import { produce } from 'immer'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type { Error, ExecutionWrapperConfig, StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'

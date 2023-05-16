@@ -11,7 +11,8 @@ import type { RouteProps as RouterRouteprops } from 'react-router-dom'
 
 import { ModalProvider } from '@harness/use-modal'
 import { DefaultLayout } from '@common/layouts'
-import SidebarProvider, { SidebarContext } from '@common/navigation/SidebarProvider'
+import type { SidebarContext } from '@common/navigation/SidebarProvider';
+import SidebarProvider from '@common/navigation/SidebarProvider'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'

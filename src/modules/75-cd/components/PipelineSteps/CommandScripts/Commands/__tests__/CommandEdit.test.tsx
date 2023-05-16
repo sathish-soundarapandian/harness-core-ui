@@ -10,7 +10,8 @@ import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { queryByAttribute, render, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { findPopoverContainer, queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
-import { CommandType, CommandUnitType } from '../../CommandScriptsTypes'
+import type { CommandUnitType } from '../../CommandScriptsTypes';
+import { CommandType } from '../../CommandScriptsTypes'
 import { CommandEdit } from '../CommandEdit'
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor')

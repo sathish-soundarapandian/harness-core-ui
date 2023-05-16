@@ -6,18 +6,21 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes,
+  MultiSelectOption
+} from '@harness/uicore';
 import {
   Text,
   MultiTypeInputType,
   getMultiTypeFromValue,
-  AllowedTypes,
-  Layout,
-  MultiSelectOption
+  Layout
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { cloneDeep, defaultTo, get, isEmpty } from 'lodash-es'
-import { connect, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { connect } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { AllNGVariables } from '@pipeline/utils/types'

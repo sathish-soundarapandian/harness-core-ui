@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { SemgrepStepBaseWithRef } from './SemgrepStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { SemgrepStepVariables, SemgrepStepVariablesProps } from './SemgrepStepVariables'
+import type { SemgrepStepVariablesProps } from './SemgrepStepVariables';
+import { SemgrepStepVariables } from './SemgrepStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SemgrepStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

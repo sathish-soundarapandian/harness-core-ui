@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { Link } from 'react-router-dom'
 
 import { Layout, Icon, Text, FormError } from '@harness/uicore'

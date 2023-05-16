@@ -11,7 +11,8 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import css from './MetricsValidationChart.module.scss'
 
 const GroupByClause = 'groupByFields'

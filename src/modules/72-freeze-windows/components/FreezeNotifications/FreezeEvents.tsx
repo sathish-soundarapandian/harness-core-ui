@@ -7,9 +7,11 @@
 
 import React from 'react'
 import { isEmpty, noop } from 'lodash-es'
-import { Button, ButtonVariation, Formik, FormikForm, FormInput, Layout, StepProps, Text } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Button, ButtonVariation, Formik, FormikForm, FormInput, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { FreezeNotificationRules, FreezeEvent } from '@freeze-windows/types'
 import css from '@pipeline/components/Notifications/useNotificationModal.module.scss'
 

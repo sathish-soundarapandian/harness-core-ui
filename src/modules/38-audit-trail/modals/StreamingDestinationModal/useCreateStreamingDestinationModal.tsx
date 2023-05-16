@@ -8,7 +8,8 @@
 import React, { useState } from 'react'
 import { Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 
 import type { StreamingDestinationAggregateDto } from '@harnessio/react-audit-service-client'
 import { CreateStreamingDestinationWizard } from '@audit-trail/components/CreateStreamingDestination/CreateStreamingDestinationWizard'

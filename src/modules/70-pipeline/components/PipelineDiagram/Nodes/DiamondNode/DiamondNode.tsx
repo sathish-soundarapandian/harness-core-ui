@@ -6,16 +6,19 @@
  */
 
 import React from 'react'
-import { Icon, Text, Button, ButtonVariation, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Icon, Text, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
-import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
+import type { ExecutionStatus} from '@pipeline/utils/statusHelpers';
+import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
-import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
+import type { BaseReactComponentProps } from '../../types';
+import { PipelineGraphType, NodeType } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import { getPositionOfAddIcon, attachDragImageToEventHandler } from '../utils'

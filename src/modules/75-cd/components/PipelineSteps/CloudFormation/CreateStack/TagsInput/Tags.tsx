@@ -8,15 +8,17 @@
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
+import type {
+  MultiSelectOption,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Layout,
   Label,
   Button,
-  FormInput,
-  MultiSelectOption,
-  AllowedTypes
+  FormInput
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

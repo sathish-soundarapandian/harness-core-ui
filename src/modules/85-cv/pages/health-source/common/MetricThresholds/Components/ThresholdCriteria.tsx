@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { useFormikContext } from 'formik'
-import { FormInput, Layout, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { FormInput, Layout } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type { AppDynamicsFomikFormInterface } from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSource.types'

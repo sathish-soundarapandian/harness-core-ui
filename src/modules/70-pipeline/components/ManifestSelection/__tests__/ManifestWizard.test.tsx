@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { findAllByText, findByText, fireEvent, render } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import type { ManifestConfig } from 'services/cd-ng'
 import { ManifestWizard } from '../ManifestWizard/ManifestWizard'

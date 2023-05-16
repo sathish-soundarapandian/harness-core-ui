@@ -9,7 +9,8 @@ import { render, waitFor } from '@testing-library/react'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServicesMock from 'services/cf'
-import FlagPipelineTab, { FlagPipelineTabProps } from '../FlagPipelineTab'
+import type { FlagPipelineTabProps } from '../FlagPipelineTab';
+import FlagPipelineTab from '../FlagPipelineTab'
 
 const renderComponent = (props: Partial<FlagPipelineTabProps> = {}): void => {
   render(

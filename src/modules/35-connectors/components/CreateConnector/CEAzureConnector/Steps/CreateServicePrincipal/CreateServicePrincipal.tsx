@@ -8,18 +8,21 @@
 import React, { useEffect, useState } from 'react'
 import { pick } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type {
+  StepProps,
+  ModalErrorHandlerBinding
+} from '@harness/uicore';
 import {
   Button,
   Layout,
   Text,
-  StepProps,
   Container,
-  ModalErrorHandler,
-  ModalErrorHandlerBinding
+  ModalErrorHandler
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useCreateConnector, useUpdateConnector, Failure } from 'services/cd-ng'
+import type { Failure } from 'services/cd-ng';
+import { useCreateConnector, useUpdateConnector } from 'services/cd-ng'
 import { useAzureappclientid } from 'services/ce/index'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { CE_AZURE_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'

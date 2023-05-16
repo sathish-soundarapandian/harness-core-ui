@@ -24,9 +24,10 @@ import { useParams } from 'react-router-dom'
 import { defaultTo, isUndefined, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   GetActiveServiceInstancesForEnvironmentQueryParams,
-  ResponseInstanceGroupedByServiceList,
+  ResponseInstanceGroupedByServiceList} from 'services/cd-ng';
+import {
   useGetActiveServiceInstancesForEnvironment
 } from 'services/cd-ng'
 import EnvironmentDetailInstanceDialog from './EnvironmentDetailInstanceDialog'

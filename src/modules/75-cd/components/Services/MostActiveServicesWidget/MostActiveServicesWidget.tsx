@@ -11,14 +11,17 @@ import cx from 'classnames'
 import { Card, Container, LabelPosition, Layout, Text, WeightedStack, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { DeploymentsTimeRangeContext, getFixed } from '@cd/components/Services/common'
-import {
+import type {
   ChangeRate,
   DashboardWorkloadDeploymentV2,
   GetWorkloadsQueryParams,
-  useGetWorkloadsV2,
   WorkloadDeploymentInfoV2
+} from 'services/cd-ng';
+import {
+  useGetWorkloadsV2
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FAIL_COLORS, SUCCESS_COLORS } from '@dashboards/constants'

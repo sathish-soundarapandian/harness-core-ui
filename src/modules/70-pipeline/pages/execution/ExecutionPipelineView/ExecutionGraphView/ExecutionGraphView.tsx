@@ -7,7 +7,8 @@
 
 import React, { useCallback } from 'react'
 import { debounce, omit } from 'lodash-es'
-import SplitPane, { SplitPaneProps } from 'react-split-pane'
+import type { SplitPaneProps } from 'react-split-pane';
+import SplitPane from 'react-split-pane'
 
 import { isExecutionNotStarted, isExecutionSkipped } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'

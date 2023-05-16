@@ -17,13 +17,14 @@ import type {
   ExecutionPipelineNode
 } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { Duration } from '@common/components'
+import type {
+  ExecutionStatus} from '@pipeline/utils/statusHelpers';
 import {
   isExecutionRunning,
   isExecutionSuccess,
   isExecutionNotStarted,
   isExecutionQueued,
   ExecutionStatusEnum,
-  ExecutionStatus,
   isExecutionWaitingForInput
 } from '@pipeline/utils/statusHelpers'
 import { getInterruptHistoriesFromType, getStepsTreeStatus, Interrupt } from '@pipeline/utils/executionUtils'

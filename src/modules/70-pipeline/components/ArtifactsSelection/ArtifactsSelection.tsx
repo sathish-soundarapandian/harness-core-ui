@@ -10,14 +10,14 @@ import { get, set, merge } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import produce from 'immer'
-import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core'
+import { Dialog, Classes } from '@blueprintjs/core'
 import { shouldShowError, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 
-import {
-  useGetConnectorListV2,
+import type {
   PageConnectorResponse,
   SidecarArtifactWrapper,
   PrimaryArtifact,
@@ -25,6 +25,7 @@ import {
   ArtifactConfig,
   SidecarArtifact
 } from 'services/cd-ng'
+import { useGetConnectorListV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
@@ -37,10 +38,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import {
-  ArtifactConnectorStepDataToLastStep,
-  useArtifactSelectionLastSteps
-} from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
+import { useArtifactSelectionLastSteps, type ArtifactConnectorStepDataToLastStep } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import ArtifactListView from './ArtifactListView/ArtifactListView'

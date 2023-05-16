@@ -7,7 +7,8 @@
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { FormInput, SelectOption, Layout, Container, Text, ButtonVariation, useToaster } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, Layout, Container, Text, ButtonVariation, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -22,7 +23,8 @@ import type { SLIProps } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateS
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import HealthSourceDrawerHeader from '@cv/pages/health-source/HealthSourceDrawer/component/HealthSourceDrawerHeader/HealthSourceDrawerHeader'
 import HealthSourceDrawerContent from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent'
-import { HealthSource, useGetMonitoredService } from 'services/cv'
+import type { HealthSource} from 'services/cv';
+import { useGetMonitoredService } from 'services/cv'
 import { createHealthsourceList } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
 import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { getErrorMessage } from '@cv/utils/CommonUtils'

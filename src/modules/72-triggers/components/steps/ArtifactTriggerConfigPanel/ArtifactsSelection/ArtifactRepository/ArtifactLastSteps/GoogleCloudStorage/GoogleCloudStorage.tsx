@@ -7,15 +7,16 @@
 
 import React, { useCallback, useMemo } from 'react'
 import cx from 'classnames'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   FormInput,
   Layout,
   MultiTypeInputType,
   Button,
-  StepProps,
   Text,
-  SelectOption,
   ButtonVariation,
   FormikForm,
   getMultiTypeFromValue,
@@ -27,7 +28,8 @@ import * as Yup from 'yup'
 import { defaultTo, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { ConnectorConfigDTO, useGetGcsBuckets, useGetProjects } from 'services/cd-ng'
+import type { ConnectorConfigDTO} from 'services/cd-ng';
+import { useGetGcsBuckets, useGetProjects } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import {
   getConnectorIdValue,
@@ -37,7 +39,8 @@ import {
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { GoolgeCloudStorageRegistrySpec } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useMutateAsGet } from '@common/hooks'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'

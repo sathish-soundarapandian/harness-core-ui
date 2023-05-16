@@ -11,13 +11,8 @@ import type { IconName } from '@harness/uicore'
 import { upperCase, throttle } from 'lodash-es'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import routes from '@common/RouteDefinitions'
-import {
-  ModuleLicenseDTO,
-  ResponseModuleLicenseDTO,
-  StartFreeLicenseQueryParams,
-  useStartFreeLicense,
-  useUpdateAccountDefaultExperienceNG
-} from 'services/cd-ng'
+import type { ModuleLicenseDTO, ResponseModuleLicenseDTO, StartFreeLicenseQueryParams } from 'services/cd-ng'
+import { useStartFreeLicense, useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { Experiences } from '@common/constants/Utils'
 import { useToaster } from '@common/components'
@@ -31,7 +26,8 @@ import {
 } from 'framework/LicenseStore/licenseStoreUtil'
 import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { Module, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import type { Module } from 'framework/types/ModuleName'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { PLG_CD_GET_STARTED_VARIANTS } from '@common/components/ConfigureOptions/constants'
 import ModuleCard from './ModuleCard'
 import css from './WelcomePage.module.scss'

@@ -7,12 +7,14 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { SelectOption, useToaster } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { useToaster } from '@harness/uicore'
 import { getVerifyStepLogsPromise, useGetVerifyStepDeploymentActivitySummary, useGetVerifyStepLogs } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { LogTypes, VerifyStepLogContentProps } from '../useLogContentHook.types'
+import type { VerifyStepLogContentProps } from '../useLogContentHook.types';
+import { LogTypes } from '../useLogContentHook.types'
 import ExecutionLog from './ExecutionLog/ExecutionLog'
 import ExternalAPICall from './ExternalAPICall/ExternalAPICall'
 import { PAGE_SIZE } from '../useLogContentHook.constants'

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import type { AllowedTypes, SelectOption} from '@harness/uicore';
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 import { defaultTo, get, memoize } from 'lodash-es'
 
 import type { GetDataError } from 'restful-react'

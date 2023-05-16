@@ -10,7 +10,8 @@ import { Card, CardBody, Icon, Layout, Text, useConfirmationDialog, useToaster }
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { Classes, Intent, Menu } from '@blueprintjs/core'
-import { Role, RoleResponse, useDeleteRole } from 'services/rbac'
+import type { Role, RoleResponse} from 'services/rbac';
+import { useDeleteRole } from 'services/rbac'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import { getRoleIcon } from '@rbac/utils/utils'

@@ -5,15 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useState } from 'react'
-import { ButtonProps, ButtonVariation } from '@harness/uicore'
+import type { FC} from 'react';
+import React, { useState } from 'react'
+import type { ButtonProps} from '@harness/uicore';
+import { ButtonVariation } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import TargetManagementAddFlagsDialog, {
+import type {
   TargetManagementAddFlagsDialogProps
-} from '@cf/components/TargetManagementAddFlagsDialog/TargetManagementAddFlagsDialog'
+} from '@cf/components/TargetManagementAddFlagsDialog/TargetManagementAddFlagsDialog';
+import TargetManagementAddFlagsDialog from '@cf/components/TargetManagementAddFlagsDialog/TargetManagementAddFlagsDialog'
 
 export interface AddFlagButtonProps extends Omit<TargetManagementAddFlagsDialogProps, 'hideModal'> {
   planEnforcementProps: Partial<ButtonProps>

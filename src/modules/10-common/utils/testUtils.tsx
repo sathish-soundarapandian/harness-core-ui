@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { UseGetProps, UseGetReturn, RestfulProvider } from 'restful-react'
+import type { UseGetProps, UseGetReturn} from 'restful-react';
+import { RestfulProvider } from 'restful-react'
 import { act, fireEvent, getByText, queryByAttribute, waitFor } from '@testing-library/react'
 import { compile } from 'path-to-regexp'
 import { createMemoryHistory } from 'history'
@@ -16,24 +17,31 @@ import qs from 'qs'
 import { noop } from 'lodash-es'
 import { enableMapSet } from 'immer'
 import userEvent from '@testing-library/user-event'
-import { AppStoreContext, AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
-import { LicenseStoreContext, LicenseStoreContextProps } from 'framework/LicenseStore/LicenseStoreContext'
+import type { AppStoreContextProps } from 'framework/AppStore/AppStoreContext';
+import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
+import type { LicenseStoreContextProps } from 'framework/LicenseStore/LicenseStoreContext';
+import { LicenseStoreContext } from 'framework/LicenseStore/LicenseStoreContext'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { withAccountId, accountPathProps } from '@common/utils/routeUtils'
 import type { Project } from 'services/cd-ng'
-import { StringsContext, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { StringsContext } from 'framework/strings'
 
-import { FeaturesContext, FeaturesContextProps } from 'framework/featureStore/FeaturesContext'
+import type { FeaturesContextProps } from 'framework/featureStore/FeaturesContext';
+import { FeaturesContext } from 'framework/featureStore/FeaturesContext'
 import type { FeatureDetail, FeatureMetaData } from 'framework/featureStore/featureStoreUtil'
 import type { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import './testUtils.scss'
-import { PermissionsContext, PermissionsContextProps } from 'framework/rbac/PermissionsContext'
+import type { PermissionsContextProps } from 'framework/rbac/PermissionsContext';
+import { PermissionsContext } from 'framework/rbac/PermissionsContext'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import type { FeatureFlag } from '@common/featureFlags'
 import { PreferenceStoreContext } from 'framework/PreferenceStore/PreferenceStoreContext'
-import {
-  TemplateSelectorContext,
+import type {
   TemplatesSelectorContextInterface
+} from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext';
+import {
+  TemplateSelectorContext
 } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 
 export type UseGetMockData<TData, TError = undefined, TQueryParams = undefined, TPathParams = undefined> = Required<

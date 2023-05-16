@@ -7,8 +7,9 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
+import type {
+  StepProps} from '@harness/uicore';
 import {
-  StepProps,
   Container,
   Text,
   FormInput,
@@ -21,7 +22,8 @@ import {
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { DelegateCardInterface, setupGCPSecretManagerFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import type { DelegateCardInterface} from '@connectors/pages/connectors/utils/ConnectorUtils';
+import { setupGCPSecretManagerFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type {

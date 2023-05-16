@@ -6,14 +6,16 @@
  */
 
 import React from 'react'
-import { getByPlaceholderText, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { getByPlaceholderText, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Feature, Features } from 'services/cf'
 import * as cfServices from 'services/cf'
 import mockTarget from '@cf/utils/testData/data/mockTarget'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
-import TargetManagementAddFlagsDialog, { TargetManagementAddFlagsDialogProps } from '../TargetManagementAddFlagsDialog'
+import type { TargetManagementAddFlagsDialogProps } from '../TargetManagementAddFlagsDialog';
+import TargetManagementAddFlagsDialog from '../TargetManagementAddFlagsDialog'
 
 const mockFlags = [
   {

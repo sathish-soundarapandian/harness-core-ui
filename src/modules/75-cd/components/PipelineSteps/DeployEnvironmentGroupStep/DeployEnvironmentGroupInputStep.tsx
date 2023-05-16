@@ -10,7 +10,8 @@ import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 
-import { AllowedTypes, getMultiTypeFromValue, Layout, MultiTypeInputType, useToaster } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { getMultiTypeFromValue, Layout, MultiTypeInputType, useToaster } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 

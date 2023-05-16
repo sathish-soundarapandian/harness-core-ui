@@ -6,7 +6,8 @@
  */
 
 import { useCallback, useMemo, useState } from 'react'
-import { Intent, IToaster, IToasterProps, Position, Toaster } from '@blueprintjs/core'
+import type { IToaster, IToasterProps} from '@blueprintjs/core';
+import { Intent, Position, Toaster } from '@blueprintjs/core'
 import { get } from 'lodash-es'
 import { Utils } from '@harness/uicore'
 import { useStrings } from 'framework/strings'

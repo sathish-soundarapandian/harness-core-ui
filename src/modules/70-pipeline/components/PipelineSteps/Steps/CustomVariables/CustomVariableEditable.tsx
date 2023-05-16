@@ -6,6 +6,9 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Text,
   Button,
@@ -14,8 +17,7 @@ import {
   getMultiTypeFromValue,
   useNestedAccordion,
   ButtonVariation,
-  ButtonSize,
-  AllowedTypes
+  ButtonSize
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Formik, FieldArray } from 'formik'
@@ -24,7 +26,8 @@ import cx from 'classnames'
 import { debounce, defaultTo, escape, isEmpty } from 'lodash-es'
 
 import { useParams } from 'react-router-dom'
-import { String, StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { String, useStrings } from 'framework/strings'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'

@@ -6,16 +6,19 @@
  */
 
 import React from 'react'
-import { Accordion, AllowedTypes, Formik } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Accordion, Formik } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { ShellScriptFormData, variableSchema } from './shellScriptTypes'
+import type { ShellScriptFormData} from './shellScriptTypes';
+import { variableSchema } from './shellScriptTypes'
 import BaseShellScript from './BaseShellScript'
 import OptionalConfiguration from './OptionalConfiguration'
 

@@ -13,7 +13,8 @@ import { useMutateAsGet } from '@common/hooks'
 import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
 import StaticResourceRenderer from '@rbac/components/StaticResourceRenderer/StaticResourceRenderer'
 import type { ResourceHandlerTableData } from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
-import { Rule, useGetPolicies } from 'services/ce'
+import type { Rule} from 'services/ce';
+import { useGetPolicies } from 'services/ce'
 
 import { RuleNameCell } from './GovernanceRulesResourceCells'
 

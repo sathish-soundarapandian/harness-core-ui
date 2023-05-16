@@ -13,7 +13,8 @@ import {
   isExecutionNotStarted,
   isExecutionSuccess
 } from '@pipeline/utils/statusHelpers'
-import { NonSelectableStageNodes, StageNodeType } from '@pipeline/utils/executionUtils'
+import type { StageNodeType } from '@pipeline/utils/executionUtils';
+import { NonSelectableStageNodes } from '@pipeline/utils/executionUtils'
 import type { GraphLayoutNode, PipelineExecutionSummary } from 'services/pipeline-ng'
 
 import { preOrderTraversal, postOrderTraversal, isExecutionActiveOrCompletedWitBadState } from './treeSearchUtils'

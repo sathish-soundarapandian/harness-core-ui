@@ -7,14 +7,17 @@
 
 import React from 'react'
 import { get, set, isEmpty, isArray } from 'lodash-es'
-import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { FormikErrors } from 'formik'
-import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
+import type { ValidateInputSetProps, StepProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType, Step } from '@pipeline/components/AbstractSteps/Step'
+import type {
+  ServiceSpec} from 'services/cd-ng';
 import {
-  ServiceSpec,
   getConnectorListV2Promise,
   getBuildDetailsForDockerPromise,
   getBuildDetailsForGcrPromise,
@@ -30,9 +33,11 @@ import { getConnectorName, getConnectorValue } from '@triggers/pages/triggers/ut
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import {
-  GenericServiceSpecVariablesForm,
+import type {
   K8sServiceSpecVariablesFormProps
+} from '../Common/GenericServiceSpec/GenericServiceSpecVariablesForm';
+import {
+  GenericServiceSpecVariablesForm
 } from '../Common/GenericServiceSpec/GenericServiceSpecVariablesForm'
 import type { K8SDirectServiceStep } from './K8sServiceSpecInterface'
 import GenericServiceSpecEditable from '../Common/GenericServiceSpec/GenericServiceSpecEditable'

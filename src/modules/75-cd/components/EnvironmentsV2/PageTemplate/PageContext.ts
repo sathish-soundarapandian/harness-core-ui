@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { createContext, Dispatch, SetStateAction, useContext } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import { createContext, useContext } from 'react'
 import { noop } from 'lodash-es'
 
 import { Views } from '@harness/uicore'

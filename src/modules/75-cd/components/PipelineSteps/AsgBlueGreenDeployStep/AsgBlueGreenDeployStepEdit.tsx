@@ -12,23 +12,27 @@ import * as Yup from 'yup'
 import produce from 'immer'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import {
+import type {
   AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
+import {
   Formik,
   FormikForm,
   Text,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 
-import { listenerRulesPromise, ResponseListString, useElasticLoadBalancers, useListeners } from 'services/cd-ng'
+import type { ResponseListString} from 'services/cd-ng';
+import { listenerRulesPromise, useElasticLoadBalancers, useListeners } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { FormMultiTypeCheckboxField } from '@common/components'

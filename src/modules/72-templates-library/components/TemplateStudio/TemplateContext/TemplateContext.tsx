@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { deleteDB, IDBPDatabase, openDB } from 'idb'
+import type { IDBPDatabase } from 'idb'
+import { deleteDB, openDB } from 'idb'
 import { merge, cloneDeep, defaultTo, isEqual, maxBy } from 'lodash-es'
 import { VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { parse } from 'yaml'
@@ -17,22 +18,19 @@ import type { GetPipelineQueryParams } from 'services/pipeline-ng'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
-import {
+import { getTemplateListPromise, getTemplateMetadataListPromise, getTemplatePromise, type Error } from 'services/template-ng'
+import type {
   CacheResponseMetadata,
   EntityGitDetails,
   EntityValidityDetails,
   ErrorNodeSummary,
-  getTemplateListPromise,
   GetTemplateListQueryParams,
-  getTemplateMetadataListPromise,
-  getTemplatePromise,
   GetTemplateQueryParams,
   NGTemplateInfoConfig,
   TemplateMetadataSummaryResponse,
   TemplateResponse,
   TemplateSummaryResponse
 } from 'services/template-ng'
-import type { Error } from 'services/template-ng'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -49,8 +47,10 @@ import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
-import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
-import { ActionReturnType, TemplateContextActions } from './TemplateActions'
+import type { TemplateReducerState, TemplateViewData } from './TemplateReducer';
+import { initialState, TemplateReducer } from './TemplateReducer'
+import type { ActionReturnType} from './TemplateActions';
+import { TemplateContextActions } from './TemplateActions'
 import { isNewTemplate } from '../TemplateStudioUtils'
 
 const logger = loggerFor(ModuleName.TEMPLATES)

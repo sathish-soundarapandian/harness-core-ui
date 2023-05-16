@@ -10,7 +10,8 @@ import { isEqual, get, omit } from 'lodash-es'
 import debounce from 'p-debounce'
 import produce from 'immer'
 
-import { useGetAccessControlList, PermissionCheck, AccessControl } from 'services/rbac'
+import type { PermissionCheck, AccessControl } from 'services/rbac'
+import { useGetAccessControlList } from 'services/rbac'
 
 type Permissions = Map<string, boolean>
 

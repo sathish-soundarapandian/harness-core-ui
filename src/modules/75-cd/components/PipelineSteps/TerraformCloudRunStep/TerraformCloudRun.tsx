@@ -11,8 +11,10 @@ import type { FormikErrors } from 'formik'
 import type { IconName } from '@harness/uicore'
 import type { StepElementConfig } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
-import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
-import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps } from '@pipeline/components/PipelineSteps/PipelineStep';
+import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { TerraformCloudRunEditRef } from './TerraformCloudRunEdit'

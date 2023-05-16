@@ -6,7 +6,11 @@
  */
 
 import React from 'react'
-import { FieldArray, FormikValues } from 'formik'
+import type { FormikValues } from 'formik';
+import { FieldArray } from 'formik'
+import type {
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Layout,
   FormInput,
@@ -15,10 +19,10 @@ import {
   Text,
   Button,
   Icon,
-  ButtonSize,
-  AllowedTypes
+  ButtonSize
 } from '@harness/uicore'
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'

@@ -6,6 +6,8 @@
  */
 
 import React, { useMemo, useState } from 'react'
+import type {
+  IconName} from '@harness/uicore';
 import {
   Button,
   ButtonSize,
@@ -14,7 +16,6 @@ import {
   FlexExpander,
   getErrorInfoFromErrorObject,
   Icon,
-  IconName,
   Layout,
   TableV2,
   Text,
@@ -32,7 +33,8 @@ import routes from '@common/RouteDefinitions'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import { useStrings } from 'framework/strings'
-import { ConnectorInfoDTO, useDeleteConnector } from 'services/cd-ng'
+import type { ConnectorInfoDTO} from 'services/cd-ng';
+import { useDeleteConnector } from 'services/cd-ng'
 import type { CcmMetaData } from 'services/ce/services'
 import { generateFilters } from '@ce/utils/anomaliesUtils'
 import { GROUP_BY_CLUSTER_NAME } from '@ce/utils/perspectiveUtils'
@@ -46,11 +48,12 @@ import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
-import {
+import type {
   CustomK8sCell,
   CustomK8sColumn,
   CustomK8sConnectorResponse,
-  CustomK8sPageConnectorResponse,
+  CustomK8sPageConnectorResponse} from '@ce/utils/cloudIntegrationUtils';
+import {
   getConnectorStatusIcon,
   getReportingTooltipIcon,
   lastEventRecieved

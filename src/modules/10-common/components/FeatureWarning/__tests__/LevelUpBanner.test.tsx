@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import LevelUpBanner, { LevelUpBannerProps } from '../LevelUpBanner'
+import type { LevelUpBannerProps } from '../LevelUpBanner';
+import LevelUpBanner from '../LevelUpBanner'
 
 const renderComponent = (props: Partial<LevelUpBannerProps> = {}): RenderResult =>
   render(

@@ -10,7 +10,8 @@ import type { Column } from 'react-table'
 import { Container, Layout, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
-import { useGetVariablesList, VariableResponseDTO } from 'services/cd-ng'
+import type { VariableResponseDTO } from 'services/cd-ng';
+import { useGetVariablesList } from 'services/cd-ng'
 import { PageSpinner } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 

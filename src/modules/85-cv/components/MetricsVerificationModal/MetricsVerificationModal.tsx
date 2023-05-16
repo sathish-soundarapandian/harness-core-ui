@@ -9,7 +9,8 @@ import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import { Container, Tabs, Tab, Text, Card, Icon, Layout } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
-import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Dialog, Classes } from '@blueprintjs/core'
 
 import cx from 'classnames'
 import type { AppdynamicsValidationResponse, AppdynamicsMetricValueValidationResponse } from 'services/cv'

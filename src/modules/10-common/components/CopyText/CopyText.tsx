@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Button, Utils, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Button, Utils } from '@harness/uicore'
 import cx from 'classnames'
 import { Classes } from '@blueprintjs/core'
 import { String } from 'framework/strings'

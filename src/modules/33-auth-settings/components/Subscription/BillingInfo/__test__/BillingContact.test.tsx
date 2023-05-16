@@ -11,7 +11,8 @@ import { render, waitFor, fireEvent, act } from '@testing-library/react'
 import { Formik } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import BillingContact, { InitialBillingInfo } from '../BillingContact'
+import type { InitialBillingInfo } from '../BillingContact';
+import BillingContact from '../BillingContact'
 describe('BillingContact', () => {
   const billingInfo = {
     name: 'Jane Doe',

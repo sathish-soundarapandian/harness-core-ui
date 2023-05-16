@@ -23,7 +23,8 @@ import type {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getSecretReferencesForWinRm } from '@secrets/utils/WinRmAuthUtils'
 import { getScopeBasedProjectPathParams, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import CreateWinRmCredWizard, { WinRmCredSharedObj } from './CreateWinRmCredWizard'
+import type { WinRmCredSharedObj } from './CreateWinRmCredWizard';
+import CreateWinRmCredWizard from './CreateWinRmCredWizard'
 import css from './useCreateWinRmCredModal.module.scss'
 
 export interface UseCreateWinRmCredModalProps {

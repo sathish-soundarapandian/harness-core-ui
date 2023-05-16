@@ -17,8 +17,9 @@ import type { FilterYaml } from 'services/cd-ng'
 
 import type { EntityFilterListProps } from './EntityFilterListUtils'
 import { defaultEntityFilter } from '../AddEditEntityFilterModal/AddEditEntityFilterModalUtils'
+import type {
+  AddEditEntityFilterModalState} from '../AddEditEntityFilterModal/AddEditEntityFilterModal.types';
 import {
-  AddEditEntityFilterModalState,
   entityFilterTypeStringsMap,
   entityTypeStringsMap
 } from '../AddEditEntityFilterModal/AddEditEntityFilterModal.types'

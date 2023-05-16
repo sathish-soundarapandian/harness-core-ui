@@ -12,9 +12,10 @@ import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   FreezeSummaryResponse,
-  GetFrozenExecutionDetailsQueryParams,
+  GetFrozenExecutionDetailsQueryParams} from 'services/cd-ng';
+import {
   useGetFrozenExecutionDetails
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

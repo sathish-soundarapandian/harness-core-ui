@@ -14,7 +14,8 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { gitConnectorMock, mockRepos } from '@gitsync/components/GitSyncForm/__tests__/mockdata'
-import useEditGitMetadata, { UseEditGitMetadataProps } from '../useEditGitMetadata'
+import type { UseEditGitMetadataProps } from '../useEditGitMetadata';
+import useEditGitMetadata from '../useEditGitMetadata'
 
 jest.mock('services/pipeline-ng', () => ({
   updatePipelineGitDetailsPromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),

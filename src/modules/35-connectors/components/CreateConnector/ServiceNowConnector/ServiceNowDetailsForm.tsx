@@ -6,6 +6,11 @@
  */
 
 import React from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  StepProps,
+  SelectOption
+} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -13,12 +18,9 @@ import {
   Text,
   FormInput,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  StepProps,
   ButtonVariation,
   PageSpinner,
-  Container,
-  SelectOption
+  Container
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -27,7 +29,8 @@ import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 
-import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
+import type { TextReferenceInterface} from '@secrets/components/TextReference/TextReference';
+import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'
 import { setupServiceNowFormData, useGetHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Connectors } from '@connectors/constants'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'

@@ -12,10 +12,14 @@ import { useParams } from 'react-router-dom'
 import { debounce, noop, isEmpty, get } from 'lodash-es'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+import type { FormikErrors, FormikProps} from 'formik';
+import { yupToFormErrors } from 'formik'
 
-import {
+import type {
   IconName,
+  AllowedTypes
+} from '@harness/uicore';
+import {
   Text,
   Layout,
   Formik,
@@ -24,14 +28,14 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Icon,
-  Accordion,
-  AllowedTypes
+  Accordion
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import { K8SDirectInfrastructure, getConnectorListV2Promise, ExecutionElementConfig } from 'services/cd-ng'
+import type { K8SDirectInfrastructure, ExecutionElementConfig } from 'services/cd-ng';
+import { getConnectorListV2Promise } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -39,7 +43,8 @@ import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProp
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'

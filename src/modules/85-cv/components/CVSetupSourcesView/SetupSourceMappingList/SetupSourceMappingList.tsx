@@ -11,17 +11,19 @@ import {
   Heading,
   Text,
   NoDataCard,
-  NoDataCardProps,
   PageError,
-  PageErrorProps,
   TableV2
 } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import type { Column } from 'react-table'
-import type { TableProps } from '@harness/uicore'
+import type { TableProps ,
+  NoDataCardProps,
+  PageErrorProps} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { TableFilter, TableFilterProps } from '@cv/components/TableFilter/TableFilter'
-import { SetupSourceCardHeaderProps, SetupSourceEmptyCardHeader } from '../SetupSourceCardHeader/SetupSourceCardHeader'
+import type { TableFilterProps } from '@cv/components/TableFilter/TableFilter';
+import { TableFilter } from '@cv/components/TableFilter/TableFilter'
+import type { SetupSourceCardHeaderProps} from '../SetupSourceCardHeader/SetupSourceCardHeader';
+import { SetupSourceEmptyCardHeader } from '../SetupSourceCardHeader/SetupSourceCardHeader'
 import { StepLabel } from '../StepLabel/StepLabel'
 import css from './SetupSourceMappingList.module.scss'
 

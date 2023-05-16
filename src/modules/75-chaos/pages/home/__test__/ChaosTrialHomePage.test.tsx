@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor, screen, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { fireEvent, render, waitFor, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cdServices from 'services/cd-ng'

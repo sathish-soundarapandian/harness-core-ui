@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, RenderResult, waitFor, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cfServices from 'services/cf'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CF_DEFAULT_PAGE_SIZE, EnvironmentSDKKeyType } from '@cf/utils/CFUtils'
-import AddKeyDialog, { AddKeyDialogProps } from '../AddKeyDialog'
+import type { AddKeyDialogProps } from '../AddKeyDialog';
+import AddKeyDialog from '../AddKeyDialog'
 
 const apiKeysMock = [
   {

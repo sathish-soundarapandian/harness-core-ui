@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { SyntheticEvent, useState } from 'react'
+import type { SyntheticEvent} from 'react';
+import React, { useState } from 'react'
 import { Drawer, Intent, Position } from '@blueprintjs/core'
 import { Button, ButtonSize, ButtonVariation, Container, useConfirmationDialog } from '@harness/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, isNil, noop, set } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type {
   ExecutionElementConfig,
   StepElementConfig,
@@ -42,18 +44,25 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import { usePrevious } from '@common/hooks/usePrevious'
 import type { K8sDirectInfraStepGroupElementConfig } from '@pipeline/components/PipelineSteps/Steps/StepGroupStep/StepGroupUtil'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
-import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
-import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
-import { StepCommandsViews, StepOrStepGroupOrTemplateStepData, Values } from '../StepCommands/StepCommandTypes'
+import type { DrawerData, PipelineViewData } from '../PipelineContext/PipelineActions';
+import { DrawerSizes, DrawerTypes } from '../PipelineContext/PipelineActions'
+import type { StepFormikRef } from '../StepCommands/StepCommands';
+import { StepCommandsWithRef as StepCommands } from '../StepCommands/StepCommands'
+import type { StepOrStepGroupOrTemplateStepData, Values } from '../StepCommands/StepCommandTypes';
+import { StepCommandsViews } from '../StepCommands/StepCommandTypes'
 import { StepPalette } from '../StepPalette/StepPalette'
 import { addService, addStepOrGroup, getStepFromId } from '../ExecutionGraph/ExecutionGraphUtil'
-import PipelineVariables, { PipelineVariablesRef } from '../PipelineVariables/PipelineVariables'
-import { PipelineNotifications, PipelineNotificationsRef } from '../PipelineNotifications/PipelineNotifications'
+import type { PipelineVariablesRef } from '../PipelineVariables/PipelineVariables';
+import PipelineVariables from '../PipelineVariables/PipelineVariables'
+import type { PipelineNotificationsRef } from '../PipelineNotifications/PipelineNotifications';
+import { PipelineNotifications } from '../PipelineNotifications/PipelineNotifications'
 import { PipelineTemplates } from '../PipelineTemplates/PipelineTemplates'
-import { ExecutionStrategy, ExecutionStrategyRefInterface } from '../ExecutionStrategy/ExecutionStrategy'
+import type { ExecutionStrategyRefInterface } from '../ExecutionStrategy/ExecutionStrategy';
+import { ExecutionStrategy } from '../ExecutionStrategy/ExecutionStrategy'
 import type { StepData } from '../../AbstractSteps/AbstractStepFactory'
 import { StepType } from '../../PipelineSteps/PipelineStepInterface'
-import { FlowControlWithRef as FlowControl, FlowControlRef } from '../FlowControl/FlowControl'
+import type { FlowControlRef } from '../FlowControl/FlowControl';
+import { FlowControlWithRef as FlowControl } from '../FlowControl/FlowControl'
 import { AdvancedOptions } from '../AdvancedOptions/AdvancedOptions'
 import { RightDrawerTitle } from './RightDrawerTitle'
 import { getFlattenedStages } from '../StageBuilder/StageBuilderUtil'

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { IconName, Icon, Layout, Text, Container } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Icon, Layout, Text, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'

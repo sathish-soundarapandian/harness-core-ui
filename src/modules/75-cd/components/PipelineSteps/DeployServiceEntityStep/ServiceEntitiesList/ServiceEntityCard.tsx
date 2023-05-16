@@ -6,16 +6,18 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Card,
   Icon,
   Text,
-  AllowedTypes,
   ButtonSize,
-  Layout,
-  SelectOption
+  Layout
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Collapse } from '@blueprintjs/core'
@@ -25,7 +27,8 @@ import produce from 'immer'
 import cx from 'classnames'
 
 import { useParams } from 'react-router-dom'
-import { getStepTypeByDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers';
+import { getStepTypeByDeploymentType } from '@pipeline/utils/stageHelpers'
 import { deploymentIconMap } from '@cd/utils/deploymentUtils'
 import { useStrings } from 'framework/strings'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'

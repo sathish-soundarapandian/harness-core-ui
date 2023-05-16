@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { act, fireEvent, queryByAttribute, render, RenderResult, waitFor, within } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react'
+import { act, fireEvent, queryByAttribute, render, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
-import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'

@@ -6,15 +6,18 @@
  */
 
 import React from 'react'
-import { Button, Container, FormikForm, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Button, Container, FormikForm, FormInput, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { get, upperCase } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
-import { FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
+import type { ResourcesInterface } from '@freeze-windows/types';
+import { FIELD_KEYS, FreezeWindowLevels } from '@freeze-windows/types'
+import type {
+  FieldVisibility} from '@freeze-windows/utils/FreezeWindowStudioUtil';
 import {
   allEnvironmentsObj,
   allServicesObj,
-  FieldVisibility,
   isAllOptionSelected
 } from '@freeze-windows/utils/FreezeWindowStudioUtil'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'

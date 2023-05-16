@@ -6,13 +6,15 @@
  */
 
 import { defaultTo } from 'lodash-es'
-import { IconName, Utils } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 import type { CSSProperties } from 'react'
+import type {
+  ExecutionStatus} from '@pipeline/utils/statusHelpers';
 import {
   ExecutionStatusEnum,
-  ExecutionStatus,
   isExecutionRunning,
   isExecutionNotStarted,
   isExecutionFinishedAnyhow

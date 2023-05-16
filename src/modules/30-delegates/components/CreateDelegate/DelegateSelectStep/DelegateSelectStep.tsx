@@ -7,7 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 
-import { Layout, StepProps, Button, Text, Container } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Layout, Button, Text, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 

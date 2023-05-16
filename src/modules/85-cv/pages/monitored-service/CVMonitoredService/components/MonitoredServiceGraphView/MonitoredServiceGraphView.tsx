@@ -7,7 +7,8 @@
 
 import React, { useState, useMemo, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { useToaster, Views } from '@harness/uicore'
+import type { Views } from '@harness/uicore';
+import { useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetServiceDependencyGraph, useSetHealthMonitoringFlag, useDeleteMonitoredService } from 'services/cv'
 import { useQueryParams } from '@common/hooks'

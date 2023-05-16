@@ -7,7 +7,8 @@
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { FilterProperties } from 'services/cd-ng'
-import { useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
+import type { UseQueryParamsOptions } from '@common/hooks/useQueryParams';
+import { useQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 
 export enum SortFields {

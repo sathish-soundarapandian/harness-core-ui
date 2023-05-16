@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
+import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import {
   ButtonSize,
   ButtonVariation,
@@ -15,12 +16,10 @@ import {
   Layout,
   MultiTypeInputType,
   FormikForm,
-  AllowedTypes,
   Toggle,
   useToggleOpen,
   ConfirmationDialog,
   RUNTIME_INPUT_VALUE,
-  SelectOption,
   ModalDialog,
   useToaster
 } from '@harness/uicore'
@@ -30,14 +29,8 @@ import type { FormikProps } from 'formik'
 import { Intent } from '@blueprintjs/core'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
-import {
-  JsonNode,
-  mergeServiceInputsPromise,
-  ServiceDefinition,
-  ServiceYaml,
-  ServiceYamlV2,
-  TemplateLinkConfig
-} from 'services/cd-ng'
+import type { JsonNode, ServiceDefinition, ServiceYaml, ServiceYamlV2, TemplateLinkConfig } from 'services/cd-ng'
+import { mergeServiceInputsPromise } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -63,15 +56,13 @@ import { getScopedValueFromDTO } from '@common/components/EntityReference/Entity
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
-import {
+import type {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
   FormState,
-  getValidationSchema,
-  getAllFixedServices,
-  ServicesWithInputs,
-  getAllFixedServicesFromValues
+  ServicesWithInputs
 } from './DeployServiceEntityUtils'
+import { getValidationSchema, getAllFixedServices, getAllFixedServicesFromValues } from './DeployServiceEntityUtils'
 import { ServiceEntitiesList } from './ServiceEntitiesList/ServiceEntitiesList'
 import { useGetServicesData } from './useGetServicesData'
 import { setupMode } from '../PipelineStepsUtil'

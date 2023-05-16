@@ -10,16 +10,18 @@ import { defaultTo, get, memoize } from 'lodash-es'
 
 import { FormInput, Layout, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase';
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
-import {
+import type {
   BuildDetails,
   GithubPackageDTO,
-  SidecarArtifact,
+  SidecarArtifact} from 'services/cd-ng';
+import {
   useGetPackagesFromGithub,
   useGetPackagesFromGithubWithServiceV2,
   useGetVersionsFromPackages,

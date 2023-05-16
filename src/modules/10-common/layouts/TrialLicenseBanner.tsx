@@ -12,7 +12,8 @@ import { capitalize, pick } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Text, Layout, Button, PageSpinner, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { useToaster } from '@common/components'
 import type { Module } from 'framework/types/ModuleName'
@@ -20,20 +21,24 @@ import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { useLocalStorage } from '@common/hooks/useLocalStorage'
 import { useContactSalesMktoModal } from '@common/modals/ContactSales/useContactSalesMktoModal'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import type {
+  StartTrialDTO,
+  FeedbackFormDTO,
+  GetLicensesAndSummaryQueryParams
+} from 'services/cd-ng';
 import {
   useExtendTrialLicense,
-  StartTrialDTO,
   useSaveFeedback,
-  FeedbackFormDTO,
-  useGetLicensesAndSummary,
-  GetLicensesAndSummaryQueryParams
+  useGetLicensesAndSummary
 } from 'services/cd-ng'
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  FeedbackFormValues
+} from '@common/modals/ExtendTrial/useExtendTrialOrFeedbackModal';
 import {
   useExtendTrialOrFeedbackModal,
-  FORM_TYPE,
-  FeedbackFormValues
+  FORM_TYPE
 } from '@common/modals/ExtendTrial/useExtendTrialOrFeedbackModal'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { useTelemetry } from '@common/hooks/useTelemetry'

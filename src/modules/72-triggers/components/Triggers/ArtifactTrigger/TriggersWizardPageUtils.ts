@@ -6,7 +6,8 @@
  */
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep } from 'lodash-es'
-import { string, array, object, ObjectSchema } from 'yup'
+import type { ObjectSchema } from 'yup';
+import { string, array, object } from 'yup'
 import { parse } from 'yaml'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
@@ -58,8 +59,9 @@ import type {
   FlatOnEditValuesInterface
 } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
 import type { AddConditionInterface } from '@triggers/pages/triggers/views/AddConditionsSection'
+import type {
+  ArtifactTriggerSpec} from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactsSelection/ArtifactInterface';
 import {
-  ArtifactTriggerSpec,
   RepositoryPortOrServer
 } from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactsSelection/ArtifactInterface'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'

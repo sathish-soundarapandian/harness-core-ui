@@ -13,11 +13,13 @@ import { Tab } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { Utils } from '@ce/common/Utils'
 import { useToaster } from '@common/exports'
-import {
+import type {
   HealthCheck,
   PortConfig,
-  useSecurityGroupsOfInstances,
   NetworkSecurityGroupForInstanceArray
+} from 'services/lw';
+import {
+  useSecurityGroupsOfInstances
 } from 'services/lw'
 import { portProtocolMap } from '@ce/constants'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'

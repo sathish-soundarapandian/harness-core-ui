@@ -10,7 +10,8 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as yup from 'yup'
 import { TestWrapper } from '@common/utils/testUtils'
-import SaveFlagRepoStep, { SaveFlagRepoStepProps } from '../SaveFlagRepoStep'
+import type { SaveFlagRepoStepProps } from '../SaveFlagRepoStep';
+import SaveFlagRepoStep from '../SaveFlagRepoStep'
 
 jest.mock('@cf/hooks/useGitSync', () => ({
   useGitSync: jest.fn(() => ({

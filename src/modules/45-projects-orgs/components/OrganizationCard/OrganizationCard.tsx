@@ -10,7 +10,8 @@ import React, { useState } from 'react'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { Menu, Classes, Intent } from '@blueprintjs/core'
-import { OrganizationAggregateDTO, useDeleteOrganization } from 'services/cd-ng'
+import type { OrganizationAggregateDTO} from 'services/cd-ng';
+import { useDeleteOrganization } from 'services/cd-ng'
 
 import { useToaster } from '@common/exports'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'

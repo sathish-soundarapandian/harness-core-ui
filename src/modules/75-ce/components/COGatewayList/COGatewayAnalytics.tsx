@@ -9,16 +9,18 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
 import { Switch, Tab } from '@blueprintjs/core'
 import copy from 'copy-to-clipboard'
-import { Layout, Container, Text, Icon, Link, Tabs, Heading, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Layout, Container, Text, Icon, Link, Tabs, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { useParams, Link as RouterLink } from 'react-router-dom'
 import moment from 'moment'
-import {
+import type {
   AllResourcesOfAccountResponse,
   Service,
-  ServiceSavings,
+  ServiceSavings} from 'services/lw';
+import {
   useAllServiceResources,
   useDescribeServiceInContainerServiceCluster,
   useHealthOfService,

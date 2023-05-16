@@ -11,7 +11,8 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { FeaturePipelineExecution } from 'services/cf'
 import * as cfServicesMock from 'services/cf'
-import FlagPipelineTab, { FlagPipelineTabProps } from '../FlagPipelineTab'
+import type { FlagPipelineTabProps } from '../FlagPipelineTab';
+import FlagPipelineTab from '../FlagPipelineTab'
 import mockAvailablePipelines from './__data__/mockAvailablePipelines'
 import mockExecutionHistory from './__data__/mockExecutionHistory'
 

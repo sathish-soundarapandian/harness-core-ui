@@ -6,22 +6,25 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
+import type {
+  StepProps,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Layout,
   Text,
   StepWizard,
-  StepProps,
   Button,
   ButtonSize,
   ButtonVariation,
-  Label,
-  AllowedTypes
+  Label
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Dialog, Classes } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { get, isEmpty, noop } from 'lodash-es'
 import type { IconProps } from '@harness/icons'

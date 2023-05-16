@@ -6,22 +6,26 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Layout, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Layout, Formik, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, defaultTo } from 'lodash-es'
 import type { FormikProps } from 'formik'
 
-import { useGetEKSClusterNames, K8sAwsInfrastructure } from 'services/cd-ng'
+import type { K8sAwsInfrastructure } from 'services/cd-ng';
+import { useGetEKSClusterNames } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { Connectors } from '@connectors/constants'
+import type {
+  K8sAwsInfrastructureUI
+} from '../Common/CommonKuberetesInfraSpec/CommonKuberetesInfraSpecEditable';
 import {
   CommonKuberetesInfraSpecEditable,
-  getValidationSchema,
-  K8sAwsInfrastructureUI
+  getValidationSchema
 } from '../Common/CommonKuberetesInfraSpec/CommonKuberetesInfraSpecEditable'
 import type { K8sAwsInfrastructureSpecEditableProps } from './K8sAwsInfrastructureSpec'
 

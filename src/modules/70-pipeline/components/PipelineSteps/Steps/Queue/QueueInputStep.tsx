@@ -14,7 +14,8 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { getScopeOptions, QueueProps } from './helper'
+import type { QueueProps } from './helper';
+import { getScopeOptions } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function QueueInputStep({ inputSetData, readonly, allowableTypes, stepViewType }: QueueProps): React.ReactElement {

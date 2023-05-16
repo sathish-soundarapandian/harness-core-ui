@@ -6,6 +6,10 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
 import {
   Text,
   Layout,
@@ -14,16 +18,15 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  Icon,
-  AllowedTypes,
-  SelectOption
+  Icon
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, defaultTo, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import type { IItemRendererProps } from '@blueprintjs/select'
 
-import { EcsInfrastructure, useClusters } from 'services/cd-ng'
+import type { EcsInfrastructure} from 'services/cd-ng';
+import { useClusters } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -32,7 +35,8 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -42,7 +46,8 @@ import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/Depl
 import { connectorTypes, EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { checkIfQueryParamsisNotEmpty, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
+import type { ConnectorRefFormValueType} from '@cd/utils/connectorUtils';
+import { getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getECSInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import css from './ECSInfraSpec.module.scss'
 

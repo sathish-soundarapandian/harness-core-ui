@@ -1,12 +1,14 @@
 import React, { useCallback, useContext } from 'react'
-import { AllowedTypes, ExpressionAndRuntimeType, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { ExpressionAndRuntimeType, MultiTypeInputType } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
 import { getIsConnectorRuntimeOrExpression } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import JsonSelectorButton, { JsonSelectorButtonProps } from './JsonSelectorButton'
+import type { JsonSelectorButtonProps } from './JsonSelectorButton';
+import JsonSelectorButton from './JsonSelectorButton'
 
 interface JsonDrawerMultiTypeProps {
   name: keyof CommonCustomMetricFormikInterface

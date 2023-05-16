@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useCallback } from 'react'
+import type { FormEvent } from 'react'
+import React, { useCallback } from 'react'
 import {
   Text,
   Formik,
@@ -17,25 +18,28 @@ import {
   CodeBlock,
   Container,
   Layout,
-  SelectOption,
-  AllowedTypes
+  type SelectOption,
+  type AllowedTypes
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
 import { get, merge } from 'lodash-es'
 import cx from 'classnames'
-import { StepFormikFowardRef, setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { getCIRunTestsStepShellOptions } from '@ci/utils/CIShellOptionsUtils'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
-import MultiTypeList, { ConnectorReferenceProps } from '@common/components/MultiTypeList/MultiTypeList'
+import type { ConnectorReferenceProps } from '@common/components/MultiTypeList/MultiTypeList'
+import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'

@@ -8,6 +8,9 @@
 import React from 'react'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
+import type {
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -16,8 +19,7 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   FormikForm,
-  ButtonVariation,
-  AllowedTypes
+  ButtonVariation
 } from '@harness/uicore'
 import cx from 'classnames'
 import { get } from 'lodash-es'

@@ -7,7 +7,8 @@
 
 import { clone, isEqual, omit } from 'lodash-es'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import { ActionReturnType, FreezeWindowActions } from './FreezeWidowActions'
+import type { ActionReturnType} from './FreezeWidowActions';
+import { FreezeWindowActions } from './FreezeWidowActions'
 
 export const DefaultFreezeId = '-1'
 

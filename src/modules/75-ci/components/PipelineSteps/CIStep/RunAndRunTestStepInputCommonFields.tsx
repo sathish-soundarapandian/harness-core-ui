@@ -9,7 +9,8 @@ import React from 'react'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import StepCommonFieldsInputSet from '../StepCommonFields/StepCommonFieldsInputSet'
-import { CIStepOptionalConfig, CIStepOptionalConfigProps } from './CIStepOptionalConfig'
+import type { CIStepOptionalConfigProps } from './CIStepOptionalConfig';
+import { CIStepOptionalConfig } from './CIStepOptionalConfig'
 
 export const RunAndRunTestStepInputCommonFields: React.FC<Omit<CIStepOptionalConfigProps, 'enableFields'>> = props => {
   const { stepViewType, readonly, path, formik, template, stepType } = props

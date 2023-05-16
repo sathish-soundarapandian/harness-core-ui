@@ -7,6 +7,8 @@
 
 import React, { useState } from 'react'
 import * as Yup from 'yup'
+import type {
+  ButtonProps} from '@harness/uicore';
 import {
   FormikForm,
   FormInput,
@@ -16,7 +18,6 @@ import {
   Container,
   Icon,
   Heading,
-  ButtonProps,
   ButtonVariation,
   getErrorInfoFromErrorObject
 } from '@harness/uicore'
@@ -29,7 +30,8 @@ import { useToaster } from '@common/components'
 import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
 import type { EmailNotificationConfiguration } from '@rbac/interfaces/Notifications'
 import { TestStatus, NotificationType } from '@rbac/interfaces/Notifications'
-import { useTestNotificationSetting, EmailSettingDTO } from 'services/notifications'
+import type { EmailSettingDTO } from 'services/notifications';
+import { useTestNotificationSetting } from 'services/notifications'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import css from '../../ConfigureNotificationsModal.module.scss'

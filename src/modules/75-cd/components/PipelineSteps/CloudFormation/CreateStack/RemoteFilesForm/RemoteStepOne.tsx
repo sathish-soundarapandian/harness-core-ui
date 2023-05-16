@@ -9,6 +9,11 @@ import React, { useEffect, useState } from 'react'
 import { find, isNumber } from 'lodash-es'
 import { Form } from 'formik'
 import { useParams } from 'react-router-dom'
+import type {
+  StepProps,
+  MultiSelectOption,
+  AllowedTypes as MultiTypeAllowedTypes
+} from '@harness/uicore';
 import {
   Layout,
   Heading,
@@ -19,12 +24,9 @@ import {
   Button,
   ButtonVariation,
   ButtonSize,
-  StepProps,
   MultiTypeInputType,
   MultiTypeInput,
-  MultiSelectOption,
-  getMultiTypeFromValue,
-  AllowedTypes as MultiTypeAllowedTypes
+  getMultiTypeFromValue
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
@@ -32,12 +34,13 @@ import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import type {
+  ConnectorTypes} from '../../CloudFormationHelper';
 import {
   AllowedTypes,
   ConnectorIcons,
   ConnectorMap,
   ConnectorLabelMap,
-  ConnectorTypes,
   isRuntime,
   FormatRemoteValues
 } from '../../CloudFormationHelper'

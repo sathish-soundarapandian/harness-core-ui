@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as uuid from 'uuid'
 import * as cfServices from 'services/cf'
@@ -16,7 +17,8 @@ import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import { mockFeatures, mockTargetGroup } from '@cf/pages/target-group-detail/__tests__/mocks'
-import FlagSettingsPanel, { FlagSettingsPanelProps } from '../FlagSettingsPanel'
+import type { FlagSettingsPanelProps } from '../FlagSettingsPanel';
+import FlagSettingsPanel from '../FlagSettingsPanel'
 import * as useGetTargetGroupFlagsHook from '../../../hooks/useGetTargetGroupFlags'
 
 const mockResponse = (): Features =>

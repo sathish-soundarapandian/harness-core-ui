@@ -18,7 +18,8 @@ import type {
   TerraformPlanExecutionData,
   TerraformStepConfiguration
 } from 'services/cd-ng'
-import { PathInterface, TerraformStoreTypes } from '../../Terraform/TerraformInterfaces'
+import type { PathInterface} from '../../Terraform/TerraformInterfaces';
+import { TerraformStoreTypes } from '../../Terraform/TerraformInterfaces'
 
 export interface AmazonS3StoreDataType {
   varFile?: {

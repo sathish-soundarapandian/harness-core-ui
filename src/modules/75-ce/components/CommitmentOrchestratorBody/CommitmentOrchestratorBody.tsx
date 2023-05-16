@@ -9,16 +9,18 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Page } from '@harness/uicore'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { SummaryResponseData, useFetchCOSummary } from 'services/lw-co'
+import type { SummaryResponseData} from 'services/lw-co';
+import { useFetchCOSummary } from 'services/lw-co'
 import PageFilterPanel from './PageFilterPanel'
 import EnableBanner from './EnableBanner'
 import ComputedDataWidgetsRow from './ComputedDataWidgetsRow'
 import DataVisualisationContainer from './DataVisualisation/DataVisualisationContainer'
-import {
+import type {
   ApplyFilterOptionsProps,
+  FilterOptions} from './FilterContext';
+import {
   defaultTimeRangeFilter,
   FilterContext,
-  FilterOptions,
   getFilterBody
 } from './FilterContext'
 import css from './CommitmentOrchestrationBody.module.scss'

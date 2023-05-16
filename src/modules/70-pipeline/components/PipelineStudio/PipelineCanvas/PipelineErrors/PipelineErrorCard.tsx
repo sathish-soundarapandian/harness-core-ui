@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Popover, Button, ButtonSize, ButtonVariation, Card, Icon, IconName, Layout, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Popover, Button, ButtonSize, ButtonVariation, Card, Icon, Layout, Text } from '@harness/uicore'
 import { Classes, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

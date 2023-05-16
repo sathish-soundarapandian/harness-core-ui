@@ -28,10 +28,13 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
-import type { IpAllowlistConfigResponse, IpAllowlistConfigValidateResponse } from '@harnessio/react-ng-manager-client'
+import type {
+  IpAllowlistConfigResponse,
+  IpAllowlistConfigValidateResponse,
+  UpdateIpAllowlistConfigOkResponse
+} from '@harnessio/react-ng-manager-client'
 import {
   useDeleteIpAllowlistConfigMutation,
-  UpdateIpAllowlistConfigOkResponse,
   useUpdateIpAllowlistConfigMutation,
   useGetIpAllowlistConfigsQuery,
   validateIpAddressAllowlistedOrNot

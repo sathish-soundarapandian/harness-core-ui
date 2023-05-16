@@ -9,7 +9,8 @@ import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { StringUtils } from '@common/exports'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { useQueryParams, useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
+import type { UseQueryParamsOptions } from '@common/hooks/useQueryParams';
+import { useQueryParams, useQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_EXECUTION_LIST_TABLE_SORT } from '@pipeline/utils/constants'
 import type { ProcessedExecutionListPageQueryParams } from '../types'
 

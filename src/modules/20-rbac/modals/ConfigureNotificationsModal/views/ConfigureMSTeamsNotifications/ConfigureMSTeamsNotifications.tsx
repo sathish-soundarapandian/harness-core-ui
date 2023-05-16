@@ -6,6 +6,8 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  ButtonProps} from '@harness/uicore';
 import {
   FormikForm,
   FormInput,
@@ -13,7 +15,6 @@ import {
   Layout,
   Icon,
   Text,
-  ButtonProps,
   Formik,
   ButtonVariation,
   getErrorInfoFromErrorObject,
@@ -24,14 +25,17 @@ import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormGroup } from '@blueprintjs/core'
 import { get, isEmpty } from 'lodash-es'
-import { connect, FormikContextType, FormikErrors } from 'formik'
+import type { FormikContextType, FormikErrors } from 'formik';
+import { connect } from 'formik'
 import { useToaster } from '@common/exports'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { MSTeamSettingDTO, useTestNotificationSetting } from 'services/notifications'
+import type { MSTeamSettingDTO} from 'services/notifications';
+import { useTestNotificationSetting } from 'services/notifications'
 import { ListInput } from '@common/components/ListInput/ListInput'
 import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
-import { MSTeamsNotificationConfiguration, NotificationType, TestStatus } from '@rbac/interfaces/Notifications'
+import type { MSTeamsNotificationConfiguration} from '@rbac/interfaces/Notifications';
+import { NotificationType, TestStatus } from '@rbac/interfaces/Notifications'
 
 import css from '@rbac/modals/ConfigureNotificationsModal/ConfigureNotificationsModal.module.scss'
 

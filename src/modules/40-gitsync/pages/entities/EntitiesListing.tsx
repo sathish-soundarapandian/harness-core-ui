@@ -11,12 +11,14 @@ import { Text, Container, PageSpinner, TableV2 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 
-import {
+import type {
   GitSyncEntityDTO,
   PageGitSyncEntityListDTO,
-  useListGitSyncEntitiesByType,
   ListGitSyncEntitiesByTypePathParams,
   GitSyncConfig
+} from 'services/cd-ng';
+import {
+  useListGitSyncEntitiesByType
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getTableColumns } from './EntityHelper'

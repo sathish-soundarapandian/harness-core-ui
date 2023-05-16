@@ -6,6 +6,11 @@
  */
 
 import React from 'react'
+import type {
+  StepProps,
+  SelectOption,
+  ModalErrorHandlerBinding,
+  IconName} from '@harness/uicore';
 import {
   Formik,
   FormikForm as Form,
@@ -13,13 +18,9 @@ import {
   Button,
   Text,
   Layout,
-  StepProps,
-  SelectOption,
   Container,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   ButtonVariation,
-  IconName,
   Heading
 } from '@harness/uicore'
 import * as Yup from 'yup'

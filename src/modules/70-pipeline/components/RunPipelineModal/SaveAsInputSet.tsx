@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikErrors } from 'formik'
@@ -13,22 +14,25 @@ import { defaultTo, isUndefined, omit, omitBy, isNull, set } from 'lodash-es'
 import type { MutateMethod } from 'restful-react'
 import { Button, ButtonVariation, Container, Formik, Layout, Popover } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import {
+import type { PipelineInfoConfig ,
   CreateInputSetForPipelineQueryParams,
   EntityGitDetails,
-  ResponseInputSetResponse,
+  ResponseInputSetResponse} from 'services/pipeline-ng'
+import {
   useCreateInputSetForPipeline
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { NameIdDescriptionTags } from '@common/components'
 import { useToaster } from '@common/exports'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import GitContextForm, { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
+import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm';
+import GitContextForm from '@common/components/GitContextForm/GitContextForm'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
-import { useSaveToGitDialog, UseSaveSuccessResponse } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
+import type { UseSaveSuccessResponse } from '@common/modals/SaveToGitDialog/useSaveToGitDialog';
+import { useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { getFormattedErrors } from '@pipeline/utils/runPipelineUtils'
 import { useStrings } from 'framework/strings'

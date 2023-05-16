@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Accordion,
   FormInput,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   Utils
 } from '@harness/uicore'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'

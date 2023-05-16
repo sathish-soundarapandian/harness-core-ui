@@ -12,7 +12,8 @@ import { Template } from '@templates-library/components/AbstractTemplate/Templat
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { StepTemplateCanvasWithRef } from '@templates-library/components/TemplateStudio/StepTemplateCanvas/StepTemplateCanvas'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { TemplateInputs, TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
+import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs';
+import { TemplateInputs } from '@templates-library/components/TemplateInputs/TemplateInputs'
 
 export class StepTemplate extends Template {
   protected label = 'Step'

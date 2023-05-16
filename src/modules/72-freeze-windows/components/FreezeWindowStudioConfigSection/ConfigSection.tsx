@@ -11,10 +11,12 @@ import type { FormikProps } from 'formik'
 import { isEmpty, noop } from 'lodash-es'
 import { Button, Formik } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import { EntityConfig, FIELD_KEYS, ResourcesInterface, ValidationErrorType } from '@freeze-windows/types'
+import type { EntityConfig, ResourcesInterface, ValidationErrorType } from '@freeze-windows/types';
+import { FIELD_KEYS } from '@freeze-windows/types'
+import type {
+  FieldVisibility} from '@freeze-windows/utils/FreezeWindowStudioUtil';
 import {
   convertValuesToYamlObj,
-  FieldVisibility,
   getEmptyEntityConfig,
   getInitialValuesForConfigSection,
   getValidationSchema

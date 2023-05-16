@@ -6,14 +6,16 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types'
 import { DashboardTags } from '@dashboards/types/DashboardTypes.types'
 import type { DashboardsContextProps } from '@dashboards/pages/DashboardsContext'
 import * as dashboardsContext from '@dashboards/pages/DashboardsContext'
-import ModuleTagsFilter, { ModuleTagsFilterProps } from '../ModuleTagsFilter'
+import type { ModuleTagsFilterProps } from '../ModuleTagsFilter';
+import ModuleTagsFilter from '../ModuleTagsFilter'
 
 const DEFAULT_FILTER: MappedDashboardTagOptions = {
   HARNESS: false,

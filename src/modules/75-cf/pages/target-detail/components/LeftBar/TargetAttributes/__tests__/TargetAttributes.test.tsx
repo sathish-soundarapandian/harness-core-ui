@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { merge } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Target } from 'services/cf'
 import mockTarget from '@cf/utils/testData/data/mockTarget'
-import TargetAttributes, { TargetAttributesProps } from '../TargetAttributes'
+import type { TargetAttributesProps } from '../TargetAttributes';
+import TargetAttributes from '../TargetAttributes'
 
 const renderComponent = (props: Partial<TargetAttributesProps> = {}): RenderResult =>
   render(

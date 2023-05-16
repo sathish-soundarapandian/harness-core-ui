@@ -11,7 +11,8 @@ import { Formik, FormikForm } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { GitSyncForm, GitSyncFormFields } from '../GitSyncForm'
+import type { GitSyncFormFields } from '../GitSyncForm';
+import { GitSyncForm } from '../GitSyncForm'
 import { mockRepos, mockBranches, gitConnectorMock, fetchSupportedConnectorsListPayload } from './mockdata'
 
 const pathParams = { accountId: 'dummy', orgIdentifier: 'default', projectIdentifier: 'DevX' }

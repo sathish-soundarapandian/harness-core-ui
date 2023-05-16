@@ -10,10 +10,12 @@ import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { Card, Container, Layout } from '@harness/uicore'
 import { ActiveServiceInstancesV2 } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancesV2'
+import type {
+  TimeRangeSelectorProps
+} from '@common/components/TimeRangeSelector/TimeRangeSelector';
 import {
   startOfDay,
-  TimeRangeSelector,
-  TimeRangeSelectorProps
+  TimeRangeSelector
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { useStrings } from 'framework/strings'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'

@@ -10,7 +10,8 @@ import { useParams } from 'react-router-dom'
 
 import { PageSpinner } from '@harness/uicore'
 
-import { GetTriggerQueryParams, NGTriggerConfigV2, useGetTrigger } from 'services/pipeline-ng'
+import type { GetTriggerQueryParams, NGTriggerConfigV2} from 'services/pipeline-ng';
+import { useGetTrigger } from 'services/pipeline-ng'
 
 import { useQueryParams } from '@common/hooks'
 import type {
@@ -23,13 +24,15 @@ import { parse } from '@common/utils/YamlHelperMethods'
 
 import factory from '@triggers/factory/TriggerFactory'
 import { TriggerWidget } from '@triggers/components/Triggers/TriggerWidget'
-import {
+import type {
   ScheduleType,
   SourceRepo,
-  TriggerBaseType,
   TriggerArtifactType,
   ManifestType,
   TriggerSubType
+} from '@triggers/components/Triggers/TriggerInterface';
+import {
+  TriggerBaseType
 } from '@triggers/components/Triggers/TriggerInterface'
 import TriggerDetailsV1 from '@triggers/pages/trigger-details/TriggerDetails'
 import TriggersWizardPageV1 from '@triggers/pages/triggers/TriggersWizardPage'

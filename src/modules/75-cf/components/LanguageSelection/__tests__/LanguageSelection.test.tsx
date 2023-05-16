@@ -9,7 +9,8 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import { LanguageSelection, LanguageSelectionProps, PlatformEntryType } from '../LanguageSelection'
+import type { LanguageSelectionProps} from '../LanguageSelection';
+import { LanguageSelection, PlatformEntryType } from '../LanguageSelection'
 
 const renderComponent = (props: Partial<LanguageSelectionProps> = {}): void => {
   render(

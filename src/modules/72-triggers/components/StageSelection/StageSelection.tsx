@@ -6,18 +6,16 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { HarnessDocTooltip, Heading, Layout, MultiSelectDropDown, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore'
+import { HarnessDocTooltip, Heading, Layout, MultiSelectDropDown } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { ALL_STAGE_VALUE, clearRuntimeInput, getAllStageItem } from '@pipeline/utils/runPipelineUtils'
 import { useStrings } from 'framework/strings'
-import {
-  StageExecutionResponse,
-  useGetMergeInputSetFromPipelineTemplateWithListInput,
-  useGetStagesExecutionList
-} from 'services/pipeline-ng'
+import type { StageExecutionResponse } from 'services/pipeline-ng'
+import { useGetMergeInputSetFromPipelineTemplateWithListInput, useGetStagesExecutionList } from 'services/pipeline-ng'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet } from '@common/hooks'
 import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'

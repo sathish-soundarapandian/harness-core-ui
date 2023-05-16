@@ -10,7 +10,8 @@ import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { FeatureAddEditStageView, FeatureAddEditStageViewProps } from '../FeatureAddStageView'
+import type { FeatureAddEditStageViewProps } from '../FeatureAddStageView';
+import { FeatureAddEditStageView } from '../FeatureAddStageView'
 import mockFFStageTemplate from './__data__/mockFFStageTemplate'
 import { getDummyPipelineContextValue } from './FeatureFlagAddStageViewTestHelpers'
 

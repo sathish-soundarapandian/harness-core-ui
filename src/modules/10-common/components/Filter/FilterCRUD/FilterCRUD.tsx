@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React, { useState, useEffect } from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { isEmpty, omitBy, truncate } from 'lodash-es'
@@ -25,7 +26,8 @@ import {
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import type { FormikProps, FormikErrors } from 'formik'
-import { Menu, Classes, Position, PopoverInteractionKind, Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Menu, Classes, Position, PopoverInteractionKind, Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { StringUtils } from '@common/exports'
 import { UNIQUE_ID_MAX_LENGTH } from '@common/utils/StringUtils'

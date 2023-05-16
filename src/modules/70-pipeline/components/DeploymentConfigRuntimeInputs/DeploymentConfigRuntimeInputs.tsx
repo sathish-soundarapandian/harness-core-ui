@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
-  AllowedTypes,
   Container,
   FormInput,
   getMultiTypeFromValue,

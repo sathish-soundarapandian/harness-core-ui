@@ -5,13 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Icon, IconName, Popover, PopoverProps } from '@harness/uicore'
+import type { IconName, PopoverProps } from '@harness/uicore';
+import { Icon, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
-import React, { ComponentProps } from 'react'
+import type { ComponentProps } from 'react';
+import React from 'react'
 import { Link } from 'react-router-dom'
+import type {
+  ExecutionStatus} from '@pipeline/utils/statusHelpers';
 import {
-  ExecutionStatus,
   isExecutionAborted,
   isExecutionApprovalRejected,
   isExecutionExpired,

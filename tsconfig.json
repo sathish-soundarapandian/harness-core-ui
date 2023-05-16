@@ -22,6 +22,7 @@
     "typeRoots": ["node_modules/@types", "./typings", "./node_modules/@types/pino-std-serializers/node_modules"],
     "resolveJsonModule": true,
     "useUnknownInCatchVariables": false,
+    "verbatimModuleSyntax": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {

@@ -5,7 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, useState, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react';
+import React, { useState } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   Layout,
@@ -14,22 +17,23 @@ import {
   Text,
   Button,
   ButtonVariation,
-  SelectOption,
   Container
 } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PageSpinner, useToaster } from '@common/components'
 import { TemplatePreview } from '@templates-library/components/TemplatePreview/TemplatePreview'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
+import type {
+  TemplateSummaryResponse} from 'services/template-ng';
 import {
   useGetTemplateList,
-  TemplateSummaryResponse,
   useUpdateStableTemplate,
   useGetTemplateMetadataList
 } from 'services/template-ng'

@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { findAllByText, findByText, fireEvent, render } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import { renderHook } from '@testing-library/react-hooks'
 
 import { TestWrapper } from '@common/utils/testUtils'

@@ -8,29 +8,34 @@
 import React, { useEffect, useState } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
 
+import type {
+  MultiSelectOption,
+  SelectOption} from '@harness/uicore';
 import {
   getMultiTypeFromValue,
   Layout,
-  MultiSelectOption,
   MultiTypeInputType,
-  SelectOption,
   Text
 } from '@harness/uicore'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase';
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type {
+  ConnectorReferenceDTO} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField';
 import {
-  ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import {
+import type {
   BuildDetails,
   SidecarArtifact,
+  BambooPlanNames
+} from 'services/cd-ng';
+import {
   useGetPlansKey,
   useGetArtifactPathsForBamboo,
-  useGetBuildsForBamboo,
-  BambooPlanNames
+  useGetBuildsForBamboo
 } from 'services/cd-ng'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'

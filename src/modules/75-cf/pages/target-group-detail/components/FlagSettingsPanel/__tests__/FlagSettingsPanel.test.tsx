@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { act, getByPlaceholderText, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, getByPlaceholderText, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { cloneDeep } from 'lodash-es'
 import * as uuid from 'uuid'
@@ -19,7 +20,8 @@ import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncCon
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import { GIT_SYNC_ERROR_CODE } from '@cf/hooks/useGitSync'
 import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
-import FlagSettingsPanel, { FlagSettingsPanelProps } from '../FlagSettingsPanel'
+import type { FlagSettingsPanelProps } from '../FlagSettingsPanel';
+import FlagSettingsPanel from '../FlagSettingsPanel'
 import * as useGetTargetGroupFlagsHook from '../../../hooks/useGetTargetGroupFlags'
 
 const mockFlags = [

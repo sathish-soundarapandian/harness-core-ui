@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AllowedTypes, Button, ButtonProps, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes, ButtonProps} from '@harness/uicore';
+import { Button, MultiTypeInputType } from '@harness/uicore'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useStrings } from 'framework/strings'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'

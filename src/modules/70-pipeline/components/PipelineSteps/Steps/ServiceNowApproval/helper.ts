@@ -5,16 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { MultiSelectOption, SelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import type {
   ServiceNowApprovalData,
   ServiceNowTicketTypeSelectOption
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types'
 import { getApprovalRejectionCriteriaForSubmit } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
-import {
+import type {
   ApprovalRejectionCriteria,
-  ApprovalRejectionCriteriaCondition,
+  ApprovalRejectionCriteriaCondition} from '@pipeline/components/PipelineSteps/Steps/Common/types';
+import {
   ApprovalRejectionCriteriaType
 } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import type { ServiceNowFieldNG } from 'services/cd-ng'

@@ -6,24 +6,29 @@
  */
 
 import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
-import {
+import type {
   AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
+import {
   Container,
   Formik,
   FormInput,
   Layout,
   MultiTypeInputType,
   PageError,
-  RUNTIME_INPUT_VALUE,
-  SelectOption
+  RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { CF_DEFAULT_PAGE_SIZE, getErrorMessage } from '@cf/utils/CFUtils'
-import { GetEnvironmentListQueryParams, useGetEnvironmentList } from 'services/cd-ng'
-import { GetAllFeaturesQueryParams, GetFeatureFlagQueryParams, useGetAllFeatures, useGetFeatureFlag } from 'services/cf'
+import type { GetEnvironmentListQueryParams} from 'services/cd-ng';
+import { useGetEnvironmentList } from 'services/cd-ng'
+import type { GetAllFeaturesQueryParams, GetFeatureFlagQueryParams} from 'services/cf';
+import { useGetAllFeatures, useGetFeatureFlag } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import type { FlagConfigurationStepData } from './types'

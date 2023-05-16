@@ -14,7 +14,8 @@ import { useStrings } from 'framework/strings'
 import { useUpdateToken } from 'services/cd-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import TokenForm, { TokenFormData } from './TokenForm'
+import type { TokenFormData } from './TokenForm';
+import TokenForm from './TokenForm'
 import type { TokenModalProps } from './CreateToken'
 
 const EditTokenForm: React.FC<TokenModalProps> = props => {

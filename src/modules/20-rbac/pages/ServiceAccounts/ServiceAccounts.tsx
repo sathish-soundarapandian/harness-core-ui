@@ -32,7 +32,8 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
-import { RbacQueryParams, useRbacQueryParamOptions } from '@rbac/utils/utils'
+import type { RbacQueryParams} from '@rbac/utils/utils';
+import { useRbacQueryParamOptions } from '@rbac/utils/utils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 

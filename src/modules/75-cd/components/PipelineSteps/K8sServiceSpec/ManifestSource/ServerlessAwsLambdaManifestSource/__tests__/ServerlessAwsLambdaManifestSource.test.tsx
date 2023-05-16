@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { ManifestConfig, ManifestConfigWrapper, ServiceSpec } from 'services/cd-ng'

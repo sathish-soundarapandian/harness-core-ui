@@ -19,8 +19,9 @@ import {
 } from 'services/cv'
 import type { ChangeTimelineProps } from './ChangeTimeline.types'
 import { Timeline } from './components/Timeline/Timeline'
+import type {
+  ChangeSourceTypes} from './ChangeTimeline.constants';
 import {
-  ChangeSourceTypes,
   defaultCategoryTimeline,
   defaultCategoryTimelineWithChaos
 } from './ChangeTimeline.constants'

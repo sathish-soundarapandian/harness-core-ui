@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react';
+import React from 'react'
 import { Menu } from '@blueprintjs/core'
-import { Select, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Select } from '@harness/uicore'
 import { isAssignmentFieldDisabled } from '@rbac/utils/utils'
 import type { ResourceGroupOption, RoleOption } from '@rbac/modals/RoleAssignmentModal/views/UserRoleAssigment'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'

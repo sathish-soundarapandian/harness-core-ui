@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, ButtonProps, Container, FormInput, IconName } from '@harness/uicore'
+import type { ButtonProps, IconName } from '@harness/uicore';
+import { Button, Container, FormInput } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import css from './JsonSelectorButton.module.scss'
 

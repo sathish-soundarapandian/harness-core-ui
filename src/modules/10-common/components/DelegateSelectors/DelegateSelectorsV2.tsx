@@ -7,7 +7,8 @@
 
 import React, { useMemo } from 'react'
 import { compact } from 'lodash-es'
-import { SimpleTagInput, Text, Icon, Layout, Container } from '@harness/uicore'
+import type { SimpleTagInput} from '@harness/uicore';
+import { Text, Icon, Layout, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
 import { MultiSelect } from '@blueprintjs/select'

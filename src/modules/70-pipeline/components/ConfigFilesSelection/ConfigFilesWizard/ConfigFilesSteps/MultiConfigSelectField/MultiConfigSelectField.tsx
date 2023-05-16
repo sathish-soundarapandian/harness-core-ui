@@ -7,8 +7,10 @@
 
 import React from 'react'
 import cx from 'classnames'
-import {
+import type {
   AllowedTypes,
+  MultiTextInputProps} from '@harness/uicore';
+import {
   Button,
   Container,
   EXPRESSION_INPUT_PLACEHOLDER,
@@ -17,16 +19,18 @@ import {
   getMultiTypeFromValue,
   Icon,
   Layout,
-  MultiTextInputProps,
   MultiTypeInputType,
   Text
 } from '@harness/uicore'
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { FormGroup, Intent } from '@blueprintjs/core'
-import { connect, FieldArray, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect, FieldArray } from 'formik'
 import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions';
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { isSshOrWinrmDeploymentType } from '@pipeline/utils/stageHelpers'

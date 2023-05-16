@@ -8,6 +8,8 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import * as yup from 'yup'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Layout,
   Heading,
@@ -19,7 +21,6 @@ import {
   Button,
   Checkbox,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   TextInput,
   ButtonVariation,
   ThumbnailSelect,
@@ -32,13 +33,15 @@ import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToas
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/components'
 import { CopyText } from '@common/components/CopyText/CopyText'
-import { useUploadSamlMetaData, useUpdateSamlMetaData, SAMLSettings } from 'services/cd-ng'
+import type { SAMLSettings } from 'services/cd-ng';
+import { useUploadSamlMetaData, useUpdateSamlMetaData } from 'services/cd-ng'
 import { getSamlEndpoint } from '@auth-settings/constants/utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  FormValues,
+  SAMLProviderType} from '@auth-settings/modals/SAMLProvider/utils';
 import {
   createFormData,
-  FormValues,
-  SAMLProviderType,
   Providers,
   getSelectedSAMLProvider
 } from '@auth-settings/modals/SAMLProvider/utils'

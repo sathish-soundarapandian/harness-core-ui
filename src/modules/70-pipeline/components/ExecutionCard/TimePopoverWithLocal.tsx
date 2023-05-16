@@ -5,10 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
-import { Text, Popover, TextProps, Layout, IconName } from '@harness/uicore'
+import type { ReactElement } from 'react';
+import React from 'react'
+import type { TextProps, IconName } from '@harness/uicore';
+import { Text, Popover, Layout } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { Classes, IPopoverProps, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import type { IPopoverProps} from '@blueprintjs/core';
+import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 
 import ReactTimeago from 'react-timeago'
 import moment from 'moment'

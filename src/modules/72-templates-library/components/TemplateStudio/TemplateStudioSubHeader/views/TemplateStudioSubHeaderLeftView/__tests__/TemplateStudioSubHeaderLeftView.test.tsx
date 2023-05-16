@@ -17,9 +17,11 @@ import { accountPathProps, pipelineModuleParams, templatePathProps } from '@comm
 import { useUpdateStableTemplate } from 'services/template-ng'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
-import {
-  TemplateStudioSubHeaderLeftViewWithRef,
+import type {
   TemplateStudioSubHeaderLeftViewProps
+} from '../TemplateStudioSubHeaderLeftView';
+import {
+  TemplateStudioSubHeaderLeftViewWithRef
 } from '../TemplateStudioSubHeaderLeftView'
 
 jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', () => ({

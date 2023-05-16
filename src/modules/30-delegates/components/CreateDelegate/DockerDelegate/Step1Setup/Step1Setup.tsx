@@ -9,11 +9,13 @@ import React, { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import type { FormikHelpers } from 'formik'
 import { set } from 'lodash-es'
-import { Layout, Formik, Button, FormikForm, Container, StepProps, SelectOption, FormInput } from '@harness/uicore'
+import type { StepProps, SelectOption} from '@harness/uicore';
+import { Layout, Formik, Button, FormikForm, Container, FormInput } from '@harness/uicore'
 import * as Yup from 'yup'
-import { validateDockerDelegatePromise, ValidateDockerDelegateQueryParams } from 'services/portal'
-import type { DelegateTokenDetails } from 'services/portal'
-import { useGetDelegateTokens, GetDelegateTokensQueryParams } from 'services/cd-ng'
+import { validateDockerDelegatePromise } from 'services/portal'
+import type { DelegateTokenDetails , ValidateDockerDelegateQueryParams } from 'services/portal'
+import type { GetDelegateTokensQueryParams } from 'services/cd-ng';
+import { useGetDelegateTokens } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
 

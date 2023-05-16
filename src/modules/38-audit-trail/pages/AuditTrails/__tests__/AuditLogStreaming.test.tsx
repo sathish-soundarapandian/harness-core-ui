@@ -7,11 +7,13 @@
 
 import React from 'react'
 import { render, fireEvent, waitFor, act, queryByAttribute } from '@testing-library/react'
-import {
-  useGetStreamingDestinationsAggregateQuery,
-  useGetStreamingDestinationsCardsQuery,
+import type {
   StreamingDestinationAggregateListResponseResponse,
   StreamingDestinationCards
+} from '@harnessio/react-audit-service-client';
+import {
+  useGetStreamingDestinationsAggregateQuery,
+  useGetStreamingDestinationsCardsQuery
 } from '@harnessio/react-audit-service-client'
 import AuditLogStreamingListView from '@audit-trail/pages/AuditTrails/views/AuditLogStreamingListView'
 import { TestWrapper } from '@common/utils/testUtils'

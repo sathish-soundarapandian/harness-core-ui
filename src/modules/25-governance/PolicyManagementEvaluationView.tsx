@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { lazy, FC } from 'react'
+import type { FC } from 'react';
+import React, { lazy } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 // eslint-disable-next-line no-restricted-imports
 import ChildComponentMounter from 'microfrontends/ChildComponentMounter'

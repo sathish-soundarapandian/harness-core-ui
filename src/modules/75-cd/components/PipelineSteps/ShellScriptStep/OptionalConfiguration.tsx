@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { FormikProps, FieldArray, useFormikContext } from 'formik'
+import type { FormikProps} from 'formik';
+import { FieldArray, useFormikContext } from 'formik'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
-  AllowedTypes,
   Button,
   ButtonVariation,
   FormikForm,
@@ -31,12 +33,14 @@ import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiT
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 
-import {
-  scriptInputType,
-  scriptOutputType,
+import type {
   ShellScriptFormData,
   ShellScriptOutputStepVariable,
   ShellScriptStepVariable
+} from './shellScriptTypes';
+import {
+  scriptInputType,
+  scriptOutputType
 } from './shellScriptTypes'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

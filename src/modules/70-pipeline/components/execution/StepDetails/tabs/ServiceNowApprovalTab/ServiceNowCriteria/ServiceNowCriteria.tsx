@@ -17,7 +17,8 @@ import type {
   CriteriaSpecWrapperDTO,
   CriteriaSpecDTO
 } from 'services/pipeline-ng'
-import { String, StringKeys } from 'framework/strings'
+import type { StringKeys } from 'framework/strings';
+import { String } from 'framework/strings'
 import { Collapse } from '@pipeline/components/execution/StepDetails/common/Collapse/Collapse'
 
 import css from './ServiceNowCriteria.module.scss'

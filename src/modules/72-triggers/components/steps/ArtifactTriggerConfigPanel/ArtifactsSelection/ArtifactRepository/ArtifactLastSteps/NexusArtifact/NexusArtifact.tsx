@@ -6,16 +6,18 @@
  */
 
 import React, { useMemo, useEffect, useState } from 'react'
+import type {
+  StepProps,
+  SelectOption
+} from '@harness/uicore';
 import {
   Formik,
   FormInput,
   Layout,
   MultiTypeInputType,
   Button,
-  StepProps,
   Text,
-  ButtonVariation,
-  SelectOption
+  ButtonVariation
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
@@ -26,7 +28,8 @@ import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import type { NexusRegistrySpec } from 'services/pipeline-ng'
 import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { ConnectorConfigDTO, useArtifactIds, useGetGroupIds, useGetRepositories } from 'services/cd-ng'
+import type { ConnectorConfigDTO} from 'services/cd-ng';
+import { useArtifactIds, useGetGroupIds, useGetRepositories } from 'services/cd-ng'
 import {
   k8sRepositoryFormatTypes,
   nexus3RepositoryFormatTypes,
@@ -43,7 +46,8 @@ import { isValueFixed } from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getRequestOptions } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/helper'
 
-import { ImagePathProps, RepositoryPortOrServer } from '../../../ArtifactInterface'
+import type { ImagePathProps} from '../../../ArtifactInterface';
+import { RepositoryPortOrServer } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
 export interface queryInterface extends specInterface {

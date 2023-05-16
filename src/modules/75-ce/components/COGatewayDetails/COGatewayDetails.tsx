@@ -18,9 +18,10 @@ import routes from '@common/RouteDefinitions'
 import { Utils } from '@ce/common/Utils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useStrings } from 'framework/strings'
+import type {
+  Service} from 'services/lw';
 import {
   useSaveService,
-  Service,
   useGetServices,
   useCreateStaticSchedules,
   useDeleteStaticSchedule,

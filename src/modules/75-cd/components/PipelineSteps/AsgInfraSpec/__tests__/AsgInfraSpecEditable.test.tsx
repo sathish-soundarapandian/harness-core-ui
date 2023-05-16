@@ -8,7 +8,8 @@
 import React from 'react'
 import { render, fireEvent, act, getByText as getElementByText, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import type * as cdng from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'

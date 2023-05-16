@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Accordion, AllowedTypes, Container, SelectOption } from '@harness/uicore'
+import type { AllowedTypes, SelectOption } from '@harness/uicore';
+import { Accordion, Container } from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import { get, isEmpty } from 'lodash-es'
@@ -17,7 +18,8 @@ import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import type { BuildStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { SecurityStepData, SecurityStepSpec } from './types'
-import SecurityField, { CustomTooltipFieldProps } from './SecurityField'
+import type { CustomTooltipFieldProps } from './SecurityField';
+import SecurityField from './SecurityField'
 
 import {
   API_KEY_AUTH_TYPE,

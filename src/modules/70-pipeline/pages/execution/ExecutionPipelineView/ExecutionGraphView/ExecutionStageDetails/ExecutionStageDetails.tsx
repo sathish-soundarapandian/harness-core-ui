@@ -9,7 +9,8 @@ import React from 'react'
 import { isEmpty, debounce, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { NodeRunInfo, useGetBarrierInfo, useGetResourceConstraintsExecutionInfo } from 'services/pipeline-ng'
+import type { NodeRunInfo} from 'services/pipeline-ng';
+import { useGetBarrierInfo, useGetResourceConstraintsExecutionInfo } from 'services/pipeline-ng'
 import type { CDStageModuleInfo } from 'services/cd-ng'
 import { PageSpinner } from '@common/components'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
@@ -25,11 +26,13 @@ import type { ExecutionLayoutState } from '@pipeline/components/ExecutionLayout/
 import ConditionalExecutionTooltipWrapper from '@pipeline/components/ConditionalExecutionToolTip/ConditionalExecutionTooltipWrapper'
 import { getExecutionStageDiagramListeners, processExecutionDataV1 } from '@pipeline/utils/execUtils'
 
+import type {
+  BaseReactComponentProps
+} from '@pipeline/components/PipelineDiagram/DiagramFactory';
 import {
   DiagramFactory,
   DiagramNodes,
-  NodeType,
-  BaseReactComponentProps
+  NodeType
 } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import PipelineStepNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStepNode/PipelineStepNode'

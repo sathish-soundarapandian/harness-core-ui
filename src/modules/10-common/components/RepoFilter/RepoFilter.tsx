@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, DropDown, Icon, Layout, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Container, DropDown, Icon, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'

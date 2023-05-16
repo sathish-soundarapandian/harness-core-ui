@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, waitFor, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'

@@ -29,15 +29,18 @@ import {
   getProjectAndOrgColumn,
   getColumsForProjectAndAccountLevel
 } from '@cv/pages/slos/components/CVCreateSLOV2/components/CreateCompositeSloForm/CreateCompositeSloForm.utils'
-import { SLOObjective, SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import type { SLOObjective} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types';
+import { SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { getSLOIdentifierWithOrgAndProject } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  useGetSLOHealthListViewV2,
+import type {
   GetSLOHealthListViewQueryParams,
   ServiceLevelObjectiveDetailsDTO,
   SLOHealthListView,
   SLODashboardApiFilter
+} from 'services/cv';
+import {
+  useGetSLOHealthListViewV2
 } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import {

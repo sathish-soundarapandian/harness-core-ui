@@ -26,7 +26,8 @@ import {
   StackedCircleContainer
 } from '@cf/components/StackedCircleContainer/StackedCircleContainer'
 import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
-import { Segment, useDeleteSegment, useGetAllSegments } from 'services/cf'
+import type { Segment} from 'services/cf';
+import { useDeleteSegment, useGetAllSegments } from 'services/cf'
 import TargetManagementHeader from '@cf/components/TargetManagementHeader/TargetManagementHeader'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

@@ -10,17 +10,19 @@ import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { Collapse, Divider } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
+import type {
+  AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
 import {
   ButtonVariation,
   Card,
   Text,
-  AllowedTypes,
   Container,
   Layout,
   TagsPopover,
   Button,
-  ButtonSize,
-  SelectOption
+  ButtonSize
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -28,7 +30,8 @@ import type { NGEnvironmentInfoConfig } from 'services/cd-ng'
 
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
+import type { ButtonProps } from '@rbac/components/Button/Button';
+import RbacButton from '@rbac/components/Button/Button'
 
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -44,8 +47,9 @@ import type {
 } from '../../types'
 import DeployInfrastructure from '../../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../../DeployCluster/DeployCluster'
+import type {
+  InlineEntityFiltersProps} from '../../components/InlineEntityFilters/InlineEntityFiltersUtils';
 import {
-  InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from '../../components/InlineEntityFilters/InlineEntityFiltersUtils'
 import { EnvironmentInputs } from './EnvironmentInputs'

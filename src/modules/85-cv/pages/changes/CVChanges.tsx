@@ -6,15 +6,17 @@
  */
 
 /* eslint-disable react-hooks/exhaustive-deps */
+import type {
+  MultiSelectOption,
+  SelectOption
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Container,
   Text,
   MultiSelectDropDown,
-  MultiSelectOption,
-  Select,
-  SelectOption
+  Select
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -34,9 +36,11 @@ import { prepareFilterInfo } from '@cv/utils/CommonUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import {
-  ChangeSourceCategoryName,
+import type {
   ChangeSourceTypes
+} from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants';
+import {
+  ChangeSourceCategoryName
 } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { getChangeSourceOptions } from '../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.utils'
 import { HorizontalLayout } from '../health-source/common/StyledComponents'

@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Button, CardBody, CardSelect, Container, Heading, IconName, Layout, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Button, CardBody, CardSelect, Container, Heading, Layout, Text } from '@harness/uicore'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { Connectors } from '@connectors/constants'
 import { useStrings } from 'framework/strings'

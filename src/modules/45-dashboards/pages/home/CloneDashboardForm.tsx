@@ -7,12 +7,15 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ModalErrorHandlerBinding, useToaster } from '@harness/uicore'
+import type { ModalErrorHandlerBinding} from '@harness/uicore';
+import { useToaster } from '@harness/uicore'
 import type { DashboardPathProps } from '@common/interfaces/RouteInterfaces'
 import type { IDashboardFormData } from '@dashboards/types/DashboardTypes.types'
 import { useStrings } from 'framework/strings'
-import { ClonedDashboardResponse, FolderModel, useCloneDashboard } from 'services/custom-dashboards'
-import DashboardForm, { DashboardFormRequestProps } from './DashboardForm'
+import type { ClonedDashboardResponse, FolderModel} from 'services/custom-dashboards';
+import { useCloneDashboard } from 'services/custom-dashboards'
+import type { DashboardFormRequestProps } from './DashboardForm';
+import DashboardForm from './DashboardForm'
 
 export interface CloneDashboardFormProps {
   editableFolders: FolderModel[]

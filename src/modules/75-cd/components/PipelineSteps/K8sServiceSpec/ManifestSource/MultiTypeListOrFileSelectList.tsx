@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'

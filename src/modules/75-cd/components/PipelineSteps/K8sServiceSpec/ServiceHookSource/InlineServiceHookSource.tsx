@@ -7,9 +7,11 @@
 
 import React from 'react'
 
-import {
-  ServiceHookSourceBase,
+import type {
   ServiceHookSourceRenderProps
+} from '@cd/factory/ServiceHookSourceFactory/ServiceHookSourceBase';
+import {
+  ServiceHookSourceBase
 } from '@cd/factory/ServiceHookSourceFactory/ServiceHookSourceBase'
 import { ServiceHooksMap } from '@pipeline/components/ServiceHooks/ServiceHooksHelper'
 import ServiceHookFileContent from './ServiceHooksSourceContent'

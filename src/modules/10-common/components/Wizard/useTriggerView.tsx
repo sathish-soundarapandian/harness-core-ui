@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import { useEffect } from 'react'
 import { VisualYamlSelectedView } from '@harness/uicore'
 import { useLocalStorage } from '@common/hooks'
 

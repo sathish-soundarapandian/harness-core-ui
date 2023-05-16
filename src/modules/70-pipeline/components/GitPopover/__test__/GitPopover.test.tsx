@@ -11,7 +11,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as cdng from 'services/cd-ng'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import GitPopover, { GitPopoverProps } from '../GitPopover'
+import type { GitPopoverProps } from '../GitPopover';
+import GitPopover from '../GitPopover'
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))

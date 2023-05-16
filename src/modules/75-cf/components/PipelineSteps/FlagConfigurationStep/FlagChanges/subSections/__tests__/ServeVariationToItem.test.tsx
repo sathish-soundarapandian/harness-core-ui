@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { act, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import ServeVariationToItem, { ServeVariationToItemProps } from '../ServeVariationToItem'
+import type { ServeVariationToItemProps } from '../ServeVariationToItem';
+import ServeVariationToItem from '../ServeVariationToItem'
 import * as ItemVariationDialog from '../ItemVariationDialog'
 import { mockVariations } from './utils.mocks'
 

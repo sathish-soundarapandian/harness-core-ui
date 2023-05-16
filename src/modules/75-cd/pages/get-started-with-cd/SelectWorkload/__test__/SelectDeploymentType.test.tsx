@@ -12,7 +12,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
-import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectDeploymentType'
+import type { SelectDeploymentTypeRefInstance } from '../SelectDeploymentType';
+import { SelectDeploymentType } from '../SelectDeploymentType'
 import { CDOnboardingContext } from '../../CDOnboardingStore'
 import { contextValues } from '../../__tests__/mocks'
 

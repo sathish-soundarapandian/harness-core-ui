@@ -6,14 +6,16 @@
  */
 
 import React from 'react'
-import { AllowedTypes, Formik } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Formik } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 
 import { useStrings } from 'framework/strings'
 import type { StepElementConfig } from 'services/cd-ng'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { NameTimeoutField } from './NameTimeoutField'
 

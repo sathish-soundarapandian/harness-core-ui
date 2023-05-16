@@ -6,6 +6,8 @@
  */
 
 import React, { useState, useMemo } from 'react'
+import type {
+  MultiSelectOption} from '@harness/uicore';
 import {
   Text,
   Layout,
@@ -15,7 +17,6 @@ import {
   Container,
   Icon,
   Select,
-  MultiSelectOption,
   ButtonVariation,
   TableV2
 } from '@harness/uicore'

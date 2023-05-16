@@ -10,16 +10,18 @@ import { Container, Layout, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
 import { Position } from '@blueprintjs/core'
-import ResourceHandlerTable, {
+import type {
   ResourceHandlerTableData
-} from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
+} from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable';
+import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 import { PageSpinner, TagsPopover } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   PageTemplateSummaryResponse,
   TemplateResponse,
-  TemplateSummaryResponse,
+  TemplateSummaryResponse} from 'services/template-ng';
+import {
   useGetTemplateList
 } from 'services/template-ng'
 

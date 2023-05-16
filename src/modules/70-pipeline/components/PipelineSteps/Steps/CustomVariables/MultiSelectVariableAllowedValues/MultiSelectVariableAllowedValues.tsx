@@ -7,16 +7,18 @@
 
 import React from 'react'
 import cx from 'classnames'
-import {
+import type {
   AllowedTypes,
   MultiSelectOption,
+  MultiTypeInputValue,
+  SelectOption} from '@harness/uicore';
+import {
   MultiSelectTypeInput,
   MultiTypeInputType,
-  MultiTypeInputValue,
-  SelectOption,
   getMultiTypeFromValue
 } from '@harness/uicore'
-import { FormikContextType, connect } from 'formik'
+import type { FormikContextType} from 'formik';
+import { connect } from 'formik'
 import { defaultTo, get, isArray, isEmpty } from 'lodash-es'
 import type { MultiSelectTypeInputProps } from '@harness/uicore/dist/components/MultiTypeInput/MultiTypeInput'
 import type { FormMultiTextTypeInputProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'

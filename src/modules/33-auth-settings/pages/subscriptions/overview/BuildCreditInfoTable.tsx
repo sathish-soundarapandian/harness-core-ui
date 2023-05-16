@@ -11,7 +11,8 @@ import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, Col
 import { Text, TableV2, Layout, Card, Heading, NoDataCard } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
-import { useStrings, StringKeys } from 'framework/strings'
+import type { StringKeys } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { LicenseUsageDTO, CreditDTO, CIModuleLicenseDTO } from 'services/cd-ng'
 import { getInfoIcon } from './UsageInfoCard'
 import { getSummaryCardRenderers } from './ServiceLicenseGraphs'

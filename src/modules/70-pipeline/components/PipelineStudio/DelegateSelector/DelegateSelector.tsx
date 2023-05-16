@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Formik, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { Formik } from 'formik'
 
 import { debounce } from 'lodash-es'
 import type { StageElementWrapperConfig } from 'services/pipeline-ng'

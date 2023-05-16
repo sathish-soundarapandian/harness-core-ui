@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { BaseSyntheticEvent, PropsWithChildren, ReactNode, useState } from 'react'
+import type { BaseSyntheticEvent, PropsWithChildren, ReactNode} from 'react';
+import React, { useState } from 'react'
 import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { get } from 'lodash-es'
-import { AllowedTypes, Card, Container, Text, Layout, HarnessDocTooltip } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Card, Container, Text, Layout, HarnessDocTooltip } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 
@@ -18,7 +20,8 @@ import { useStrings } from 'framework/strings'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 
-import { InlineEntityFiltersProps, InlineEntityFiltersRadioType } from '../InlineEntityFiltersUtils'
+import type { InlineEntityFiltersProps} from '../InlineEntityFiltersUtils';
+import { InlineEntityFiltersRadioType } from '../InlineEntityFiltersUtils'
 import EntityFilterList from '../EntityFiltersList/EntityFilterList'
 
 import css from './InlineEntityFiltersWidget.module.scss'

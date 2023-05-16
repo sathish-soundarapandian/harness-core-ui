@@ -5,14 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useMemo } from 'react'
-import { Container, FormInput, Layout, SelectOption, Text } from '@harness/uicore'
+import type { FC} from 'react';
+import React, { useMemo } from 'react'
+import type { SelectOption} from '@harness/uicore';
+import { Container, FormInput, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Segment, Variation } from 'services/cf'
 import { CFVariationColorsColorRef } from '@cf/constants'
 import { FeatureFlagBucketBy } from '@cf/utils/CFUtils'
-import DistributionBar, { DistributionSegment } from './DistributionBar'
+import type { DistributionSegment } from './DistributionBar';
+import DistributionBar from './DistributionBar'
 
 import css from './PercentageRollout.module.scss'
 

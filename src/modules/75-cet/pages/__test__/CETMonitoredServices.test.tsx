@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import { TestWrapper, type TestWrapperProps } from '@common/utils/testUtils'
 import { CETMonitoredServices } from '@cet/pages/CETMonitoredServices'
 import * as hooks from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'

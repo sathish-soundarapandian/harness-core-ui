@@ -6,6 +6,9 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   FormInput,
@@ -13,10 +16,8 @@ import {
   Layout,
   MultiTypeInputType,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
-  SelectOption,
   FormikForm
 } from '@harness/uicore'
 import cx from 'classnames'
@@ -30,15 +31,17 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 
-import {
+import type {
   ArtifactoryImagePath,
   ConnectorConfigDTO,
   DockerBuildDetailsDTO,
   Failure,
   Error,
-  useGetBuildDetailsForArtifactoryArtifact,
-  useGetImagePathsForArtifactory,
   ServiceDefinition
+} from 'services/cd-ng';
+import {
+  useGetBuildDetailsForArtifactoryArtifact,
+  useGetImagePathsForArtifactory
 } from 'services/cd-ng'
 import {
   checkIfQueryParamsisNotEmpty,

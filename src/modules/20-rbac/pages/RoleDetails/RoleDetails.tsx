@@ -14,9 +14,10 @@ import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { Page, useToaster } from '@common/exports'
 import { PageSpinner } from '@common/components'
-import {
+import type {
   Permission,
-  Role,
+  Role} from 'services/rbac';
+import {
   useGetPermissionList,
   useGetRole,
   usePutRole,
@@ -25,7 +26,8 @@ import {
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import PermissionCard from '@rbac/components/PermissionCard/PermissionCard'
 import RbacFactory from '@rbac/factories/RbacFactory'
-import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
+import type { ResourceCategory } from '@rbac/interfaces/ResourceType';
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getPermissionMap, onPermissionChange } from '@rbac/pages/RoleDetails/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'

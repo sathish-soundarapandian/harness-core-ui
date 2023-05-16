@@ -12,12 +12,14 @@ import { defaultTo } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import { String, useStrings } from 'framework/strings'
 import { Duration } from '@common/exports'
-import {
-  useMarkWaitStep,
+import type {
   ExecutionNode,
   WaitStepRequestDto,
   ResponseWaitStepExecutionDetailsDto,
   ExecutionGraph
+} from 'services/pipeline-ng';
+import {
+  useMarkWaitStep
 } from 'services/pipeline-ng'
 import { WaitActions, waitActionsIconMap, waitActionsStringMap } from '@pipeline/utils/FailureStrategyUtils'
 import { usePermission } from '@rbac/hooks/usePermission'

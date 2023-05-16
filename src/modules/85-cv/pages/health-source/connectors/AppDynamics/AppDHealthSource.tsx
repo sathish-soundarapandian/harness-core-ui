@@ -8,6 +8,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { defaultTo, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Text,
   Button,
@@ -15,7 +17,6 @@ import {
   Formik,
   FormikForm,
   Layout,
-  SelectOption,
   Utils,
   useToaster,
   MultiTypeInputType,
@@ -23,11 +24,13 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  useGetAppDynamicsApplications,
-  useGetAppDynamicsTiers,
+import type {
   AppdynamicsValidationResponse,
   TimeSeriesMetricPackDTO
+} from 'services/cv';
+import {
+  useGetAppDynamicsApplications,
+  useGetAppDynamicsTiers
 } from 'services/cv'
 import { Connectors } from '@connectors/constants'
 import { useStrings } from 'framework/strings'

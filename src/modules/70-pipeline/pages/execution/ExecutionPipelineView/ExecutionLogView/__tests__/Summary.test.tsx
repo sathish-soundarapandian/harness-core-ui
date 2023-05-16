@@ -10,7 +10,8 @@ import React from 'react'
 import { render } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import Summary, { SummaryProps as SummaryPropsInterface } from '../Summary'
+import type { SummaryProps as SummaryPropsInterface } from '../Summary';
+import Summary from '../Summary'
 
 const SummaryProps: SummaryPropsInterface = {
   summaryElement: <div />

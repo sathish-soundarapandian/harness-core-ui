@@ -24,7 +24,8 @@ import applicationConfigBaseFactory from '@cd/factory/ApplicationConfigFactory/A
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import { RuntimeApplicationConfig } from '@pipeline/components/RuntimeApplicationConfig/RuntimeApplicationConfig'
 import { KubernetesArtifacts } from '../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
-import { ApplicationConfigType, AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
+import type { AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types';
+import { ApplicationConfigType } from './AzureWebAppServiceSpecInterface.types'
 import PrimaryArtifactRef from '../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
 import { ConfigFiles } from '../SshServiceSpec/SshConfigFiles/ConfigFiles'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'

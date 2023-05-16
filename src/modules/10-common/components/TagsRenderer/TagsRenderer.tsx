@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Text, Layout, Tag, TagsPopover, tagsType } from '@harness/uicore'
+import type { tagsType } from '@harness/uicore';
+import { Text, Layout, Tag, TagsPopover } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 export interface ListTagsProps {

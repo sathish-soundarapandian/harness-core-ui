@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { OnboardingSelectedFlag, OnboardingSelectedFlagProps } from '../OnboardingSelectedFlag'
+import type { OnboardingSelectedFlagProps } from '../OnboardingSelectedFlag';
+import { OnboardingSelectedFlag } from '../OnboardingSelectedFlag'
 
 const mockSelectedFlag = {
   identifier: 'ff_onboarding_flag',

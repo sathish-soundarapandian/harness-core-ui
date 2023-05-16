@@ -11,8 +11,10 @@ import { Intent, PopoverPosition } from '@blueprintjs/core'
 import React, { useMemo } from 'react'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Color, FontVariation } from '@harness/design-system'
-import { String, useStrings, UseStringsReturn } from 'framework/strings'
-import { PageVariableResponseDTO, useDeleteVariable, VariableResponseDTO } from 'services/cd-ng'
+import type { UseStringsReturn } from 'framework/strings';
+import { String, useStrings } from 'framework/strings'
+import type { PageVariableResponseDTO, VariableResponseDTO } from 'services/cd-ng';
+import { useDeleteVariable } from 'services/cd-ng'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
 import {
   getValueFromVariableAndValidationType,

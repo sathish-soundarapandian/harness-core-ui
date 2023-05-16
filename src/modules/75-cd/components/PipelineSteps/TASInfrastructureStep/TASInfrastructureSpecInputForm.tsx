@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
-import { Text, Layout, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Text, Layout, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get, defaultTo, isEqual, set, isUndefined } from 'lodash-es'
@@ -18,8 +19,10 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { useGetTasOrganizations, useGetTasSpaces, useGetTasSpacesV2 } from 'services/cd-ng'
-import { getSelectedConnectorValue, SelectedConnectorType } from '@cd/utils/connectorUtils'
-import { TASInfrastructureSpecEditableProps, organizationLabel, spaceGroupLabel } from './TASInfrastructureInterface'
+import type { SelectedConnectorType } from '@cd/utils/connectorUtils';
+import { getSelectedConnectorValue } from '@cd/utils/connectorUtils'
+import type { TASInfrastructureSpecEditableProps} from './TASInfrastructureInterface';
+import { organizationLabel, spaceGroupLabel } from './TASInfrastructureInterface'
 import { getValue } from '../PipelineStepsUtil'
 import css from './TASInfrastructureSpec.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

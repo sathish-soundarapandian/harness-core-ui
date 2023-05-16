@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, findByText as findByTextBody, RenderResult, waitFor, screen, findByRole } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, findByText as findByTextBody, waitFor, screen, findByRole } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { noop } from 'lodash-es'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'

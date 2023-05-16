@@ -8,8 +8,10 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { MultiSelectOption } from '@harness/uicore'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
-import { FilterDTO, usePostAuditFilter, useUpdateAuditFilter, useDeleteAuditFilter } from 'services/audit'
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
+import type { FilterDTO} from 'services/audit';
+import { usePostAuditFilter, useUpdateAuditFilter, useDeleteAuditFilter } from 'services/audit'
 import type { FilterDataInterface } from '@common/components/Filter/Constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'

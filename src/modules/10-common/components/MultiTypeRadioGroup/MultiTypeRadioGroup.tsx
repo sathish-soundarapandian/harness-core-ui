@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { FormGroup, IFormGroupProps, Intent, IOptionProps, IRadioGroupProps, RadioGroup } from '@blueprintjs/core'
-import {
+import type { IFormGroupProps, IOptionProps, IRadioGroupProps} from '@blueprintjs/core';
+import { FormGroup, Intent, RadioGroup } from '@blueprintjs/core'
+import type {
   DataTooltipInterface,
+  ExpressionAndRuntimeTypeProps} from '@harness/uicore';
+import {
   ExpressionAndRuntimeType,
-  ExpressionAndRuntimeTypeProps,
   FormikTooltipContext,
   MultiTypeInputValue,
   Text

@@ -13,10 +13,10 @@ import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
-import { LdapGroupResponse, useSearchLdapGroups } from 'services/cd-ng'
+import { useSearchLdapGroups } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { Error } from 'services/cd-ng'
+import type { Error , LdapGroupResponse} from 'services/cd-ng'
 import css from '../useLinkToSSOProviderModal.module.scss'
 
 const LinkToLDAPProviderForm: React.FC = () => {

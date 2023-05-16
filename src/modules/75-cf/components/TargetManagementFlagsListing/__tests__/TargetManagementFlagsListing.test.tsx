@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockFeatures } from '@cf/pages/target-group-detail/__tests__/mocks'
-import TargetManagementFlagsListing, { TargetManagementFlagsListingProps } from '../TargetManagementFlagsListing'
+import type { TargetManagementFlagsListingProps } from '../TargetManagementFlagsListing';
+import TargetManagementFlagsListing from '../TargetManagementFlagsListing'
 
 const renderComponent = (props: Partial<TargetManagementFlagsListingProps> = {}): RenderResult =>
   render(

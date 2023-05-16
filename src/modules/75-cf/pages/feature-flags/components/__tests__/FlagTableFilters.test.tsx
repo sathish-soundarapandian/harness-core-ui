@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { getByTestId, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { getByTestId, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockFeatureFlags from '../../__tests__/mockFeatureFlags'
-import { FlagTableFilters, FlagTableFiltersProps } from '../FlagTableFilters'
+import type { FlagTableFiltersProps } from '../FlagTableFilters';
+import { FlagTableFilters } from '../FlagTableFilters'
 
 const updateTableFilter = jest.fn()
 let flagEnabled = true

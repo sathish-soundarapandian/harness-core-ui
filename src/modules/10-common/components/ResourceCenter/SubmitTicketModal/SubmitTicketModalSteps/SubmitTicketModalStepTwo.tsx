@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Text,
   Formik,
   Button,
   ButtonVariation,
-  StepProps,
   FormInput,
   PageSpinner,
   useToaster
@@ -27,6 +28,9 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { DEFAULT_MODULES_ORDER, moduleInfoMap } from '@common/hooks/useNavModuleInfo'
 import { useStrings } from 'framework/strings'
+import type {
+  SubmitTicket
+} from './Utils';
 import {
   getBrowserName,
   getComponentsFromModule,
@@ -34,8 +38,7 @@ import {
   IssueType,
   issueTypes,
   priorityItems,
-  PriorityType,
-  SubmitTicket
+  PriorityType
 } from './Utils'
 import css from './SubmitTicketModalSteps.module.scss'
 

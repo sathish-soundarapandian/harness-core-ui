@@ -6,13 +6,16 @@
  */
 
 import React from 'react'
-import { Formik, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Formik } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
-import { ShellScriptFormData, variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
+import type { ShellScriptFormData} from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes';
+import { variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import OptionalConfiguration from '@cd/components/PipelineSteps/ShellScriptStep/OptionalConfiguration'
 
 interface ShellScriptWidgetProps {

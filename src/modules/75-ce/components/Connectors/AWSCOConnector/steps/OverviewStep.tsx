@@ -9,24 +9,28 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
+import type {
+  StepProps,
+  ModalErrorHandlerBinding
+} from '@harness/uicore';
 import {
   Layout,
   Button,
-  StepProps,
   Heading,
   Formik,
   FormikForm,
   Container,
-  ModalErrorHandler,
-  ModalErrorHandlerBinding
+  ModalErrorHandler
 } from '@harness/uicore'
-import type { ConnectorInfoDTO, ConnectorConfigDTO } from 'services/cd-ng'
-import { validateTheIdentifierIsUniquePromise, Failure } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ConnectorConfigDTO , Failure } from 'services/cd-ng'
+import { validateTheIdentifierIsUniquePromise } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { StringUtils } from '@common/exports'
-import {
-  AddDescriptionAndKVTagsWithIdentifier,
+import type {
   FormikForAddDescriptionandKVTags
+} from '@common/components/AddDescriptionAndTags/AddDescriptionAndTags';
+import {
+  AddDescriptionAndKVTagsWithIdentifier
 } from '@common/components/AddDescriptionAndTags/AddDescriptionAndTags'
 import type { permission as PermissionType } from '../constants'
 import { CO_PERMISSION, CE_PERMISSION, COCE_PERMISSION } from '../constants'

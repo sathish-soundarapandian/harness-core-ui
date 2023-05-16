@@ -30,8 +30,9 @@ import Highcharts from 'highcharts'
 import { Drawer } from '@blueprintjs/core'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  StackdriverDefinition} from 'services/cv';
 import {
-  StackdriverDefinition,
   useGetRiskCategoryForCustomHealthMetric,
   useGetStackdriverDashboardDetail,
   useGetStackdriverSampleData

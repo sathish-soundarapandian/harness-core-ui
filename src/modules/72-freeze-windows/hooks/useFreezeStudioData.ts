@@ -16,7 +16,8 @@ import {
   useGetProjectList,
   useGetServiceList
 } from 'services/cd-ng'
-import { FreezeWindowLevels, ResourcesInterface, ProjctsByOrgId } from '@freeze-windows/types'
+import type { ResourcesInterface, ProjctsByOrgId } from '@freeze-windows/types';
+import { FreezeWindowLevels } from '@freeze-windows/types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import {

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, StepProps, Layout, Button, ButtonVariation, FormInput, FormikForm, Text } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Container, Layout, Button, ButtonVariation, FormInput, FormikForm, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import React from 'react'
 import { Formik } from 'formik'

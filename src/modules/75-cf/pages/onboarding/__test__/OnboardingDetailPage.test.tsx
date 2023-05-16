@@ -7,8 +7,10 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
-import userEvent, { TargetElement } from '@testing-library/user-event'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
+import type { TargetElement } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PlatformEntryType } from '@cf/components/LanguageSelection/LanguageSelection'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'

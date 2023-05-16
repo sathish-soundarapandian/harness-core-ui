@@ -24,11 +24,10 @@ import {
   MockDashboards,
   MockWidgetsResponse
 } from '@cv/components/MetricDashboardWidgetNav/tests/mock'
-import Mock = jest.Mock
 
 describe('unit tests for dashboard widget metric', () => {
   let mockedReturnedValue: UseGetReturn<any, any, any>
-  let widgetMapper: Mock
+  let widgetMapper: jest.Mock
 
   beforeEach(() => {
     jest.clearAllMocks()

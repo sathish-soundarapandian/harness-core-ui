@@ -8,6 +8,9 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import cx from 'classnames'
 import { get, isEmpty, set } from 'lodash-es'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -15,9 +18,7 @@ import {
   FormInput,
   Text,
   FormikForm as Form,
-  StepProps,
   Container,
-  SelectOption,
   ButtonVariation,
   PageSpinner
 } from '@harness/uicore'
@@ -40,7 +41,8 @@ import type {
 } from 'services/cd-ng'
 import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
+import type { TextReferenceInterface} from '@secrets/components/TextReference/TextReference';
+import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
@@ -48,9 +50,10 @@ import { Connectors } from '@connectors/constants'
 import { GitAuthTypes, GitAPIAuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { ConnectViaOAuth } from '@common/components/ConnectViaOAuth/ConnectViaOAuth'
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
+import type {
+  OAuthEventProcessingResponse} from '@common/components/ConnectViaOAuth/OAuthUtils';
 import {
   OAUTH_PLACEHOLDER_VALUE,
-  OAuthEventProcessingResponse,
   handleOAuthEventProcessing
 } from '@common/components/ConnectViaOAuth/OAuthUtils'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'

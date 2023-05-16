@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { RenderResult, getByText, render, act, fireEvent } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { getByText, render, act, fireEvent } from '@testing-library/react'
 import { useGetOrganizationList, useGetProjectList } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps, resourceGroupPathProps } from '@common/utils/routeUtils'

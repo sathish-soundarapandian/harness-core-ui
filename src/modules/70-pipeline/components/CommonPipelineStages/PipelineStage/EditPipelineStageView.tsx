@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Text, Container, Formik, FormikForm, Button, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Text, Container, Formik, FormikForm, Button } from '@harness/uicore'
 import * as Yup from 'yup'
 import { get, set } from 'lodash-es'
 import type { FormikErrors } from 'formik'

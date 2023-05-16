@@ -5,7 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ReactNode, useMemo, useRef } from 'react'
+import type { FC, ReactNode} from 'react';
+import React, { useMemo, useRef } from 'react'
+import type {
+  MultiSelectOption,
+  SelectOption
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -14,9 +19,7 @@ import {
   Formik,
   FormikForm,
   FormInput,
-  Layout,
-  MultiSelectOption,
-  SelectOption
+  Layout
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'

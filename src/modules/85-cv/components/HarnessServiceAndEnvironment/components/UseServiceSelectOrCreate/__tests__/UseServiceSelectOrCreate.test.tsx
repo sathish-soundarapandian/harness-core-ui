@@ -9,7 +9,8 @@ import { MultiSelectDropDown } from '@harness/uicore'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { MultiSelectService, useServiceSelectOrCreate } from '../UseServiceSelectOrCreate'
+import type { MultiSelectService} from '../UseServiceSelectOrCreate';
+import { useServiceSelectOrCreate } from '../UseServiceSelectOrCreate'
 
 jest.mock('@common/modals/HarnessServiceModal/HarnessServiceModal', () => {
   return {

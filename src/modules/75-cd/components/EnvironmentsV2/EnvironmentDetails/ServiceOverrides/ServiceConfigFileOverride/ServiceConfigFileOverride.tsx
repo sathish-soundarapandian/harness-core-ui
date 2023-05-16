@@ -7,20 +7,22 @@
 
 import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import {
+import type {
   AllowedTypes,
+  StepProps,
+  IconProps} from '@harness/uicore';
+import {
   Button,
   ButtonSize,
   ButtonVariation,
   Layout,
-  StepProps,
   MultiTypeInputType,
   PageSpinner,
-  IconProps,
   StepWizard
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { EnvironmentPathProps, PipelinePathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'

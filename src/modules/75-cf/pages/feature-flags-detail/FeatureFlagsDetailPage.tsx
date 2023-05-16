@@ -8,7 +8,8 @@
 import React, { useState, useEffect } from 'react'
 import { Layout, PageError } from '@harness/uicore'
 import { useParams, useLocation } from 'react-router-dom'
-import { GetFeatureFlagQueryParams, useGetFeatureFlag } from 'services/cf'
+import type { GetFeatureFlagQueryParams} from 'services/cf';
+import { useGetFeatureFlag } from 'services/cf'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'

@@ -8,28 +8,33 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { cloneDeep, defaultTo, get, isEqual, memoize } from 'lodash-es'
 
+import type {
+  MultiSelectOption,
+  SelectOption
+} from '@harness/uicore';
 import {
   FormInput,
   getMultiTypeFromValue,
   Layout,
-  MultiSelectOption,
-  MultiTypeInputType,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 import type { SubmenuSelectOption } from '@harness/uicore/dist/components/SelectWithSubmenu/SelectWithSubmenuV2'
 import type { IconName } from '@blueprintjs/core'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useMutateAsGet } from '@common/hooks'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase';
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type {
+  ConnectorReferenceDTO} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField';
 import {
-  ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import {
+import type {
   BuildDetails,
   JobDetails,
-  SidecarArtifact,
+  SidecarArtifact} from 'services/cd-ng';
+import {
   useGetJobDetailsForJenkinsServiceV2,
   useGetArtifactPathForJenkinsServiceV2,
   useGetBuildsForJenkinsServiceV2,
@@ -44,7 +49,8 @@ import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/Triggers
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { ConnectorRefType, getScopedConnectorValue } from '@pipeline/utils/stepUtils'
+import type { ConnectorRefType} from '@pipeline/utils/stepUtils';
+import { getScopedConnectorValue } from '@pipeline/utils/stepUtils'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {

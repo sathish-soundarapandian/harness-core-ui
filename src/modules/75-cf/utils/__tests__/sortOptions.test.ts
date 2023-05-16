@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { sortOptions, Option } from '@cf/utils/sortOptions'
+import type { Option } from '@cf/utils/sortOptions';
+import { sortOptions } from '@cf/utils/sortOptions'
 
 const makeOpt = (val: string): Option => ({ label: val, value: val })
 

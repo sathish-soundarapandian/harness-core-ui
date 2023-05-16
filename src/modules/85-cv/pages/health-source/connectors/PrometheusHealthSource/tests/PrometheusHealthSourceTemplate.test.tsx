@@ -12,7 +12,8 @@ import * as cvService from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import { setFieldValue, InputTypes } from '@common/utils/JestFormHelper'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import { PrometheusHealthSource, PrometheusHealthSourceProps } from '../PrometheusHealthSource'
+import type { PrometheusHealthSourceProps } from '../PrometheusHealthSource';
+import { PrometheusHealthSource } from '../PrometheusHealthSource'
 import {
   expectedParameter,
   fixedValuesTemplate,

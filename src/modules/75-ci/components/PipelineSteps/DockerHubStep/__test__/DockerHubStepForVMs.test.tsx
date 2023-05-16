@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, Matcher, act, fireEvent } from '@testing-library/react'
+import type { Matcher} from '@testing-library/react';
+import { render, act, fireEvent } from '@testing-library/react'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'

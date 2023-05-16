@@ -6,6 +6,8 @@
  */
 
 import React, { useCallback } from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -14,7 +16,6 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  StepProps,
   ButtonVariation
 } from '@harness/uicore'
 import cx from 'classnames'
@@ -30,12 +31,14 @@ import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
 
-import {
+import type {
   ConnectorTypes,
-  gitFetchTypeList,
-  GitFetchTypes,
   StartupScriptDataType,
   StartupScriptWizardStepTwoProps
+} from './StartupScriptInterface.types';
+import {
+  gitFetchTypeList,
+  GitFetchTypes
 } from './StartupScriptInterface.types'
 import { HarnessOption } from './HarnessOption'
 import css from './StartupScriptSelection.module.scss'

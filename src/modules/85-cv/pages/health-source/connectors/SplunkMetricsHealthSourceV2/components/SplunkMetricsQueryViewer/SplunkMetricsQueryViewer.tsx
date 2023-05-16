@@ -7,7 +7,8 @@
 
 import React, { useCallback, useMemo, useState } from 'react'
 import { Utils, Container, Text } from '@harness/uicore'
-import { IDrawerProps, Position, Drawer } from '@blueprintjs/core'
+import type { IDrawerProps} from '@blueprintjs/core';
+import { Position, Drawer } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { Records } from '@cv/components/Records/Records'

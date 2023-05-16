@@ -20,7 +20,8 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import FreezeWindowsPage from '@freeze-windows/pages/FreezeWindowsPage'
 import FreezeWindowStudioPage from '@freeze-windows/pages/FreezeWindowStudioPage'
-import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
+import type { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory';
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
 
 RbacFactory.registerResourceTypeHandler(ResourceType.DEPLOYMENTFREEZE, {

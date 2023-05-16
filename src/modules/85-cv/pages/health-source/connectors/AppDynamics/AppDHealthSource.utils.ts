@@ -7,7 +7,8 @@
 
 import { cloneDeep, isEmpty, isEqual } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type {

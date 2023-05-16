@@ -8,7 +8,8 @@
 import React from 'react'
 import { findByText, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 
 import * as cdng from 'services/cd-ng'
 

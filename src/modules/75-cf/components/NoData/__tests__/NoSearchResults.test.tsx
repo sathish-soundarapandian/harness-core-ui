@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import NoSearchResults, { NoSearchResultsProps } from '../NoSearchResults'
+import type { NoSearchResultsProps } from '../NoSearchResults';
+import NoSearchResults from '../NoSearchResults'
 
 const renderComponent = (props: Partial<NoSearchResultsProps> = {}): RenderResult =>
   render(

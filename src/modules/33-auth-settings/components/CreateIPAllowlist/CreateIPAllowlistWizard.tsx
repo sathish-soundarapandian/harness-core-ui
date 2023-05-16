@@ -12,7 +12,8 @@ import { StepWizard } from '@harness/uicore'
 import type { IpAllowlistConfigResponse } from '@harnessio/react-ng-manager-client'
 
 import { useStrings } from 'framework/strings'
-import { SourceType, IIPAllowlistForm } from '@auth-settings/interfaces/IPAllowlistInterface'
+import type { IIPAllowlistForm } from '@auth-settings/interfaces/IPAllowlistInterface';
+import { SourceType } from '@auth-settings/interfaces/IPAllowlistInterface'
 import StepOverview from './StepOverview/StepOverview'
 import StepDefineRange from './StepDefineRange/StepDefineRange'
 import StepTestIP from './StepTestIP/StepTestIP'

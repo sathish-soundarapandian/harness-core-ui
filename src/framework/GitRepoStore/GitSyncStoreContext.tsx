@@ -5,13 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useCallback, ReactNode } from 'react'
+import type { ReactNode } from 'react';
+import React, { useEffect, useCallback } from 'react'
 import { noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { PageSpinner } from '@harness/uicore'
 
 import { useListGitSync } from 'services/cd-ng'
-import { GitSyncConfig, SourceCodeManagerDto, useGetSourceCodeManagersQuery } from 'services/cd-ng-rq'
+import type { GitSyncConfig, SourceCodeManagerDto} from 'services/cd-ng-rq';
+import { useGetSourceCodeManagersQuery } from 'services/cd-ng-rq'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 

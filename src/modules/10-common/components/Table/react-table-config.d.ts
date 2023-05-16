@@ -7,7 +7,7 @@
 
 /* See https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-table */
 
-import {
+import type {
   UseColumnOrderInstanceProps,
   UseColumnOrderState,
   UseExpandedInstanceProps,

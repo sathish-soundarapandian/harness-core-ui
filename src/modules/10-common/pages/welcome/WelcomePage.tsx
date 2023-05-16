@@ -7,7 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useFeatureFlag } from '@harnessio/ff-react-client-sdk'
-import { HarnessIcons, Container, Text, Layout, Heading, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { HarnessIcons, Container, Text, Layout, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'

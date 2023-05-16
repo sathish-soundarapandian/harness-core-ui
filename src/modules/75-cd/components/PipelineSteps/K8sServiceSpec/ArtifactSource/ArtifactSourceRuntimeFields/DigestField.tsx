@@ -7,7 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { memoize } from 'lodash-es'
-import { SelectOption, Text, useToaster } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Text, useToaster } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
@@ -16,7 +17,8 @@ import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactor
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { Failure } from 'services/cd-ng'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import { BuildDetailsDTO, getTagError } from '../artifactSourceUtils'
+import type { BuildDetailsDTO} from '../artifactSourceUtils';
+import { getTagError } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface DigestFieldProps extends ArtifactSourceRenderProps {

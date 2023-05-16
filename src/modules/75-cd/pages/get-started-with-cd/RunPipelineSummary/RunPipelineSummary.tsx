@@ -20,26 +20,30 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { capitalize, defaultTo, get, isEmpty } from 'lodash-es'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { useGetDelegateGroupByIdentifier } from 'services/portal'
 import type { ServiceDefinition, UserRepoResponse } from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import type {
+  ResponsePipelineSaveResponse} from 'services/pipeline-ng';
 import {
   createPipelineV2Promise,
-  ResponsePipelineSaveResponse,
   usePostPipelineExecuteWithInputSetYaml
 } from 'services/pipeline-ng'
 import { Status } from '@common/utils/Constants'
 import { useGetServicesData } from '@cd/components/PipelineSteps/DeployServiceEntityStep/useGetServicesData'
 import routes from '@common/RouteDefinitions'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type {
+  PipelineRefPayload
+} from '../CDOnboardingUtils';
 import {
   DEFAULT_PIPELINE_NAME,
   DEFAULT_PIPELINE_PAYLOAD,
   EMPTY_STRING,
-  getUniqueEntityIdentifier,
-  PipelineRefPayload
+  getUniqueEntityIdentifier
 } from '../CDOnboardingUtils'
 import { DeployProvisiongWizardStepId } from '../DeployProvisioningWizard/Constants'
 import { useCDOnboardingContext } from '../CDOnboardingStore'

@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 import { ButtonSize, ButtonVariation, Heading, Layout } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { OptionsMenuButton } from '@common/components'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import type { SubSectionComponent } from './FlagChangesForm'
 import css from './SubSectionSelector.module.scss'
 

@@ -8,8 +8,10 @@
 import React from 'react'
 import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { FormikContextType, useFormikContext } from 'formik'
-import { Card, Layout, Text, DropDown, SelectOption, FormInput } from '@harness/uicore'
+import type { FormikContextType} from 'formik';
+import { useFormikContext } from 'formik'
+import type { SelectOption} from '@harness/uicore';
+import { Card, Layout, Text, DropDown, FormInput } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { BillingContactProps } from '@common/constants/SubscriptionTypes'

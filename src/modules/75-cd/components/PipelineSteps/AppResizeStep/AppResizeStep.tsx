@@ -6,13 +6,14 @@
  */
 
 import React from 'react'
-import {
+import type {
   IconName,
+  AllowedTypes} from '@harness/uicore';
+import {
   Formik,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  AllowedTypes,
   Container,
   Icon,
   Text
@@ -20,10 +21,11 @@ import {
 import { Intent, FontVariation, Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+import type { FormikErrors, FormikProps} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { defaultTo, isEmpty, set } from 'lodash-es'
-import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
-import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef , StepProps, ValidateInputSetProps} from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig, TasAppResizeStepInfo } from 'services/cd-ng'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -35,7 +37,8 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

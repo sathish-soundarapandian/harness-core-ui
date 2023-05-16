@@ -7,7 +7,8 @@
 
 import { PageSpinner } from '@harness/uicore'
 import React from 'react'
-import AddDrawer, { AddDrawerMapInterface, DrawerContext, ItemInterface } from '@common/components/AddDrawer/AddDrawer'
+import type { AddDrawerMapInterface, ItemInterface } from '@common/components/AddDrawer/AddDrawer';
+import AddDrawer, { DrawerContext } from '@common/components/AddDrawer/AddDrawer'
 import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
 
 export interface AddConnectorsDrawerProps {

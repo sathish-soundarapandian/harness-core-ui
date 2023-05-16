@@ -11,7 +11,8 @@ import { Formik, FormikForm } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { SelectedAppsSideNav, SelectedAppsSideNavProps } from '../SelectedAppsSideNav'
+import type { SelectedAppsSideNavProps } from '../SelectedAppsSideNav';
+import { SelectedAppsSideNav } from '../SelectedAppsSideNav'
 
 function WrapperComponent(props: SelectedAppsSideNavProps): JSX.Element {
   return (

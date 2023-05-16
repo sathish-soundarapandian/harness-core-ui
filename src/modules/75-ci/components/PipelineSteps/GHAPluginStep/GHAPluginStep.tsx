@@ -22,7 +22,8 @@ import type {
 import type { StringsMap } from 'stringTypes'
 import { GHAPluginStepBaseWithRef, customRegexForMultiTypeMap } from './GHAPluginStepBase'
 import { GHAPluginStepInputSet } from './GHAPluginStepInputSet'
-import { GHAPluginStepVariables, GHAPluginStepVariablesProps } from './GHAPluginStepVariables'
+import type { GHAPluginStepVariablesProps } from './GHAPluginStepVariables';
+import { GHAPluginStepVariables } from './GHAPluginStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './GHAPluginStepFunctionConfigs'
 
 export interface GHAPluginStepSpec {

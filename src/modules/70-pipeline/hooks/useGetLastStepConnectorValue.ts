@@ -10,7 +10,8 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import { ConnectorResponse, useGetConnector } from 'services/cd-ng'
+import type { ConnectorResponse} from 'services/cd-ng';
+import { useGetConnector } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'

@@ -8,15 +8,18 @@
 import React from 'react'
 import { defaultTo, get } from 'lodash-es'
 import cx from 'classnames'
-import { MultiTypeInputType, DataTooltipInterface, FormInput, getMultiTypeFromValue } from '@harness/uicore'
+import type { DataTooltipInterface} from '@harness/uicore';
+import { MultiTypeInputType, FormInput, getMultiTypeFromValue } from '@harness/uicore'
 import type { FormMultiTextTypeInputProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import type { FormikContextType } from 'formik'
 import { connect } from 'formik'
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
+import type {
+  ConfigureOptionsProps
+} from '@common/components/ConfigureOptions/ConfigureOptions';
 import {
   ALLOWED_VALUES_TYPE,
-  ConfigureOptions,
-  ConfigureOptionsProps
+  ConfigureOptions
 } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useRenderMultiTypeInputWithAllowedValues } from '../utils/utils'
 import css from '../InputSetView.module.scss'

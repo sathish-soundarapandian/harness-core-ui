@@ -10,9 +10,11 @@ import { isEmpty, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { FormInput, Text, Container, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { FormInput, Text, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
+import type { MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText';
+import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { FormMultiTypeCheckboxField, FormMultiTypeTextAreaField } from '@common/components'
 import {

@@ -17,7 +17,8 @@ import { NameIdDescriptionTags, PageSpinner } from '@common/components'
 import { useToaster } from '@common/exports'
 import { NameSchema, IdentifierSchema } from '@common/utils/Validation'
 import { useStrings } from 'framework/strings'
-import { useCreateServicesV2, useUpsertServiceV2, ServiceRequestDTO } from 'services/cd-ng'
+import type { ServiceRequestDTO } from 'services/cd-ng';
+import { useCreateServicesV2, useUpsertServiceV2 } from 'services/cd-ng'
 import type { HarnessServicetModalProps } from './HarnessServiceModal.types'
 import { getHarnessServiceModalFormDetails } from './HarnessServiceModal.utils'
 

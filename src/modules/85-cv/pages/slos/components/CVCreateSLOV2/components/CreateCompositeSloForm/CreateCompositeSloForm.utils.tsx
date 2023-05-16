@@ -12,12 +12,13 @@ import type { FormikProps } from 'formik'
 import { defaultTo, isEmpty, isEqual, isUndefined } from 'lodash-es'
 import type { SLOConsumptionBreakdown, SLOTargetFilterDTO, ServiceLevelIndicatorDTO } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
+import type {
+  SLOObjective,
+  SLOV2Form} from '../../CVCreateSLOV2.types';
 import {
   PeriodLengthTypes,
   PeriodTypes,
   SLOFormulaType,
-  SLOObjective,
-  SLOV2Form,
   SLOV2FormFields
 } from '../../CVCreateSLOV2.types'
 import { createSloTargetFilterDTO, getColorProp } from './components/AddSlos/AddSLOs.utils'

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -14,7 +15,8 @@ import * as cfServicesMock from 'services/cf'
 import * as usePlanEnforcementMock from '@cf/hooks/usePlanEnforcement'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
 import mockFeature from '@cf/utils/testData/data/mockFeature'
-import { SelectFeatureFlagsModalButton, SelectFeatureFlagsModalButtonProps } from '../SelectFeatureFlagsModalButton'
+import type { SelectFeatureFlagsModalButtonProps } from '../SelectFeatureFlagsModalButton';
+import { SelectFeatureFlagsModalButton } from '../SelectFeatureFlagsModalButton'
 
 const renderComponent = (props: Partial<SelectFeatureFlagsModalButtonProps> = {}): RenderResult => {
   return render(

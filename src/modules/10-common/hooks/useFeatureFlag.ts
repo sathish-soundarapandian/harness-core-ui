@@ -6,7 +6,8 @@
  */
 
 import { useContext } from 'react'
-import { AppStoreContext, FeatureFlagMap } from 'framework/AppStore/AppStoreContext'
+import type { FeatureFlagMap } from 'framework/AppStore/AppStoreContext';
+import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import type { FeatureFlag } from '@common/featureFlags'
 
 /**

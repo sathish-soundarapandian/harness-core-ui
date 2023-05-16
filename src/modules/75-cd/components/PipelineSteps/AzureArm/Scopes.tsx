@@ -9,13 +9,14 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { map, get, isEmpty, split, includes } from 'lodash-es'
+import type {
+  MultiSelectOption,
+  AllowedTypes,
+  SelectOption} from '@harness/uicore';
 import {
   FormInput,
   Layout,
-  MultiSelectOption,
   useToaster,
-  AllowedTypes,
-  SelectOption,
   getMultiTypeFromValue,
   MultiTypeInputType
 } from '@harness/uicore'
@@ -30,7 +31,8 @@ import {
   useGetManagementGroups
 } from 'services/cd-ng'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { ResourceGroup, Subscription, ManagementGroup, Tenant, ScopeTypes, ScopeTypeLabels } from './AzureArm.types'
+import type { ResourceGroup, Subscription, ManagementGroup, Tenant} from './AzureArm.types';
+import { ScopeTypes, ScopeTypeLabels } from './AzureArm.types'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './AzureArm.module.scss'

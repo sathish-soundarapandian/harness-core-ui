@@ -6,13 +6,15 @@
  */
 
 import React, { useContext } from 'react'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
+import type {
+  DataTooltipInterface} from '@harness/uicore';
 import {
   Layout,
   Icon,
   Container,
   Text,
-  DataTooltipInterface,
   FormikTooltipContext,
   HarnessDocTooltip,
   Tag

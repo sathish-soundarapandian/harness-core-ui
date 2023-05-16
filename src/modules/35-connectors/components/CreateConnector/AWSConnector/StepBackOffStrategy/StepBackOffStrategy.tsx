@@ -7,11 +7,12 @@
 
 import React, { useState, useEffect } from 'react'
 import * as Yup from 'yup'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Formik,
   Text,
-  StepProps,
   Container,
   CardSelect,
   FormInput,
@@ -22,7 +23,8 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'

@@ -8,9 +8,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { pick, get, isPlainObject } from 'lodash-es'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { FormGroup, Intent } from '@blueprintjs/core'
-import { HarnessDocTooltip, Container, Icon, Text, FormikTooltipContext, DataTooltipInterface } from '@harness/uicore'
+import type { DataTooltipInterface } from '@harness/uicore';
+import { HarnessDocTooltip, Container, Icon, Text, FormikTooltipContext } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ResponsePageSecretResponseWrapper, ConnectorInfoDTO, SecretDTOV2 } from 'services/cd-ng'

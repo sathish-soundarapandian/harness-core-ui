@@ -6,6 +6,11 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  StepProps,
+  SelectOption,
+  MultiSelectOption,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Formik,
   FormikForm as Form,
@@ -13,13 +18,9 @@ import {
   Button,
   Text,
   Layout,
-  StepProps,
   Container,
-  SelectOption,
   TextInput,
-  MultiSelectOption,
   Icon,
-  ModalErrorHandlerBinding,
   ModalErrorHandler,
   ButtonVariation,
   Label,
@@ -32,7 +33,8 @@ import * as Yup from 'yup'
 import { FontVariation, Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { Project, useGetInvites, Organization, useAddUsers, AddUsers, useGetUsers } from 'services/cd-ng'
+import type { Project, Organization, AddUsers} from 'services/cd-ng';
+import { useGetInvites, useAddUsers, useGetUsers } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useGetRoleList } from 'services/rbac'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -40,7 +42,8 @@ import { useToaster } from '@common/exports'
 import { CopyText } from '@common/components/CopyText/CopyText'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { InvitationStatus, handleInvitationResponse, isAccountBasicRole } from '@rbac/utils/utils'
+import type { InvitationStatus} from '@rbac/utils/utils';
+import { handleInvitationResponse, isAccountBasicRole } from '@rbac/utils/utils'
 import { getDefaultRole, getDetailsUrl } from '@projects-orgs/utils/utils'
 import { useGetCommunity } from '@common/utils/utils'
 import { EmailSchema } from '@common/utils/Validation'

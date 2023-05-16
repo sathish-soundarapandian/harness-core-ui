@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Classes, Intent, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Container, Icon, Text, IconName, Popover, Layout } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Container, Icon, Text, Popover, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { InputSetErrorResponse } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'

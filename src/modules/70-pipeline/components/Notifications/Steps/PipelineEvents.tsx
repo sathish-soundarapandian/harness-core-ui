@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, ButtonVariation, Formik, FormInput, Layout, MultiSelectOption, StepProps, Text } from '@harness/uicore'
+import type { MultiSelectOption, StepProps} from '@harness/uicore';
+import { Button, ButtonVariation, Formik, FormInput, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { Color, Intent } from '@harness/design-system'
 import * as Yup from 'yup'

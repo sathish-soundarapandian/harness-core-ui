@@ -7,6 +7,9 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 import cx from 'classnames'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   FormInput,
@@ -14,9 +17,7 @@ import {
   Layout,
   MultiTypeInputType,
   Button,
-  StepProps,
   Text,
-  SelectOption,
   ButtonVariation,
   FormikForm
 } from '@harness/uicore'
@@ -25,7 +26,8 @@ import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { defaultTo, memoize, merge } from 'lodash-es'
-import { ConnectorConfigDTO, useGetBuildDetailsForGcr } from 'services/cd-ng'
+import type { ConnectorConfigDTO} from 'services/cd-ng';
+import { useGetBuildDetailsForGcr } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'

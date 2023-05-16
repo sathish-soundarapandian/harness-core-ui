@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, waitFor, Matcher, SelectorMatcherOptions } from '@testing-library/react'
+import type { Matcher, SelectorMatcherOptions } from '@testing-library/react';
+import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import mockImport from 'framework/utils/mockImport'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'

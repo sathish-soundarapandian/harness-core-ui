@@ -4,10 +4,12 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { SetStateAction, Dispatch } from 'react'
+import type { SetStateAction, Dispatch } from 'react';
+import React from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { TextInput, Text, MultiTypeInputType, Container, getMultiTypeFromValue, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { TextInput, Text, MultiTypeInputType, Container, getMultiTypeFromValue } from '@harness/uicore'
 import { get, set } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
@@ -19,10 +21,12 @@ import {
   generateSchemaForLimitCPU,
   generateSchemaForLimitMemory
 } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import type {
+  ConnectorRefInterface
+} from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm';
 import {
   handleCIConnectorRefOnChange,
-  ConnectionType,
-  ConnectorRefInterface
+  ConnectionType
 } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import { Connectors } from '@connectors/constants'

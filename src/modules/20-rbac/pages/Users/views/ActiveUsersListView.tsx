@@ -31,13 +31,14 @@ import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Position, Menu, Intent } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, noop } from 'lodash-es'
-import {
+import type {
   UserAggregate,
-  useRemoveUser,
-  useGetAggregatedUsers,
   UserGroupDTO,
   UserMetadataDTO,
-  RoleAssignmentMetadataDTO,
+  RoleAssignmentMetadataDTO} from 'services/cd-ng';
+import {
+  useRemoveUser,
+  useGetAggregatedUsers,
   useUnlockUser,
   checkIfLastAdminPromise,
   resetTwoFactorAuthPromise

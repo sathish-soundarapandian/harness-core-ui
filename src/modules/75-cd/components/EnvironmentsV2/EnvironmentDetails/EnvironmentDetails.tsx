@@ -30,11 +30,12 @@ import {
 import { Color } from '@harness/design-system'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   EnvironmentResponse,
   EnvironmentResponseDTO,
   NGEnvironmentConfig,
-  NGEnvironmentInfoConfig,
+  NGEnvironmentInfoConfig} from 'services/cd-ng';
+import {
   updateEnvironmentV2Promise,
   useGetEnvironmentV2
 } from 'services/cd-ng'

@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { IDashboardFormData } from '@dashboards/types/DashboardTypes.types'
 import type { StringKeys } from 'framework/strings'
 import * as customDashboardServices from 'services/custom-dashboards'
-import CloneDashboardForm, { CloneDashboardFormProps } from '../CloneDashboardForm'
+import type { CloneDashboardFormProps } from '../CloneDashboardForm';
+import CloneDashboardForm from '../CloneDashboardForm'
 
 const defaultProps: CloneDashboardFormProps = {
   editableFolders: [],

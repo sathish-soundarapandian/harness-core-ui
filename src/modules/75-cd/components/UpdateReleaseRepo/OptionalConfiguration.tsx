@@ -6,16 +6,19 @@
  */
 
 import React from 'react'
-import { FormikProps, FieldArray } from 'formik'
-import {
+import type { FormikProps} from 'formik';
+import { FieldArray } from 'formik'
+import type {
   AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
+import {
   Button,
   ButtonVariation,
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 

@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { STATUS } from '../types'
-import FormButtons, { FormButtonsProps } from '../FormButtons'
+import type { FormButtonsProps } from '../FormButtons';
+import FormButtons from '../FormButtons'
 
 const renderComponent = (props: Partial<FormButtonsProps> = {}, initialErrors = {}): RenderResult =>
   render(

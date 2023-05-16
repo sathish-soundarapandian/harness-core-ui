@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, AllowedTypes, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'

@@ -15,7 +15,8 @@ import {
   fireEvent
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import * as ngServices from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'

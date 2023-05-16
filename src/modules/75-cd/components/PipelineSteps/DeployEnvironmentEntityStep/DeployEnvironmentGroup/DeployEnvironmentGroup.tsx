@@ -11,8 +11,10 @@ import { defaultTo, isEmpty, isNil } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
 
-import {
+import type {
   AllowedTypes,
+  SelectOption} from '@harness/uicore';
+import {
   ButtonSize,
   ButtonVariation,
   FormInput,
@@ -21,7 +23,6 @@ import {
   ModalDialog,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
-  SelectOption,
   useToaster,
   useToggleOpen
 } from '@harness/uicore'
@@ -59,8 +60,9 @@ import EnvironmentGroupsList from '../EnvironmentGroupsList/EnvironmentGroupsLis
 import DeployEnvironment from '../DeployEnvironment/DeployEnvironment'
 import DeployCluster from '../DeployCluster/DeployCluster'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
+import type {
+  InlineEntityFiltersProps} from '../components/InlineEntityFilters/InlineEntityFiltersUtils';
 import {
-  InlineEntityFiltersProps,
   InlineEntityFiltersRadioType
 } from '../components/InlineEntityFilters/InlineEntityFiltersUtils'
 

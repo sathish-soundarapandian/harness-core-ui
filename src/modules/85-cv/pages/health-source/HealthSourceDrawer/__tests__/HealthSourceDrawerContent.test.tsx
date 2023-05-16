@@ -8,7 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import HealthSourceDrawerContent from '../HealthSourceDrawerContent'
 import type { HealthSourceDrawerInterface } from '../HealthSourceDrawerContent.types'

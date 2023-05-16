@@ -7,6 +7,8 @@
 
 import React, { useState } from 'react'
 import cx from 'classnames'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   Text,
@@ -15,7 +17,6 @@ import {
   Heading,
   Icon,
   Pagination,
-  SelectOption,
   ExpandingSearchInput,
   TableV2
 } from '@harness/uicore'
@@ -36,7 +37,8 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { PAGE_SIZE } from '@dashboards/pages/home/HomePage'
 import FolderCard from '@dashboards/components/FolderCard/FolderCard'
 import { useStrings } from 'framework/strings'
-import { ErrorResponse, FolderModel, useSearchFolders } from 'services/custom-dashboards'
+import type { ErrorResponse, FolderModel} from 'services/custom-dashboards';
+import { useSearchFolders } from 'services/custom-dashboards'
 import CreateFolder from './form/CreateFolder'
 import { useDashboardsContext } from '../DashboardsContext'
 

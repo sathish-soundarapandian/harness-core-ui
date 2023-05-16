@@ -9,7 +9,8 @@ import React, { useState } from 'react'
 import { Form } from 'formik'
 import * as Yup from 'yup'
 import { defaultTo } from 'lodash-es'
-import { Button, ButtonVariation, Text, Container, Formik, Layout, StepProps, FormInput, Label } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Button, ButtonVariation, Text, Container, Formik, Layout, FormInput, Label } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
 import type { ConfigFileWrapper, ConnectorConfigDTO, StoreConfigWrapper } from 'services/cd-ng'

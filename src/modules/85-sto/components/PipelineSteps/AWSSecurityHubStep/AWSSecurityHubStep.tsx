@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { AWSSecurityHubStepBaseWithRef } from './AWSSecurityHubStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { AWSSecurityHubStepVariables, AWSSecurityHubStepVariablesProps } from './AWSSecurityHubStepVariables'
+import type { AWSSecurityHubStepVariablesProps } from './AWSSecurityHubStepVariables';
+import { AWSSecurityHubStepVariables } from './AWSSecurityHubStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './AWSSecurityHubStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

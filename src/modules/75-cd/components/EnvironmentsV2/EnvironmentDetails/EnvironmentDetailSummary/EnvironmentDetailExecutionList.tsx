@@ -6,13 +6,15 @@
  */
 
 import React, { useRef } from 'react'
-import { Container, ExpandingSearchInput, ExpandingSearchInputHandle, Icon, PageError, Text } from '@harness/uicore'
+import type { ExpandingSearchInputHandle} from '@harness/uicore';
+import { Container, ExpandingSearchInput, Icon, PageError, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet, useUpdateQueryParams } from '@common/hooks'
-import { GetListOfExecutionsQueryParams, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
+import type { GetListOfExecutionsQueryParams, PipelineExecutionSummary} from 'services/pipeline-ng';
+import { useGetListOfExecutions } from 'services/pipeline-ng'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { MemoisedExecutionListTable } from '@pipeline/pages/execution-list/ExecutionListTable/ExecutionListTable'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'

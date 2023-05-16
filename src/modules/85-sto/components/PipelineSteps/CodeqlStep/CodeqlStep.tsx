@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { CodeqlStepBaseWithRef } from './CodeqlStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { CodeqlStepVariables, CodeqlStepVariablesProps } from './CodeqlStepVariables'
+import type { CodeqlStepVariablesProps } from './CodeqlStepVariables';
+import { CodeqlStepVariables } from './CodeqlStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './CodeqlStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

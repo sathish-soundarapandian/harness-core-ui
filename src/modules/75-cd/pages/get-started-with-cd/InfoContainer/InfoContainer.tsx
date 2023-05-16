@@ -8,7 +8,8 @@
 import React from 'react'
 import { Container, Icon, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import css from './InfoContainer.module.scss'
 
 const InfoContainer: React.FC<{ label: StringKeys; labelElement?: React.ReactNode }> = ({ label, labelElement }) => {

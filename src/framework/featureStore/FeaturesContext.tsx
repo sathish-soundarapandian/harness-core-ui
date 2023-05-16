@@ -13,12 +13,14 @@ import { useParams } from 'react-router-dom'
 import { useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  FeatureRestrictionDetailRequestDTO,
+  ModuleLicenseDTO
+} from 'services/cd-ng';
 import {
   useGetEnabledFeatureRestrictionDetailByAccountId,
   useGetFeatureRestrictionDetail,
-  useGetAllFeatureRestrictionMetadata,
-  FeatureRestrictionDetailRequestDTO,
-  ModuleLicenseDTO
+  useGetAllFeatureRestrictionMetadata
 } from 'services/cd-ng'
 import type { RestrictionType } from '@common/constants/SubscriptionTypes'
 import { Editions } from '@common/constants/SubscriptionTypes'

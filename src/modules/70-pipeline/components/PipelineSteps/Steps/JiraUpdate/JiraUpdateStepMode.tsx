@@ -12,6 +12,7 @@ import { Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
+import type { SelectOption } from '@harness/uicore'
 import {
   Accordion,
   FormError,
@@ -21,11 +22,11 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   PageSpinner,
-  SelectOption,
   Text
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
@@ -33,7 +34,8 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { JiraFieldNG, JiraStatusNG, useGetJiraIssueUpdateMetadata, useGetJiraStatuses } from 'services/cd-ng'
+import type { JiraFieldNG, JiraStatusNG } from 'services/cd-ng'
+import { useGetJiraIssueUpdateMetadata, useGetJiraStatuses } from 'services/cd-ng'
 import type {
   AccountPathProps,
   GitQueryParams,

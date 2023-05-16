@@ -15,11 +15,13 @@ import { Color } from '@harness/design-system'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ApprovalStageConfig,
   GetInitialStageYamlSnippetQueryParams,
-  useGetInitialStageYamlSnippet,
   StageElementWrapperConfig
+} from 'services/pipeline-ng';
+import {
+  useGetInitialStageYamlSnippet
 } from 'services/pipeline-ng'
 import type { StageElementConfig } from 'services/cd-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'

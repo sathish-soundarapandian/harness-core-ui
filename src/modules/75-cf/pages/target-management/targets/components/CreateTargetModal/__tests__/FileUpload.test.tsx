@@ -7,10 +7,12 @@
 
 import React from 'react'
 import { cloneDeep } from 'lodash-es'
-import { screen, render, RenderResult, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { screen, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
-import FileUpload, { FileUploadProps } from '../FileUpload'
+import type { FileUploadProps } from '../FileUpload';
+import FileUpload from '../FileUpload'
 import type { TargetData } from '../types'
 
 const renderComponent = (props: Partial<FileUploadProps> = {}): RenderResult =>

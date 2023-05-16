@@ -7,7 +7,8 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { AllowedTypes, FormikForm, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { FormikForm, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

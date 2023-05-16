@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { findByText, fireEvent, getByTestId, render, RenderResult, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { findByText, fireEvent, getByTestId, render, waitFor } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
 import { TestWrapper } from '@common/utils/testUtils'

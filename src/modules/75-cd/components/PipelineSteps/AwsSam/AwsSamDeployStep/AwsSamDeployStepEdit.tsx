@@ -11,9 +11,10 @@ import * as Yup from 'yup'
 import { defaultTo } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import type { FormikProps } from 'formik'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
   Accordion,
-  AllowedTypes,
   Container,
   Formik,
   FormikForm,
@@ -34,14 +35,16 @@ import type { MapValue } from '@common/components/MultiTypeMap/MultiTypeMap'
 import { Connectors } from '@connectors/constants'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ConnectorRef } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { NameTimeoutField } from '../../Common/GenericExecutionStep/NameTimeoutField'
+import type {
+  AwsSamBuildDeployStepFormikVaues} from '../AwsSamBuildDeployStepOptionalFields';
 import {
-  AwsSamBuildDeployStepFormikVaues,
   AwsSamBuildDeployStepOptionalFields
 } from '../AwsSamBuildDeployStepOptionalFields'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

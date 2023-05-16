@@ -18,7 +18,8 @@ import { useToaster } from '@common/components'
 import { useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
 import { Category, PurposeActions } from '@common/constants/TrackingConstants'
 import { ModuleName } from 'framework/types/ModuleName'
-import ModuleInfoCards, { ModuleInfoCard, getInfoCardsProps } from '../../components/ModuleInfoCards/ModuleInfoCards'
+import type { ModuleInfoCard} from '../../components/ModuleInfoCards/ModuleInfoCards';
+import ModuleInfoCards, { getInfoCardsProps } from '../../components/ModuleInfoCards/ModuleInfoCards'
 import css from './WelcomePage.module.scss'
 
 export interface ModuleProps {

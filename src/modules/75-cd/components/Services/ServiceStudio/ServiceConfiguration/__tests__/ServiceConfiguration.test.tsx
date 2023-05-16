@@ -9,12 +9,15 @@ import React from 'react'
 import { render, getByText, fireEvent, waitFor } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
-import {
-  PipelineContext,
+import type {
   PipelineContextInterface
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext';
+import {
+  PipelineContext
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import * as cdngServices from 'services/cd-ng'
-import { ServiceContext, ServiceContextValues } from '@cd/context/ServiceContext'
+import type { ServiceContextValues } from '@cd/context/ServiceContext';
+import { ServiceContext } from '@cd/context/ServiceContext'
 import {
   pipelineContext,
   mockStageReturnWithoutManifestData,

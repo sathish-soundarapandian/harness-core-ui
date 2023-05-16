@@ -17,7 +17,8 @@ import {
   Text,
   useToaster
 } from '@harness/uicore'
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { Drawer } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { Color, FontVariation } from '@harness/design-system'
@@ -27,9 +28,10 @@ import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/Rout
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import {
+import type {
   EnvAndEnvGroupCard,
-  GetCustomSequenceQueryParams,
+  GetCustomSequenceQueryParams} from 'services/cd-ng';
+import {
   saveCustomSequencePromise,
   useGetCustomSequence,
   useDefaultSequence

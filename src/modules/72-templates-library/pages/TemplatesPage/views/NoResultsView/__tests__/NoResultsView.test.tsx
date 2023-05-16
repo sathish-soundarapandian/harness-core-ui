@@ -9,7 +9,8 @@ import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 import { waitFor } from '@testing-library/dom'
 import { TestWrapper } from '@common/utils/testUtils'
-import NoResultsView, { NoResultsViewProps } from '../NoResultsView'
+import type { NoResultsViewProps } from '../NoResultsView';
+import NoResultsView from '../NoResultsView'
 
 const baseProps: NoResultsViewProps = {
   text: 'There are no templates in your project.',

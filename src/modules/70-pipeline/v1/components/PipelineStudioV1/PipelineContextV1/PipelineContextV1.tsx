@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { deleteDB, IDBPDatabase, openDB } from 'idb'
+import type { IDBPDatabase} from 'idb';
+import { deleteDB, openDB } from 'idb'
 import { cloneDeep, defaultTo, isEmpty, isEqual, isNil, omit, pick, merge } from 'lodash-es'
-import {
+import type {
   AllowedTypes,
   AllowedTypesWithRunTime,
-  IconName,
+  IconName} from '@harness/uicore';
+import {
   MultiTypeInputType,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
@@ -22,25 +24,27 @@ import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import SessionToken from 'framework/utils/SessionToken'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import {
+import type {
   PipelineInfoConfig,
   StageElementConfig,
   StageElementWrapperConfig,
   CreatePipelineQueryParams,
-  createPipelineV2Promise,
   EntityGitDetails,
   ErrorNodeSummary,
   EntityValidityDetails,
   Failure,
-  getPipelineSummaryPromise,
-  getPipelinePromise,
   GetPipelineQueryParams,
   PutPipelineQueryParams,
-  putPipelineV2Promise,
   ResponsePMSPipelineResponseDTO,
   YamlSchemaErrorWrapperDTO,
   ResponsePMSPipelineSummaryResponse,
   CacheResponseMetadata
+} from 'services/pipeline-ng';
+import {
+  createPipelineV2Promise,
+  getPipelineSummaryPromise,
+  getPipelinePromise,
+  putPipelineV2Promise
 } from 'services/pipeline-ng'
 import { useGlobalEventListener, useLocalStorage, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -52,25 +56,29 @@ import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateServiceDataType } from '@pipeline/utils/templateUtils'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import type { Pipeline, TemplateIcons } from '@pipeline/utils/types'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import {
+import type {
   ActionReturnType,
+  PipelineReducerState,
+  PipelineViewData,
+  SelectionState
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions';
+import {
   DefaultNewPipelineId,
   DefaultPipeline,
   DrawerTypes,
   initialState,
   PipelineContextActions,
-  PipelineReducer,
-  PipelineReducerState,
-  PipelineViewData,
-  SelectionState
+  PipelineReducer
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type { PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
+import type {
+  PipelineSelectionState} from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam';
 import {
-  PipelineSelectionState,
   usePipelineQuestParamState
 } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
 import {

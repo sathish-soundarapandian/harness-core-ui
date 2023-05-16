@@ -12,9 +12,11 @@ import { Intent, Radio } from '@blueprintjs/core'
 import { defaultTo, isEqual, noop } from 'lodash-es'
 import cx from 'classnames'
 import type { ErrorNodeSummary, TemplateResponse } from 'services/template-ng'
-import {
-  getTitleFromErrorNodeSummary,
+import type {
   TemplateErrorEntity
+} from '@pipeline/components/TemplateLibraryErrorHandling/utils';
+import {
+  getTitleFromErrorNodeSummary
 } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import css from './ErrorNode.module.scss'
 

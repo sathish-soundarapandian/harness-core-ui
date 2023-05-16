@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { connect } from 'formik'
-import { Layout, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Layout } from '@harness/uicore'
 import cx from 'classnames'
 
 import { defaultTo } from 'lodash-es'

@@ -8,7 +8,8 @@
 import React from 'react'
 import { StepWizard } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { deploymentTypeIcon, deploymentTypeLabel, ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils'
+import type { ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils';
+import { deploymentTypeIcon, deploymentTypeLabel } from '@pipeline/utils/DeploymentTypeUtils'
 import type { ServiceDefinition } from 'services/cd-ng'
 import ServiceHooksStore from './ServiceHooksSteps/ServiceHooksStore'
 

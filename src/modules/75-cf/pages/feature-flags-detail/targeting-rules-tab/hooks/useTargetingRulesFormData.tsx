@@ -7,15 +7,17 @@
 
 import { CFVariationColors } from '@cf/constants'
 import type { Feature, Segment } from 'services/cf'
-import {
+import type {
   FormVariationMap,
-  TargetingRuleItemStatus,
-  TargetingRuleItemType,
   TargetingRulesFormValues,
   VariationColorMap,
   VariationPercentageRollout,
   VariationTarget,
   VariationTargetGroup
+} from '../types';
+import {
+  TargetingRuleItemStatus,
+  TargetingRuleItemType
 } from '../types'
 
 interface UseTargetingRulesFormData {

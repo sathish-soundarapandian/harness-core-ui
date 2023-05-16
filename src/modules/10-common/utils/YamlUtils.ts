@@ -9,7 +9,8 @@
 // @ts-nocheck
 import * as yamlLanguageService from '@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService'
 import { isEmpty } from 'lodash-es'
-import { TextDocument, Diagnostic } from 'vscode-languageserver-types'
+import type { Diagnostic } from 'vscode-languageserver-types';
+import { TextDocument } from 'vscode-languageserver-types'
 import { parse } from 'yaml'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 

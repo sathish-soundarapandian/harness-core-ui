@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { createClient, ContentfulClientApi } from 'contentful'
+import type { ContentfulClientApi } from 'contentful';
+import { createClient } from 'contentful'
 
 export enum ContentfulEnvironment {
   PRODUCTION = 'master'

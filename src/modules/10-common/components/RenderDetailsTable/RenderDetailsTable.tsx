@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Container, Layout, Text, IconName, Icon, Tag, tagsType } from '@harness/uicore'
+import type { IconName, tagsType } from '@harness/uicore';
+import { Container, Layout, Text, Icon, Tag } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'

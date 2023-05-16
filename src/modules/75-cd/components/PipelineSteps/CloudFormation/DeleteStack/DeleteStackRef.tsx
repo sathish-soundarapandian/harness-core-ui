@@ -9,14 +9,16 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import * as Yup from 'yup'
+import type {
+  MultiSelectOption
+} from '@harness/uicore';
 import {
   Formik,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
   Layout,
-  Text,
-  MultiSelectOption
+  Text
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { map, isEmpty, defaultTo } from 'lodash-es'
@@ -30,14 +32,16 @@ import { IdentifierSchemaWithOutName, ConnectorRefSchema } from '@common/utils/V
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useListAwsRegions } from 'services/portal'
 import { useGetIamRolesForAws } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Connectors } from '@connectors/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { DeleteStackTypes, CloudFormationDeleteStackProps } from '../CloudFormationInterfaces.types'
+import type { CloudFormationDeleteStackProps } from '../CloudFormationInterfaces.types';
+import { DeleteStackTypes } from '../CloudFormationInterfaces.types'
 import { isRuntime } from '../CloudFormationHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../CloudFormation.module.scss'

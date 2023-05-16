@@ -7,10 +7,13 @@
 
 import React from 'react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { render, act, fireEvent, Matcher, waitFor } from '@testing-library/react'
-import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'
+import type { Matcher} from '@testing-library/react';
+import { render, act, fireEvent, waitFor } from '@testing-library/react'
+import type { UseGetReturnData } from '@common/utils/testUtils';
+import { findPopoverContainer } from '@common/utils/testUtils'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
-import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { BackgroundStep } from '../BackgroundStep'

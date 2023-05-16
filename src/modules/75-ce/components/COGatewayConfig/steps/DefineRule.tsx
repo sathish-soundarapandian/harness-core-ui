@@ -7,7 +7,8 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { Card, Formik, FormikForm, FormInput, Icon, IconName, Layout, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Card, Formik, FormikForm, FormInput, Icon, Layout, Text } from '@harness/uicore'
 import type { TextProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import { Utils } from '@ce/common/Utils'
 import type { GatewayDetails } from '@ce/components/COCreateGateway/models'

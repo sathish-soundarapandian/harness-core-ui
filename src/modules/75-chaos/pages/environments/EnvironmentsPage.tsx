@@ -13,9 +13,10 @@ import { Container, Layout, Pagination, Text, TableV2, TagsPopover } from '@harn
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import cx from 'classnames'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
-import {
+import type {
   EnvironmentResponseDTO,
-  GetEnvironmentListForProjectQueryParams,
+  GetEnvironmentListForProjectQueryParams} from 'services/cd-ng';
+import {
   useDeleteEnvironmentV2,
   useGetEnvironmentListForProject
 } from 'services/cd-ng'

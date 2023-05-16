@@ -6,6 +6,9 @@
  */
 
 import React, { useEffect, useState, useRef } from 'react'
+import type {
+  SelectWithSubmenuOption
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -14,23 +17,25 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  RUNTIME_INPUT_VALUE,
-  SelectWithSubmenuOption
+  RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { FieldArray } from 'formik'
 import cx from 'classnames'
-import { IconName, Spinner } from '@blueprintjs/core'
+import type { IconName} from '@blueprintjs/core';
+import { Spinner } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { cloneDeep, isArray, isEqual, memoize } from 'lodash-es'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
-import { JobDetails, useGetJobDetailsForJenkins, useGetJobParametersForJenkins } from 'services/cd-ng'
+import type { JobDetails} from 'services/cd-ng';
+import { useGetJobDetailsForJenkins, useGetJobParametersForJenkins } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type {

@@ -8,9 +8,12 @@
 import React from 'react'
 import { Button, Formik, MultiTypeInputType, Text } from '@harness/uicore'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-import { StepWidgetWithFormikRef, StepWidgetProps } from '@pipeline/components/AbstractSteps/StepWidget'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
-import { StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepWidgetProps } from '@pipeline/components/AbstractSteps/StepWidget';
+import { StepWidgetWithFormikRef } from '@pipeline/components/AbstractSteps/StepWidget'
+import type { TestWrapperProps } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
+import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
 class StepTestFactory extends AbstractStepFactory {

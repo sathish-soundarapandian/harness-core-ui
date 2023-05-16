@@ -34,9 +34,10 @@ import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHa
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   NGServiceConfig,
-  ResponseValidateTemplateInputsResponseDTO,
+  ResponseValidateTemplateInputsResponseDTO} from 'services/cd-ng';
+import {
   useCreateServiceV2,
   useUpdateServiceV2,
   validateTemplateInputsPromise
@@ -51,7 +52,8 @@ import { queryClient } from 'services/queryClient'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDActions, Category } from '@common/constants/TrackingConstants'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
-import { ServiceTabs, setNameIDDescription, ServicePipelineConfig } from '../utils/ServiceUtils'
+import type { ServicePipelineConfig } from '../utils/ServiceUtils';
+import { ServiceTabs, setNameIDDescription } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
 
 interface ServiceStudioDetailsProps {

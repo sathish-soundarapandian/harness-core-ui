@@ -5,9 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypesWithRunTime } from '@harness/uicore'
+import type { AllowedTypesWithRunTime } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
@@ -18,7 +20,8 @@ import {
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import { namespaceRegex } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 

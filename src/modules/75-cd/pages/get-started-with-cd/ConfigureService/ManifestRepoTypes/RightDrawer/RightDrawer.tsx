@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { SyntheticEvent } from 'react'
+import type { SyntheticEvent } from 'react';
+import React from 'react'
 import { Drawer, Position } from '@blueprintjs/core'
 import { Button } from '@harness/uicore'
 import css from './RightDrawer.module.scss'

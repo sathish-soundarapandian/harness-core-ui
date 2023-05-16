@@ -6,12 +6,15 @@
  */
 
 /* eslint-disable react/display-name */
-import React, { ReactNode } from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { ReactNode } from 'react';
+import React from 'react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as documentTitle from '@common/hooks/useDocumentTitle'
-import ListingPageTemplate, { ListingPageTemplateProps } from '../ListingPageTemplate'
+import type { ListingPageTemplateProps } from '../ListingPageTemplate';
+import ListingPageTemplate from '../ListingPageTemplate'
 
 jest.mock('@harness/uicore', () => {
   const fullModule = jest.requireActual('@harness/uicore')

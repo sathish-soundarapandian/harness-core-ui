@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, Layout, Text, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'

@@ -8,7 +8,8 @@
 import { Intent } from '@blueprintjs/core'
 import { useConfirmationDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { Service, useDeleteService } from 'services/lw'
+import type { Service} from 'services/lw';
+import { useDeleteService } from 'services/lw'
 
 interface UseDeleteServiceHookProps {
   serviceData: Service

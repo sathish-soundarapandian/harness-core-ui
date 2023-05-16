@@ -9,13 +9,14 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { get } from 'lodash-es'
+import type {
+  IconName} from '@harness/uicore';
 import {
   Text,
   Icon,
   Layout,
   Button,
   ButtonVariation,
-  IconName,
   Container,
   ButtonSize,
   PageSpinner
@@ -23,14 +24,15 @@ import {
 import { FontVariation } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import {
+import type {
   ConnectorFilterProperties,
   ConnectorInfoDTO,
   ConnectorResponse,
-  getSecretV2Promise,
   ResponsePageConnectorResponse,
   ResponseSecretResponseWrapper,
-  SecretDTOV2,
+  SecretDTOV2} from 'services/cd-ng';
+import {
+  getSecretV2Promise,
   useGetConnectorListV2
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

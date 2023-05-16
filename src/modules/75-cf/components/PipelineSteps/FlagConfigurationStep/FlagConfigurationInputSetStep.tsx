@@ -8,11 +8,14 @@
 import React, { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect } from 'formik'
-import { Container, FormInput, PageError, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Container, FormInput, PageError, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { Feature, useGetAllFeatures } from 'services/cf'
-import { GetEnvironmentListQueryParams, useGetEnvironmentList } from 'services/cd-ng'
+import type { Feature} from 'services/cf';
+import { useGetAllFeatures } from 'services/cf'
+import type { GetEnvironmentListQueryParams} from 'services/cd-ng';
+import { useGetEnvironmentList } from 'services/cd-ng'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import type { FlagConfigurationStepData } from './types'

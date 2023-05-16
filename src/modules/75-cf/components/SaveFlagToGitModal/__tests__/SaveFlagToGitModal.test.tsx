@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, screen, RenderResult, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as yup from 'yup'
 import { TestWrapper } from '@common/utils/testUtils'
 import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
-import SaveFlagToGitModal, { SaveFlagToGitModalProps } from '../SaveFlagToGitModal'
+import type { SaveFlagToGitModalProps } from '../SaveFlagToGitModal';
+import SaveFlagToGitModal from '../SaveFlagToGitModal'
 
 jest.mock('@cf/hooks/useGitSync', () => ({
   useGitSync: jest.fn(() => ({

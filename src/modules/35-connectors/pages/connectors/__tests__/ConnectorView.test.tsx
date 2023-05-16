@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { render, waitFor, queryByText, fireEvent, getByText, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { render, waitFor, queryByText, fireEvent, getByText } from '@testing-library/react'
 import { act } from 'react-test-renderer'
 import React from 'react'
 import type { ConnectorResponse, ConnectorInfoDTO } from 'services/cd-ng'

@@ -7,9 +7,11 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Text, Container, Layout, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Text, Container, Layout, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { useStrings } from 'framework/strings'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'

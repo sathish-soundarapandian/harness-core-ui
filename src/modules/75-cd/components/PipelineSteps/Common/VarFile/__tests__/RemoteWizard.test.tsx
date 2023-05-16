@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { act, fireEvent, queryByAttribute, render, screen, waitFor } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { RemoteWizard } from '../RemoteWizard'

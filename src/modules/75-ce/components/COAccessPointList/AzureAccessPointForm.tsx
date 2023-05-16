@@ -10,20 +10,23 @@ import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { isEmpty as _isEmpty } from 'lodash-es'
-import { Button, Container, Formik, FormikForm, FormInput, Icon, Layout, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Button, Container, Formik, FormikForm, FormInput, Icon, Layout, Text } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { Dialog } from '@blueprintjs/core'
 import { useToaster } from '@common/exports'
-import {
+import type {
   AccessPoint,
+  CertificateData
+} from 'services/lw';
+import {
   useAllRegions,
   useAllResourceGroups,
   useAllVPCs,
   useAllSubnets,
   useAllPublicIps,
-  useAllCertificates,
-  CertificateData
+  useAllCertificates
 } from 'services/lw'
 import type { AccessPointScreenMode } from '@ce/types'
 import CertificateUpload from './CertificateUploadScreen'

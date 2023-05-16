@@ -13,7 +13,8 @@ import type {
   GetTemplateResponse
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
-import { Connectors, CreateConnectorModalProps, TESTCONNECTION_STEP_INDEX } from '@connectors/constants'
+import type { CreateConnectorModalProps} from '@connectors/constants';
+import { Connectors, TESTCONNECTION_STEP_INDEX } from '@connectors/constants'
 import { getConnectorTitleIdByType, getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { buildCustomSMPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'

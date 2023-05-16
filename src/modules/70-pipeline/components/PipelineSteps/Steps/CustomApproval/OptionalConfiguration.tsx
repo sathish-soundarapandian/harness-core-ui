@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
-import { FormikProps, FieldArray } from 'formik'
-import { Button, ButtonVariation, FormikForm, FormInput, AllowedTypes } from '@harness/uicore'
+import type { FormikProps} from 'formik';
+import { FieldArray } from 'formik'
+import type { AllowedTypes } from '@harness/uicore';
+import { Button, ButtonVariation, FormikForm, FormInput } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 import type { IOptionProps } from '@blueprintjs/core'
 
@@ -18,7 +20,8 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { ApprovalRejectionCriteria } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalRejectionCriteria'
 import type { ApprovalRejectionCriteria as ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { scriptInputType, CustomApprovalFormData, CustomApprovalStepVariable } from './types'
+import type { CustomApprovalFormData, CustomApprovalStepVariable } from './types';
+import { scriptInputType } from './types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './CustomApproval.module.scss'
 

@@ -5,10 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ReactNode, SyntheticEvent } from 'react'
-import { Formik, FormikProps } from 'formik'
+import type { FC, ReactNode, SyntheticEvent } from 'react';
+import React from 'react'
+import type { FormikProps } from 'formik';
+import { Formik } from 'formik'
 import { get, noop } from 'lodash-es'
 import * as Yup from 'yup'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   Card,
@@ -18,7 +22,6 @@ import {
   FormInput,
   HarnessDocTooltip,
   Layout,
-  SelectOption,
   Text,
   Thumbnail,
   Utils
@@ -28,21 +31,25 @@ import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
 
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { useGetCommunity } from '@common/utils/utils'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { GoogleCloudFunctionsEnvType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { GoogleCloudFunctionsEnvType} from '@pipeline/utils/stageHelpers';
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type {
+  DeploymentTypeItem} from '@cd/utils/deploymentUtils';
 import {
-  DeploymentTypeItem,
   getCgSupportedDeploymentTypes,
   getNgSupportedDeploymentTypes
 } from '@cd/utils/deploymentUtils'
 import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
-import { TemplateSummaryResponse, useGetTemplateList } from 'services/template-ng'
+import type { TemplateSummaryResponse} from 'services/template-ng';
+import { useGetTemplateList } from 'services/template-ng'
 import { useMutateAsGet } from '@common/hooks'
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'

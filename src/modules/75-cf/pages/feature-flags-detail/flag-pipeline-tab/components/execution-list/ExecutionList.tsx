@@ -6,7 +6,8 @@
  */
 
 import { Card, Layout } from '@harness/uicore'
-import React, { FC } from 'react'
+import type { FC } from 'react';
+import React from 'react'
 
 import type { FeaturePipelineExecution, Variation } from 'services/cf'
 import ExecutionCardHeader from './execution-card/ExecutionCardHeader'

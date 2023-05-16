@@ -6,6 +6,10 @@
  */
 
 import React from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  SelectOption
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -14,9 +18,7 @@ import {
   FormInput,
   Heading,
   Layout,
-  ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  SelectOption
+  ModalErrorHandler
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'

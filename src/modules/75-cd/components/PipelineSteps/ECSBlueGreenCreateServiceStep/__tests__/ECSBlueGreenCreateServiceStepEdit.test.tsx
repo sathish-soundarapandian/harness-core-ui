@@ -18,7 +18,8 @@ import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ECSBlueGreenCreateServiceStepEditRef } from '../ECSBlueGreenCreateServiceStepEdit'
 import type {

@@ -5,20 +5,25 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Layout, Select, Heading, Container, Text, SelectOption, PageError } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, Select, Heading, Container, Text, PageError } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import React, { useState, useEffect, useMemo, SetStateAction, Dispatch } from 'react'
+import type { SetStateAction, Dispatch } from 'react';
+import React, { useState, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
+import type {
+  TestReportSummary,
+  SelectionOverview
+} from 'services/ti-service';
 import {
   useReportSummary,
   useGetToken,
   useTestOverview,
   useReportsInfo,
-  useTestInfo,
-  TestReportSummary,
-  SelectionOverview
+  useTestInfo
 } from 'services/ti-service'
 import { PageSpinner } from '@common/components'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'

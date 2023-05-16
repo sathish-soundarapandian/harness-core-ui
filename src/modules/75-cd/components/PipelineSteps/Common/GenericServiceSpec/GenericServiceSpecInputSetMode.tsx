@@ -9,7 +9,8 @@ import React from 'react'
 import { connect } from 'formik'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
-import { AllowedTypes, Layout } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Layout } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type {

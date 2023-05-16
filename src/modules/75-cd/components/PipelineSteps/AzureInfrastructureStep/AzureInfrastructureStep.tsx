@@ -6,36 +6,40 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import type {
+  SelectOption,
+  IconName} from '@harness/uicore';
 import {
   Text,
   Layout,
   FormInput,
-  SelectOption,
   Formik,
   FormikForm,
-  IconName,
   Icon,
   getMultiTypeFromValue,
   MultiTypeInputType,
   Accordion
 } from '@harness/uicore'
-import { FormikProps, FormikErrors, yupToFormErrors } from 'formik'
+import type { FormikProps, FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, get, defaultTo, set, isEmpty, isEqual } from 'lodash-es'
 import * as Yup from 'yup'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import {
+import type {
   AzureSubscriptionDTO,
+  K8sAzureInfrastructure} from 'services/cd-ng';
+import {
   getAzureClustersPromise,
   getAzureResourceGroupsBySubscriptionPromise,
   getAzureSubscriptionsPromise,
   getConnectorListV2Promise,
-  K8sAzureInfrastructure,
   useGetAzureClusters,
   useGetAzureResourceGroupsBySubscription,
   useGetAzureSubscriptions
@@ -52,8 +56,9 @@ import { getConnectorName, getConnectorValue } from '@pipeline/components/Pipeli
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 
+import type {
+  ConnectorReferenceDTO} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField';
 import {
-  ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -67,14 +72,16 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import { getNameSpaceSchema, getReleaseNameSchema, getValue } from '../PipelineStepsUtil'
-import {
+import type {
   AzureInfrastructureSpecEditableProps,
   AzureInfrastructureTemplate,
+  K8sAzureInfrastructureUI
+} from './AzureInfrastructureInterface';
+import {
   getValidationSchema,
   subscriptionLabel,
   clusterLabel,
-  resourceGroupLabel,
-  K8sAzureInfrastructureUI
+  resourceGroupLabel
 } from './AzureInfrastructureInterface'
 import css from './AzureInfrastructureSpec.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'

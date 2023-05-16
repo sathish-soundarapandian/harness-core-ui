@@ -6,6 +6,8 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Button,
   Container,
@@ -15,7 +17,6 @@ import {
   FormInput,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   Text,
   ButtonVariation
 } from '@harness/uicore'
@@ -23,7 +24,8 @@ import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { TokenDTO, useRotateToken } from 'services/cd-ng'
+import type { TokenDTO} from 'services/cd-ng';
+import { useRotateToken } from 'services/cd-ng'
 import type { ProjectPathProps, ServiceAccountPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { TokenValueRenderer } from './TokenValueRenderer'

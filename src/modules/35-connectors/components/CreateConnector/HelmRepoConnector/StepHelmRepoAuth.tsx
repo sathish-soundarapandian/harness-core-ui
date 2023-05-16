@@ -6,6 +6,10 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   Button,
@@ -13,10 +17,7 @@ import {
   FormInput,
   Text,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  StepProps,
   Container,
-  SelectOption,
   ButtonVariation,
   PageSpinner
 } from '@harness/uicore'
@@ -27,7 +28,8 @@ import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
+import type { TextReferenceInterface} from '@secrets/components/TextReference/TextReference';
+import TextReference, { ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'

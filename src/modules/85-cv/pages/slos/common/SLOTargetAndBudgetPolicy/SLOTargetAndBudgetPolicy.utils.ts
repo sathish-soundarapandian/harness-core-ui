@@ -5,16 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Utils, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
+import type {
+  ErrorBudgetInterface,
+  SLOV2Form
+} from '../../components/CVCreateSLOV2/CVCreateSLOV2.types';
 import {
   Days,
-  ErrorBudgetInterface,
   EvaluationType,
   PeriodLengthTypes,
-  PeriodTypes,
-  SLOV2Form
+  PeriodTypes
 } from '../../components/CVCreateSLOV2/CVCreateSLOV2.types'
 
 export const getPeriodTypeOptions = (getString: UseStringsReturn['getString']): SelectOption[] => {

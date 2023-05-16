@@ -5,12 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
-import { Drawer, IDrawerProps } from '@blueprintjs/core'
+import type { ReactElement } from 'react'
+import React from 'react'
+import type { IDrawerProps } from '@blueprintjs/core'
+import { Drawer } from '@blueprintjs/core'
 import { Avatar, Card, Container, Layout, TableV2, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import type { Column, Renderer, CellProps } from 'react-table'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import type { AuditEventDTO } from 'services/audit'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'

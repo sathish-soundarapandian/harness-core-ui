@@ -9,16 +9,18 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import type { UseMutateFunction, UseMutationResult, UseQueryResult } from '@tanstack/react-query'
 import { TestWrapper } from '@common/utils/testUtils'
-import {
+import type {
   SettingsGetSettingError,
   SettingsSaveSettingError,
   SettingsSaveSettingVariables,
+  MetadataListProjectsError,
+  MetadataGetProjectError
+} from 'services/ticket-service/ticketServiceComponents';
+import {
   useSettingsGetSetting,
   useSettingsSaveSetting,
   useMetadataListProjects,
-  MetadataListProjectsError,
-  useMetadataGetProject,
-  MetadataGetProjectError
+  useMetadataGetProject
 } from 'services/ticket-service/ticketServiceComponents'
 import type { MetadataListProjectsResponseBody, Project, Setting } from 'services/ticket-service/ticketServiceSchemas'
 import ExternalTicketSettings from '../ExternalTicketSettings'

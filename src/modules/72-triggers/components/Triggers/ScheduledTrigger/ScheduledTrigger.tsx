@@ -11,7 +11,8 @@ import TriggerOverviewPanel from '@triggers/components/steps/TriggerOverviewPane
 import SchedulePanel from '@triggers/components/steps/SchedulePanel/SchedulePanel'
 import WebhookPipelineInputPanel from '@triggers/components/steps/WebhookPipelineInputPanel/WebhookPipelineInputPanel'
 import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
-import { Trigger, TriggerProps } from '../Trigger'
+import type { TriggerProps } from '../Trigger';
+import { Trigger } from '../Trigger'
 import { TriggerBaseType } from '../TriggerInterface'
 import ScheduledTriggerWizard from './ScheduledTriggerWizard'
 

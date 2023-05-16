@@ -8,7 +8,8 @@
 import React from 'react'
 import { Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { ItemContainer, ItemContainerProps } from '../ItemContainer/ItemContainer'
+import type { ItemContainerProps } from '../ItemContainer/ItemContainer';
+import { ItemContainer } from '../ItemContainer/ItemContainer'
 
 export const NoDataFoundRow: React.FC<ItemContainerProps & { message: string }> = ({ message, ...props }) => (
   <ItemContainer {...props}>

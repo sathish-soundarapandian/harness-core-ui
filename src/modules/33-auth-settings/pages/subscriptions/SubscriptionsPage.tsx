@@ -9,7 +9,8 @@ import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import moment from 'moment'
 import { useParams, useHistory } from 'react-router-dom'
-import { Card, Container, Icon, IconName, Layout, Heading, PageError } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Card, Container, Icon, Layout, Heading, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'
 import { Page } from '@common/exports'
@@ -21,10 +22,12 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
+import type {
+  GetModuleLicensesByAccountAndModuleTypeQueryParams
+} from 'services/cd-ng';
 import {
   useGetAccountNG,
-  useGetModuleLicensesByAccountAndModuleType,
-  GetModuleLicensesByAccountAndModuleTypeQueryParams
+  useGetModuleLicensesByAccountAndModuleType
 } from 'services/cd-ng'
 
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'

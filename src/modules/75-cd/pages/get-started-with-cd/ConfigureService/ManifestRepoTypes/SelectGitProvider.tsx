@@ -31,13 +31,14 @@ import { defaultTo, set } from 'lodash-es'
 import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
-import {
+import type {
   ConnectorInfoDTO,
   ResponseConnectorResponse,
   ResponseMessage,
   ResponseScmConnectorResponse,
   SecretDTOV2,
-  SecretTextSpecDTO,
+  SecretTextSpecDTO} from 'services/cd-ng';
+import {
   useCreateConnector,
   useCreateDefaultScmConnector
 } from 'services/cd-ng'
@@ -57,11 +58,12 @@ import {
 import { getGitUrl } from '@pipeline/utils/CIUtils'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 import { StringUtils } from '@common/exports'
+import type {
+  GitProvider,
+  GitProviderPermission} from '../../DeployProvisioningWizard/Constants';
 import {
   GitAuthenticationMethod,
-  GitProvider,
   GitProviderTypeToAuthenticationMethodMapping,
-  GitProviderPermission,
   GitProviderPermissions,
   ACCOUNT_SCOPE_PREFIX,
   DEFAULT_HARNESS_KMS,

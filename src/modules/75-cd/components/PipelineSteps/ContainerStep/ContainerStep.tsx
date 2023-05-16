@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
-import { FormikErrors, yupToFormErrors } from 'formik'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
 import * as Yup from 'yup'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'

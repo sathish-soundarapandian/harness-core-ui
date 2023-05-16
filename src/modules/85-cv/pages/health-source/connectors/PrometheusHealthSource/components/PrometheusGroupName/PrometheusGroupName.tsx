@@ -5,11 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
-import { FormInput, SelectOption, Formik, FormikForm, Text, Container, Layout, Button } from '@harness/uicore'
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, Formik, FormikForm, Text, Container, Layout, Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { PrometheusMonitoringSourceFieldNames } from '@cv/pages/health-source/connectors/PrometheusHealthSource/PrometheusHealthSource.constants'
 
 export interface PrometheusGroupNameProps {

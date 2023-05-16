@@ -6,23 +6,24 @@
  */
 
 import React, { useState } from 'react'
-import {
+import type {
   StepProps,
+  ModalErrorHandlerBinding} from '@harness/uicore';
+import {
   Container,
   Formik,
   FormikForm,
   Button,
   Text,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   Layout
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 
-import { SecretRequestWrapper, usePostSecret, usePutSecret, SecretDTOV2, WinRmAuthDTO } from 'services/cd-ng'
-import type { KerberosConfigDTO, SSHKeySpecDTO, WinRmCommandParameter } from 'services/cd-ng'
+import { usePostSecret, usePutSecret } from 'services/cd-ng'
+import type { KerberosConfigDTO, SSHKeySpecDTO, WinRmCommandParameter , SecretRequestWrapper, SecretDTOV2, WinRmAuthDTO } from 'services/cd-ng'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import { buildAuthConfig } from '@secrets/utils/WinRmAuthUtils'
 import { useToaster } from '@common/exports'

@@ -6,17 +6,18 @@
  */
 
 import React from 'react'
+import type {
+  StepProps,
+  AllowedTypes} from '@harness/uicore';
 import {
   Text,
   Layout,
   Button,
   FormInput,
-  StepProps,
   getMultiTypeFromValue,
   MultiTypeInputType,
   Formik,
   ButtonVariation,
-  AllowedTypes,
   FormikForm
 } from '@harness/uicore'
 import * as Yup from 'yup'

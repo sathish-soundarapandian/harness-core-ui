@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Select, ItemListRenderer } from '@blueprintjs/select'
+import type { ItemListRenderer } from '@blueprintjs/select';
+import { Select } from '@blueprintjs/select'
 import { Button, MenuItem, Menu } from '@blueprintjs/core'
 import cx from 'classnames'
 

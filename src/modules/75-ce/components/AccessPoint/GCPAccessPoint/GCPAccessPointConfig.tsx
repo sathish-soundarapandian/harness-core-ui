@@ -11,12 +11,15 @@ import { defaultTo as _defaultTo } from 'lodash-es'
 import { HarnessDocTooltip, Heading, useToaster } from '@harness/uicore'
 import { AccessPointFormStep, PROVIDER_TYPES } from '@ce/constants'
 import { Utils } from '@ce/common/Utils'
-import { AccessPoint, useCreateAccessPoint, useEditAccessPoint } from 'services/lw'
+import type { AccessPoint} from 'services/lw';
+import { useCreateAccessPoint, useEditAccessPoint } from 'services/lw'
 import type { AccessPointScreenMode } from '@ce/types'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import GCPDnsMapping, { GcpDnsFormVal } from './GCPDnsMapping'
-import GCPAccessPointForm, { GcpApFormValue } from './GCPAccessPointForm'
+import type { GcpDnsFormVal } from './GCPDnsMapping';
+import GCPDnsMapping from './GCPDnsMapping'
+import type { GcpApFormValue } from './GCPAccessPointForm';
+import GCPAccessPointForm from './GCPAccessPointForm'
 import css from './GCPAccessPoint.module.scss'
 
 interface GCPAccessPointConfigProps {

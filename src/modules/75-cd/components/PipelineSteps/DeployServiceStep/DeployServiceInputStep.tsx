@@ -6,6 +6,9 @@
  */
 
 import React from 'react'
+import type {
+  SelectOption
+} from '@harness/uicore';
 import {
   Button,
   ButtonSize,
@@ -13,14 +16,14 @@ import {
   getMultiTypeFromValue,
   Dialog,
   Layout,
-  MultiTypeInputType,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { connect } from 'formik'
-import { ServiceRequestDTO, useGetServiceAccessList } from 'services/cd-ng'
+import type { ServiceRequestDTO} from 'services/cd-ng';
+import { useGetServiceAccessList } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'

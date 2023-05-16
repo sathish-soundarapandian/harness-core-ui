@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useGetFoldersWithHidden } from 'services/custom-dashboards'
 import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'

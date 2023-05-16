@@ -7,7 +7,8 @@
 
 import React from 'react'
 
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import { findByText, fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'

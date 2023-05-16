@@ -19,8 +19,9 @@ import type { StoreConfigWrapper } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
+import type {
+  ApplicationConfigProps} from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceSpecInterface.types';
 import {
-  ApplicationConfigProps,
   ApplicationConfigType
 } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceSpecInterface.types'
 import { fileTypes } from '../StartupScriptSelection/StartupScriptInterface.types'

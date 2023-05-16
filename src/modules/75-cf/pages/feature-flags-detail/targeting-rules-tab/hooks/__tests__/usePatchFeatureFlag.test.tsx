@@ -14,7 +14,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServicesMock from 'services/cf'
 import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import type { GitRepo } from 'services/cf'
-import usePatchFeatureFlag, { UsePatchFeatureFlagProps } from '../usePatchFeatureFlag'
+import type { UsePatchFeatureFlagProps } from '../usePatchFeatureFlag';
+import usePatchFeatureFlag from '../usePatchFeatureFlag'
 import {
   mockPercentageVariationRollout,
   percentageRolloutAdded,

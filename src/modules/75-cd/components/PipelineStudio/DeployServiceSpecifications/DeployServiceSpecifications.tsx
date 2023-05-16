@@ -8,15 +8,16 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import {
+import type {
   AllowedTypes,
+  SelectOption} from '@harness/uicore';
+import {
   Card,
   Checkbox,
   Container,
   Layout,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
-  SelectOption,
   Text,
   useConfirmationDialog
 } from '@harness/uicore'
@@ -28,7 +29,8 @@ import { useStrings } from 'framework/strings'
 
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { ServiceConfig, ServiceDefinition, useGetServiceList } from 'services/cd-ng'
+import type { ServiceConfig, ServiceDefinition} from 'services/cd-ng';
+import { useGetServiceList } from 'services/cd-ng'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import {
@@ -50,12 +52,13 @@ import {
 import SelectDeploymentType from '@cd/components/PipelineStudio/DeployServiceSpecifications/SelectDeploymentType/SelectDeploymentType'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { useDeepCompareEffect } from '@common/hooks'
+import type {
+  ServiceDeploymentType} from '@pipeline/utils/stageHelpers';
 import {
   deleteStageData,
   doesStageContainOtherData,
   getServiceDefinitionType,
   getStepTypeByDeploymentType,
-  ServiceDeploymentType,
   StageType
 } from '@pipeline/utils/stageHelpers'
 import type { StageElementConfig } from 'services/pipeline-ng'

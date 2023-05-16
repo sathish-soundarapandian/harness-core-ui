@@ -23,18 +23,20 @@ import {
 import { Intent } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import {
+import type {
   JiraFieldNG,
   JiraProjectBasicNG,
   JiraProjectNG,
-  JiraStatusNG,
+  JiraStatusNG} from 'services/cd-ng';
+import {
   useGetJiraIssueCreateMetadata,
   useGetJiraProjects
 } from 'services/cd-ng'

@@ -8,7 +8,8 @@
 import React from 'react'
 import { render, fireEvent, getByText as getElementByText, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import routes from '@common/RouteDefinitions'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
@@ -19,7 +20,8 @@ import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { testConnectorRefChangeForGcp } from './helper'
 import { GoogleCloudFunctionInfraSpecEditable } from '../GoogleCloudFunctionInfraSpecEditable'
 import { gcfTypeRegions, gcpConnectorListResponse, gcpProjectListResponse } from './mocks'
-import { GoogleCloudFunctionInfraSpec, GoogleCloudFunctionInfrastructure } from '../GoogleCloudFunctionInfraSpec'
+import type { GoogleCloudFunctionInfrastructure } from '../GoogleCloudFunctionInfraSpec';
+import { GoogleCloudFunctionInfraSpec } from '../GoogleCloudFunctionInfraSpec'
 
 const fetchConnector = jest.fn().mockReturnValue({ data: gcpConnectorListResponse.data?.content?.[1] })
 

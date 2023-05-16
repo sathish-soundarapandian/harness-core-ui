@@ -5,20 +5,23 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode } from 'react'
+import type { ReactNode } from 'react';
+import React from 'react'
 import type { CellProps } from 'react-table'
 import moment from 'moment'
 import { CircularPercentageChart, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import formatCost from '@ce/utils/formatCost'
-import {
+import type {
   QlceViewFieldInputInput,
-  QlceViewAggregateOperation,
   QlceViewEntityStatsDataPoint,
   ClusterData,
   StorageDetails,
   InstanceDetails
+} from 'services/ce/services';
+import {
+  QlceViewAggregateOperation
 } from 'services/ce/services'
 import CostTrend from '@ce/common/CostTrend'
 import { CE_COLOR_CONST } from '../CEChart/CEChartOptions'

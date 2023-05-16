@@ -8,11 +8,12 @@
 import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useConfirmationDialog } from '@harness/uicore'
-import {
+import type {
   ChangeSourceDTO,
   HealthSource,
   MonitoredServiceDTO,
-  MonitoredServiceResponse,
+  MonitoredServiceResponse} from 'services/cv';
+import {
   useUpdateMonitoredService
 } from 'services/cv'
 import { useStrings } from 'framework/strings'

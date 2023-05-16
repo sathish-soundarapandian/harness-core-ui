@@ -13,7 +13,8 @@ import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/Resource
 import { PageSpinner } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
-import { CEViewFolder, useGetFolders } from 'services/ce'
+import type { CEViewFolder} from 'services/ce';
+import { useGetFolders } from 'services/ce'
 import css from './PerspectiveResourceModalBody.module.scss'
 
 type ParsedColumnContent = CEViewFolder & { identifier: string }

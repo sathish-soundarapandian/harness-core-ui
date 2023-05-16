@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { AllowedTypesWithRunTime, MultiTypeInputType, StepProps } from '@harness/uicore'
+import type { AllowedTypesWithRunTime, StepProps } from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 
 import type { BambooArtifactProps, BambooArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'

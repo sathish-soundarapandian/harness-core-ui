@@ -26,7 +26,8 @@ import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { debounce, get, isEmpty, isPlainObject, noop } from 'lodash-es'
-import { Classes, Dialog, FormGroup, IDialogProps, Intent } from '@blueprintjs/core'
+import type { IDialogProps} from '@blueprintjs/core';
+import { Classes, Dialog, FormGroup, Intent } from '@blueprintjs/core'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ElastigroupConfiguration, ElastigroupInfrastructure, StoreConfigWrapper } from 'services/cd-ng'
@@ -40,9 +41,11 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { connectorTypes } from '@pipeline/utils/constants'
 import { useQueryParams } from '@common/hooks'
-import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
+import type { ConnectorRefFormValueType} from '@cd/utils/connectorUtils';
+import { getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { ConfigFilesMap } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
-import { ElastigroupInfraSpecEditableProps, getValidationSchema } from './ElastigroupInfraTypes'
+import type { ElastigroupInfraSpecEditableProps} from './ElastigroupInfraTypes';
+import { getValidationSchema } from './ElastigroupInfraTypes'
 import { ElastigroupConfig } from './ElastigroupConfig'
 import css from './ElastigroupInfra.module.scss'
 

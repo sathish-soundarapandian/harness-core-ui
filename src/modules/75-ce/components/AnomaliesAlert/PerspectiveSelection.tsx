@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, StepProps, Text, ButtonVariation, Button, Icon, FormInput, SelectOption } from '@harness/uicore'
+import type { StepProps, SelectOption } from '@harness/uicore';
+import { Layout, Text, ButtonVariation, Button, Icon, FormInput } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'

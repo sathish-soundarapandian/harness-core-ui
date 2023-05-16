@@ -5,19 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react'
+import React from 'react'
 import { isNull, isNumber } from 'lodash-es'
-import Highcharts, { PointOptionsObject } from 'highcharts'
-import { Text, Layout, Tag, SelectOption, IconName } from '@harness/uicore'
+import Highcharts, { type PointOptionsObject } from 'highcharts'
+import { Text, Layout, Tag, type SelectOption, type IconName } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import HighchartsReact from 'highcharts-react-official'
 import type { Renderer, CellProps } from 'react-table'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import { useStrings, type UseStringsReturn } from 'framework/strings'
 import type { CategoryCountDetails, CountServiceDTO, MonitoredServiceListItemDTO, RiskData } from 'services/cv'
 import { getRiskColorValue, getRiskLabelStringId } from '@cv/utils/CommonUtils'
 import ImageDeleteService from '@cv/assets/delete-service.svg'
 import type { FilterCardItem } from '@cv/components/FilterCard/FilterCard.types'
-import { RiskTagWithLabelProps, FilterTypes } from './CVMonitoredService.types'
+import type { RiskTagWithLabelProps } from './CVMonitoredService.types'
+import { FilterTypes } from './CVMonitoredService.types'
 import { HistoricalTrendChartOption, DefaultChangePercentage } from './CVMonitoredService.constants'
 import css from './CVMonitoredService.module.scss'
 

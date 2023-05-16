@@ -1,5 +1,6 @@
 import React from 'react'
-import { FormInput, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { FormInput } from '@harness/uicore'
 import ThresholdSelect from './ThresholdSelect'
 import { getGroupDropdownOptions, isGroupTransationTextField } from '../MetricThresholds.utils'
 import { MetricTypeValues } from '../MetricThresholds.constants'

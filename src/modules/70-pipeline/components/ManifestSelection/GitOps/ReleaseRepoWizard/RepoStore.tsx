@@ -7,20 +7,22 @@
 
 import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  StepProps,
+  IconName,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Layout,
   Button,
   Text,
   Formik,
-  StepProps,
   getMultiTypeFromValue,
   MultiTypeInputType,
   ThumbnailSelect,
-  IconName,
   ButtonVariation,
   FormikForm,
-  ButtonSize,
-  AllowedTypes
+  ButtonSize
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'

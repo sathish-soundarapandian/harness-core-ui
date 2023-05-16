@@ -11,6 +11,9 @@ import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 
+import type {
+  SelectOption,
+  ExpandingSearchInputHandle} from '@harness/uicore';
 import {
   ButtonVariation,
   Dialog,
@@ -18,13 +21,11 @@ import {
   HarnessDocTooltip,
   Heading,
   Page,
-  SelectOption,
   Container,
   Layout,
   Text,
   DropDown,
   Pagination,
-  ExpandingSearchInputHandle,
   useToaster
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -41,7 +42,8 @@ import { SettingType } from '@common/constants/Utils'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import { FilterContextProvider } from '@cd/context/FiltersContext'
 
@@ -51,9 +53,11 @@ import NoEnvironmentGroups from './NoEnvironmentGroups'
 import EnvironmentTabs from '../EnvironmentsV2/EnvironmentTabs'
 import { EnvironmentGroupsFilters } from './EnvironmentGroupsFilters/EnvironmentGroupsFilters'
 import { getHasFilterIdentifier, getHasFilters } from './EnvironmentGroupsFilters/filterUtils'
-import { EnvironmentGroupListQueryParams, Sort, SortFields } from './utils'
+import type { EnvironmentGroupListQueryParams} from './utils';
+import { Sort, SortFields } from './utils'
+import type {
+  PageQueryParamsWithDefaults} from '../EnvironmentsV2/PageTemplate/utils';
 import {
-  PageQueryParamsWithDefaults,
   PAGE_TEMPLATE_DEFAULT_PAGE_INDEX,
   PAGE_TEMPLATE_DEFAULT_PAGE_SIZE,
   usePageQueryParamOptions

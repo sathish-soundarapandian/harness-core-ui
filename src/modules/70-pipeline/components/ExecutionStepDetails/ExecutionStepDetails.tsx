@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo } from 'react'
-import { Button, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Button } from '@harness/uicore'
 import { Popover, Menu, Spinner } from '@blueprintjs/core'
 import { has, defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -21,10 +22,11 @@ import { useStrings } from 'framework/strings'
 import factory from '@pipeline/factories/ExecutionFactory'
 import { isCDStage, isCIStage, StageType } from '@pipeline/utils/stageHelpers'
 import { isExecutionCompletedWithBadState, isExecutionRunning, isExecutionSuccess } from '@pipeline/utils/statusHelpers'
+import type {
+  StepNodeType} from '@pipeline/utils/executionUtils';
 import {
   getInterruptHistoriesFromType,
   Interrupt,
-  StepNodeType,
   NonSelectableStepNodes
 } from '@pipeline/utils/executionUtils'
 

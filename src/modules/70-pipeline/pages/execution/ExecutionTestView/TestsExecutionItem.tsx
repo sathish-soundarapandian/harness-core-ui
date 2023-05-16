@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useCallback, useMemo, useRef, SetStateAction, Dispatch } from 'react'
+import type { SetStateAction, Dispatch } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import { Intent, ProgressBar } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import { get, omit } from 'lodash-es'
@@ -14,8 +15,10 @@ import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import type { orderType, sortType, serverSortProps } from '@common/components/Table/react-table-config'
-import { TestSuite, useTestCaseSummary, TestCase, TestCaseSummaryQueryParams } from 'services/ti-service'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { TestSuite, TestCase, TestCaseSummaryQueryParams } from 'services/ti-service';
+import { useTestCaseSummary } from 'services/ti-service'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { CopyText } from '@common/components/CopyText/CopyText'
 import { Duration } from '@common/exports'
 import useExpandErrorModal from '@pipeline/components/ExpandErrorModal/useExpandErrorModal'

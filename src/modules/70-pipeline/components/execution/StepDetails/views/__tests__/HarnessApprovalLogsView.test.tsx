@@ -7,13 +7,16 @@
 
 import React from 'react'
 import { render, fireEvent, act, getByText as getByTextGlobalFn } from '@testing-library/react'
-import {
-  useGetHarnessApprovalInstanceAuthorization,
-  useGetApprovalInstance,
+import type {
   ResponseApprovalInstanceResponse,
   ResponseHarnessApprovalInstanceAuthorization
+} from 'services/pipeline-ng';
+import {
+  useGetHarnessApprovalInstanceAuthorization,
+  useGetApprovalInstance
 } from 'services/pipeline-ng'
-import { TestWrapper, UseGetMockDataWithMutateAndRefetch } from '@common/utils/testUtils'
+import type { UseGetMockDataWithMutateAndRefetch } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { HarnessApprovalLogsView } from '../HarnessApprovalView/HarnessApprovalLogsView'
 import { mockAuthData, mockAuthDataAuthFalse, mockApprovalData } from './mock'
 

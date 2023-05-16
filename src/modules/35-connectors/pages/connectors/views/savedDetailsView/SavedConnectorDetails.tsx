@@ -7,7 +7,8 @@
 
 import React from 'react'
 import moment from 'moment'
-import { Layout, Text, Icon, IconName, Card } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Layout, Text, Icon, Card } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 
 import type {
@@ -18,8 +19,8 @@ import type {
   AzureKeyVaultConnectorDTO,
   GcpKmsConnectorDTO
 } from 'services/cd-ng'
-import { useStrings, UseStringsReturn } from 'framework/strings'
-import type { StringKeys } from 'framework/strings'
+import { useStrings } from 'framework/strings'
+import type { StringKeys , UseStringsReturn } from 'framework/strings'
 import { StringUtils } from '@common/exports'
 import type { TagsInterface } from '@common/interfaces/ConnectorsInterface'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
@@ -27,12 +28,14 @@ import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityM
 import { Connectors } from '@connectors/constants'
 import { HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import { accessTypeOptionsMap } from '@connectors/components/CreateConnector/HashiCorpVault/views/VaultConnectorFormFields'
+import type {
+  IBackoffStrategyTypeLabelMapping
+} from '../../utils/ConnectorHelper';
 import {
   BackOffStrategy,
   backoffStrategyTypeLabelMapping,
   getLabelForAuthType,
-  GitAuthTypes,
-  IBackoffStrategyTypeLabelMapping
+  GitAuthTypes
 } from '../../utils/ConnectorHelper'
 import { AzureSecretKeyType } from '../../utils/ConnectorUtils'
 import css from './SavedConnectorDetails.module.scss'

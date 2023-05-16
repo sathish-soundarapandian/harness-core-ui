@@ -30,7 +30,8 @@ import { ModuleName } from 'framework/types/ModuleName'
 import type { StringsMap } from 'stringTypes'
 import { DockerHubStepBaseWithRef } from './DockerHubStepBase'
 import { DockerHubStepInputSet } from './DockerHubStepInputSet'
-import { DockerHubStepVariables, DockerHubStepVariablesProps } from './DockerHubStepVariables'
+import type { DockerHubStepVariablesProps } from './DockerHubStepVariables';
+import { DockerHubStepVariables } from './DockerHubStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './DockerHubStepFunctionConfigs'
 import { getConnectorSuggestions } from '../EditorSuggestionUtils'
 

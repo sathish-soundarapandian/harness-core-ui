@@ -28,7 +28,8 @@ import noDataImage from '@cv/assets/noData.svg'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { metricTypeOptions, PAGE_SIZE } from './MetricsAnalysisContainer.constants'
 import { generatePointsForTimeSeries } from './MetricsAnalysisContainer.utils'
-import { MetricsAnalysisContentProps, MetricsAnalysisProps, MetricTypes } from './MetricsAnalysisContainer.types'
+import type { MetricsAnalysisContentProps, MetricsAnalysisProps} from './MetricsAnalysisContainer.types';
+import { MetricTypes } from './MetricsAnalysisContainer.types'
 import MetricAnalysisRow from './components/MetricsAnalysisRow/MetricAnalysisRow'
 import css from './MetricsAnalysisContainer.module.scss'
 

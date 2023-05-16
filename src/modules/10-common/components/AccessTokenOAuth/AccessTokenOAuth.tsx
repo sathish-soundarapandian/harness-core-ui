@@ -10,18 +10,21 @@ import { useParams } from 'react-router-dom'
 import { Text, Layout, DropDown, getErrorInfoFromErrorObject, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ConnectorInfoDTO,
-  useSaveUserSourceCodeManager,
   UserSourceCodeManagerRequestDTO,
   UserSourceCodeManagerResponseDTO
+} from 'services/cd-ng';
+import {
+  useSaveUserSourceCodeManager
 } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { StringsMap } from 'stringTypes'
 import { ConnectViaOAuth } from '@common/components/ConnectViaOAuth/ConnectViaOAuth'
 import { Status } from '@common/utils/Constants'
-import { OAuthEventProcessingResponse, handleOAuthEventProcessing } from '@common/components/ConnectViaOAuth/OAuthUtils'
+import type { OAuthEventProcessingResponse} from '@common/components/ConnectViaOAuth/OAuthUtils';
+import { handleOAuthEventProcessing } from '@common/components/ConnectViaOAuth/OAuthUtils'
 import css from './AccessTokenOAuth.module.scss'
 
 enum SourceCodeTypes {

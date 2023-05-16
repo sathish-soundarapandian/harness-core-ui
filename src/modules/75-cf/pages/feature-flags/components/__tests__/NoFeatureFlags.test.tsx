@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
 import mockFeatureFlags from '../../__tests__/mockFeatureFlags'
-import { NoFeatureFlags, NoFeatureFlagsProps } from '../NoFeatureFlags'
+import type { NoFeatureFlagsProps } from '../NoFeatureFlags';
+import { NoFeatureFlags } from '../NoFeatureFlags'
 
 const onClearFilter = jest.fn()
 const onClearSearch = jest.fn()

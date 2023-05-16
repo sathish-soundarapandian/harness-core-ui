@@ -31,18 +31,21 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { PermissionsRequest } from '@rbac/hooks/usePermission'
-import {
+import type {
   Feature,
   GitSyncErrorResponse,
   PatchFeatureQueryParams,
   Prerequisite,
-  useGetAllFeatures,
-  usePatchFeature,
   Variation
+} from 'services/cf';
+import {
+  useGetAllFeatures,
+  usePatchFeature
 } from 'services/cf'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 
-import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
+import type { UseGitSync } from '@cf/hooks/useGitSync';
+import { GIT_SYNC_ERROR_CODE } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'

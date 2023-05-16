@@ -8,16 +8,17 @@
 import React from 'react'
 import cx from 'classnames'
 
-import { Accordion, AllowedTypes, Formik, FormInput, IconName } from '@harness/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore';
+import { Accordion, Formik, FormInput } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 
 import { defaultTo, get } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
-import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 
-import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef , StepProps, ValidateInputSetProps} from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
@@ -33,7 +34,8 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StringsMap } from 'stringTypes'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { MergePRVariableStepProps, MergePRVariableView } from './MergePrVariableView'
+import type { MergePRVariableStepProps} from './MergePrVariableView';
+import { MergePRVariableView } from './MergePrVariableView'
 import MergePRInputStep from './MergePrInputStep'
 import OptionalConfiguration from './OptionalConfiguration'
 import { validateGitOpsExecutionStepForm } from '../PipelineStepsUtil'

@@ -12,10 +12,11 @@ import { ButtonVariation, Container, FormInput, RUNTIME_INPUT_VALUE } from '@har
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import {
+import type {
   ChangeSourceDTO,
   MonitoredServiceDTO,
-  MonitoredServiceResponse,
+  MonitoredServiceResponse} from 'services/cv';
+import {
   useCreateDefaultMonitoredService,
   useGetMonitoredServiceFromServiceAndEnvironment
 } from 'services/cv'

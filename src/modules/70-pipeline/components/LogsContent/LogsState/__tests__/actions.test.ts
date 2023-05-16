@@ -6,7 +6,8 @@
  */
 
 import { renderHook } from '@testing-library/react-hooks'
-import { useActionCreator, UseActionCreatorReturn } from '../actions'
+import type { UseActionCreatorReturn } from '../actions';
+import { useActionCreator } from '../actions'
 import { ActionType } from '../types'
 
 const dispatch = jest.fn()

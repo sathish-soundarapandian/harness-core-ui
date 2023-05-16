@@ -26,7 +26,8 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Error, ResponsePageSecretResponseWrapper, useListSecretsV2 } from 'services/cd-ng'
+import type { Error, ResponsePageSecretResponseWrapper} from 'services/cd-ng';
+import { useListSecretsV2 } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import useCreateUpdateSecretModal from '@secrets/modals/CreateSecretModal/useCreateUpdateSecretModal'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'

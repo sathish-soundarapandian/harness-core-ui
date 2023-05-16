@@ -23,7 +23,8 @@ import { ModuleName } from 'framework/types/ModuleName'
 import type { StringsMap } from 'stringTypes'
 import { JFrogArtifactoryStepBaseWithRef } from './JFrogArtifactoryStepBase'
 import { JFrogArtifactoryStepInputSet } from './JFrogArtifactoryStepInputSet'
-import { JFrogArtifactoryStepVariables, JFrogArtifactoryStepVariablesProps } from './JFrogArtifactoryStepVariables'
+import type { JFrogArtifactoryStepVariablesProps } from './JFrogArtifactoryStepVariables';
+import { JFrogArtifactoryStepVariables } from './JFrogArtifactoryStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './JFrogArtifactoryStepFunctionConfigs'
 import { getConnectorSuggestions } from '../EditorSuggestionUtils'
 

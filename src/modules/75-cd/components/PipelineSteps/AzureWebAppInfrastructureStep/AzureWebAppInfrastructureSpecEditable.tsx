@@ -6,11 +6,12 @@
  */
 
 import React, { useEffect } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Text,
   Layout,
   FormInput,
-  SelectOption,
   Formik,
   FormikForm,
   Icon,
@@ -23,8 +24,9 @@ import { useParams } from 'react-router-dom'
 import { debounce, noop, get, defaultTo } from 'lodash-es'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import type {
+  AzureWebAppInfrastructure} from 'services/cd-ng';
 import {
-  AzureWebAppInfrastructure,
   useGetAzureResourceGroupsBySubscription,
   useGetAzureSubscriptions
 } from 'services/cd-ng'
@@ -42,8 +44,9 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import type { AzureWebAppInfrastructureUI } from './AzureWebAppInfrastructureStep'
+import type {
+  AzureWebAppInfrastructureSpecEditableProps} from './AzureWebAppInfrastructureInterface';
 import {
-  AzureWebAppInfrastructureSpecEditableProps,
   getValidationSchema,
   subscriptionLabel,
   resourceGroupLabel

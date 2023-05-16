@@ -6,7 +6,11 @@
  */
 
 import React, { useMemo } from 'react'
-import { FormikProps, FieldArray } from 'formik'
+import type { FormikProps} from 'formik';
+import { FieldArray } from 'formik'
+import type {
+  SelectOption,
+  AllowedTypesWithRunTime} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -15,10 +19,8 @@ import {
   Label,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   Select,
   Text,
-  AllowedTypesWithRunTime,
   ButtonSize,
   HarnessDocTooltip
 } from '@harness/uicore'
@@ -30,7 +32,8 @@ import { defaultTo, get, isEmpty } from 'lodash-es'
 import { String as StringGlobal, useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import type { ScriptType} from '@common/components/ShellScriptMonaco/ShellScriptMonaco';
+import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'

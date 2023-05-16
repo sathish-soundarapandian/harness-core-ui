@@ -8,17 +8,21 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { set } from 'lodash-es'
-import { Button, Layout, StepProps, Heading, Text } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Button, Layout, Heading, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
-import { useGenerateKubernetesYaml, DelegateSetupDetails, GenerateKubernetesYamlQueryParams } from 'services/portal'
+import type { DelegateSetupDetails, GenerateKubernetesYamlQueryParams } from 'services/portal';
+import { useGenerateKubernetesYaml } from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
-import {
+import type {
   GenerateNgHelmValuesYamlQueryParams,
-  useGenerateNgHelmValuesYaml,
   DelegateSetupDetails as HelmDelegateSetupDetails
+} from 'services/cd-ng';
+import {
+  useGenerateNgHelmValuesYaml
 } from 'services/cd-ng'
 
 import type { K8sDelegateWizardData } from '../DelegateSetupStep/DelegateSetupStep'

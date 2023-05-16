@@ -1,7 +1,8 @@
 import { Container, useToaster } from '@harness/uicore'
 import React from 'react'
 import { useFormikContext } from 'formik'
-import { UserAssessmentDTO, useSaveAssessmentResponse } from 'services/assessments'
+import type { UserAssessmentDTO} from 'services/assessments';
+import { useSaveAssessmentResponse } from 'services/assessments'
 import { getErrorMessage } from '@auth-settings/utils'
 import { useDeepCompareEffect } from '@common/hooks'
 import type { AssessmentsForm } from '../../interfaces/Assessments'

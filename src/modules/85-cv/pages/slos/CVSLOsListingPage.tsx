@@ -6,6 +6,8 @@
  */
 import React, { useEffect, useState, useMemo, useReducer, useRef } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
+import type {
+  IconName} from '@harness/uicore';
 import {
   useToaster,
   ButtonVariation,
@@ -17,7 +19,6 @@ import {
   Container,
   TableV2,
   Text,
-  IconName,
   Tag,
   ExpandingSearchInput
 } from '@harness/uicore'
@@ -34,14 +35,16 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import type {
+  RiskCount,
+  GetSLOHealthListViewQueryParams
+} from 'services/cv';
 import {
   useGetAllJourneys,
   useGetServiceLevelObjectivesRiskCount,
-  RiskCount,
   useGetSLOHealthListView,
   useGetSLOAssociatedMonitoredServices,
-  useDeleteSLOV2Data,
-  GetSLOHealthListViewQueryParams
+  useDeleteSLOV2Data
 } from 'services/cv'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'

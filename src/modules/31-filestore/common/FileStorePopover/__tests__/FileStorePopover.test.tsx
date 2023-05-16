@@ -8,7 +8,8 @@
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
-import FileStorePopover, { FileStorePopoverItem } from '@filestore/common/FileStorePopover/FileStorePopover'
+import type { FileStorePopoverItem } from '@filestore/common/FileStorePopover/FileStorePopover';
+import FileStorePopover from '@filestore/common/FileStorePopover/FileStorePopover'
 
 import { FileStoreActionTypes } from '@filestore/utils/constants'
 

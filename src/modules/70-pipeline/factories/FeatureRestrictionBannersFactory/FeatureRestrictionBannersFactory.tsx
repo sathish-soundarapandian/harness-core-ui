@@ -11,17 +11,20 @@ import { useFeatures } from '@common/hooks/useFeatures'
 import type { CheckFeaturesReturn } from 'framework/featureStore/featureStoreUtil'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import FeatureWarningCommonBanner from '@common/components/FeatureWarning/FeatureWarningCommonBanner'
+import type {
+  DisplayBanner} from '@common/components/FeatureWarning/FeatureWarningCommonBannerUtils';
 import {
   FeatureWarningTheme,
   RedirectButton,
-  DisplayBanner,
   getDismissBannerKey
 } from '@common/components/FeatureWarning/FeatureWarningCommonBannerUtils'
 import { useStrings } from 'framework/strings'
+import type {
+  ModuleToFeatureMapValue
+} from './FeatureRestrictionBannersFactoryUtils';
 import {
   getBannerDependencyMet,
-  getQualifiedEnforcedBanner,
-  ModuleToFeatureMapValue
+  getQualifiedEnforcedBanner
 } from './FeatureRestrictionBannersFactoryUtils'
 
 // If multiple limits within a FeatureIdentifier, show higher limit first in the array

@@ -9,7 +9,8 @@ import React from 'react'
 import { act, fireEvent, render, waitFor, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { AddStageView, AddStageViewProps } from '../views/AddStageView'
+import type { AddStageViewProps } from '../views/AddStageView';
+import { AddStageView } from '../views/AddStageView'
 import { stageMockData } from './mocks'
 
 const commonProps: AddStageViewProps = {

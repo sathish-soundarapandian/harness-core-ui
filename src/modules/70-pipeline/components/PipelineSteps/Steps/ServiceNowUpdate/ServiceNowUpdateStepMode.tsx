@@ -11,8 +11,11 @@ import { useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { FieldArray } from 'formik'
 import { Intent } from '@harness/design-system'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
   Button,
   Formik,
@@ -22,21 +25,23 @@ import {
   MultiTypeInputType,
   Text,
   PageSpinner,
-  AllowedTypes,
   FormError
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { String, StringKeys, useStrings } from 'framework/strings'
+import type { StepFormikFowardRef} from '@pipeline/components/AbstractSteps/Step';
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StringKeys} from 'framework/strings';
+import { String, useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import {
+import type {
   ServiceNowFieldNG,
-  ServiceNowTicketTypeDTO,
+  ServiceNowTicketTypeDTO} from 'services/cd-ng';
+import {
   useGetServiceNowIssueMetadata,
   useGetServiceNowTemplateMetadata,
   useGetServiceNowTicketTypes,
@@ -53,10 +58,11 @@ import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { ServiceNowDynamicFieldsSelector } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowDynamicFieldsSelector'
 import { ServiceNowFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
+import type {
+  ServiceNowCreateFieldType,
+  ServiceNowFieldNGWithValue} from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types';
 import {
   FieldType,
-  ServiceNowCreateFieldType,
-  ServiceNowFieldNGWithValue,
   ServiceNowStaticFields
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
 import {

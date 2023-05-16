@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo } from 'react'
-import { Text, Container, Layout, Button, ButtonVariation, ButtonSize, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Text, Container, Layout, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ChangeEventDTO } from 'services/cv'

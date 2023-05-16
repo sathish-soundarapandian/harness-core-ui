@@ -6,12 +6,13 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  StepProps,
+  ModalErrorHandlerBinding} from '@harness/uicore';
 import {
   Layout,
   Button,
   Formik,
-  StepProps,
-  ModalErrorHandlerBinding,
   ModalErrorHandler,
   FormikForm,
   Container,
@@ -23,14 +24,16 @@ import { Link, useParams } from 'react-router-dom'
 import { isEmpty, pick, get, omit } from 'lodash-es'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import {
+import type {
   Failure,
   ConnectorInfoDTO,
   ResponseBoolean,
   GetConnectorListV2QueryParams,
-  useGetConnectorListV2,
   ConnectorFilterProperties,
   ConnectorResponse
+} from 'services/cd-ng';
+import {
+  useGetConnectorListV2
 } from 'services/cd-ng'
 import type { CEAzureConnector } from 'services/ce'
 import { String, useStrings } from 'framework/strings'
@@ -38,7 +41,8 @@ import routes from '@common/RouteDefinitions'
 import { Description, Tags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import GitContextForm, { GitContextProps, IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
+import type { GitContextProps, IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm';
+import GitContextForm from '@common/components/GitContextForm/GitContextForm'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { CE_AZURE_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'

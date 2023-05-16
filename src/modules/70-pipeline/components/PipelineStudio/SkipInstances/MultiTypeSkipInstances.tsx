@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, getMultiTypeFromValue, FormInput, Container, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { MultiTypeInputType, getMultiTypeFromValue, FormInput, Container } from '@harness/uicore'
 import { produce } from 'immer'
 import { set, unset } from 'lodash-es'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'

@@ -11,11 +11,14 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { useStrings } from 'framework/strings'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
-import {
-  getUpdatedYamlForInfrastructurePromise,
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import type {
   InfrastructureDefinitionConfig,
   ResponseCustomDeploymentRefreshYaml
+} from 'services/cd-ng';
+import {
+  getUpdatedYamlForInfrastructurePromise
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { InfraYamlDiffViewWrapper } from './InfraYamlDiffViewWrapper'

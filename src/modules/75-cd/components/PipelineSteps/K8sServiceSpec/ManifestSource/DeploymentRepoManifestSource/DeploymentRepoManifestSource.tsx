@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
+import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase';
+import { ManifestSourceBase } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { ReleaseRepoManifestDataType } from '@pipeline/components/ManifestSelection/GitOps/ReleaseRepoInterface'
 import { ManifestContent } from '../ManifestSourceRuntimeFields/ManifestContent'
 

@@ -1,9 +1,11 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import {
-  PipelineOutOfSyncErrorStrip,
+import type {
   PipelineOutOfSyncErrorStripProps
+} from '@pipeline/components/TemplateLibraryErrorHandling/PipelineOutOfSyncErrorStrip/PipelineOutOfSyncErrorStrip';
+import {
+  PipelineOutOfSyncErrorStrip
 } from '@pipeline/components/TemplateLibraryErrorHandling/PipelineOutOfSyncErrorStrip/PipelineOutOfSyncErrorStrip'
 
 const errorNodeSummaryDummmyResponse = {

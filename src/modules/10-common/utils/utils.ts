@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, IconName, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { IconName, MultiSelectOption, SelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, isUndefined } from 'lodash-es'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useContext, useRef, useState } from 'react'
+import React, { type Dispatch, type SetStateAction, useContext, useRef, useState } from 'react'
 import * as Yup from 'yup'
 import { defaultTo, isEmpty, isEqual, omit, omitBy, pick, unset } from 'lodash-es'
 import type { FormikProps } from 'formik'
@@ -20,7 +20,7 @@ import {
   Layout,
   OverlaySpinner,
   Select,
-  SelectOption,
+  type SelectOption,
   Text,
   useToaster
 } from '@harness/uicore'
@@ -47,8 +47,8 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { getScopeFromDTO, getScopeLabelfromScope } from '@common/components/EntityReference/EntityReference'
 import { useTemplateAlreadyExistsDialog } from '@templates-library/hooks/useTemplateAlreadyExistsDialog'
 import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
-import { CardInterface, InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
-import { SaveTemplateAsType, StoreMetadata, StoreType as GitStoreType } from '@common/constants/GitSyncTypes'
+import { type CardInterface, InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
+import { SaveTemplateAsType, type StoreMetadata, StoreType as GitStoreType } from '@common/constants/GitSyncTypes'
 import type { ProjectPathProps, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'

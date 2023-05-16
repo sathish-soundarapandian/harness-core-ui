@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { FormInput, SelectOption, Layout, Radio, Container, HarnessDocTooltip } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, Layout, Radio, Container, HarnessDocTooltip } from '@harness/uicore'
 import { noop, isEmpty } from 'lodash-es'
 import { Color } from '@harness/design-system'
-import { Formik, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { useStrings } from 'framework/strings'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'

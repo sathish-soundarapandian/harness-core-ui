@@ -19,7 +19,8 @@ import * as commonHooks from '@common/hooks'
 import { templatePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import { mockBranches } from '@gitsync/components/GitSyncForm/__tests__/mockdata'
-import { TemplateDetails, TemplateDetailsProps } from '../TemplateDetails'
+import type { TemplateDetailsProps } from '../TemplateDetails';
+import { TemplateDetails } from '../TemplateDetails'
 
 const gitAppStoreValues = {
   isGitSyncEnabled: false,

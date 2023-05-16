@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Color } from '@harness/design-system'
-import { FilterProps, TableFilters } from '@cf/components/TableFilters/TableFilters'
+import type { FilterProps} from '@cf/components/TableFilters/TableFilters';
+import { TableFilters } from '@cf/components/TableFilters/TableFilters'
 import type { Features } from 'services/cf'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'

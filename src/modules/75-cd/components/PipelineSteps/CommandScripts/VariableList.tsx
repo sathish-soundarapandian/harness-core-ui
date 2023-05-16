@@ -7,15 +7,18 @@
 
 import React from 'react'
 import { get } from 'lodash-es'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
-import { Button, ButtonVariation, FormInput, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Button, ButtonVariation, FormInput } from '@harness/uicore'
 
 import type { NGVariable } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { CommandScriptsData, scriptInputType } from './CommandScriptsTypes'
+import type { CommandScriptsData} from './CommandScriptsTypes';
+import { scriptInputType } from './CommandScriptsTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './VariableList.module.scss'
 

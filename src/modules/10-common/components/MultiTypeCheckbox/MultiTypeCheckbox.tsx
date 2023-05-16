@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { FormGroup, ICheckboxProps, IFormGroupProps, Intent } from '@blueprintjs/core'
+import type { ICheckboxProps, IFormGroupProps} from '@blueprintjs/core';
+import { FormGroup, Intent } from '@blueprintjs/core'
+import type {
+  DataTooltipInterface,
+  ExpressionAndRuntimeTypeProps} from '@harness/uicore';
 import {
   Checkbox,
-  DataTooltipInterface,
   ExpressionAndRuntimeType,
-  ExpressionAndRuntimeTypeProps,
   FormError,
   getMultiTypeFromValue,
   HarnessDocTooltip,
@@ -26,7 +28,8 @@ import { connect } from 'formik'
 
 import { errorCheck } from '@common/utils/formikHelpers'
 
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions';
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from './MultiTypeCheckbox.module.scss'
 
 export interface MultiTypeCheckboxProps

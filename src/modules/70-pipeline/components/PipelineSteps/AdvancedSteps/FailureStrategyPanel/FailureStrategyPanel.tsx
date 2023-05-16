@@ -6,7 +6,8 @@
  */
 import React from 'react'
 import { Button, FormInput, Text } from '@harness/uicore'
-import { FieldArray, FormikErrors, useFormikContext } from 'formik'
+import type { FormikErrors} from 'formik';
+import { FieldArray, useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
 import { defaultTo, flatMap, get, isEmpty, uniq } from 'lodash-es'
 import cx from 'classnames'

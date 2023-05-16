@@ -12,7 +12,8 @@ import * as Yup from 'yup'
 import { TestWrapper } from '@common/utils/testUtils'
 import { HealthSourceQueryType } from '../HealthSourceQueryType'
 import { queryTypeValidation } from '../HealthSourceQueryType.constants'
-import { HealthSourceQueryTypeProps, QueryType } from '../HealthSourceQueryType.types'
+import type { HealthSourceQueryTypeProps} from '../HealthSourceQueryType.types';
+import { QueryType } from '../HealthSourceQueryType.types'
 
 const mockGetString = jest.fn().mockImplementation(() => 'cv.componentValidations.queryType')
 const SampleComponent: React.FC<{

@@ -31,7 +31,8 @@ import { ModuleName } from 'framework/types/ModuleName'
 import type { StringsMap } from 'stringTypes'
 import { BackgroundStepBaseWithRef } from './BackgroundStepBase'
 import { BackgroundStepInputSet } from './BackgroundStepInputSet'
-import { BackgroundStepVariables, BackgroundStepVariablesProps } from './BackgroundStepVariables'
+import type { BackgroundStepVariablesProps } from './BackgroundStepVariables';
+import { BackgroundStepVariables } from './BackgroundStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './BackgroundStepFunctionConfigs'
 import { getConnectorSuggestions } from '../EditorSuggestionUtils'
 

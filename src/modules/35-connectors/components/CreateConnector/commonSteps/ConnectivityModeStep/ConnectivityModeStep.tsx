@@ -6,6 +6,9 @@
  */
 
 import React, { useState } from 'react'
+import type {
+  ModalErrorHandlerBinding,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -13,8 +16,6 @@ import {
   FormikForm,
   Layout,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  StepProps,
   Text
 } from '@harness/uicore'
 import * as Yup from 'yup'
@@ -28,9 +29,10 @@ import type {
   ResponseConnectorResponse
 } from 'services/cd-ng'
 import { PageSpinner } from '@common/components'
-import ConnectivityMode, {
+import type {
   ConnectivityCardItem,
-  ConnectivityModeForm,
+  ConnectivityModeForm} from '@common/components/ConnectivityMode/ConnectivityMode';
+import ConnectivityMode, {
   ConnectivityModeType
 } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -39,7 +41,8 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ConnectorLabels } from '@connectors/constants'
-import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
+import type { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector';
+import useCreateEditConnector from '@connectors/hooks/useCreateEditConnector'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from './ConnectivityModeStep.module.scss'
 

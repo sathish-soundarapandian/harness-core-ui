@@ -8,17 +8,23 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { defaultTo, isEmpty, set } from 'lodash-es'
-import { FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import type { FormikErrors} from 'formik';
+import { yupToFormErrors } from 'formik'
+import type { IconName} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { StringsMap } from 'stringTypes'
-import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
-import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps } from '@pipeline/components/PipelineSteps/PipelineStep';
+import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import QueueWidget from './QueueWidget'
 import QueueInputStep from './QueueInputStep'
-import QueueVariableStep, { QueueVariableViewProps } from './QueueVariableStep'
-import { QueueData, SCOPE_KEYS } from './helper'
+import type { QueueVariableViewProps } from './QueueVariableStep';
+import QueueVariableStep from './QueueVariableStep'
+import type { QueueData} from './helper';
+import { SCOPE_KEYS } from './helper'
 
 const QueueWidgetWithRef = React.forwardRef(QueueWidget)
 export class QueueStep extends PipelineStep<QueueData> {

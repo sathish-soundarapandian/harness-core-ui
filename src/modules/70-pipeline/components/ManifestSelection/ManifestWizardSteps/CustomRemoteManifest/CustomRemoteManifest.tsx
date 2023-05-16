@@ -6,9 +6,12 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes,
+  SelectOption,
+  StepProps} from '@harness/uicore';
 import {
   Accordion,
-  AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
@@ -17,8 +20,6 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  SelectOption,
-  StepProps,
   Text
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'

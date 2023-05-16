@@ -5,8 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
+import type {
   AllowedTypes,
+  SelectOption,
+  StepProps} from '@harness/uicore';
+import {
   Button,
   ButtonVariation,
   Formik,
@@ -16,8 +19,6 @@ import {
   Icon,
   Layout,
   MultiTypeInputType,
-  SelectOption,
-  StepProps,
   Text
 } from '@harness/uicore'
 import React from 'react'
@@ -27,7 +28,8 @@ import cx from 'classnames'
 import * as Yup from 'yup'
 import { v4 as uuid } from 'uuid'
 import { FieldArray, Form } from 'formik'
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -36,7 +38,8 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { GitRepoName } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { Connector, PathInterface, RemoteVar, TerraformStoreTypes } from '../Terraform/TerraformInterfaces'
+import type { Connector, PathInterface, RemoteVar} from '../Terraform/TerraformInterfaces';
+import { TerraformStoreTypes } from '../Terraform/TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 import css from './VarFile.module.scss'

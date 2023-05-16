@@ -7,7 +7,8 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { AllowedTypes, Container, FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Container, FormInput, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { get } from 'lodash-es'

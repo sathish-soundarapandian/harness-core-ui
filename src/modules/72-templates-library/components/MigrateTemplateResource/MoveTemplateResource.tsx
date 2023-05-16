@@ -9,6 +9,8 @@ import React, { useRef, useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty, omit, defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Container,
   Formik,
@@ -17,7 +19,6 @@ import {
   ButtonVariation,
   useToaster,
   FormInput,
-  SelectOption,
   Layout,
   Text
 } from '@harness/uicore'
@@ -26,11 +27,13 @@ import type { HideModal } from '@harness/use-modal'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { Error, ResponseInputSetMoveConfigResponseDTO } from 'services/pipeline-ng'
-import {
-  moveTemplateConfigsPromise,
+import type {
   TemplateSummaryResponse,
   TemplateMetadataSummaryResponse,
   ResponseTemplateMoveConfigResponse
+} from 'services/template-ng';
+import {
+  moveTemplateConfigsPromise
 } from 'services/template-ng'
 
 import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
@@ -45,7 +48,8 @@ import {
   VersionsDropDown
 } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 
-import { ExtraQueryParams, getDisableFields, MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
+import type { ExtraQueryParams} from '@pipeline/components/MigrateResource/MigrateUtils';
+import { getDisableFields, MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
 
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { NameIdDescriptionTagsType } from '@common/utils/Validation'

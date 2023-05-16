@@ -8,8 +8,9 @@
 import React, { useEffect } from 'react'
 import cx from 'classnames'
 import { get, isEmpty, isNil, set } from 'lodash-es'
+import type {
+  AllowedTypes} from '@harness/uicore';
 import {
-  AllowedTypes,
   Button,
   FormError,
   FormInput,

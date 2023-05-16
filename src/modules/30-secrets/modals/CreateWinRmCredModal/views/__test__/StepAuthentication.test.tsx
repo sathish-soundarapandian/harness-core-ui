@@ -12,7 +12,8 @@ import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import StepAuthentication from '@secrets/modals/CreateWinRmCredModal/views/StepAuthentication'
 import { clickSubmit } from '@common/utils/JestFormHelper'
-import { usePutSecret, usePostSecret, WinRmAuthDTO } from 'services/cd-ng'
+import type { WinRmAuthDTO } from 'services/cd-ng';
+import { usePutSecret, usePostSecret } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
 jest.mock('services/cd-ng')

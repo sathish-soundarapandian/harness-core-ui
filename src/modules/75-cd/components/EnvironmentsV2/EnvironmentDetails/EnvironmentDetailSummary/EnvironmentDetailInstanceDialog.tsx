@@ -5,11 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
+import type { Dispatch, SetStateAction} from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Container, Dialog, ExpandingSearchInput, ExpandingSearchInputHandle, Text } from '@harness/uicore'
+import type { ExpandingSearchInputHandle} from '@harness/uicore';
+import { Container, Dialog, ExpandingSearchInput, Text } from '@harness/uicore'
 import type {
   InstanceGroupedByArtifactV2,
   InstanceGroupedByInfrastructureV2,
@@ -17,7 +19,8 @@ import type {
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { EnvironmentDetailTable, InfraViewFilters, TableType } from './EnvironmentDetailTable'
+import type { InfraViewFilters} from './EnvironmentDetailTable';
+import { EnvironmentDetailTable, TableType } from './EnvironmentDetailTable'
 import EnvironmentDetailInfraView from './EnvironmentDetailInfraView'
 
 import css from './EnvironmentDetailSummary.module.scss'

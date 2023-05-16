@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { CSSProperties } from 'react'
+import type { CSSProperties } from 'react';
+import React from 'react'
 import { Button, Text, Popover, Container, useToggleOpen, Dialog } from '@harness/uicore'
 import { Classes, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -13,7 +14,8 @@ import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 
 import { useConfigureOptionsContext } from './ConfigureOptionsContext'
-import ConfigureOptionsDialog, { ConfigureOptionsDialogProps } from './ConfigureOptionsDialog'
+import type { ConfigureOptionsDialogProps } from './ConfigureOptionsDialog';
+import ConfigureOptionsDialog from './ConfigureOptionsDialog'
 import { ALLOWED_VALUES_TYPE } from './constants'
 import { VALIDATORS } from './validators'
 import css from './ConfigureOptions.module.scss'

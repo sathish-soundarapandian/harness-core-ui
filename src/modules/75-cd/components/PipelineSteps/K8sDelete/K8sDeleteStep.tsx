@@ -6,6 +6,10 @@
  */
 
 import React from 'react'
+import type {
+  IconName,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -13,26 +17,27 @@ import {
   Formik,
   FormInput,
   getMultiTypeFromValue,
-  IconName,
   Layout,
   MultiTypeInputType,
   Text,
-  Icon,
-  AllowedTypes
+  Icon
 } from '@harness/uicore'
 import { Intent, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { FieldArray, FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+import type { FormikErrors, FormikProps} from 'formik';
+import { FieldArray, yupToFormErrors } from 'formik'
 import { v4 as uuid } from 'uuid'
 import type { IOptionProps } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { defaultTo, isEmpty, unset } from 'lodash-es'
-import {
+import type {
   StepFormikFowardRef,
-  setFormikRef,
   StepProps,
-  StepViewType,
   ValidateInputSetProps
+} from '@pipeline/components/AbstractSteps/Step';
+import {
+  setFormikRef,
+  StepViewType
 } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
 

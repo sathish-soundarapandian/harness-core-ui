@@ -8,7 +8,8 @@
 import React from 'react'
 import type { IconName } from '@blueprintjs/core'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps } from '@pipeline/components/AbstractSteps/Step';
+import { Step } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { PipelineContextInterface } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'

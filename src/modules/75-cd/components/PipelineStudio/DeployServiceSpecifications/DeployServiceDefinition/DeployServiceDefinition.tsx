@@ -6,7 +6,8 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Layout, SelectOption, useConfirmationDialog } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { debounce, defaultTo, get, isEqual, set, unset } from 'lodash-es'
 import produce from 'immer'

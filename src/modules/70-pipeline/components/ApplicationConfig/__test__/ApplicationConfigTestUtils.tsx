@@ -6,15 +6,18 @@
  */
 
 import React from 'react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import pipelineContextMock from '@pipeline/components/ManifestSelection/__tests__/pipeline_mock.json'
 import connectorsData from '@pipeline/components/ManifestSelection/__tests__/connectors_mock.json'
-import {
+import type {
   ApplicationConfigSelectionProps,
-  ApplicationConfigSelectionTypes,
   ConnectorTypes,
-  ModalViewOption,
   WizardStepNames
+} from '../ApplicationConfig.types';
+import {
+  ApplicationConfigSelectionTypes,
+  ModalViewOption
 } from '../ApplicationConfig.types'
 import ApplicationConfigWizardStepTwo from '../ApplicationConfigListView/ApplicationConfigWizard/ApplicationConfigWizardStepTwo'
 

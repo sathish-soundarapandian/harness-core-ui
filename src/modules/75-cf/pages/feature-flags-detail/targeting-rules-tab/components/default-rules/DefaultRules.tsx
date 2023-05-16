@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
-import { FormInput, Heading, SelectOption } from '@harness/uicore'
+import type { ReactElement } from 'react';
+import React from 'react'
+import type { SelectOption } from '@harness/uicore';
+import { FormInput, Heading } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { Variation } from 'services/cf'
 import { CFVariationColors } from '@cf/constants'

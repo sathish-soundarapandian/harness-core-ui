@@ -9,7 +9,8 @@ import { render, screen } from '@testing-library/react'
 
 import React from 'react'
 import { TestWrapper } from '@common/utils/testUtils'
-import TabTargetingFooter, { TargetingRulesTabFooterProps } from '../TargetingRulesTabFooter'
+import type { TargetingRulesTabFooterProps } from '../TargetingRulesTabFooter';
+import TabTargetingFooter from '../TargetingRulesTabFooter'
 
 const renderComponent = (props: Partial<TargetingRulesTabFooterProps> = {}): void => {
   render(

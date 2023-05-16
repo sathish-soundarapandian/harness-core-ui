@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Layout, SelectOption, FormInput, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, FormInput, Text } from '@harness/uicore'
 import { Toothpick, TimeSelect } from '@common/components'
 import { useStrings } from 'framework/strings'
 import ExpressionBreakdown, { ActiveInputs } from '../ExpressionBreakdown/ExpressionBreakdown'

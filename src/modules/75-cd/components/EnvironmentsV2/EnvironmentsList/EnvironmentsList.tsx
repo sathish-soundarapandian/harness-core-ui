@@ -11,10 +11,11 @@ import type { Column } from 'react-table'
 import { defaultTo, get } from 'lodash-es'
 
 import { TableV2, useToaster } from '@harness/uicore'
-import {
+import type {
   EnvironmentResponse,
   EnvironmentResponseDTO,
-  PageEnvironmentResponse,
+  PageEnvironmentResponse} from 'services/cd-ng';
+import {
   useDeleteEnvironmentV2
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'

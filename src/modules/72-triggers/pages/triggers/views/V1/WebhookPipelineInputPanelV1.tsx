@@ -9,8 +9,10 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Text, NestedAccordionProvider, HarnessDocTooltip, PageSpinner } from '@harness/uicore'
 import { get, remove } from 'lodash-es'
-import { InputSetSelector, InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector'
-import { getInputSetForPipelinePromise, InputSetResponse, ResponseInputSetResponse } from 'services/pipeline-ng'
+import type { InputSetSelectorProps } from '@pipeline/components/InputSetSelector/InputSetSelector';
+import { InputSetSelector } from '@pipeline/components/InputSetSelector/InputSetSelector'
+import type { InputSetResponse, ResponseInputSetResponse } from 'services/pipeline-ng';
+import { getInputSetForPipelinePromise } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useQueryParams } from '@common/hooks'

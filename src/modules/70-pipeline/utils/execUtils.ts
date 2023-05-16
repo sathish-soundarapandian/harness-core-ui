@@ -7,7 +7,8 @@
 
 import type { IconName } from '@harness/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
+import type { PipelineGraphState} from '@pipeline/components/PipelineDiagram/types';
+import { PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
 import type { ExecutionGraph, ExecutionNode, NodeRunInfo } from 'services/pipeline-ng'
 import {
   getConditionalExecutionFlag,
@@ -16,6 +17,8 @@ import {
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type {
+  ServiceDependency} from './executionUtils';
 import {
   StepGroupRollbackIdentifier,
   StepNodeType,
@@ -26,7 +29,6 @@ import {
   TopLevelStepNodes,
   hasOnlyLiteEngineTask,
   StepTypeIconsMap,
-  ServiceDependency,
   STATIC_SERVICE_GROUP_NAME,
   isNodeTypeMatrixOrFor,
   NonSelectableStepNodes

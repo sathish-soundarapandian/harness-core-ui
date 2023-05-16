@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { GroupedVirtuoso, GroupedVirtuosoHandle } from 'react-virtuoso'
+import type { GroupedVirtuosoHandle } from 'react-virtuoso';
+import { GroupedVirtuoso } from 'react-virtuoso'
 import { sum } from 'lodash-es'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 
-import { GroupHeader, GroupHeaderProps, LogViewerAccordionStatus } from './GroupHeader/GroupHeader'
+import type { GroupHeaderProps, LogViewerAccordionStatus } from './GroupHeader/GroupHeader';
+import { GroupHeader } from './GroupHeader/GroupHeader'
 import { MultiLogLineMemo as MultiLogLine } from './MultiLogLine/MultiLogLine'
 import type { CommonLogsProps } from './LogsProps'
 import css from '../LogsContent.module.scss'

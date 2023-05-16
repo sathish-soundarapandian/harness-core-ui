@@ -8,7 +8,8 @@
 import React from 'react'
 
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
+import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase';
+import { ManifestSourceBase } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { ManifestContent } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceRuntimeFields/ManifestContent'
 
 export class GoogleCloudFunctionDefinitionManifestSource extends ManifestSourceBase<ManifestSourceRenderProps> {

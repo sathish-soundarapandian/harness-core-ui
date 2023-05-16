@@ -8,15 +8,18 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo as _defaultTo, isEmpty as _isEmpty, values as _values } from 'lodash-es'
-import { Button, Container, Heading, Layout, Select, SelectOption, Text, useToaster } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Button, Container, Heading, Layout, Select, Text, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 import { useModalHook } from '@harness/use-modal'
 import { Utils } from '@ce/common/Utils'
 import { useGatewayContext } from '@ce/context/GatewayContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { AccessPoint, AccessPointCore, useAccessPointResources, useListAccessPoints } from 'services/lw'
+import type { AccessPoint, AccessPointCore} from 'services/lw';
+import { useAccessPointResources, useListAccessPoints } from 'services/lw'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { AccessPointScreenMode } from '@ce/types'
 import type { GatewayDetails } from '../COCreateGateway/models'

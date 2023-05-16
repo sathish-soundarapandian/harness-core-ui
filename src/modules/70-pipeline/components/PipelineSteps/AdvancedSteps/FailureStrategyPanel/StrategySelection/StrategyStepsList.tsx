@@ -7,10 +7,12 @@
 
 import React from 'react'
 import type { FormikContextType } from 'formik'
-import { ThumbnailSelect, ThumbnailSelectProps } from '@harness/uicore'
+import type { ThumbnailSelectProps } from '@harness/uicore';
+import { ThumbnailSelect } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import { StrategyType, stringsMap, strategyIconMap } from '@pipeline/utils/FailureStrategyUtils'
+import type { StrategyType} from '@pipeline/utils/FailureStrategyUtils';
+import { stringsMap, strategyIconMap } from '@pipeline/utils/FailureStrategyUtils'
 
 import css from './StrategySelection.module.scss'
 

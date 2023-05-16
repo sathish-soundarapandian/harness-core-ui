@@ -6,7 +6,8 @@
  */
 
 import { Color } from '@harness/design-system'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import SideNav from '@cf/components/SideNav/SideNav'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 

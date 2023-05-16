@@ -11,10 +11,11 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   CreateFeatureFlagQueryParams,
   Feature,
-  FeatureFlagRequestRequestBody,
+  FeatureFlagRequestRequestBody} from 'services/cf';
+import {
   useCreateFeatureFlag,
   useGetAllFeatures
 } from 'services/cf'

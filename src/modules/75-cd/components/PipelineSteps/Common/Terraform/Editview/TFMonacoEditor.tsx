@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { Dialog, Classes } from '@blueprintjs/core'
-import { FormikProps, connect } from 'formik'
+import type { FormikProps} from 'formik';
+import { connect } from 'formik'
 import { Button } from '@harness/uicore'
 
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'

@@ -21,8 +21,8 @@ import { FileStoreContext } from '@filestore/components/FileStoreContext/FileSto
 import FolderIcon from '@filestore/images/closed-folder.svg'
 import FileIcon from '@filestore/images/file-.svg'
 
-import { FileStoreNodeTypes, FileUsage } from '@filestore/interfaces/FileStore'
-import type { StoreNodeType, SortType } from '@filestore/interfaces/FileStore'
+import { FileStoreNodeTypes } from '@filestore/interfaces/FileStore'
+import type { StoreNodeType, SortType , FileUsage } from '@filestore/interfaces/FileStore'
 import { getFileUsageNameByType, getMenuOptionItems, sortNodesByType } from '@filestore/utils/FileStoreUtils'
 import useDelete from '@filestore/common/useDelete/useDelete'
 import useNewNodeModal from '@filestore/common/useNewNodeModal/useNewNodeModal'

@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { StepWizard, Icon, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { StepWizard, Icon } from '@harness/uicore'
 import type { IconProps } from '@harness/icons'
-import { String, StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { String, useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'

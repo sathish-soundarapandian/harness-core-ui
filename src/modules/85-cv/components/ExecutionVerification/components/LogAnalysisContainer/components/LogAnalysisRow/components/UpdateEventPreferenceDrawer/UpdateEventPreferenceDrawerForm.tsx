@@ -6,7 +6,8 @@ import { Button, ButtonVariation, FormInput, Formik, useToaster, Container, Icon
 import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { LogFeedback, useSaveLogFeedback, useUpdateLogFeedback } from 'services/cv'
+import type { LogFeedback} from 'services/cv';
+import { useSaveLogFeedback, useUpdateLogFeedback } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { getIsValuesUpdated, getRiskItems } from './UpdateEventPreferenceDrawer.utils'
 import EventRiskItem from './component/EventRiskItem'

@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { BurpStepBaseWithRef } from './BurpStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { BURP_DEFAULT_CONFIG, BurpStepVariables, BurpStepVariablesProps } from './BurpStepVariables'
+import type { BurpStepVariablesProps } from './BurpStepVariables';
+import { BURP_DEFAULT_CONFIG, BurpStepVariables } from './BurpStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './BurpStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 

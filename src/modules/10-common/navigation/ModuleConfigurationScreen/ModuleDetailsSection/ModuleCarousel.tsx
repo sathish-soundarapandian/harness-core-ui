@@ -10,8 +10,10 @@ import Lottie from 'react-lottie-player'
 import { Icon } from '@harness/icons'
 import { Container, Layout, Text, Carousel } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
-import { MassagedModuleData, ModuleContentType } from '../useGetContentfulModules'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo';
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import type { MassagedModuleData} from '../useGetContentfulModules';
+import { ModuleContentType } from '../useGetContentfulModules'
 import CarouselImageAndDescription from '../CarousellmageAndDescription/CarousellmageAndDescription'
 import LottieRenderer from '../LottieRenderer/LottieRenderer'
 import css from './ModuleCarousel.module.scss'

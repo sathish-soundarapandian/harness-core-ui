@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { TooltipContextProvider } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import ListingPageHeading, { ListingPageHeadingProps } from '../ListingPageHeading'
+import type { ListingPageHeadingProps } from '../ListingPageHeading';
+import ListingPageHeading from '../ListingPageHeading'
 
 const renderComponent = (
   heading: string,

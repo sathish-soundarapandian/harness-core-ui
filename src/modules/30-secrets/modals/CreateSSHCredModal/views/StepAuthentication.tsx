@@ -6,23 +6,24 @@
  */
 
 import React, { useState } from 'react'
-import {
+import type {
   StepProps,
+  ModalErrorHandlerBinding} from '@harness/uicore';
+import {
   Container,
   Formik,
   FormikForm,
   Button,
   Text,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   Layout
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 
-import { SecretRequestWrapper, usePostSecret, SSHAuthDTO, usePutSecret, SecretDTOV2 } from 'services/cd-ng'
-import type { KerberosConfigDTO, SSHConfigDTO, SSHKeySpecDTO } from 'services/cd-ng'
+import { usePostSecret, usePutSecret } from 'services/cd-ng'
+import type { KerberosConfigDTO, SSHConfigDTO, SSHKeySpecDTO , SecretRequestWrapper, SSHAuthDTO, SecretDTOV2 } from 'services/cd-ng'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import SSHAuthFormFields from '@secrets/components/SSHAuthFormFields/SSHAuthFormFields'
 import { buildAuthConfig } from '@secrets/utils/SSHAuthUtils'

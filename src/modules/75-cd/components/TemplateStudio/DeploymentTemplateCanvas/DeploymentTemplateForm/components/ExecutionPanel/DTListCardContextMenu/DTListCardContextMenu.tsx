@@ -10,8 +10,9 @@ import { Button } from '@harness/uicore'
 import type { PopoverProps } from '@harness/uicore/dist/components/Popover/Popover'
 import { Classes } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
+import type {
+  TemplateMenuItem} from '@templates-library/components/TemplatesActionPopover/TemplatesActionPopover';
 import {
-  TemplateMenuItem,
   TemplatesActionPopover
 } from '@templates-library/components/TemplatesActionPopover/TemplatesActionPopover'
 import type { TemplateSummaryResponse } from 'services/template-ng'

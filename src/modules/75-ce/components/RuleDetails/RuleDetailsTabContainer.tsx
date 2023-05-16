@@ -7,17 +7,20 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { isEmpty, defaultTo, get } from 'lodash-es'
-import { Accordion, Container, Icon, IconName, Layout, Table, Text, TextProps, useToaster } from '@harness/uicore'
+import type { IconName, TextProps} from '@harness/uicore';
+import { Accordion, Container, Icon, Layout, Table, Text, useToaster } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
-import { AccessPoint, Opts, Resource, Service, ServiceDep, useRouteDetails, useSaveService } from 'services/lw'
+import type { AccessPoint, Opts, Resource, Service, ServiceDep} from 'services/lw';
+import { useRouteDetails, useSaveService } from 'services/lw'
 import { useStrings } from 'framework/strings'
 import { InstanceStatusIndicatorV2 } from '@ce/common/InstanceStatusIndicator/InstanceStatusIndicator'
 import { Utils } from '@ce/common/Utils'
 import CopyButton from '@common/utils/CopyButton'
 import { allProviders, ceConnectorTypes, GatewayKindType } from '@ce/constants'
-import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
+import type { ConnectorInfoDTO} from 'services/cd-ng';
+import { useGetConnector } from 'services/cd-ng'
 import { useBooleanStatus } from '@common/hooks'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'

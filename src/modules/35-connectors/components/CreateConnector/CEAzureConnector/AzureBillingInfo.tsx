@@ -7,6 +7,10 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import type {
+  ModalErrorHandlerBinding,
+  StepProps
+} from '@harness/uicore';
 import {
   Button,
   Formik,
@@ -14,15 +18,14 @@ import {
   FormInput,
   Heading,
   Layout,
-  ModalErrorHandler,
-  ModalErrorHandlerBinding,
-  StepProps
+  ModalErrorHandler
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   ConnectorInfoDTO,
   ConnectorConfigDTO,
-  ConnectorRequestBody,
+  ConnectorRequestBody} from 'services/cd-ng';
+import {
   useCreateConnector,
   useUpdateConnector
 } from 'services/cd-ng'

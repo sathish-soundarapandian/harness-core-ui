@@ -15,7 +15,8 @@ import type { AccountPathProps, Module } from '@common/interfaces/RouteInterface
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useQueryParams } from '@common/hooks'
 import { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { ResponseModuleLicenseDTO, useStartFreeLicense } from 'services/cd-ng'
+import type { ResponseModuleLicenseDTO} from 'services/cd-ng';
+import { useStartFreeLicense } from 'services/cd-ng'
 import useChaosModal from '@chaos/modals/ChaosTrialModal/useChaosTrialModal'
 import routes from '@common/RouteDefinitions'
 import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'

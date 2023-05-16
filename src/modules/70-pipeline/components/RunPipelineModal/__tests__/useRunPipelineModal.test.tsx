@@ -10,7 +10,8 @@ import { act, fireEvent, render } from '@testing-library/react'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { GetInputSetsResponse } from '@pipeline/pages/inputSet-list/__tests__/InputSetListMocks'
-import { RunPipelineModalParams, useRunPipelineModal } from '../useRunPipelineModal'
+import type { RunPipelineModalParams} from '../useRunPipelineModal';
+import { useRunPipelineModal } from '../useRunPipelineModal'
 import { getMockFor_Generic_useMutate, getMockFor_useGetTemplateFromPipeline } from './mocks'
 
 const props: RunPipelineModalParams & GitQueryParams = {

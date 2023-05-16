@@ -8,7 +8,8 @@
 import React from 'react'
 import * as uuid from 'uuid'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 

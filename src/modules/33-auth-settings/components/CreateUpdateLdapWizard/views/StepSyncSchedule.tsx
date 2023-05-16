@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useRef, useState } from 'react'
+import type { ReactElement} from 'react';
+import React, { useRef, useState } from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Formik,
   FormikForm,
   Layout,
-  StepProps,
   Text,
   useConfirmationDialog,
   useToaster
@@ -23,7 +25,8 @@ import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
-import { ExpressionBreakdownInterface, scheduleTabsId } from '@common/components/SchedulePanel/components/utils'
+import type { ExpressionBreakdownInterface} from '@common/components/SchedulePanel/components/utils';
+import { scheduleTabsId } from '@common/components/SchedulePanel/components/utils'
 import { String, useStrings } from 'framework/strings'
 import { useGetIterationsFromCron } from 'services/portal'
 import { getErrorMessage } from '@auth-settings/utils'

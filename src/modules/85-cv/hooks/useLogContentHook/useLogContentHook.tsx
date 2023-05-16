@@ -13,7 +13,8 @@ import { Dialog } from '@harness/uicore'
 import VerifyStepLogContent from './views/VerifyStepLogContent'
 import SLOLogContent from './views/SLOLogContent'
 import MonitoredServiceLogContent from './views/MonitoredServiceLogContent'
-import { LogTypes, UseLogContentHookProps, UseLogContentHookReturn } from './useLogContentHook.types'
+import type { UseLogContentHookProps, UseLogContentHookReturn } from './useLogContentHook.types';
+import { LogTypes } from './useLogContentHook.types'
 import css from './useLogContentHook.module.scss'
 
 export const useLogContentHook = ({

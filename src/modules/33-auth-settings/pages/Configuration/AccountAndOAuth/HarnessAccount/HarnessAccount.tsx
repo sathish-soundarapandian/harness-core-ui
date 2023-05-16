@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react';
+import React from 'react'
 import { Layout, Switch, Collapse, useConfirmationDialog } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'

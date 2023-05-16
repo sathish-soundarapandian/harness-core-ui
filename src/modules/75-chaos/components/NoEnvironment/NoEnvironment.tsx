@@ -8,7 +8,8 @@
 import React from 'react'
 import { String, useStrings } from 'framework/strings'
 import EmptyContent from './EmptyContent.svg'
-import EnvironmentDialog, { EnvironmentDialogProps } from '../CreateEnvironmentDialog/EnvironmentDialog'
+import type { EnvironmentDialogProps } from '../CreateEnvironmentDialog/EnvironmentDialog';
+import EnvironmentDialog from '../CreateEnvironmentDialog/EnvironmentDialog'
 import { NoData } from '../NoData/NoData'
 
 export interface NoEnvironmentProps {

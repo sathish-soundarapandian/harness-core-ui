@@ -6,7 +6,8 @@
  */
 
 import React, { useCallback } from 'react'
-import { Container, FormInput, MultiSelectOption, Card, Icon, Layout, Text } from '@harness/uicore'
+import type { MultiSelectOption} from '@harness/uicore';
+import { Container, FormInput, Card, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'

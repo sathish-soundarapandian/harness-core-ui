@@ -6,14 +6,16 @@
  */
 
 import type { DependencyElement } from 'services/ci'
-import {
-  addService,
+import type {
   DependenciesWrapper,
-  getDependenciesState,
-  getDependencyFromNode,
-  getStepsState,
   StepState,
   StepStateMap
+} from '../ExecutionGraphUtil';
+import {
+  addService,
+  getDependenciesState,
+  getDependencyFromNode,
+  getStepsState
 } from '../ExecutionGraphUtil'
 
 describe('ExecutionGraphUtils', () => {

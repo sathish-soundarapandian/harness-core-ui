@@ -15,13 +15,13 @@ import { Accordion, Button, Container, Layout, Popover, Text } from '@harness/ui
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import {
+import type { PipelineInfoConfig ,
   ConnectorCheckResponse,
   PipelineInputResponse,
   PreFlightDTO,
   PreFlightEntityErrorInfo,
-  ResponsePreFlightDTO,
+  ResponsePreFlightDTO} from 'services/pipeline-ng'
+import {
   startPreflightCheckPromise,
   useGetPreflightCheckResponse
 } from 'services/pipeline-ng'
@@ -31,7 +31,8 @@ import type { GitQueryParams, Module } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import css from './PreFlightCheckModal.module.scss'
 
 enum Section {

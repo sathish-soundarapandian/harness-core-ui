@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonVariation, Container, Formik, FormikForm, Layout, StepProps, Text } from '@harness/uicore'
+import type { StepProps} from '@harness/uicore';
+import { Button, ButtonVariation, Container, Formik, FormikForm, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
@@ -14,7 +15,8 @@ import type { FormikHelpers } from 'formik'
 
 import { String, useStrings } from 'framework/strings'
 import { IdentifierSchema } from '@common/utils/Validation'
-import { ConnectorConfigDTO, validateTheIdentifierIsUniquePromise } from 'services/cd-ng'
+import type { ConnectorConfigDTO} from 'services/cd-ng';
+import { validateTheIdentifierIsUniquePromise } from 'services/cd-ng'
 import { validateKubernetesYamlPromise } from 'services/portal'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { delegateNameRegex } from '@delegates/components/CreateDelegate/K8sDelegate/DelegateSetupStep/DelegateSetupStep.constants'

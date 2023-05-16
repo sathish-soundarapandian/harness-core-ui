@@ -13,7 +13,8 @@ import { cloneDeep, debounce, isNil } from 'lodash-es'
 import SplitPane from 'react-split-pane'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useParams } from 'react-router-dom'
-import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
+import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover';
+import { DynamicPopover } from '@common/components/DynamicPopover/DynamicPopover'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StageActions } from '@common/constants/TrackingConstants'
 import type {
@@ -34,7 +35,8 @@ import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/Pipel
 import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
-import { DiagramFactory, NodeType, BaseReactComponentProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
+import type { BaseReactComponentProps } from '@pipeline/components/PipelineDiagram/DiagramFactory';
+import { DiagramFactory, NodeType } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStage'
 import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
 import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
@@ -43,10 +45,14 @@ import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { EmptyStageName, MinimumSplitPaneSize, DefaultSplitPaneSize, MaximumSplitPaneSize } from '../PipelineConstants'
-import {
-  getNewStageFromType,
+import type {
   PopoverData,
   StageState,
+  MoveStageDetailsType,
+  Listeners
+} from './StageBuilderUtil';
+import {
+  getNewStageFromType,
   removeNodeFromPipeline,
   mayBeStripCIProps,
   getNewStageFromTemplate,
@@ -54,10 +60,8 @@ import {
   getLinkEventListeners,
   getNodeEventListerner,
   MoveDirection,
-  MoveStageDetailsType,
   moveStage,
-  getPropagatingStagesFromStage,
-  Listeners
+  getPropagatingStagesFromStage
 } from './StageBuilderUtil'
 import { StageList } from './views/StageList'
 import { SplitViewTypes } from '../PipelineContext/PipelineActions'

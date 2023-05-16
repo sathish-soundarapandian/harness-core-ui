@@ -7,9 +7,11 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, CardSelect, Container, Text, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Layout, CardSelect, Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { DelegateSizeDetails, useGetDelegateSizes } from 'services/portal'
+import type { DelegateSizeDetails} from 'services/portal';
+import { useGetDelegateSizes } from 'services/portal'
 
 import { useStrings } from 'framework/strings'
 

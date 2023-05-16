@@ -6,12 +6,13 @@
  */
 
 import React from 'react'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
+import type { IDialogProps } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core'
 import { object as yupObject, string as yupString } from 'yup'
 import { Button, Container, Formik, FormikForm } from '@harness/uicore'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
-import { StringKeys, useStrings } from 'framework/strings'
-import type { UseStringsReturn } from 'framework/strings'
+import { useStrings } from 'framework/strings'
+import type { UseStringsReturn , StringKeys} from 'framework/strings'
 import css from './ManualInputQueryModal.module.scss'
 
 interface UseManualInputQueryModalProps {

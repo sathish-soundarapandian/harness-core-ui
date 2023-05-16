@@ -5,12 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect, useMemo, useState } from 'react'
-import { AvatarGroup, AvatarGroupProps, Button, ButtonVariation, Layout, Text } from '@harness/uicore'
+import type { FC} from 'react';
+import React, { useEffect, useMemo, useState } from 'react'
+import type { AvatarGroupProps} from '@harness/uicore';
+import { AvatarGroup, Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { Variation } from 'services/cf'
 import { VariationWithIcon } from '@cf/components/VariationWithIcon/VariationWithIcon'
-import ItemVariationDialog, { ItemVariationDialogProps } from './ItemVariationDialog'
+import type { ItemVariationDialogProps } from './ItemVariationDialog';
+import ItemVariationDialog from './ItemVariationDialog'
 import css from './ServeVariationToItem.module.scss'
 
 export interface ServeVariationToItemProps {

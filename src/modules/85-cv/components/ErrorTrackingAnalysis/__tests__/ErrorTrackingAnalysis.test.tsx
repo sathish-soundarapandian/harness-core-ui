@@ -15,7 +15,8 @@ import {
   mockedClustersData,
   mockedHealthSourcesData
 } from '@cv/pages/monitored-service/components/ServiceHealth/components/MetricsAndLogs/__tests__/MetricsAndLogs.mock'
-import { ErrorTrackingAnalysisProps, ErrorTrackingEvents } from '../ErrorTrackingAnalysis.types'
+import type { ErrorTrackingAnalysisProps} from '../ErrorTrackingAnalysis.types';
+import { ErrorTrackingEvents } from '../ErrorTrackingAnalysis.types'
 import { mockedErrorTrackingAnalysisData } from './ErrorTrackingAnalysis.mocks'
 
 const WrapperComponent = (props: ErrorTrackingAnalysisProps): JSX.Element => {

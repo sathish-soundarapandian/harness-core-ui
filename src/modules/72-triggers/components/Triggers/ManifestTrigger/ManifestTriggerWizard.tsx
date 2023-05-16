@@ -22,7 +22,8 @@ import {
   useConfirmationDialog,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
-import { getPipelineInputs, InputsResponseBody } from '@harnessio/react-pipeline-service-client'
+import type { InputsResponseBody } from '@harnessio/react-pipeline-service-client';
+import { getPipelineInputs } from '@harnessio/react-pipeline-service-client'
 import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import Wizard from '@common/components/Wizard/Wizard'
@@ -53,13 +54,15 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 
-import { Failure, getConnectorListV2Promise, GetConnectorQueryParams, useGetConnector } from 'services/cd-ng'
-import {
+import type { Failure, GetConnectorQueryParams} from 'services/cd-ng';
+import { getConnectorListV2Promise, useGetConnector } from 'services/cd-ng'
+import type {
   GetTriggerQueryParams,
   NGTriggerConfigV2,
   NGTriggerSourceV2,
   PipelineInfoConfig,
-  ResponseNGTriggerResponse,
+  ResponseNGTriggerResponse} from 'services/pipeline-ng';
+import {
   useCreateTrigger,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   useGetPipeline,

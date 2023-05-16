@@ -7,17 +7,21 @@
 
 import React from 'react'
 import type { IFormGroupProps } from '@blueprintjs/core'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
+import type {
+  MultiTypeInputProps,
+  SelectOption
+} from '@harness/uicore';
 import {
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  MultiTypeInputProps,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions';
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 interface FormMultiTypeInputProps extends Omit<IFormGroupProps, 'labelFor'> {
   name: string

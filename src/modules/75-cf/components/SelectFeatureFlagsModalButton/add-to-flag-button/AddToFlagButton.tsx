@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement } from 'react'
-import { ButtonProps as CoreButtonProps, ButtonVariation } from '@harness/uicore'
+import type { ReactElement } from 'react';
+import React from 'react'
+import type { ButtonProps as CoreButtonProps} from '@harness/uicore';
+import { ButtonVariation } from '@harness/uicore'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'

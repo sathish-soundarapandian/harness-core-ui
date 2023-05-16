@@ -8,13 +8,14 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
+import type {
+  SelectOption,
+  MultiSelectOption} from '@harness/uicore';
 import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   FormikForm,
   FormInput,
-  SelectOption,
-  MultiSelectOption,
   MultiSelectTypeInput,
   Label
 } from '@harness/uicore'
@@ -28,7 +29,8 @@ import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import { Servicev1ApplicationQuery, useApplicationServiceListApps } from 'services/gitops'
+import type { Servicev1ApplicationQuery} from 'services/gitops';
+import { useApplicationServiceListApps } from 'services/gitops'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import type { ApplicationFilters, applicationListItemInterface } from './types'
 import { useApplicationsFilter } from './useApplicationsFilter'

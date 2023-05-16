@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen } from '@testing-library/react'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { Segment, Variation } from 'services/cf'
+import type {
+  ServeVariationToTargetGroupProps} from '../ServeVariationToTargetGroup';
 import ServeVariationToTargetGroup, {
-  ServeVariationToTargetGroupProps,
   serveVariationToTargetGroupSchema
 } from '../ServeVariationToTargetGroup'
 import {

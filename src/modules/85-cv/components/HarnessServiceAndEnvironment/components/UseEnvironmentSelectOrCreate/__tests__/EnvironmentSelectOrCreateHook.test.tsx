@@ -9,7 +9,8 @@ import { MultiSelectDropDown } from '@harness/uicore'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import { MultiselectEnv, useEnvironmentSelectOrCreate } from '../EnvironmentSelectOrCreateHook'
+import type { MultiselectEnv} from '../EnvironmentSelectOrCreateHook';
+import { useEnvironmentSelectOrCreate } from '../EnvironmentSelectOrCreateHook'
 
 jest.mock('@common/modals/HarnessEnvironmentModal/HarnessEnvironmentModal', () => {
   return {

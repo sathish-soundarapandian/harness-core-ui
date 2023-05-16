@@ -7,14 +7,15 @@
 
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
-import {
+import type {
   StepProps,
+  ModalErrorHandlerBinding} from '@harness/uicore';
+import {
   Formik,
   FormikForm,
   Layout,
   Text,
   ModalErrorHandler,
-  ModalErrorHandlerBinding,
   Button,
   ButtonVariation,
   Container,
@@ -23,12 +24,14 @@ import {
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import {
-  useCreateConnector,
-  useUpdateConnector,
+import type {
   ConnectorConfigDTO,
   ConnectorRequestBody,
   ConnectorInfoDTO
+} from 'services/cd-ng';
+import {
+  useCreateConnector,
+  useUpdateConnector
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'

@@ -7,16 +7,19 @@
 
 import React, { useMemo } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
-import { FormInput, Layout, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, Layout, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
-import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase';
+import { ArtifactSourceBase } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import {
+import type {
   AzureArtifactsFeed,
   AzureArtifactsPackage,
   AzureDevopsProject,
   BuildDetails,
-  SidecarArtifact,
+  SidecarArtifact} from 'services/cd-ng';
+import {
   useListFeedsForAzureArtifactsWithServiceV2,
   useListPackagesForAzureArtifactsWithServiceV2,
   useListProjectsForAzureArtifactsWithServiceV2,

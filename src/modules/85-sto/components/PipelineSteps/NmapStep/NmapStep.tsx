@@ -17,7 +17,8 @@ import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps
 import type { StringsMap } from 'stringTypes'
 import { NmapStepBaseWithRef } from './NmapStepBase'
 import { SecurityStepInputSet } from '../SecurityStepInputSet'
-import { NmapStepVariables, NmapStepVariablesProps } from './NmapStepVariables'
+import type { NmapStepVariablesProps } from './NmapStepVariables';
+import { NmapStepVariables } from './NmapStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './NmapStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 import { NMAP_DEFAULT_CONFIG } from '../constants'

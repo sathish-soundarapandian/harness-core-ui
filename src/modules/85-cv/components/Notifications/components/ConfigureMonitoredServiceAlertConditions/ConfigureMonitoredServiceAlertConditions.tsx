@@ -22,10 +22,11 @@ import {
   getUpdatedNotificationRules,
   validateNotificationConditions
 } from '../../NotificationsContainer.utils'
-import {
+import type {
   ConfigureMonitoredServiceAlertConditionsProps,
   NotificationConditions,
-  NotificationRule,
+  NotificationRule} from '../../NotificationsContainer.types';
+import {
   SRMNotificationType
 } from '../../NotificationsContainer.types'
 import type { FieldValueType, MoreFieldsType } from '../NotificationRuleRow/NotificationRuleRow.types'

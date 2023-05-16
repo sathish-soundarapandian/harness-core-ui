@@ -6,10 +6,11 @@
  */
 
 import React, { useState, useRef } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Layout,
   FormInput,
-  SelectOption,
   Formik,
   FormikForm,
   MultiTypeInputType,
@@ -22,9 +23,10 @@ import { useParams } from 'react-router-dom'
 import { debounce, noop, get, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import {
+import type {
   AzureTagDTO,
-  SshWinRmAzureInfrastructure,
+  SshWinRmAzureInfrastructure} from 'services/cd-ng';
+import {
   useGetAzureResourceGroupsBySubscription,
   useGetAzureSubscriptions,
   useGetSubscriptionTags
@@ -35,8 +37,9 @@ import { Connectors } from '@connectors/constants'
 import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import type {
+  ConnectorReferenceDTO} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField';
 import {
-  ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
@@ -48,8 +51,9 @@ import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiT
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import type {
+  AzureInfrastructureSpecEditableProps} from './SshWinRmAzureInfrastructureInterface';
 import {
-  AzureInfrastructureSpecEditableProps,
   getValidationSchema,
   subscriptionLabel,
   resourceGroupLabel

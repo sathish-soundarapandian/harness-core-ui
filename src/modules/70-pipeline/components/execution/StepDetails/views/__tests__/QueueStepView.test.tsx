@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { ExecutionNode, ResourceConstraintDetail, useGetResourceConstraintsExecutionInfo } from 'services/pipeline-ng'
+import type { ExecutionNode, ResourceConstraintDetail} from 'services/pipeline-ng';
+import { useGetResourceConstraintsExecutionInfo } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { QueueStepView } from '../QueueStepView/QueueStepView'
 import { executionMetadata } from './mock'

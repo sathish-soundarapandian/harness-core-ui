@@ -9,13 +9,15 @@ import React, { useState } from 'react'
 import { Container, Layout, Text, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
-import ResourceHandlerTable, {
+import type {
   ResourceHandlerTableData
-} from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
+} from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable';
+import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
 import { PageSpinner } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
-import { EnvironmentResponseDTO, useGetEnvironmentList } from 'services/cd-ng'
+import type { EnvironmentResponseDTO} from 'services/cd-ng';
+import { useGetEnvironmentList } from 'services/cd-ng'
 
 // eslint-disable-next-line react/function-component-definition
 const RenderColumnPipeline: Renderer<CellProps<EnvironmentResponseDTO>> = ({ row }) => {

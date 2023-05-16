@@ -12,7 +12,8 @@ import { isEmpty } from 'lodash-es'
 import { Container, FormInput, Icon, PageError } from '@harness/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { useGetMetricPacks, GetMetricPacksQueryParams, MetricPackDTO } from 'services/cv'
+import type { GetMetricPacksQueryParams, MetricPackDTO } from 'services/cv';
+import { useGetMetricPacks } from 'services/cv'
 import css from './MonitoredServiceConnector.module.scss'
 
 export default function MetricPack({

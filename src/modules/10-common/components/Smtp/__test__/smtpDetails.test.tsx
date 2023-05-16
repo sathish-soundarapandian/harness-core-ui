@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult, act, fireEvent, getByText, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, act, fireEvent, getByText, waitFor } from '@testing-library/react'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import SmtpDetails from '../SmtpDetails'
 let validateNameCalled = false

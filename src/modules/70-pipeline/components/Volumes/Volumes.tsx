@@ -6,6 +6,10 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypesWithRunTime,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   FormInput,
   Text,
@@ -13,17 +17,17 @@ import {
   Container,
   MultiTypeInputType,
   Layout,
-  getMultiTypeFromValue,
-  AllowedTypesWithRunTime,
-  AllowedTypes
+  getMultiTypeFromValue
 } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik';
+import { FieldArray } from 'formik'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import css from './Volumes.module.scss'
 
 export interface AddConditionInterface {

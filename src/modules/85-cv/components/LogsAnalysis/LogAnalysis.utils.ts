@@ -9,7 +9,8 @@ import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/Step
 import type { UseStringsReturn } from 'framework/strings'
 import type { AnalyzedLogDataDTO } from 'services/cv'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
-import { LogAnalysisRowData, LogEvents } from './LogAnalysis.types'
+import type { LogAnalysisRowData} from './LogAnalysis.types';
+import { LogEvents } from './LogAnalysis.types'
 
 export const getClusterTypes = (getString: UseStringsReturn['getString']): SelectOption[] => {
   return [

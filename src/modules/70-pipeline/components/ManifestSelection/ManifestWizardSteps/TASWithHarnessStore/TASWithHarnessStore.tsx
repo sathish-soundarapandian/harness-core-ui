@@ -6,8 +6,11 @@
  */
 
 import React from 'react'
-import {
+import type {
   AllowedTypes,
+  SelectOption,
+  StepProps} from '@harness/uicore';
+import {
   Button,
   ButtonVariation,
   Container,
@@ -17,8 +20,6 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  SelectOption,
-  StepProps,
   Text
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'

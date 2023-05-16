@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react';
+import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'

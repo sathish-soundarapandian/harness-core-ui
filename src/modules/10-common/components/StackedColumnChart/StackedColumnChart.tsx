@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo } from 'react'
-import Highcharts, { SeriesColumnOptions } from 'highcharts'
+import type { SeriesColumnOptions } from 'highcharts';
+import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { merge } from 'lodash-es'
 

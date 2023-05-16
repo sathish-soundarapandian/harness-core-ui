@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo } from 'react'
-import { Checkbox, PaginationProps, TableV2 } from '@harness/uicore'
+import type { PaginationProps} from '@harness/uicore';
+import { Checkbox, TableV2 } from '@harness/uicore'
 import type { CellProps, Column } from 'react-table'
 import produce from 'immer'
 import css from './ResourceHandlerTable.module.scss'

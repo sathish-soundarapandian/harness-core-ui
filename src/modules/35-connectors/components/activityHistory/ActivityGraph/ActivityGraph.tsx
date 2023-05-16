@@ -11,14 +11,17 @@ import { useParams } from 'react-router-dom'
 import { Container, PageSpinner } from '@harness/uicore'
 import HighchartsReact from 'highcharts-react-official'
 import { Color } from '@harness/design-system'
-import Highcharts, { SeriesColumnOptions } from 'highcharts'
+import type { SeriesColumnOptions } from 'highcharts';
+import Highcharts from 'highcharts'
 import type { DateRange } from '@blueprintjs/datetime'
-import {
+import type {
   GetActivitiesSummaryQueryParams,
-  useGetActivitiesSummary,
   ListActivitiesQueryParams,
   GetConnectivitySummaryQueryParams,
   ResponsePageActivitySummary
+} from 'services/cd-ng';
+import {
+  useGetActivitiesSummary
 } from 'services/cd-ng'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { useStrings } from 'framework/strings'

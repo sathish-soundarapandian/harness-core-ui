@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { FlexExpander, Layout, SelectOption, Container } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { FlexExpander, Layout, Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { pick } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
@@ -14,7 +15,8 @@ import { useStrings } from 'framework/strings'
 import TimeRangePicker from '@common/components/TimeRangePicker/TimeRangePicker'
 import type { setTimeRangeFn } from '@ce/types'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
-import { FilterDTO, FilterStatsDTO, useAnomalyFilterValues, useGetFilterList } from 'services/ce'
+import type { FilterDTO, FilterStatsDTO} from 'services/ce';
+import { useAnomalyFilterValues, useGetFilterList } from 'services/ce'
 import { flattenObject, removeNullAndEmpty, UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import { anomalyFilterValueColumns } from '@ce/utils/anomaliesUtils'

@@ -5,13 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useEffect, useMemo } from 'react'
+import type { FC} from 'react';
+import React, { useEffect, useMemo } from 'react'
 import * as Yup from 'yup'
-import { FormInput, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { FormInput } from '@harness/uicore'
 import type { Feature } from 'services/cf'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { CFPipelineInstructionType } from '@cf/components/PipelineSteps/FlagConfigurationStep/types'
-import SubSection, { SubSectionProps } from '../SubSection'
+import type { SubSectionProps } from '../SubSection';
+import SubSection from '../SubSection'
 
 export const defaultRulesSchema = (getString: UseStringsReturn['getString']): Yup.Schema<any> =>
   Yup.object({

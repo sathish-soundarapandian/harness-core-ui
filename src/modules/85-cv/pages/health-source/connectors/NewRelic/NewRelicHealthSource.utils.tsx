@@ -6,7 +6,8 @@
  */
 
 import { cloneDeep, isEmpty, isEqual, omit } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { MetricPackDTO } from 'services/cv'
 import { isMultiTypeRuntime } from '@common/utils/utils'

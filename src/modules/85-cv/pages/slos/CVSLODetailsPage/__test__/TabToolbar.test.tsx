@@ -7,15 +7,18 @@
 
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { render, RenderResult, screen, waitFor, getByText, queryByText } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { render, screen, waitFor, getByText, queryByText } from '@testing-library/react'
 import * as cvService from 'services/cv'
 import routes from '@common/RouteDefinitions'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
-import {
-  LogTypes,
+import type {
   SLOLogContentProps,
   VerifyStepLogContentProps
+} from '@cv/hooks/useLogContentHook/useLogContentHook.types';
+import {
+  LogTypes
 } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
 import TabToolbar from '../DetailsPanel/views/TabToolbar'
 import { testWrapperProps, responseSLODashboardDetail, pathParams } from './CVSLODetailsPage.mock'

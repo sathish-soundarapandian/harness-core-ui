@@ -5,13 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback, useMemo, useState } from 'react'
+import type { FC} from 'react';
+import React, { useCallback, useMemo, useState } from 'react'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Layout,
   ModalDialog,
-  SelectOption,
   FormInput,
   Formik,
   FormikForm,

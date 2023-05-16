@@ -6,12 +6,13 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import type {
+  StepProps} from '@harness/uicore';
 import {
   Layout,
   Button,
   Formik,
   Text,
-  StepProps,
   Container,
   ButtonVariation,
   PageSpinner,
@@ -19,7 +20,8 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { DelegateCardInterface, setupGCPFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import type { DelegateCardInterface} from '@connectors/pages/connectors/utils/ConnectorUtils';
+import { setupGCPFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { DelegateTypes } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'

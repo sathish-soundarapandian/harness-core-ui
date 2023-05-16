@@ -6,14 +6,16 @@
  */
 
 import React, { useState } from 'react'
-import { Button, Heading, Container, Layout, IconName, Icon, Text } from '@harness/uicore'
+import type { IconName} from '@harness/uicore';
+import { Button, Heading, Container, Layout, Icon, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import type { StringsMap } from 'stringTypes'
 import type { Module } from '@common/interfaces/RouteInterfaces'
-import ModuleInfoCards, { ModuleInfoCard, getInfoCardsProps } from '@common/components/ModuleInfoCards/ModuleInfoCards'
+import type { ModuleInfoCard} from '@common/components/ModuleInfoCards/ModuleInfoCards';
+import ModuleInfoCards, { getInfoCardsProps } from '@common/components/ModuleInfoCards/ModuleInfoCards'
 import { useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
 import { Experiences } from '@common/constants/Utils'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'

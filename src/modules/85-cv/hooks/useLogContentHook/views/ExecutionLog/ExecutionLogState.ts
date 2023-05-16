@@ -12,7 +12,8 @@ import type { ExecutionLogDTO } from 'services/cv'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 import { escapeStringRegexp, sanitizeHTML } from '@common/utils/StringUtils'
 import { getTags } from '@cv/utils/CommonUtils'
-import { Action, ActionType, State, LogLineData, TextKeys, UseActionCreatorReturn } from './ExecutionLog.types'
+import type { Action, State, LogLineData, TextKeys, UseActionCreatorReturn } from './ExecutionLog.types';
+import { ActionType } from './ExecutionLog.types'
 import { defaultReducerState } from './ExecutionLog.constants'
 
 const setExecutionLogs = (state: State, action: Action<ActionType.SetExecutionLogs>): State => {

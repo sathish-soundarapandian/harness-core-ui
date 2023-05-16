@@ -9,7 +9,8 @@ import React from 'react'
 import { get, isEmpty } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'

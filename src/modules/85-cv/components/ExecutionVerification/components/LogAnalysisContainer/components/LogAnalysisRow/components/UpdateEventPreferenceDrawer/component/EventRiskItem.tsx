@@ -1,6 +1,7 @@
 import React from 'react'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { Layout, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { LogFeedback } from 'services/cv'
 import RiskItemIndicator from './component/RiskItemIndicator'

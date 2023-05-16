@@ -7,7 +7,8 @@
 
 import React, { useMemo } from 'react'
 import type { GetDataError } from 'restful-react'
-import { Container, FormInput, MultiSelectOption, SelectOption } from '@harness/uicore'
+import type { MultiSelectOption, SelectOption } from '@harness/uicore';
+import { Container, FormInput } from '@harness/uicore'
 import type { Failure, useGetLabelNames, useGetMetricNames } from 'services/cv'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'

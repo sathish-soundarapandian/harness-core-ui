@@ -8,7 +8,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, Label, SelectOption, useToaster, Layout } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { getMultiTypeFromValue, MultiTypeInputType, Label, useToaster, Layout } from '@harness/uicore'
 import { connect } from 'formik'
 import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'

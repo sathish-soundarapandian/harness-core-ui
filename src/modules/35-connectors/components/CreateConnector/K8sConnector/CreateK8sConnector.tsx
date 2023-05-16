@@ -9,10 +9,11 @@ import React from 'react'
 import { StepWizard } from '@harness/uicore'
 import { pick } from 'lodash-es'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import type {
+  CreateConnectorModalProps} from '@connectors/constants';
 import {
   Connectors,
   CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
-  CreateConnectorModalProps,
   TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
 import { getConnectorTitleIdByType, getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'

@@ -1,5 +1,6 @@
 import { isEmpty } from 'lodash-es'
-import { SelectOption, Utils } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { LogFeedback } from 'services/cv'

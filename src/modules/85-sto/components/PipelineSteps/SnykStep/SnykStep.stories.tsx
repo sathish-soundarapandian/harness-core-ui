@@ -10,10 +10,12 @@ import type { Meta, Story } from '@storybook/react'
 import { Card, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type {
+  TestStepWidgetProps
+} from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil';
 import {
   factory,
-  TestStepWidget,
-  TestStepWidgetProps
+  TestStepWidget
 } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { SnykStep as SnykStepComponent } from './SnykStep'

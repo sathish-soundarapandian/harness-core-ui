@@ -5,9 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactElement, useEffect, useState } from 'react'
+import type { ReactElement} from 'react';
+import React, { useEffect, useState } from 'react'
 import { FieldArray } from 'formik'
 import { get, isEmpty, set } from 'lodash-es'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   Button,
   FormInput,
@@ -15,15 +18,16 @@ import {
   Layout,
   MultiTypeInputType,
   Radio,
-  SelectOption,
   Text
 } from '@harness/uicore'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import {
+import type {
   ApprovalRejectionCriteriaCondition,
-  ApprovalRejectionCriteriaProps,
+  ApprovalRejectionCriteriaProps} from '@pipeline/components/PipelineSteps/Steps/Common/types';
+import {
   ApprovalRejectionCriteriaType
 } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { useDeepCompareEffect } from '@common/hooks'

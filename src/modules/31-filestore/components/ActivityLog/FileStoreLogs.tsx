@@ -6,7 +6,8 @@
  */
 
 import React, { useContext, useState, useCallback } from 'react'
-import { DateRangePicker, DateRange, IDateRangeShortcut } from '@blueprintjs/datetime'
+import type { DateRange, IDateRangeShortcut } from '@blueprintjs/datetime';
+import { DateRangePicker } from '@blueprintjs/datetime'
 import { Position } from '@blueprintjs/core'
 import moment from 'moment'
 

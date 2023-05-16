@@ -9,7 +9,8 @@ import type { Dispatch, SetStateAction } from 'react'
 import type QueryString from 'qs'
 import moment from 'moment'
 import type Highcharts from 'highcharts'
-import { Utils, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Utils } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import { Color } from '@harness/design-system'
 import { compact, filter, values, isEmpty } from 'lodash-es'
@@ -35,8 +36,7 @@ import {
   LIST_USER_JOURNEYS_PAGESIZE,
   SLOActionTypes
 } from './CVSLOsListingPage.constants'
-import {
-  SLOCardToggleViews,
+import type {
   GetSLOAndErrorBudgetGraphOptions,
   SLORiskFilter,
   RiskTypes,
@@ -48,6 +48,9 @@ import {
   SLOTargetChartWithChangeTimelineProps,
   GetSLOCommonQueryParamsProps,
   PathParams
+} from './CVSLOsListingPage.types';
+import {
+  SLOCardToggleViews
 } from './CVSLOsListingPage.types'
 import { getMonitoredServicesOptions } from './common/SLI/SLI.utils'
 import { getUserJourneyOptions } from './components/CVCreateSLOV2/CVCreateSLOV2.utils'

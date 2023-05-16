@@ -11,24 +11,31 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { Container, FormInput, Layout, SelectOption, useToaster } from '@harness/uicore'
-import { useStrings, UseStringsReturn } from 'framework/strings'
-import {
-  ConnectorReferenceField,
+import type { SelectOption} from '@harness/uicore';
+import { Container, FormInput, Layout, useToaster } from '@harness/uicore'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
+import type {
   ConnectorSelectedValue
+} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField';
+import {
+  ConnectorReferenceField
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useQueryParams } from '@common/hooks'
 import RepositorySelect from '@common/components/RepositorySelect/RepositorySelect'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata} from '@common/constants/GitSyncTypes';
+import { StoreType } from '@common/constants/GitSyncTypes'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
-import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
+import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler';
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { Connectors } from '@connectors/constants'
 import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import { yamlPathRegex } from '@common/utils/StringUtils'
-import { ConnectorInfoDTO, GetConnectorQueryParams, useGetConnector, useGetSettingValue } from 'services/cd-ng'
+import type { ConnectorInfoDTO, GetConnectorQueryParams} from 'services/cd-ng';
+import { useGetConnector, useGetSettingValue } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import css from './GitSyncForm.module.scss'

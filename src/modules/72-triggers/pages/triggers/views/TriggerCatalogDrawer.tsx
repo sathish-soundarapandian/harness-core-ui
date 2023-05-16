@@ -11,7 +11,8 @@ import { AddDrawer, PageSpinner, useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { useGetTriggerCatalog } from 'services/pipeline-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { DrawerContext, ItemInterface } from '@common/components/AddDrawer/AddDrawer'
+import type { ItemInterface } from '@common/components/AddDrawer/AddDrawer';
+import { DrawerContext } from '@common/components/AddDrawer/AddDrawer'
 import { getTriggerCategoryDrawerMapFromTriggerCatalogItem } from '../utils/TriggersListUtils'
 import { getErrorMessage } from '../utils/TriggersWizardPageUtils'
 

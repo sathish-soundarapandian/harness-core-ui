@@ -7,15 +7,16 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import cx from 'classnames'
+import type {
+  StepProps,
+  SelectOption} from '@harness/uicore';
 import {
   Formik,
   Layout,
   Button,
-  StepProps,
   Text,
   ButtonVariation,
   MultiTypeInputType,
-  SelectOption,
   getMultiTypeFromValue,
   FormInput,
   FormikForm
@@ -28,17 +29,19 @@ import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
-import { AMITagObject, BuildDetails, ConnectorConfigDTO, useListVersionsForAMIArtifact } from 'services/cd-ng'
+import type { AMITagObject, BuildDetails, ConnectorConfigDTO} from 'services/cd-ng';
+import { useListVersionsForAMIArtifact } from 'services/cd-ng'
 import {
   getConnectorIdValue,
   getArtifactFormData,
   amiFilters,
   shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import {
+import type {
   AmazonMachineImageInitialValuesType,
   ArtifactType,
-  ImagePathProps,
+  ImagePathProps} from '@pipeline/components/ArtifactsSelection/ArtifactInterface';
+import {
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'

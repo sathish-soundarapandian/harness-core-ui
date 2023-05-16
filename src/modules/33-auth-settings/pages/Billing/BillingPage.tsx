@@ -10,11 +10,13 @@ import { Button, Page, ButtonVariation, Layout, Card, Text } from '@harness/uico
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { StringKeys, useStrings } from 'framework/strings'
+import type { StringKeys} from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
-import { ItemDTO, SubscriptionDetailDTO, useListSubscriptions } from 'services/cd-ng'
+import type { ItemDTO, SubscriptionDetailDTO} from 'services/cd-ng';
+import { useListSubscriptions } from 'services/cd-ng'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { openFileATicket } from '@common/components/ResourceCenter/utils'
@@ -24,7 +26,8 @@ import { getSubscriptionByPaymentFrequency } from '@auth-settings/components/Sub
 import SubscriptionTable from './SubscriptionTable'
 import NoBills from './images/noBills.svg'
 import BillingAdminsCard from './BillingAdminsCard'
-import ActiveSubscriptionCard, { ActiveSubscriptionDetails } from './ActiveSubscriptionCard'
+import type { ActiveSubscriptionDetails } from './ActiveSubscriptionCard';
+import ActiveSubscriptionCard from './ActiveSubscriptionCard'
 import PaymentMethods from './PaymentMethods'
 import css from './BillingPage.module.scss'
 

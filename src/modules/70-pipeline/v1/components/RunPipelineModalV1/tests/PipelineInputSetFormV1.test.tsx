@@ -11,7 +11,8 @@ import { Formik, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import connector from '@connectors/pages/connectors/__tests__/mocks/get-connector-mock.json'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { PipelineInputSetFormV1, PipelineInputSetFormV1Props } from '../PipelineInputSetFormV1'
+import type { PipelineInputSetFormV1Props } from '../PipelineInputSetFormV1';
+import { PipelineInputSetFormV1 } from '../PipelineInputSetFormV1'
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn().mockImplementation(() => {

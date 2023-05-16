@@ -23,10 +23,11 @@ import {
   ButtonVariation,
   Container
 } from '@harness/uicore'
+import type {
+  CreateIpAllowlistConfigOkResponse,
+  UpdateIpAllowlistConfigOkResponse} from '@harnessio/react-ng-manager-client';
 import {
   useCreateIpAllowlistConfigMutation,
-  CreateIpAllowlistConfigOkResponse,
-  UpdateIpAllowlistConfigOkResponse,
   useUpdateIpAllowlistConfigMutation
 } from '@harnessio/react-ng-manager-client'
 

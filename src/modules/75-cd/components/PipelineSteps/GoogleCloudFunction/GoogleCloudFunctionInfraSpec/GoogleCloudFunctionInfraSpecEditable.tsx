@@ -6,6 +6,10 @@
  */
 
 import React from 'react'
+import type {
+  AllowedTypes,
+  SelectOption
+} from '@harness/uicore';
 import {
   Text,
   Layout,
@@ -13,9 +17,7 @@ import {
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  AllowedTypes,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, defaultTo, get, noop } from 'lodash-es'
@@ -29,7 +31,8 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
@@ -39,7 +42,8 @@ import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/Depl
 import { connectorTypes, EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { isFixedNonEmptyValue } from '@pipeline/utils/stageHelpers'
 import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
-import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
+import type { ConnectorRefFormValueType} from '@cd/utils/connectorUtils';
+import { getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getGoogleCloudFunctionInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { GoogleCloudFunctionInfrastructure } from './GoogleCloudFunctionInfraSpec'
 import css from './GoogleCloudFunctionInfraSpec.module.scss'

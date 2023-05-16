@@ -6,13 +6,15 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Text, Layout, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Text, Layout, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get, defaultTo, isEqual, set, isUndefined } from 'lodash-es'
+import type {
+  AzureSubscriptionDTO} from 'services/cd-ng';
 import {
-  AzureSubscriptionDTO,
   useGetAzureResourceGroupsBySubscription,
   useGetAzureSubscriptions,
   useGetAzureResourceGroupsV2
@@ -22,8 +24,9 @@ import { Connectors } from '@connectors/constants'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
+import type {
+  ConnectorReferenceDTO} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField';
 import {
-  ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
@@ -32,8 +35,9 @@ import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import type {
+  AzureWebAppInfrastructureSpecEditableProps} from './AzureWebAppInfrastructureInterface';
 import {
-  AzureWebAppInfrastructureSpecEditableProps,
   subscriptionLabel,
   resourceGroupLabel
 } from './AzureWebAppInfrastructureInterface'

@@ -10,7 +10,9 @@ import cx from 'classnames'
 import { produce } from 'immer'
 import { isEmpty, compact, isArray, has, defaultTo, set } from 'lodash-es'
 import * as Yup from 'yup'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik'
+import { FieldArray } from 'formik'
+import type { AllowedTypes, AllowedTypes } from '@harness/uicore'
 import {
   Accordion,
   Button,
@@ -21,14 +23,14 @@ import {
   HarnessDocTooltip,
   MultiTypeInputType,
   Container,
-  AllowedTypes,
   useToaster,
   Layout,
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { setFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,

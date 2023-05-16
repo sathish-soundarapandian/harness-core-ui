@@ -13,17 +13,19 @@ import produce from 'immer'
 import { capitalize, defaultTo, get, isEmpty, noop, set } from 'lodash-es'
 import { HelpPanel } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
-import {
+import type {
   EnvironmentRequestDTO,
   InfrastructureRequestDTO,
-  InfrastructureRequestDTORequestBody,
+  InfrastructureRequestDTORequestBody} from 'services/cd-ng';
+import {
   useCreateEnvironmentV2,
   useCreateInfrastructure,
   useUpdateInfrastructure,
   useUpsertEnvironmentV2
 } from 'services/cd-ng'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
+import type { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector';
+import useCreateEditConnector from '@connectors/hooks/useCreateEditConnector'
 import { buildKubPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { DelegateTypes } from '@delegates/constants'
@@ -33,11 +35,12 @@ import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/CreateDockerDelegate'
+import type {
+  DelegateSuccessHandler,
+  EnvironmentEntities} from '../CDOnboardingUtils';
 import {
   cleanEnvironmentDataUtil,
-  DelegateSuccessHandler,
   DeploymentType,
-  EnvironmentEntities,
   getUniqueEntityIdentifier,
   newDelegateState,
   newEnvironmentState

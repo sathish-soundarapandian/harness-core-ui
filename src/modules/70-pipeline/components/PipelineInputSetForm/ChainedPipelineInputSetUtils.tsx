@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Text, Icon, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore';
+import { Text, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'

@@ -12,6 +12,9 @@ import { defaultTo, get, merge } from 'lodash-es'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import type { IItemRendererProps } from '@blueprintjs/select'
+import type {
+  SelectOption,
+  StepProps} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
@@ -21,20 +24,20 @@ import {
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
-  SelectOption,
-  StepProps,
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
-import { ConnectorConfigDTO, useGetGcsBuckets, useGetProjects } from 'services/cd-ng'
+import type { ConnectorConfigDTO} from 'services/cd-ng';
+import { useGetGcsBuckets, useGetProjects } from 'services/cd-ng'
 import { useMutateAsGet } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type {
   GoogleCloudStorageArtifactProps,
   GoogleCloudStorageInitialValuesType

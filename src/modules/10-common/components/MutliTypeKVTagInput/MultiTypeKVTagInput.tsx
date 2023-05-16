@@ -8,28 +8,32 @@
 import React from 'react'
 import { useFormikContext } from 'formik'
 import { defaultTo, get, isArray as checkIsArray } from 'lodash-es'
-import { FormGroup, IFormGroupProps, Intent, ITagInputProps, TagInput } from '@blueprintjs/core'
+import type { IFormGroupProps, ITagInputProps} from '@blueprintjs/core';
+import { FormGroup, Intent, TagInput } from '@blueprintjs/core'
 import cx from 'classnames'
 
-import {
-  Container,
+import type {
   DataTooltipInterface,
-  errorCheck,
-  ExpressionAndRuntimeType,
   ExpressionAndRuntimeTypeProps,
   FixedTypeComponentProps,
+  MultiTypeInputValue
+} from '@harness/uicore';
+import {
+  Container,
+  errorCheck,
+  ExpressionAndRuntimeType,
   FormError,
   getFormFieldLabel,
   getMultiTypeFromValue,
   Layout,
-  MultiTypeInputType,
-  MultiTypeInputValue
+  MultiTypeInputType
 } from '@harness/uicore'
 import type { KVTagInputProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 
 import { useStrings } from 'framework/strings'
 
-import { ConfigureOptions, ConfigureOptionsProps } from '../ConfigureOptions/ConfigureOptions'
+import type { ConfigureOptionsProps } from '../ConfigureOptions/ConfigureOptions';
+import { ConfigureOptions } from '../ConfigureOptions/ConfigureOptions'
 
 import css from './MultiTypeKVTagInput.module.scss'
 

@@ -6,7 +6,8 @@
  */
 
 import React, { useMemo } from 'react'
-import { Select, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Select } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import classNames from 'classnames'
 import { useStrings } from 'framework/strings'

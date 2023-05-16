@@ -10,9 +10,11 @@ import { Container, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { debounce, isEmpty, isEqual, set } from 'lodash-es'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
-import {
-  StepCommandsWithRef as StepCommands,
+import type {
   StepFormikRef
+} from '@pipeline/components/PipelineStudio/StepCommands/StepCommands';
+import {
+  StepCommandsWithRef as StepCommands
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import type { StepElementConfig } from 'services/cd-ng'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'

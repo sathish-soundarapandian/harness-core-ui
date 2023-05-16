@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { AgentListProps, ErrorTracking } from '@cet/ErrorTrackingApp'
+import type { AgentListProps } from '@cet/ErrorTrackingApp'
+import { ErrorTracking } from '@cet/ErrorTrackingApp'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import type { ETCustomMicroFrontendProps } from '@cet/ErrorTracking.types'
 import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'

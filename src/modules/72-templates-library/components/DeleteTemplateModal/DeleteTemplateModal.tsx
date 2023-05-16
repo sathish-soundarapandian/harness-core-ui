@@ -24,14 +24,16 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { useGetSettingValue } from 'services/cd-ng'
 
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PageSpinner, useToaster } from '@common/components'
 import { SettingType } from '@common/constants/Utils'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { useMutateAsGet } from '@common/hooks'
+import type {
+  TemplateSummaryResponse} from 'services/template-ng';
 import {
-  TemplateSummaryResponse,
   useDeleteTemplateVersionsOfIdentifier,
   useGetTemplateList,
   useGetTemplateMetadataList

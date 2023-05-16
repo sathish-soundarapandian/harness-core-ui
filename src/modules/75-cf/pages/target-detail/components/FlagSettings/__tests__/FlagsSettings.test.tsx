@@ -7,7 +7,8 @@
 
 import React from 'react'
 import { cloneDeep } from 'lodash-es'
-import { getByPlaceholderText, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { getByPlaceholderText, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { Feature, Features } from 'services/cf'
 import * as cfServices from 'services/cf'
@@ -15,7 +16,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import mockTarget from '@cf/utils/testData/data/mockTarget'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
-import FlagSettings, { FlagSettingsProps } from '../FlagSettings'
+import type { FlagSettingsProps } from '../FlagSettings';
+import FlagSettings from '../FlagSettings'
 
 const mockFlags = [
   {

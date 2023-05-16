@@ -7,8 +7,9 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import cx from 'classnames'
+import type {
+  SelectOption} from '@harness/uicore';
 import {
-  SelectOption,
   Select,
   Text,
   Button,
@@ -26,23 +27,25 @@ import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { get, isEmpty, remove } from 'lodash-es'
 import { Classes } from '@blueprintjs/core'
-import {
+import type {
   GitEnabledDTO,
-  isGitSyncEnabledPromise,
   OrganizationResponse,
-  ProjectAggregateDTO,
+  ProjectAggregateDTO} from 'services/cd-ng';
+import {
+  isGitSyncEnabledPromise,
   useGetOrganizationList,
   useGetProjectAggregateDTOList
 } from 'services/cd-ng'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
-import {
+import type {
   PagePMSPipelineSummaryResponse,
   PipelineFilterProperties,
   PMSPipelineSummaryResponse,
+  Error} from 'services/pipeline-ng';
+import {
   useGetPipelineList,
-  Error,
   useGetPipelineSummary
 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'

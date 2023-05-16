@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Container, Layout, FormInput, Formik, Collapse, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Button, ButtonVariation, Container, Layout, FormInput, Formik, Collapse } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as yup from 'yup'
 import { Dialog } from '@blueprintjs/core'
@@ -14,7 +15,8 @@ import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { useCreateSegment, Tag, CreateSegmentQueryParams } from 'services/cf'
+import type { Tag, CreateSegmentQueryParams } from 'services/cf';
+import { useCreateSegment } from 'services/cf'
 import { useToaster } from '@common/exports'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'

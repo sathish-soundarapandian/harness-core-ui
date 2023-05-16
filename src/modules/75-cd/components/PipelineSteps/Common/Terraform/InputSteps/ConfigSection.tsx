@@ -10,16 +10,18 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { get, map } from 'lodash-es'
 
+import type {
+  SelectOption} from '@harness/uicore';
 import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   FormInput,
   Label,
   useToaster,
-  SelectOption,
   Layout
 } from '@harness/uicore'
-import { connect, FormikContextType } from 'formik'
+import type { FormikContextType } from 'formik';
+import { connect } from 'formik'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'

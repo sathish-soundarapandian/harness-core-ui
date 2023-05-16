@@ -12,7 +12,8 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { queryByNameAttribute } from '@common/utils/testUtils'
 import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef} from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { AsgSwapService } from '../AsgSwapServiceStep'
 

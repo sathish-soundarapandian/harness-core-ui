@@ -9,8 +9,9 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import type {
+  ConfigureMonitoredServiceAlertConditionsProps} from '@cv/components/Notifications/NotificationsContainer.types';
 import {
-  ConfigureMonitoredServiceAlertConditionsProps,
   SRMNotificationType
 } from '@cv/components/Notifications/NotificationsContainer.types'
 import ConfigureMonitoredServiceAlertConditions from '../ConfigureMonitoredServiceAlertConditions'

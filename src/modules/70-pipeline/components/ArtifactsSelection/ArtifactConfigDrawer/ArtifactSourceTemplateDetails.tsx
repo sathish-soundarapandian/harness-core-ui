@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Container, Layout, AllowedTypes, Formik, FormikForm, FormInput, PageError, Heading } from '@harness/uicore'
+import type { AllowedTypes} from '@harness/uicore';
+import { Container, Layout, Formik, FormikForm, FormInput, PageError, Heading } from '@harness/uicore'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import * as Yup from 'yup'

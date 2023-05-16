@@ -10,11 +10,13 @@ import { render, act } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
 import mockImport from 'framework/utils/mockImport'
-import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step';
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
-import { ZeroNorthStep, ZeroNorthStepData } from '../ZeroNorthStep'
+import type { ZeroNorthStepData } from '../ZeroNorthStep';
+import { ZeroNorthStep } from '../ZeroNorthStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 

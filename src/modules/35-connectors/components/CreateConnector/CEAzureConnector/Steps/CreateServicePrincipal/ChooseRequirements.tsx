@@ -6,16 +6,17 @@
  */
 
 import React, { useState, useRef } from 'react'
+import type {
+  StepProps,
+  IconName} from '@harness/uicore';
 import {
   Button,
   Formik,
   FormikForm,
   Layout,
   ModalErrorHandler,
-  StepProps,
   CardSelect,
   Icon,
-  IconName,
   Text,
   Container
 } from '@harness/uicore'

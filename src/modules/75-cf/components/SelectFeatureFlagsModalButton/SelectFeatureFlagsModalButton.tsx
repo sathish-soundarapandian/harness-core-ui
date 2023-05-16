@@ -8,10 +8,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Dialog, Intent } from '@blueprintjs/core'
 import * as yup from 'yup'
+import type {
+  ButtonProps} from '@harness/uicore';
 import {
   Button,
   Text,
-  ButtonProps,
   Container,
   TextInput,
   Layout,
@@ -27,7 +28,8 @@ import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { CF_DEFAULT_PAGE_SIZE, getErrorMessage, SegmentsSortByField, SortOrder } from '@cf/utils/CFUtils'
 import { useStrings } from 'framework/strings'
-import { Feature, useGetAllFeatures } from 'services/cf'
+import type { Feature} from 'services/cf';
+import { useGetAllFeatures } from 'services/cf'
 import { useToaster } from '@common/exports'
 
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'

@@ -13,12 +13,14 @@ import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   GetActiveInstanceGroupedByEnvironmentQueryParams,
-  InstanceGroupedByEnvironment,
+  InstanceGroupedByEnvironment} from 'services/cd-ng';
+import {
   useGetActiveInstanceGroupedByEnvironment
 } from 'services/cd-ng'
-import { PostProdTableData, getRollbackStatusFromResponse } from './PostProdRollbackUtil'
+import type { PostProdTableData} from './PostProdRollbackUtil';
+import { getRollbackStatusFromResponse } from './PostProdRollbackUtil'
 import { PostProdRollbackListTable } from './PostProdRollbackTable'
 import openTaskEmptyState from '../openTaskEmptyState.svg'
 import css from './PostProdRollback.module.scss'

@@ -8,7 +8,8 @@
 /* eslint-disable no-console */
 import React, { useEffect, useLayoutEffect, useState, useRef, useMemo, useCallback } from 'react'
 import classNames from 'classnames'
-import Draggable, { DraggableData, DraggableEvent, DraggableEventHandler } from 'react-draggable'
+import type { DraggableData, DraggableEvent, DraggableEventHandler } from 'react-draggable';
+import Draggable from 'react-draggable'
 import { v4 as uuid } from 'uuid'
 import {
   CANVAS_CLICK_EVENT,

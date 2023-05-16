@@ -19,11 +19,14 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useGetFreeze } from 'services/cd-ng'
-import { FreezeWindowLevels, WindowPathProps, FreezeNotificationRules } from '@freeze-windows/types'
+import type { WindowPathProps, FreezeNotificationRules } from '@freeze-windows/types';
+import { FreezeWindowLevels } from '@freeze-windows/types'
 import type { FreezeWindowFormData } from '@freeze-windows/components/ScheduleFreezeForm/ScheduleFreezeForm'
 import { FreezeStatus, getFreezeStatus } from '@freeze-windows/utils/freezeWindowUtils'
-import { FreezeWindowContextActions, DrawerTypes } from './FreezeWidowActions'
-import { initialState, FreezeWindowReducerState, FreezeReducer, DefaultFreezeId } from './FreezeWindowReducer'
+import type { DrawerTypes } from './FreezeWidowActions';
+import { FreezeWindowContextActions } from './FreezeWidowActions'
+import type { FreezeWindowReducerState} from './FreezeWindowReducer';
+import { initialState, FreezeReducer, DefaultFreezeId } from './FreezeWindowReducer'
 
 export interface FreezeWindowContextInterface {
   state: FreezeWindowReducerState

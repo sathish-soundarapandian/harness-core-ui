@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Icon, Layout, Text, Popover, IconName } from '@harness/uicore'
+import type { IconName } from '@harness/uicore';
+import { Icon, Layout, Text, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, PopoverInteractionKind } from '@blueprintjs/core'
 import css from './ActivityStack.module.scss'

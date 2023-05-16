@@ -8,7 +8,8 @@
 import React from 'react'
 import { render, fireEvent, waitFor, queryByAttribute, screen } from '@testing-library/react'
 import type { ResponseWaitStepExecutionDetailsDto } from 'services/pipeline-ng'
-import { TestWrapper, UseGetMockData } from '@common/utils/testUtils'
+import type { UseGetMockData } from '@common/utils/testUtils';
+import { TestWrapper } from '@common/utils/testUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import executionMetadata from '@pipeline/components/execution/StepDetails/common/ExecutionContent/PolicyEvaluationContent/__mocks__/executionMetadata.json'
 import { WaitStepDetailsTab } from '../WaitStepDetailsTab'

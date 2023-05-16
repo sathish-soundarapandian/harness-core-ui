@@ -8,7 +8,8 @@
 import React from 'react'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { truncate } from 'lodash-es'
-import { SelectOption, Layout, Popover, Button, DropDown } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { Layout, Popover, Button, DropDown } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { getFilterSummary, MAX_FILTER_NAME_LENGTH, getFilterSize } from '@common/components/Filter/utils/FilterUtils'
 import type { FilterInterface } from '../Constants'

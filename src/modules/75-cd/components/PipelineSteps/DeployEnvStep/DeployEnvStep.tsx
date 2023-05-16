@@ -6,6 +6,11 @@
  */
 
 import React from 'react'
+import type {
+  IconName,
+  SelectOption,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Button,
   ButtonSize,
@@ -14,19 +19,16 @@ import {
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
-  IconName,
   Label,
   Dialog,
   Layout,
   MultiTypeInputType,
-  SelectOption,
   ThumbnailSelect,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
   getErrorInfoFromErrorObject,
   Container,
-  PageSpinner,
-  AllowedTypes
+  PageSpinner
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
@@ -35,14 +37,16 @@ import { useParams } from 'react-router-dom'
 import { Classes } from '@blueprintjs/core'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { connect, FormikErrors, FormikProps } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik';
+import { connect } from 'formik'
 import cx from 'classnames'
-import {
+import type {
   EnvironmentRequestDTO,
   EnvironmentResponseDTO,
   EnvironmentYaml,
+  PipelineInfrastructure} from 'services/cd-ng';
+import {
   getEnvironmentListPromise,
-  PipelineInfrastructure,
   useGetEnvironmentAccessList,
   useGetEnvironmentList,
   useUpsertEnvironmentV2,
@@ -54,7 +58,8 @@ import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step';
+import { Step, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

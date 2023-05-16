@@ -9,7 +9,8 @@ import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { render, fireEvent, findByText, waitFor, getAllByText as getAllByTextGlobal } from '@testing-library/react'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
-import { CrudOperation, FilterCRUD } from '../FilterCRUD/FilterCRUD'
+import type { CrudOperation} from '../FilterCRUD/FilterCRUD';
+import { FilterCRUD } from '../FilterCRUD/FilterCRUD'
 import filtersData from '../mocks/filters-mock.json'
 
 const createFilter = jest.fn()

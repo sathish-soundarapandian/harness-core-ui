@@ -6,9 +6,11 @@
  */
 
 import { Color } from '@harness/design-system'
-import { FormInput, Layout, SelectOption, Text } from '@harness/uicore'
+import type { SelectOption} from '@harness/uicore';
+import { FormInput, Layout, Text } from '@harness/uicore'
 import type { FormikContextType } from 'formik'
-import React, { ReactElement, useMemo } from 'react'
+import type { ReactElement} from 'react';
+import React, { useMemo } from 'react'
 import type { UseGetReturn } from 'restful-react'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'

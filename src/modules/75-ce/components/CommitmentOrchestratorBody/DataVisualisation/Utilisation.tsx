@@ -11,8 +11,9 @@ import type { Column } from 'react-table'
 import { defaultTo } from 'lodash-es'
 import { Container } from '@harness/uicore'
 import { getStaticSchedulePeriodTime } from '@common/utils/momentUtils'
+import type {
+  Column as GridColumn} from '@ce/components/PerspectiveGrid/Columns';
 import {
-  Column as GridColumn,
   RenderCostCell,
   RenderNameCell,
   RenderPercentageCell

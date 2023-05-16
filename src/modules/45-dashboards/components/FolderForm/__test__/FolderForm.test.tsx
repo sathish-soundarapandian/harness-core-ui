@@ -6,13 +6,15 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import type { RenderResult} from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 import { TestWrapper } from '@common/utils/testUtils'
 import { FolderType } from '@dashboards/constants/FolderType'
 import { useStrings } from 'framework/strings'
 import type { FolderModel } from 'services/custom-dashboards'
-import FolderForm, { FolderFormProps } from '../FolderForm'
+import type { FolderFormProps } from '../FolderForm';
+import FolderForm from '../FolderForm'
 
 const testFolder: FolderModel = {
   id: '1',

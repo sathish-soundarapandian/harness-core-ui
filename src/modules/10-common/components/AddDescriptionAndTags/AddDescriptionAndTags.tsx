@@ -6,7 +6,8 @@
  */
 
 import React, { useState } from 'react'
-import { Container, FormInput, Layout, TagInputProps, Text, tagsType } from '@harness/uicore'
+import type { TagInputProps, tagsType } from '@harness/uicore';
+import { Container, FormInput, Layout, Text } from '@harness/uicore'
 import type { ITagInputProps } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import type { InputWithIdentifierProps } from '@harness/uicore/dist/components/InputWithIdentifier/InputWithIdentifier'

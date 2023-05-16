@@ -5,21 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type {
+  SelectOption,
+  StepProps,
+  AllowedTypes} from '@harness/uicore';
 import {
   Button,
   ButtonVariation,
   Formik,
   FormInput,
   Layout,
-  SelectOption,
-  StepProps,
   Text,
   useToaster,
   MultiTypeInputType,
   getMultiTypeFromValue,
   Icon,
   HarnessDocTooltip,
-  AllowedTypes,
   Heading
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -27,7 +28,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, map } from 'lodash-es'
 import cx from 'classnames'
-import { FieldArray, Form, FieldArrayRenderProps } from 'formik'
+import type { FieldArrayRenderProps } from 'formik';
+import { FieldArray, Form } from 'formik'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

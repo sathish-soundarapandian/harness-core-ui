@@ -7,6 +7,10 @@
 
 import React from 'react'
 import { Menu } from '@blueprintjs/core'
+import type {
+  SelectOption,
+  AllowedTypes
+} from '@harness/uicore';
 import {
   Text,
   Layout,
@@ -14,9 +18,7 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Icon,
-  SelectOption,
-  Accordion,
-  AllowedTypes
+  Accordion
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
@@ -29,7 +31,8 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { Failure, K8sGcpInfrastructure, K8sAwsInfrastructure } from 'services/cd-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError';
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 

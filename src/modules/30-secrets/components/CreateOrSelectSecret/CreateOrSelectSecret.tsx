@@ -9,7 +9,8 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { pick } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
-import SecretReference, { SecretRef } from '@secrets/components/SecretReference/SecretReference'
+import type { SecretRef } from '@secrets/components/SecretReference/SecretReference';
+import SecretReference from '@secrets/components/SecretReference/SecretReference'
 import type { SecretMultiSelectProps } from '@secrets/utils/SecretField'
 import { getReference } from '@common/utils/utils'
 import type {

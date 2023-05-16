@@ -7,9 +7,11 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypesWithRunTime} from '@harness/uicore';
+import { MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import { ArtifactType, TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import type { ArtifactType} from '@pipeline/components/ArtifactsSelection/ArtifactInterface';
+import { TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { DockerRegistryArtifact } from './DockerRegistryArtifact'
 

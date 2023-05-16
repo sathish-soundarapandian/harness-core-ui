@@ -11,11 +11,12 @@ import type { ObjectSchema } from 'yup'
 import * as yup from 'yup'
 import { useModalHook } from '@harness/use-modal'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
+import type {
   GitRepo,
   GitSyncErrorResponse,
   PatchInstruction,
-  PatchOperation,
+  PatchOperation} from 'services/cf';
+import {
   useGetGitRepo,
   usePatchGitRepo
 } from 'services/cf'

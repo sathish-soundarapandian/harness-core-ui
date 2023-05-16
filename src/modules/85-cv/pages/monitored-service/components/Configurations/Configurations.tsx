@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useContext, useMemo, useState, useCallback, useRef } from 'react'
-import { Container, Tab, Tabs, PageError, Views } from '@harness/uicore'
+import type { Views } from '@harness/uicore';
+import { Container, Tab, Tabs, PageError } from '@harness/uicore'
 import { useHistory, useParams, matchPath } from 'react-router-dom'
 import { clone, defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
 import { parse } from 'yaml'
@@ -18,9 +19,10 @@ import routes from '@common/RouteDefinitions'
 import { editParams } from '@cv/utils/routeUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useIndexedDBHook, CVObjectStoreNames } from '@cv/hooks/IndexedDBHook/IndexedDBHook'
-import {
+import type {
   ChangeSourceDTO,
-  MonitoredServiceDTO,
+  MonitoredServiceDTO} from 'services/cv';
+import {
   useGetMonitoredService,
   useGetMonitoredServiceYamlTemplate,
   useSaveMonitoredService,

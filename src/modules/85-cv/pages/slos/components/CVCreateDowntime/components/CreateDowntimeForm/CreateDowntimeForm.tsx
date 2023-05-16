@@ -13,8 +13,10 @@ import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Stepper } from '@common/components/Stepper/Stepper'
 import { useGetAssociatedMonitoredServices } from 'services/cv'
-import { CreateDowntimeFormInterface, CreateDowntimeSteps } from './CreateDowntimeForm.types'
-import { DowntimeForm, DowntimeFormFields } from '../../CVCreateDowntime.types'
+import type { CreateDowntimeFormInterface} from './CreateDowntimeForm.types';
+import { CreateDowntimeSteps } from './CreateDowntimeForm.types'
+import type { DowntimeForm} from '../../CVCreateDowntime.types';
+import { DowntimeFormFields } from '../../CVCreateDowntime.types'
 import DowntimeName from './components/DowntimeName/DowntimeName'
 import DowntimeWindow from './components/DowntimeWindow/DowntimeWindow'
 import AddMonitoredServices from './components/AddMonitoredServices/AddMonitoredServices'

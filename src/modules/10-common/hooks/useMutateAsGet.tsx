@@ -7,7 +7,8 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { UseMutateProps, UseMutateReturn, MutateMethod, GetDataError } from 'restful-react'
-import { useState, useCallback, useEffect, Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from 'react';
+import { useState, useCallback, useEffect } from 'react'
 // eslint-disable-next-line no-restricted-imports
 import type { Cancelable, DebounceSettings } from 'lodash' // only type imports
 import { debounce, identity } from 'lodash-es'

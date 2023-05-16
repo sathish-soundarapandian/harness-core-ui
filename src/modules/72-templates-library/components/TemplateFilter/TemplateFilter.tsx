@@ -6,12 +6,14 @@
  */
 
 import React, { useEffect, useRef } from 'react'
-import { Layout, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Layout } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty, isArray, defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
-import { Filter, FilterRef } from '@common/components/Filter/Filter'
+import type { FilterRef } from '@common/components/Filter/Filter';
+import { Filter } from '@common/components/Filter/Filter'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 
@@ -21,13 +23,15 @@ import { useBooleanStatus, useQueryParams, useUpdateQueryParams } from '@common/
 import { getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import { useStrings } from 'framework/strings'
 import type { FilterDTO } from 'services/pipeline-ng'
+import type {
+  TemplateFilterProperties,
+  NGTag
+} from 'services/template-ng';
 import {
   useDeleteFilter,
   useGetFilterList,
   usePostFilter,
-  useUpdateFilter,
-  TemplateFilterProperties,
-  NGTag
+  useUpdateFilter
 } from 'services/template-ng'
 import { killEvent } from '@common/utils/eventUtils'
 import { useQueryParamsOptions } from '@common/hooks/useQueryParams'

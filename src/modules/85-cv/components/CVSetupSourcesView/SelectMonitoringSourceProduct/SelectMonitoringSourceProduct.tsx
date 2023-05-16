@@ -10,7 +10,8 @@ import { FormInput, Layout, Container, Text, Card, CardBody } from '@harness/uic
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { StepLabelProps, StepLabel } from '../StepLabel/StepLabel'
+import type { StepLabelProps} from '../StepLabel/StepLabel';
+import { StepLabel } from '../StepLabel/StepLabel'
 import { SetupSourceEmptyCardHeader } from '../SetupSourceCardHeader/SetupSourceCardHeader'
 import css from './SelectMonitoringSourceProduct.module.scss'
 

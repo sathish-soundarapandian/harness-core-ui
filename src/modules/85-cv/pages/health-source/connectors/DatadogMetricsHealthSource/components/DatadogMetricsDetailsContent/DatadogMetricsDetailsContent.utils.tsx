@@ -7,7 +7,8 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { Icon, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore';
+import { Icon } from '@harness/uicore'
 import type {
   DatadogAggregation,
   DatadogAggregationType,

@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { object, ObjectSchema, string } from 'yup'
+import type { ObjectSchema} from 'yup';
+import { object, string } from 'yup'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { isCronValid, scheduleTabsId } from '../components/utils'

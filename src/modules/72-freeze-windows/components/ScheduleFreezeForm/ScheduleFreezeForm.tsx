@@ -5,14 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { ReactNode, useState } from 'react'
-import { FormikForm, Formik, Layout, FormInput, SelectOption, Text, DropDown } from '@harness/uicore'
+import type { ReactNode} from 'react';
+import React, { useState } from 'react'
+import type { SelectOption} from '@harness/uicore';
+import { FormikForm, Formik, Layout, FormInput, Text, DropDown } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import produce from 'immer'
 import { defaultTo, isNull, isUndefined, omit, omitBy, set } from 'lodash-es'
 import moment from 'moment'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings';
+import { useStrings } from 'framework/strings'
 import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import {
   DOES_NOT_REPEAT,
