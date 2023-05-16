@@ -22,6 +22,8 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ProjectPathProps, ModulePathParams, Module } from '@common/interfaces/RouteInterfaces'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { ServicePopoverCard } from '@cd/components/ServicePopoverCard/ServicePopoverCard'
+import { EnvironmentDetailsTab } from '../EnvironmentsV2/utils'
+import { InfraDefinitionTabs } from '../EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfraDefinitionDetailsDrawer/InfraDefinitionDetailsDrawer'
 import serviceCardCSS from '@cd/components/ServicePopoverCard/ServicePopoverCard.module.scss'
 import css from './CDStageDetails.module.scss'
 
@@ -109,8 +111,8 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
           defaultTo({ name: envForGitOps.name, identifier: envForGitOps.identifier }, { name: '', identifier: '' })
       )
     : []
-  const serviceScope = getScopeFromValue(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
 
+  const serviceScope = getScopeFromValue(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
   return (
     <div className={css.container}>
       <div className={cx(css.main, { [css.threeSections]: !!gitOpsApps.length })}>
@@ -187,6 +189,25 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
               </Link>
             )}
           </ul>
+        </div>
+        <div>
+          <StrTemplate className={css.title} tagName="div" stringID="infrastructureText" />
+          <Link
+            to={routes.toEnvironmentDetails({
+              accountId,
+              orgIdentifier,
+              projectIdentifier,
+              environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', null),
+              sectionId: EnvironmentDetailsTab.INFRASTRUCTURE,
+              infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
+              infrastructureId: get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', null),
+              module
+            })}
+          >
+            <Text lineClamp={1} className={css.stageItemDetails}>
+              {get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', null)}
+            </Text>
+          </Link>
         </div>
         <GitopsApplications
           gitOpsApps={gitOpsApps}

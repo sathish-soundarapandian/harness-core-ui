@@ -38,7 +38,7 @@ export default function CDInfo(props: CDInfoProps): React.ReactElement {
   }
   const serviceName = get(data, 'data.moduleInfo.cd.serviceInfo.displayName', null)
   const environment = get(data, 'data.moduleInfo.cd.infraExecutionSummary.name', null)
-
+  const infraStructures = get(data, 'data.moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', null)
   return (
     <Container>
       {barrier?.barrierData?.data && data.status === 'Running' && (
@@ -100,6 +100,21 @@ export default function CDInfo(props: CDInfoProps): React.ReactElement {
                 </Text>
                 <Text font={{ size: 'xsmall' }} color={Color.GREY_700} data-testid="hovercard-environment">
                   {environment}
+                </Text>
+              </Layout.Vertical>
+            </Layout.Horizontal>
+          )}
+          {infraStructures && (
+            <Layout.Horizontal padding={{ right: 'medium', bottom: 'small', left: 'small' }}>
+              <Container flex={{ justifyContent: 'center', alignItems: 'start' }} width={32}>
+                <Icon name="infrastructure" color={Color.GREY_600} size={24} />
+              </Container>
+              <Layout.Vertical spacing={'xsmall'} padding={{ top: 'xsmall', bottom: 'xsmall' }}>
+                <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK}>
+                  {getString('infrastructureText')}
+                </Text>
+                <Text font={{ size: 'xsmall' }} color={Color.GREY_700} data-testid="hovercard-environment">
+                  {infraStructures}
                 </Text>
               </Layout.Vertical>
             </Layout.Horizontal>
