@@ -5,6 +5,7 @@ import { useStrings } from 'framework/strings'
 import type { InfrastructureConfig } from 'services/cd-ng'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { stringify } from '@common/utils/YamlHelperMethods'
+import { sanitize } from '@common/utils/JSONUtils'
 
 interface Params {
   selectedInfrastructure: string
@@ -38,6 +39,7 @@ export function useInfrastructureUnsavedChanges(params: Params): UseInfrastructu
 
   const handleInfrastructureUpdate = useCallback(
     (updatedInfraValues: InfrastructureConfig) => {
+      sanitize(updatedInfraValues, { removeEmptyString: false, removeEmptyArray: false, removeEmptyObject: false })
       setUpdatedInfrastructure(
         prevInfra =>
           ({
