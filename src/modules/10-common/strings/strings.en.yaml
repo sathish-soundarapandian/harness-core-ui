@@ -575,6 +575,7 @@ subscriptions:
     activeDevelopers: Active Developers
     creditsRightHeader: Expires on {{date}}
     allCredits: Credits
+    freeCredits: free credits
     developers: Developers
     developer: Developer
     cloudSpend: Total Cloud Spend

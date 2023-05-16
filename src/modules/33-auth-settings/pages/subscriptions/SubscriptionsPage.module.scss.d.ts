@@ -13,6 +13,7 @@ declare const styles: {
   readonly badgesContainer: string
   readonly banner: string
   readonly bannerIcon: string
+  readonly buildCreditHeader: string
   readonly cardTitle: string
   readonly cd: string
   readonly ce: string
@@ -26,6 +27,7 @@ declare const styles: {
   readonly exportButtonAlign: string
   readonly failed24HrsExecutionsBadge: string
   readonly fetchButton: string
+  readonly freeStyle: string
   readonly frequencyContainer: string
   readonly frequencyCount: string
   readonly headerMargin: string

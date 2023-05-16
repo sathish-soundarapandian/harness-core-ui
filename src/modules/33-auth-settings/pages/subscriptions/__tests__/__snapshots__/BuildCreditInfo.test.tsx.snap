@@ -13,7 +13,7 @@ exports[`Build Credit Info test  Build Credit Info with emmpty credit data: buil
         style="width: 100%;"
       >
         <div
-          class="Layout--vertical StyledProps--main"
+          class="Layout--vertical StyledProps--main buildCreditHeader"
         >
           <h1
             class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
@@ -121,7 +121,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
         style="width: 100%;"
       >
         <div
-          class="Layout--vertical StyledProps--main"
+          class="Layout--vertical StyledProps--main buildCreditHeader"
         >
           <h1
             class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
@@ -205,7 +205,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
             class="TableV2--cell"
             colspan="1"
             role="columnheader"
-            style="width: 33%;"
+            style="width: 40%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -225,7 +225,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
             class="TableV2--cell"
             colspan="1"
             role="columnheader"
-            style="width: 38%;"
+            style="width: 40%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -245,7 +245,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
             class="TableV2--cell"
             colspan="1"
             role="columnheader"
-            style="width: 33%;"
+            style="width: 10%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -259,6 +259,18 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
                   common.entitlement
                 </p>
               </div>
+            </p>
+          </div>
+          <div
+            class="TableV2--cell"
+            colspan="1"
+            role="columnheader"
+            style="width: 10%;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+               
             </p>
           </div>
         </div>
@@ -275,7 +287,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 33%;"
+                style="width: 40%;"
               >
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
@@ -287,7 +299,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 38%;"
+                style="width: 40%;"
               >
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
@@ -299,7 +311,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 33%;"
+                style="width: 10%;"
               >
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
@@ -308,6 +320,11 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
                   1000
                 </p>
               </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 10%;"
+              />
             </div>
           </div>
           <div
@@ -320,7 +337,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 33%;"
+                style="width: 40%;"
               >
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
@@ -332,7 +349,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 38%;"
+                style="width: 40%;"
               >
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
@@ -344,7 +361,7 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
               <div
                 class="TableV2--cell"
                 role="cell"
-                style="width: 33%;"
+                style="width: 10%;"
               >
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-size-small"
@@ -353,6 +370,11 @@ exports[`Build Credit Info test  Build Credit Info: build credit table 1`] = `
                   2000
                 </p>
               </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 10%;"
+              />
             </div>
           </div>
         </div>

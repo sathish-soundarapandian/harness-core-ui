@@ -1917,7 +1917,7 @@ exports[`Subscriptions Page should render CI details  with no data service table
             style="width: 100%;"
           >
             <div
-              class="Layout--vertical StyledProps--main"
+              class="Layout--vertical StyledProps--main buildCreditHeader"
             >
               <h1
                 class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-size-medium"
