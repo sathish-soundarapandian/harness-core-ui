@@ -113,7 +113,7 @@ export default function CDInfo(props: CDInfoProps): React.ReactElement {
                 <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK}>
                   {getString('infrastructureText')}
                 </Text>
-                <Text font={{ size: 'xsmall' }} color={Color.GREY_700} data-testid="hovercard-environment">
+                <Text font={{ size: 'xsmall' }} color={Color.GREY_700} data-testid="hovercard-infraStructure">
                   {infraStructures}
                 </Text>
               </Layout.Vertical>
