@@ -32,7 +32,7 @@ export interface ConfigFilesListViewProps {
   serviceCacheId: string
 }
 
-export type ConfigFileType = 'Harness' | 'Git' | 'Gitlab' | 'Github' | 'Bitbucket'
+export type ConfigFileType = 'Harness' | 'Git' | 'Github' | 'Bitbucket' | 'GitLab'
 
 export interface ConfigFileStepTitle {
   label: string

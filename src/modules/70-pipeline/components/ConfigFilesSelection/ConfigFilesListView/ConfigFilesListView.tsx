@@ -225,7 +225,6 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<any>>> => {
     const arr: Array<React.ReactElement<StepProps<any>>> = []
     let configDetailStep = null
-
     if (isEditMode && fetchingConnector) {
       configDetailStep = <PageSpinner />
     } else {
@@ -242,10 +241,7 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
             />
           )
           break
-        case ConfigFilesToConnectorMap.Git:
-        case ConfigFilesToConnectorMap.Gitlab:
-        case ConfigFilesToConnectorMap.Bitbucket:
-        case ConfigFilesToConnectorMap.Github:
+        default:
           configDetailStep = (
             <GitConfigStep
               {...commonProps}
@@ -258,20 +254,6 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
               {...((shouldPassPrevStepData() ? prevStepProps() : {}) as GitConfigFileLastStepPrevStepData)}
             />
           )
-          break
-
-        default:
-          configDetailStep = (
-            <HarnessConfigStep
-              {...commonProps}
-              stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
-              name={getString('pipeline.configFiles.title', { type: 'Details' })}
-              listOfConfigFiles={listOfConfigFiles}
-              {...commonLastStepProps}
-              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
-            />
-          )
-          break
       }
     }
 
@@ -293,10 +275,7 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
             listOfConfigFiles={listOfConfigFiles}
           />
         )
-      case ConfigFilesToConnectorMap.Git:
-      case ConfigFilesToConnectorMap.Gitlab:
-      case ConfigFilesToConnectorMap.Bitbucket:
-      case ConfigFilesToConnectorMap.Github:
+      default:
         return (
           <StepWizard title={getString('connectors.createNewConnector')}>
             <ConnectorDetailsStep
@@ -339,8 +318,6 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
             />
           </StepWizard>
         )
-      default:
-        return <></>
     }
   }, [newConnectorView, configStore, isEditMode])
 
