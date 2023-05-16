@@ -2,7 +2,7 @@ import {
   accountResourceConnectors,
   connectorsCatalogueAPI,
   accountConnectorTestConnection,
-  connectorsListAPI
+  accountConnectorsListAPI
 } from '../../support/35-connectors/constants'
 import { pageHeaderClassName } from '../../support/70-pipeline/constants'
 
@@ -18,7 +18,7 @@ describe('CE Azure Connector', () => {
     cy.intercept('GET', connectorsCatalogueAPI, { fixture: 'ng/api/connectors/catalogue.json' }).as(
       'connectorsCatalogue'
     )
-    cy.intercept('POST', connectorsListAPI, { fixture: 'ng/api/connectors/emptyConnectors.json' }).as(
+    cy.intercept('POST', accountConnectorsListAPI, { fixture: 'ng/api/connectors/emptyConnectors.json' }).as(
       'connectorsCatalogue'
     )
     cy.intercept('POST', accountConnectorTestConnection, { fixture: '/ng/api/connectors/testConnection.json' }).as(
