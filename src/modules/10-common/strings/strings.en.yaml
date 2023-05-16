@@ -545,7 +545,7 @@ subscriptions:
   expiryCountdown: expires in {{ days }} days
   expired: expired {{ days }} days ago
   banner:
-    trial: '{{ module }} {{edition}} trial'
+    trial: '{{ module }} subscription'
   trial: '{{edition}} (14 day trial)'
   paid: '{{edition}}'
   noActiveSubscription: No Active Subscription
