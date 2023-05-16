@@ -67,6 +67,21 @@ exports[`<CDStageDetails /> tests snapshot test 1`] = `
           </a>
         </ul>
       </div>
+      <div>
+        <div
+          class="title"
+        >
+          infrastructureText
+        </div>
+        <a
+          href="/account/undefined/environments/Production/details?sectionId=INFRASTRUCTURE&infraDetailsTab=CONFIGURATION"
+        >
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main stageItemDetails"
+            style="--text-line-clamp: 1;"
+          />
+        </a>
+      </div>
     </div>
   </div>
 </div>
