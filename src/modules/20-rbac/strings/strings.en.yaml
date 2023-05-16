@@ -178,9 +178,9 @@ userDetails:
       groupNameRequired: Group name is required
       ssoIdRequired: Please select a SSO Provider
 youAreNotAuthorizedTo: You are not authorized to
-unauthorizedText: 'You are not authorized to perform this action because you are missing the following permissions:'
+unauthorizedText: 'You do not have the necessary permissions to perform this action. You are missing the following permissions:'
 permissionOn: permission on
-youAreMissingTheFollowingPermission: 'You are missing the following permission:'
+youAreMissingTheFollowingPermission: 'You are missing the following permission{{entityType}}:'
 in: '{{ $.common.in }}'
 project: project
 org: organization
