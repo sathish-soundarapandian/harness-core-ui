@@ -4,7 +4,7 @@ export const featureFlagsCall = `/api/users/feature-flags/accountId?routingId=${
 
 export const awsRegionsCall = '/cv/api/aws/regions?*'
 export const awsWorkspacesCall = '/cv/api/aws/prometheus/workspaces?*'
-export const awsConnectorCall = '/ng/api/connectors?accountIdentifier=accountId&type=Aws*'
+export const awsConnectorCall = '/ng/api/connectors/listV2?accountIdentifier=accountId*'
 
 export const awsRegionsResponse = {
   status: 'SUCCESS',

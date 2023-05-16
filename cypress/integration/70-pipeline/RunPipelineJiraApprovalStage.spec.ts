@@ -11,7 +11,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
   const stepsCall = '/pipeline/api/pipelines/v2/steps?routingId=accountId&accountId=accountId'
   const jirayamlSnippetCall = '/pipeline/api/approvals/stage-yaml-snippet?routingId=accountId&approvalType=JiraApproval'
   const jiraConnectorsCall =
-    '/ng/api/connectors?accountIdentifier=accountId&type=Jira&searchTerm=&pageIndex=0&pageSize=10&projectIdentifier=project1&orgIdentifier=default'
+    '/ng/api/connectors/listV2?accountIdentifier=accountId&searchTerm=&pageIndex=0&pageSize=10&projectIdentifier=project1&orgIdentifier=default'
   const jiraProjectsCall =
     '/ng/api/jira/projects?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud'
   const jiraIssueTypesCall =
@@ -69,7 +69,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form with empty required fields validations', () => {
-      cy.intercept('GET', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
       cy.intercept('GET', jiraIssueTypeMetadataCall, { fixture: 'ng/api/jiraIssueTypesFields' }).as('issueTypeFields')
@@ -95,7 +95,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('GET', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
       cy.intercept('GET', jiraIssueTypeMetadataCall, { fixture: 'ng/api/jiraIssueTypesFields' }).as('issueTypeFields')
@@ -139,7 +139,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('GET', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
       cy.wait(2000)
@@ -176,7 +176,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('GET', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraStatusesCall, { fixture: 'ng/api/jiraStatuses' })
       cy.wait(2000)

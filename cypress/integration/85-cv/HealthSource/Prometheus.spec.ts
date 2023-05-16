@@ -491,7 +491,7 @@ describe('AWS Prometheus', () => {
   it('should render AWS Prometheus functionality correctly', () => {
     cy.intercept('GET', awsRegionsCall, awsRegionsResponse).as('awsRegionsCall')
     cy.intercept('GET', awsWorkspacesCall, workspaceMock).as('awsWorkspacesCall')
-    cy.intercept('GET', awsConnectorCall).as('awsConnectorCall')
+    cy.intercept('POST', awsConnectorCall).as('awsConnectorCall')
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
     cy.contains('span', 'Add New Health Source').click()
