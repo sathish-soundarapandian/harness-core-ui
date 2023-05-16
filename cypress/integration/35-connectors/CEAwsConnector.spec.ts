@@ -3,7 +3,8 @@ import {
   accountResourceConnectors,
   ceAWSConnectionData,
   ceConnectorOverviewSave,
-  connectorsCatalogueAPI
+  connectorsCatalogueAPI,
+  connectorsListAPI
 } from '../../support/35-connectors/constants'
 import { pageHeaderClassName } from '../../support/70-pipeline/constants'
 
@@ -17,6 +18,9 @@ describe('CE AWS Connector', () => {
 
   it('Create CE AWS connector', () => {
     cy.intercept('GET', connectorsCatalogueAPI, { fixture: 'ng/api/connectors/catalogue.json' }).as(
+      'connectorsCatalogue'
+    )
+    cy.intercept('POST', connectorsListAPI, { fixture: 'ng/api/connectors/emptyConnectors.json' }).as(
       'connectorsCatalogue'
     )
     cy.intercept('POST', ceConnectorOverviewSave, { fixture: '/ng/api/connectors/CEConnectors/connectorList.json' }).as(
