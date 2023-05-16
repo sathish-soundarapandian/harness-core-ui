@@ -185,9 +185,8 @@ function InputSetList(): React.ReactElement {
   const [pipelineHasRuntimeInputs, setPipelineHasRuntimeInputs] = useState(true)
   useEffect(() => {
     if (
-      !template?.data?.inputSetTemplateYaml &&
-      isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) &&
-      !isEmpty(pipelineInputs?.inputs)
+      !template?.data?.inputSetTemplateYaml ||
+      (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) && !isEmpty(pipelineInputs?.inputs))
     ) {
       setPipelineHasRuntimeInputs(false)
     } else {

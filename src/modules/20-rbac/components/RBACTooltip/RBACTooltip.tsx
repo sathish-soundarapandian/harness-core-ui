@@ -43,7 +43,11 @@ const RBACTooltip: React.FC<RBACTooltipProps> = ({
   const { selectedProject } = useAppStore()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const resourceTypeHandler = RbacFactory.getResourceTypeHandler(resourceType)
-  const resourceIdentifierLabel = resourceIdentifier ? ` ${getString('common.for')} "${resourceIdentifier}" ` : ''
+  const resourceIdentifierLabel = resourceIdentifier
+    ? ` ${getString('common.on')} ${
+        resourceTypeHandler?.label ? getString(resourceTypeHandler?.label) : resourceTypeLabel
+      } ${getString('common.with')} ${getString('common.ID')} ${resourceIdentifier}`
+    : ''
   const currentScope = getScopeFromDTO(
     resourceScope || {
       projectIdentifier,
@@ -77,7 +81,6 @@ const RBACTooltip: React.FC<RBACTooltipProps> = ({
       }
     }
   }
-
   return (
     <Layout.Vertical padding="small" spacing="small" className={cx(css.minWidth, { className: !!className })}>
       <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_800}>
@@ -86,14 +89,16 @@ const RBACTooltip: React.FC<RBACTooltipProps> = ({
         <span>{` ${resourceTypeHandler?.label ? getString(resourceTypeHandler?.label) : resourceTypeLabel}.`}</span>
       </Text>
       <Text font={{ size: 'small' }} color={Color.GREY_800}>
-        {getString('rbac.youAreMissingTheFollowingPermission')}
+        {`${getString('rbac.youAreMissingTheFollowingPermission', {
+          entityType: resourceIdentifierLabel
+        })}`}
       </Text>
       <Text font={{ size: 'small' }} color={Color.GREY_800}>
         {'"'}
         {resourceTypeHandler?.permissionLabels?.[permission] || permission}
         <span>{` ${resourceTypeHandler?.label ? getString(resourceTypeHandler?.label) : resourceTypeLabel}`}</span>
         {'"'}
-        <span>{`${resourceIdentifierLabel}${getString('rbac.in')} ${getScopeSuffix()}`}</span>
+        <span>{` ${getString('rbac.in')} ${getScopeSuffix()}`}</span>
       </Text>
     </Layout.Vertical>
   )

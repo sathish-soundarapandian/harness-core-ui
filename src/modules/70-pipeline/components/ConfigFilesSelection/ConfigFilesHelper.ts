@@ -14,7 +14,7 @@ import type { ConfigFileType, ConfigFileHarnessDataType } from './ConfigFilesInt
 export const ConfigFilesMap: { [key: string]: ConfigFileType } = {
   Git: 'Git',
   Github: 'Github',
-  Gitlab: 'Gitlab',
+  GitLab: 'GitLab',
   Bitbucket: 'Bitbucket',
   Harness: 'Harness'
 }
@@ -22,7 +22,7 @@ export const ConfigFilesMap: { [key: string]: ConfigFileType } = {
 export const ConfigFileIconByType: Record<ConfigFileType, IconName> = {
   Git: 'service-github',
   Github: 'github',
-  Gitlab: 'gitlab',
+  GitLab: 'gitlab',
   Bitbucket: 'bitbucket-blue',
   Harness: 'harness'
 }
@@ -30,7 +30,7 @@ export const ConfigFileIconByType: Record<ConfigFileType, IconName> = {
 export const ConfigFileTypeTitle: Record<ConfigFileType, StringKeys> = {
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
-  Gitlab: 'common.repo_provider.gitlabLabel',
+  GitLab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'pipeline.manifestType.bitBucketLabel',
   Harness: 'harness'
 }
@@ -40,8 +40,20 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
   NativeHelm: [ConfigFilesMap.Harness],
   ServerlessAwsLambda: [ConfigFilesMap.Harness],
   AzureWebApp: [ConfigFilesMap.Harness],
-  Ssh: [ConfigFilesMap.Harness, ConfigFilesMap.Github, ConfigFilesMap.Git, ConfigFilesMap.Bitbucket],
-  WinRm: [ConfigFilesMap.Harness, ConfigFilesMap.Github, ConfigFilesMap.Git, ConfigFilesMap.Bitbucket],
+  Ssh: [
+    ConfigFilesMap.Harness,
+    ConfigFilesMap.Github,
+    ConfigFilesMap.Git,
+    ConfigFilesMap.Bitbucket,
+    ConfigFilesMap.GitLab
+  ],
+  WinRm: [
+    ConfigFilesMap.Harness,
+    ConfigFilesMap.Github,
+    ConfigFilesMap.Git,
+    ConfigFilesMap.Bitbucket,
+    ConfigFilesMap.GitLab
+  ],
   ECS: [ConfigFilesMap.Harness],
   CustomDeployment: [ConfigFilesMap.Harness],
   Elastigroup: [ConfigFilesMap.Harness],
@@ -55,7 +67,7 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
 export const ConfigFilesToConnectorLabelMap: Record<ConfigFileType, StringKeys> = {
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
-  Gitlab: 'common.repo_provider.gitlabLabel',
+  GitLab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'pipeline.manifestType.bitBucketLabel',
   Harness: 'harness'
 }
@@ -105,6 +117,6 @@ export const getConfigFilesHeaderTooltipId = (selectedDeploymentType: ServiceDef
 export const ConfigStoresBehindFeatureFlag = [
   ConfigFilesMap.Git,
   ConfigFilesMap.Github,
-  ConfigFilesMap.Gitlab,
+  ConfigFilesMap.GitLab,
   ConfigFilesMap.Bitbucket
 ]

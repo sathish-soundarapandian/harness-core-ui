@@ -15,7 +15,7 @@ import {
   SelectOption,
   useToaster
 } from '@harness/uicore'
-import { defaultTo, get, isEmpty, isNil, merge } from 'lodash-es'
+import { defaultTo, get, isArray, isEmpty, isNil, merge } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -241,11 +241,13 @@ export function DeployServiceEntityInputStep({
       updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}values`)
       formik.setFieldValue(`${localPathPrefix}values`, RUNTIME_INPUT_VALUE)
     } else {
-      const newValues = values.map(val => {
+      const newValues = values?.map(val => {
         let serviceInputs: any = RUNTIME_INPUT_VALUE
-        const existingServiceInputs = servicesValue.find((ser: any) => ser.serviceRef === (val.value as string))
-        if (existingServiceInputs) {
-          serviceInputs = existingServiceInputs.serviceInputs
+        if (isArray(servicesValue)) {
+          const existingServiceInputs = servicesValue.find((ser: any) => ser.serviceRef === (val.value as string))
+          if (existingServiceInputs) {
+            serviceInputs = existingServiceInputs.serviceInputs
+          }
         }
 
         return {

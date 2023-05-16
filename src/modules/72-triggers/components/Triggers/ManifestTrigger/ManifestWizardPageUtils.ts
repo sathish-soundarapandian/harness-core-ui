@@ -232,27 +232,6 @@ export const getValidationSchema = (
   })
 }
 
-export const ciCodebaseBuild = {
-  type: 'branch',
-  spec: {
-    branch: '<+trigger.branch>'
-  }
-}
-
-export const ciCodebaseBuildPullRequest = {
-  type: 'PR',
-  spec: {
-    number: '<+trigger.prNumber>'
-  }
-}
-
-export const ciCodebaseBuildIssueComment = {
-  type: 'tag',
-  spec: {
-    tag: '<+trigger.tag>'
-  }
-}
-
 export const getConnectorName = (connector?: ConnectorResponse): string =>
   `${
     connector?.connector?.orgIdentifier && connector?.connector?.projectIdentifier
@@ -424,37 +403,6 @@ export const getModifiedTemplateValues = (
     delete pipeline.template.templateInputs.properties.ci.codebase.repoName
   }
   return returnInitialValuesForEdit
-}
-
-/**
- * Get proper branch to fetch Trigger InputSets
- * If gitAwareForTriggerEnabled is true, pipelineBranchName is used only if it's not DEFAULT_TRIGGER_BRANCH
- * Otherwise, return branch which is the active pipeline branch
- */
-export function getTriggerInputSetsBranchQueryParameter({
-  gitAwareForTriggerEnabled,
-  pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
-  branch = ''
-}: {
-  gitAwareForTriggerEnabled?: boolean
-  pipelineBranchName?: string
-  branch?: string
-}): string {
-  if (gitAwareForTriggerEnabled) {
-    if (
-      [
-        ciCodebaseBuildIssueComment.spec.tag,
-        ciCodebaseBuildPullRequest.spec.number,
-        ciCodebaseBuild.spec.branch
-      ].includes(pipelineBranchName)
-    ) {
-      return branch
-    } else {
-      return pipelineBranchName
-    }
-  }
-
-  return branch
 }
 
 export const getErrorMessage = (error: any): string =>

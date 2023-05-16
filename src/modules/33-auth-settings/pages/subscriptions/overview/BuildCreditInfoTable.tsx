@@ -23,6 +23,11 @@ interface SummaryCardData {
   count: number | string
   className: string
 }
+
+enum creditTypes {
+  FREE = 'FREE',
+  PAID = 'PAID'
+}
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D>
   row: Row<D>
@@ -63,6 +68,7 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
   }
   const expiryTimeCell: CellType = ({ row }) => {
     const dataPassed = row.original
+
     const formattedExpiryTime = moment(dataPassed?.expiryTime).format('MMM DD YYYY')
     return (
       <Text color={Color.GREY_900} font={{ size: 'small' }} lineClamp={1}>
@@ -78,6 +84,13 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
       </Text>
     )
   }
+  const freeCell: CellType = ({ row }) => {
+    const dataPassed = row.original
+    const text = dataPassed?.creditType === creditTypes.FREE ? getString('common.subscriptions.usage.freeCredits') : ''
+    const freeCellElement =
+      dataPassed?.creditType === creditTypes.FREE ? <Text className={pageCss.freeStyle}>{text}</Text> : null
+    return freeCellElement
+  }
 
   const columns: Column<LicenseUsageDTO>[] = React.useMemo(() => {
     return [
@@ -85,7 +98,7 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
         Header: NameHeader('common.startDateCredit'),
         accessor: 'storeType',
         disableSortBy: true,
-        width: '33%',
+        width: '40%',
         Cell: starTimeCell
       },
 
@@ -93,14 +106,19 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
         Header: NameHeader('common.expiryDateCredit'),
         accessor: 'identifier',
         disableSortBy: true,
-        width: '38%',
+        width: '40%',
         Cell: expiryTimeCell
       },
       {
         Header: NameHeader('common.entitlement'),
         accessor: 'serviceInstances',
-        width: '33%',
+        width: '10%',
         Cell: entitlementCell
+      },
+      {
+        accessor: 'creditType',
+        width: '10%',
+        Cell: freeCell
       }
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [])
@@ -124,12 +142,12 @@ export function BuildCreditInfoTable({ data, licenseData }: BuildCreditInfoTable
         className: pageCss.overUseClass
       }
     ]
-  }, [])
+  }, [totalCredits])
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
-          <Layout.Vertical>
+          <Layout.Vertical className={pageCss.buildCreditHeader}>
             <Heading color={Color.BLACK} font={{ size: 'medium' }}>
               {getString('common.subscriptions.usage.buildCredits')}
             </Heading>

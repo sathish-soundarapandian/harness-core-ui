@@ -1153,6 +1153,7 @@ export interface StringsMap {
   'common.subscriptions.usage.ffActiveUserTootip': string
   'common.subscriptions.usage.ffDeveloperTooltip': string
   'common.subscriptions.usage.ffFFTooltip': string
+  'common.subscriptions.usage.freeCredits': string
   'common.subscriptions.usage.header': string
   'common.subscriptions.usage.last30days': string
   'common.subscriptions.usage.monthlyUsers': string

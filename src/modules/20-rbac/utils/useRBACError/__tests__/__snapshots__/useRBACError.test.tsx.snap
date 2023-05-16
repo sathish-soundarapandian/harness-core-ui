@@ -206,14 +206,14 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
         }
       }
     >
-      1. "core_connector_view" rbac.permissionOn 
+      1. "core_connector_view" rbac.permissionOn
       <span
         className="textToLowercase"
       >
          pipelines
       </span>
       <span>
-        rbac.in rbac.org "testOrg"
+         rbac.in rbac.org "testOrg"
       </span>
     </p>
   </Layout.Vertical>
@@ -230,14 +230,14 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
         }
       }
     >
-      2. "core_connector_edit" rbac.permissionOn 
+      2. "core_connector_edit" rbac.permissionOn
       <span
         className="textToLowercase"
       >
          pipelines
       </span>
       <span>
-        rbac.in rbac.project "proj123"
+         rbac.in rbac.project "proj123"
       </span>
     </p>
   </Layout.Vertical>
@@ -254,14 +254,14 @@ exports[`useRbacError testRBACError with multiple errors 1`] = `
         }
       }
     >
-      3. "core_connector_delete" rbac.permissionOn 
+      3. "core_connector_delete" rbac.permissionOn
       <span
         className="textToLowercase"
       >
          pipelines
       </span>
       <span>
-        rbac.in rbac.org "testOrg3"
+         rbac.in rbac.org "testOrg3"
       </span>
     </p>
   </Layout.Vertical>

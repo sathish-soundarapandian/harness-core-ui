@@ -68,10 +68,15 @@ const CreditInfo: React.FC<CreditInfoProps> = ({ totalCredits, expiryDate }) => 
   }
   return <UsageInfoCard {...props} />
 }
+
+export enum creditStatus {
+  ACTIVE = 'ACTIVE',
+  EXPIRED = 'EXPIRED'
+}
 export const creditSum = (creditsData: CreditDTO[]): number => {
   let totalCredits = 0
   creditsData.forEach((cd: CreditDTO) => {
-    totalCredits = totalCredits + (cd.quantity || 0)
+    if (cd.creditStatus !== creditStatus.EXPIRED) totalCredits = totalCredits + (cd.quantity || 0)
   })
   return totalCredits
 }

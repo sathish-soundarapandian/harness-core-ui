@@ -21,11 +21,24 @@
   border: solid 1px !important;
   border-radius: 4px;
 }
+
+.buildCreditHeader {
+  margin-bottom: 15px !important;
+}
+
+.freeStyle {
+  text-align: center;
+  width: 90px;
+  height: 20px;
+  color: white !important;
+  background-color: #2114b5 !important;
+  border: 1px solid var(--black);
+  border-radius: 4px;
+}
 .badgesContainer {
   height: 56px;
   display: flex;
-  margin-bottom: 15px;
-
+  align-items: flex-start !important;
   .badge {
     display: flex;
     height: 32px;
