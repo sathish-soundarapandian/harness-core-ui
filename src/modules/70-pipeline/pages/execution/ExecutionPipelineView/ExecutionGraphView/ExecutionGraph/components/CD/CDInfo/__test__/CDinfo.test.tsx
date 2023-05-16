@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getByTestId, getByText, render } from '@testing-library/react'
+import { getAllByTestId, getByTestId, getByText, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import CDInfo, { CDInfoProps } from '../CDInfo'
 
@@ -24,7 +24,13 @@ const serviceEnvProps = (): CDInfoProps => ({
       moduleInfo: {
         cd: {
           serviceInfo: {
-            displayName: 'ServiceA'
+            displayName: 'ServiceA',
+            artifacts: {
+              sidecars: [],
+              primary: {
+                imagePath: 'test-image'
+              }
+            }
           },
           infraExecutionSummary: {
             name: 'infra1',
@@ -70,5 +76,10 @@ describe('CDInfo', () => {
 
     const infraElement = getByTestId(container, 'hovercard-infraStructure')
     expect(infraElement.textContent).toBe('infrastructure-1')
+
+    expect(getByText(container, 'artifactOrArtifacts')).toBeInTheDocument()
+
+    const artifacts = getAllByTestId(container, 'hovercard-artifacts')
+    expect(artifacts[0].textContent).toBe('test-image')
   })
 })

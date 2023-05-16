@@ -80,7 +80,7 @@ export default function CDInfo(props: CDInfoProps): React.ReactElement {
                       key={`${imagePath}+${index}`}
                       font={{ size: 'xsmall' }}
                       color={Color.GREY_700}
-                      data-testid="hovercard-environment"
+                      data-testid="hovercard-artifacts"
                     >
                       {imagePath}
                     </Text>
