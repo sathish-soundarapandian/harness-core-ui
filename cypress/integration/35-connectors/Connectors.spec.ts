@@ -27,6 +27,9 @@ describe('Connectors list', () => {
   })
 
   it('Connector addition', () => {
+    cy.intercept('POST', connectorsListAPI, { fixture: 'ng/api/connectors/emptyConnectors.json' }).as(
+      'connectorsCatalogue'
+    )
     cy.intercept('GET', connectorsCatalogueAPI, { fixture: 'ng/api/connectors/catalogue.json' }).as(
       'connectorsCatalogue'
     )
