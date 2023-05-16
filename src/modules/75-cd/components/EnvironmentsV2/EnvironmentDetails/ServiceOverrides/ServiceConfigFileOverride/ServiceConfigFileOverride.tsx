@@ -284,7 +284,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
           />
         )
       case ConfigFilesToConnectorMap.Git:
-      case ConfigFilesToConnectorMap.GitLab:
+      case ConfigFilesToConnectorMap.Gitlab:
       case ConfigFilesToConnectorMap.Bitbucket:
       case ConfigFilesToConnectorMap.Github:
         return (
@@ -338,6 +338,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<any>>> => {
     const arr: Array<React.ReactElement<StepProps<any>>> = []
     let configDetailStep = null
+
     if (isEditMode && fetchingConnector) {
       configDetailStep = <PageSpinner />
     } else {
@@ -354,8 +355,10 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
             />
           )
           break
-
-        default:
+        case ConfigFilesToConnectorMap.Git:
+        case ConfigFilesToConnectorMap.Gitlab:
+        case ConfigFilesToConnectorMap.Bitbucket:
+        case ConfigFilesToConnectorMap.Github:
           configDetailStep = (
             <GitConfigStep
               {...commonProps}
@@ -366,6 +369,19 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
               selectedConfigFile={configStore}
               {...commonLastStepProps}
               {...((shouldPassPrevStepData() ? prevStepProps() : {}) as GitConfigFileLastStepPrevStepData)}
+            />
+          )
+          break
+
+        default:
+          configDetailStep = (
+            <HarnessConfigStep
+              {...commonProps}
+              stepName={getString('pipeline.configFiles.title', { type: 'Details' })}
+              name={getString('pipeline.configFiles.title', { type: 'Details' })}
+              listOfConfigFiles={fileOverrides}
+              {...commonLastStepProps}
+              {...((shouldPassPrevStepData() ? prevStepProps() : {}) as HarnessConfigFileLastStepPrevStepData)}
             />
           )
           break
