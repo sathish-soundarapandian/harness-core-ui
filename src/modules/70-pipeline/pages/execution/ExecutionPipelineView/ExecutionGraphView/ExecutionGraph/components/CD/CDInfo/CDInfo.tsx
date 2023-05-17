@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { get, isEmpty } from 'lodash-es'
-import { Container, Icon, Text, Layout } from '@harness/uicore'
+import { Container, Icon, Text, Layout, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import BarrierStageTooltip from '../BarrierStageTooltip/BarrierStageTooltip'
@@ -18,6 +18,32 @@ export interface CDInfoProps {
     barrierInfoLoading?: boolean
     barrierData?: any
   }
+}
+
+interface IconComponentProps {
+  label: string
+  value: string
+  icon: IconName
+  dataTestId: string
+}
+
+function InfoComponent(props: IconComponentProps): React.ReactElement {
+  const { label, value, icon, dataTestId } = props
+  return (
+    <Layout.Horizontal padding={{ right: 'medium', bottom: 'small', left: 'small' }}>
+      <Container flex={{ justifyContent: 'center', alignItems: 'start' }} width={32}>
+        <Icon name={icon} color={Color.GREY_600} size={24} />
+      </Container>
+      <Layout.Vertical spacing={'xsmall'} padding={{ top: 'xsmall', bottom: 'xsmall' }}>
+        <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK}>
+          {label}
+        </Text>
+        <Text font={{ size: 'xsmall' }} color={Color.GREY_700} data-testid={dataTestId}>
+          {value}
+        </Text>
+      </Layout.Vertical>
+    </Layout.Horizontal>
+  )
 }
 
 export default function CDInfo(props: CDInfoProps): React.ReactElement {
@@ -51,20 +77,14 @@ export default function CDInfo(props: CDInfoProps): React.ReactElement {
       {(serviceName || artifacts.length > 0 || environment) && (
         <Container border={{ top: true, width: 1, color: Color.GREY_100 }} padding={{ top: 'small' }}>
           {serviceName && (
-            <Layout.Horizontal padding={{ right: 'medium', bottom: 'small', left: 'small' }}>
-              <Container flex={{ justifyContent: 'center', alignItems: 'start' }} width={32}>
-                <Icon name="services" color={Color.GREY_600} size={24} />
-              </Container>
-              <Layout.Vertical spacing={'xsmall'} padding={{ top: 'xsmall', bottom: 'xsmall' }}>
-                <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK}>
-                  {getString('serviceOrServices')}
-                </Text>
-                <Text font={{ size: 'xsmall' }} color={Color.GREY_700} data-testid="hovercard-service">
-                  {serviceName}
-                </Text>
-              </Layout.Vertical>
-            </Layout.Horizontal>
+            <InfoComponent
+              label={getString('serviceOrServices')}
+              value={serviceName}
+              icon="services"
+              dataTestId="hovercard-service"
+            />
           )}
+
           {artifacts.length > 0 && (
             <Layout.Horizontal padding={{ right: 'medium', bottom: 'small', left: 'small' }}>
               <Container flex={{ justifyContent: 'center', alignItems: 'start' }} width={32}>
@@ -90,34 +110,20 @@ export default function CDInfo(props: CDInfoProps): React.ReactElement {
             </Layout.Horizontal>
           )}
           {environment && (
-            <Layout.Horizontal padding={{ right: 'medium', bottom: 'small', left: 'small' }}>
-              <Container flex={{ justifyContent: 'center', alignItems: 'start' }} width={32}>
-                <Icon name="services" color={Color.GREY_600} size={24} />
-              </Container>
-              <Layout.Vertical spacing={'xsmall'} padding={{ top: 'xsmall', bottom: 'xsmall' }}>
-                <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK}>
-                  {getString('environmentOrEnvironments')}
-                </Text>
-                <Text font={{ size: 'xsmall' }} color={Color.GREY_700} data-testid="hovercard-environment">
-                  {environment}
-                </Text>
-              </Layout.Vertical>
-            </Layout.Horizontal>
+            <InfoComponent
+              label={getString('environmentOrEnvironments')}
+              value={environment}
+              icon="services"
+              dataTestId="hovercard-environment"
+            />
           )}
           {infraStructures && (
-            <Layout.Horizontal padding={{ right: 'medium', bottom: 'small', left: 'small' }}>
-              <Container flex={{ justifyContent: 'center', alignItems: 'start' }} width={32}>
-                <Icon name="infrastructure" color={Color.GREY_600} size={24} />
-              </Container>
-              <Layout.Vertical spacing={'xsmall'} padding={{ top: 'xsmall', bottom: 'xsmall' }}>
-                <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK}>
-                  {getString('infrastructureText')}
-                </Text>
-                <Text font={{ size: 'xsmall' }} color={Color.GREY_700} data-testid="hovercard-infraStructure">
-                  {infraStructures}
-                </Text>
-              </Layout.Vertical>
-            </Layout.Horizontal>
+            <InfoComponent
+              label={getString('infrastructureText')}
+              value={infraStructures}
+              icon="infrastructure"
+              dataTestId="hovercard-infraStructure"
+            />
           )}
         </Container>
       )}

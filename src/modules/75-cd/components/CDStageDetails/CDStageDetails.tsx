@@ -197,10 +197,10 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
               accountId,
               orgIdentifier,
               projectIdentifier,
-              environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', null),
+              environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''),
               sectionId: EnvironmentDetailsTab.INFRASTRUCTURE,
               infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
-              infrastructureId: get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', null),
+              infrastructureId: get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', ''),
               module
             })}
           >
