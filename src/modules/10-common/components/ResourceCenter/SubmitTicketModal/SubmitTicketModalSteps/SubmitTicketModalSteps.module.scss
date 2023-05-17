@@ -34,13 +34,16 @@
 
 .link {
   color: var(--white) !important;
+  a {
+    color: var(--primary-8) !important;
+  }
 }
 
 .suggestionsPanel {
-  padding-left: '20px';
-  border: '1px solid grey';
-  background-color: 'white';
-  height: '580px';
-  margin-bottom: '20px';
-  overflow-y: 'auto';
+  padding-left: 20px;
+  border: 1px solid var(--grey);
+  background-color: var(--white);
+  height: 580px;
+  margin-bottom: 20px;
+  overflow-y: auto;
 }

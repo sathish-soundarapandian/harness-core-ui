@@ -102,7 +102,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
               <Text className={css.link}>
                 Ticket{' '}
                 <a href={ticketURL} target="_blank" rel="noreferrer">
-                  ${zendeskResponse.ticket.id}
+                  {zendeskResponse.ticket.id}
                 </a>{' '}
                 has been created successfully
               </Text>

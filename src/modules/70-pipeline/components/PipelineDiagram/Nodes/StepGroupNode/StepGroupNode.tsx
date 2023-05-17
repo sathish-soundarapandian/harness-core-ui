@@ -40,7 +40,7 @@ import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
 export function StepGroupNode(props: any): JSX.Element {
   const { replaceQueryParams } = useUpdateQueryParams<ExecutionPageQueryParams>()
-  const { queryParams, selectedStageId } = useExecutionContext()
+  const { queryParams, selectedStageId, pipelineExecutionDetail } = useExecutionContext()
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getString } = useStrings()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
@@ -151,7 +151,22 @@ export function StepGroupNode(props: any): JSX.Element {
               showPrimary(getString('pipeline.execution.emptyStepGroup'))
             }
             if (stageGroupTypes.includes(props?.type)) {
-              if (isExecutionNotStarted(props?.status) || isExecutionSkipped(props?.status)) return
+              // Restrict pipeline rollback stage uncollapsed view in chained pipeline
+              const isChildStagePipelineRollback =
+                !isEmpty(selectedStageId) &&
+                props?.type === StageType.PIPELINE_ROLLBACK &&
+                get(pipelineExecutionDetail?.pipelineExecutionSummary, [
+                  'layoutNodeMap',
+                  `${selectedStageId}`,
+                  'nodeType'
+                ]) === StageType.PIPELINE
+              if (
+                isExecutionNotStarted(props?.status) ||
+                isExecutionSkipped(props?.status) ||
+                isChildStagePipelineRollback
+              )
+                return
+
               const params = {
                 ...queryParams,
                 stage: props?.id,
