@@ -112,6 +112,12 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
       )
     : []
 
+  const gitOpsClusters = Array.isArray(get(stage, 'moduleInfo.cd.gitopsExecutionSummary.clusters'))
+    ? (get(stage, 'moduleInfo.cd.gitopsExecutionSummary') as Required<GitOpsExecutionSummary>).clusters.map(cluster =>
+        defaultTo({ name: cluster.clusterName, identifier: cluster.clusterId }, { name: '', identifier: '' })
+      )
+    : []
+
   const serviceScope = getScopeFromValue(get(stage, 'moduleInfo.cd.serviceInfo.identifier', ''))
   return (
     <div className={css.container}>
@@ -190,25 +196,47 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
             )}
           </ul>
         </div>
-        <div>
-          <StrTemplate className={css.title} tagName="div" stringID="infrastructureText" />
-          <Link
-            to={routes.toEnvironmentDetails({
-              accountId,
-              orgIdentifier,
-              projectIdentifier,
-              environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''),
-              sectionId: EnvironmentDetailsTab.INFRASTRUCTURE,
-              infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
-              infrastructureId: get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', ''),
-              module
-            })}
-          >
-            <Text lineClamp={1} className={css.stageItemDetails}>
-              {get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', null)}
-            </Text>
-          </Link>
-        </div>
+
+        {gitOpsClusters.length ? (
+          <div>
+            <StrTemplate className={css.title} tagName="div" stringID="common.clusters" />
+
+            <>
+              {gitOpsClusters.map(cluster => {
+                return (
+                  <Text
+                    lineClamp={1}
+                    className={css.stageItemDetails}
+                    margin={{ right: 'xsmall' }}
+                    key={cluster.identifier}
+                  >
+                    {cluster.name}
+                  </Text>
+                )
+              })}
+            </>
+          </div>
+        ) : (
+          <div>
+            <StrTemplate className={css.title} tagName="div" stringID="infrastructureText" />
+            <Link
+              to={routes.toEnvironmentDetails({
+                accountId,
+                orgIdentifier,
+                projectIdentifier,
+                environmentIdentifier: get(stage, 'moduleInfo.cd.infraExecutionSummary.identifier', ''),
+                sectionId: EnvironmentDetailsTab.INFRASTRUCTURE,
+                infraDetailsTab: InfraDefinitionTabs.CONFIGURATION,
+                infrastructureId: get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', ''),
+                module
+              })}
+            >
+              <Text lineClamp={1} className={css.stageItemDetails}>
+                {get(stage, 'moduleInfo.cd.infraExecutionSummary.infrastructureIdentifier', null)}
+              </Text>
+            </Link>
+          </div>
+        )}
         <GitopsApplications
           gitOpsApps={gitOpsApps}
           orgIdentifier={orgIdentifier}
