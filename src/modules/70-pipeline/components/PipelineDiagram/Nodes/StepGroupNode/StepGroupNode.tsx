@@ -199,19 +199,15 @@ export function StepGroupNode(props: any): JSX.Element {
             }}
             onDragLeave={() => allowAdd && debounceHideVisibility()}
             style={stepGroupData?.containerCss ? stepGroupData?.containerCss : undefined}
-            className={cx(
-              css.stepGroup,
-              //  css.marginBottom,
-              {
-                [css.firstnode]: !props?.isParallelNode,
-                [css.parallelNodes]: props?.isParallelNode,
-                [css.nestedGroup]: isNestedStepGroup,
-                [css.stepGroupNormal]: !isNestedStepGroup,
-                parentMatrix: isParentMatrix,
-                [css.templateStepGroup]: !!props?.data?.isTemplateNode,
-                [css.rollbackGroup]: StageType.PIPELINE_ROLLBACK === props?.type
-              }
-            )}
+            className={cx(css.stepGroup, {
+              [css.firstnode]: !props?.isParallelNode,
+              [css.parallelNodes]: props?.isParallelNode,
+              [css.nestedGroup]: isNestedStepGroup,
+              [css.stepGroupNormal]: !isNestedStepGroup,
+              parentMatrix: isParentMatrix,
+              [css.templateStepGroup]: !!props?.data?.isTemplateNode,
+              [css.rollbackGroup]: StageType.PIPELINE_ROLLBACK === props?.type
+            })}
           >
             <div
               className={cx(
