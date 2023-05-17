@@ -12,6 +12,8 @@ import { isEmpty } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { PrimaryArtifact } from 'services/cd-ng'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import type { ArtifactListViewProps } from '../ArtifactInterface'
 import PrimaryArtifactView from './PrimaryArtifact/PrimaryArtifactView'
 import css from '../ArtifactsSelection.module.scss'
@@ -31,6 +33,9 @@ function ArtifactListView({
   } else {
     isArtifactSelected = !isEmpty(primaryArtifact?.spec?.connectorRef)
   }
+
+  const CDS_NG_TRIGGER_MULTI_ARTIFACTS = useFeatureFlag(FeatureFlag.CDS_NG_TRIGGER_MULTI_ARTIFACTS)
+
   return (
     <Layout.Vertical
       style={{ flexShrink: 'initial', width: '100%' }}
@@ -38,7 +43,7 @@ function ArtifactListView({
       spacing="medium"
     >
       <div>
-        {!isArtifactSelected ? (
+        {CDS_NG_TRIGGER_MULTI_ARTIFACTS ? (
           <>
             <Label
               style={{
@@ -59,24 +64,70 @@ function ArtifactListView({
               variation={ButtonVariation.LINK}
               onClick={() => addNewArtifact()}
               text={getString('pipeline.artifactTriggerConfigPanel.defineArtifactSource')}
+              margin={isArtifactSelected ? { bottom: 'large' } : {}}
             />
+            {isArtifactSelected && (
+              <>
+                <div className={cx(css.artifactList, css.listHeader)}>
+                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+                    {getString('pipeline.artifactsSelection.artifactType')}
+                  </Text>
+                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
+                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
+                </div>
+                <PrimaryArtifactView
+                  primaryArtifact={primaryArtifact as PrimaryArtifact}
+                  deleteArtifact={deleteArtifact}
+                  accountId={accountId}
+                  fetchedConnectorResponse={fetchedConnectorResponse}
+                  editArtifact={editArtifact}
+                />
+              </>
+            )}
           </>
         ) : (
           <>
-            <div className={cx(css.artifactList, css.listHeader)}>
-              <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-                {getString('pipeline.artifactsSelection.artifactType')}
-              </Text>
-              <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
-              <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
-            </div>
-            <PrimaryArtifactView
-              primaryArtifact={primaryArtifact as PrimaryArtifact}
-              deleteArtifact={deleteArtifact}
-              accountId={accountId}
-              fetchedConnectorResponse={fetchedConnectorResponse}
-              editArtifact={editArtifact}
-            />
+            {!isArtifactSelected ? (
+              <>
+                <Label
+                  style={{
+                    fontSize: 13,
+                    color: 'var(--form-label)',
+                    fontWeight: 'normal',
+                    marginBottom: 'var(--spacing-small)'
+                  }}
+                  data-tooltip-id={'selectArtifactManifestLabel'}
+                >
+                  {getString('pipeline.artifactTriggerConfigPanel.artifact')}
+                  <HarnessDocTooltip tooltipId="selectArtifactManifestLabel" useStandAlone={true} />
+                </Label>
+                <Button
+                  className={css.addArtifact}
+                  id="add-artifact"
+                  size={ButtonSize.SMALL}
+                  variation={ButtonVariation.LINK}
+                  onClick={() => addNewArtifact()}
+                  text={getString('pipeline.artifactTriggerConfigPanel.defineArtifactSource')}
+                />
+              </>
+            ) : (
+              <>
+                <div className={cx(css.artifactList, css.listHeader)}>
+                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+                    {getString('pipeline.artifactsSelection.artifactType')}
+                  </Text>
+                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
+                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
+                </div>
+                <PrimaryArtifactView
+                  primaryArtifact={primaryArtifact as PrimaryArtifact}
+                  deleteArtifact={deleteArtifact}
+                  accountId={accountId}
+                  fetchedConnectorResponse={fetchedConnectorResponse}
+                  editArtifact={editArtifact}
+                />
+              </>
+            )}
           </>
         )}
       </div>

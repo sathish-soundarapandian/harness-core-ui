@@ -17,12 +17,10 @@ import type { IconProps } from '@harness/icons'
 import { merge, noop } from 'lodash-es'
 import { PageConnectorResponse, PrimaryArtifact, useGetConnectorListV2 } from 'services/cd-ng'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 
 import { useQueryParams } from '@common/hooks'
-import { useTelemetry } from '@common/hooks/useTelemetry'
-import { ArtifactActions } from '@common/constants/TrackingConstants'
 import type { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
@@ -31,9 +29,8 @@ import {
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getTriggerArtifactInitialSpec } from '@triggers/components/Triggers/ArtifactTrigger/TriggersWizardPageUtils'
-import type { ArtifactTriggerConfig, NGTriggerSourceV2 } from 'services/pipeline-ng'
+import type { NGTriggerSourceV2 } from 'services/pipeline-ng'
 import ArtifactWizard from '@pipeline/components/ArtifactsSelection/ArtifactWizard/ArtifactWizard'
 import { showConnectorStep } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 
@@ -71,23 +68,16 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
   const { spec: triggerSpec } = (formikProps.values?.source ?? {}) as Omit<Required<NGTriggerSourceV2>, 'pollInterval'>
   const { type: artifactType, spec } = triggerSpec
   const artifactSpec = spec as ArtifactTriggerSpec
-  const selectedArtifactType = artifactType as Required<ArtifactTriggerConfig>['type']
+  const selectedArtifactType = artifactType as Required<ArtifactType>
   const [isEditMode, setIsEditMode] = useState(false)
   const [connectorView, setConnectorView] = useState(false)
   const [fetchedConnectorResponse, setFetchedConnectorResponse] = useState<PageConnectorResponse | undefined>()
   const [primaryArtifact, setPrimaryArtifact] = useState<PrimaryArtifact>(triggerSpec as PrimaryArtifact)
+  const [isNewArtifact, setIsNewArtifact] = useState(false)
 
   const { getString } = useStrings()
-  const { trackEvent } = useTelemetry()
-  const { expressions } = useVariablesExpression()
 
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<
-    PipelineType<{
-      orgIdentifier: string
-      projectIdentifier: string
-      accountId: string
-    }>
-  >()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const DIALOG_PROPS: IDialogProps = {
@@ -177,14 +167,10 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         />
       </Dialog>
     ),
-    [selectedArtifactType, connectorView, formikProps]
+    [selectedArtifactType, connectorView, formikProps, isNewArtifact]
   )
 
-  const setTelemetryEvent = useCallback((): void => {
-    trackEvent(ArtifactActions.SavePrimaryArtifactOnPipelinePage, {})
-  }, [trackEvent])
-
-  const addArtifact = async (artifactObj: ArtifactTriggerSpec): Promise<void> => {
+  const addArtifact = (artifactObj: ArtifactTriggerSpec): void => {
     const { type, spec: _triggerSpec } = formikProps.values.source ?? {}
     const { type: _artifactType } = _triggerSpec ?? {}
 
@@ -199,27 +185,27 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
       }
     }
 
-    await formikProps.setValues(values)
+    formikProps.setValues(values)
 
     setPrimaryArtifact(values?.source?.spec)
-
-    setTelemetryEvent()
     hideConnectorModal()
   }
 
   const getArtifactInitialValues = useCallback((): InitialArtifactDataType => {
     return {
       submittedArtifact: selectedArtifactType,
-      connectorId: artifactSpec?.connectorRef
+      connectorId: isNewArtifact ? undefined : artifactSpec?.connectorRef
     }
-  }, [selectedArtifactType, artifactSpec])
+  }, [selectedArtifactType, artifactSpec, isNewArtifact])
 
   const addNewArtifact = (): void => {
+    setIsNewArtifact(true)
     setConnectorView(false)
     showConnectorModal()
   }
 
   const editArtifact = (): void => {
+    setIsNewArtifact(false)
     setConnectorView(false)
     showConnectorModal()
   }
@@ -256,16 +242,16 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
     }
   }
 
-  const artifactLastStepProps = useCallback((): ImagePathProps<ArtifactTriggerSpec> => {
+  const getArtifactLastStepProps = useCallback((): ImagePathProps<ArtifactTriggerSpec> => {
     return {
       ...getLastStepName(),
-      initialValues: artifactSpec,
+      initialValues: isNewArtifact ? getTriggerArtifactInitialSpec(selectedArtifactType) ?? artifactSpec : artifactSpec,
       handleSubmit: (data: ArtifactTriggerSpec) => {
         addArtifact(data)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addArtifact, expressions, selectedArtifactType, getString])
+  }, [addArtifact, selectedArtifactType, isNewArtifact])
 
   const getLabels = useCallback((): ConnectorRefLabelType => {
     return {
@@ -313,39 +299,39 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
   const getLastSteps = useCallback((): JSX.Element => {
     switch (selectedArtifactType) {
       case 'Gcr':
-        return <GCRImagePath {...artifactLastStepProps()} />
+        return <GCRImagePath {...getArtifactLastStepProps()} />
       case 'Ecr':
-        return <ECRArtifact {...artifactLastStepProps()} />
+        return <ECRArtifact {...getArtifactLastStepProps()} />
       case 'Nexus3Registry':
-        return <NexusArtifact {...artifactLastStepProps()} />
+        return <NexusArtifact {...getArtifactLastStepProps()} />
       case 'ArtifactoryRegistry':
-        return <Artifactory {...artifactLastStepProps()} />
+        return <Artifactory {...getArtifactLastStepProps()} />
       case 'AmazonS3':
-        return <AmazonS3 {...artifactLastStepProps()} />
+        return <AmazonS3 {...getArtifactLastStepProps()} />
       case 'GithubPackageRegistry':
-        return <GithubPackageRegistry {...artifactLastStepProps()} />
+        return <GithubPackageRegistry {...getArtifactLastStepProps()} />
       case 'GoogleArtifactRegistry':
-        return <GoogleArtifactRegistry {...artifactLastStepProps()} />
+        return <GoogleArtifactRegistry {...getArtifactLastStepProps()} />
       case 'Acr':
-        return <ACRArtifact {...artifactLastStepProps()} />
+        return <ACRArtifact {...getArtifactLastStepProps()} />
       case 'AzureArtifacts':
-        return <AzureArtifacts {...artifactLastStepProps()} />
+        return <AzureArtifacts {...getArtifactLastStepProps()} />
       case 'CustomArtifact':
-        return <CustomArtifact {...artifactLastStepProps()} />
+        return <CustomArtifact {...getArtifactLastStepProps()} />
       case 'Jenkins':
-        return <JenkinsArtifact {...artifactLastStepProps()} />
+        return <JenkinsArtifact {...getArtifactLastStepProps()} />
       case 'DockerRegistry':
-        return <DockerRegistryArtifact {...artifactLastStepProps()} />
+        return <DockerRegistryArtifact {...getArtifactLastStepProps()} />
       case 'AmazonMachineImage':
-        return <AmazonMachineImage {...artifactLastStepProps()} />
+        return <AmazonMachineImage {...getArtifactLastStepProps()} />
       case 'GoogleCloudStorage':
-        return <GoogleCloudStorage {...artifactLastStepProps()} />
+        return <GoogleCloudStorage {...getArtifactLastStepProps()} />
       case 'Bamboo':
-        return <BambooArtifact {...artifactLastStepProps()} />
+        return <BambooArtifact {...getArtifactLastStepProps()} />
       default:
         return <></>
     }
-  }, [artifactLastStepProps, selectedArtifactType])
+  }, [getArtifactLastStepProps, selectedArtifactType])
 
   const handleConnectorViewChange = useCallback((isConnectorView: boolean): void => {
     setConnectorView(isConnectorView)

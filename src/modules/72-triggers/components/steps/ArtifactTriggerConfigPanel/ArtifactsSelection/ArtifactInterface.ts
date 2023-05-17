@@ -39,21 +39,8 @@ export interface ArtifactsSelectionProps {
   readonly: boolean
 }
 
-export type ArtifactType =
-  | 'DockerRegistry'
-  | 'Gcr'
-  | 'Ecr'
-  | 'Nexus3Registry'
-  | 'ArtifactoryRegistry'
-  | 'CustomArtifact'
-  | 'Acr'
-  | 'Jenkins'
-  | 'AmazonS3'
-  | 'GoogleArtifactRegistry'
-  | 'GithubPackageRegistry'
-  | 'AzureArtifacts'
-  | 'GoogleCloudStorage'
-  | 'AmazonMachineImage'
+export type ArtifactType = Required<ArtifactTriggerConfig>['type']
+
 export interface OrganizationCreationType {
   type: ArtifactType
 }
@@ -66,7 +53,7 @@ export enum RepositoryPortOrServer {
   RepositoryUrl = 'repositoryUrl'
 }
 export interface InitialArtifactDataType {
-  submittedArtifact?: ArtifactTriggerConfig['type']
+  submittedArtifact?: ArtifactType
   connectorId: string | undefined | ConnectorSelectedValue
 }
 export interface ImagePathTypes {

@@ -26,7 +26,6 @@ import type {
   GcrSpec,
   JenkinsRegistrySpec,
   TriggerEventDataCondition,
-  ArtifactTriggerConfig,
   CustomArtifactSpec,
   GithubPackagesSpec,
   GarSpec,
@@ -60,6 +59,7 @@ import type {
 import type { AddConditionInterface } from '@triggers/pages/triggers/views/AddConditionsSection'
 import {
   ArtifactTriggerSpec,
+  ArtifactType,
   RepositoryPortOrServer
 } from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactsSelection/ArtifactInterface'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
@@ -2035,9 +2035,7 @@ export const getArtifactManifestTriggerYaml = ({
   return clearNullUndefined(triggerYaml)
 }
 
-export const getTriggerArtifactInitialSpec = (
-  artifactType: ArtifactTriggerConfig['type']
-): ArtifactTriggerSpec | undefined => {
+export const getTriggerArtifactInitialSpec = (artifactType: ArtifactType): ArtifactTriggerSpec | undefined => {
   const connectorRef = ''
   const tag = '<+trigger.artifact.build>'
   const version = '<+trigger.artifact.build>'
@@ -2196,7 +2194,7 @@ export const getTriggerArtifactInitialSpec = (
 
 export const getTriggerArtifactInitialSource = (
   triggerType: TriggerType,
-  artifactType: ArtifactTriggerConfig['type']
+  artifactType: ArtifactType
 ): NGTriggerSourceV2 => ({
   type: triggerType,
   spec: {
