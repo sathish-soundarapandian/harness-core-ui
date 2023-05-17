@@ -186,6 +186,12 @@ declare module 'ccmui/MicroFrontendApp' {
   export default ChildApp
 }
 
+declare module 'cdbui/MicroFrontendApp' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'ciui/MicroFrontendApp' {
   const ChildApp: ChildAppComponent
   export default ChildApp

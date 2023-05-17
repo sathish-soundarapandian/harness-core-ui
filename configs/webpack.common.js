@@ -29,6 +29,7 @@ const ChildAppError = path.resolve(CONTEXT, './src/microfrontends/ChildAppError.
 const enableGovernance = process.env.ENABLE_GOVERNANCE !== 'false'
 const enableGitOpsUI = process.env.ENABLE_GITOPSUI !== 'false'
 const enableChaosUI = process.env.ENABLE_CHAOS !== 'false'
+const enableCDBUI = process.env.ENABLE_CDB_UI === 'true'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableCIUI = process.env.ENABLE_CI_UI === 'true'
 const enableTIUI = process.env.ENABLE_TI_UI === 'true'
@@ -45,6 +46,7 @@ console.table({
   enableGitOpsUI,
   enableChaosUI,
   enableCCMUI,
+  enableCDBUI,
   enableCIUI,
   enableTIUI,
   enableSTO,
@@ -206,6 +208,7 @@ const config = {
         enableSTO,
         enableChaosUI,
         enableCCMUI,
+        enableCDBUI,
         enableCIUI,
         enableTIUI,
         enableCODE,
@@ -238,6 +241,11 @@ if (!enableGitOpsUI) {
 if (!enableCCMUI) {
   // render a mock app when CCM MF is disabled
   config.resolve.alias['ccmui/MicroFrontendApp'] = ChildAppError
+}
+
+if (!enableCDBUI) {
+  // render a mock app when CDB MF is disabled
+  config.resolve.alias['cdbui/MicroFrontendApp'] = ChildAppError
 }
 
 if (!enableCIUI) {

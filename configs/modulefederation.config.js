@@ -29,6 +29,7 @@ module.exports = ({
   enableSTO,
   enableChaosUI,
   enableCCMUI,
+  enableCDBUI,
   enableCODE,
   enableFFUI,
   enableCIUI,
@@ -85,6 +86,10 @@ module.exports = ({
 
   if (enableIACM) {
     remotes.iacm = "remoteIACM@[window.getApiBaseUrl('iacm/remoteEntry.js')]"
+  }
+
+  if (enableCDBUI) {
+    remotes.cdbui = "cdbui@[window.getApiBaseUrl('cdbui/remoteEntry.js')]"
   }
 
   if (process.env.TARGET_LOCALHOST) {
