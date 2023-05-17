@@ -20,11 +20,11 @@ metadata:
 
   links:
     - url: https://github.com/harness/harness-core-ui
-      title: Harness-Core UI Repo 
-      icon: Github Repo
+      title: Harness-Core-UI-Repo 
+      icon: Github-Repo
     - url: https://qa.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default1/projects/harnesscoreuiidp/pipelines/harnesscoreuideploymentidp/pipeline-studio/?storeType=INLINE
-      title: Deployment Pipeline
-      icon: Deployment Pipeline
+      title: Deployment-Pipeline
+      icon: Deployment-Pipeline
 spec:
   type: service
   lifecycle: experimental
