@@ -353,11 +353,14 @@ export const openWindowInNewTab = (url?: string): void => {
 
 export const getMonitoredServiceIdentifierProp = (
   isAccountLevel: boolean,
+  isCompositeSLO: boolean,
   monitoredServiceIdentifiers?: string[],
   monitoredServiceIdentifier?: string
 ) => {
   if (isAccountLevel) {
     return { scopedMonitoredServiceIdentifiers: monitoredServiceIdentifiers }
+  } else if (monitoredServiceIdentifiers?.length && isCompositeSLO) {
+    return { monitoredServiceIdentifiers }
   } else if (monitoredServiceIdentifier) {
     return { monitoredServiceIdentifiers: [monitoredServiceIdentifier] }
   }

@@ -48,7 +48,8 @@ export default function ChangesTable({
   dataTooltipId,
   monitoredServiceDetails,
   resetFilters,
-  isChangesPage
+  isChangesPage,
+  isCompositeSLO
 }: ChangesTableInterface): JSX.Element {
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
@@ -77,6 +78,7 @@ export default function ChangesTable({
   const changeEventListQueryParams = useMemo(() => {
     const monitoredServiceIdentifierProp = getMonitoredServiceIdentifierProp(
       isAccountLevel,
+      !!isCompositeSLO,
       monitoredServiceIdentifiers,
       monitoredServiceIdentifier
     )

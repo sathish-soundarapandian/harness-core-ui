@@ -22,7 +22,8 @@ import {
   getDetailsLabel,
   getRiskLabelStringId,
   getMonitoredServiceIdentifiers,
-  getEnvironmentOptions
+  getEnvironmentOptions,
+  getMonitoredServiceIdentifierProp
 } from '../CommonUtils'
 import {
   monitoredServiceDetails,
@@ -232,5 +233,16 @@ describe('Test for getMonitoredServiceIdentifiers', () => {
       returnAll: true
     })
     expect(envOptionsWithAll).toEqual([{ label: 'all', value: 'all' }, ...scopedEnvOption])
+  })
+
+  test('should validate getMonitoredServiceIdentifierProp', () => {
+    const simpleProjectLevelSLO = getMonitoredServiceIdentifierProp(false, false, [], 'ms1')
+    expect(simpleProjectLevelSLO).toEqual({ monitoredServiceIdentifiers: ['ms1'] })
+
+    const compositeProjectLevelSLO = getMonitoredServiceIdentifierProp(false, true, ['ms1'], '')
+    expect(compositeProjectLevelSLO).toEqual({ monitoredServiceIdentifiers: ['ms1'] })
+
+    const compositeAccountLevelSLO = getMonitoredServiceIdentifierProp(true, true, ['ms1'], '')
+    expect(compositeAccountLevelSLO).toEqual({ scopedMonitoredServiceIdentifiers: ['ms1'] })
   })
 })

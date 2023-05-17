@@ -55,6 +55,7 @@ export interface SLOTargetChartWithChangeTimelineProps extends SLOCardContentPro
   customTimeFilter: boolean
   setCustomTimeFilter: (customTimeFilter: boolean) => void
   defaultOffSetPercentage?: number
+  isCompositeSLO?: boolean
 }
 
 export enum SLOCardToggleViews {

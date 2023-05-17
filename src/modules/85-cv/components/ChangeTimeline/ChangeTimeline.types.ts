@@ -32,6 +32,7 @@ export interface ChangeTimelineProps {
   sloWidgetsDataLoading?: boolean
   fetchSecondaryEvents?: () => Promise<void>
   isSLOChartTimeline?: boolean
+  isCompositeSLO?: boolean
 }
 
 export interface ChangesInfoCardData {

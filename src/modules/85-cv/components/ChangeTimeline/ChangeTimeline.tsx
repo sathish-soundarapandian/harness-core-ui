@@ -56,7 +56,8 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
     sloWidgetsData,
     sloWidgetsDataLoading,
     fetchSecondaryEvents,
-    isSLOChartTimeline
+    isSLOChartTimeline,
+    isCompositeSLO
   } = props
 
   const {
@@ -123,6 +124,7 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
     /* istanbul ignore else */ if (!useMonitoredServiceChangeTimeline) {
       const monitoredServiceIdentifierProp = getMonitoredServiceIdentifierProp(
         isAccountLevel,
+        !!isCompositeSLO,
         monitoredServiceIdentifiers,
         monitoredServiceIdentifier
       )

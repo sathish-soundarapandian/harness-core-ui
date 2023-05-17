@@ -23,6 +23,8 @@ const mockAPI = {
   cancel: jest.fn()
 }
 
+const useChangeEventTimelineRefetch = jest.fn()
+
 jest.mock('highcharts-react-official', () => () => <div />)
 jest.mock('@cv/components/ChangeTimeline/components/TimelineSlider/TimelineSlider', () => () => <div />)
 jest.mock('services/cv', () => ({
@@ -31,7 +33,9 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ data: slowidgetAPI, loading: false, error: null, refetch: jest.fn() })),
   useGetMonitoredServiceChangeEventSummary: jest.fn().mockImplementation(() => mockAPI),
   useChangeEventTimelineForAccount: jest.fn().mockImplementation(() => mockAPI),
-  useChangeEventTimeline: jest.fn().mockImplementation(() => mockAPI),
+  useChangeEventTimeline: jest.fn().mockImplementation(() => {
+    return { ...mockAPI, refetch: useChangeEventTimelineRefetch }
+  }),
   useGetAnomaliesSummary: jest.fn().mockImplementation(() => mockAPI),
   useChangeEventListForAccount: jest.fn().mockImplementation(() => mockAPI),
   useChangeEventList: jest.fn().mockImplementation(() => mockAPI),
@@ -92,6 +96,18 @@ describe('Test DetailsPanel', () => {
     expect(getByTestId('SLOCard_UserHint_SLO')).toBeInTheDocument()
     expect(getByTestId('timeline-slider-container')).toBeInTheDocument()
     expect(getByText('common.purpose.cf.continuous')).toBeInTheDocument()
+    expect(useChangeEventTimelineRefetch).toHaveBeenCalledWith({
+      queryParamStringifyOptions: {
+        arrayFormat: 'repeat'
+      },
+      queryParams: {
+        changeCategories: [],
+        changeSourceTypes: [],
+        endTime: 1676946240000,
+        monitoredServiceIdentifiers: ['appd_env1'],
+        startTime: 1676419200000
+      }
+    })
   })
 
   test('validate getEvaluationTitleAndValue', () => {

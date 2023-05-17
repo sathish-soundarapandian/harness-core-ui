@@ -25,6 +25,7 @@ export interface ChangesTableInterface {
   dataTooltipId?: string
   monitoredServiceDetails?: MonitoredServiceDetail[]
   resetFilters?: () => void
+  isCompositeSLO?: boolean
 }
 
 export interface ChangesTableContentWrapper {

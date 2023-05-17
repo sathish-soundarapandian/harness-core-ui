@@ -189,6 +189,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
                 endTime={endTime}
                 monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
                 monitoredServiceDetails={monitoredServiceDetails || []}
+                isCompositeSLO={isCompositeSLO}
               />
             </Card>
           </Container>

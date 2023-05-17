@@ -334,7 +334,14 @@ exports[`validate CompositeSLOConsumption should render CompositeSLOConsumption 
               class="TableV2--cell"
               role="cell"
               style="width: 10%;"
-            />
+            >
+              <p
+                class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
+                title=" 75%"
+              >
+                 75%
+              </p>
+            </div>
             <div
               class="TableV2--cell"
               role="cell"

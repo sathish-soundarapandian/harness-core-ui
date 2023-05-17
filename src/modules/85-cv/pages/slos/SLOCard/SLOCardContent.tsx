@@ -189,6 +189,7 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                   customTimeFilter={customTimeFilter}
                   setCustomTimeFilter={setCustomTimeFilter}
                   defaultOffSetPercentage={defaultOffset}
+                  isCompositeSLO={isCompositeSLO}
                 />
               </Container>
             </Layout.Horizontal>
@@ -261,6 +262,7 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                 setShowTimelineSlider={setShowTimelineSlider}
                 customTimeFilter={customTimeFilter}
                 setCustomTimeFilter={setCustomTimeFilter}
+                isCompositeSLO={isCompositeSLO}
               />
             </Container>
           </Layout.Horizontal>

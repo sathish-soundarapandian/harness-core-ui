@@ -7,6 +7,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import cx from 'classnames'
 import { Button, ButtonVariation, Container } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import { getMonitoredServiceIdentifiers } from '@cv/utils/CommonUtils'
 import ChangeTimeline from '@cv/components/ChangeTimeline/ChangeTimeline'
 import type { ChangesInfoCardData } from '@cv/components/ChangeTimeline/ChangeTimeline.types'
@@ -19,6 +20,7 @@ import annotationsIcon from '@cv/assets/annotationsDark.svg'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useStrings } from 'framework/strings'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SLOTargetChart } from '../components/SLOTargetChart/SLOTargetChart'
 import { getDataPointsWithMinMaxXLimit } from '../components/SLOTargetChart/SLOTargetChart.utils'
 import { SLOTargetChartWithChangeTimelineProps, SLOCardToggleViews } from '../CVSLOsListingPage.types'
@@ -44,7 +46,8 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
   defaultOffSetPercentage,
   sloWidgetsData,
   sloWidgetsDataLoading,
-  fetchSecondaryEvents
+  fetchSecondaryEvents,
+  isCompositeSLO
 }) => {
   const {
     sloPerformanceTrend,
@@ -57,11 +60,14 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
     sloIdentifier
   } = filteredServiceLevelObjective ?? serviceLevelObjective
   const { getString } = useStrings()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const SLOEndTime = sloPerformanceTrend[sloPerformanceTrend.length - 1]?.timestamp
   const errorBudgetEndTime = errorBudgetBurndown[errorBudgetBurndown.length - 1]?.timestamp
   const _endTime = (type === SLOCardToggleViews.SLO ? SLOEndTime : errorBudgetEndTime) ?? currentPeriodStartTime
   const [changeTimelineSummary, setChangeTimelineSummary] = useState<ChangesInfoCardData[] | null>(null)
-  const monitoredServiceIdentifiers = getMonitoredServiceIdentifiers(true, monitoredServiceDetails)
+  const monitoredServiceIdentifiers = getMonitoredServiceIdentifiers(isAccountLevel, monitoredServiceDetails)
   const { startTime = currentPeriodStartTime, endTime = _endTime } = chartTimeRange ?? {}
   const isAnnotationsEnabled = useFeatureFlag(FeatureFlag.SRM_SLO_ANNOTATIONS)
   const isSLOView = type === SLOCardToggleViews.SLO
@@ -202,6 +208,7 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
             showDrawer({ annotationMessage })
           }}
           isSLOChartTimeline
+          isCompositeSLO={isCompositeSLO}
         />
       </Container>
     </>
