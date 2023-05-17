@@ -14,8 +14,8 @@ metadata:
     pagerduty.com/service-id: PS5XKY7
 
   tags:
-    - React
-    - TypeScript
+    - react
+    - typeScript
   
 
   links:
