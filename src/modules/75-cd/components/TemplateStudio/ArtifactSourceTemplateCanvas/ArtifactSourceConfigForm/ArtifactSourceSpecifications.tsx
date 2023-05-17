@@ -190,7 +190,7 @@ export function ArtifactSourceSpecifications(props: {
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
 
   const [selectedArtifactType, setSelectedArtifactType] = React.useState<ArtifactType>(formValues?.artifactType)
-  const { CUSTOM_ARTIFACT_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG } = useFeatureFlags()
 
   const artifactConnectorType = ArtifactToConnectorMap[selectedArtifactType]
 
@@ -212,10 +212,9 @@ export function ArtifactSourceSpecifications(props: {
   const enabledArtifactTypesList = useMemo(
     () =>
       getEnabledArtifactTypesList({
-        CUSTOM_ARTIFACT_NG,
-        AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
+        CUSTOM_ARTIFACT_NG
       }),
-    [CUSTOM_ARTIFACT_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS]
+    [CUSTOM_ARTIFACT_NG]
   )
 
   const handleArtifactTypeSelection = (artifactType: ArtifactType) => {

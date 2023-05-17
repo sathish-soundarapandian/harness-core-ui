@@ -108,8 +108,7 @@ export default function ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CUSTOM_ARTIFACT_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS, CDS_SERVICE_CONFIG_LAST_STEP, BAMBOO_ARTIFACT_NG } =
-    useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, CDS_SERVICE_CONFIG_LAST_STEP, BAMBOO_ARTIFACT_NG } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -124,7 +123,6 @@ export default function ArtifactsSelection({
       [ServiceDeploymentType.AzureWebApp, ServiceDeploymentType.TAS].includes(
         deploymentType as ServiceDeploymentType
       ) &&
-      AZURE_WEBAPP_NG_JENKINS_ARTIFACTS &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Jenkins)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Jenkins)
