@@ -18,7 +18,7 @@ const pagesToBeTested = [
   { name: 'getstarted', url: '/home/get-started' }
 ]
 console.log('process.env.OVER_WRITE_BENCHMARK_RESULT', process.env.OVER_WRITE_BENCHMARK_RESULT)
-const lighthouseRunTimes = 1
+const lighthouseRunTimes = 3
 const acceptableChange = process.env.LIGHT_HOUSE_ACCEPTANCE_CHANGE
   ? parseInt(process.env.LIGHT_HOUSE_ACCEPTANCE_CHANGE)
   : 5
@@ -105,7 +105,8 @@ async function run() {
     return scores
   }
 
-  const runLightHouseNtimes = async (n, passedUrl) => {
+  const 
+  LightHouseNtimes = async (n, passedUrl) => {
     let localResults = []
     for (let i = 0; i < n; i++) {
       console.log(`Running lighthouse on ${passedUrl} for the ${i + 1} time`)
