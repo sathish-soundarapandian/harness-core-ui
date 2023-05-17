@@ -5,8 +5,8 @@ metadata:
   description: pipeline build and deploy
   annotations:
     jira/project-key: IDP
-    jira/component: <example-component> # optional, you might skip this value to fetch data for all components
-    jira/token-type: Bearer # optional, used for Activity stream feed. If you are using Basic auth you can skip this.
+#     jira/component: <example-component> # optional, you might skip this value to fetch data for all components
+#     jira/token-type: Bearer # optional, used for Activity stream feed. If you are using Basic auth you can skip this.
     github.com/project-slug: harness/harness-core-ui
     harness.io/project-url: https://qa.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default1/projects/harnesscoreuiidp
     backstage.io/techdocs-ref: dir:.
