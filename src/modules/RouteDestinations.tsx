@@ -63,7 +63,7 @@ export default function RouteDestinations(): React.ReactElement {
     SSCA_ENABLED,
     IDP_ENABLED,
     CET_ENABLED,
-    CUSTOM_DASHBOARDS_NEXT
+    CDB_MFE_ENABLED
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -106,7 +106,7 @@ export default function RouteDestinations(): React.ReactElement {
           <CERoutes />
         </Route>
       ) : null}
-      {CUSTOM_DASHBOARDS_NEXT ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children}
+      {CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children}
       {CFNG_ENABLED ? CFRoutes({})?.props.children : null}
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}
