@@ -14,6 +14,11 @@ module.exports = {
     __DEV__: false,
     __ON_PREM__: false
   },
+  // https://jestjs.io/docs/29.0/upgrading-to-jest29#snapshot-format
+  snapshotFormat: {
+    escapeString: true,
+    printBasicPrototype: true
+  },
   setupFilesAfterEnv: ['<rootDir>/scripts/jest/setup-file.js', 'fake-indexeddb/auto', 'jest-canvas-mock'],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
