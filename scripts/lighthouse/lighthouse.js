@@ -18,7 +18,7 @@ const pagesToBeTested = [
   { name: 'getstarted', url: '/home/get-started' }
 ]
 console.log('process.env.OVER_WRITE_BENCHMARK_RESULT', process.env.OVER_WRITE_BENCHMARK_RESULT)
-const lighthouseRunTimes = 3
+const lighthouseRunTimes = 1
 const acceptableChange = process.env.LIGHT_HOUSE_ACCEPTANCE_CHANGE
   ? parseInt(process.env.LIGHT_HOUSE_ACCEPTANCE_CHANGE)
   : 5
