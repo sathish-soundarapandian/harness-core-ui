@@ -7,7 +7,7 @@
 
 import React, { ReactElement } from 'react'
 import * as Yup from 'yup'
-import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { IconName } from '@harness/icons'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { isEmpty, set } from 'lodash-es'
@@ -90,6 +90,7 @@ export class FlagConfigurationStep extends PipelineStep<FlagConfigurationStepDat
         isNewStep={isNewStep}
         readonly={readonly}
         ref={formikRef}
+        allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
       />
     )
   }

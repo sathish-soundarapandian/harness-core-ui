@@ -58,6 +58,7 @@ const renderComponent = (props?: Partial<FlagConfigurationStepWidgetProps>): Ren
         onUpdate={jest.fn()}
         ref={React.createRef()}
         isNewStep
+        allowableTypes={[]}
         {...props}
       />
     </TestWrapper>

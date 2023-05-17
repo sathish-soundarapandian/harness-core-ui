@@ -7,6 +7,7 @@
 
 import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import {
+  AllowedTypes,
   Container,
   Formik,
   FormInput,
@@ -36,17 +37,20 @@ export interface FlagConfigurationStepWidgetProps {
   readonly?: boolean
   onUpdate: (data: FlagConfigurationStepData) => void
   stepViewType?: StepViewType
+  allowableTypes: AllowedTypes
 }
 
 // eslint-disable-next-line react/display-name
 const FlagConfigurationStepWidget = forwardRef(
   (
-    { initialValues, onUpdate, isNewStep, readonly, stepViewType }: FlagConfigurationStepWidgetProps,
+    { initialValues, onUpdate, isNewStep, readonly, stepViewType, allowableTypes }: FlagConfigurationStepWidgetProps,
     formikRef: StepFormikFowardRef<FlagConfigurationStepData>
   ) => {
     const [isInitialRender, setIsInitialRender] = useState<boolean>(true)
     const formValuesRef = useRef<FlagConfigurationStepData>({} as FlagConfigurationStepData)
     const { getString } = useStrings()
+    const [envType, setEnvType] = useState<MultiTypeInputType>()
+    const [flagType, setFlagType] = useState<MultiTypeInputType>()
 
     const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
 
@@ -70,7 +74,6 @@ const FlagConfigurationStepWidget = forwardRef(
       accountIdentifier,
       orgIdentifier,
       projectIdentifier,
-      environmentIdentifier: formValuesRef.current?.spec?.environment || '',
       pageSize: CF_DEFAULT_PAGE_SIZE,
       pageNumber: 0
     }
@@ -114,7 +117,6 @@ const FlagConfigurationStepWidget = forwardRef(
 
     const queryParams: GetFeatureFlagQueryParams = {
       projectIdentifier,
-      environmentIdentifier: featureQueryParams.environmentIdentifier,
       accountIdentifier,
       orgIdentifier
     }
@@ -155,6 +157,7 @@ const FlagConfigurationStepWidget = forwardRef(
     useEffect(() => {
       // fetch only if a saved flag exists & flag is not in current list
       if (
+        flagType === MultiTypeInputType.FIXED &&
         savedFlagId &&
         !featuresData?.features?.some(flag => flag.identifier === savedFlagId) &&
         !savedFlagData &&
@@ -162,7 +165,7 @@ const FlagConfigurationStepWidget = forwardRef(
       ) {
         getFlag()
       }
-    }, [savedFlagId, savedFlagData, featureItems, getFlag, getFlagLoading, featuresData?.features])
+    }, [flagType, savedFlagId, savedFlagData, featureItems, getFlag, getFlagLoading, featuresData?.features])
 
     if (showLoading) {
       return (
@@ -222,18 +225,31 @@ const FlagConfigurationStepWidget = forwardRef(
           )?.environment
 
           return (
+            //environment dropdown
             <Layout.Vertical padding={{ right: 'xlarge' }}>
               <FormInput.InputWithIdentifier
                 isIdentifierEditable={isNewStep && !readonly}
                 inputLabel={getString('cf.pipeline.flagConfiguration.stepName')}
                 inputGroupProps={{ disabled: readonly }}
               />
-              <FormInput.Select
+              <FormInput.MultiTypeInput
                 name="spec.environment"
-                items={environmentItems}
+                useValue={true}
+                selectItems={environmentItems}
                 label={getString('cf.pipeline.flagConfiguration.selectEnvironment')}
                 disabled={readonly}
-                onQueryChange={searchTerm => refetchEnvironments({ queryParams: { ...envQueryParams, searchTerm } })}
+                multiTypeInputProps={{
+                  disabled: readonly,
+                  allowableTypes,
+                  onTypeChange: setEnvType,
+                  onInput: event => {
+                    if (envType === MultiTypeInputType.FIXED) {
+                      refetchEnvironments({
+                        queryParams: { ...envQueryParams, searchTerm: (event.target as HTMLInputElement).value }
+                      })
+                    }
+                  }
+                }}
               />
               <FormInput.MultiTypeInput
                 name="spec.feature"
@@ -243,11 +259,15 @@ const FlagConfigurationStepWidget = forwardRef(
                 disabled={readonly}
                 multiTypeInputProps={{
                   disabled: readonly,
-                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
-                  onInput: event =>
-                    refetchFeatures({
-                      queryParams: { ...featureQueryParams, name: (event.target as HTMLInputElement).value }
-                    })
+                  allowableTypes,
+                  onTypeChange: setFlagType,
+                  onInput: event => {
+                    if (flagType === MultiTypeInputType.FIXED) {
+                      refetchFeatures({
+                        queryParams: { ...featureQueryParams, name: (event.target as HTMLInputElement).value }
+                      })
+                    }
+                  }
                 }}
               />
 
@@ -260,6 +280,8 @@ const FlagConfigurationStepWidget = forwardRef(
                 clearField={(fieldName: string) => setFieldValue(fieldName, undefined)}
                 setField={(fieldName: string, value: unknown) => setFieldValue(fieldName, value)}
                 fieldValues={formValues}
+                envType={envType}
+                flagType={flagType}
                 showRuntimeFixedSelector
               />
             </Layout.Vertical>
