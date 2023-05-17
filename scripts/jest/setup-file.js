@@ -15,14 +15,19 @@ enableMapSet()
 
 process.env.TZ = 'UTC'
 
+/* 
+https://stackoverflow.com/questions/71704077/errors-when-updating-testing-library-user-event-to-v-14
+ 
 document.createRange = () => ({
-  setStart: () => {},
-  setEnd: () => {},
-  commonAncestorContainer: {
-    nodeName: 'BODY',
-    ownerDocument: document
-  }
+   setStart: () => {},
+   setEnd: () => {},
+   commonAncestorContainer: {
+     nodeName: 'BODY',
+     ownerDocument: document
+   }
 })
+*/
+
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
 window.scrollTo = jest.fn()
 
