@@ -630,8 +630,8 @@ export function RightDrawer(): React.ReactElement {
         pipelineStage?.stage?.spec?.execution as any,
         newStepData,
         paletteData.isParallelNodeClicked,
-        paletteData.isRollback,
-        newPipelineStudioEnabled
+        paletteData.isRollback
+        // newPipelineStudioEnabled
       )
 
       if (pipelineStage?.stage) {
@@ -916,8 +916,8 @@ export function RightDrawer(): React.ReactElement {
                 provisioner,
                 newStepData,
                 paletteData.isParallelNodeClicked,
-                paletteData.isRollback,
-                newPipelineStudioEnabled
+                paletteData.isRollback
+                // newPipelineStudioEnabled
               )
 
               if (pipelineStage?.stage) {

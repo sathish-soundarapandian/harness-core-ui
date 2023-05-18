@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { ExecutionWrapperConfig } from 'services/pipeline-ng'
+import { has } from 'lodash-es'
+import type { ExecutionWrapperConfig, StepElementConfig, StepGroupElementConfig } from 'services/pipeline-ng'
 
 export const getPositionOfAddIcon = (props: any, isRightNode?: boolean): string => {
   if (isRightNode) {
@@ -28,3 +29,6 @@ export const getPositionOfAddIcon = (props: any, isRightNode?: boolean): string 
 
 export const hasStepGroupChild = (stepsData: ExecutionWrapperConfig[]): boolean =>
   stepsData?.some((step: ExecutionWrapperConfig): boolean => step?.step?.type === 'STEP_GROUP')
+
+export const isNodeTypeStepGroup = (stepsData?: StepElementConfig | StepGroupElementConfig): boolean =>
+  has(stepsData, 'steps')

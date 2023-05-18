@@ -25,7 +25,7 @@ import { useNodeDimensionContext } from '../NodeDimensionStore'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import { getPositionOfAddIcon, hasStepGroupChild } from '../utils'
 import { NodeDimensionProvider } from '../NodeDimensionStore'
-import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
+import { AddLinkStepNode } from '../DefaultNode/AddLinkNode/AddLinkNode'
 import css from './StepGroupNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
 
@@ -74,6 +74,7 @@ function StepGroupNodeWrapper(
       data: {
         nodeType: DiagramType.StepGroupNode,
         nodeData: {
+          parentIdentifier: nodeData?.data?.parentIdentifier,
           id: nodeData?.data?.id,
           data: nodeData?.data?.data?.stepGroup,
           metaData: {
@@ -82,6 +83,7 @@ function StepGroupNodeWrapper(
           }
         },
         destinationNode: {
+          parentIdentifier: props?.data?.parentIdentifier,
           id: props?.data?.id,
           data: props?.data?.data?.stepGroup,
           metaData: {
@@ -105,7 +107,7 @@ function StepGroupNodeWrapper(
         />
       ) : (
         <div style={{ position: 'relative' }}>
-          {props.data?.loopingStrategyEnabled && (
+          {props.data?.metaData?.loopingStrategyEnabled && (
             <MatrixNodeLabelWrapper isParallelNode={props?.isParallelNode} nodeType={nodeType} />
           )}
           <div
@@ -191,6 +193,7 @@ function StepGroupNodeWrapper(
                       data: {
                         nodeType: DiagramType.StepGroupNode,
                         nodeData: {
+                          parentIdentifier: props?.data?.parentIdentifier,
                           id: props?.data?.id,
                           data: props?.data?.data?.stepGroup as StepGroupElementConfig,
                           metaData: {
@@ -210,6 +213,7 @@ function StepGroupNodeWrapper(
                       data: {
                         nodeType: DiagramType.StepGroupNode,
                         nodeData: {
+                          parentIdentifier: props?.data?.parentIdentifier,
                           id: props?.data?.id,
                           data: props?.data?.data?.stepGroup as StepGroupElementConfig,
                           metaData: {
@@ -230,6 +234,7 @@ function StepGroupNodeWrapper(
                       data: {
                         nodeType: DiagramType.StepGroupNode,
                         nodeData: {
+                          parentIdentifier: props?.data?.parentIdentifier,
                           id: props?.data?.id,
                           data: props?.data?.data?.stepGroup as StepGroupElementConfig,
                           metaData: {
@@ -270,6 +275,7 @@ function StepGroupNodeWrapper(
                     data: {
                       nodeType: DiagramType.StepGroupNode,
                       nodeData: {
+                        parentIdentifier: props?.data?.parentIdentifier,
                         id: props?.data?.id,
                         data: props?.data?.data?.stepGroup as StepGroupElementConfig,
                         metaData: {
@@ -285,10 +291,11 @@ function StepGroupNodeWrapper(
             )}
           </div>
           {!isParallelNode(props) && !props?.permissions?.readonly && (
-            <AddLinkNode<StepGroupElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+            // <AddLinkNode<StepGroupElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+            <AddLinkStepNode
               data={props?.data?.data?.stepGroup as StepGroupElementConfig}
               id={props?.data?.id}
-              parentIdentifier={props?.metaData?.parentIdentifier}
+              parentIdentifier={props?.data?.parentIdentifier}
               isParallelNode={isParallelNode(props)}
               readonly={props?.permissions?.readonly}
               fireEvent={props.fireEvent}
@@ -314,8 +321,8 @@ function StepGroupNodeWrapper(
                   target: event.target,
                   data: {
                     nodeType: DiagramType.StepGroupNode,
-                    parentIdentifier: props?.metaData?.parentIdentifier,
                     nodeData: {
+                      parentIdentifier: props?.data?.parentIdentifier,
                       id: props?.data?.id,
                       data: props?.data?.data?.stepGroup,
                       metaData: {

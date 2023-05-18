@@ -7,12 +7,17 @@
 
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 
 export interface EditStageViewProps {
   data?: StageElementWrapper<DeploymentStageElementConfig>
   template?: TemplateSummaryResponse
-  onSubmit?: (values: StageElementWrapper<DeploymentStageElementConfig>, identifier?: string) => void
+  onSubmit?: (
+    values: StageElementWrapper<DeploymentStageElementConfig>,
+    identifier?: string,
+    pipeline?: PipelineInfoConfig
+  ) => void
   onChange?: (values: DeploymentStageElementConfig) => void
   context?: string
   isReadonly: boolean

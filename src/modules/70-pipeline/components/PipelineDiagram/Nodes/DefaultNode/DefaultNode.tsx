@@ -31,7 +31,9 @@ interface NodeMetaDataType {
   iconStyle: CSSProperties
 }
 
-function DefaultNode(props: NodeProps<PipelineGraphState<any, NodeMetaDataType>, NodeMetaDataType>): JSX.Element {
+function DefaultNode(
+  props: NodeProps<PipelineGraphState<any, NodeMetaDataType, any>, NodeMetaDataType, any>
+): JSX.Element {
   const allowAdd = defaultTo(props?.permissions?.allowAdd, false)
   const nodeRef = React.useRef<HTMLDivElement>(null)
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
@@ -192,7 +194,7 @@ function DefaultNode(props: NodeProps<PipelineGraphState<any, NodeMetaDataType>,
               data: {
                 entityType: DiagramType.Default,
                 identifier: props?.data?.identifier,
-                parentIdentifier: props?.metaData?.parentIdentifier,
+                parentIdentifier: props?.data?.parentIdentifier,
                 node: props
               }
             })

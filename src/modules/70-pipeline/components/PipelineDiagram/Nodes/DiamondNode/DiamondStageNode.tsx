@@ -15,17 +15,17 @@ import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
-import type { ExecutionWrapperConfig, StepElementConfig } from 'services/pipeline-ng'
-import type { EventStepDataType } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
+import type { EventStageDataType } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { PipelineGraphType, NodeType, NodeProps, PipelineStageNodeMetaDataType } from '../../types'
 import SVGMarker from '../SVGMarker'
-import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
+import { AddLinkStageNode } from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon } from '../utils'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './DiamondNode.module.scss'
 
-export function DiamondNodeWidget(
-  props: NodeProps<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+export function DiamondStageNode(
+  props: NodeProps<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventStageDataType>
 ): JSX.Element {
   const { getString } = useStrings()
 
@@ -46,6 +46,8 @@ export function DiamondNodeWidget(
 
   // const hasChildren = (nodeData: typeof props): boolean => Boolean(defaultTo(nodeData?.data?.children?.length, 0))
   const isParallelNode = (nodeData: typeof props): boolean => Boolean(nodeData?.metaData?.isParallelNode)
+  const nodeData = props?.data?.data?.stage as StageElementConfig
+  const graphType = props?.data?.metaData?.nodeMeta?.graphType
 
   return (
     <div
@@ -62,8 +64,9 @@ export function DiamondNodeWidget(
           data: {
             nodeType: DiagramType.DiamondNode,
             nodeData: {
+              parentIdentifier: props?.data?.parentIdentifier,
               id: props?.data?.id,
-              data: props?.data?.data?.step,
+              data: nodeData,
               metaData: {
                 // hasChildren: hasChildren(props),
                 // isParallelNode: isParallelNode(props)
@@ -86,7 +89,7 @@ export function DiamondNodeWidget(
             [cssDefault.skipped]: stepStatus === ExecutionStatusEnum.Skipped,
             [cssDefault.notStarted]: stepStatus === ExecutionStatusEnum.NotStarted
           },
-          { [css.top]: props?.data?.graphType === PipelineGraphType.STAGE_GRAPH }
+          { [css.top]: graphType === PipelineGraphType.STAGE_GRAPH }
         )}
         draggable={true}
         onDragStart={event => {
@@ -107,7 +110,7 @@ export function DiamondNodeWidget(
           id={props?.data?.id}
           data-nodeid={props?.data?.id}
           className={css.horizontalBar}
-          style={{ height: props.data?.graphType === PipelineGraphType.STAGE_GRAPH ? 40 : 64 }}
+          style={{ height: graphType === PipelineGraphType.STAGE_GRAPH ? 40 : 64 }}
           onMouseEnter={event => {
             event.stopPropagation()
             props?.fireEvent?.({
@@ -116,8 +119,9 @@ export function DiamondNodeWidget(
               data: {
                 nodeType: DiagramType.Default,
                 nodeData: {
+                  parentIdentifier: props?.data?.parentIdentifier,
                   id: props?.data?.id,
-                  data: props?.data?.data?.step,
+                  data: nodeData,
                   metaData: {
                     // hasChildren: hasChildren(props),
                     // isParallelNode: isParallelNode(props)
@@ -134,8 +138,9 @@ export function DiamondNodeWidget(
               data: {
                 nodeType: DiagramType.Default,
                 nodeData: {
+                  parentIdentifier: props?.data?.parentIdentifier,
                   id: props?.data?.id,
-                  data: props?.data?.data?.step,
+                  data: nodeData,
                   metaData: {
                     // hasChildren: hasChildren(props),
                     // isParallelNode: isParallelNode(props)
@@ -149,14 +154,14 @@ export function DiamondNodeWidget(
             <>
               <div
                 className={cx(cssDefault.markerStart, cssDefault.diamondStageLeft, {
-                  [cssDefault.diamondStep]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+                  [cssDefault.diamondStep]: graphType === PipelineGraphType.STEP_GRAPH
                 })}
               >
                 <SVGMarker />
               </div>
               <div
                 className={cx(cssDefault.markerEnd, cssDefault.diamondStageRight, {
-                  [cssDefault.diamondStep]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+                  [cssDefault.diamondStep]: graphType === PipelineGraphType.STEP_GRAPH
                 })}
               >
                 <SVGMarker />
@@ -246,8 +251,9 @@ export function DiamondNodeWidget(
                 data: {
                   nodeType: DiagramType.Default,
                   nodeData: {
+                    parentIdentifier: props?.data?.parentIdentifier,
                     id: props?.data?.id,
-                    data: props?.data?.data?.step,
+                    data: nodeData,
                     metaData: {
                       // hasChildren: hasChildren(props),
                       // isParallelNode: isParallelNode(props)
@@ -274,48 +280,48 @@ export function DiamondNodeWidget(
         </div>
       )}
       {!isParallelNode(props) && !props?.permissions?.readonly && (
-        <AddLinkNode<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+        <AddLinkStageNode
           isParallelNode={isParallelNode(props)}
           readonly={props?.permissions?.readonly}
           fireEvent={props.fireEvent}
           style={{ left: getPositionOfAddIcon(props) }}
-          data={props?.data?.data?.step as StepElementConfig}
+          data={nodeData}
           id={props?.data?.id}
-          parentIdentifier={props?.metaData?.parentIdentifier}
+          parentIdentifier={props?.data?.parentIdentifier}
           className={cx(
             cssDefault.addNodeIcon,
             {
               [cssDefault.show]: showAddLink
             },
             {
-              [cssDefault.stepAddIcon]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+              [cssDefault.stepAddIcon]: graphType === PipelineGraphType.STEP_GRAPH
             },
             {
-              [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH
+              [cssDefault.stageAddIcon]: graphType === PipelineGraphType.STAGE_GRAPH
             }
           )}
           setShowAddLink={setShowAddLink}
         />
       )}
       {(props?.metaData?.nextNode?.type === NodeType.StepGroupNode ||
-        (!props?.metaData?.nextNode && props?.metaData?.parentIdentifier)) &&
+        (!props?.metaData?.nextNode && props?.data?.parentIdentifier)) &&
         !isParallelNode(props) &&
         !props?.permissions?.readonly && (
-          <AddLinkNode<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
-            parentIdentifier={props?.metaData?.parentIdentifier}
+          <AddLinkStageNode
+            parentIdentifier={props?.data?.parentIdentifier}
             isParallelNode={isParallelNode(props)}
             readonly={props?.permissions?.readonly}
             fireEvent={props.fireEvent}
-            data={props?.data?.data?.step as StepElementConfig}
+            data={nodeData}
             style={{ right: getPositionOfAddIcon(props, true) }}
             isRightAddIcon={true}
             className={cx(
               cssDefault.addNodeIcon,
               {
-                [cssDefault.stepAddIcon]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+                [cssDefault.stepAddIcon]: graphType === PipelineGraphType.STEP_GRAPH
               },
               {
-                [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH
+                [cssDefault.stageAddIcon]: graphType === PipelineGraphType.STAGE_GRAPH
               }
             )}
             setShowAddLink={setShowAddLink}

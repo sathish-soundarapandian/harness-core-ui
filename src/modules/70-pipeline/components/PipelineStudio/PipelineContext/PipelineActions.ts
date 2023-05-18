@@ -10,7 +10,6 @@ import type { IDrawerProps } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import type { YamlSnippetMetaData } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import type * as Diagram from '@pipeline/components/Diagram'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type {
   EntityGitDetails,
@@ -24,6 +23,7 @@ import type { DependencyElement } from 'services/ci'
 import type { TemplateServiceDataType } from '@pipeline/utils/templateUtils'
 import type { StepState } from '../ExecutionGraph/ExecutionGraphUtil'
 import type { AdvancedPanels, StepOrStepGroupOrTemplateStepData } from '../StepCommands/StepCommandTypes'
+import type { EventStepOrGroupBaseType } from '../StageBuilder/StageBuilderUtil'
 
 export enum PipelineActions {
   DBInitialize = 'DBInitialize',
@@ -88,7 +88,7 @@ export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
       isRollback: boolean
       isParallelNodeClicked: boolean
       onUpdate?: (stepOrGroup: StepOrStepGroupOrTemplateStepData | DependencyElement) => void
-      entity: Diagram.DefaultNodeModel
+      entity: EventStepOrGroupBaseType // DiagramNodeType
       stepsMap: Map<string, StepState>
       hiddenAdvancedPanels?: AdvancedPanels[]
     }

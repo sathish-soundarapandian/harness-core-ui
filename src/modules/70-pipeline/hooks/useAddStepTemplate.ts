@@ -21,8 +21,8 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { useMutateAsGet } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+// import { FeatureFlag } from '@common/featureFlags'
+// import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 interface AddStepTemplateReturnType {
@@ -36,7 +36,7 @@ interface AddStepTemplate {
 export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateReturnType {
   const { executionRef } = props
   const { accountId } = useParams<ProjectPathProps>()
-  const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
+  // const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
   const pipelineContext = usePipelineContext()
   const {
     state: {
@@ -101,8 +101,8 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
         pipelineStage?.stage?.spec?.execution as any,
         newStepData,
         event.isParallel,
-        event.isRollback,
-        newPipelineStudioEnabled
+        event.isRollback
+        // newPipelineStudioEnabled
       )
       if (pipelineStage?.stage) {
         await updateStage(pipelineStage?.stage)

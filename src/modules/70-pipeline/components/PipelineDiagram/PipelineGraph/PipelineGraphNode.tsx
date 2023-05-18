@@ -155,7 +155,7 @@ function PipelineGraphNodeWithoutCollapseWithRef<T, U, V>(
     isParallelNode,
     isNextNodeParallel,
     isPrevNodeParallel,
-    parentIdentifier,
+    // parentIdentifier,
     prevNode,
     nextNode,
     updateGraphLinks,
@@ -186,7 +186,7 @@ function PipelineGraphNodeWithoutCollapseWithRef<T, U, V>(
   const nodeMetaData: BaseMetaDataType<T, U, V> = {
     nextNode,
     prevNode,
-    parentIdentifier,
+    // parentIdentifier,
     isParallelNode,
     className: classNames(css.graphNode, className)
   }

@@ -231,15 +231,15 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
         !props?.permissions?.readonly && (
           <CreateNode
             {...props}
-            isInsideStepGroup={true}
+            // isInsideStepGroup={true}
             onClick={(event: any) => {
               props?.fireEvent?.({
                 type: Event.ClickNode,
                 target: event.target,
                 data: {
                   nodeType: DiagramType.Default,
-                  parentIdentifier: props?.parentIdentifier,
                   nodeData: {
+                    parentIdentifier: props?.parentIdentifier as string,
                     id: props?.data?.id,
                     data: props?.data?.data?.stepGroup,
                     metaData: {

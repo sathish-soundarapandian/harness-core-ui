@@ -74,7 +74,7 @@ export function CIDependencyNode(props: any): JSX.Element {
                     {...props}
                     className={css.createnodeci}
                     titleClassName={cx(css.createnodecititle, css.nodeNameText)}
-                    isInsideStepGroup={true}
+                    // isInsideStepGroup={true}
                     onClick={(event: any) => {
                       props?.fireEvent?.({
                         type: Event.ClickNode,

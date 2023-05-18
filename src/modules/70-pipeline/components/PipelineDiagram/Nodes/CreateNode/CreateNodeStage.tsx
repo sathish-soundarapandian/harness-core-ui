@@ -19,6 +19,7 @@ interface CreateNodeStageProps extends TerminalNodeProps<EventDataType> {
   onMouseOver?: () => void
   onMouseLeave?: () => void
   onDrop?: (event: React.DragEvent<HTMLDivElement>) => void
+  onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 function CreateNodeStage(props: CreateNodeStageProps): React.ReactElement | null {
   const hasChildren = (
@@ -76,6 +77,10 @@ function CreateNodeStage(props: CreateNodeStageProps): React.ReactElement | null
       onClick={event => {
         event.preventDefault()
         event.stopPropagation()
+        if (props?.onClick) {
+          props?.onClick(event)
+          return
+        }
         props?.fireEvent?.({
           type: Event.AddLinkClicked,
           target: event.target,

@@ -30,12 +30,9 @@ import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
 import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
-import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
-import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
 import {
   DiagramFactory,
   NodeType,
-  NodeProps,
   PipelineStageNodeMetaDataType,
   CombinedNodeProps
 } from '@pipeline/components/PipelineDiagram/DiagramFactory'
@@ -46,6 +43,7 @@ import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import type { DeploymentStageConfig } from 'services/cd-ng'
+import { DiamondStageNode } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondStageNode'
 import {
   CanvasWidget,
   createEngine,
@@ -73,7 +71,7 @@ import {
   moveStage,
   getFlattenedStages,
   EventStageDataType,
-  ListenerReturnType
+  ListenerReturnTypeForStage
 } from './StageBuilderUtil'
 import { useStageBuilderCanvasState } from './useStageBuilderCanvasState'
 import { StageList } from './views/StageList'
@@ -84,18 +82,19 @@ import type { PipelineSelectionState } from '../PipelineQueryParamState/usePipel
 import css from './StageBuilder.module.scss'
 
 const diagram = new DiagramFactory<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventStageDataType>()
+const PIPELINE_STAGE_NODE = PipelineStageNode as React.FC<
+  CombinedNodeProps<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventStageDataType>
+>
 
+diagram.registerNode('Deployment', PIPELINE_STAGE_NODE, true)
+diagram.registerNode('CI', PIPELINE_STAGE_NODE)
+diagram.registerNode('SecurityTests', PIPELINE_STAGE_NODE)
 diagram.registerNode(
-  'Deployment',
-  PipelineStageNode as React.FC<
+  'Approval',
+  DiamondStageNode as React.FC<
     CombinedNodeProps<StageElementWrapperConfig, PipelineStageNodeMetaDataType, EventStageDataType>
-  >,
-  true
+  >
 )
-// diagram.registerNode('CI', PipelineStageNode)
-// // diagram.registerNode('SecurityTests', PipelineStageNode as unknown as React.FC<NodeProps>)
-// // diagram.registerNode('Approval', DiamondNodeWidget)
-// // diagram.registerNode('Barrier', IconNode)
 diagram.registerNode(
   NodeType.CreateNode,
   CreateNodeStage as React.FC<
@@ -135,7 +134,6 @@ export const initializeStageStateMap = (stages: StageElementWrapperConfig[], map
 
 export const renderPopover = ({
   data,
-  addStage,
   addStageNew,
   isParallel,
   isGroupStage,
@@ -202,28 +200,19 @@ export const renderPopover = ({
       getNewStageFromTemplate: getNewStageFromTemplate as any,
       onSelectStage: (type, stage, pipelineTemp) => {
         if (stage) {
-          addStageNew?.(stage, isParallel, !isParallel, undefined, true, pipelineTemp, event?.node)
+          addStageNew?.(stage, isParallel, !isParallel, undefined, true, pipelineTemp, {
+            stage: event?.data?.nodeData?.data
+          })
         } else {
-          addStageNew?.(getNewStageFromType(type as any), isParallel, !isParallel, event?.node)
+          addStageNew?.(getNewStageFromType(type as any), isParallel, !isParallel, undefined, true, pipelineTemp, {
+            stage: event?.data?.nodeData?.data
+          })
         }
       },
       contextType: contextType
     })
   }
-  return renderPipelineStage({
-    isParallel,
-    showSelectMenu: true,
-    getNewStageFromType: getNewStageFromType as any,
-    getNewStageFromTemplate: getNewStageFromTemplate as any,
-    onSelectStage: (type, stage, pipelineTemp) => {
-      if (stage) {
-        addStage?.(stage, isParallel, event, undefined, true, pipelineTemp)
-      } else {
-        addStage?.(getNewStageFromType(type as any), isParallel, event)
-      }
-    },
-    contextType: contextType
-  })
+  return <></>
 }
 
 function StageBuilder(): JSX.Element {
@@ -459,13 +448,10 @@ function StageBuilder(): JSX.Element {
       pipeline.stages = []
     }
     if (droppedOnLink) {
-      if (!destination) {
+      if (!destination?.stage) {
         pipeline.stages.push(newStage)
       } else {
-        const { parIndex } = getStageIndexWithParallelNodesFromPipeline(
-          pipeline,
-          destination?.stage?.identifier || destination?.identifier
-        )
+        const { parIndex } = getStageIndexWithParallelNodesFromPipeline(pipeline, destination?.stage?.identifier)
         if (parIndex === 0) {
           pipeline.stages.unshift(newStage)
         } else if (parIndex > 0) {
@@ -473,7 +459,7 @@ function StageBuilder(): JSX.Element {
         }
       }
     } else if (isParallel && !droppedOnLink) {
-      const { stage, parent } = getStageFromPipeline(destination?.stage?.identifier || destination?.identifier || '')
+      const { stage, parent } = getStageFromPipeline(destination?.stage?.identifier || '')
       const parentTemp = parent as StageElementWrapperConfig
       if (stage) {
         if (parentTemp && parentTemp.parallel && parentTemp.parallel.length > 0) {
@@ -662,7 +648,7 @@ function StageBuilder(): JSX.Element {
     engine
   )
 
-  const nodeListenersNew: ListenerReturnType = getNodeEventListerner(
+  const nodeListenersNew: ListenerReturnTypeForStage = getNodeEventListerner(
     updateStageOnAddLinkNew,
     setSelectionRef,
     confirmDeleteStage,
@@ -701,7 +687,7 @@ function StageBuilder(): JSX.Element {
     stageMap
   )
 
-  const linkListenersNew: ListenerReturnType = getLinkEventListeners(
+  const linkListenersNew: ListenerReturnTypeForStage = getLinkEventListeners(
     dynamicPopoverHandler,
     pipelineContext,
     addStageNew,
@@ -716,12 +702,12 @@ function StageBuilder(): JSX.Element {
   }
 
   const events = {
-    [Event.DropLinkEvent]: linkListenersNew[Event.DropLinkEvent],
-    [Event.DropNodeEvent]: nodeListenersNew[Event.DropNodeEvent],
     [Event.ClickNode]: nodeListenersNew[Event.ClickNode],
     [Event.AddParallelNode]: nodeListenersNew[Event.AddParallelNode],
+    [Event.DropNodeEvent]: nodeListenersNew[Event.DropNodeEvent],
     [Event.RemoveNode]: nodeListenersNew[Event.RemoveNode],
     [Event.AddLinkClicked]: linkListenersNew[Event.AddLinkClicked],
+    [Event.DropLinkEvent]: linkListenersNew[Event.DropLinkEvent],
     [Event.CanvasClick]: canvasClick,
     [Event.MouseEnterNode]: nodeListenersNew[Event.MouseEnterNode],
     [Event.MouseLeaveNode]: nodeListenersNew[Event.MouseLeaveNode],

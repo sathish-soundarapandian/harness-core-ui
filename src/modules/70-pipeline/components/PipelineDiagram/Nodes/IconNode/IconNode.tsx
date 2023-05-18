@@ -14,7 +14,7 @@ import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import type { ExecutionWrapperConfig, StepElementConfig } from 'services/pipeline-ng'
 import type { EventStepDataType } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { PipelineGraphType, NodeType, NodeProps, PipelineStageNodeMetaDataType } from '../../types'
-import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
+import { AddLinkStepNode } from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon } from '../utils'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './IconNode.module.scss'
@@ -218,8 +218,8 @@ export function IconNode(
                       id: props?.data?.id,
                       data: props?.data?.data?.step,
                       metaData: {
-                        // hasChildren: hasChildren(props),
-                        // isParallelNode: isParallelNode(props)
+                        hasChildren: hasChildren(props),
+                        isParallelNode: isParallelNode(props)
                       }
                     }
                   }
@@ -257,8 +257,8 @@ export function IconNode(
               target: event.target,
               data: {
                 nodeType: DiagramType.IconNode,
-                parentIdentifier: props?.metaData?.parentIdentifier,
                 nodeData: {
+                  parentIdentifier: props?.data?.parentIdentifier,
                   id: props?.data?.id,
                   data: props?.data?.data?.step,
                   metaData: {
@@ -283,10 +283,10 @@ export function IconNode(
         />
       )}
       {!isParallelNode(props) && !props?.permissions?.readonly && (
-        <AddLinkNode<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+        <AddLinkStepNode
           data={props?.data?.data?.step as StepElementConfig}
           id={props?.data?.id}
-          parentIdentifier={props?.metaData?.parentIdentifier}
+          parentIdentifier={props?.data?.parentIdentifier}
           isParallelNode={isParallelNode(props)}
           readonly={props?.permissions?.readonly}
           fireEvent={props.fireEvent}
@@ -304,17 +304,18 @@ export function IconNode(
         />
       )}
       {(props?.metaData?.nextNode?.type === NodeType.StepGroupNode ||
-        (!props?.metaData?.nextNode && props?.metaData?.parentIdentifier)) &&
+        (!props?.metaData?.nextNode && props?.data?.parentIdentifier)) &&
         !isParallelNode(props) &&
         !props?.permissions?.readonly && (
-          <AddLinkNode<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
-            parentIdentifier={props?.metaData?.parentIdentifier}
+          <AddLinkStepNode
+            data={props?.data?.data?.step as StepElementConfig}
+            id={props?.data?.id}
+            parentIdentifier={props?.data?.parentIdentifier}
             isParallelNode={isParallelNode(props)}
             readonly={props?.permissions?.readonly}
             fireEvent={props.fireEvent}
-            data={props?.data?.data?.step as StepElementConfig}
-            style={{ right: getPositionOfAddIcon(props, true) }}
             isRightAddIcon={true}
+            style={{ right: getPositionOfAddIcon(props, true) }}
             className={cx(
               cssDefault.addNodeIcon,
               cssDefault.right,

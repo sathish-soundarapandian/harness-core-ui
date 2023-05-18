@@ -17,7 +17,7 @@ import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelp
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { NodeType, NodeProps } from '../../types'
-import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
+import AddLinkNode, { AddLinkStageNode } from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon } from '../utils'
 import css from '../DefaultNode/DefaultNode.module.scss'
 import groupnodecss from './GroupNode.module.scss'
@@ -355,7 +355,8 @@ function GroupNode(props: NodeProps<any, any>): React.ReactElement {
         usePortal
       />
       {!props.readonly && (
-        <AddLinkNode<GroupNodeProps>
+        // <AddLinkNode<GroupNodeProps>
+        <AddLinkStageNode
           id={props.id}
           nextNode={props?.nextNode}
           parentIdentifier={props?.parentIdentifier}

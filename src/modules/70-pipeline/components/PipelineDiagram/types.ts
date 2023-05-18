@@ -48,18 +48,19 @@ export interface PipelineGraphState<T, U, V> {
   data: T
   metaData: U
   nodeType?: string
-  graphType?: PipelineGraphType
+  graphType?: PipelineGraphType // graphType both here and in metaData
   children?: PipelineGraphState<T, U, V>[]
   parentStepGroupId?: string
   readonly?: boolean
   stageNodeId?: string
+  parentIdentifier: string
 }
 
 export interface BaseMetaDataType<T, U, V> {
   nextNode?: PipelineGraphState<T, U, V>
   prevNode?: PipelineGraphState<T, U, V>
   isParallelNode?: boolean
-  parentIdentifier?: string
+
   className?: string
   isFirstParallelNode?: boolean
 }

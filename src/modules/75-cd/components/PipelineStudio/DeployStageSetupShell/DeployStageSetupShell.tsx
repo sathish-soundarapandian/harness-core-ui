@@ -83,13 +83,13 @@ export default function DeployStageSetupShell(): JSX.Element {
     contextType,
     stagesMap,
     isReadonly,
-    stepsFactory,
+    // stepsFactory,
     updateStage,
     getStageFromPipeline,
     updatePipelineView,
     scope,
     setSelectedStepId,
-    getStagePathFromPipeline,
+    // getStagePathFromPipeline,
     setSelectedSectionId
   } = pipelineContext
 
@@ -260,10 +260,10 @@ export default function DeployStageSetupShell(): JSX.Element {
       })
       setIncompleteTabs({})
     } catch (error) {
-      if (error.name !== 'ValidationError') {
+      if ((error as any).name !== 'ValidationError') {
         return
       }
-      const response = error.inner.reduce((errors: ValidationError, currentError: ValidationError) => {
+      const response = (error as any).inner.reduce((errors: ValidationError, currentError: ValidationError) => {
         errors = set(errors, currentError.path, currentError.message)
         return errors
       }, {})
@@ -347,7 +347,7 @@ export default function DeployStageSetupShell(): JSX.Element {
   const originalStage = selectedStageId
     ? getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId, originalPipeline).stage
     : undefined
-  const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
+  // const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
 
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const { addTemplate } = useAddStepTemplate({ executionRef: executionRef.current })
@@ -461,10 +461,10 @@ export default function DeployStageSetupShell(): JSX.Element {
               hasRollback={true}
               isReadonly={isReadonly}
               hasDependencies={false}
-              stepsFactory={stepsFactory}
+              // stepsFactory={stepsFactory}
               originalStage={originalStage}
               ref={executionRef}
-              pathToStage={`${stagePath}.stage.spec.execution`}
+              // pathToStage={`${stagePath}.stage.spec.execution`}
               templateTypes={templateTypes}
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               stage={selectedStage!}

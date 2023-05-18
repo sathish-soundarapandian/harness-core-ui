@@ -7,12 +7,12 @@
 
 import React, { useEffect } from 'react'
 import { cloneDeep, set, isEmpty, get, defaultTo, omit } from 'lodash-es'
-import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-diagrams-core'
-import type { BaseModelListener } from '@projectstorm/react-canvas-core'
+// import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-diagrams-core'
+// import type { BaseModelListener } from '@projectstorm/react-canvas-core'
 import { Color } from '@harness/design-system'
 import { Button, ButtonVariation, Layout, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
-import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+// import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { useToaster } from '@common/exports'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -34,13 +34,12 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import {
   DiagramFactory,
-  DiagramNodes,
+  // DiagramNodes,
   NodeType,
-  NodeProps,
+  // NodeProps,
   CombinedNodeProps,
   PipelineStageNodeMetaDataType
 } from '@pipeline/components/PipelineDiagram/DiagramFactory'
-import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
 import PipelineStepNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStepNode/PipelineStepNode'
 import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
@@ -51,7 +50,8 @@ import { CIDependencyNode } from '@pipeline/components/PipelineDiagram/Nodes/Ste
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
 import StepGroupNode from '@pipeline/components/PipelineDiagram/Nodes/StepGroupNode/StepGroupNode'
-import { ExecutionStepModel, GridStyleInterface } from './ExecutionStepModel'
+import { DiamondStepNode } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondStepNode'
+// import { ExecutionStepModel, GridStyleInterface } from './ExecutionStepModel'
 import { StepType as PipelineStepType } from '../../PipelineSteps/PipelineStepInterface'
 import {
   addStepOrGroup,
@@ -59,12 +59,12 @@ import {
   StepState,
   getStepsState,
   removeStepOrGroup,
-  isLinkUnderStepGroup,
+  // isLinkUnderStepGroup,
   getStepFromNode,
   generateRandomString,
   getDependenciesState,
   StepType,
-  getDependencyFromNode,
+  // getDependencyFromNode,
   DependenciesWrapper,
   getDefaultStepState,
   getDefaultStepGroupState,
@@ -79,39 +79,40 @@ import {
 } from './ExecutionGraphUtil'
 import { EmptyStageName } from '../PipelineConstants'
 import {
-  CanvasWidget,
-  createEngine,
-  DefaultLinkEvent,
-  DefaultNodeEvent,
-  DefaultNodeModel,
-  DefaultNodeModelGenerics,
+  // CanvasWidget,
+  // createEngine,
+  // DefaultLinkEvent,
+  // DefaultNodeEvent,
+  // DefaultNodeModel,
+  // DefaultNodeModelGenerics,
   DiagramType,
   Event,
   RollbackToggleSwitch,
-  StepGroupNodeLayerModel,
-  StepGroupNodeLayerOptions,
+  // StepGroupNodeLayerModel,
+  // StepGroupNodeLayerOptions,
   StepsType
 } from '../../Diagram'
-import { CanvasButtons } from '../../CanvasButtons/CanvasButtons'
+// import { CanvasButtons } from '../../CanvasButtons/CanvasButtons'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
-import type { EventDataType, EventStepDataType, EventStepGroupDataType } from '../StageBuilder/StageBuilderUtil'
+import type {
+  EventStepDataType,
+  EventStepGroupDataType,
+  EventStepOrGroupBaseType,
+  ListenerStepReturnType
+} from '../StageBuilder/StageBuilderUtil'
 import css from './ExecutionGraph.module.scss'
+import { isNodeTypeStepGroup } from '@pipeline/components/PipelineDiagram/Nodes/utils'
+import type { StepGroupElementConfig } from 'services/pipeline-ng'
 
 const diagram = new DiagramFactory<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, any>()
+// any is EventStepStepGroupDataType
+type StepNodeType = React.FC<
+  CombinedNodeProps<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+>
 
-diagram.registerNode(
-  'ShellScript',
-  PipelineStepNode as React.FC<
-    CombinedNodeProps<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepDataType>
-  >,
-  true
-)
-diagram.registerNode(
-  NodeType.CreateNode,
-  CreateNodeStep as unknown as React.FC<
-    CombinedNodeProps<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepDataType>
-  >
-)
+// const
+diagram.registerNode('ShellScript', PipelineStepNode as unknown as StepNodeType, true)
+diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as StepNodeType)
 diagram.registerNode(NodeType.EndNode, EndNodeStep)
 diagram.registerNode(NodeType.StartNode, StartNodeStep)
 diagram.registerNode(
@@ -120,12 +121,12 @@ diagram.registerNode(
     CombinedNodeProps<ExecutionWrapperConfig, PipelineStageNodeMetaDataType, EventStepGroupDataType>
   >
 )
-// diagram.registerNode('Approval', DiamondNodeWidget)
-// diagram.registerNode('JiraApproval', DiamondNodeWidget)
-// diagram.registerNode('HarnessApproval', DiamondNodeWidget)
-// diagram.registerNode('default-diamond', DiamondNodeWidget)
-// diagram.registerNode('Barrier', IconNode)
-// diagram.registerNode(STATIC_SERVICE_GROUP_NAME, CIDependencyNode)
+diagram.registerNode('Approval', DiamondStepNode as unknown as StepNodeType)
+diagram.registerNode('JiraApproval', DiamondStepNode as unknown as StepNodeType)
+diagram.registerNode('HarnessApproval', DiamondStepNode as unknown as StepNodeType)
+diagram.registerNode('default-diamond', DiamondStepNode as unknown as StepNodeType)
+diagram.registerNode('Barrier', IconNode as unknown as StepNodeType)
+diagram.registerNode(STATIC_SERVICE_GROUP_NAME, CIDependencyNode as any)
 
 export const CDPipelineStudioNew = diagram.render()
 
@@ -145,13 +146,13 @@ interface Labels {
 }
 
 interface PopoverData {
-  event?: DefaultNodeEvent
+  event?: { entity: EventStepOrGroupBaseType }
   isParallelNodeClicked?: boolean
   labels?: Labels
   onPopoverSelection?: (
     isStepGroup: boolean,
     isParallelNodeClicked: boolean,
-    event?: DefaultNodeEvent,
+    event?: { entity: EventStepOrGroupBaseType },
     isTemplate?: boolean
   ) => void
   isHoverView?: boolean
@@ -217,7 +218,7 @@ const renderPopover = ({
 }
 
 export interface ExecutionGraphAddStepEvent {
-  entity: DefaultNodeModel<DefaultNodeModelGenerics> //NOTE: this is a graph element
+  entity: EventStepOrGroupBaseType //DefaultNodeModel<DefaultNodeModelGenerics> //NOTE: this is a graph element
   isParallel: boolean
   stepsMap: Map<string, StepState>
   isRollback: boolean
@@ -243,7 +244,6 @@ export interface ExecutionGraphProp<T extends StageElementConfig> {
   /*Set to true if  model has spec.serviceDependencies array */
   hasDependencies?: boolean
   isReadonly: boolean
-  stepsFactory: AbstractStepFactory // REQUIRED (pass to addUpdateGraph)
   stage: StageElementWrapper<T>
   originalStage?: StageElementWrapper<T>
   updateStage: (stage: StageElementWrapper<T>) => void
@@ -251,12 +251,9 @@ export interface ExecutionGraphProp<T extends StageElementConfig> {
   onEditStep: (event: ExecutionGraphEditStepEvent) => void
   selectedStepId?: string
   onSelectStep?: (stepId: string) => void
-  gridStyle?: GridStyleInterface
   rollBackPropsStyle?: React.CSSProperties
   rollBackBannerStyle?: React.CSSProperties
   canvasButtonsLayout?: 'horizontal' | 'vertical'
-  canvasButtonsTooltipPosition?: 'top' | 'left'
-  pathToStage: string
   templateTypes: { [key: string]: string }
 }
 
@@ -268,21 +265,17 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     allowAddGroup = true,
     hasDependencies = false,
     hasRollback = true,
-    stepsFactory,
     stage,
     originalStage,
     updateStage,
     onAddStep,
-    isReadonly,
+    // isReadonly,
     onEditStep,
     onSelectStep,
     selectedStepId,
-    gridStyle = {},
     rollBackPropsStyle = {},
     rollBackBannerStyle = {},
     canvasButtonsLayout,
-    canvasButtonsTooltipPosition,
-    pathToStage,
     templateTypes
   } = props
   const {
@@ -307,12 +300,10 @@ function ExecutionGraphRef<T extends StageElementConfig>(
 
   const addStep = (event: ExecutionGraphAddStepEvent): void => {
     onAddStep(event)
-    model.clearSelection()
   }
 
   const editStep = (event: ExecutionGraphEditStepEvent): void => {
     onEditStep(event)
-    model.clearSelection()
   }
 
   const canvasRef = React.useRef<HTMLDivElement | null>(null)
@@ -329,22 +320,15 @@ function ExecutionGraphRef<T extends StageElementConfig>(
 
   const { showError } = useToaster()
 
-  //1) setup the diagram engine
-  const engine = React.useMemo(() => createEngine(), [])
-
-  //2) setup the diagram model
-  const model = React.useMemo(() => new ExecutionStepModel(), [])
-  model.setGridStyle(gridStyle)
-
   const onPopoverSelection = (
     isStepGroup: boolean,
     isParallelNodeClicked: boolean,
-    event?: DefaultNodeEvent,
+    event?: { entity: EventStepOrGroupBaseType },
     isTemplate = false
   ): void => {
     if (!isStepGroup && event) {
       addStep({
-        entity: event.entity,
+        entity: event.entity, // TODO--PRAT--expect string??
         isRollback: state.isRollback,
         stepsMap: state.states,
         isParallel: isParallelNodeClicked,
@@ -363,8 +347,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           stepGroup: node
         },
         isParallelNodeClicked,
-        state.isRollback,
-        newPipelineStudioEnabled
+        state.isRollback
+        // newPipelineStudioEnabled
       )
       editStep({
         node,
@@ -383,7 +367,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     isParallel: boolean,
     el: Element,
     showStepGroup: boolean,
-    event?: any,
+    event?: { entity: EventStepOrGroupBaseType },
     onHide?: () => void | undefined
   ): void => {
     const options: Labels = { addStep: getString('addStep') }
@@ -408,93 +392,27 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     }
   }
 
-  const dropNodeListener = (event: any): void => {
-    const eventTemp = event as DefaultNodeEvent
-    eventTemp.stopPropagation()
-    if (event.node?.identifier) {
-      const dropEntity = model.getNodeFromId(event.node.id)
-      if (dropEntity) {
-        const drop = getStepFromNode({
-          stepData: state.stepsData,
-          node: dropEntity,
-          isComplete: true,
-          isFindParallelNode: false,
-          isRollback: state.isRollback
-        })
-        const dropNode = drop.node as ExecutionWrapperConfig
-        const current = getStepFromNode({
-          stepData: state.stepsData,
-          node: eventTemp.entity,
-          isComplete: true,
-          isFindParallelNode: true,
-          isRollback: state.isRollback
-        }) as {
-          node: ExecutionWrapperConfig
-          parent?: ExecutionWrapperConfig[]
-        }
-        const skipFlattenIfSameParallel = drop.parent === current.node?.parallel
-        // Check Drop Node and Current node should not be same
-        if (event.node.identifier !== eventTemp.entity.getIdentifier() && dropNode) {
-          if (dropNode?.stepGroup && eventTemp.entity.getParent() instanceof StepGroupNodeLayerModel) {
-            showError(getString('stepGroupInAnotherStepGroup'), undefined, 'pipeline.setgroup.error')
-          } else {
-            const isRemove = removeStepOrGroup({
-              state,
-              entity: dropEntity,
-              skipFlatten: skipFlattenIfSameParallel,
-              newPipelineStudioEnabled: newPipelineStudioEnabled,
-              isRollback: state.isRollback
-            })
-            if (isRemove) {
-              if (current.node) {
-                if (current.parent && (current.node.step || current.node.stepGroup)) {
-                  const index = current.parent?.indexOf(current.node) ?? -1
-                  if (index > -1) {
-                    // Remove current Stage also and make it parallel
-                    current.parent?.splice(index, 1, { parallel: [current.node, dropNode] })
-                    updateStageWithNewData(state)
-                  }
-                } else if (current.node.parallel && (current.node.parallel?.length || 0) > 0) {
-                  current.node.parallel?.push?.(dropNode)
-                  updateStageWithNewData(state)
-                }
-              } else {
-                addStepOrGroup(
-                  eventTemp.entity,
-                  state.stepsData,
-                  dropNode,
-                  false,
-                  state.isRollback,
-                  newPipelineStudioEnabled
-                )
-                updateStageWithNewData(state)
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+  const dropNodeListenerNew = (event: EventStepOrGroupBaseType): void => {
+    const identifier = event?.data?.nodeData?.data?.identifier as string
+    const parentIdentifier = event?.data?.nodeData?.parentIdentifier as string
 
-  const dropNodeListenerNew = (event: any): void => {
-    event = { ...event, ...event?.data }
-    if (event?.node?.identifier && event?.node?.data) {
+    if (identifier && event?.data?.nodeData) {
       const drop = getStepFromNode({
         stepData: state.stepsData,
         isComplete: true,
         isFindParallelNode: false,
-        nodeId: event?.node?.identifier,
-        parentId: event?.node?.parentIdentifier,
+        nodeId: identifier,
+        parentId: parentIdentifier,
         isRollback: state.isRollback
       })
       const dropNode = drop?.node as ExecutionWrapperConfig
       const current = getStepFromNode({
         stepData: state.stepsData,
-        node: event?.entity,
+        // node: event?.entity,
         isComplete: true,
         isFindParallelNode: true,
-        nodeId: event?.destination?.identifier,
-        parentId: event?.destination?.parentIdentifier,
+        nodeId: event?.data?.destinationNode?.data?.identifier,
+        parentId: event?.data?.destinationNode?.parentIdentifier, // TODO--PRAT-- destinatino parentIdentifer
         isRollback: state.isRollback
       }) as {
         node: ExecutionWrapperConfig
@@ -502,8 +420,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       }
       const skipFlattenIfSameParallel = drop.parent === current.node?.parallel
       // Check Drop Node and Current node should not be same
-      if (event.node?.identifier !== event?.destination?.identifier && dropNode) {
-        if (dropNode?.stepGroup && event?.destination?.parentIdentifier) {
+      if (identifier !== event?.data?.destinationNode?.data?.identifier && dropNode) {
+        if (dropNode?.stepGroup && event?.data?.destinationNode?.parentIdentifier) {
           showError(getString('stepGroupInAnotherStepGroup'), undefined, 'pipeline.setgroup.error')
         } else {
           const isRemove = removeStepOrGroup({
@@ -516,15 +434,15 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           if (isRemove) {
             if (current.node) {
               if (
-                event?.entityType === DiagramType.CreateNew &&
-                event?.destination?.isInsideStepGroup &&
-                event?.destination?.nodeType === NodeType.StepGroupNode &&
-                event?.destination?.data?.length === 0
+                event?.data?.nodeType === DiagramType.CreateNew &&
+                // event?.destination?.isInsideStepGroup &&
+                event?.data?.destinationNode?.nodeType === NodeType.StepGroupNode
+                //  &&   event?.data?.destinationNode?.data?.length === 0 // Check
               ) {
                 if (current.node.stepGroup) current.node.stepGroup.steps.push(dropNode)
                 else if (current.node.parallel) {
                   const index = current.node.parallel.findIndex(
-                    obj => obj?.stepGroup?.identifier === event?.destination?.identifier
+                    obj => obj?.stepGroup?.identifier === event?.data?.destinationNode?.data?.identifier
                   )
                   if (index > -1) {
                     current.node.parallel?.[index].stepGroup?.steps.push(dropNode)
@@ -546,12 +464,16 @@ function ExecutionGraphRef<T extends StageElementConfig>(
               updateStageWithNewData(state)
             } else {
               addStepOrGroup(
-                { ...event, node: { ...event?.destination } },
+                {
+                  ...event,
+                  data: { nodeData: event?.data?.destinationNode as typeof event.data.nodeData }
+                  //  node: { ...event?.destination }
+                },
                 state.stepsData,
                 dropNode,
                 false,
-                state.isRollback,
-                newPipelineStudioEnabled
+                state.isRollback
+                // newPipelineStudioEnabled
               )
               updateStageWithNewData(state)
             }
@@ -563,23 +485,24 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       // }
     }
   }
-  const dragStart = (event: any): void => {
-    const eventTemp = event as DefaultNodeEvent
-    eventTemp.stopPropagation?.()
+  const dragStart = (): void => {
+    // const eventTemp = event
+    // eventTemp.stopPropagation?.()
     dynamicPopoverHandler?.hide()
   }
-  const mouseEnterNodeListener = (event: any): void => {
-    const eventTemp = event as DefaultNodeEvent
-    eventTemp.stopPropagation?.()
+  const mouseEnterNodeListener = (event: EventStepOrGroupBaseType): void => {
+    const eventTemp = event
+    // eventTemp.stopPropagation?.()
     dynamicPopoverHandler?.hide()
     const node = getStepFromNode({
       stepData: state.stepsData,
-      node: eventTemp.entity,
+      // node: eventTemp.entity,
+      nodeId: event?.data?.nodeData?.data?.identifier,
       isComplete: false,
       isFindParallelNode: false,
       isRollback: state.isRollback
     }).node as StepElementConfig
-    const stepCondition = get(eventTemp, 'data.data.step.when')
+    const stepCondition = event?.data?.nodeData?.data?.when //get(eventTemp, 'data.data.step.when')
     const stepGroupCondition = get(eventTemp, 'data.data.stepGroup.when')
     const whenCondition = defaultTo(stepCondition || stepGroupCondition, node?.when)
     if (whenCondition) {
@@ -590,7 +513,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       const stepData = get(eventTemp, 'data.data.step')
       const stepGroupData = get(eventTemp, 'data.data.stepGroup')
       dynamicPopoverHandler?.show(
-        eventTemp.target,
+        event.target as Element, // TODO--PRAT---CHECK type
         {
           event: defaultTo(get(eventTemp, 'data.data'), eventTemp),
           isHoverView: true,
@@ -601,134 +524,35 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     }
   }
 
-  const mouseLeaveNodeListener = (event: any): void => {
-    const eventTemp = event as DefaultNodeEvent
-    eventTemp.stopPropagation?.()
+  const mouseLeaveNodeListener = (): void => {
+    // const eventTemp = event as DefaultNodeEvent
+    // eventTemp.stopPropagation?.()
     dynamicPopoverHandler?.hide()
   }
 
-  const nodeListeners: NodeModelListener = {
-    [Event.ClickNode]: (event: any) => {
-      const eventTemp = event as DefaultNodeEvent
-      eventTemp.stopPropagation()
-      const stepState = state.states.get(event.entity.getIdentifier())
+  const nodeListenersNew: ListenerStepReturnType = {
+    [Event.ClickNode]: (event: EventStepOrGroupBaseType) => {
+      // event = { ...event, ...event?.data }
+      const identifier = event?.data?.nodeData?.data?.identifier as string
+      const parentIdentifier = event?.data?.nodeData?.parentIdentifier as string
+      const stepState = state?.states?.get(identifier)
       dynamicPopoverHandler?.hide()
-      const nodeRender = document.querySelector(`[data-nodeid="${eventTemp.entity.getID()}"]`)
-      const layer = eventTemp.entity.getParent()
-      const parentIdentifier = (event.entity.getParent().getOptions() as StepGroupNodeLayerOptions).identifier
-      if (eventTemp.entity.getType() === DiagramType.CreateNew && nodeRender) {
+      const nodeRender = document.querySelector(`[data-nodeid="${identifier}"]`)
+
+      if (event?.data?.nodeType === DiagramType.CreateNew && nodeRender) {
         if (parentIdentifier === STATIC_SERVICE_GROUP_NAME) {
           addStep({
-            entity: event.entity,
+            entity: event,
             isRollback: state.isRollback,
             isParallel: false,
             stepsMap: state.states,
-            parentIdentifier: (event.entity.getParent().getOptions() as StepGroupNodeLayerOptions).identifier
+            parentIdentifier: parentIdentifier // (event.entity.getParent().getOptions() as StepGroupNodeLayerOptions).identifier
           })
         } else {
-          handleAdd(false, nodeRender, !(layer instanceof StepGroupNodeLayerModel), event)
+          handleAdd(false, nodeRender, !parentIdentifier, { entity: { ...event } })
         }
       } else if (stepState && stepState.isStepGroupCollapsed) {
-        const stepStates = state.states.set(event.entity.getIdentifier(), {
-          ...stepState,
-          isStepGroupCollapsed: !stepState.isStepGroupCollapsed
-        })
-        setState(prev => ({ ...prev, states: stepStates }))
-      } else {
-        let node: ExecutionWrapper | DependencyElement | undefined
-        if (stepState?.stepType === StepType.STEP) {
-          node = getStepFromNode({
-            stepData: state.stepsData,
-            node: eventTemp.entity,
-            isComplete: false,
-            isFindParallelNode: false,
-            isRollback: state.isRollback
-          }).node
-        } else if (stepState?.stepType === StepType.SERVICE) {
-          node = getDependencyFromNode(state.dependenciesData, eventTemp.entity).node
-        }
-        /* istanbul ignore else */ if (node) {
-          editStep({
-            node: node,
-            isUnderStepGroup: eventTemp.entity.getParent() instanceof StepGroupNodeLayerModel,
-            isStepGroup: false,
-            stepsMap: state.states,
-            addOrEdit: 'edit',
-            stepType: stepState?.stepType
-          })
-
-          onSelectStep?.((node as DependencyElement).identifier)
-        }
-      }
-    },
-    [Event.RemoveNode]: (event: any) => {
-      const eventTemp = event as DefaultNodeEvent
-      eventTemp.stopPropagation()
-      dynamicPopoverHandler?.hide()
-      const isRemoved = removeStepOrGroup({
-        state,
-        entity: eventTemp.entity,
-        newPipelineStudioEnabled: newPipelineStudioEnabled,
-        isRollback: state.isRollback
-      })
-      if (isRemoved) {
-        const newStateMap = new Map<string, StepState>([...state.states])
-        newStateMap.delete(eventTemp.entity?.getIdentifier())
-        setState(prevState => ({
-          ...prevState,
-          states: newStateMap
-        }))
-        updateStageWithNewData(state)
-        trackEvent(StepActions.DeleteStep, { type: eventTemp.entity.getType() || '' })
-      }
-    },
-    [Event.AddParallelNode]: (event: any) => {
-      const eventTemp = event as DefaultNodeEvent
-      eventTemp.stopPropagation()
-      const layer = eventTemp.entity.getParent()
-      if (layer instanceof StepGroupNodeLayerModel) {
-        const node = getStepFromNode({
-          stepData: state.stepsData,
-          node: eventTemp.entity,
-          isComplete: false,
-          isFindParallelNode: false,
-          isRollback: state.isRollback
-        }).node
-        if (node) {
-          handleAdd(true, eventTemp.target, false, event, eventTemp.callback)
-        }
-      } else {
-        /* istanbul ignore else */ if (eventTemp.target) {
-          handleAdd(true, eventTemp.target, true, event, eventTemp.callback)
-        }
-      }
-    },
-    [Event.DropLinkEvent]: dropNodeListener,
-    [Event.MouseEnterNode]: mouseEnterNodeListener,
-    [Event.MouseLeaveNode]: mouseLeaveNodeListener
-  }
-
-  const nodeListenersNew: NodeModelListener = {
-    [Event.ClickNode]: (event: any) => {
-      event = { ...event, ...event?.data }
-      const stepState = state?.states?.get(event?.identifier)
-      dynamicPopoverHandler?.hide()
-      const nodeRender = document.querySelector(`[data-nodeid="${event?.identifier}"]`)
-
-      if (event?.entityType === DiagramType.CreateNew && nodeRender) {
-        if (event?.parentIdentifier === STATIC_SERVICE_GROUP_NAME) {
-          addStep({
-            entity: event.entity,
-            isRollback: state.isRollback,
-            isParallel: false,
-            stepsMap: state.states,
-            parentIdentifier: event?.parentIdentifier // (event.entity.getParent().getOptions() as StepGroupNodeLayerOptions).identifier
-          })
-        } else {
-          handleAdd(false, nodeRender, !event?.parentIdentifier, { entity: { ...event } })
-        }
-      } else if (stepState && stepState.isStepGroupCollapsed) {
-        const stepStates = state.states.set(event?.identifier, {
+        const stepStates = state.states.set(identifier, {
           ...stepState,
           isStepGroupCollapsed: !stepState.isStepGroupCollapsed
         })
@@ -740,17 +564,17 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             stepData: state.stepsData,
             isComplete: false,
             isFindParallelNode: false,
-            nodeId: event?.identifier,
-            parentId: event?.parentIdentifier,
+            nodeId: identifier,
+            parentId: parentIdentifier,
             isRollback: state.isRollback
           }).node
         } else if (stepState?.stepType === StepType.SERVICE) {
-          node = getDependencyFromNodeV1(state.dependenciesData, event?.identifier).node
+          node = getDependencyFromNodeV1(state.dependenciesData, identifier).node
         }
         /* istanbul ignore else */ if (node) {
           editStep({
             node: node,
-            isUnderStepGroup: event?.parentIdentifier,
+            isUnderStepGroup: Boolean(parentIdentifier),
             isStepGroup: false,
             stepsMap: state.states,
             addOrEdit: 'edit',
@@ -761,10 +585,10 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         }
       }
     },
-    [Event.RemoveNode]: (event: any) => {
-      event = { ...event, ...event?.data }
+    [Event.RemoveNode]: (event: EventStepOrGroupBaseType) => {
+      // event = { ...event, ...event?.data }
       dynamicPopoverHandler?.hide()
-
+      const nodeData = event.data?.nodeData
       const isRemoved = removeStepOrGroup({
         state,
         entity: event,
@@ -773,34 +597,38 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       })
       if (isRemoved) {
         const newStateMap = new Map<string, StepState>([...state.states])
-        newStateMap.delete(event?.identifier)
+        newStateMap.delete(nodeData?.data?.identifier as string)
         setState(prevState => ({
           ...prevState,
           states: newStateMap
         }))
         updateStageWithNewData(state)
-        trackEvent(StepActions.DeleteStep, { type: event?.entityType || '' })
+        trackEvent(StepActions.DeleteStep, { type: event.data?.nodeType || '' })
       }
     },
-    [Event.AddParallelNode]: (event: any) => {
-      event = { ...event, ...event?.data }
+
+    [Event.AddParallelNode]: (event: EventStepOrGroupBaseType) => {
+      // event = { ...event, ...event?.data }
       // event.stopPropagation()
-      const layer = event?.parentIdentifier
-      if (layer) {
+      const identifier = event?.data?.nodeData?.data?.identifier as string
+      const parentIdentifier = event?.data?.nodeData?.parentIdentifier as string
+
+      // const layer = parentIdentifier
+      if (parentIdentifier) {
         const node = getStepFromNode({
           stepData: state.stepsData,
           isComplete: false,
           isFindParallelNode: false,
-          nodeId: event?.identifier,
-          parentId: event?.parentIdentifier,
+          nodeId: identifier,
+          parentId: parentIdentifier,
           isRollback: state.isRollback
         }).node
         if (node) {
-          handleAdd(true, event.target, false, { entity: { ...event } }, event.callback)
+          handleAdd(true, event.target as Element, false, { entity: { ...event } }, (event as any).callback) // TODO--PRAT--check for callback
         }
       } else {
         /* istanbul ignore else */ if (event.target) {
-          handleAdd(true, event.target, true, { entity: { ...event } }, event.callback)
+          handleAdd(true, event.target as Element, true, { entity: { ...event } }, (event as any).callback)
         }
       }
     },
@@ -809,95 +637,36 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     [Event.MouseLeaveNode]: mouseLeaveNodeListener
   }
 
-  const linkListeners: LinkModelListener = {
-    [Event.AddLinkClicked]: (event: any) => {
-      const eventTemp = event as DefaultLinkEvent
-      eventTemp.stopPropagation()
-      dynamicPopoverHandler?.hide()
-      const linkRender = document.querySelector(`[data-linkid="${eventTemp.entity.getID()}"] circle`)
-      const sourceLayer = eventTemp.entity.getSourcePort().getNode().getParent()
-      const targetLayer = eventTemp.entity.getTargetPort().getNode().getParent()
-      // check if the link is under step group then directly show add Step
-      if (
-        sourceLayer instanceof StepGroupNodeLayerModel &&
-        targetLayer instanceof StepGroupNodeLayerModel &&
-        sourceLayer === targetLayer &&
-        linkRender
-      ) {
-        handleAdd(false, linkRender, false, event)
-      } else if (linkRender) {
-        handleAdd(false, linkRender, true, event)
-      }
-    },
-    [Event.DropLinkEvent]: (event: any) => {
-      const eventTemp = event as DefaultLinkEvent
-      eventTemp.stopPropagation()
-      if (event.node?.identifier && event.node?.id) {
-        const dropEntity = model.getNodeFromId(event.node.id)
-        if (dropEntity) {
-          const dropNode = getStepFromNode({
-            stepData: state.stepsData,
-            node: dropEntity,
-            isComplete: true,
-            isFindParallelNode: false,
-            isRollback: state.isRollback
-          }).node as ExecutionWrapperConfig
-          if (dropNode?.stepGroup && isLinkUnderStepGroup(eventTemp.entity)) {
-            showError(getString('stepGroupInAnotherStepGroup'), undefined, 'pipeline.setgroup.error')
-          } else {
-            const isRemove = removeStepOrGroup({
-              state,
-              entity: dropEntity,
-              newPipelineStudioEnabled: newPipelineStudioEnabled,
-              isRollback: state.isRollback
-            })
-            if (isRemove && dropNode) {
-              addStepOrGroup(
-                eventTemp.entity,
-                state.stepsData,
-                dropNode,
-                false,
-                state.isRollback,
-                newPipelineStudioEnabled
-              )
-              updateStageWithNewData(state)
-            }
-          }
-        }
-      }
-    }
-  }
-  const linkListenersNew: LinkModelListener = {
-    [Event.AddLinkClicked]: (event: any) => {
-      event = { ...event, ...event?.data }
+  const linkListenersNew: ListenerStepReturnType = {
+    [Event.AddLinkClicked]: (event: EventStepOrGroupBaseType) => {
+      // event = { ...event, ...event?.data }
       // event.stopPropagation()
+      const identifier = event?.data?.nodeData?.data?.identifier as string
+      const parentIdentifier = event?.data?.nodeData?.parentIdentifier as string
+
       dynamicPopoverHandler?.hide()
       const targetEl = event?.target
-      const linkRender = targetEl || document.querySelector(`[data-linkid="${event.identifier}"]`)
+      const linkRender = (targetEl as Element) || document.querySelector(`[data-linkid="${identifier}"]`) // TODO--PRAT-- (as Element vc EventTarget)
       // check if the link is under step group then directly show add Step
-      if (event?.node?.parentIdentifier && linkRender) {
+      if (parentIdentifier && linkRender) {
         handleAdd(false, linkRender, false, { entity: { ...event } })
       } else if (linkRender) {
         handleAdd(false, linkRender, true, { entity: { ...event } })
       }
     },
-    [Event.DropLinkEvent]: (event: any) => {
-      event = { ...event, ...event?.data }
-      if (event.node?.identifier === event.destination?.identifier) {
+    [Event.DropLinkEvent]: (event: EventStepOrGroupBaseType) => {
+      // event = { ...event, ...event?.data }
+      if (event?.data?.nodeData?.data?.identifier === event.data?.destinationNode?.data?.identifier) {
         return
       }
-      // event.stopPropagation()
-      // if (event.node?.identifier && event?.node?.data) {
-      //   if (event?.node?.data?.stepGroup && event?.destination?.parentIdentifier) {
-      //     showError(getString('stepGroupInAnotherStepGroup'), undefined, 'pipeline.setgroup.error')
-      //   } else {
-      const stepDetails = omit(event.node.data, [
-        'conditionalExecutionEnabled',
-        'graphType',
-        'isInComplete',
-        'isTemplateNode',
-        'loopingStrategyEnabled'
-      ])
+      const stepDetails = event?.data?.nodeData?.data
+      //  omit(event.node.data, [
+      //   'conditionalExecutionEnabled',
+      //   'graphType',
+      //   'isInComplete',
+      //   'isTemplateNode',
+      //   'loopingStrategyEnabled'
+      // ])
       const isRemove = removeStepOrGroup({
         state,
         entity: event,
@@ -906,116 +675,23 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       })
       if (isRemove) {
         addStepOrGroup(
-          { ...event, node: { ...event?.destination } },
+          event,
           state.stepsData,
-          stepDetails,
+          isNodeTypeStepGroup(stepDetails)
+            ? { stepGroup: stepDetails as StepGroupElementConfig }
+            : { step: stepDetails as StepElementConfig },
           false,
-          state.isRollback,
-          newPipelineStudioEnabled
+          state.isRollback
         )
         updateStageWithNewData(state)
       }
-      // }
-      // }
-      // }
     }
   }
-
-  const layerListeners: BaseModelListener = {
-    [Event.StepGroupCollapsed]: (event: any) => {
-      const stepState = state.states.get(event.entity.getIdentifier())
-      const eventTemp = event as DefaultNodeEvent
-      eventTemp.stopPropagation()
-      if (stepState) {
-        const stepStates = state.states.set(event.entity.getIdentifier(), {
-          ...stepState,
-          isStepGroupCollapsed: !stepState.isStepGroupCollapsed
-        })
-        setState(prev => ({ ...prev, states: stepStates }))
-      }
-    },
-    [Event.StepGroupClicked]: (event: any) => {
-      const eventTemp = event as DefaultNodeEvent
-      eventTemp.stopPropagation()
-      const node = getStepFromNode({
-        stepData: state.stepsData,
-        node: eventTemp.entity,
-        isComplete: false,
-        isFindParallelNode: false,
-        isRollback: state.isRollback
-      }).node
-      if (node) {
-        editStep({
-          node: node,
-          isStepGroup: true,
-          addOrEdit: 'edit',
-          stepsMap: state.states,
-          stepType: StepType.STEP
-        })
-      }
-    },
-    [Event.RollbackClicked]: (event: any) => {
-      const stepState = state.states.get(event.entity.getIdentifier())
-      const eventTemp = event as DefaultNodeEvent
-      eventTemp.stopPropagation()
-      if (stepState) {
-        const stepStates = state.states.set(event.entity.getIdentifier(), {
-          ...stepState,
-          isStepGroupRollback: !stepState.isStepGroupRollback
-        })
-        setState(prev => ({ ...prev, states: stepStates }))
-      }
-    },
-    [Event.AddParallelNode]: (event: any) => {
-      const eventTemp = event as DefaultNodeEvent
-      eventTemp.stopPropagation()
-      if (eventTemp.target) {
-        handleAdd(true, eventTemp.target, true, event, eventTemp.callback)
-      }
-    },
-    [Event.DropLinkEvent]: dropNodeListener,
-    [Event.MouseEnterNode]: mouseEnterNodeListener,
-    [Event.MouseLeaveNode]: mouseLeaveNodeListener
-  }
-
-  useEffect(() => {
-    engine.registerListener({
-      [Event.RollbackClicked]: (event: any): void => {
-        const type = event.type as StepsType
-        setState(prev => ({ ...prev, isRollback: type === StepsType.Rollback }))
-      }
-    })
-  }, [engine])
-
   const onRollbackToggleSwitchClick = (type: StepsType) => {
     const isRollbackToggled = type === StepsType.Rollback
     setState(prev => ({ ...prev, isRollback: isRollbackToggled }))
     updatePipelineView({ ...pipelineView, isRollbackToggled })
   }
-
-  // renderParallelNodes(model)
-  model.setSelectedNodeId(selectedStepId)
-  model.addUpdateGraph({
-    stepsData: state.isRollback ? state.stepsData.rollbackSteps || [] : state.stepsData.steps || [],
-    stepStates: state.states,
-    hasDependencies,
-    servicesData: state.dependenciesData || [],
-    factory: stepsFactory,
-    listeners: {
-      nodeListeners,
-      linkListeners,
-      layerListeners
-    },
-    isRollback: state.isRollback,
-    getString,
-    isReadonly,
-    parentPath: `${pathToStage}.steps`,
-    errorMap,
-    templateTypes
-  })
-
-  // load model into engine
-  engine.setModel(model)
 
   useEffect(() => {
     if (stageCloneRef.current?.stage?.spec?.execution) {
@@ -1095,15 +771,15 @@ function ExecutionGraphRef<T extends StageElementConfig>(
   const listerners = {
     [Event.ClickNode]: nodeListenersNew[Event.ClickNode],
     [Event.AddParallelNode]: nodeListenersNew[Event.AddParallelNode],
-    [Event.DropNodeEvent]: nodeListenersNew[Event.DropNodeEvent],
-    [Event.RemoveNode]: nodeListenersNew[Event.RemoveNode],
     [Event.AddLinkClicked]: linkListenersNew[Event.AddLinkClicked],
+    [Event.RemoveNode]: nodeListenersNew[Event.RemoveNode],
+    [Event.DropNodeEvent]: nodeListenersNew[Event.DropNodeEvent],
     [Event.DropLinkEvent]: linkListenersNew[Event.DropLinkEvent],
     [Event.CanvasClick]: canvasClick,
     [Event.MouseEnterNode]: mouseEnterNodeListener,
     [Event.MouseLeaveNode]: mouseLeaveNodeListener,
     [Event.DragStart]: dragStart,
-    [Event.StepGroupClicked]: (event: any) => {
+    [Event.StepGroupClicked]: (event: EventStepOrGroupBaseType) => {
       const eventTemp = event
       // state.stepsData, eventTemp.data, undefined, undefined, event.data.identifier
       const node = getStepFromNode({
@@ -1162,60 +838,6 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           dynamicPopoverHandler?.hide()
         }
       }}
-      // onDragOver={event => {
-      //   const position = engine.getRelativeMousePoint(event)
-      //   model.highlightNodesAndLink(position)
-      //   event.preventDefault()
-      // }}
-      // onDrop={event => {
-      //   const position = engine.getRelativeMousePoint(event)
-      //   const nodeLink = model.getNodeLinkAtPosition(position)
-      //   const dropData: CommandData = JSON.parse(event.dataTransfer.getData('storm-diagram-node'))
-      //   if (nodeLink instanceof DefaultNodeModel) {
-      //     const dataClone: ExecutionWrapper[] = cloneDeep(state.data)
-      //     const stepIndex = dataClone.findIndex(item => item.step?.identifier === nodeLink.getIdentifier())
-      //     const removed = dataClone.splice(stepIndex, 1)
-      //     removed.push({
-      //       step: {
-      //         type: dropData.value,
-      //         name: dropData.text,
-      //         identifier: uuid(),
-      //         spec: {}
-      //       }
-      //     })
-      //     dataClone.splice(stepIndex, 0, {
-      //       parallel: removed
-      //     })
-      //     setState(prevState => ({
-      //       ...prevState,
-      //       isDrawerOpen: false,
-      //       data: dataClone,
-      //       isAddStepOverride: false,
-      //       isParallelNodeClicked: false
-      //     }))
-      //   } else if (nodeLink instanceof DefaultLinkModel) {
-      //     const dataClone: ExecutionWrapper[] = cloneDeep(state.data)
-      //     const stepIndex = dataClone.findIndex(
-      //       item =>
-      //         item.step?.identifier === (nodeLink.getSourcePort().getNode() as DefaultNodeModel).getIdentifier()
-      //     )
-      //     dataClone.splice(stepIndex + 1, 0, {
-      //       step: {
-      //         type: dropData.value,
-      //         name: dropData.text,
-      //         identifier: uuid(),
-      //         spec: {}
-      //       }
-      //     })
-      //     setState(prevState => ({
-      //       ...prevState,
-      //       isDrawerOpen: false,
-      //       data: dataClone,
-      //       isAddStepOverride: false,
-      //       isParallelNodeClicked: false
-      //     }))
-      //   }
-      // }}
     >
       <div className={css.canvas} ref={canvasRef}>
         {state.isRollback && (
@@ -1245,22 +867,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             </NodeDimensionProvider>
           </>
         ) : (
-          <>
-            <CanvasWidget
-              engine={engine}
-              isRollback={hasRollback}
-              rollBackProps={{
-                style: { top: 62, ...rollBackPropsStyle },
-                active: state.isRollback ? StepsType.Rollback : StepsType.Normal
-              }}
-            />
-            <CanvasButtons
-              engine={engine}
-              tooltipPosition={canvasButtonsTooltipPosition}
-              layout={canvasButtonsLayout}
-              className={css.canvasButtons}
-            />
-          </>
+          <></>
         )}
         <DynamicPopover
           className={css.addStepPopover}

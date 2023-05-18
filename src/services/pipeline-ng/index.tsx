@@ -4535,7 +4535,6 @@ export interface StepElementConfig {
 export interface StepGroupElementConfig {
   delegateSelectors?: string[]
   failureStrategies?: FailureStrategyConfig[]
-  strategy?: StrategyConfig
   identifier: string
   name: string
   steps: ExecutionWrapperConfig[]

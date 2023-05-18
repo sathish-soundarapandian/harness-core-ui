@@ -26,27 +26,27 @@ export function ApprovalStageExecution(): React.ReactElement {
       templateTypes
     },
     isReadonly,
-    stepsFactory,
+    // stepsFactory,
     updateStage,
     updatePipelineView,
     getStageFromPipeline,
-    setSelectedStepId,
-    getStagePathFromPipeline
+    setSelectedStepId
+    // getStagePathFromPipeline
   } = usePipelineContext()
   const selectedStage = getStageFromPipeline(selectedStageId).stage
   const originalStage = getStageFromPipeline(selectedStageId, originalPipeline).stage
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const { addTemplate } = useAddStepTemplate({ executionRef: executionRef.current })
-  const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
+  // const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
   return (
     <ExecutionGraph
       allowAddGroup={true}
       isReadonly={isReadonly}
       hasDependencies={false}
-      stepsFactory={stepsFactory}
+      // stepsFactory={stepsFactory}
       ref={executionRef}
       hasRollback={false}
-      pathToStage={`${stagePath}.stage.spec.execution`}
+      // pathToStage={`${stagePath}.stage.spec.execution`}
       templateTypes={templateTypes}
       selectedStepId={selectedStepId}
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -47,7 +47,7 @@ import {
   NodeType as DiagramNodeType,
   NodeProps
 } from '@pipeline/components/PipelineDiagram/DiagramFactory'
-import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
+import { DiamondStageNode } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondStageNode'
 import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
 import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStage'
 import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
@@ -66,7 +66,7 @@ diagram.registerNode(DiagramNodeType.CreateNode, CreateNodeStage as unknown as R
 diagram.registerNode(DiagramNodeType.EndNode, EndNodeStage)
 diagram.registerNode(DiagramNodeType.StartNode, StartNodeStage)
 diagram.registerNode([DiagramNodeType.MatrixNode, DiagramNodeType.LoopNode, DiagramNodeType.PARALLELISM], MatrixNode)
-diagram.registerNode(['Approval', 'JiraApproval', 'HarnessApproval', 'default-diamond'], DiamondNodeWidget)
+diagram.registerNode(['Approval', 'JiraApproval', 'HarnessApproval', 'default-diamond'], DiamondStageNode)
 
 export const CDPipelineStudioNew = diagram.render()
 const barrierSupportedStageTypes = [StageType.DEPLOY, StageType.APPROVAL]

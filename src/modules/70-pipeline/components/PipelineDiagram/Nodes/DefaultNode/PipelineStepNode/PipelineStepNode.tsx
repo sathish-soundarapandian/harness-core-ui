@@ -20,7 +20,7 @@ import type { EventStepDataType } from '@pipeline/components/PipelineStudio/Stag
 import type { ExecutionWrapperConfig, StepElementConfig } from 'services/pipeline-ng'
 import SVGMarker from '../../SVGMarker'
 import { NodeProps, NodeType, PipelineStageNodeMetaDataType } from '../../../types'
-import AddLinkNode from '../AddLinkNode/AddLinkNode'
+import { AddLinkStepNode } from '../AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon } from '../../utils'
 import defaultCss from '../DefaultNode.module.scss'
 
@@ -74,6 +74,7 @@ function PipelineStepNode(
       data: {
         nodeType: DiagramType.Default,
         nodeData: {
+          parentIdentifier: nodeData?.data?.parentIdentifier,
           id: nodeData?.data?.id,
           data: nodeData?.data?.data?.step,
           metaData: {
@@ -82,12 +83,17 @@ function PipelineStepNode(
           }
         },
         destinationNode: {
+          parentIdentifier: props?.data?.parentIdentifier,
           id: props?.data?.id,
           data: props?.data?.data?.step,
           metaData: {
             hasChildren: hasChildren(props),
             isParallelNode: isParallelNode(props)
           }
+        },
+        metaData: {
+          prevNode: props?.metaData?.prevNode,
+          nextNode: props?.metaData?.nextNode
         }
       }
     })
@@ -118,12 +124,17 @@ function PipelineStepNode(
           data: {
             nodeType: DiagramType.Default,
             nodeData: {
+              parentIdentifier: props?.data?.parentIdentifier,
               id: props?.data?.id,
               data: props?.data?.data?.step,
               metaData: {
                 hasChildren: hasChildren(props),
                 isParallelNode: isParallelNode(props)
               }
+            },
+            metaData: {
+              prevNode: props?.metaData?.prevNode,
+              nextNode: props?.metaData?.nextNode
             }
           }
         })
@@ -182,12 +193,17 @@ function PipelineStepNode(
             data: {
               nodeType: DiagramType.Default,
               nodeData: {
+                parentIdentifier: props?.data?.parentIdentifier,
                 id: props?.data?.id,
                 data: props?.data?.data?.step,
                 metaData: {
                   hasChildren: hasChildren(props),
                   isParallelNode: isParallelNode(props)
                 }
+              },
+              metaData: {
+                prevNode: props?.metaData?.prevNode,
+                nextNode: props?.metaData?.nextNode
               }
             }
           })
@@ -204,12 +220,17 @@ function PipelineStepNode(
             data: {
               nodeType: DiagramType.Default,
               nodeData: {
+                parentIdentifier: props?.data?.parentIdentifier,
                 id: props?.data?.id,
                 data: props?.data?.data?.step,
                 metaData: {
                   hasChildren: hasChildren(props),
                   isParallelNode: isParallelNode(props)
                 }
+              },
+              metaData: {
+                prevNode: props?.metaData?.prevNode,
+                nextNode: props?.metaData?.nextNode
               }
             }
           })
@@ -223,12 +244,17 @@ function PipelineStepNode(
             data: {
               nodeType: DiagramType.Default,
               nodeData: {
+                parentIdentifier: props?.data?.parentIdentifier,
                 id: props?.data?.id,
                 data: props?.data?.data?.step,
                 metaData: {
                   hasChildren: hasChildren(props),
                   isParallelNode: isParallelNode(props)
                 }
+              },
+              metaData: {
+                prevNode: props?.metaData?.prevNode,
+                nextNode: props?.metaData?.nextNode
               }
             }
           })
@@ -269,7 +295,7 @@ function PipelineStepNode(
             </Text>
           </div>
         )}
-        {props.data?.loopingStrategyEnabled && (
+        {props.data?.metaData?.loopingStrategyEnabled && (
           <div className={defaultCss.loopingStrategy}>
             <Text
               tooltip={getString('pipeline.loopingStrategy.title')}
@@ -316,12 +342,17 @@ function PipelineStepNode(
               data: {
                 nodeType: DiagramType.Default,
                 nodeData: {
+                  parentIdentifier: props?.data?.parentIdentifier,
                   id: props?.data?.id,
                   data: props?.data?.data?.step,
                   metaData: {
                     hasChildren: hasChildren(props),
                     isParallelNode: isParallelNode(props)
                   }
+                },
+                metaData: {
+                  prevNode: props?.metaData?.prevNode,
+                  nextNode: props?.metaData?.nextNode
                 }
               }
             })
@@ -363,14 +394,18 @@ function PipelineStepNode(
               // extract common data to top
               data: {
                 nodeType: DiagramType.Default,
-                parentIdentifier: props?.metaData?.parentIdentifier,
                 nodeData: {
+                  parentIdentifier: props?.data?.parentIdentifier,
                   id: props?.data?.id,
                   data: props?.data?.data?.step,
                   metaData: {
                     hasChildren: hasChildren(props),
                     isParallelNode: isParallelNode(props)
                   }
+                },
+                metaData: {
+                  prevNode: props?.metaData?.prevNode,
+                  nextNode: props?.metaData?.nextNode
                 }
               }
             })
@@ -380,32 +415,36 @@ function PipelineStepNode(
         />
       )}
       {!isParallelNode(props) && !isServiceStep && !props?.permissions?.readonly && (
-        <AddLinkNode<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+        <AddLinkStepNode
           data={props?.data?.data?.step as StepElementConfig}
           id={props?.data?.id}
-          parentIdentifier={props?.metaData?.parentIdentifier}
+          parentIdentifier={props?.data?.parentIdentifier}
           isParallelNode={isParallelNode(props)}
           readonly={props?.permissions?.readonly}
           fireEvent={props.fireEvent}
           style={{ left: getPositionOfAddIcon(props) }}
           className={cx(defaultCss.addNodeIcon, defaultCss.stepAddIcon)}
+          prevNode={props?.metaData?.prevNode}
+          nextNode={props?.metaData?.nextNode}
         />
       )}
       {!props?.metaData?.nextNode &&
         !isServiceStep &&
-        props?.metaData?.parentIdentifier &&
+        props?.data?.parentIdentifier &&
         !props?.permissions?.readonly &&
         !isParallelNode(props) && (
-          <AddLinkNode<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+          <AddLinkStepNode
             data={props?.data?.data?.step as StepElementConfig}
             id={props?.data?.id}
-            parentIdentifier={props?.metaData?.parentIdentifier}
+            parentIdentifier={props?.data?.parentIdentifier}
             isParallelNode={isParallelNode(props)}
             readonly={props?.permissions?.readonly}
             fireEvent={props.fireEvent}
             isRightAddIcon={true}
             style={{ right: getPositionOfAddIcon(props, true) }}
             className={cx(defaultCss.addNodeIcon, defaultCss.stepAddIcon)}
+            prevNode={props?.metaData?.prevNode}
+            nextNode={props?.metaData?.nextNode}
           />
         )}
     </div>

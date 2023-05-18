@@ -26,11 +26,15 @@ interface AddLinkNodeProps<T, U, V>
   data: T
   setShowAddLink?: (data: boolean) => void
   fireEvent?: FireEventMethod<EventProps<T, EventMetaDataProps>>
+  prevNode?: T
+  nextNode?: T
 }
 
 type AddLinkNodeStageProps<T, U, V> = AddLinkNodeProps<T, U, V>
 
-export default function AddLinkNode<T, U, V>(props: AddLinkNodeStageProps<T, U, V>): React.ReactElement | null {
+export function AddLinkStageNode<StageElementConfig, PipelineStageNodeMetaDataType, EventStageDataType>(
+  props: AddLinkNodeStageProps<StageElementConfig, PipelineStageNodeMetaDataType, EventStageDataType>
+): React.ReactElement | null {
   return (
     <div
       style={props?.style}
@@ -41,14 +45,18 @@ export default function AddLinkNode<T, U, V>(props: AddLinkNodeStageProps<T, U, 
           type: Event.AddLinkClicked,
           target: event.target,
           data: {
-            parentIdentifier: props?.parentIdentifier,
             nodeType: DiagramType.Link,
             nodeData: {
+              parentIdentifier: props?.parentIdentifier as string,
               id: props?.id as string,
               data: props?.data,
               metaData: {
                 isRightAddIcon: props?.isRightAddIcon
               }
+            },
+            metaData: {
+              nextNode: props?.nextNode,
+              prevNode: props?.prevNode
             }
           }
         })
@@ -65,9 +73,9 @@ export default function AddLinkNode<T, U, V>(props: AddLinkNodeStageProps<T, U, 
           type: Event.DropLinkEvent,
           target: event.target,
           data: {
-            parentIdentifier: props?.parentIdentifier,
             nodeType: DiagramType.Link,
             nodeData: {
+              parentIdentifier: nodeData?.parentIdentifier,
               id: nodeData?.data.id,
               data: nodeData?.data?.data?.stage,
               metaData: {
@@ -75,11 +83,91 @@ export default function AddLinkNode<T, U, V>(props: AddLinkNodeStageProps<T, U, 
               }
             },
             destinationNode: {
+              parentIdentifier: props?.parentIdentifier as string,
               id: props?.id as string,
               data: props?.data,
               metaData: {
                 isRightAddIcon: props?.isRightAddIcon
               }
+            },
+            metaData: {
+              prevNode: props?.prevNode,
+              nextNode: props?.nextNode
+            }
+          }
+        })
+        // check where is it coming from
+        props?.setShowAddLink?.(false)
+      }}
+      className={cx(props.className, 'Plus-class')}
+    >
+      <Icon name="plus" color={Color.WHITE} />
+    </div>
+  )
+}
+
+export function AddLinkStepNode<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>(
+  props: AddLinkNodeStageProps<StepElementConfig, PipelineStageNodeMetaDataType, EventStepDataType>
+): React.ReactElement | null {
+  return (
+    <div
+      style={props?.style}
+      data-linkid={props?.id}
+      onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.stopPropagation()
+        props?.fireEvent?.({
+          type: Event.AddLinkClicked,
+          target: event.target,
+          data: {
+            nodeType: DiagramType.Link,
+            nodeData: {
+              parentIdentifier: props?.parentIdentifier as string,
+              id: props?.id as string,
+              data: props?.data,
+              metaData: {
+                isRightAddIcon: props?.isRightAddIcon
+              }
+            },
+            metaData: {
+              nextNode: props?.nextNode,
+              prevNode: props?.prevNode
+            }
+          }
+        })
+      }}
+      onDragOver={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.stopPropagation()
+        event.preventDefault()
+        props?.setShowAddLink?.(true)
+      }}
+      onDrop={event => {
+        const nodeData = JSON.parse(event.dataTransfer.getData(DiagramDrag.NodeDrag))
+        // as typeof props
+        event.stopPropagation()
+        props?.fireEvent?.({
+          type: Event.DropLinkEvent,
+          target: event.target,
+          data: {
+            nodeType: DiagramType.Link,
+            nodeData: {
+              parentIdentifier: nodeData?.parentIdentifier,
+              id: nodeData?.data.id,
+              data: nodeData?.data?.data?.step,
+              metaData: {
+                isRightAddIcon: nodeData?.isRightAddIcon
+              }
+            },
+            destinationNode: {
+              parentIdentifier: props?.parentIdentifier as string,
+              id: props?.id as string,
+              data: props?.data,
+              metaData: {
+                isRightAddIcon: props?.isRightAddIcon
+              }
+            },
+            metaData: {
+              prevNode: props?.prevNode,
+              nextNode: props?.nextNode
             }
           }
         })

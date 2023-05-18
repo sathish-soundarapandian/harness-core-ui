@@ -18,7 +18,7 @@ import { useStrings } from 'framework/strings'
 import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import type { EventStageDataType } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import SVGMarker from '../../SVGMarker'
-import AddLinkNode from '../AddLinkNode/AddLinkNode'
+import { AddLinkStageNode } from '../AddLinkNode/AddLinkNode'
 import { NodeProps, NodeType, PipelineStageNodeMetaDataType } from '../../../types'
 import { getPositionOfAddIcon } from '../../utils'
 import defaultCss from '../DefaultNode.module.scss'
@@ -79,6 +79,7 @@ function PipelineStageNode(
           data: {
             nodeType: DiagramType.Default,
             nodeData: {
+              parentIdentifier: props?.data?.parentIdentifier,
               id: props?.data?.id,
               data: props?.data?.data?.stage as StageElementConfig,
               metaData: {
@@ -118,6 +119,7 @@ function PipelineStageNode(
           data: {
             nodeType: DiagramType.Default,
             nodeData: {
+              parentIdentifier: nodeData?.data?.parentIdentifier,
               id: nodeData?.data?.id,
               data: nodeData?.data?.data?.stage,
               metaData: {
@@ -126,6 +128,7 @@ function PipelineStageNode(
               }
             },
             destinationNode: {
+              parentIdentifier: props?.data?.parentIdentifier,
               id: props?.data?.id,
               data: props?.data?.data?.stage,
               metaData: {
@@ -169,6 +172,7 @@ function PipelineStageNode(
             data: {
               nodeType: DiagramType.Default,
               nodeData: {
+                parentIdentifier: props?.data?.parentIdentifier,
                 id: props?.data?.id,
                 data: props?.data?.data?.stage as StageElementConfig,
                 metaData: {
@@ -188,6 +192,7 @@ function PipelineStageNode(
             data: {
               nodeType: DiagramType.Default,
               nodeData: {
+                parentIdentifier: props?.data?.parentIdentifier,
                 id: props?.data?.id,
                 data: props?.data?.data?.stage as StageElementConfig,
                 metaData: {
@@ -213,6 +218,7 @@ function PipelineStageNode(
             data: {
               nodeType: DiagramType.Default,
               nodeData: {
+                parentIdentifier: props?.data?.parentIdentifier,
                 id: props?.data?.id,
                 data: props?.data?.data?.stage as StageElementConfig,
                 metaData: {
@@ -283,6 +289,7 @@ function PipelineStageNode(
               data: {
                 nodeType: DiagramType.Default,
                 nodeData: {
+                  parentIdentifier: props?.data?.parentIdentifier,
                   id: props?.data?.id,
                   data: props?.data?.data?.stage as StageElementConfig,
                   metaData: {
@@ -355,8 +362,8 @@ function PipelineStageNode(
               // extract common data to top
               data: {
                 nodeType: DiagramType.Default,
-                parentIdentifier: props?.metaData?.parentIdentifier,
                 nodeData: {
+                  parentIdentifier: props?.data?.parentIdentifier,
                   id: props?.data?.id,
                   data: props?.data?.data?.stage as StageElementConfig,
                   metaData: {
@@ -372,10 +379,10 @@ function PipelineStageNode(
       )}
 
       {!isParallelNode(props) && !props?.permissions?.readonly && (
-        <AddLinkNode<StageElementConfig, PipelineStageNodeMetaDataType, EventStageDataType>
+        <AddLinkStageNode
           data={props?.data?.data?.stage as StageElementConfig}
           id={props?.data?.id}
-          parentIdentifier={props?.metaData?.parentIdentifier}
+          parentIdentifier={props?.data?.parentIdentifier}
           isParallelNode={isParallelNode(props)}
           readonly={props?.permissions?.readonly}
           fireEvent={props.fireEvent}

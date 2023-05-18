@@ -71,7 +71,8 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
 }): JSX.Element => {
   const {
     state: {
-      pipeline: { stages = [] }
+      pipeline: { stages = [] },
+      pipeline
     }
   } = usePipelineContext()
   const { getString } = useStrings()
@@ -172,7 +173,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
         if (values.gitOpsEnabled) {
           set(data, 'stage.spec.gitOpsEnabled', values.gitOpsEnabled)
         }
-        onSubmit?.(data, values.identifier)
+        onSubmit?.(data, values.identifier, pipeline)
       }
     }
   }

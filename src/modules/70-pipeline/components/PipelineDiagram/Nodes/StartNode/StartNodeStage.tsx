@@ -15,7 +15,7 @@ import css from '../Nodes.module.scss'
 
 const DEFAULT_ICON: IconName = 'play'
 
-function StartNodeStage(props: NodeProps<any, any>): React.ReactElement {
+function StartNodeStage(props: any): React.ReactElement {
   return (
     <div id={props?.data?.id} className={cx(props?.metaData?.className, css.stageNode)}>
       <div className={cx(css.nodeStart)} style={{ backgroundColor: '#f3f3fa', border: '1px solid #b0b1c4' }}>

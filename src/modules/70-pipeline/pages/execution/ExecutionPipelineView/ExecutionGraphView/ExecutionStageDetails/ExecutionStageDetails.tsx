@@ -28,7 +28,7 @@ import ConditionalExecutionTooltipWrapper from '@pipeline/components/Conditional
 import { getExecutionStageDiagramListeners, processExecutionDataV1 } from '@pipeline/utils/execUtils'
 
 import { DiagramFactory, DiagramNodes, NodeType, NodeProps } from '@pipeline/components/PipelineDiagram/DiagramFactory'
-import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
+import { DiamondStepNode } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondStepNode'
 import PipelineStepNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStepNode/PipelineStepNode'
 import { IconNode } from '@pipeline/components/PipelineDiagram/Nodes/IconNode/IconNode'
 import CreateNodeStep from '@pipeline/components/PipelineDiagram/Nodes/CreateNode/CreateNodeStep'
@@ -53,10 +53,10 @@ diagram.registerNode(NodeType.EndNode, EndNodeStep)
 diagram.registerNode(NodeType.StartNode, StartNodeStep)
 diagram.registerNode('STEP_GROUP', DiagramNodes[NodeType.StepGroupNode])
 diagram.registerNode([NodeType.MatrixNode, NodeType.LoopNode, NodeType.PARALLELISM], MatrixStepNode)
-diagram.registerNode('Approval', DiamondNodeWidget)
-diagram.registerNode('JiraApproval', DiamondNodeWidget)
-diagram.registerNode('HarnessApproval', DiamondNodeWidget)
-diagram.registerNode('default-diamond', DiamondNodeWidget)
+diagram.registerNode('Approval', DiamondStepNode)
+diagram.registerNode('JiraApproval', DiamondStepNode)
+diagram.registerNode('HarnessApproval', DiamondStepNode)
+diagram.registerNode('default-diamond', DiamondStepNode)
 diagram.registerNode(['Barrier', 'ResourceConstraint'], IconNode)
 
 export const CDPipelineStudioNew = diagram.render()
