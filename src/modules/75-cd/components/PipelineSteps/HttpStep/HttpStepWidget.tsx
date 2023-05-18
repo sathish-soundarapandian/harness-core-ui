@@ -13,6 +13,7 @@ import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/compo
 import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import OptionalConfiguration from './OptionalConfiguration'
 import type { HttpStepData, HttpStepFormData } from './types'
 import HttpStepBase from './HttpStepBase'
@@ -40,6 +41,7 @@ export function HttpStepWidget(
 ): React.ReactElement {
   const { initialValues, onUpdate, onChange, isNewStep, isDisabled, stepViewType, allowableTypes } = props
   const { getString } = useStrings()
+  const { CDS_ENCODE_HTTP_STEP_URL } = useFeatureFlags()
 
   return (
     <Formik<HttpStepFormData>
@@ -56,9 +58,11 @@ export function HttpStepWidget(
         spec: Yup.object().shape({
           url: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-              return Yup.string()
-                .matches(/((https?):\/\/)?(www.)?[a-z0-9]+\..*$/, getString('validation.urlIsNotValid'))
-                .required(getString('common.validation.urlIsRequired'))
+              return (
+                CDS_ENCODE_HTTP_STEP_URL
+                  ? Yup.string().matches(/((http)+s?:\/\/)(www.)?[a-z0-9]+\..*$/, getString('validation.urlIsNotValid'))
+                  : Yup.string().url(getString('validation.urlIsNotValid'))
+              ).required(getString('common.validation.urlIsRequired'))
             }
             return Yup.string().required(getString('common.validation.urlIsRequired'))
           }),
