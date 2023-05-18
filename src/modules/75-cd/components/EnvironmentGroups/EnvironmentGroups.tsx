@@ -54,7 +54,6 @@ import { EnvironmentGroupsFilters } from './EnvironmentGroupsFilters/Environment
 import { getHasFilterIdentifier, getHasFilters } from './EnvironmentGroupsFilters/filterUtils'
 import { EnvironmentGroupListQueryParams, Sort, SortFields } from './utils'
 
-
 import {
   PageQueryParamsWithDefaults,
   PAGE_TEMPLATE_DEFAULT_PAGE_INDEX,

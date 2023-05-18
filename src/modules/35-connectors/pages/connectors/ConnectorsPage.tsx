@@ -141,7 +141,6 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
       resourceType: ResourceType.SETTING
     }
   })
-  console.log({ hasRBACViewPermission })
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
