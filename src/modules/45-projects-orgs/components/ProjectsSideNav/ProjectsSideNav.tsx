@@ -94,6 +94,7 @@ export default function ProjectsSideNav(): React.ReactElement {
                 <SidebarLink label={getString('pipelines')} to={routes.toPipelines(projectDetailsParams)} />
                 <SidebarLink label={getString('services')} to={routes.toServices(projectDetailsParams)} />
                 <SidebarLink label={getString('environments')} to={routes.toEnvironment(projectDetailsParams)} />
+                <SidebarLink label={'Monitored Services'} to={routes.toMonitoredServices(projectDetailsParams)} />
                 {CDS_SERVICE_OVERRIDES_2_0 && (
                   <SidebarLink
                     label={getString('common.overrides')}

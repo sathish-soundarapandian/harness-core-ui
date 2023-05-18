@@ -870,6 +870,17 @@ const routes = {
       })
     }
   ),
+  toMonitoredServices: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }>) => {
+      return module
+        ? `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoredservices`
+        : `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoredservices`
+    }
+  ),
   toServiceStudio: withAccountId(
     ({
       orgIdentifier,

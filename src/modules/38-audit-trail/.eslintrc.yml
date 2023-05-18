@@ -14,6 +14,7 @@ rules:
         - group:
             - modules/38-user-profile/*
             - modules/40-gitsync/*
+            - modules/40-monitored-services/*
             - modules/45-dashboards/*
             - modules/45-projects-orgs/*
             - modules/50-assessments/*
@@ -36,6 +37,7 @@ rules:
             - modules/90-gitops/*
             - '@user-profile/*'
             - '@gitsync/*'
+            - '@monitored-services/*'
             - '@dashboards/*'
             - '@projects-orgs/*'
             - '@assessments/*'

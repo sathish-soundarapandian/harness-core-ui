@@ -12,6 +12,7 @@ rules:
             - microfrontends/*
             - '!microfrontends/ChildAppMounter'
         - group:
+            - modules/40-monitored-services/*
             - modules/45-dashboards/*
             - modules/45-projects-orgs/*
             - modules/50-assessments/*
@@ -32,6 +33,7 @@ rules:
             - modules/85-iacm/*
             - modules/85-sto/*
             - modules/90-gitops/*
+            - '@monitored-services/*'
             - '@dashboards/*'
             - '@projects-orgs/*'
             - '@assessments/*'

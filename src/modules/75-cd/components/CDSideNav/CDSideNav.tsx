@@ -238,6 +238,7 @@ export default function CDSideNav(): React.ReactElement {
           <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module })} />
           <SidebarLink label={getString('services')} to={routes.toServices({ ...params, module })} />
           <SidebarLink label={getString('environments')} to={routes.toEnvironment({ ...params, module })} />
+          <SidebarLink label={'Monitored Services'} to={routes.toMonitoredServices({ ...params, module })} />
           {CDS_SERVICE_OVERRIDES_2_0 && (
             <SidebarLink label={getString('common.overrides')} to={routes.toServiceOverrides({ ...params, module })} />
           )}

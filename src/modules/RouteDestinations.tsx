@@ -17,6 +17,7 @@ import secretsRoutes from '@secrets/RouteDestinations'
 import variableRoutes from '@variables/RouteDestinations'
 import fileStoreRoutes from '@filestore/RouteDestinations'
 import RbacRoutes from '@rbac/RouteDestinations'
+import monitoredServiceRoutes from '@monitored-services/RouteDestinations'
 import projectsOrgsRoutes from '@projects-orgs/RouteDestinations'
 import connectorRoutes from '@connectors/RouteDestinations'
 import tempatesRoutes from '@templates-library/RouteDestinations'
@@ -81,6 +82,8 @@ export default function RouteDestinations(): React.ReactElement {
       {delegatesRoutes.props.children}
       {fileStoreRoutes.props.children}
       {projectsOrgsRoutes.props.children}
+      {/* Todo - add the feature flag */}
+      {monitoredServiceRoutes.props.children}
       {GovernanceRoutes.props.children}
       {CODE_ENABLED ? CODERouteDestinations().props.children : null}
       {connectorRoutes.props.children}
