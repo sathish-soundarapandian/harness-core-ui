@@ -20,6 +20,7 @@ navLabels:
   gamedays: GameDays
   probes: Resilience Probes
   dashboards: Chaos Dashboards
+  security: Security Governance
 environments:
   pageTitle: '[{{projectName}}] Environments'
   create:

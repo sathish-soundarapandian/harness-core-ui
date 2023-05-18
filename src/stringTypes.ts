@@ -8250,6 +8250,7 @@ export interface StringsMap {
   'chaos.navLabels.dashboards': string
   'chaos.navLabels.gamedays': string
   'chaos.navLabels.probes': string
+  'chaos.navLabels.security': string
   'chaos.noEnvironment.message': string
   'chaos.noEnvironment.title': string
   'chaos.pipelineStep.description': string

@@ -2107,6 +2107,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-dashboards`
   ),
+  toChaosSecurityGovernance: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/security-governance`
+  ),
 
   // chaos enviroments
   toChaosEnvironments: withAccountId(

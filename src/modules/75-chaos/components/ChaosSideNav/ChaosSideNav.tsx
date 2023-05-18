@@ -22,7 +22,8 @@ export default function ChaosSideNav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
   const { getString } = useStrings()
-  const { CHAOS_PROBE_ENABLED, CHAOS_GAMEDAY_ENABLED, CHAOS_DASHBOARD_ENABLED } = useFeatureFlags()
+  const { CHAOS_PROBE_ENABLED, CHAOS_GAMEDAY_ENABLED, CHAOS_DASHBOARD_ENABLED, CHAOS_SECURITY_GOVERNANCE } =
+    useFeatureFlags()
   const { updateAppStore } = useAppStore()
   const history = useHistory()
 
@@ -59,6 +60,12 @@ export default function ChaosSideNav(): React.ReactElement {
             <SidebarLink label={getString('chaos.navLabels.dashboards')} to={routes.toChaosDashboards({ ...params })} />
           )}
           <SidebarLink label={getString('environments')} to={routes.toChaosEnvironments({ ...params })} />
+          {CHAOS_SECURITY_GOVERNANCE && (
+            <SidebarLink
+              label={getString('chaos.navLabels.security')}
+              to={routes.toChaosSecurityGovernance({ ...params })}
+            />
+          )}
           <ProjectSetupMenu module="chaos" />
         </>
       ) : null}
