@@ -8,7 +8,7 @@
 import type { AllowedTypes, SelectOption, SelectWithSubmenuOption } from '@harness/uicore'
 import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import type { ArtifactConfig, PrimaryArtifact, PageConnectorResponse, ServiceDefinition } from 'services/cd-ng'
+import type { ArtifactConfig, ServiceDefinition } from 'services/cd-ng'
 import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import type {
   AcrSpec,
@@ -25,11 +25,10 @@ import type {
 } from 'services/pipeline-ng'
 
 export interface ArtifactListViewProps {
-  primaryArtifact?: PrimaryArtifact
+  artifacts: ArtifactTriggerSpec[]
+  artifactType: ArtifactType
   addNewArtifact: () => void
   editArtifact: () => void
-  fetchedConnectorResponse?: PageConnectorResponse
-  accountId: string
   deleteArtifact: () => void
 }
 export interface ArtifactsSelectionProps {

@@ -8,10 +8,8 @@
 import React from 'react'
 import { Layout, Text, Button, ButtonSize, ButtonVariation, Label, HarnessDocTooltip } from '@harness/uicore'
 import cx from 'classnames'
-import { isEmpty } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { PrimaryArtifact } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import type { ArtifactListViewProps } from '../ArtifactInterface'
@@ -19,20 +17,14 @@ import PrimaryArtifactView from './PrimaryArtifact/PrimaryArtifactView'
 import css from '../ArtifactsSelection.module.scss'
 
 function ArtifactListView({
-  accountId,
-  fetchedConnectorResponse,
-  primaryArtifact,
+  artifacts,
+  artifactType,
   editArtifact,
   deleteArtifact,
   addNewArtifact
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
-  let isArtifactSelected = false
-  if (primaryArtifact?.type === 'CustomArtifact') {
-    isArtifactSelected = primaryArtifact?.spec?.script
-  } else {
-    isArtifactSelected = !isEmpty(primaryArtifact?.spec?.connectorRef)
-  }
+  const isArtifactsAdded = artifacts?.length !== 0
 
   const CDS_NG_TRIGGER_MULTI_ARTIFACTS = useFeatureFlag(FeatureFlag.CDS_NG_TRIGGER_MULTI_ARTIFACTS)
 
@@ -64,9 +56,9 @@ function ArtifactListView({
               variation={ButtonVariation.LINK}
               onClick={() => addNewArtifact()}
               text={getString('pipeline.artifactTriggerConfigPanel.defineArtifactSource')}
-              margin={isArtifactSelected ? { bottom: 'large' } : {}}
+              margin={isArtifactsAdded ? { bottom: 'large' } : {}}
             />
-            {isArtifactSelected && (
+            {isArtifactsAdded && (
               <>
                 <div className={cx(css.artifactList, css.listHeader)}>
                   <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
@@ -75,19 +67,21 @@ function ArtifactListView({
                   <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
                   <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
                 </div>
-                <PrimaryArtifactView
-                  primaryArtifact={primaryArtifact as PrimaryArtifact}
-                  deleteArtifact={deleteArtifact}
-                  accountId={accountId}
-                  fetchedConnectorResponse={fetchedConnectorResponse}
-                  editArtifact={editArtifact}
-                />
+                {artifacts?.map((artifact, index) => (
+                  <PrimaryArtifactView
+                    key={index}
+                    artifact={artifact}
+                    artifactType={artifactType}
+                    deleteArtifact={deleteArtifact}
+                    editArtifact={editArtifact}
+                  />
+                ))}
               </>
             )}
           </>
         ) : (
           <>
-            {!isArtifactSelected ? (
+            {!isArtifactsAdded ? (
               <>
                 <Label
                   style={{
@@ -119,13 +113,15 @@ function ArtifactListView({
                   <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
                   <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
                 </div>
-                <PrimaryArtifactView
-                  primaryArtifact={primaryArtifact as PrimaryArtifact}
-                  deleteArtifact={deleteArtifact}
-                  accountId={accountId}
-                  fetchedConnectorResponse={fetchedConnectorResponse}
-                  editArtifact={editArtifact}
-                />
+                {artifacts?.map((artifact, index) => (
+                  <PrimaryArtifactView
+                    key={index}
+                    artifact={artifact}
+                    artifactType={artifactType}
+                    deleteArtifact={deleteArtifact}
+                    editArtifact={editArtifact}
+                  />
+                ))}
               </>
             )}
           </>

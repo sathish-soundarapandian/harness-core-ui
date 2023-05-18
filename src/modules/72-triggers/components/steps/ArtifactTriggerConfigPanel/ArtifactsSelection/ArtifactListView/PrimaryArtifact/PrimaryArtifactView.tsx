@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
-import { Button, Icon, Layout, Text } from '@harness/uicore'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Button, Icon, Layout, Text, shouldShowError, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import type { PageConnectorResponse, PrimaryArtifact } from 'services/cd-ng'
+import { PageConnectorResponse, useGetConnectorListV2 } from 'services/cd-ng'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import {
   ArtifactIconByType,
@@ -19,73 +20,112 @@ import {
   ENABLED_ARTIFACT_TYPES
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { showConnectorStep } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ArtifactRepositoryTooltip from '../ArtifactRepositoryTooltip'
-import type { ArtifactType } from '../../ArtifactInterface'
+import type { ArtifactTriggerSpec, ArtifactType } from '../../ArtifactInterface'
 import { getArtifactLocation } from '../../ArtifactUtils'
 import css from '../../ArtifactsSelection.module.scss'
 
 interface PrimaryArtifactViewProps {
-  primaryArtifact: PrimaryArtifact
-  accountId: string
-  fetchedConnectorResponse: PageConnectorResponse | undefined
+  artifact: ArtifactTriggerSpec
+  artifactType: ArtifactType
   editArtifact: () => void
   deleteArtifact: () => void
 }
 
 function PrimaryArtifactView({
-  primaryArtifact,
-  accountId,
-  fetchedConnectorResponse,
+  artifact,
+  artifactType,
   editArtifact,
   deleteArtifact
 }: PrimaryArtifactViewProps): React.ReactElement {
   const { getString } = useStrings()
-  const primaryArtifactType = primaryArtifact?.type as ArtifactType
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
+  const [fetchedConnectorResponse, setFetchedConnectorResponse] = useState<PageConnectorResponse | undefined>()
+  const { color: primaryConnectorColor } = getStatus(artifact?.connectorRef, fetchedConnectorResponse, accountId)
+  const primaryConnectorName = getConnectorNameFromValue(artifact?.connectorRef, fetchedConnectorResponse)
 
-  const { color: primaryConnectorColor } = getStatus(
-    primaryArtifact?.spec?.connectorRef,
-    fetchedConnectorResponse,
-    accountId
-  )
-  const primaryConnectorName = getConnectorNameFromValue(primaryArtifact?.spec?.connectorRef, fetchedConnectorResponse)
+  const defaultQueryParams = {
+    pageIndex: 0,
+    pageSize: 10,
+    searchTerm: '',
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    includeAllConnectorsAvailableAtScope: true
+  }
+  const { mutate: fetchConnectors } = useGetConnectorListV2({
+    queryParams: defaultQueryParams
+  })
+
+  const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
+
+  const refetchConnectorList = async (): Promise<void> => {
+    try {
+      const response = await fetchConnectors({
+        filterType: 'Connector',
+        connectorIdentifiers: [getIdentifierFromValue(artifact.connectorRef as string)]
+      })
+      /* istanbul ignore else */
+      if (response.data) {
+        const { data: connectorResponse } = response
+        setFetchedConnectorResponse(connectorResponse)
+      }
+    } catch (e) {
+      /* istanbul ignore else */
+      if (shouldShowError(e)) {
+        showError(getRBACErrorMessage(e as RBACError))
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (artifact?.connectorRef) {
+      refetchConnectorList()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [artifact?.connectorRef])
 
   const getPrimaryArtifactRepository = useCallback(
-    (artifactType: ArtifactType): string => {
-      if (artifactType === ENABLED_ARTIFACT_TYPES.CustomArtifact) {
+    (_artifactType: ArtifactType): string => {
+      if (_artifactType === ENABLED_ARTIFACT_TYPES.CustomArtifact) {
         return getString('common.repo_provider.customLabel')
       }
-      return defaultTo(primaryConnectorName, primaryArtifact?.spec?.connectorRef)
+      return defaultTo(primaryConnectorName, artifact?.connectorRef)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [primaryArtifact?.spec?.connectorRef, primaryConnectorName]
+    [artifact?.connectorRef, primaryConnectorName]
   )
 
   return (
     <section className={cx(css.artifactList, css.rowItem)}>
-      <div>{getString(ArtifactTitleIdByType[primaryArtifactType])}</div>
+      <div>{getString(ArtifactTitleIdByType[artifactType])}</div>
       <div className={css.connectorNameField}>
-        <Icon padding={{ right: 'small' }} name={ArtifactIconByType[primaryArtifactType]} size={18} />
+        <Icon padding={{ right: 'small' }} name={ArtifactIconByType[artifactType]} size={18} />
         <Text
           tooltip={
             <ArtifactRepositoryTooltip
               artifactConnectorName={primaryConnectorName}
-              artifactConnectorRef={primaryArtifact.spec?.connectorRef}
-              artifactType={primaryArtifactType}
+              artifactConnectorRef={artifact?.connectorRef}
+              artifactType={artifactType}
             />
           }
           tooltipProps={{ isDark: true }}
-          alwaysShowTooltip={showConnectorStep(primaryArtifactType)}
+          alwaysShowTooltip={showConnectorStep(artifactType)}
           className={css.connectorName}
           lineClamp={1}
         >
-          {getPrimaryArtifactRepository(primaryArtifactType)}
+          {getPrimaryArtifactRepository(artifactType)}
         </Text>
 
         <Icon name="full-circle" size={8} color={primaryConnectorColor} />
       </div>
       <div>
         <Text width={200} lineClamp={1} color={Color.GREY_500}>
-          <span className={css.noWrap}>{getArtifactLocation(primaryArtifact)}</span>
+          <span className={css.noWrap}>{getArtifactLocation(artifact, artifactType)}</span>
         </Text>
       </div>
 

@@ -9,7 +9,7 @@ import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectO
 import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import type { ArtifactConfig, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
+import type { ArtifactConfig } from 'services/cd-ng'
 import {
   ArtifactType,
   GoogleArtifactRegistryInitialValuesType,
@@ -17,7 +17,8 @@ import {
   ImagePathTypes,
   JenkinsArtifactType,
   RepositoryPortOrServer,
-  TagTypes
+  TagTypes,
+  ArtifactTriggerSpec
 } from './ArtifactInterface'
 
 export const shellScriptType: SelectOption[] = [
@@ -358,16 +359,16 @@ export const getArtifactPathToFetchTags = (
   return formik.values.imagePath
 }
 
-export const getArtifactLocation = (artifact: PrimaryArtifact | SidecarArtifact): string => {
-  if (artifact.type === 'AmazonS3') {
-    return artifact.spec?.filePath ?? artifact.spec?.filePathRegex
+export const getArtifactLocation = (artifact: ArtifactTriggerSpec, artifactType: ArtifactType): string => {
+  if (artifactType === 'AmazonS3') {
+    return artifact?.filePath ?? artifact?.filePathRegex
   }
   return (
-    artifact.spec?.imagePath ||
-    artifact.spec?.artifactPath ||
-    artifact.spec?.artifactPathFilter ||
-    artifact.spec?.repository ||
-    artifact.spec?.version ||
-    artifact.spec?.versionRegex
+    artifact?.imagePath ||
+    artifact?.artifactPath ||
+    artifact?.artifactPathFilter ||
+    artifact?.repository ||
+    artifact?.version ||
+    artifact?.versionRegex
   )
 }

@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import type { FormikProps } from 'formik'
-import { MultiTypeInputType, shouldShowError, useToaster } from '@harness/uicore'
+import { MultiTypeInputType } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -15,15 +15,11 @@ import { useParams } from 'react-router-dom'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
 import { merge, noop } from 'lodash-es'
-import { PageConnectorResponse, PrimaryArtifact, useGetConnectorListV2 } from 'services/cd-ng'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import type { GitQueryParams, PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 
 import { useQueryParams } from '@common/hooks'
-import type { RBACError } from '@rbac/utils/useRBACError/useRBACError'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import {
   ArtifactIconByType,
   ArtifactTitleIdByType,
@@ -66,13 +62,12 @@ interface ArtifactsSelectionProps {
 
 export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionProps): React.ReactElement | null {
   const { spec: triggerSpec } = (formikProps.values?.source ?? {}) as Omit<Required<NGTriggerSourceV2>, 'pollInterval'>
-  const { type: artifactType, spec } = triggerSpec
+  const { type: artifactType, spec, sources: artifactSpecSources = [] } = triggerSpec
   const artifactSpec = spec as ArtifactTriggerSpec
   const selectedArtifactType = artifactType as Required<ArtifactType>
   const [isEditMode, setIsEditMode] = useState(false)
   const [connectorView, setConnectorView] = useState(false)
-  const [fetchedConnectorResponse, setFetchedConnectorResponse] = useState<PageConnectorResponse | undefined>()
-  const [primaryArtifact, setPrimaryArtifact] = useState<PrimaryArtifact>(triggerSpec as PrimaryArtifact)
+  const [artifacts, setArtifacts] = useState<ArtifactTriggerSpec[]>(artifactSpecSources as ArtifactTriggerSpec[])
   const [isNewArtifact, setIsNewArtifact] = useState(false)
 
   const { getString } = useStrings()
@@ -90,45 +85,6 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
     title: '',
     style: { width: 1100, height: 550, borderLeft: 'none', paddingBottom: 0, position: 'relative' }
   }
-
-  const defaultQueryParams = {
-    pageIndex: 0,
-    pageSize: 10,
-    searchTerm: '',
-    accountIdentifier: accountId,
-    orgIdentifier,
-    projectIdentifier,
-    includeAllConnectorsAvailableAtScope: true
-  }
-  const { mutate: fetchConnectors } = useGetConnectorListV2({
-    queryParams: defaultQueryParams
-  })
-
-  const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
-
-  const refetchConnectorList = async (): Promise<void> => {
-    try {
-      const response = await fetchConnectors({
-        filterType: 'Connector',
-        connectorIdentifiers: [getIdentifierFromValue(artifactSpec.connectorRef as string)]
-      })
-      /* istanbul ignore else */
-      if (response.data) {
-        const { data: connectorResponse } = response
-        setFetchedConnectorResponse(connectorResponse)
-      }
-    } catch (e) {
-      /* istanbul ignore else */
-      if (shouldShowError(e)) {
-        showError(getRBACErrorMessage(e as RBACError))
-      }
-    }
-  }
-
-  useEffect(() => {
-    refetchConnectorList()
-  }, [artifactSpec?.connectorRef])
 
   const [showConnectorModal, hideConnectorModal] = useModalHook(
     () => (
@@ -172,7 +128,7 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
 
   const addArtifact = (artifactObj: ArtifactTriggerSpec): void => {
     const { type, spec: _triggerSpec } = formikProps.values.source ?? {}
-    const { type: _artifactType } = _triggerSpec ?? {}
+    const { type: _artifactType, sources = [] } = _triggerSpec ?? {}
 
     const values = {
       ...formikProps.values,
@@ -180,14 +136,15 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         type,
         spec: {
           type: _artifactType,
-          spec: artifactObj
+          spec: artifactObj,
+          sources: [...sources, artifactObj]
         }
       }
     }
 
     formikProps.setValues(values)
 
-    setPrimaryArtifact(values?.source?.spec)
+    setArtifacts(values.source.spec.sources)
     hideConnectorModal()
   }
 
@@ -218,7 +175,7 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
     merge(_artifactSpec?.spec, initialSpec)
 
     await formikProps.setValues(merge(formikProps.values, artifactSource))
-    setPrimaryArtifact({} as PrimaryArtifact)
+    setArtifacts([])
   }
 
   const getIconProps = useCallback((): IconProps => {
@@ -340,12 +297,11 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
 
   return (
     <ArtifactListView
-      primaryArtifact={primaryArtifact}
+      artifacts={artifacts}
+      artifactType={artifactType}
       addNewArtifact={addNewArtifact}
       editArtifact={editArtifact}
       deleteArtifact={deleteArtifact}
-      fetchedConnectorResponse={fetchedConnectorResponse}
-      accountId={accountId}
     />
   )
 }
