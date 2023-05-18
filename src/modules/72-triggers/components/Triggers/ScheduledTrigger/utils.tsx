@@ -10,10 +10,10 @@ import { isEmpty } from 'lodash-es'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import { CronFormat, isCronValid } from '@triggers/components/steps/SchedulePanel/components/utils'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
-import type { NGTriggerSourceV2, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { PanelInterface } from '@triggers/components/TabWizard/TabWizard'
 import { NameIdentifierSchema } from '@common/utils/Validation'
-import type { ScheduleType, TriggerBaseType } from '../TriggerInterface'
+import type { ScheduleType, TriggerBaseType, TriggerType } from '../TriggerInterface'
 
 export interface ScheduledInitialValuesInterface {
   triggerType: TriggerBaseType
@@ -21,7 +21,7 @@ export interface ScheduledInitialValuesInterface {
 }
 
 export interface FlatInitialValuesInterface {
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   identifier?: string
   tags?: {
     [key: string]: string
@@ -48,7 +48,7 @@ export interface FlatOnEditValuesInterface {
     [key: string]: string
   }
   pipeline?: PipelineInfoConfig
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   manifestType?: string
   artifactType?: string
   originalPipeline?: PipelineInfoConfig
@@ -81,7 +81,7 @@ export interface FlatValidScheduleFormikValuesInterface {
   pipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   sourceRepo: string
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   expression: string
   pipelineBranchName?: string
   inputSetRefs?: string[]

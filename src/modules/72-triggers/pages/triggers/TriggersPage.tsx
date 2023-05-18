@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
-import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelineType, TriggerPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -18,15 +18,8 @@ import TriggersList from './views/TriggersList'
 import type { TriggerDataInterface } from './utils/TriggersListUtils'
 
 const TriggersPage: React.FC = (): React.ReactElement => {
-  const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } = useParams<
-    PipelineType<{
-      projectIdentifier: string
-      orgIdentifier: string
-      accountId: string
-      pipelineIdentifier: string
-      triggerIdentifier: string
-    }>
-  >()
+  const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier, module } =
+    useParams<PipelineType<TriggerPathProps>>()
   const history = useHistory()
   const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
   const onNewTriggerClick = (val: TriggerDataInterface): void => {

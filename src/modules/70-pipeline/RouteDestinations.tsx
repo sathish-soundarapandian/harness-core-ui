@@ -13,7 +13,8 @@ import type {
   Module,
   ModulePathParams,
   PipelinePathProps,
-  PipelineType
+  PipelineType,
+  TriggerQueryParams
 } from '@common/interfaces/RouteInterfaces'
 import { EmptyLayout, MinimalLayout } from '@common/layouts'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
@@ -383,7 +384,7 @@ AuditTrailFactory.registerResourceHandler('TRIGGER', {
         projectIdentifier,
         accountId: accountIdentifier,
         triggerIdentifier: trigger.identifier,
-        triggerType: trigger.labels.triggerType,
+        triggerType: trigger.labels.triggerType as TriggerQueryParams['triggerType'],
         pipelineIdentifier: trigger.labels.pipelineIdentifier
       })
     }

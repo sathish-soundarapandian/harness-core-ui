@@ -5,14 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { fillArtifactConnectorDataAndMoveToNextStep } from './fillArtifactConnectorDataAndMoveToNextStep'
+
 export const fillArtifactWizardData = ({ connectorId, fillArtifactData }): void => {
   // Connector
-  if (connectorId) {
-    cy.get('[data-testid="cr-field-connectorId"]').click()
-    cy.contains('p', connectorId).click()
-    cy.contains('span', 'Apply Selected').click()
-    cy.get('button[type="submit"]').click()
-  }
+  fillArtifactConnectorDataAndMoveToNextStep(connectorId)
 
   // Specific to Artifact type
   fillArtifactData()

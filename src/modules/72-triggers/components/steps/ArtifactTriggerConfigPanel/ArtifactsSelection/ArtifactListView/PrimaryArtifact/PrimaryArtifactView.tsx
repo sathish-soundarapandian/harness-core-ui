@@ -130,8 +130,8 @@ function PrimaryArtifactView({
       </div>
 
       <Layout.Horizontal>
-        <Button icon="Edit" minimal iconProps={{ size: 18 }} onClick={() => editArtifact()} />
-        <Button iconProps={{ size: 18 }} minimal icon="main-trash" onClick={deleteArtifact} />
+        <Button icon="Edit" minimal iconProps={{ size: 18 }} onClick={editArtifact} />
+        <Button icon="main-trash" minimal iconProps={{ size: 18 }} onClick={deleteArtifact} />
       </Layout.Horizontal>
     </section>
   )

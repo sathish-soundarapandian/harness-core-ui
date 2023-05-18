@@ -7,11 +7,11 @@
 
 import type { StringsMap } from 'stringTypes'
 import { WebhookTrigger } from '@triggers/components/Triggers/WebhookTrigger/WebhookTrigger'
-import { SourceRepo } from '../../TriggerInterface'
+import type { SourceRepo } from '../../TriggerInterface'
 import type { WebhookInitialValuesInterface } from '../utils'
 
 export class Github extends WebhookTrigger<WebhookInitialValuesInterface> {
-  protected type: SourceRepo = SourceRepo.Github
+  protected type: SourceRepo = 'Github'
   protected triggerDescription: keyof StringsMap = 'common.repo_provider.githubLabel'
 
   protected defaultValues = {

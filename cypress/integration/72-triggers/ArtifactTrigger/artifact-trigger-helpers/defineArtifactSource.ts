@@ -5,6 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const defineArtifactSource = (): void => {
-  cy.contains('span', 'Define Artifact Source').click()
+export const defineArtifactSource = (isMultiRegion = false): void => {
+  cy.contains('span', isMultiRegion ? 'Define Multi Region Artifact Source' : 'Define Artifact Source').click()
 }

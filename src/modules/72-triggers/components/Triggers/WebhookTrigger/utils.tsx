@@ -10,13 +10,13 @@ import { string, array, object, ObjectSchema } from 'yup'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import type { PanelInterface } from '@triggers/components/TabWizard/TabWizard'
 import type { UseStringsReturn } from 'framework/strings'
-import type { GetActionsListQueryParams, NGTriggerSourceV2, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { GetActionsListQueryParams, PipelineInfoConfig } from 'services/pipeline-ng'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { NameIdentifierSchema } from '@common/utils/Validation'
 import { connectorUrlType } from '@connectors/constants'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
-import type { SourceRepo, TriggerBaseType } from '../TriggerInterface'
+import type { SourceRepo, TriggerBaseType, TriggerType } from '../TriggerInterface'
 import { ciCodebaseBuild, ciCodebaseBuildPullRequest, CUSTOM, TriggerGitEvent } from '../utils'
 
 export function getDefaultPipelineReferenceBranch(event = ''): string {
@@ -143,7 +143,7 @@ export interface WebhookInitialValuesInterface {
 }
 
 export interface FlatInitialValuesInterface {
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   identifier?: string
   tags?: {
     [key: string]: string
@@ -181,7 +181,7 @@ export interface FlatOnEditValuesInterface {
     [key: string]: string
   }
   pipeline?: PipelineInfoConfig
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   manifestType?: string
   artifactType?: string
   originalPipeline?: PipelineInfoConfig

@@ -6,12 +6,12 @@
  */
 
 import type { StringsMap } from 'stringTypes'
-import { ScheduleType } from '../../TriggerInterface'
+import type { ScheduleType } from '../../TriggerInterface'
 import { ScheduledTrigger } from '../ScheduledTrigger'
 import type { ScheduledInitialValuesInterface } from '../utils'
 
 export class Cron extends ScheduledTrigger<ScheduledInitialValuesInterface> {
-  protected type: ScheduleType = ScheduleType.Cron
+  protected type: ScheduleType = 'Cron'
   protected triggerDescription: keyof StringsMap = 'triggers.cronLabel'
 
   protected defaultValues = {

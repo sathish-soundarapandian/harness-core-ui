@@ -12,7 +12,7 @@ import type { NGTriggerResponse } from 'services/pipeline-ng'
 import type { TriggerBaseType, TriggerSubType } from './TriggerInterface'
 export interface TriggerProps<T> {
   isNewTrigger: boolean
-  baseType?: TriggerBaseType
+  baseType: TriggerBaseType
   type?: TriggerSubType
   triggerData?: NGTriggerResponse
   initialValues: T

@@ -11,11 +11,11 @@ import ManifestPipelineInputPanel from '@triggers/components/steps/ManifestPipel
 import ManifestTriggerConfigPanel from '@triggers/components/steps/ManifestTriggerConfigPanel/ManifestTriggerConfigPanel'
 import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
 import { Trigger, TriggerProps } from '../Trigger'
-import { TriggerBaseType } from '../TriggerInterface'
+import type { TriggerBaseType } from '../TriggerInterface'
 import ManifestTriggerWizard from './ManifestTriggerWizard'
 
 export abstract class ManifestTrigger<T> extends Trigger<T> {
-  protected baseType = TriggerBaseType.MANIFEST
+  protected baseType: TriggerBaseType = 'Manifest'
 
   renderStepOne(): JSX.Element {
     return <ManifestTriggerConfigPanel />

@@ -28,7 +28,6 @@ import { Intent } from '@harness/design-system'
 
 import {
   NGTriggerConfigV2,
-  NGTriggerSourceV2,
   PipelineInfoConfig,
   ResponseNGTriggerResponse,
   useCreateTrigger,
@@ -97,7 +96,6 @@ import {
   getValidationSchema
 } from './utils'
 import type { TriggerProps } from '../Trigger'
-import { TriggerBaseType } from '../TriggerInterface'
 import {
   GitSourceProviders,
   clearNullUndefined,
@@ -343,7 +341,7 @@ export default function WebhookTriggerWizard(
   )
 
   const [onEditInitialValues, setOnEditInitialValues] = useState<FlatOnEditValuesInterface>({
-    triggerType: baseType as NGTriggerSourceV2['type']
+    triggerType: baseType
   })
 
   const getInitialValues = (): FlatInitialValuesInterface => {
@@ -683,7 +681,7 @@ export default function WebhookTriggerWizard(
           ...(sourceRepoForYaml === GitSourceProviders.GITHUB.value && { encryptedWebhookSecretIdentifier }),
           pipeline: pipelineJson,
           sourceRepo: sourceRepoForYaml,
-          triggerType: TriggerBaseType.WEBHOOK,
+          triggerType: 'Webhook',
           event,
           autoAbortPreviousExecutions,
           connectorRef,
@@ -798,7 +796,7 @@ export default function WebhookTriggerWizard(
           tags,
           pipeline: pipelineJson,
           sourceRepo: sourceRepoForCustomYaml,
-          triggerType: TriggerBaseType.WEBHOOK,
+          triggerType: 'Webhook',
           secureToken: authToken?.spec?.value,
           headerConditions,
           payloadConditions,
@@ -850,7 +848,7 @@ export default function WebhookTriggerWizard(
   }, [mergeInputSetResponse?.data?.pipelineYaml])
 
   useEffect(() => {
-    if (triggerData?.yaml && triggerData.type === TriggerBaseType.WEBHOOK) {
+    if (triggerData?.yaml && triggerData.type === 'Webhook') {
       const newOnEditInitialValues = getWebhookTriggerValues({
         triggerResponseYaml: triggerData.yaml
       })
@@ -980,7 +978,7 @@ export default function WebhookTriggerWizard(
         projectIdentifier,
         pipelineIdentifier,
         source: {
-          type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
+          type: formikValueTriggerType,
           ...(isGitWebhookPollingEnabled &&
             formikValueSourceRepo === GitSourceProviders.GITHUB.value && { pollInterval, webhookId }),
           spec: {
@@ -1033,7 +1031,7 @@ export default function WebhookTriggerWizard(
         projectIdentifier,
         pipelineIdentifier,
         source: {
-          type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
+          type: formikValueTriggerType,
           spec: {
             type: formikValueSourceRepo, // Custom
             spec: {

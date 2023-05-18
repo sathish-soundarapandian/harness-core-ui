@@ -17,6 +17,7 @@ import type {
 } from 'services/pipeline-ng'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
+import type { TriggerBaseType, TriggerType } from '@triggers/components/Triggers/TriggerInterface'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
 import type { CronFormat } from '../views/subviews/CustomTab'
 
@@ -30,7 +31,7 @@ export interface ConnectorRefInterface {
 }
 
 export interface FlatInitialValuesInterface {
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   identifier?: string
   tags?: {
     [key: string]: string
@@ -64,7 +65,7 @@ export interface FlatOnEditValuesInterface {
   }
   source?: NGTriggerSourceV2
   pipeline: PipelineInfoConfig
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   manifestType?: string
   artifactType?: string
   originalPipeline?: PipelineInfoConfig
@@ -129,7 +130,7 @@ export interface FlatValidWebhookFormikValuesInterface {
   originalPipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   sourceRepo: string
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   repoName?: string
   connectorRef?: { connector: { spec: { type: string } }; value: string } // get from dto interface when available
   autoAbortPreviousExecutions: boolean
@@ -165,7 +166,7 @@ export interface FlatValidScheduleFormikValuesInterface {
   pipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   sourceRepo: string
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   expression: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
@@ -180,7 +181,7 @@ export interface FlatValidArtifactFormikValuesInterface {
   tags?: {
     [key: string]: string
   }
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   selectedArtifact: any
   stageId: string
   pipeline: PipelineInfoConfig
@@ -194,7 +195,7 @@ export interface TriggerConfigDTO extends Omit<NGTriggerConfigV2, 'identifier'> 
 }
 
 export interface TriggerGitQueryParams extends GitQueryParams {
-  triggerType?: NGTriggerSourceV2['type']
+  triggerType?: TriggerBaseType
   sourceRepo?: WebhookTriggerConfigV2['type']
   manifestType?: ManifestTriggerConfig['type']
   artifactType?: ArtifactTriggerConfig['type']

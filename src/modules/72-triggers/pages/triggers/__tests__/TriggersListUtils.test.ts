@@ -7,7 +7,7 @@
 
 import type { CategoryInterface } from '@common/components/AddDrawer/AddDrawer'
 import { Connectors } from '@connectors/constants'
-import { TriggerBaseType } from '@triggers/components/Triggers/TriggerInterface'
+import type { TriggerBaseType } from '@triggers/components/Triggers/TriggerInterface'
 import type { StringKeys } from 'framework/strings'
 import type { TriggerCatalogResponse } from 'services/pipeline-ng'
 import { getCategoryItems, getTriggerCategoryDrawerMapFromTriggerCatalogItem } from '../utils/TriggersListUtils'
@@ -135,19 +135,19 @@ describe('Test util methods', () => {
     expect(triggerCategories.length).toBe(4)
 
     const getCategoryData = getTriggerCategoryData(triggerCategories)
-    const webhookTriggerCategory = getCategoryData(TriggerBaseType.WEBHOOK)
+    const webhookTriggerCategory = getCategoryData('Webhook')
     expect(webhookTriggerCategory.categoryLabel).toBe(getString('execution.triggerType.WEBHOOK'))
     expect(webhookTriggerCategory.items).toEqual(webhookTriggerCategoryItems)
 
-    const artifactTriggerCategory = getCategoryData(TriggerBaseType.ARTIFACT)
+    const artifactTriggerCategory = getCategoryData('Artifact')
     expect(artifactTriggerCategory.categoryLabel).toBe(getString('pipeline.artifactTriggerConfigPanel.artifact'))
     expect(artifactTriggerCategory.items).toEqual(artifactTriggerCategoryItems)
 
-    const manifestTriggerCategory = getCategoryData(TriggerBaseType.MANIFEST)
+    const manifestTriggerCategory = getCategoryData('Manifest')
     expect(manifestTriggerCategory.categoryLabel).toBe(getString('manifestsText'))
     expect(manifestTriggerCategory.items).toEqual(manifestTriggerCategoryItems)
 
-    const scheduledTriggerCategory = getCategoryData(TriggerBaseType.SCHEDULE)
+    const scheduledTriggerCategory = getCategoryData('Scheduled')
     expect(scheduledTriggerCategory.categoryLabel).toBe(getString('triggers.scheduledLabel'))
     expect(scheduledTriggerCategory.items).toEqual(scheduledTriggerCategoryItems)
   })

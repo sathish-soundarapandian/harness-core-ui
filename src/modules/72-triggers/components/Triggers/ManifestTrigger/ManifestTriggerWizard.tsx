@@ -54,7 +54,6 @@ import { Failure, getConnectorListV2Promise, GetConnectorQueryParams, useGetConn
 import {
   GetTriggerQueryParams,
   NGTriggerConfigV2,
-  NGTriggerSourceV2,
   PipelineInfoConfig,
   ResponseNGTriggerResponse,
   useCreateTrigger,
@@ -104,6 +103,7 @@ import type { TriggerProps } from '../Trigger'
 import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
 import { isNewTrigger } from '../utils'
 import { useIsTriggerCreatePermission } from '../useIsTriggerCreatePermission'
+import type { TriggerType } from '../TriggerInterface'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -336,7 +336,7 @@ export default function ManifestTriggerWizard(
   const [onEditInitialValues, setOnEditInitialValues] = useState<
     | FlatOnEditValuesInterface
     | {
-        triggerType: NGTriggerSourceV2['type']
+        triggerType: TriggerType
         pipeline?: PipelineInfoConfig | Record<string, never>
         originalPipeline?: PipelineInfoConfig
         resolvedPipeline?: PipelineInfoConfig

@@ -768,6 +768,7 @@ pipelineInputPanel:
   whatAreInputsets: What are Input Sets?
 artifactTriggerConfigPanel:
   artifact: 'Artifact'
+  artifacts: '{{$.artifacts}}'
   artifactRepository: '{{artifact}} Repository'
   buildTagArtifactPath: 'Build/Tag/ Artifact Path'
   locationRepoPath: Location/Repo Path
@@ -775,6 +776,7 @@ artifactTriggerConfigPanel:
   listenOnNewArtifact: 'Listen on New {{artifact}}'
   plusSelect: '+ Select {{artifact}}'
   defineArtifactSource: 'Define Artifact Source'
+  defineMultiRegionArtifactSource: 'Define Multi Region Artifact Source'
   defineManifestSource: 'Define Manifest Source'
   selectAnArtifact: 'Select an Artifact Reference'
   selectAManifest: 'Select a Manifest Reference'

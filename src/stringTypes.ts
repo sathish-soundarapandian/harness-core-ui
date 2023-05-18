@@ -3849,6 +3849,7 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.artifactReferenceUnique': string
   'pipeline.artifactTriggerConfigPanel.artifactRepository': string
   'pipeline.artifactTriggerConfigPanel.artifactTagSetting': string
+  'pipeline.artifactTriggerConfigPanel.artifacts': string
   'pipeline.artifactTriggerConfigPanel.buildTagArtifactPath': string
   'pipeline.artifactTriggerConfigPanel.chartVersionRuntimeInput': string
   'pipeline.artifactTriggerConfigPanel.configureArtifactRuntimeInputs': string
@@ -3856,6 +3857,7 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.configureInputs': string
   'pipeline.artifactTriggerConfigPanel.defineArtifactSource': string
   'pipeline.artifactTriggerConfigPanel.defineManifestSource': string
+  'pipeline.artifactTriggerConfigPanel.defineMultiRegionArtifactSource': string
   'pipeline.artifactTriggerConfigPanel.hasRuntimeInputs': string
   'pipeline.artifactTriggerConfigPanel.listenOnNewArtifact': string
   'pipeline.artifactTriggerConfigPanel.locationRepoPath': string

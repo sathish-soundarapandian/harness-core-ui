@@ -20,7 +20,8 @@ export const visitTriggersPage = (
           ...featureFlagsData.resource,
           { uuid: null, name: 'NG_SVC_ENV_REDESIGN', enabled: true, lastUpdatedAt: 0 },
           { uuid: null, name: 'CD_TRIGGER_V2', enabled: true, lastUpdatedAt: 0 },
-          { uuid: null, name: 'BAMBOO_ARTIFACT_NG', enabled: true, lastUpdatedAt: 0 }
+          { uuid: null, name: 'BAMBOO_ARTIFACT_NG', enabled: true, lastUpdatedAt: 0 },
+          { uuid: null, name: 'CDS_NG_TRIGGER_MULTI_ARTIFACTS', enabled: true, lastUpdatedAt: 0 }
         ]
       })
 

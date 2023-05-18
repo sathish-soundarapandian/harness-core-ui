@@ -10,7 +10,6 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import TriggerDetailsV1 from '@triggers/pages/trigger-details/TriggerDetails'
 import TriggersWizardPage from '@triggers/pages/triggers/TriggersWizardPage'
-import { TriggerBaseType } from '@triggers/components/Triggers/TriggerInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
@@ -39,8 +38,7 @@ export function TriggerWidget<T>({
   // Until then it gives us the freedom to selectively render only those triggers that have been refactored.
   // Show triggers V2 for NG_SVC_ENV_REDESIGN with artifact or manifest, or CD_TRIGGERS_REFACTOR
   const trigger =
-    ((NG_SVC_ENV_REDESIGN && (baseType === TriggerBaseType.ARTIFACT || baseType === TriggerBaseType.MANIFEST)) ||
-      CD_TRIGGERS_REFACTOR) &&
+    ((NG_SVC_ENV_REDESIGN && (baseType === 'Artifact' || baseType === 'Manifest')) || CD_TRIGGERS_REFACTOR) &&
     factory.getTrigger<T>(type)
 
   if (!trigger) {

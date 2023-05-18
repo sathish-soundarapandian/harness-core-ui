@@ -7,11 +7,11 @@
 
 import type { StringsMap } from 'stringTypes'
 import { WebhookTrigger } from '@triggers/components/Triggers/WebhookTrigger/WebhookTrigger'
-import { SourceRepo } from '../../TriggerInterface'
+import type { SourceRepo } from '../../TriggerInterface'
 import type { WebhookInitialValuesInterface } from '../utils'
 
 export class AzureRepo extends WebhookTrigger<WebhookInitialValuesInterface> {
-  protected type: SourceRepo = SourceRepo.AzureRepo
+  protected type: SourceRepo = 'AzureRepo'
   protected triggerDescription: keyof StringsMap = 'common.repo_provider.azureRepos'
 
   protected defaultValues = {

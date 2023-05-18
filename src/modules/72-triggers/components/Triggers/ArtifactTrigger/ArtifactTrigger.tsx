@@ -11,11 +11,11 @@ import ArtifactTriggerInputPanel from '@triggers/components/steps/ArtifactTrigge
 import ArtifactTriggerConfigPanel from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactTriggerConfigPanel'
 import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
 import { Trigger, TriggerProps } from '../Trigger'
-import { TriggerBaseType } from '../TriggerInterface'
 import ArtifactTriggerWizard from './ArtifactTriggerWizard'
+import type { TriggerBaseType } from '../TriggerInterface'
 
 export abstract class ArtifactTrigger<T> extends Trigger<T> {
-  protected baseType: TriggerBaseType = TriggerBaseType.ARTIFACT
+  protected baseType: TriggerBaseType = 'Artifact'
 
   renderStepOne(): JSX.Element {
     return <ArtifactTriggerConfigPanel />

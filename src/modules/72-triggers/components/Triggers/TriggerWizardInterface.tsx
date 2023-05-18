@@ -7,8 +7,9 @@
 
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import type { NGTriggerConfigV2, NGTriggerSourceV2, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { NGTriggerConfigV2, PipelineInfoConfig } from 'services/pipeline-ng'
 import type { AddConditionInterface } from '../AddConditionsSection/AddConditionsSection'
+import type { TriggerType } from './TriggerInterface'
 
 export interface ConnectorRefInterface {
   identifier?: string
@@ -30,7 +31,7 @@ export interface FlatValidWebhookFormikValuesInterface {
   pipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   sourceRepo: string
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   repoName?: string
   connectorRef?: { connector: { spec: { type: string } }; value: string } // get from dto interface when available
   autoAbortPreviousExecutions: boolean
@@ -56,7 +57,7 @@ export interface FlatValidWebhookFormikValuesInterface {
   stagesToExecute?: string[]
 }
 export interface TriggerTypeSourceInterface {
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   sourceRepo?: string
   manifestType?: string
   artifactType?: string

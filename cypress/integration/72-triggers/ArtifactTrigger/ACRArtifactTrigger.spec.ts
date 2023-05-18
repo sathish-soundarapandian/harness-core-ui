@@ -11,6 +11,8 @@ import {
   getAzureSubscriptions
 } from '../constansts'
 import { visitTriggersPage } from '../triggers-helpers/visitTriggersPage'
+import { defineArtifactSource } from './artifact-trigger-helpers/defineArtifactSource'
+import { fillArtifactConnectorDataAndMoveToNextStep } from './artifact-trigger-helpers/fillArtifactConnectorDataAndMoveToNextStep'
 import { fillArtifactTriggerData } from './artifact-trigger-helpers/fillArtifactTriggerData'
 
 describe('ACR Artifact Trigger', () => {
@@ -25,16 +27,18 @@ describe('ACR Artifact Trigger', () => {
     const fillArtifactData = (): void => {
       cy.wait(`@getAzureSubscriptions`)
       cy.get('input[name="subscriptionId"]').clear().type(subscriptionId)
-      cy.contains('p', 'Harness-Test: 12d2db62-5aa9-471d-84bb-faa489b3e319').click()
+      cy.contains('p', `Harness-Test: ${subscriptionId}`).click()
+      // cy.get('.bp3-overlay-backdrop').should('not.be.visible')
       cy.wait('@getArtifactsACRContainerRegistries')
       cy.get('input[name="registry"]').clear().type(registry)
       cy.contains('p', registry).click()
+      // cy.get('.bp3-overlay-backdrop').should('not.be.visible')
       cy.wait('@getArtifactsACRContainerRegistryRepositories')
       cy.get('input[name="repository"]').clear().type(repository)
-      cy.contains('p', repository).click()
+      cy.contains('p', repository).should('be.visible').click()
+      // cy.get('.bp3-overlay-backdrop').should('not.be.visible')
     }
-
-    beforeEach(() => {
+    const interceptRequests = (): void => {
       cy.intercept('GET', getAzureSubscriptions({ connectorId }), {
         fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Azure_Subscriptions.json'
       }).as('getAzureSubscriptions')
@@ -44,9 +48,10 @@ describe('ACR Artifact Trigger', () => {
       cy.intercept('GET', getArtifactsACRContainerRegistryRepositories({ registry, connectorId, subscriptionId }), {
         fixture: 'pipeline/api/triggers/Cypress_Test_Trigger_Artifacts_ACR_Container_Registry_Repositories.json'
       }).as('getArtifactsACRContainerRegistryRepositories')
-    })
+    }
 
     it('1: Pipeline Input', () => {
+      interceptRequests()
       fillArtifactTriggerData({
         artifactTypeCy,
         triggerName,
@@ -56,11 +61,30 @@ describe('ACR Artifact Trigger', () => {
       })
     })
     it('2: InputSetRefs', () => {
+      interceptRequests()
       fillArtifactTriggerData({
         artifactTypeCy,
         triggerName,
         connectorId,
         fillArtifactData,
+        inputSetRefs: ['inputset1', 'inputset2'],
+        triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: ACR_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: Acr\n      spec:\n        connectorRef: ${connectorId}\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n        registry: ${registry}\n        repository: automation\n        subscriptionId: ${subscriptionId}\n        tag: <+trigger.artifact.build>\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n  inputSetRefs:\n    - inputset1\n    - inputset2\n`
+      })
+    })
+    it.skip('3: Multi Region', () => {
+      interceptRequests()
+      fillArtifactTriggerData({
+        artifactTypeCy,
+        triggerName,
+        connectorId,
+        fillArtifactData: () => {
+          fillArtifactData()
+          cy.get('button[type="submit"]').click()
+          defineArtifactSource(true)
+          interceptRequests()
+          fillArtifactConnectorDataAndMoveToNextStep(connectorId)
+          fillArtifactData()
+        },
         inputSetRefs: ['inputset1', 'inputset2'],
         triggerYAML: `trigger:\n  name: ${triggerName}\n  identifier: ACR_Trigger\n  enabled: true\n  description: test description\n  tags:\n    tag1: ""\n    tag2: ""\n  orgIdentifier: default\n  projectIdentifier: project1\n  pipelineIdentifier: testPipeline_Cypress\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: Acr\n      spec:\n        connectorRef: ${connectorId}\n        eventConditions:\n          - key: build\n            operator: Equals\n            value: "1"\n        registry: ${registry}\n        repository: automation\n        subscriptionId: ${subscriptionId}\n        tag: <+trigger.artifact.build>\n        metaDataConditions:\n          - key: <+trigger.artifact.metadata.field>\n            operator: Equals\n            value: "1"\n        jexlCondition: <+trigger.payload.repository.owner.name> == "harness"\n  inputSetRefs:\n    - inputset1\n    - inputset2\n`
       })

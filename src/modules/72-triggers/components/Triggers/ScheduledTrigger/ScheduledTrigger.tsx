@@ -12,11 +12,11 @@ import SchedulePanel from '@triggers/components/steps/SchedulePanel/SchedulePane
 import WebhookPipelineInputPanel from '@triggers/components/steps/WebhookPipelineInputPanel/WebhookPipelineInputPanel'
 import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
 import { Trigger, TriggerProps } from '../Trigger'
-import { TriggerBaseType } from '../TriggerInterface'
+import type { TriggerBaseType } from '../TriggerInterface'
 import ScheduledTriggerWizard from './ScheduledTriggerWizard'
 
 export abstract class ScheduledTrigger<T> extends Trigger<T> {
-  protected baseType = TriggerBaseType.SCHEDULE
+  protected baseType: TriggerBaseType = 'Scheduled'
 
   renderStepOne(): JSX.Element {
     return <TriggerOverviewPanel />

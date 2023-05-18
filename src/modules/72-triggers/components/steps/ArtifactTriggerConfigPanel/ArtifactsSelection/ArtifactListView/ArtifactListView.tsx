@@ -16,17 +16,54 @@ import type { ArtifactListViewProps } from '../ArtifactInterface'
 import PrimaryArtifactView from './PrimaryArtifact/PrimaryArtifactView'
 import css from '../ArtifactsSelection.module.scss'
 
-function ArtifactListView({
-  artifacts,
+const ArtifactTable = ({
+  artifactSpecSources,
   artifactType,
   editArtifact,
-  deleteArtifact,
-  addNewArtifact
-}: ArtifactListViewProps): React.ReactElement {
+  deleteArtifact
+}: ArtifactListViewProps): React.ReactElement => {
   const { getString } = useStrings()
-  const isArtifactsAdded = artifacts?.length !== 0
 
-  const CDS_NG_TRIGGER_MULTI_ARTIFACTS = useFeatureFlag(FeatureFlag.CDS_NG_TRIGGER_MULTI_ARTIFACTS)
+  return (
+    <>
+      <div className={cx(css.artifactList, css.listHeader)}>
+        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+          {getString('pipeline.artifactsSelection.artifactType')}
+        </Text>
+        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
+        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
+      </div>
+      {artifactSpecSources.map((artifactSpecSource, index) => (
+        <PrimaryArtifactView
+          key={index}
+          artifact={artifactSpecSource.spec}
+          artifactType={artifactType}
+          deleteArtifact={() => {
+            deleteArtifact(index)
+          }}
+          editArtifact={() => {
+            editArtifact(index)
+          }}
+        />
+      ))}
+    </>
+  )
+}
+
+function ArtifactListView(props: ArtifactListViewProps): React.ReactElement {
+  const { artifactSpecSources, artifactType, addNewArtifact } = props
+  const { getString } = useStrings()
+  const isArtifactSelected = artifactSpecSources.length !== 0
+  const isMultiRegionArtifact =
+    useFeatureFlag(FeatureFlag.CDS_NG_TRIGGER_MULTI_ARTIFACTS) && artifactType !== 'CustomArtifact'
+  const artifactLabel =
+    artifactSpecSources.length > 1
+      ? getString('pipeline.artifactTriggerConfigPanel.artifacts')
+      : getString('pipeline.artifactTriggerConfigPanel.artifact')
+  const buttonText =
+    isArtifactSelected && isMultiRegionArtifact
+      ? getString('pipeline.artifactTriggerConfigPanel.defineMultiRegionArtifactSource')
+      : getString('pipeline.artifactTriggerConfigPanel.defineArtifactSource')
 
   return (
     <Layout.Vertical
@@ -35,53 +72,40 @@ function ArtifactListView({
       spacing="medium"
     >
       <div>
-        {CDS_NG_TRIGGER_MULTI_ARTIFACTS ? (
+        {isMultiRegionArtifact ? (
           <>
-            <Label
-              style={{
-                fontSize: 13,
-                color: 'var(--form-label)',
-                fontWeight: 'normal',
-                marginBottom: 'var(--spacing-small)'
-              }}
-              data-tooltip-id={'selectArtifactManifestLabel'}
+            <div
+              style={
+                isArtifactSelected ? { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' } : {}
+              }
             >
-              {getString('pipeline.artifactTriggerConfigPanel.artifact')}
-              <HarnessDocTooltip tooltipId="selectArtifactManifestLabel" useStandAlone={true} />
-            </Label>
-            <Button
-              className={css.addArtifact}
-              id="add-artifact"
-              size={ButtonSize.SMALL}
-              variation={ButtonVariation.LINK}
-              onClick={() => addNewArtifact()}
-              text={getString('pipeline.artifactTriggerConfigPanel.defineArtifactSource')}
-              margin={isArtifactsAdded ? { bottom: 'large' } : {}}
-            />
-            {isArtifactsAdded && (
-              <>
-                <div className={cx(css.artifactList, css.listHeader)}>
-                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-                    {getString('pipeline.artifactsSelection.artifactType')}
-                  </Text>
-                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
-                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
-                </div>
-                {artifacts?.map((artifact, index) => (
-                  <PrimaryArtifactView
-                    key={index}
-                    artifact={artifact}
-                    artifactType={artifactType}
-                    deleteArtifact={deleteArtifact}
-                    editArtifact={editArtifact}
-                  />
-                ))}
-              </>
-            )}
+              <Label
+                style={{
+                  fontSize: 13,
+                  color: 'var(--form-label)',
+                  fontWeight: 'normal',
+                  marginBottom: 'var(--spacing-small)'
+                }}
+                data-tooltip-id={'selectArtifactManifestLabel'}
+              >
+                {artifactLabel}
+                <HarnessDocTooltip tooltipId="selectArtifactManifestLabel" useStandAlone={true} />
+              </Label>
+              <Button
+                className={css.addArtifact}
+                id="add-artifact"
+                size={ButtonSize.SMALL}
+                variation={ButtonVariation.LINK}
+                onClick={() => addNewArtifact()}
+                text={buttonText}
+                margin={isArtifactSelected ? { bottom: 'large' } : {}}
+              />
+            </div>
+            {isArtifactSelected && <ArtifactTable {...props} />}
           </>
         ) : (
           <>
-            {!isArtifactsAdded ? (
+            {!isArtifactSelected ? (
               <>
                 <Label
                   style={{
@@ -92,7 +116,7 @@ function ArtifactListView({
                   }}
                   data-tooltip-id={'selectArtifactManifestLabel'}
                 >
-                  {getString('pipeline.artifactTriggerConfigPanel.artifact')}
+                  {artifactLabel}
                   <HarnessDocTooltip tooltipId="selectArtifactManifestLabel" useStandAlone={true} />
                 </Label>
                 <Button
@@ -101,28 +125,11 @@ function ArtifactListView({
                   size={ButtonSize.SMALL}
                   variation={ButtonVariation.LINK}
                   onClick={() => addNewArtifact()}
-                  text={getString('pipeline.artifactTriggerConfigPanel.defineArtifactSource')}
+                  text={buttonText}
                 />
               </>
             ) : (
-              <>
-                <div className={cx(css.artifactList, css.listHeader)}>
-                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-                    {getString('pipeline.artifactsSelection.artifactType')}
-                  </Text>
-                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('artifactRepository')}</Text>
-                  <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location')}</Text>
-                </div>
-                {artifacts?.map((artifact, index) => (
-                  <PrimaryArtifactView
-                    key={index}
-                    artifact={artifact}
-                    artifactType={artifactType}
-                    deleteArtifact={deleteArtifact}
-                    editArtifact={editArtifact}
-                  />
-                ))}
-              </>
+              <ArtifactTable {...props} />
             )}
           </>
         )}

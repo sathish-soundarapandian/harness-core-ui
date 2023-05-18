@@ -13,13 +13,7 @@ import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { NameIdentifierSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import type {
-  NGTriggerSourceV2,
-  PipelineInfoConfig,
-  NGVariable,
-  NGTriggerConfigV2,
-  NGTriggerSpecV2
-} from 'services/pipeline-ng'
+import type { PipelineInfoConfig, NGVariable, NGTriggerConfigV2, NGTriggerSpecV2 } from 'services/pipeline-ng'
 import { connectorUrlType } from '@connectors/constants'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -37,6 +31,7 @@ import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipelin
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
+import type { TriggerType } from '@triggers/components/Triggers/TriggerInterface'
 import { isCronValid } from '../views/subviews/ScheduleUtils'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
 import type {
@@ -80,11 +75,12 @@ export const TriggerTypes = {
   NEW_ARTIFACT: 'NewArtifact',
   SCHEDULE: 'Scheduled',
   MANIFEST: 'Manifest',
-  ARTIFACT: 'Artifact'
+  ARTIFACT: 'Artifact',
+  MULTIREGIONARTIFACT: 'MultiRegionArtifact'
 }
 
-export const isArtifactOrManifestTrigger = (triggerType?: string): boolean =>
-  triggerType === TriggerTypes.MANIFEST || triggerType === TriggerTypes.ARTIFACT
+export const isArtifactOrManifestTrigger = (triggerType?: TriggerType): boolean =>
+  triggerType === 'Manifest' || triggerType === 'Artifact'
 
 export const PayloadConditionTypes = {
   TARGET_BRANCH: 'targetBranch',
@@ -109,7 +105,7 @@ const getTriggerTitle = ({
   triggerName,
   getString
 }: {
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   triggerName?: string
   getString: UseStringsReturn['getString']
 }): string => {
@@ -265,7 +261,7 @@ const getPanels = ({
   triggerType,
   getString
 }: {
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   getString: (key: StringKeys) => string
 }): PanelInterface[] | [] => {
   if (triggerType === TriggerTypes.WEBHOOK) {
@@ -335,7 +331,7 @@ export const getWizardMap = ({
   getString,
   triggerName
 }: {
-  triggerType: NGTriggerSourceV2['type']
+  triggerType: TriggerType
   triggerName?: string
   getString: UseStringsReturn['getString']
 }): { wizardLabel: string; panels: PanelInterface[] } => ({
@@ -362,7 +358,7 @@ function getCronExpressionValidationError(
 }
 // requiredFields and checkValidPanel in getPanels() above to render warning icons related to this schema
 export const getValidationSchema = (
-  triggerType: NGTriggerSourceV2['type'],
+  triggerType: TriggerType,
   getString: (key: StringKeys, params?: any) => string,
   isGitWebhookPollingEnabled?: boolean,
   isGithubWebhookAuthenticationEnabled?: boolean
@@ -2380,7 +2376,7 @@ export const getArtifactManifestTriggerYaml = ({
     projectIdentifier,
     pipelineIdentifier,
     source: {
-      type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
+      type: formikValueTriggerType as unknown as TriggerType,
       spec: {
         stageIdentifier: stageId,
         manifestRef: selectedArtifact?.identifier,

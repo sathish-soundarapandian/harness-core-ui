@@ -33,8 +33,14 @@ import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
-
 import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
+import type {
+  TriggerArtifactType,
+  ManifestType,
+  ScheduleType,
+  SourceRepo,
+  TriggerBaseType
+} from '@triggers/components/Triggers/TriggerInterface'
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
 import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
@@ -160,11 +166,12 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
       if (val?.categoryValue) {
         hideDrawer()
         onNewTriggerClick({
-          triggerType: val.categoryValue,
-          sourceRepo: (val.categoryValue === TriggerTypes.WEBHOOK && val.value) || undefined,
-          artifactType: (val.categoryValue === TriggerTypes.ARTIFACT && val.value) || undefined,
-          manifestType: (val.categoryValue === TriggerTypes.MANIFEST && val.value) || undefined,
-          scheduleType: (val.categoryValue === TriggerTypes.SCHEDULE && val.value) || undefined
+          triggerType: val.categoryValue as TriggerBaseType,
+          sourceRepo: (val.categoryValue === TriggerTypes.WEBHOOK && (val.value as SourceRepo)) || undefined,
+          artifactType:
+            (val.categoryValue === TriggerTypes.ARTIFACT && (val.value as TriggerArtifactType)) || undefined,
+          manifestType: (val.categoryValue === TriggerTypes.MANIFEST && (val.value as ManifestType)) || undefined,
+          scheduleType: (val.categoryValue === TriggerTypes.SCHEDULE && (val.value as ScheduleType)) || undefined
         })
       }
     }

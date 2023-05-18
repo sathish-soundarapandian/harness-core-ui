@@ -14,7 +14,7 @@ import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { merge, noop } from 'lodash-es'
+import { noop } from 'lodash-es'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import type { GitQueryParams, PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -25,7 +25,10 @@ import {
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { getTriggerArtifactInitialSpec } from '@triggers/components/Triggers/ArtifactTrigger/TriggersWizardPageUtils'
+import {
+  getArtifactTriggerSpecSource,
+  isArtifactAdded
+} from '@triggers/components/Triggers/ArtifactTrigger/TriggersWizardPageUtils'
 import type { NGTriggerSourceV2 } from 'services/pipeline-ng'
 import ArtifactWizard from '@pipeline/components/ArtifactsSelection/ArtifactWizard/ArtifactWizard'
 import { showConnectorStep } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -40,6 +43,7 @@ import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/D
 import ArtifactListView from './ArtifactListView/ArtifactListView'
 import type {
   ArtifactTriggerSpec,
+  ArtifactTriggerSpecWrapper,
   ArtifactType,
   ConnectorRefLabelType,
   ImagePathProps,
@@ -62,13 +66,18 @@ interface ArtifactsSelectionProps {
 
 export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionProps): React.ReactElement | null {
   const { spec: triggerSpec } = (formikProps.values?.source ?? {}) as Omit<Required<NGTriggerSourceV2>, 'pollInterval'>
-  const { type: artifactType, spec, sources: artifactSpecSources = [] } = triggerSpec
-  const artifactSpec = spec as ArtifactTriggerSpec
+  const { type: artifactType, sources = [] } = triggerSpec
+  const filteredArtifactSpecSources = sources.filter((artifactSpecSource: ArtifactTriggerSpecWrapper) =>
+    isArtifactAdded(artifactType, artifactSpecSource.spec)
+  )
   const selectedArtifactType = artifactType as Required<ArtifactType>
   const [isEditMode, setIsEditMode] = useState(false)
   const [connectorView, setConnectorView] = useState(false)
-  const [artifacts, setArtifacts] = useState<ArtifactTriggerSpec[]>(artifactSpecSources as ArtifactTriggerSpec[])
+  const [artifactSpecSources, setArtifactSpecSources] = useState<ArtifactTriggerSpecWrapper[]>(
+    filteredArtifactSpecSources as ArtifactTriggerSpecWrapper[]
+  )
   const [isNewArtifact, setIsNewArtifact] = useState(false)
+  const [currentEditArtifactIndex, setCurrentEditArtifactIndex] = useState(0)
 
   const { getString } = useStrings()
 
@@ -123,37 +132,45 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
         />
       </Dialog>
     ),
-    [selectedArtifactType, connectorView, formikProps, isNewArtifact]
+    [selectedArtifactType, connectorView, formikProps, isNewArtifact, currentEditArtifactIndex]
   )
 
-  const addArtifact = (artifactObj: ArtifactTriggerSpec): void => {
-    const { type, spec: _triggerSpec } = formikProps.values.source ?? {}
-    const { type: _artifactType, sources = [] } = _triggerSpec ?? {}
-
+  const setFormikValues = (updatedArtifacts: ArtifactTriggerSpecWrapper[]): void => {
+    const { type, spec } = formikProps.values.source ?? {}
     const values = {
       ...formikProps.values,
       source: {
         type,
         spec: {
-          type: _artifactType,
-          spec: artifactObj,
-          sources: [...sources, artifactObj]
+          ...spec,
+          sources: updatedArtifacts
         }
       }
     }
 
     formikProps.setValues(values)
 
-    setArtifacts(values.source.spec.sources)
+    setArtifactSpecSources(updatedArtifacts)
+  }
+
+  const addArtifact = (artifactObj: ArtifactTriggerSpec): void => {
+    const updatedArtifacts = isNewArtifact
+      ? [...artifactSpecSources, { spec: artifactObj }]
+      : artifactSpecSources.map((artifact, index) =>
+          index === currentEditArtifactIndex ? { spec: artifactObj } : artifact
+        )
+
+    setFormikValues(updatedArtifacts)
+
     hideConnectorModal()
   }
 
   const getArtifactInitialValues = useCallback((): InitialArtifactDataType => {
     return {
       submittedArtifact: selectedArtifactType,
-      connectorId: isNewArtifact ? undefined : artifactSpec?.connectorRef
+      connectorId: isNewArtifact ? undefined : artifactSpecSources[currentEditArtifactIndex].spec?.connectorRef
     }
-  }, [selectedArtifactType, artifactSpec, isNewArtifact])
+  }, [selectedArtifactType, isNewArtifact, artifactSpecSources, currentEditArtifactIndex])
 
   const addNewArtifact = (): void => {
     setIsNewArtifact(true)
@@ -161,21 +178,20 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
     showConnectorModal()
   }
 
-  const editArtifact = (): void => {
+  const editArtifact = (currentArtifactIndex: number): void => {
+    setCurrentEditArtifactIndex(currentArtifactIndex)
     setIsNewArtifact(false)
     setConnectorView(false)
     showConnectorModal()
   }
 
-  const deleteArtifact = async (): Promise<void> => {
-    const initialSpec = getTriggerArtifactInitialSpec(selectedArtifactType)
-    const { source: artifactSource } = formikProps.values
-    const { spec: _artifactSpec } = artifactSource ?? {}
+  const deleteArtifact = (currentArtifactIndex: number): void => {
+    const updatedArtifacts = [
+      ...artifactSpecSources.slice(0, currentArtifactIndex),
+      ...artifactSpecSources.slice(currentArtifactIndex + 1)
+    ]
 
-    merge(_artifactSpec?.spec, initialSpec)
-
-    await formikProps.setValues(merge(formikProps.values, artifactSource))
-    setArtifacts([])
+    setFormikValues(updatedArtifacts)
   }
 
   const getIconProps = useCallback((): IconProps => {
@@ -192,23 +208,21 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
     return iconProps
   }, [selectedArtifactType])
 
-  const getLastStepName = (): { key: string; name: string } => {
+  const getArtifactLastStepProps = useCallback((): ImagePathProps<ArtifactTriggerSpec> => {
+    const initialValues = isNewArtifact
+      ? getArtifactTriggerSpecSource(selectedArtifactType) ?? artifactSpecSources[currentEditArtifactIndex].spec
+      : artifactSpecSources[currentEditArtifactIndex].spec
+
     return {
       key: getString('connectors.stepFourName'),
-      name: getString('connectors.stepFourName')
-    }
-  }
-
-  const getArtifactLastStepProps = useCallback((): ImagePathProps<ArtifactTriggerSpec> => {
-    return {
-      ...getLastStepName(),
-      initialValues: isNewArtifact ? getTriggerArtifactInitialSpec(selectedArtifactType) ?? artifactSpec : artifactSpec,
+      name: getString('connectors.stepFourName'),
+      initialValues,
       handleSubmit: (data: ArtifactTriggerSpec) => {
         addArtifact(data)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addArtifact, selectedArtifactType, isNewArtifact])
+  }, [addArtifact, selectedArtifactType, isNewArtifact, artifactSpecSources, currentEditArtifactIndex])
 
   const getLabels = useCallback((): ConnectorRefLabelType => {
     return {
@@ -297,7 +311,7 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
 
   return (
     <ArtifactListView
-      artifacts={artifacts}
+      artifactSpecSources={artifactSpecSources}
       artifactType={artifactType}
       addNewArtifact={addNewArtifact}
       editArtifact={editArtifact}

@@ -48,7 +48,13 @@ import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useQueryParams } from '@common/hooks'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
-import { getTriggerIcon, GitSourceProviders, getEnabledStatusTriggerValues } from '../utils/TriggersListUtils'
+import type { TriggerBaseType } from '@triggers/components/Triggers/TriggerInterface'
+import {
+  getTriggerIcon,
+  GitSourceProviders,
+  getEnabledStatusTriggerValues,
+  getTriggerBaseType
+} from '../utils/TriggersListUtils'
 import { TriggerTypes, clearNullUndefined, ResponseStatus } from '../utils/TriggersWizardPageUtils'
 import TriggerStatusCell from './subviews/TriggerStatusCell'
 import css from './TriggersListSection.module.scss'
@@ -56,7 +62,7 @@ import css from './TriggersListSection.module.scss'
 export interface GoToEditWizardInterface {
   triggerIdentifier: string
   // only used for url not showing undefined
-  triggerType?: string
+  triggerType?: TriggerBaseType
 }
 interface TriggersListSectionProps {
   triggerListData?: PageNGTriggerDetailsResponse
@@ -172,7 +178,10 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
                 return
               }
               if (data?.identifier && data.type) {
-                column.goToEditWizard({ triggerIdentifier: data.identifier, triggerType: data.type })
+                column.goToEditWizard({
+                  triggerIdentifier: data.identifier,
+                  triggerType: getTriggerBaseType(data.type)
+                })
               }
               setMenuOpen(false)
             }}

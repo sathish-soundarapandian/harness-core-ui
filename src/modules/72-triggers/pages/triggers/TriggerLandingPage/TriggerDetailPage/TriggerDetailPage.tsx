@@ -35,6 +35,7 @@ import { useQueryParams } from '@common/hooks'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useTriggerView from '@common/components/Wizard/useTriggerView'
 import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
+import { getTriggerBaseType } from '../../utils/TriggersListUtils'
 import css from '../TriggerLandingPage.module.scss'
 
 export interface Condition {
@@ -204,7 +205,7 @@ export default function TriggerDetailPage(): JSX.Element {
         projectIdentifier,
         pipelineIdentifier,
         triggerIdentifier,
-        triggerType: type,
+        triggerType: getTriggerBaseType(type),
         module,
         repoIdentifier,
         branch,

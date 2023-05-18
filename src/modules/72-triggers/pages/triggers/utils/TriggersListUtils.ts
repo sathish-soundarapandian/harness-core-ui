@@ -21,9 +21,17 @@ import {
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import type { TriggerCatalogItem } from 'services/pipeline-ng'
+import type { NGTriggerDetailsResponse, TriggerCatalogItem } from 'services/pipeline-ng'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { TriggerTypes, AWS_CODECOMMIT, AwsCodeCommit } from './TriggersWizardPageUtils'
+import type {
+  TriggerType,
+  TriggerBaseType,
+  SourceRepo,
+  TriggerArtifactType,
+  ManifestType,
+  ScheduleType
+} from '@triggers/components/Triggers/TriggerInterface'
+import { AWS_CODECOMMIT, AwsCodeCommit } from './TriggersWizardPageUtils'
 
 export const GitSourceProviders: Record<
   string,
@@ -46,7 +54,7 @@ export const getTriggerIcon = ({
   webhookSourceRepo,
   buildType
 }: {
-  type: string
+  type: NGTriggerDetailsResponse['type']
   webhookSourceRepo?: string // string temporary until backend
   buildType?: string
 }): IconName => {
@@ -54,15 +62,15 @@ export const getTriggerIcon = ({
     webhookSourceRepo === AwsCodeCommit ? AWS_CODECOMMIT : webhookSourceRepo?.toUpperCase()
   const webhookSourceRepoIconName =
     webhookSourceRepo && updatedWebhookSourceRepo && GitSourceProviders[updatedWebhookSourceRepo]?.iconName
-  if (type === TriggerTypes.WEBHOOK && webhookSourceRepoIconName) {
+  if (type === 'Webhook' && webhookSourceRepoIconName) {
     return webhookSourceRepoIconName as IconName
-  } else if (type === TriggerTypes.SCHEDULE) {
+  } else if (type === 'Scheduled') {
     return TriggerTypeIcons.SCHEDULE as IconName
-  } else if (type === TriggerTypes.MANIFEST && buildType) {
+  } else if (type === 'Manifest' && buildType) {
     if (buildType === ManifestDataType.HelmChart) {
       return manifestTypeIcons.HelmChart
     }
-  } else if (type === TriggerTypes.ARTIFACT && buildType) {
+  } else if ((type === 'Artifact' || type === 'MultiRegionArtifact') && buildType) {
     return ArtifactIconByType[buildType as ArtifactType]
   }
   return 'yaml-builder-trigger'
@@ -279,11 +287,11 @@ export interface ItemInterface {
 }
 
 export interface TriggerDataInterface {
-  triggerType: string
-  sourceRepo?: string
-  manifestType?: string
-  artifactType?: string
-  scheduleType?: string
+  triggerType: TriggerBaseType
+  sourceRepo?: SourceRepo
+  manifestType?: ManifestType
+  artifactType?: TriggerArtifactType
+  scheduleType?: ScheduleType
 }
 
 export const getEnabledStatusTriggerValues = ({
@@ -395,3 +403,6 @@ export const getTriggerCategoryDrawerMapFromTriggerCatalogItem = (
     categories
   }
 }
+
+export const getTriggerBaseType = (triggerType?: TriggerType): TriggerBaseType | undefined =>
+  triggerType === 'MultiRegionArtifact' ? 'Artifact' : triggerType

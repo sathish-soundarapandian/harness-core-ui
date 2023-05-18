@@ -12,11 +12,11 @@ import WebhookPipelineInputPanel from '@triggers/components/steps/WebhookPipelin
 import WebhookTriggerConfigPanel from '@triggers/components/steps/WebhookTriggerConfigPanel/WebhookTriggerConfigPanel'
 import WebhookPipelineInputPanelV1 from '@triggers/pages/triggers/views/V1/WebhookPipelineInputPanelV1'
 import { Trigger, TriggerProps } from '../Trigger'
-import { TriggerBaseType } from '../TriggerInterface'
+import type { TriggerBaseType } from '../TriggerInterface'
 import WebhookTriggerWizard from './WebhookTriggerWizard'
 
 export abstract class WebhookTrigger<T> extends Trigger<T> {
-  protected baseType = TriggerBaseType.WEBHOOK
+  protected baseType: TriggerBaseType = 'Webhook'
 
   renderStepOne(): JSX.Element {
     return <WebhookTriggerConfigPanel />

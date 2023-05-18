@@ -26,7 +26,6 @@ import { Intent } from '@harness/design-system'
 
 import {
   NGTriggerConfigV2,
-  NGTriggerSourceV2,
   PipelineInfoConfig,
   ResponseNGTriggerResponse,
   useCreateTrigger,
@@ -78,7 +77,6 @@ import useTriggerView from '@common/components/Wizard/useTriggerView'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import { flattenKeys, getModifiedTemplateValues } from '../WebhookTrigger/utils'
 import type { TriggerProps } from '../Trigger'
-import { TriggerBaseType } from '../TriggerInterface'
 import {
   clearNullUndefined,
   displayPipelineIntegrityResponse,
@@ -319,7 +317,7 @@ export default function ScheduledTriggerWizard(
   )
 
   const [onEditInitialValues, setOnEditInitialValues] = useState<FlatOnEditValuesInterface>({
-    triggerType: baseType as NGTriggerSourceV2['type']
+    triggerType: baseType
   })
 
   const getInitialValues = (): FlatInitialValuesInterface => {
@@ -533,7 +531,7 @@ export default function ScheduledTriggerWizard(
         description,
         tags,
         pipeline: pipelineJson,
-        triggerType: TriggerBaseType.SCHEDULE,
+        triggerType: 'Scheduled',
         expression,
         pipelineBranchName,
         inputSetRefs,
@@ -581,7 +579,7 @@ export default function ScheduledTriggerWizard(
   }, [mergeInputSetResponse?.data?.pipelineYaml])
 
   useEffect(() => {
-    if (triggerData?.yaml && triggerData.type === TriggerBaseType.SCHEDULE) {
+    if (triggerData?.yaml && triggerData.type === 'Scheduled') {
       const newOnEditInitialValues = getScheduleTriggerValues({
         triggerResponseYaml: triggerData.yaml
       })
@@ -631,7 +629,7 @@ export default function ScheduledTriggerWizard(
       projectIdentifier,
       pipelineIdentifier,
       source: {
-        type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
+        type: formikValueTriggerType,
         spec: {
           type: scheduledTypes.CRON,
           spec: {

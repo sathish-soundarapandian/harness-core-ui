@@ -5,7 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { EntityGitDetails } from 'services/pipeline-ng'
+import type {
+  ArtifactTriggerConfig,
+  EntityGitDetails,
+  ManifestTriggerConfig,
+  NGTriggerSourceV2,
+  TriggerCatalogItem,
+  WebhookTriggerConfigV2
+} from 'services/pipeline-ng'
 import type { Module as ModuleName } from 'framework/types/ModuleName'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
@@ -104,22 +111,15 @@ export interface TemplateStudioPathProps extends ProjectPathProps {
 export interface InputSetPathProps extends PipelinePathProps {
   inputSetIdentifier: string
 }
-export interface TriggerPathProps extends PipelinePathProps {
-  triggerIdentifier: string
-  triggerType?: string
-  sourceRepo?: string
-  artifactType?: string
-  manifestType?: string
-  scheduleType?: string
-}
+export interface TriggerPathProps extends PipelinePathProps, TriggerQueryParams {}
 
 export interface TriggerQueryParams {
   triggerIdentifier: string
-  triggerType?: string
-  sourceRepo?: string
-  artifactType?: string
-  manifestType?: string
-  scheduleType?: string
+  triggerType?: Exclude<NGTriggerSourceV2['type'], 'MultiRegionArtifact'>
+  sourceRepo?: Exclude<WebhookTriggerConfigV2['type'], 'AwsCodeCommit' | 'Harness'>
+  artifactType?: ArtifactTriggerConfig['type']
+  manifestType?: ManifestTriggerConfig['type']
+  scheduleType?: Extract<TriggerCatalogItem['triggerCatalogType'][number], 'Cron'>
 }
 
 export interface ExecutionPathProps extends PipelinePathProps {

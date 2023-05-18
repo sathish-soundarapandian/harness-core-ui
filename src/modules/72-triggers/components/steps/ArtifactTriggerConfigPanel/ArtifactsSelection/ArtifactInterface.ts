@@ -13,23 +13,30 @@ import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScrip
 import type {
   AcrSpec,
   AmazonS3RegistrySpec,
+  AMIRegistrySpec,
   ArtifactoryRegistrySpec,
   ArtifactTriggerConfig,
+  AzureArtifactsRegistrySpec,
   BambooRegistrySpec,
   CustomArtifactSpec,
   DockerRegistrySpec,
   EcrSpec,
+  GarSpec,
   GcrSpec,
+  GithubPackagesSpec,
+  GoolgeCloudStorageRegistrySpec,
   JenkinsRegistrySpec,
-  NexusRegistrySpec
+  Nexus2RegistrySpec,
+  NexusRegistrySpec,
+  TriggerEventDataCondition
 } from 'services/pipeline-ng'
 
 export interface ArtifactListViewProps {
-  artifacts: ArtifactTriggerSpec[]
+  artifactSpecSources: ArtifactTriggerSpecWrapper[]
   artifactType: ArtifactType
   addNewArtifact: () => void
-  editArtifact: () => void
-  deleteArtifact: () => void
+  editArtifact: (currentArtifactIndex: number) => void
+  deleteArtifact: (currentArtifactIndex: number) => void
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean
@@ -241,7 +248,7 @@ export interface JenkinsArtifactTriggerSpec extends Omit<JenkinsRegistrySpec, 'j
   childJobName?: SelectWithSubmenuOption | string
 }
 
-export type ArtifactTriggerSpec =
+export type ArtifactTriggerSpec = (
   | AcrSpec
   | AmazonS3RegistrySpec
   | ArtifactoryRegistrySpec
@@ -249,6 +256,18 @@ export type ArtifactTriggerSpec =
   | EcrSpec
   | GcrSpec
   | JenkinsArtifactTriggerSpec
+  | Nexus2RegistrySpec
   | NexusRegistrySpec
   | CustomArtifactSpec
   | BambooRegistrySpec
+  | GithubPackagesSpec
+  | AMIRegistrySpec
+  | GoolgeCloudStorageRegistrySpec
+  | AzureArtifactsRegistrySpec
+  | GarSpec
+  // Added metaDataConditions here as BE has not updated the interfaces and we have added metaDataConditions for artifact trigger
+) & { metaDataConditions?: TriggerEventDataCondition[] }
+
+export type ArtifactTriggerSpecWrapper = {
+  spec: ArtifactTriggerSpec
+}

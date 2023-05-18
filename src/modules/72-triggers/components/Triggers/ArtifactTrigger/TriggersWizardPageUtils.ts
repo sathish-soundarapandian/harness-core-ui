@@ -5,9 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep } from 'lodash-es'
+import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep, omit } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
-import { parse } from 'yaml'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -24,15 +23,14 @@ import type {
   ArtifactoryRegistrySpec,
   EcrSpec,
   GcrSpec,
-  JenkinsRegistrySpec,
-  TriggerEventDataCondition,
   CustomArtifactSpec,
   GithubPackagesSpec,
   GarSpec,
   AzureArtifactsRegistrySpec,
   AMIRegistrySpec,
   GoolgeCloudStorageRegistrySpec,
-  BambooRegistrySpec
+  BambooRegistrySpec,
+  Nexus2RegistrySpec
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -59,7 +57,9 @@ import type {
 import type { AddConditionInterface } from '@triggers/pages/triggers/views/AddConditionsSection'
 import {
   ArtifactTriggerSpec,
+  ArtifactTriggerSpecWrapper,
   ArtifactType,
+  JenkinsArtifactTriggerSpec,
   RepositoryPortOrServer
 } from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactsSelection/ArtifactInterface'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
@@ -97,11 +97,12 @@ export const TriggerTypes = {
   NEW_ARTIFACT: 'NewArtifact',
   SCHEDULE: 'Scheduled',
   MANIFEST: 'Manifest',
-  ARTIFACT: 'Artifact'
+  ARTIFACT: 'Artifact',
+  MULTIREGIONARTIFACT: 'MultiRegionArtifact'
 }
 
-export const isArtifactOrManifestTrigger = (triggerType?: string): boolean =>
-  triggerType === TriggerTypes.MANIFEST || triggerType === TriggerTypes.ARTIFACT
+export const isArtifactOrManifestTrigger = (triggerType?: TriggerType): boolean =>
+  triggerType === 'Manifest' || triggerType === 'Artifact'
 
 export const PayloadConditionTypes = {
   TARGET_BRANCH: 'targetBranch',
@@ -189,18 +190,13 @@ const checkValidEventConditionsForNewArtifact = ({
   return true
 }
 
-const checkValidSelectedArtifact = ({ formikValues }: { formikValues: { [key: string]: any } }): boolean => {
-  return !isEmpty(formikValues?.source?.spec?.spec?.connectorRef)
-}
-
 const checkValidArtifactTriggerConfig = ({ formikValues }: { formikValues: { [key: string]: any } }): boolean => {
-  let isLegal = false
-  if (formikValues.artifactType === 'CustomArtifact') {
-    isLegal = formikValues?.source?.spec?.spec?.script
-  } else {
-    isLegal = checkValidSelectedArtifact({ formikValues })
-  }
-  return isIdentifierIllegal(formikValues?.identifier) ? false : isLegal
+  const { sources: artifactSourceSpecSources = [], type } = formikValues?.source?.spec ?? {}
+  const filteredArtifactSourceSpecSources = artifactSourceSpecSources.filter(
+    (artifactSourceSpecSource: ArtifactTriggerSpecWrapper) => isArtifactAdded(type, artifactSourceSpecSource.spec)
+  )
+
+  return isIdentifierIllegal(formikValues?.identifier) ? false : filteredArtifactSourceSpecSources.length !== 0
 }
 
 const getArtifactTriggersPanels = ({
@@ -1793,39 +1789,16 @@ export const replaceRunTimeVariables = ({
   }
 }
 
-const replaceStageManifests = ({ filteredStage, selectedArtifact }: { filteredStage: any; selectedArtifact: any }) => {
-  const stageArtifacts = filteredStage?.stage?.template
-    ? filteredStage?.stage?.template?.templateInputs?.spec?.serviceConfig?.serviceDefinition?.spec?.manifests
-    : filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.manifests
-  const stageArtifactIdx = stageArtifacts?.findIndex(
-    (item: any) => item.manifest?.identifier === selectedArtifact?.identifier
-  )
-
-  if (stageArtifactIdx >= 0) {
-    stageArtifacts[stageArtifactIdx].manifest = selectedArtifact
-  }
-}
-
-const replaceStageArtifacts = ({ filteredStage, selectedArtifact }: { filteredStage: any; selectedArtifact: any }) => {
-  const stageArtifacts = filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts
-  const stageArtifactIdx =
-    filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts?.sidecars?.findIndex(
-      (item: any) => item.sidecar?.identifier === selectedArtifact?.identifier
-    )
-
-  if (stageArtifactIdx >= 0) {
-    stageArtifacts['sidecars'][stageArtifactIdx].sidecar = selectedArtifact
-  }
-}
-
 const replaceEventConditions = ({
   values,
   persistIncomplete,
-  triggerYaml
+  triggerYaml,
+  isMultiArtifact
 }: {
   values: any
   persistIncomplete: boolean
   triggerYaml: any
+  isMultiArtifact: boolean
 }) => {
   const { versionOperator, versionValue, buildOperator, buildValue, eventConditions = [] } = values
   if (
@@ -1849,11 +1822,16 @@ const replaceEventConditions = ({
   }
 
   if (triggerYaml.source?.spec) {
-    const sourceSpecSpec = { ...triggerYaml.source?.spec.spec }
+    const sourceSpecSpec = isMultiArtifact ? { ...triggerYaml.source?.spec } : { ...triggerYaml.source?.spec.spec }
     sourceSpecSpec.eventConditions = persistIncomplete
       ? eventConditions
       : eventConditions.filter((eventCondition: AddConditionInterface) => isRowFilled(eventCondition))
-    triggerYaml.source.spec.spec = sourceSpecSpec
+
+    if (isMultiArtifact) {
+      triggerYaml.source.spec = sourceSpecSpec
+    } else {
+      triggerYaml.source.spec.spec = sourceSpecSpec
+    }
   }
 }
 
@@ -1911,7 +1889,6 @@ export const getArtifactManifestTriggerYaml = ({
     triggerType: formikValueTriggerType,
     event,
     selectedArtifact,
-    stageId,
     pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
     source,
     stagesToExecute,
@@ -1925,81 +1902,40 @@ export const getArtifactManifestTriggerYaml = ({
     get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
   )
 
-  const { type: triggerType, spec: triggerSpec } = source ?? {}
-  const { type: artifactType, spec: artifactSpec } = triggerSpec ?? {}
+  const { spec: triggerSpec } = source ?? {}
+  const { type: artifactType, sources: artifactSpecSources = [] } = triggerSpec ?? {}
 
   replaceRunTimeVariables({ manifestType, artifactType, selectedArtifact })
   let newPipeline = cloneDeep(pipelineRuntimeInput)
-  const newPipelineObj = newPipeline?.template ? newPipeline?.template?.templateInputs : newPipeline
-  const filteredStage = newPipelineObj.stages?.find((item: any) => item.stage?.identifier === stageId)
-  if (manifestType) {
-    replaceStageManifests({ filteredStage, selectedArtifact })
-  } else if (artifactType) {
-    replaceStageArtifacts({ filteredStage, selectedArtifact })
-  }
+
   newPipeline = clearUndefinedArtifactId(newPipeline)
   const stringifyPipelineRuntimeInput = yamlStringify({
     pipeline: clearNullUndefined(newPipeline)
   })
-  const filteredStagesforStore = val?.resolvedPipeline?.stages
-  const filteredManifestforStore = filteredStagesforStore?.map((st: any) =>
-    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
-      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
-    )
-  )
-  const storeManifest = filteredManifestforStore?.find((mani: undefined) => mani != undefined)
-  let storeVal = storeManifest?.manifest?.spec?.store
-  const filteredParallelManifestforStore =
-    filteredStagesforStore?.map((_st: { parallel: any[] }) =>
-      _st?.parallel
-        // eslint-disable-next-line @typescript-eslint/no-shadow
-        ?.map(st =>
-          get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
-            (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
-          )
-        )
-        ?.map(i => i?.manifest?.spec?.store)
-    ) ?? []
 
-  //further finding storeVal in parallel stage
-  for (let i = 0; i < filteredParallelManifestforStore.length; i++) {
-    if (filteredParallelManifestforStore[i] !== undefined) {
-      for (let j = 0; j < filteredParallelManifestforStore[i].length; j++) {
-        if (filteredParallelManifestforStore[i][j] != undefined) {
-          storeVal = filteredParallelManifestforStore[i][j]
-        }
-      }
+  const isMultiRegionArtifact = artifactSpecSources?.length > 1
+  const triggerSource = {
+    type: isMultiRegionArtifact ? 'MultiRegionArtifact' : 'Artifact',
+    spec: {
+      type: artifactType,
+      ...(isMultiRegionArtifact
+        ? {
+            sources: artifactSpecSources?.map((artifactSpecSource: ArtifactTriggerSpecWrapper) => ({
+              spec: getArtifactTriggerSpecSource(artifactType, artifactSpecSource.spec)
+            })),
+            metaDataConditions,
+            jexlCondition
+          }
+        : {
+            spec: {
+              ...omit(artifactSpecSources[0]?.spec ?? getArtifactTriggerSpecSource(artifactType), ['type']),
+              metaDataConditions,
+              jexlCondition
+            }
+          })
     }
   }
 
-  // clears any runtime inputs and set values in source->spec->spec
-  let artifactSourceSpec = clearRuntimeInputValue(
-    cloneDeep(
-      parse(
-        JSON.stringify({
-          spec: { ...selectedArtifact?.spec, store: storeVal, ...artifactSpec, metaDataConditions, jexlCondition }
-        }) || ''
-      )
-    )
-  )
-
-  //if connectorRef present in store is runtime then we need to fetch values from stringifyPipelineRuntimeInput
-  const filteredStageforRuntimeStore = parse(stringifyPipelineRuntimeInput)?.pipeline?.stages?.map((st: any) =>
-    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
-      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
-    )
-  )
-  const runtimeStoreManifest = filteredStageforRuntimeStore?.find((mani: undefined) => mani != undefined)
-  const newStoreVal = runtimeStoreManifest?.manifest?.spec?.store
-  if (storeVal?.spec?.connectorRef === '<+input>') {
-    artifactSourceSpec = cloneDeep(
-      parse(
-        JSON.stringify({
-          spec: { ...selectedArtifact?.spec, store: newStoreVal }
-        }) || ''
-      )
-    )
-  }
   const execStages = val?.originalPipeline?.allowStageExecutions ? stagesToExecute : []
   const triggerYaml: NGTriggerConfigV2 = {
     name,
@@ -2011,194 +1947,349 @@ export const getArtifactManifestTriggerYaml = ({
     projectIdentifier,
     pipelineIdentifier,
     stagesToExecute: execStages,
-    source: {
-      type: triggerType as NGTriggerSourceV2['type'],
-      spec: {
-        stageIdentifier: stageId,
-        manifestRef: selectedArtifact?.identifier,
-        type: artifactType,
-        ...artifactSourceSpec
-      }
-    },
+    source: triggerSource as NGTriggerSourceV2,
     inputYaml: stringifyPipelineRuntimeInput,
     pipelineBranchName: _gitAwareForTriggerEnabled ? pipelineBranchName : null,
     inputSetRefs: inputSetRefs.length ? inputSetRefs : undefined
   }
-  if (artifactType) {
-    if (triggerYaml?.source?.spec && Object.getOwnPropertyDescriptor(triggerYaml?.source?.spec, 'manifestRef')) {
-      delete triggerYaml.source.spec.manifestRef
-    }
-  }
 
-  replaceEventConditions({ values: val, persistIncomplete, triggerYaml })
+  replaceEventConditions({ values: val, persistIncomplete, triggerYaml, isMultiArtifact: isMultiRegionArtifact })
 
   return clearNullUndefined(triggerYaml)
 }
 
-export const getTriggerArtifactInitialSpec = (artifactType: ArtifactType): ArtifactTriggerSpec | undefined => {
-  const connectorRef = ''
-  const tag = '<+trigger.artifact.build>'
-  const version = '<+trigger.artifact.build>'
-  const build = '<+trigger.artifact.build>'
-  const eventConditions: TriggerEventDataCondition[] = []
-  const imagePath = ''
+export const getArtifactTriggerSpecSource = (
+  artifactType: ArtifactType,
+  spec: ArtifactTriggerSpec = {}
+): ArtifactTriggerSpec | undefined => {
+  const defaultConnectorRef = ''
+  const defaultTag = '<+trigger.artifact.build>'
+  const defaultVersion = '<+trigger.artifact.build>'
+  const defaultBuild = '<+trigger.artifact.build>'
+  const defaultImagePath = ''
 
   switch (artifactType) {
     case 'Gcr': {
+      const {
+        imagePath = defaultImagePath,
+        registryHostname = '',
+        connectorRef = defaultConnectorRef,
+        tag = defaultTag
+      } = spec as GcrSpec
+
       return {
+        type: artifactType,
         connectorRef,
-        eventConditions,
         imagePath,
-        registryHostname: '',
+        registryHostname,
         tag
-      } as GcrSpec
-    }
-    case 'Bamboo': {
-      return {
-        connectorRef: '',
-        eventConditions,
-        artifactPaths: [],
-        planKey: ''
-      } as BambooRegistrySpec
+      }
     }
     case 'Ecr': {
+      const {
+        imagePath = defaultImagePath,
+        region = '',
+        connectorRef = defaultConnectorRef,
+        tag = defaultTag
+      } = spec as EcrSpec
+
       return {
+        type: artifactType,
         connectorRef,
-        eventConditions,
         imagePath,
-        region: '',
+        region,
         tag
-      } as EcrSpec
-    }
-    case 'ArtifactoryRegistry': {
-      return {
-        artifactDirectory: '',
-        connectorRef,
-        eventConditions,
-        repository: '',
-        repositoryFormat: ''
-      } as ArtifactoryRegistrySpec
-    }
-    case 'AmazonS3': {
-      return {
-        bucketName: '',
-        connectorRef,
-        eventConditions,
-        filePathRegex: '',
-        region: ''
-      } as AmazonS3RegistrySpec
+      }
     }
     case 'DockerRegistry': {
+      const {
+        imagePath = defaultImagePath,
+        connectorRef = defaultConnectorRef,
+        tag = defaultTag
+      } = spec as DockerRegistrySpec
+
       return {
+        type: artifactType,
         connectorRef,
-        eventConditions,
         imagePath,
         tag
-      } as DockerRegistrySpec
+      }
     }
-    case 'Acr': {
+    // TODO: Update these values once we add support for Nexus2Registry Artifact Trigger
+    case 'Nexus2Registry': {
+      const {
+        artifactId = '',
+        classifier = '',
+        connectorRef = defaultConnectorRef,
+        extension = '',
+        groupId = '',
+        packageName = '',
+        repositoryFormat = '',
+        repositoryName = '',
+        repositoryUrl = ''
+      } = spec as Nexus2RegistrySpec
+
       return {
+        type: artifactType,
         connectorRef,
-        eventConditions,
-        registry: '',
-        repository: '',
-        subscriptionId: '',
-        tag
-      } as AcrSpec
+        artifactId,
+        classifier,
+        extension,
+        groupId,
+        packageName,
+        repositoryFormat,
+        repositoryName,
+        repositoryUrl
+      }
     }
     case 'Nexus3Registry': {
+      const {
+        connectorRef = defaultConnectorRef,
+        imagePath = defaultImagePath,
+        repositoryFormat = 'docker',
+        repository = '',
+        repositoryPortorRepositoryURL = RepositoryPortOrServer.RepositoryUrl,
+        tag = defaultTag,
+        repositoryUrl = '',
+        artifactPath = ''
+      } = spec as NexusRegistrySpec
+
       return {
+        type: artifactType,
         connectorRef,
-        eventConditions,
         imagePath,
-        repositoryFormat: 'docker',
-        repository: '',
-        repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl,
+        repository,
+        repositoryPortorRepositoryURL,
+        repositoryFormat,
         tag,
-        repositoryUrl: '',
-        artifactPath: ''
-      } as NexusRegistrySpec
+        repositoryUrl,
+        artifactPath
+      }
+    }
+    case 'ArtifactoryRegistry': {
+      const {
+        artifactDirectory = '',
+        connectorRef = defaultConnectorRef,
+        repository = '',
+        repositoryFormat = ''
+      } = spec as ArtifactoryRegistrySpec
+
+      return {
+        type: artifactType,
+        connectorRef,
+        artifactDirectory,
+        repository,
+        repositoryFormat
+      }
+    }
+    case 'Acr': {
+      const {
+        connectorRef = defaultConnectorRef,
+        registry = '',
+        repository = '',
+        subscriptionId = '',
+        tag = defaultTag
+      } = spec as AcrSpec
+
+      return {
+        type: artifactType,
+        connectorRef,
+        registry,
+        repository,
+        subscriptionId,
+        tag
+      }
+    }
+    case 'AmazonS3': {
+      const {
+        bucketName = '',
+        connectorRef = defaultConnectorRef,
+        filePathRegex = '',
+        region = ''
+      } = spec as AmazonS3RegistrySpec
+
+      return {
+        type: artifactType,
+        connectorRef,
+        bucketName,
+        filePathRegex,
+        region
+      }
     }
     case 'Jenkins': {
+      const {
+        artifactPath = '',
+        connectorRef = defaultConnectorRef,
+        jobName = '',
+        build = defaultBuild
+      } = spec as JenkinsArtifactTriggerSpec
+
       return {
-        artifactPath: '',
+        type: artifactType,
         connectorRef,
-        eventConditions,
-        jobName: '',
-        build
-      } as JenkinsRegistrySpec
+        artifactPath,
+        build,
+        jobName
+      }
     }
     case 'CustomArtifact': {
+      const {
+        artifactsArrayPath = '',
+        inputs = [],
+        script = '',
+        version = defaultVersion,
+        versionPath = ''
+      } = spec as CustomArtifactSpec
+
       return {
-        artifactsArrayPath: '',
-        inputs: [],
-        script: '',
+        type: artifactType,
+        artifactsArrayPath,
+        inputs,
+        script,
         version,
-        versionPath: ''
-      } as CustomArtifactSpec
-    }
-    case 'GithubPackageRegistry': {
-      return {
-        packageName: '',
-        connectorRef,
-        eventConditions,
-        packageType: 'container',
-        org: '',
-        version
-      } as GithubPackagesSpec
+        versionPath
+      }
     }
     case 'GoogleArtifactRegistry': {
+      const {
+        connectorRef = defaultConnectorRef,
+        project = '',
+        region = '',
+        repositoryName = '',
+        version = defaultVersion
+      } = spec as GarSpec
+
       return {
-        package: '',
+        type: artifactType,
         connectorRef,
-        eventConditions,
-        project: '',
-        region: '',
-        repositoryName: '',
+        // Adding package in this was as 'package' is a reserved word in strict mode. Modules are automatically in strict mode.
+        package: spec.package ?? '',
+        project,
+        region,
+        repositoryName,
         version
-      } as GarSpec
+      }
+    }
+    case 'GithubPackageRegistry': {
+      const {
+        packageName = '',
+        connectorRef = defaultConnectorRef,
+        packageType = 'container',
+        org = '',
+        version = defaultVersion
+      } = spec as GithubPackagesSpec
+
+      return {
+        type: artifactType,
+        connectorRef,
+        org,
+        packageName,
+        packageType,
+        version
+      }
     }
     case 'AzureArtifacts': {
+      const {
+        connectorRef = defaultConnectorRef,
+        packageType = 'maven',
+        scope = 'project',
+        project = '',
+        feed = '',
+        version = defaultVersion
+      } = spec as AzureArtifactsRegistrySpec
+
       return {
-        package: '',
+        type: artifactType,
         connectorRef,
-        eventConditions,
-        packageType: 'maven',
-        scope: 'project',
-        project: '',
-        feed: '',
+        feed,
+        // Adding package in this was as 'package' is a reserved word in strict mode. Modules are automatically in strict mode.
+        package: spec.package ?? '',
+        packageType,
+        scope,
+        project,
         version
-      } as AzureArtifactsRegistrySpec
+      }
     }
     case 'AmazonMachineImage': {
+      const {
+        connectorRef = defaultConnectorRef,
+        filters = [],
+        tags = [],
+        region = '',
+        version = defaultVersion
+      } = spec as AMIRegistrySpec
+
       return {
-        eventConditions,
+        type: artifactType,
         connectorRef,
-        filters: [],
-        tags: [],
-        region: '',
+        filters,
+        region,
+        tags,
         version
-      } as AMIRegistrySpec
+      }
     }
     case 'GoogleCloudStorage': {
+      const {
+        connectorRef = defaultConnectorRef,
+        project = '',
+        bucket = '',
+        artifactPath = '<+trigger.artifact.build>'
+      } = spec as GoolgeCloudStorageRegistrySpec
+
       return {
-        eventConditions,
+        type: artifactType,
         connectorRef,
-        project: '',
-        bucket: '',
-        artifactPath: tag
-      } as GoolgeCloudStorageRegistrySpec
+        artifactPath,
+        bucket,
+        project
+      }
+    }
+    case 'Bamboo': {
+      const { connectorRef = defaultConnectorRef, artifactPaths = [], planKey = '' } = spec as BambooRegistrySpec
+
+      return {
+        type: artifactType,
+        connectorRef,
+        artifactPaths,
+        planKey
+      }
     }
   }
 }
 
-export const getTriggerArtifactInitialSource = (
-  triggerType: TriggerType,
-  artifactType: ArtifactType
-): NGTriggerSourceV2 => ({
-  type: triggerType,
-  spec: {
+const getArtifactTriggerSourceSpec = (artifactType: ArtifactType, spec?: ArtifactTriggerSpec) => {
+  const { eventConditions = [], metaDataConditions = [] } = spec ?? {}
+
+  return {
     type: artifactType,
-    spec: getTriggerArtifactInitialSpec(artifactType)
+    eventConditions,
+    metaDataConditions,
+    sources: [{ spec: getArtifactTriggerSpecSource(artifactType, spec) }]
   }
-})
+}
+
+export const getTriggerArtifactInitialSource = (artifactType: ArtifactType): NGTriggerSourceV2 => {
+  return {
+    // When creating new Artifact trigger, consider that as Artifact Type
+    // We will convert the type to MultiRegionArtifact once more than one artifact added
+    type: 'Artifact',
+    spec: getArtifactTriggerSourceSpec(artifactType)
+  }
+}
+
+/**
+ * We consider all the artifact trigger as MultiRegionArtifact in UI and process the data while doing API communication.
+ * This will reduced the changes in the UI.
+ *
+ * @param artifactType - Type of the Artifact Trigger
+ * @param spec - spec of the Artifact Trigger
+ *
+ * @returns Artifact trigger source for the Artifact type in the formate of MultiRegionArtifact
+ */
+export const transformArtifactTriggerSourceSpecToMultiRegionArtifactTriggerSourceSpec = (
+  artifactType: ArtifactType,
+  spec: ArtifactTriggerSpec
+) => getArtifactTriggerSourceSpec(artifactType, spec)
+
+export const isArtifactAdded = (artifactType: ArtifactType, spec?: ArtifactTriggerSpec): boolean =>
+  !isEmpty(artifactType === 'CustomArtifact' ? spec?.script : spec?.connectorRef)

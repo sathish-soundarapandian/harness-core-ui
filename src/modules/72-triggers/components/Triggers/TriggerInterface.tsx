@@ -5,28 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { ArtifactTriggerConfig, ManifestTriggerConfig, NGTriggerSourceV2 } from 'services/pipeline-ng'
+import type {
+  ArtifactTriggerConfig,
+  ManifestTriggerConfig,
+  NGTriggerSourceV2,
+  TriggerCatalogItem,
+  WebhookTriggerConfigV2
+} from 'services/pipeline-ng'
 
-export enum TriggerBaseType {
-  WEBHOOK = 'Webhook',
-  SCHEDULE = 'Scheduled',
-  ARTIFACT = 'Artifact',
-  MANIFEST = 'Manifest'
-}
+export type TriggerType = NGTriggerSourceV2['type']
 
-export enum SourceRepo {
-  Github = 'Github',
-  Gitlab = 'Gitlab',
-  Bitbucket = 'Bitbucket',
-  AzureRepo = 'AzureRepo',
-  Custom = 'Custom'
-}
+export type TriggerBaseType = Exclude<TriggerType, 'MultiRegionArtifact'>
 
-export enum ScheduleType {
-  Cron = 'Cron'
-}
+export type SourceRepo = Exclude<Required<WebhookTriggerConfigV2>['type'], 'AwsCodeCommit' | 'Harness'>
 
-export type TriggerType = Required<NGTriggerSourceV2>['type']
+export type ScheduleType = Extract<TriggerCatalogItem['triggerCatalogType'][number], 'Cron'>
+
+/**
+ * There are two type of Artifact Trigger
+ * 1: Artifact: For single artifact source
+ * 2: MultiRegionArtifact: For multiple artifact source
+ */
+export type ArtifactTriggerType = Extract<TriggerType, 'Artifact' | 'MultiRegionArtifact'>
 
 export type TriggerArtifactType = Required<ArtifactTriggerConfig>['type']
 
