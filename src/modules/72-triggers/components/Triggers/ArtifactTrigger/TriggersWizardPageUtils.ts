@@ -65,7 +65,6 @@ import {
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { NameIdentifierSchema } from '@common/utils/Validation'
 import type { TriggerType } from '../TriggerInterface'
-import { DEFAULT_TRIGGER_BRANCH } from '../utils'
 export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
 export const AwsCodeCommit = 'AwsCodeCommit'
@@ -322,6 +321,27 @@ export const scheduledTypes = {
 
 export const isPipelineWithCiCodebase = (pipeline: any): boolean =>
   Object.keys(pipeline?.properties?.ci?.codebase || {}).includes('build')
+
+export const ciCodebaseBuild = {
+  type: 'branch',
+  spec: {
+    branch: '<+trigger.branch>'
+  }
+}
+
+export const ciCodebaseBuildPullRequest = {
+  type: 'PR',
+  spec: {
+    number: '<+trigger.prNumber>'
+  }
+}
+
+export const ciCodebaseBuildIssueComment = {
+  type: 'tag',
+  spec: {
+    tag: '<+trigger.tag>'
+  }
+}
 
 export const getConnectorName = (connector?: ConnectorResponse): string => {
   let connectorName = ''
@@ -1696,6 +1716,39 @@ export const getModifiedTemplateValues = (
   return returnInitialValuesForEdit
 }
 
+export const DEFAULT_TRIGGER_BRANCH = '<+trigger.branch>'
+
+/**
+ * Get proper branch to fetch Trigger InputSets
+ * If gitAwareForTriggerEnabled is true, pipelineBranchName is used only if it's not DEFAULT_TRIGGER_BRANCH
+ * Otherwise, return branch which is the active pipeline branch
+ */
+export function getTriggerInputSetsBranchQueryParameter({
+  gitAwareForTriggerEnabled,
+  pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
+  branch = ''
+}: {
+  gitAwareForTriggerEnabled?: boolean
+  pipelineBranchName?: string
+  branch?: string
+}): string {
+  if (gitAwareForTriggerEnabled) {
+    if (
+      [
+        ciCodebaseBuildIssueComment.spec.tag,
+        ciCodebaseBuildPullRequest.spec.number,
+        ciCodebaseBuild.spec.branch
+      ].includes(pipelineBranchName)
+    ) {
+      return branch
+    } else {
+      return pipelineBranchName
+    }
+  }
+
+  return branch
+}
+
 export const getErrorMessage = (error: any): string =>
   get(error, 'data.error', get(error, 'data.message', error?.message))
 
@@ -1823,7 +1876,7 @@ export const getDefaultPipelineReferenceBranch = (triggerType = '', event = ''):
       case TriggerGitEvent.ISSUE_COMMENT:
       case TriggerGitEvent.PULL_REQUEST:
       default:
-        return DEFAULT_TRIGGER_BRANCH
+        return ciCodebaseBuild.spec.branch
     }
   }
 

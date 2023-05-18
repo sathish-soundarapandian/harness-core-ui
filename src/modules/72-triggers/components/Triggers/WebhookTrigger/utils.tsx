@@ -17,14 +17,14 @@ import { connectorUrlType } from '@connectors/constants'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import type { SourceRepo, TriggerBaseType } from '../TriggerInterface'
-import { ciCodebaseBuild, ciCodebaseBuildPullRequest, CUSTOM, DEFAULT_TRIGGER_BRANCH, TriggerGitEvent } from '../utils'
+import { ciCodebaseBuild, ciCodebaseBuildPullRequest, CUSTOM, TriggerGitEvent } from '../utils'
 
 export function getDefaultPipelineReferenceBranch(event = ''): string {
   switch (event) {
     case TriggerGitEvent.ISSUE_COMMENT:
     case TriggerGitEvent.PULL_REQUEST:
     default:
-      return DEFAULT_TRIGGER_BRANCH
+      return ciCodebaseBuild.spec.branch
   }
 }
 

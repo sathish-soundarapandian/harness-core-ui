@@ -43,7 +43,12 @@ import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { Status } from '@common/utils/Constants'
 import { Connectors } from '@connectors/constants'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { eventTypes, clearNullUndefined } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
+import {
+  eventTypes,
+  clearNullUndefined,
+  ciCodebaseBuild,
+  ciCodebaseBuildPullRequest
+} from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { TriggerConfigDTO } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -61,7 +66,6 @@ import {
 } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { isSimplifiedYAMLEnabledForCI, YAMLVersion } from '@pipeline/utils/CIUtils'
 import { BuildTabs } from '@ci/components/PipelineStudio/CIPipelineStagesUtils'
-import { ciCodebaseBuild, ciCodebaseBuildPullRequest } from '@triggers/components/Triggers/utils'
 import {
   InfraProvisioningWizardProps,
   WizardStep,
