@@ -115,7 +115,7 @@ export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps)
           <TextWithSearchMarkers
             searchText={searchText}
             currentSearchIndex={currentSearchIndex}
-            txt={updatedTokenContent}
+            txt={token.content}
             searchIndices={searchIndices?.slice(offset)}
           />
         )
@@ -164,6 +164,7 @@ export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
 
   const showLogInfo = logsInfoViewSettings === 'true'
   const showDateTimeInfo = logsDateTimeViewSettings === 'true'
+
   return (
     <div
       className={css.logLine}
