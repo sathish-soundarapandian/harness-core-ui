@@ -45,8 +45,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SettingType } from '@common/constants/Utils'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
-import { SECRETS_DEFAULT_PAGE_INDEX, SECRETS_DEFAULT_PAGE_SIZE } from '../../Constants'
 import { usePermission } from '@rbac/hooks/usePermission'
+import { SECRETS_DEFAULT_PAGE_INDEX, SECRETS_DEFAULT_PAGE_SIZE } from '../../Constants'
 
 import css from './SecretsList.module.scss'
 

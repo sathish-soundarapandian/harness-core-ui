@@ -19,10 +19,10 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
-import { Views, EnvironmentStoreContext } from './common'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { Views, EnvironmentStoreContext } from './common'
 
 import { EnvironmentList } from './EnvironmentList/EnvironmentsList'
 

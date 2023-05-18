@@ -61,8 +61,8 @@ import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import type { Sort, SortFields } from '@common/utils/listUtils'
-import { ServiceTabs } from '../utils/ServiceUtils'
 import { usePermission } from '@rbac/hooks/usePermission'
+import { ServiceTabs } from '../utils/ServiceUtils'
 
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 

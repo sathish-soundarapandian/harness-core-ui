@@ -55,6 +55,9 @@ import { toBase64 } from '@common/utils/utils'
 import LogoInput from '@common/components/LogoInput/LogoInput'
 import { useGetSettingValue } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import {
   DefaultNewTemplateId,
   DefaultNewVersionLabel,
@@ -63,9 +66,6 @@ import {
   ICON_FILE_MAX_SIZE_IN_KB,
   ICON_FILE_SUPPORTED_TYPES
 } from '../templates'
-import { usePermission } from '@rbac/hooks/usePermission'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import css from './TemplateConfigModal.module.scss'
 

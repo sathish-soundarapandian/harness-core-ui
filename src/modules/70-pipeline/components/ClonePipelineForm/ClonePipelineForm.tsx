@@ -24,10 +24,10 @@ import {
   ModalDialog,
   OverlaySpinner
 } from '@harness/uicore'
-import { usePermission } from '@rbac/hooks/usePermission'
 
 import { Divider } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
+import { usePermission } from '@rbac/hooks/usePermission'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import { PMSPipelineSummaryResponse, useClonePipeline } from 'services/pipeline-ng'

@@ -22,13 +22,13 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { SettingType } from '@common/constants/Utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import SecretDetails from '../secretDetails/SecretDetails'
 import SecretReferences from '../secretReferences/SecretReferences'
 import { SecretMenuItem } from '../secrets/views/SecretsListView/SecretsList'
 import css from './SecretDetailsHomePage.module.scss'
-import { usePermission } from '@rbac/hooks/usePermission'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 interface OptionalIdentifiers {
   module?: Module

@@ -45,6 +45,7 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 
 import { FilterContextProvider } from '@cd/context/FiltersContext'
 
+import { usePermission } from '@rbac/hooks/usePermission'
 import CreateEnvironmentGroupModal from './CreateEnvironmentGroupModal'
 import EnvironmentGroupsList from './EnvironmentGroupsList/EnvironmentGroupsList'
 import NoEnvironmentGroups from './NoEnvironmentGroups'
@@ -52,7 +53,6 @@ import EnvironmentTabs from '../EnvironmentsV2/EnvironmentTabs'
 import { EnvironmentGroupsFilters } from './EnvironmentGroupsFilters/EnvironmentGroupsFilters'
 import { getHasFilterIdentifier, getHasFilters } from './EnvironmentGroupsFilters/filterUtils'
 import { EnvironmentGroupListQueryParams, Sort, SortFields } from './utils'
-import { usePermission } from '@rbac/hooks/usePermission'
 
 
 import {

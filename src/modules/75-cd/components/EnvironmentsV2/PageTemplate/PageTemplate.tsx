@@ -27,11 +27,11 @@ import {
   DropDown,
   useToaster
 } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
-import { Color, FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import { GetFilterListQueryParams, useGetFilterList, useGetSettingValue } from 'services/cd-ng'
