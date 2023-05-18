@@ -107,7 +107,7 @@ describe('ImportResource - Input Set', () => {
     const importButton = getByText('common.import')
     expect(container).toMatchSnapshot()
     act(() => {
-      userEvent.click(importButton)
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('pipeline.importSuccessMessage')).toBeDefined())
     await waitFor(() => expect(onSuccess).toHaveBeenCalled())
@@ -129,7 +129,7 @@ describe('ImportResource - Input Set', () => {
 
     const importButton = getByText('common.import')
     act(() => {
-      userEvent.click(importButton)
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('pipeline.importSuccessMessage')).toBeDefined())
     await waitFor(() => expect(onSuccess).toHaveBeenCalled())

@@ -66,14 +66,14 @@ describe('FlagElemMultivariate', () => {
     const kindDropdown = document.getElementsByName('kind')[0]
     expect(kindDropdown).toHaveValue('multivariate')
 
-    userEvent.click(kindDropdown)
+    await userEvent.click(kindDropdown)
 
     await waitFor(() => {
       expect(screen.getByText('boolean')).toBeInTheDocument()
       expect(screen.getByText('multivariate')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByText('boolean'))
+    await userEvent.click(screen.getByText('boolean'))
 
     await waitFor(() => expect(flagToggleMock).toHaveBeenCalled())
   })
@@ -85,11 +85,11 @@ describe('FlagElemMultivariate', () => {
 
       const dataTypeDropdown = document.getElementsByName('dataTypes')[0]
 
-      userEvent.click(dataTypeDropdown)
+      await userEvent.click(dataTypeDropdown)
 
       await waitFor(() => expect(screen.getByText(type)).toBeInTheDocument())
 
-      userEvent.click(screen.getByText(type))
+      await userEvent.click(screen.getByText(type))
 
       await waitFor(() => expect(dataTypeDropdown).toHaveValue(type))
     }
@@ -108,7 +108,7 @@ describe('FlagElemMultivariate', () => {
     const addVariationButton = screen.getByText('cf.shared.variation')
     expect(addVariationButton).toBeInTheDocument()
 
-    userEvent.click(addVariationButton)
+    await userEvent.click(addVariationButton)
 
     await waitFor(() => expect(document.getElementsByName('variations.2.name')[0]).toBeInTheDocument())
   })
@@ -120,7 +120,7 @@ describe('FlagElemMultivariate', () => {
     const addVariationButton = screen.getByText('cf.shared.variation')
     expect(addVariationButton).toBeInTheDocument()
 
-    userEvent.click(addVariationButton)
+    await userEvent.click(addVariationButton)
 
     await waitFor(() => expect(document.getElementsByName('variations.2.name')[0]).toBeInTheDocument())
 
@@ -128,7 +128,7 @@ describe('FlagElemMultivariate', () => {
     const deleteButton = screen.getByTestId('delete_icon_2')
     expect(deleteButton).toBeInTheDocument()
 
-    userEvent.click(deleteButton)
+    await userEvent.click(deleteButton)
 
     await waitFor(() => expect(document.getElementsByName('variations.2.name')).toHaveLength(0))
   })
@@ -140,8 +140,8 @@ describe('FlagElemMultivariate', () => {
 
     // assert
     const defaultOnVariationDropdown = document.getElementsByName('defaultOnVariation')[0]
-    userEvent.click(defaultOnVariationDropdown)
-    userEvent.click(screen.getByText('variation one'))
+    await userEvent.click(defaultOnVariationDropdown)
+    await userEvent.click(screen.getByText('variation one'))
 
     await waitFor(() => expect(defaultOnVariationDropdown).toHaveValue('variation one'))
   })
@@ -153,11 +153,11 @@ describe('FlagElemMultivariate', () => {
 
     // assert
     const defaultOffVariationDropdown = document.getElementsByName('defaultOffVariation')[0]
-    userEvent.click(defaultOffVariationDropdown)
+    await userEvent.click(defaultOffVariationDropdown)
 
     await waitFor(() => expect(screen.getByText('variation two')).toBeInTheDocument())
 
-    userEvent.click(screen.getByText('variation two'))
+    await userEvent.click(screen.getByText('variation two'))
 
     await waitFor(() => expect(defaultOffVariationDropdown).toHaveValue('variation two'))
   })
@@ -188,17 +188,17 @@ describe('FlagElemMultivariate', () => {
 
     // select default rules
     const defaultOnVariationDropdown = document.getElementsByName('defaultOnVariation')[0]
-    userEvent.click(defaultOnVariationDropdown)
-    userEvent.click(screen.getAllByText('variation one')[0])
+    await userEvent.click(defaultOnVariationDropdown)
+    await userEvent.click(screen.getAllByText('variation one')[0])
 
     const defaultOffVariationDropdown = document.getElementsByName('defaultOffVariation')[0]
-    userEvent.click(defaultOffVariationDropdown)
-    userEvent.click(screen.getAllByText('variation one')[1])
+    await userEvent.click(defaultOffVariationDropdown)
+    await userEvent.click(screen.getAllByText('variation one')[1])
 
     const nextButton = screen.getByText('cf.creationModal.saveAndClose')
     expect(nextButton).toBeInTheDocument()
 
-    userEvent.click(nextButton)
+    await userEvent.click(nextButton)
 
     await waitFor(() => expect(nextStepMock).toHaveBeenCalledWith(nextStepDataMock))
   })
@@ -211,7 +211,7 @@ describe('FlagElemMultivariate', () => {
     const backButton = screen.getByText('back')
     expect(backButton).toBeInTheDocument()
 
-    userEvent.click(backButton)
+    await userEvent.click(backButton)
 
     await waitFor(() => expect(previousStepMock).toHaveBeenCalledWith(previousStepDataMock))
   })

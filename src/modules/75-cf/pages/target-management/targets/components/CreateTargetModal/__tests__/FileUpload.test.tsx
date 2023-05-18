@@ -31,7 +31,7 @@ describe('FileUpload', () => {
     const targetsCSV = targets.map(({ name, identifier }) => [name, identifier].join()).join('\n')
     File.prototype.text = jest.fn().mockResolvedValueOnce(targetsCSV)
 
-    userEvent.upload(
+    await userEvent.upload(
       screen.getByLabelText('cf.targets.uploadYourFile'),
       new File([targetsCSV], 'test.csv', { type: 'text/csv' })
     )
@@ -64,7 +64,7 @@ describe('FileUpload', () => {
 
     await waitFor(() => expect(document.querySelectorAll('.bp3-tag')).toHaveLength(mockTargets.length))
 
-    userEvent.click(screen.getByRole('button', { name: 'filters.clearAll' }))
+    await userEvent.click(screen.getByRole('button', { name: 'filters.clearAll' }))
 
     await waitFor(() => {
       expect(document.querySelectorAll('.bp3-tag')).toHaveLength(0)

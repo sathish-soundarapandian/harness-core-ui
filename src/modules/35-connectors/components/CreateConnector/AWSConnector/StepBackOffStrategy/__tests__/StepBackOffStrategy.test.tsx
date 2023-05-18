@@ -124,22 +124,22 @@ describe('StepBackoffStrategy tests', () => {
     expect(fixedDelayOption.parentElement?.parentElement).not.toHaveClass('Card--selected')
 
     // Fixed Delay
-    userEvent.click(fixedDelayOption)
+    await userEvent.click(fixedDelayOption)
     expect(fixedDelayOption.parentElement?.parentElement).toHaveClass('Card--selected')
     // Fixed Backoff
     const fixedBackoffInput = queryByNameAttribute('fixedBackoff', container) as HTMLInputElement
     expect(fixedBackoffInput).toBeInTheDocument()
     expect(fixedBackoffInput.value).toBe('0')
-    userEvent.clear(fixedBackoffInput)
-    userEvent.type(fixedBackoffInput, '300')
+    await userEvent.clear(fixedBackoffInput)
+    await userEvent.type(fixedBackoffInput, '300')
     // Retry Count
     const retryCountInput = queryByNameAttribute('retryCount', container) as HTMLInputElement
     expect(retryCountInput).toBeInTheDocument()
     expect(retryCountInput.value).toBe('0')
-    userEvent.clear(retryCountInput)
-    userEvent.type(retryCountInput, '3')
+    await userEvent.clear(retryCountInput)
+    await userEvent.type(retryCountInput, '3')
 
-    userEvent.click(continueBtn)
+    await userEvent.click(continueBtn)
     await waitFor(() => expect(nextStepFn).toHaveBeenCalledTimes(1))
     await waitFor(() =>
       expect(nextStepFn).toHaveBeenCalledWith({
@@ -201,30 +201,30 @@ describe('StepBackoffStrategy tests', () => {
     expect(equalJitterOption.parentElement?.parentElement).not.toHaveClass('Card--selected')
 
     // Equal Jitter
-    userEvent.click(equalJitterOption)
+    await userEvent.click(equalJitterOption)
     expect(equalJitterOption.parentElement?.parentElement).toHaveClass('Card--selected')
     // Base Delay
     const baseDelayInput = queryByNameAttribute('baseDelay', container) as HTMLInputElement
     expect(baseDelayInput).toBeInTheDocument()
     expect(baseDelayInput.value).toBe('0')
-    userEvent.clear(baseDelayInput)
-    userEvent.type(baseDelayInput, '200')
+    await userEvent.clear(baseDelayInput)
+    await userEvent.type(baseDelayInput, '200')
     // Max Backoff Time
     const maxBackoffTimeInput = queryByNameAttribute('maxBackoffTime', container) as HTMLInputElement
     expect(maxBackoffTimeInput).toBeInTheDocument()
     expect(maxBackoffTimeInput.value).toBe('0')
-    userEvent.clear(maxBackoffTimeInput)
-    userEvent.type(maxBackoffTimeInput, '300')
+    await userEvent.clear(maxBackoffTimeInput)
+    await userEvent.type(maxBackoffTimeInput, '300')
     // Retry Count
     const retryCountInput = queryByNameAttribute('retryCount', container) as HTMLInputElement
     expect(retryCountInput).toBeInTheDocument()
     expect(retryCountInput.value).toBe('0')
-    userEvent.clear(retryCountInput)
-    userEvent.type(retryCountInput, '2')
+    await userEvent.clear(retryCountInput)
+    await userEvent.type(retryCountInput, '2')
 
     const continueBtn = screen.getByText('continue')
     expect(continueBtn).toBeInTheDocument()
-    userEvent.click(continueBtn)
+    await userEvent.click(continueBtn)
     await waitFor(() => expect(nextStepFn).toHaveBeenCalledTimes(1))
     expect(nextStepFn).toHaveBeenCalledWith({
       name: 'AWS Backoff Connector',
@@ -285,30 +285,30 @@ describe('StepBackoffStrategy tests', () => {
     expect(fullJitterOption.parentElement?.parentElement).not.toHaveClass('Card--selected')
 
     // Full Jitter
-    userEvent.click(fullJitterOption)
+    await userEvent.click(fullJitterOption)
     expect(fullJitterOption.parentElement?.parentElement).toHaveClass('Card--selected')
     // Base Delay
     const baseDelayInput = queryByNameAttribute('baseDelay', container) as HTMLInputElement
     expect(baseDelayInput).toBeInTheDocument()
     expect(baseDelayInput.value).toBe('0')
-    userEvent.clear(baseDelayInput)
-    userEvent.type(baseDelayInput, '400')
+    await userEvent.clear(baseDelayInput)
+    await userEvent.type(baseDelayInput, '400')
     // Max Backoff Time
     const maxBackoffTimeInput = queryByNameAttribute('maxBackoffTime', container) as HTMLInputElement
     expect(maxBackoffTimeInput).toBeInTheDocument()
     expect(maxBackoffTimeInput.value).toBe('0')
-    userEvent.clear(maxBackoffTimeInput)
-    userEvent.type(maxBackoffTimeInput, '600')
+    await userEvent.clear(maxBackoffTimeInput)
+    await userEvent.type(maxBackoffTimeInput, '600')
     // Retry Count
     const retryCountInput = queryByNameAttribute('retryCount', container) as HTMLInputElement
     expect(retryCountInput).toBeInTheDocument()
     expect(retryCountInput.value).toBe('0')
-    userEvent.clear(retryCountInput)
-    userEvent.type(retryCountInput, '4')
+    await userEvent.clear(retryCountInput)
+    await userEvent.type(retryCountInput, '4')
 
     const continueBtn = screen.getByText('continue')
     expect(continueBtn).toBeInTheDocument()
-    userEvent.click(continueBtn)
+    await userEvent.click(continueBtn)
     await waitFor(() => expect(nextStepFn).toHaveBeenCalledTimes(1))
     expect(nextStepFn).toHaveBeenCalledWith({
       name: 'AWS Backoff Connector',
@@ -399,7 +399,7 @@ describe('StepBackoffStrategy tests', () => {
 
     const continueBtn = screen.getByText('continue')
     expect(continueBtn).toBeInTheDocument()
-    userEvent.click(continueBtn)
+    await userEvent.click(continueBtn)
     await waitFor(() => expect(nextStepFn).toHaveBeenCalledTimes(1))
     expect(nextStepFn).toHaveBeenCalledWith({
       description: '',
@@ -482,12 +482,12 @@ describe('StepBackoffStrategy tests', () => {
     expect(fullJitterOption.parentElement?.parentElement).not.toHaveClass('Card--selected')
 
     // Unselect Equal Jitter
-    userEvent.click(equalJitterOption)
+    await userEvent.click(equalJitterOption)
     await waitFor(() => expect(equalJitterOption.parentElement?.parentElement).not.toHaveClass('Card--selected'))
 
     const continueBtn = screen.getByText('continue')
     expect(continueBtn).toBeInTheDocument()
-    userEvent.click(continueBtn)
+    await userEvent.click(continueBtn)
     await waitFor(() => expect(nextStepFn).toHaveBeenCalledTimes(1))
     expect(nextStepFn).toHaveBeenCalledWith({
       description: '',
@@ -588,7 +588,7 @@ describe('StepBackoffStrategy tests', () => {
 
     const continueBtn = screen.getByText('continue')
     expect(continueBtn).toBeInTheDocument()
-    userEvent.click(continueBtn)
+    await userEvent.click(continueBtn)
     await waitFor(() => expect(nextStepFn).toHaveBeenCalledTimes(1))
     expect(nextStepFn).toHaveBeenCalledWith({
       description: '',
@@ -689,7 +689,7 @@ describe('StepBackoffStrategy tests', () => {
 
     const backBtn = screen.getByText('back')
     expect(backBtn).toBeInTheDocument()
-    userEvent.click(backBtn)
+    await userEvent.click(backBtn)
     await waitFor(() => expect(previousStepFn).toHaveBeenCalledTimes(1))
     expect(previousStepFn).toHaveBeenCalledWith(prevStepData)
   })

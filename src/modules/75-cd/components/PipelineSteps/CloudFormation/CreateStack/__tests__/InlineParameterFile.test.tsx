@@ -95,7 +95,7 @@ describe('Test cloudformation inline parameter with no data', () => {
     const { container, getByText } = renderComponent(props)
     const getParams = getByText('cd.cloudFormation.retrieveNames')
     act(() => {
-      userEvent.click(getParams)
+      await userEvent.click(getParams)
     })
     expect(container).toMatchSnapshot()
   })
@@ -125,7 +125,7 @@ describe('Test cloudformation inline parameter with no data', () => {
     const { container, getByText } = renderComponent(props)
     const getParams = getByText('cd.cloudFormation.retrieveNames')
     act(() => {
-      userEvent.click(getParams)
+      await userEvent.click(getParams)
     })
     expect(container).toMatchSnapshot()
   })
@@ -154,7 +154,7 @@ describe('Test cloudformation inline parameter with no data', () => {
     const { getByText } = renderComponent(props)
     const getParams = getByText('cd.cloudFormation.retrieveNames')
     act(() => {
-      userEvent.click(getParams)
+      await userEvent.click(getParams)
     })
     expect(getByText('cd.cloudFormation.errors.getParam')).toBeTruthy()
   })
@@ -183,12 +183,12 @@ describe('Test cloudformation inline parameter with no data', () => {
     const { container, getByTestId } = renderComponent(props)
     const remove = getByTestId('remove-header-0')
     act(() => {
-      userEvent.click(remove)
+      await userEvent.click(remove)
     })
 
     const add = getByTestId('add-header')
     act(() => {
-      userEvent.click(add)
+      await userEvent.click(add)
     })
     expect(container).toMatchSnapshot()
   })

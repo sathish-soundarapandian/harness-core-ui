@@ -40,7 +40,7 @@ describe('MSlist', () => {
     act(() => {
       const envFilter = getByPlaceholderText('- all -')
       expect(envFilter).toBeInTheDocument()
-      userEvent.click(envFilter)
+      await userEvent.click(envFilter)
     })
     await waitFor(() => expect(document.querySelector('[class*="menuItem"]')).not.toBeNull())
     expect(getByText('loading')).toBeInTheDocument()
@@ -145,18 +145,18 @@ describe('MSlist', () => {
     expect(container.querySelectorAll('[type="checkbox"]')[1]).toBeChecked()
 
     act(() => {
-      userEvent.click(container.querySelectorAll('[type="checkbox"]')[1])
-      userEvent.click(container.querySelectorAll('[type="checkbox"]')[0])
+      await userEvent.click(container.querySelectorAll('[type="checkbox"]')[1])
+      await userEvent.click(container.querySelectorAll('[type="checkbox"]')[0])
     })
     expect(container.querySelectorAll('[type="checkbox"]')[0]).toBeChecked()
 
     act(() => {
-      userEvent.click(container.querySelectorAll('[type="checkbox"]')[0])
+      await userEvent.click(container.querySelectorAll('[type="checkbox"]')[0])
     })
     expect(container.querySelectorAll('[type="checkbox"]')[0]).not.toBeChecked()
 
     act(() => {
-      userEvent.click(container.querySelectorAll('[type="checkbox"]')[1])
+      await userEvent.click(container.querySelectorAll('[type="checkbox"]')[1])
     })
     await expect(container.querySelectorAll('[type="checkbox"]')[1]).toBeChecked()
 
@@ -184,12 +184,12 @@ describe('MSlist', () => {
     act(() => {
       const envFilter = getByPlaceholderText('- all -')
       expect(envFilter).toBeInTheDocument()
-      userEvent.click(envFilter)
+      await userEvent.click(envFilter)
     })
     await waitFor(() => expect(document.querySelector('[class*="menuItem"]')).not.toBeNull())
     const envOption = getByText('env1234')
     expect(envOption).toBeInTheDocument()
-    userEvent.click(envOption)
+    await userEvent.click(envOption)
   })
 
   test('should verify pagination', async () => {

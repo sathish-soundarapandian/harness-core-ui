@@ -89,7 +89,7 @@ describe('ChaosTrialHomePage snapshot test', () => {
 
     expect(handleStartButtonClick).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByText('common.startFreePlan'))
+    await userEvent.click(screen.getByText('common.startFreePlan'))
 
     await waitFor(() => expect(handleStartButtonClick).toHaveBeenCalled())
   })

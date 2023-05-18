@@ -69,7 +69,7 @@ describe('Unit tests for MetricMenu', () => {
     expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
     const modalDeleteBtn = getByText('delete')
     act(() => {
-      userEvent.click(modalDeleteBtn!)
+      await userEvent.click(modalDeleteBtn!)
     })
     await waitFor(() => {
       expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
@@ -93,7 +93,7 @@ describe('Unit tests for MetricMenu', () => {
     expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
     const deleteConfirmationBtn = getAllByText('delete')[0]
     act(() => {
-      userEvent.click(deleteConfirmationBtn!)
+      await userEvent.click(deleteConfirmationBtn!)
     })
     await waitFor(() => {
       expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
@@ -104,7 +104,7 @@ describe('Unit tests for MetricMenu', () => {
     expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
     const cancelBtn = getByText('cancel')
     act(() => {
-      userEvent.click(cancelBtn!)
+      await userEvent.click(cancelBtn!)
     })
     await waitFor(() => {
       expect(document.body.innerHTML).not.toContain('useConfirmationDialog')

@@ -48,7 +48,7 @@ const renderComponent = (props: Partial<WrapperComponentProps> = {}): RenderResu
     </TestWrapper>
   )
 
-  userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
+  await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
 
   return result
 }

@@ -28,7 +28,7 @@ describe('Create Docker Step2Script', () => {
     )
     const backBtn = getByRole('button', { name: /back/ })
 
-    userEvent.click(backBtn!)
+    await userEvent.click(backBtn!)
 
     expect(container).toMatchSnapshot()
   })
@@ -39,8 +39,9 @@ describe('Create Docker Step2Script', () => {
         <Step2Script />
       </TestWrapper>
     )
+
     const continueBtn = getByRole('button', { name: /continue/ })
-    userEvent.click(continueBtn!)
+    await userEvent.click(continueBtn!)
     expect(continueBtn).toBeDisabled()
   })
 })

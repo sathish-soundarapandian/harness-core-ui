@@ -87,7 +87,7 @@ describe('Test cloudformation create stack input set', () => {
     const { container } = renderComponent(data)
     const branch = queryByAttribute('name', container, 'test.spec.configuration.templateFile.spec.store.spec.branch')
     act(() => {
-      userEvent.type(branch!, 'main')
+      await userEvent.type(branch!, 'main')
     })
     expect(branch).toHaveDisplayValue('main')
 
@@ -97,7 +97,7 @@ describe('Test cloudformation create stack input set', () => {
       'test.spec.configuration.templateFile.spec.store.spec.paths[0]'
     )
     act(() => {
-      userEvent.type(filePath!, 'test/test.cf')
+      await userEvent.type(filePath!, 'test/test.cf')
     })
     expect(filePath).toHaveDisplayValue('test/test.cf')
     expect(container).toMatchSnapshot()
@@ -126,7 +126,7 @@ describe('Test cloudformation create stack input set', () => {
     const { container } = renderComponent(data)
     const templateBody = queryByAttribute('name', container, 'test.spec.configuration.templateFile.spec.templateBody')
     act(() => {
-      userEvent.type(templateBody!, 'test body')
+      await userEvent.type(templateBody!, 'test body')
     })
     expect(templateBody).toHaveDisplayValue('test body')
     expect(container).toMatchSnapshot()

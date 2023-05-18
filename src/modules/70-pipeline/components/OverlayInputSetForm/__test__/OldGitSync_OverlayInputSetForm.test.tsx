@@ -189,7 +189,7 @@ describe('OverlayInputSetForm Tests', () => {
       // Click on Save button in the Save to Git dialog to save
       const saveToGitSaveBtn = queryByText(portalDiv, 'save')?.parentElement as HTMLElement
       expect(saveToGitSaveBtn).toBeInTheDocument()
-      userEvent.click(saveToGitSaveBtn!)
+      await userEvent.click(saveToGitSaveBtn!)
     })
   })
   describe('Create OverlayInputSet - ', () => {
@@ -229,7 +229,7 @@ describe('OverlayInputSetForm Tests', () => {
       // Click on Save button in the Save to Git dialog to save
       const saveToGitSaveBtn = queryByText(portalDiv, 'save')?.parentElement as HTMLElement
       expect(saveToGitSaveBtn).toBeInTheDocument()
-      userEvent.click(saveToGitSaveBtn!)
+      await userEvent.click(saveToGitSaveBtn!)
     })
 
     test('entityValidity false', () => {

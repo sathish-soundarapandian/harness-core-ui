@@ -251,7 +251,7 @@ describe('ECRArtifactSource tests', () => {
     expect(portalDivs.length).toBe(0)
 
     const imagePathDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
-    userEvent.click(imagePathDropDownButton!)
+    await userEvent.click(imagePathDropDownButton!)
     expect(portalDivs.length).toBe(1)
     await waitFor(() => expect(fetchImages).not.toHaveBeenCalled())
   })
@@ -280,7 +280,7 @@ describe('ECRArtifactSource tests', () => {
     expect(portalDivs.length).toBe(0)
 
     const tagDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[2]
-    userEvent.click(tagDropDownButton!)
+    await userEvent.click(tagDropDownButton!)
     const allSelectListMenu = document.getElementsByClassName('bp3-menu')
     const noTagsOption = await findByText(allSelectListMenu[0] as HTMLElement, 'pipelineSteps.deploy.errors.notags')
     expect(noTagsOption).toBeDefined()
@@ -330,14 +330,14 @@ describe('ECRArtifactSource tests', () => {
     expect(portalDivs.length).toBe(0)
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     const imagePathDropDownIcon = dropdownIcons[2]
-    userEvent.click(imagePathDropDownIcon!)
+    await userEvent.click(imagePathDropDownIcon!)
     expect(fetchImages).toHaveBeenCalledTimes(1)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
     const thirdOption = await findByText(selectListMenu as HTMLElement, 'helm-test-chart')
     expect(thirdOption).toBeDefined()
-    userEvent.click(thirdOption)
+    await userEvent.click(thirdOption)
     expect(imagePathInput.value).toBe('helm-test-chart')
 
     // Switch the connector - choose AWS connector for connectorRef field
@@ -364,14 +364,14 @@ describe('ECRArtifactSource tests', () => {
 
     // Choose first option for imagePath from dropdown
     expect(portalDivs.length).toBe(2)
-    userEvent.click(imagePathDropDownIcon!)
+    await userEvent.click(imagePathDropDownIcon!)
     expect(fetchImages).toHaveBeenCalledTimes(1)
     expect(portalDivs.length).toBe(2)
     const imagePathDropdownPortalDiv = portalDivs[0]
     const dropdownOptionList = imagePathDropdownPortalDiv.querySelector('.bp3-menu')
     const firstOption = await findByText(dropdownOptionList as HTMLElement, 'harnesscie-advanced-testingui')
     expect(firstOption).toBeDefined()
-    userEvent.click(firstOption)
+    await userEvent.click(firstOption)
     expect(imagePathInput.value).toBe('harnesscie-advanced-testingui')
   })
 
@@ -417,29 +417,29 @@ describe('ECRArtifactSource tests', () => {
     const dropdownIcons = container.querySelectorAll('[data-icon="chevron-down"]')
     expect(dropdownIcons.length).toBe(4)
     const tagDropDownIcon = dropdownIcons[3]
-    userEvent.click(tagDropDownIcon!)
+    await userEvent.click(tagDropDownIcon!)
     expect(fetchTags).toHaveBeenCalledTimes(1)
     expect(portalDivs.length).toBe(1)
     const tagDropdownPortalDiv = portalDivs[0]
     const selectListMenu = tagDropdownPortalDiv.querySelector('.bp3-menu')
     const firstOption = await findByText(selectListMenu as HTMLElement, '0.0.1')
     expect(firstOption).toBeDefined()
-    userEvent.click(firstOption)
+    await userEvent.click(firstOption)
     expect(tagInput.value).toBe('0.0.1')
 
     // Switch the connector - choose AWS connector for connectorRef field
     const connnectorRefInput = queryByAttribute('data-testid', container, /connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
     if (connnectorRefInput) {
-      userEvent.click(connnectorRefInput)
+      await userEvent.click(connnectorRefInput)
     }
     await act(async () => {
       const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
       const awsConnector = await findByText(connectorSelectorDialog as HTMLElement, 'AWS')
       expect(awsConnector).toBeTruthy()
-      userEvent.click(awsConnector)
+      await userEvent.click(awsConnector)
       const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
-      userEvent.click(applySelected)
+      await userEvent.click(applySelected)
     })
     expect(fetchTags).toHaveBeenCalledTimes(1)
     // Expect tag field values to be empty after switching connector
@@ -562,12 +562,12 @@ describe('ECRArtifactSource tests', () => {
 
     // Select tag from dropdown
     const tagDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[3]
-    userEvent.click(tagDropDownButton!)
+    await userEvent.click(tagDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDivTag = portalDivs[0]
     const selectListMenuTag = dropdownPortalDivTag.querySelector('.bp3-menu')
     const tagSelectItem = await findByText(selectListMenuTag as HTMLElement, '0.0.2')
-    userEvent.click(tagSelectItem)
+    await userEvent.click(tagSelectItem)
     expect(tagSelect.value).toBe('0.0.2')
   })
 
@@ -622,12 +622,12 @@ describe('ECRArtifactSource tests', () => {
 
     // Select image from dropdown
     const imagePathDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[2]
-    userEvent.click(imagePathDropDownButton!)
+    await userEvent.click(imagePathDropDownButton!)
     expect(portalDivs.length).toBe(1)
     const dropdownPortalDivImagePath = portalDivs[0]
     const selectListMenuImagePath = dropdownPortalDivImagePath.querySelector('.bp3-menu')
     const selectItemImagePath = await findByText(selectListMenuImagePath as HTMLElement, 'helm-test-chart')
-    userEvent.click(selectItemImagePath)
+    await userEvent.click(selectItemImagePath)
     expect(imagePathSelect.value).toBe('helm-test-chart')
   })
 
@@ -675,7 +675,7 @@ describe('ECRArtifactSource tests', () => {
     const dropdownPortalDivTag = portalDivs[0]
     const selectListMenuTag = dropdownPortalDivTag.querySelector('.bp3-menu')
     const tagSelectItem = await findByText(selectListMenuTag as HTMLElement, '0.0.3')
-    userEvent.click(tagSelectItem)
+    await userEvent.click(tagSelectItem)
     expect(tagSelect.value).toBe('0.0.3')
 
     // Select region from dropdown

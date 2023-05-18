@@ -37,7 +37,7 @@ describe('CloudWatchTemplates', () => {
     const assignAccordion = screen.getByText(/cv.monitoringSources.assign/)
 
     act(() => {
-      userEvent.click(assignAccordion!)
+      await userEvent.click(assignAccordion!)
     })
 
     const serviceInstancePathInput = container.querySelector(
@@ -51,7 +51,7 @@ describe('CloudWatchTemplates', () => {
     expect(expressionInput).toHaveValue('<+monitoredService.name>')
 
     act(() => {
-      userEvent.click(screen.getByText('submit'))
+      await userEvent.click(screen.getByText('submit'))
     })
 
     expect(onSubmit).toHaveBeenCalled()

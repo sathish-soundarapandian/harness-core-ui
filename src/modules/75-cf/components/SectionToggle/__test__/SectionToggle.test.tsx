@@ -68,7 +68,7 @@ describe('SectionToggle', () => {
 
     await waitFor(() => expect(screen.getByRole('link', { name: 'targets-doc-link' })).toBeInTheDocument())
 
-    userEvent.click(screen.getByRole('link', { name: 'targets-doc-link' }))
+    await userEvent.click(screen.getByRole('link', { name: 'targets-doc-link' }))
 
     await waitFor(() => expect(linkOnClick).not.toHaveBeenCalled(), { timeout: 3000 })
   })

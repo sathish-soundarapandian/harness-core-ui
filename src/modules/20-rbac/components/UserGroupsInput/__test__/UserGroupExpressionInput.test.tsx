@@ -47,7 +47,7 @@ describe('UserGroup Expression Input tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByLabelText('common.combined')!)
+    await userEvent.click(screen.getByLabelText('common.combined')!)
     waitFor(() => {
       expect(
         screen.getByPlaceholderText('( <+pipeline.variables.group1> + "," + <+pipeline.variables.group2>).split(",")')
@@ -84,7 +84,7 @@ describe('UserGroup Expression Input tests', () => {
     )
 
     act(() => {
-      userEvent.type(container.querySelector('input[name="spec.approvers.userGroups"]')!, '<+test>')
+      await userEvent.type(container.querySelector('input[name="spec.approvers.userGroups"]')!, '<+test>')
     })
 
     waitFor(() => {

@@ -56,7 +56,7 @@ describe('ChoosePlan', () => {
         <ChoosePlan {...props} />
       </TestWrapper>
     )
-    userEvent.click(getByText('Team'))
+    await userEvent.click(getByText('Team'))
     await waitFor(() => {
       expect(setPlanMock).toHaveBeenCalledWith('TEAM')
     })

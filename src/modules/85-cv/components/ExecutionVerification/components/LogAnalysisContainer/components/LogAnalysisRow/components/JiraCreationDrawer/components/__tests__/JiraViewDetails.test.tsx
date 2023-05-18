@@ -61,7 +61,7 @@ describe('JiraViewDetails', () => {
     const retryButton = screen.getByText(/Retry/)
 
     act(() => {
-      userEvent.click(retryButton)
+      await userEvent.click(retryButton)
     })
 
     await waitFor(() => expect(refetchTicketDetails).toHaveBeenCalled())
@@ -100,7 +100,7 @@ describe('JiraViewDetails', () => {
     )
 
     act(() => {
-      userEvent.click(screen.getByTestId('jiraDetailsLink_button'))
+      await userEvent.click(screen.getByTestId('jiraDetailsLink_button'))
     })
 
     await waitFor(() =>
@@ -126,7 +126,7 @@ describe('JiraViewDetails', () => {
     )
 
     act(() => {
-      userEvent.click(screen.getByTestId('jiraDetailsLink_button'))
+      await userEvent.click(screen.getByTestId('jiraDetailsLink_button'))
     })
 
     await waitFor(() =>
@@ -134,7 +134,7 @@ describe('JiraViewDetails', () => {
     )
 
     act(() => {
-      userEvent.click(screen.getByTestId('jiraDetailsClose_button'))
+      await userEvent.click(screen.getByTestId('jiraDetailsClose_button'))
     })
 
     await waitFor(() => expect(onHideCallbackMock).toHaveBeenCalled())

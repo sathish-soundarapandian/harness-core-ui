@@ -60,33 +60,33 @@ describe('Unit tests for NotificationRuleRow', () => {
     // Selecting first condition
     const monitoredServiceConditionType = 'Change Impact'
     const conditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any
-    userEvent.click(conditionDropdown)
+    await userEvent.click(conditionDropdown)
     const typeToSelect = getByText(monitoredServiceConditionType)
-    userEvent.click(typeToSelect)
+    await userEvent.click(typeToSelect)
     expect(conditionDropdown.value).toBe(monitoredServiceConditionType)
 
     // Selecting second condition
     const secondMonitoredServiceConditionType = 'Health Score'
     const secondConditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any
-    userEvent.click(conditionDropdown)
+    await userEvent.click(conditionDropdown)
     const secondTypeToSelect = getByText(secondMonitoredServiceConditionType)
-    userEvent.click(secondTypeToSelect)
+    await userEvent.click(secondTypeToSelect)
     expect(secondConditionDropdown.value).toBe(secondMonitoredServiceConditionType)
 
     // Selecting third condition
     const thirdMonitoredServiceConditionType = 'Change Observed'
     const thirdConditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any
-    userEvent.click(conditionDropdown)
+    await userEvent.click(conditionDropdown)
     const thirdTypeToSelect = getByText(thirdMonitoredServiceConditionType)
-    userEvent.click(thirdTypeToSelect)
+    await userEvent.click(thirdTypeToSelect)
     expect(thirdConditionDropdown.value).toBe(thirdMonitoredServiceConditionType)
 
     // Selecting fourth condition
     const fourthMonitoredServiceConditionType = 'Code Errors'
     const fourthConditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any
-    userEvent.click(conditionDropdown)
+    await userEvent.click(conditionDropdown)
     const fourthTypeToSelect = getByText(fourthMonitoredServiceConditionType)
-    userEvent.click(fourthTypeToSelect)
+    await userEvent.click(fourthTypeToSelect)
     expect(fourthConditionDropdown).toHaveValue(fourthMonitoredServiceConditionType)
   })
 })

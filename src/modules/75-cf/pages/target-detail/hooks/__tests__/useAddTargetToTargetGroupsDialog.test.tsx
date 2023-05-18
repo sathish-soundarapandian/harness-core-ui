@@ -56,7 +56,7 @@ const renderComponent = (props: Partial<AddTargetToTargetGroupsDialogProps> = {}
     </TestWrapper>
   )
 
-  userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
+  await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
 
   return result
 }

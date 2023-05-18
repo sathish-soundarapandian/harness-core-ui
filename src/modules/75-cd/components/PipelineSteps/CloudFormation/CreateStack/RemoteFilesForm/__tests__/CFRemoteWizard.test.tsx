@@ -186,19 +186,19 @@ describe('Test cloudformation remote wizard', () => {
       </TestWrapper>
     )
     const git = getByTestId('connector-Git')
-    userEvent.click(git)
+    await userEvent.click(git)
     expect(container).toMatchSnapshot()
 
     const github = getByTestId('connector-Github')
-    userEvent.click(github)
+    await userEvent.click(github)
     expect(container).toMatchSnapshot()
 
     const gitLab = getByTestId('connector-GitLab')
-    userEvent.click(gitLab)
+    await userEvent.click(gitLab)
     expect(container).toMatchSnapshot()
 
     const bitbucket = getByTestId('connector-Bitbucket')
-    userEvent.click(bitbucket)
+    await userEvent.click(bitbucket)
     expect(container).toMatchSnapshot()
   })
 
@@ -249,7 +249,7 @@ describe('Test cloudformation remote wizard', () => {
       </TestWrapper>
     )
     const newConnButton = getByText('newLabel common.repo_provider.githubLabel connector')
-    userEvent.click(newConnButton)
+    await userEvent.click(newConnButton)
     expect(container).toMatchSnapshot()
   })
 
@@ -349,7 +349,7 @@ describe('Test cloudformation remote wizard', () => {
       </TestWrapper>
     )
     const continueButton = getByTestId('submit')
-    userEvent.click(continueButton)
+    await userEvent.click(continueButton)
 
     expect(container).toMatchSnapshot()
   })

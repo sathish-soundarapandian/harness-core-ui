@@ -49,7 +49,7 @@ describe('VariationsWithPercentageRolloutCell', () => {
     const input = screen.getByPlaceholderText('- cf.targetManagementFlagConfiguration.selectVariation -')
     expect(input).toBeInTheDocument()
 
-    userEvent.click(input)
+    await userEvent.click(input)
 
     await waitFor(() => {
       mockFeatures[0].variations.forEach(({ name, identifier }) => {
@@ -63,11 +63,11 @@ describe('VariationsWithPercentageRolloutCell', () => {
 
     expect(screen.queryByTestId('variation-percentage-rollout')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByPlaceholderText('- cf.targetManagementFlagConfiguration.selectVariation -'))
+    await userEvent.click(screen.getByPlaceholderText('- cf.targetManagementFlagConfiguration.selectVariation -'))
 
     const btn = screen.getByText('cf.featureFlags.percentageRollout')
     expect(btn).toBeInTheDocument()
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => {
       expect(screen.getByTestId('variation-percentage-rollout')).toBeInTheDocument()

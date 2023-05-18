@@ -100,7 +100,7 @@ describe('AllEnvironmentsFlagsListing', () => {
     const flag1Columns = getAllByRole(rows[1], 'cell')
     const menuButton = getByRole(flag1Columns[3], 'button')
 
-    userEvent.click(menuButton)
+    await userEvent.click(menuButton)
 
     const menuItems = screen.getAllByRole('listitem')
 
@@ -116,7 +116,7 @@ describe('AllEnvironmentsFlagsListing', () => {
     const flag1Columns = getAllByRole(rows[1], 'cell')
     const menuButton = getByRole(flag1Columns[3], 'button')
 
-    userEvent.click(menuButton)
+    await userEvent.click(menuButton)
 
     const menuItems = screen.getAllByRole('listitem')
 
@@ -124,7 +124,7 @@ describe('AllEnvironmentsFlagsListing', () => {
     expect(menuItems[0]).toHaveTextContent('edit')
     expect(menuItems[1]).toHaveTextContent('delete')
 
-    userEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
+    await userEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
 
     expect(screen.getByTestId('location')).toHaveTextContent('feature-flags/Great_New_Feature')
   })

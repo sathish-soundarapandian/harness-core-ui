@@ -30,7 +30,7 @@ describe('ExecutionVerificationStepShortView', () => {
     expect(policyTab).toBeInTheDocument()
 
     act(() => {
-      userEvent.click(policyTab)
+      await userEvent.click(policyTab)
     })
 
     expect(screen.queryByTestId(/ExecutionVerificationSummary/)).not.toBeInTheDocument()

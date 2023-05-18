@@ -125,14 +125,14 @@ describe('Verify CustomHealthSource', () => {
       const deleteButton = container.querySelectorAll('span[data-icon="main-delete"]')[1]
 
       act(() => {
-        userEvent.click(deleteButton)
+        await userEvent.click(deleteButton)
       })
 
       expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
 
       const modalDeleteBtn = screen.queryAllByText('confirm')[0]
       act(() => {
-        userEvent.click(modalDeleteBtn!)
+        await userEvent.click(modalDeleteBtn!)
       })
 
       await waitFor(() => {

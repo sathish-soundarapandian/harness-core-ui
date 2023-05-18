@@ -78,7 +78,7 @@ describe('Test AddKeyDialog', () => {
   const openDialog = async (): Promise<void> => {
     const addKeyBtn = screen.getByRole('button', { name: 'cf.environments.apiKeys.addKey' })
     expect(addKeyBtn).toBeInTheDocument()
-    userEvent.click(addKeyBtn)
+    await userEvent.click(addKeyBtn)
     await waitFor(() => expect(screen.getByText('cf.environments.apiKeys.addKeyTitle')).toBeInTheDocument())
   }
 
@@ -87,10 +87,10 @@ describe('Test AddKeyDialog', () => {
 
     await openDialog()
 
-    userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'dummy api key name', {
+    await userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'dummy api key name', {
       allAtOnce: true
     })
-    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+    await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
       expect(screen.getByText('cf.environments.apiKeys.duplicateKey')).toBeInTheDocument()
@@ -102,7 +102,7 @@ describe('Test AddKeyDialog', () => {
 
     await openDialog()
 
-    userEvent.click(screen.getByText('createSecretYAML.create'))
+    await userEvent.click(screen.getByText('createSecretYAML.create'))
 
     await waitFor(() => {
       expect(screen.getByText('cf.environments.apiKeys.emptyName')).toBeInTheDocument()
@@ -117,10 +117,10 @@ describe('Test AddKeyDialog', () => {
 
     await openDialog()
 
-    userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'new api key name', {
+    await userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'new api key name', {
       allAtOnce: true
     })
-    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+    await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
       expect(mutateMock).toBeCalledWith({
@@ -141,10 +141,10 @@ describe('Test AddKeyDialog', () => {
 
     await openDialog()
 
-    userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'dummy api key name', {
+    await userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'dummy api key name', {
       allAtOnce: true
     })
-    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+    await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
       expect(screen.getByText(message)).toBeInTheDocument()

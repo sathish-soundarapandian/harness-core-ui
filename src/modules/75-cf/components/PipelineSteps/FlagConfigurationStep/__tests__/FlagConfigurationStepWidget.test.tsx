@@ -172,7 +172,7 @@ describe('FlagConfigurationStepWidget', () => {
       expect(flagInput).toHaveValue('Test Paging Flag')
 
       // Click the flag dropdown to display options
-      userEvent.click(flagInput)
+      await userEvent.click(flagInput)
       const dropdownOptions = document.getElementsByTagName('li')
 
       // saved flag should be prepended to list
@@ -209,7 +209,7 @@ describe('FlagConfigurationStepWidget', () => {
       expect(flagInput).toHaveValue('X Flag 11') // saved flag
 
       // Click the flag dropdown to display options
-      userEvent.click(flagInput)
+      await userEvent.click(flagInput)
       const dropdownOptions = document.getElementsByTagName('li')
 
       // saved flag should be not have been prepended to list

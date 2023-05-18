@@ -102,7 +102,7 @@ describe('ImportResource - Pipeline', () => {
     expect(connectorSelector).not.toHaveAttribute('disabled')
     const moveButton = getByText('common.moveToGit')
     act(() => {
-      userEvent.click(moveButton)
+      await userEvent.click(moveButton)
     })
     await waitFor(() => expect(getByText('validation.sshConnectorRequired')).toBeInTheDocument())
 
@@ -133,7 +133,7 @@ describe('ImportResource - Pipeline', () => {
 
     const moveButton = getByText('common.moveToGit')
     act(() => {
-      userEvent.click(moveButton)
+      await userEvent.click(moveButton)
     })
     await waitFor(() => expect(getByText('pipeline.moveSuccessMessage')).toBeDefined())
     await waitFor(() => expect(onSuccess).toHaveBeenCalled())
@@ -152,7 +152,7 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const cancelButton = getByText('cancel')
-    userEvent.click(cancelButton)
+    await userEvent.click(cancelButton)
     expect(onCancelClick).toHaveBeenCalled()
     expect(onCancelClick).toHaveBeenCalledTimes(1)
   })
@@ -165,7 +165,7 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const cancelButton = getByText('cancel')
-    userEvent.click(cancelButton)
+    await userEvent.click(cancelButton)
     expect(onCancelClick).not.toHaveBeenCalled()
     expect(onCancelClick).toHaveBeenCalledTimes(0)
   })
@@ -187,7 +187,7 @@ describe('ImportResource - Pipeline', () => {
 
     const moveButton = getByText('common.moveToGit')
     act(() => {
-      userEvent.click(moveButton)
+      await userEvent.click(moveButton)
     })
 
     await waitFor(() => expect(onSuccess).not.toHaveBeenCalled())
@@ -218,7 +218,7 @@ describe('ImportResource - Pipeline', () => {
 
     const moveButton = getByText('common.moveToGit')
     act(() => {
-      userEvent.click(moveButton)
+      await userEvent.click(moveButton)
     })
     await waitFor(() => expect(getByText('Invalid Request: Error while moving inputSet')).toBeDefined())
     await waitFor(() => expect(onFailure).toHaveBeenCalled())
@@ -247,7 +247,7 @@ describe('ImportResource - Pipeline', () => {
 
     const moveButton = getByText('common.moveToGit')
     act(() => {
-      userEvent.click(moveButton)
+      await userEvent.click(moveButton)
     })
     await waitFor(() => expect(getByText('somethingWentWrong')).toBeDefined())
     await waitFor(() => expect(onFailure).toHaveBeenCalled())
@@ -298,7 +298,7 @@ describe('ImportResource - Pipeline', () => {
 
     const moveButton = getByText('common.moveToGit')
     act(() => {
-      userEvent.click(moveButton)
+      await userEvent.click(moveButton)
     })
     await waitFor(() =>
       expect(getByText('Error while moving pipeline to remote because file already exist')).toBeDefined()

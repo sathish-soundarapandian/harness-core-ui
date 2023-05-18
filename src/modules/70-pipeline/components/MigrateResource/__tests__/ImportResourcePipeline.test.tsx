@@ -93,7 +93,7 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const cancelButton = getByText('cancel')
-    userEvent.click(cancelButton)
+    await userEvent.click(cancelButton)
     expect(onCancelClick).toHaveBeenCalled()
     expect(onCancelClick).toHaveBeenCalledTimes(1)
   })
@@ -106,7 +106,7 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const cancelButton = getByText('cancel')
-    userEvent.click(cancelButton)
+    await userEvent.click(cancelButton)
     expect(onCancelClick).not.toHaveBeenCalled()
     expect(onCancelClick).toHaveBeenCalledTimes(0)
   })
@@ -126,7 +126,7 @@ describe('ImportResource - Pipeline', () => {
     const importButton = getByText('common.import')
     expect(container).toMatchSnapshot()
     act(() => {
-      userEvent.click(importButton)
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('pipeline.importSuccessMessage')).toBeDefined())
     await waitFor(() => expect(onSuccess).toHaveBeenCalled())
@@ -147,7 +147,7 @@ describe('ImportResource - Pipeline', () => {
     const importButton = getByText('common.import')
     expect(container).toMatchSnapshot()
     act(() => {
-      userEvent.click(importButton)
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('pipeline.importSuccessMessage')).toBeDefined())
     await waitFor(() => expect(onSuccess).not.toHaveBeenCalled())
@@ -178,7 +178,7 @@ describe('ImportResource - Pipeline', () => {
     const importButton = getByText('common.import')
     expect(container).toMatchSnapshot()
     act(() => {
-      userEvent.click(importButton)
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('Invalid Request: Error while importing pipeline')).toBeDefined())
     await waitFor(() => expect(onFailure).toHaveBeenCalled())
@@ -206,7 +206,7 @@ describe('ImportResource - Pipeline', () => {
     const importButton = getByText('common.import')
     expect(container).toMatchSnapshot()
     act(() => {
-      userEvent.click(importButton)
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('somethingWentWrong')).toBeDefined())
     await waitFor(() => expect(onFailure).not.toHaveBeenCalled())
@@ -253,7 +253,7 @@ describe('ImportResource - Pipeline', () => {
 
     const importButton = getByText('common.import')
     act(() => {
-      userEvent.click(importButton)
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('Error while importing pipeline because file does not exist')).toBeDefined())
     expect(getByText('common.errorHandler.issueCouldBe')).toBeDefined()
@@ -287,7 +287,7 @@ describe('ImportResource - Pipeline', () => {
 
     const importButton = getByText('common.import')
     act(() => {
-      userEvent.click(importButton)
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('Invalid Request: Error while importing pipeline')).toBeDefined())
     await waitFor(() => expect(onFailure).toHaveBeenCalled())
@@ -314,7 +314,7 @@ describe('ImportResource - Pipeline', () => {
 
     const importButton = getByText('common.import')
     act(() => {
-      userEvent.click(importButton)
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('somethingWentWrong')).toBeDefined())
     await waitFor(() => expect(onFailure).not.toHaveBeenCalled())
@@ -361,7 +361,7 @@ describe('ImportResource - Pipeline', () => {
 
     const importButton = getByText('common.import')
     act(() => {
-      userEvent.click(importButton)
+      await userEvent.click(importButton)
     })
     await waitFor(() => expect(getByText('Error while importing pipeline because file does not exist')).toBeDefined())
     expect(getByText('common.errorHandler.issueCouldBe')).toBeDefined()

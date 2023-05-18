@@ -172,9 +172,9 @@ const clickOnReconcileButton = async (): Promise<void> => {
   const reconcileMenuOption = await screen.findByRole('button', {
     name: /overlay input set menu actions/i
   })
-  userEvent.click(reconcileMenuOption)
+  await userEvent.click(reconcileMenuOption)
   const reconcileBtn = await screen.findByText('pipeline.outOfSyncErrorStrip.reconcile')
-  userEvent.click(reconcileBtn)
+  await userEvent.click(reconcileBtn)
   expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 }
 
@@ -254,7 +254,7 @@ describe('Remote Git Sync Input Set Error Exp', () => {
     const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
     expect(reconcileDialog).toMatchSnapshot('Reconcile Dialog - Remote Git Sync')
 
-    userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(removeInvalidFieldBtn)
     let gitSaveBtn: HTMLElement
     await waitFor(async () => {
       const portalDiv = document.getElementsByClassName('bp3-portal')[2] as HTMLElement
@@ -263,7 +263,7 @@ describe('Remote Git Sync Input Set Error Exp', () => {
       gitSaveBtn = await findByRole(portalDiv, 'button', { name: 'save' })
       expect(gitSaveBtn).toBeInTheDocument()
     })
-    userEvent.click(gitSaveBtn!)
+    await userEvent.click(gitSaveBtn!)
     await waitFor(() => expect(pipelineng.useUpdateOverlayInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
@@ -288,7 +288,7 @@ describe('Remote Git Sync Input Set Error Exp', () => {
     const deleteInputSetBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.deleteOverlayIS' })
     expect(deleteInputSetModal).toMatchSnapshot('Delete Input Set Modal - Remote Git Sync')
 
-    userEvent.click(deleteInputSetBtn)
+    await userEvent.click(deleteInputSetBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })

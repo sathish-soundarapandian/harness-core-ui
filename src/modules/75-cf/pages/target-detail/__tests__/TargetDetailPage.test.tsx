@@ -152,7 +152,7 @@ describe('TargetDetailPage', () => {
       expect(refetchTargetMock).not.toHaveBeenCalled()
       expect(refetchEnvMock).not.toHaveBeenCalled()
 
-      userEvent.click(screen.getByRole('button', { name: 'Retry' }))
+      await userEvent.click(screen.getByRole('button', { name: 'Retry' }))
 
       await waitFor(() => {
         expect(refetchTargetMock).toHaveBeenCalled()

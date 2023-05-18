@@ -45,7 +45,7 @@ describe('StringWithTooltip', () => {
     expect(icon).toBeInTheDocument()
     expect(screen.queryByText(tooltips[tooltipId])).not.toBeInTheDocument()
 
-    userEvent.click(icon)
+    await userEvent.click(icon)
 
     await waitFor(() => {
       expect(screen.getByText(tooltips[tooltipId])).toBeInTheDocument()

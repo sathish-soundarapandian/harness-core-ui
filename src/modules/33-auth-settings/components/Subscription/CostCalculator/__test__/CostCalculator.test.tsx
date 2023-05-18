@@ -291,7 +291,7 @@ describe('CostCalculator', () => {
         />
       </TestWrapper>
     )
-    userEvent.click(getByText('authSettings.costCalculator.next'))
+    await userEvent.click(getByText('authSettings.costCalculator.next'))
     await waitFor(() => {
       expect(setViewMock).toBeCalledWith(SubscribeViews.BILLINGINFO)
     })

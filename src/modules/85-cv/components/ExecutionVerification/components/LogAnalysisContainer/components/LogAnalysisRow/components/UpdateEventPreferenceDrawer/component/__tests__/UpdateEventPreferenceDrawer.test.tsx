@@ -38,7 +38,7 @@ describe('UpdateEventPreferenceDrawer', () => {
     expect(drawerContent).toBeInTheDocument()
 
     act(() => {
-      userEvent.click(closeBtn)
+      await userEvent.click(closeBtn)
     })
 
     expect(onHideMock).toHaveBeenCalled()

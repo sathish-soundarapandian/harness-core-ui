@@ -241,7 +241,7 @@ describe('<LogsContent /> tests', () => {
         </TestWrapper>
       )
       const button = getByText('Bottom')
-      userEvent.click(button)
+      await userEvent.click(button)
       expect(container).toMatchSnapshot()
     })
 

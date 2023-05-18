@@ -45,7 +45,7 @@ describe('AddTargetingButton', () => {
   test('it should default to identifier if name not present', () => {
     renderComponent()
 
-    userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
+    await userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))
 
     expect(screen.getByText('true_id'))
     expect(screen.getByText('false_id'))

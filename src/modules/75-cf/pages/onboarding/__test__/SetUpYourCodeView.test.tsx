@@ -61,12 +61,12 @@ describe('SetUpYourCodeView', () => {
     // xamarin android readme
     expect(screen.getByText('cf.onboarding.readme.xamarinAndroid')).toBeVisible()
 
-    userEvent.click(screen.getByRole('radio', { name: 'cf.onboarding.ios' }))
+    await userEvent.click(screen.getByRole('radio', { name: 'cf.onboarding.ios' }))
 
     // xamarin ios readme
     expect(screen.getByText('cf.onboarding.readme.xamarinIOS')).toBeVisible()
 
-    userEvent.click(screen.getByRole('radio', { name: 'cf.onboarding.android' }))
+    await userEvent.click(screen.getByRole('radio', { name: 'cf.onboarding.android' }))
 
     // back to xamarin android readme
     expect(screen.getByText('cf.onboarding.readme.xamarinAndroid')).toBeVisible()

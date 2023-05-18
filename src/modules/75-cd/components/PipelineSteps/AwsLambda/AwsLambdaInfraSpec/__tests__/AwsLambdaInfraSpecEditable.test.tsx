@@ -73,14 +73,14 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> =
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByNameAttribute('regExValues', cogModal) as HTMLInputElement
   act(() => {
     fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   })
   await waitFor(() => expect(regexTextArea.value).toBe('<+input>.includes(/test/)'))
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
 }
 
 describe('AwsLambdaInfraSpecEditable tests', () => {
@@ -112,7 +112,7 @@ describe('AwsLambdaInfraSpecEditable tests', () => {
     await waitFor(() => expect(getByText('Aws Connector 2')).toBeInTheDocument())
     const connnectorRefInput = getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
-    userEvent.click(connnectorRefInput!)
+    await userEvent.click(connnectorRefInput!)
     await testConnectorRefChange()
 
     expect(regionInput.value).toBe('GovCloud (US-East)')
@@ -138,7 +138,7 @@ describe('AwsLambdaInfraSpecEditable tests', () => {
     const connectorInput = queryByNameAttribute('connectorRef', container) as HTMLInputElement
     expect(connectorInput.value).toBe(RUNTIME_INPUT_VALUE)
     const cogConnectorRef = document.getElementById('configureOptions_connectorRef')
-    userEvent.click(cogConnectorRef!)
+    await userEvent.click(cogConnectorRef!)
     await waitFor(() => expect(modals.length).toBe(1))
     const regionCOGConnectorRef = modals[0] as HTMLElement
     await doConfigureOptionsTesting(regionCOGConnectorRef)
@@ -146,7 +146,7 @@ describe('AwsLambdaInfraSpecEditable tests', () => {
     const regionInput = queryByNameAttribute('region', container) as HTMLInputElement
     expect(regionInput.value).toBe(RUNTIME_INPUT_VALUE)
     const cogRegion = document.getElementById('configureOptions_region')
-    userEvent.click(cogRegion!)
+    await userEvent.click(cogRegion!)
     await waitFor(() => expect(modals.length).toBe(1))
     const regionCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(regionCOGModal)

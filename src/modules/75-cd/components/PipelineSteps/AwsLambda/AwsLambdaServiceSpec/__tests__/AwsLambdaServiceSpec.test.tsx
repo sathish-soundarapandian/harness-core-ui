@@ -172,7 +172,7 @@ describe('AwsLambdaServiceSpec tests', () => {
     expect(awsLambdaFunctionAliasDefinitionPathInput).toBeInTheDocument()
 
     const submitBtn = getByText('Submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
   })
 
   test('when template is empty object, no fields should be rendered', async () => {

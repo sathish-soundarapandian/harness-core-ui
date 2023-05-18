@@ -236,7 +236,7 @@ describe('ArtifactImagePathTagView tests', () => {
     expect(portalDivs.length).toBe(0)
     expect(container).toMatchSnapshot()
     const packageDropdwnBtn = container.querySelectorAll('[data-icon="chevron-down"]')[0]
-    userEvent.click(packageDropdwnBtn!)
+    await userEvent.click(packageDropdwnBtn!)
 
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')

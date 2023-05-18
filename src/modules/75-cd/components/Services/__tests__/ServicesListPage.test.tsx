@@ -98,12 +98,12 @@ describe('ServicesListPage', () => {
         <ServicesListPage />
       </TestWrapper>
     )
-    userEvent.click(container.querySelector('[data-testid="add-service"]') as HTMLElement)
+    await userEvent.click(container.querySelector('[data-testid="add-service"]') as HTMLElement)
     const form = findDialogContainer()
     expect(form).toBeTruthy()
     expect(form).toMatchSnapshot()
-    userEvent.click(container.querySelector('[icon="grid-view"]') as HTMLElement)
-    userEvent.click(container.querySelector('[icon="list"]') as HTMLElement)
+    await userEvent.click(container.querySelector('[icon="grid-view"]') as HTMLElement)
+    await userEvent.click(container.querySelector('[icon="list"]') as HTMLElement)
     expect(container).toMatchSnapshot()
   })
 

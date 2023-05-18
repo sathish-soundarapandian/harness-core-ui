@@ -173,9 +173,9 @@ const clickOnReconcileButton = async (): Promise<void> => {
   const reconcileMenuOption = await screen.findByRole('button', {
     name: /input set menu actions/i
   })
-  userEvent.click(reconcileMenuOption)
+  await userEvent.click(reconcileMenuOption)
   const reconcileBtn = await screen.findByText('pipeline.outOfSyncErrorStrip.reconcile')
-  userEvent.click(reconcileBtn)
+  await userEvent.click(reconcileBtn)
   expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
 }
 
@@ -305,7 +305,7 @@ describe('Inline Input Set Error Exp', () => {
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
 
-    userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(removeInvalidFieldBtn)
     await waitFor(() => expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
@@ -328,7 +328,7 @@ describe('Inline Input Set Error Exp', () => {
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
     const deleteInputSetBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.deleteInputSet' })
 
-    userEvent.click(deleteInputSetBtn)
+    await userEvent.click(deleteInputSetBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
@@ -341,7 +341,7 @@ describe('Inline Input Set Error Exp', () => {
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
 
     const goBackToInputSetListBtn = screen.getByRole('button', { name: 'pipeline.inputSets.goBackToInputSetList' })
-    userEvent.click(goBackToInputSetListBtn)
+    await userEvent.click(goBackToInputSetListBtn)
 
     await waitFor(() => getByTestId('location'))
     expect(getByTestId('location')).toHaveTextContent(
@@ -366,7 +366,7 @@ describe('Inline Input Set Error Exp', () => {
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
     const deleteInputSetBtn = screen.getByRole('button', { name: 'pipeline.inputSets.deleteInputSet' })
-    userEvent.click(deleteInputSetBtn)
+    await userEvent.click(deleteInputSetBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
   })
 
@@ -393,7 +393,7 @@ describe('Inline Input Set Error Exp', () => {
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
     const deleteInputSetBtn = screen.getByRole('button', { name: 'pipeline.inputSets.deleteInputSet' })
-    userEvent.click(deleteInputSetBtn)
+    await userEvent.click(deleteInputSetBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockErrorHandler).toHaveBeenCalled())
   })
@@ -415,7 +415,7 @@ describe('Inline Input Set Error Exp', () => {
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = screen.getByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(removeInvalidFieldBtn)
     await waitFor(() => expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockErrorHandler).toHaveBeenCalled())
   })
@@ -433,7 +433,7 @@ describe('Inline Input Set Error Exp', () => {
     const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
 
     expect(removeInvalidFieldBtn).toBeDisabled()
-    userEvent.click(retryBtn)
+    await userEvent.click(retryBtn)
     expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
     await waitFor(() => expect(reconcileDialog).toBeTruthy())
   })
@@ -450,7 +450,7 @@ describe('Inline Input Set Error Exp', () => {
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = screen.getByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(removeInvalidFieldBtn)
     expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled()
     const loadingMessage = await findByTextBody(reconcileDialog, 'Loading, please wait...')
     await waitFor(() => expect(loadingMessage).toBeInTheDocument())
@@ -494,7 +494,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(removeInvalidFieldBtn)
     let gitSaveBtn: HTMLElement
     await waitFor(async () => {
       const portalDiv = findDialogContainer() as HTMLElement
@@ -504,7 +504,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
       gitSaveBtn = gitSave.parentElement as HTMLElement
       expect(gitSaveBtn).toBeInTheDocument()
     })
-    userEvent.click(gitSaveBtn!)
+    await userEvent.click(gitSaveBtn!)
     await waitFor(() => expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
@@ -526,7 +526,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
     const deleteInputSetBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.deleteInputSet' })
-    userEvent.click(deleteInputSetBtn)
+    await userEvent.click(deleteInputSetBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
@@ -539,7 +539,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
 
     const goBackToInputSetListBtn = screen.getByRole('button', { name: 'pipeline.inputSets.goBackToInputSetList' })
-    userEvent.click(goBackToInputSetListBtn)
+    await userEvent.click(goBackToInputSetListBtn)
 
     await waitFor(() => getByTestId('location'))
     expect(getByTestId('location')).toHaveTextContent(
@@ -586,7 +586,7 @@ describe('Remote Git Sync Input Set Error Exp', () => {
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
-    userEvent.click(removeInvalidFieldBtn)
+    await userEvent.click(removeInvalidFieldBtn)
     let gitSaveBtn: HTMLElement
     await waitFor(async () => {
       const portalDiv = findDialogContainer() as HTMLElement
@@ -595,7 +595,7 @@ describe('Remote Git Sync Input Set Error Exp', () => {
       gitSaveBtn = await findByRole(portalDiv, 'button', { name: 'save' })
       expect(gitSaveBtn).toBeInTheDocument()
     })
-    userEvent.click(gitSaveBtn!)
+    await userEvent.click(gitSaveBtn!)
     await waitFor(() => expect(pipelineng.useUpdateInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
@@ -617,7 +617,7 @@ describe('Remote Git Sync Input Set Error Exp', () => {
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
     const deleteInputSetBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.deleteInputSet' })
-    userEvent.click(deleteInputSetBtn)
+    await userEvent.click(deleteInputSetBtn)
     await waitFor(() => expect(pipelineng.useDeleteInputSetForPipeline).toHaveBeenCalled())
     await waitFor(() => expect(mockSuccessHandler).toHaveBeenCalled())
   })
@@ -629,7 +629,7 @@ describe('Remote Git Sync Input Set Error Exp', () => {
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
 
     const goBackToInputSetListBtn = screen.getByRole('button', { name: 'pipeline.inputSets.goBackToInputSetList' })
-    userEvent.click(goBackToInputSetListBtn)
+    await userEvent.click(goBackToInputSetListBtn)
 
     await waitFor(() => getByTestId('location'))
     expect(getByTestId('location')).toHaveTextContent(

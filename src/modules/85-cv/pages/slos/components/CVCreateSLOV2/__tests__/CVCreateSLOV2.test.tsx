@@ -161,7 +161,7 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
     act(() => {
-      userEvent.click(getByText('next'))
+      await userEvent.click(getByText('next'))
     })
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.nameValidation').length).toEqual(2))
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.userJourneyRequired').length).toEqual(2))
@@ -175,16 +175,16 @@ describe('CVCreateSloV2', () => {
 
     // Save should validate all Steps
     act(() => {
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
     })
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Configure_Service_Level_Indicatiors"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Configure_Service_Level_Indicatiors"]')!)
     })
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO"]')!)
     })
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
   })
 
@@ -195,14 +195,14 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
     act(() => {
-      userEvent.click(getByText('save'))
+      await userEvent.click(getByText('save'))
     })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
     act(() => {
-      userEvent.click(getByText('cancel'))
+      await userEvent.click(getByText('cancel'))
     })
     expect(container).toMatchSnapshot()
   })
@@ -213,7 +213,7 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.nameValidation').length).toEqual(2))
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.userJourneyRequired').length).toEqual(2))
@@ -227,7 +227,7 @@ describe('CVCreateSloV2', () => {
 
     // Save should validate all Steps
     act(() => {
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
     })
     await waitFor(() => {
       expect(
@@ -242,19 +242,19 @@ describe('CVCreateSloV2', () => {
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
     act(() => {
-      userEvent.type(sloName!, 'composite slo 1')
+      await userEvent.type(sloName!, 'composite slo 1')
     })
 
     // Cancel should open modal
     act(() => {
-      userEvent.click(screen.getByText('cancel'))
+      await userEvent.click(screen.getByText('cancel'))
     })
     const modal = findDialogContainer()
     expect(modal).toBeTruthy()
     fireEvent.click(await findByText(modal!, 'cancel'))
 
     act(() => {
-      userEvent.click(screen.getByText('cancel'))
+      await userEvent.click(screen.getByText('cancel'))
     })
     fireEvent.click(await findByText(modal!, 'common.ok'))
   })
@@ -276,7 +276,7 @@ describe('CVCreateSloV2', () => {
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toHaveValue(SLODetailsData.resource.serviceLevelObjectiveV2.name))
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     expect(container.querySelector('input[value="Window"]')).toBeChecked()
     await waitFor(() => expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.name)).toBeInTheDocument())
@@ -294,7 +294,7 @@ describe('CVCreateSloV2', () => {
       )
     )
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     await waitFor(() =>
       expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.type)).toBeInTheDocument()
@@ -305,7 +305,7 @@ describe('CVCreateSloV2', () => {
       ).toBeInTheDocument()
     )
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     SLODetailsData.resource.serviceLevelObjectiveV2.spec.serviceLevelObjectivesDetails.forEach(async sloObjective => {
       await waitFor(() => expect(getByText(sloObjective.serviceLevelObjectiveRef)).toBeInTheDocument())
@@ -316,7 +316,7 @@ describe('CVCreateSloV2', () => {
       )
     )
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     await waitFor(() =>
       expect(
@@ -337,23 +337,23 @@ describe('CVCreateSloV2', () => {
     )
 
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     expect(screen.getByText('new slov2')).toBeInTheDocument()
     expect(screen.getByText('Second_Journey')).toBeInTheDocument()
 
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     expect(screen.getByText('Rolling')).toBeInTheDocument()
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     expect(screen.getByText('hHJYxnUFTCypZdmYr0Q0tQ')).toBeInTheDocument()
     expect(screen.getByText('7b-_GIZxRu6VjFqAqqdVDQ')).toBeInTheDocument()
 
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     expect(screen.getByText('87%')).toBeInTheDocument()
   })
@@ -370,20 +370,20 @@ describe('CVCreateSloV2', () => {
     )
 
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
 
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
 
     act(() => {
-      userEvent.click(screen.getByText('back'))
+      await userEvent.click(screen.getByText('back'))
     })
 
     const periodTypeDropDown = container.querySelectorAll('[icon="chevron-down"]')[0]
     act(() => {
-      userEvent.click(periodTypeDropDown!)
+      await userEvent.click(periodTypeDropDown!)
     })
 
     await waitFor(() => {
@@ -398,7 +398,7 @@ describe('CVCreateSloV2', () => {
     )
 
     act(() => {
-      userEvent.click(document.querySelectorAll('ul.bp3-menu li')[1]!)
+      await userEvent.click(document.querySelectorAll('ul.bp3-menu li')[1]!)
     })
 
     expect(container.querySelector('[name="periodType"]')).toHaveValue(
@@ -409,7 +409,7 @@ describe('CVCreateSloV2', () => {
     const cancelButton = await findByText(modal!, 'cancel')
 
     act(() => {
-      userEvent.click(cancelButton)
+      await userEvent.click(cancelButton)
     })
 
     expect(container.querySelector('[name="periodType"]')).toHaveValue(
@@ -418,7 +418,7 @@ describe('CVCreateSloV2', () => {
 
     // click again
     act(() => {
-      userEvent.click(periodTypeDropDown!)
+      await userEvent.click(periodTypeDropDown!)
     })
 
     await waitFor(() => {
@@ -433,13 +433,13 @@ describe('CVCreateSloV2', () => {
     )
 
     await act(() => {
-      userEvent.click(document.querySelectorAll('ul.bp3-menu li')[1]!)
+      await userEvent.click(document.querySelectorAll('ul.bp3-menu li')[1]!)
     })
 
     const okButton = await findByText(findDialogContainer()!, 'common.ok')
 
     await act(() => {
-      userEvent.click(okButton)
+      await userEvent.click(okButton)
     })
 
     expect(container.querySelector('[name="periodType"]')).toHaveValue(
@@ -465,24 +465,24 @@ describe('CVCreateSloV2', () => {
     await waitFor(() => expect(sloName).toBeInTheDocument())
 
     act(() => {
-      userEvent.clear(sloName!)
-      userEvent.type(sloName!, 'updated composite slo')
-      userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
+      await userEvent.clear(sloName!)
+      await userEvent.type(sloName!, 'updated composite slo')
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
     })
 
     fireEvent.change(container.querySelector('[name="SLOTargetPercentage"]')!, { target: { value: 99 } })
 
-    userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
+    await userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
     expect(container.querySelector('input[value="WeightedAverage"]')).toBeChecked()
 
     act(() => {
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
     })
 
     await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
     act(() => {
-      userEvent.click(document.querySelector('.bp3-dialog button')!)
+      await userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
 
     expect(updateSLO).toHaveBeenCalledWith(updateSLOMock)
@@ -502,21 +502,21 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
+    await userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
     expect(container.querySelector('input[value="WeightedAverage"]')).toBeChecked()
     act(() => {
-      userEvent.click(container.querySelector('input[value="LeastPerformance"]')!)
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(container.querySelector('input[value="LeastPerformance"]')!)
+      await userEvent.click(screen.getByText('next'))
     })
 
     act(() => {
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
     })
 
     await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
     act(() => {
-      userEvent.click(document.querySelector('.bp3-dialog button')!)
+      await userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
 
     const {
@@ -556,23 +556,23 @@ describe('CVCreateSloV2', () => {
     act(() => {
       const sloName = container.querySelector('input[name ="name"]')
       waitFor(() => expect(sloName).toBeInTheDocument())
-      userEvent.clear(sloName!)
-      userEvent.type(sloName!, 'updated composite slo')
+      await userEvent.clear(sloName!)
+      await userEvent.type(sloName!, 'updated composite slo')
     })
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
     })
 
     fireEvent.change(container.querySelector('[name="SLOTargetPercentage"]')!, { target: { value: 99 } })
 
     act(() => {
-      userEvent.click(screen.getByText('cancel'))
+      await userEvent.click(screen.getByText('cancel'))
     })
 
     waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
     act(() => {
-      userEvent.click(document.querySelector('.bp3-dialog button')!)
+      await userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
   })
 
@@ -593,11 +593,11 @@ describe('CVCreateSloV2', () => {
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
     act(() => {
-      userEvent.clear(sloName!)
-      userEvent.type(sloName!, 'updated composite slo')
+      await userEvent.clear(sloName!)
+      await userEvent.type(sloName!, 'updated composite slo')
     })
     await act(() => {
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
     })
 
     await waitFor(() => expect(screen.getByText('cv.CompositeSLO.compositeSloUpdated')).toBeInTheDocument())
@@ -624,16 +624,16 @@ describe('CVCreateSloV2', () => {
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
     act(() => {
-      userEvent.clear(sloName!)
-      userEvent.type(sloName!, 'updated composite slo')
+      await userEvent.clear(sloName!)
+      await userEvent.type(sloName!, 'updated composite slo')
     })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
 
     await act(() => {
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
     })
   })
 
@@ -658,16 +658,16 @@ describe('CVCreateSloV2', () => {
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
     act(() => {
-      userEvent.clear(sloName!)
-      userEvent.type(sloName!, 'updated composite slo')
+      await userEvent.clear(sloName!)
+      await userEvent.type(sloName!, 'updated composite slo')
     })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
 
     await act(() => {
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
     })
   })
 
@@ -692,16 +692,16 @@ describe('CVCreateSloV2', () => {
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
     act(() => {
-      userEvent.clear(sloName!)
-      userEvent.type(sloName!, 'updated composite slo')
+      await userEvent.clear(sloName!)
+      await userEvent.type(sloName!, 'updated composite slo')
     })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
 
     await act(() => {
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
     })
   })
 
@@ -717,11 +717,11 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     await waitFor(() => expect(screen.getByText('new slov2')).toBeInTheDocument())
     act(() => {
-      userEvent.click(screen.getByText('save'))
+      await userEvent.click(screen.getByText('save'))
     })
     await waitFor(() => expect(screen.getByText('cv.CompositeSLO.compositeSloCreated')).toBeInTheDocument())
   })
@@ -738,20 +738,20 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
     })
     const firstWeight = container.querySelector('[name="weightagePercentage"]')
     act(() => {
-      userEvent.clear(firstWeight!)
-      userEvent.type(firstWeight!, '55')
+      await userEvent.clear(firstWeight!)
+      await userEvent.type(firstWeight!, '55')
     })
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     expect(screen.getByText('45%')).toBeInTheDocument()
     act(() => {
-      userEvent.clear(firstWeight!)
-      userEvent.type(firstWeight!, '101')
+      await userEvent.clear(firstWeight!)
+      await userEvent.type(firstWeight!, '101')
     })
   })
 
@@ -826,27 +826,27 @@ describe('Simple SLO V2', () => {
     )
 
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
 
     act(() => {
-      userEvent.click(container.querySelector('[value="Ratio"]')!)
+      await userEvent.click(container.querySelector('[value="Ratio"]')!)
     })
 
     act(() => {
-      userEvent.click(container.querySelector('[name="goodRequestMetric"]')!)
+      await userEvent.click(container.querySelector('[name="goodRequestMetric"]')!)
     })
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
     act(() => {
-      userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
+      await userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
     })
 
     act(() => {
-      userEvent.click(container.querySelector('[name="validRequestMetric"]')!)
+      await userEvent.click(container.querySelector('[name="validRequestMetric"]')!)
     })
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(4))
     act(() => {
-      userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
+      await userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
     })
   })
   test('Edit simple slo v2', async () => {
@@ -865,7 +865,7 @@ describe('Simple SLO V2', () => {
     expect(container.querySelector('input[ name="name"')).toHaveValue('SLO1')
 
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     expect(getByText('service_appd_env_appd')).toBeInTheDocument()
     expect(getByText('cv.slos.slis.HealthSource')).toBeInTheDocument()
@@ -873,39 +873,39 @@ describe('Simple SLO V2', () => {
     expect(container.querySelector('input[value="Good"]')).toBeChecked()
 
     act(() => {
-      userEvent.click(getByText('cv.slos.slis.type.latency'.toUpperCase()))
+      await userEvent.click(getByText('cv.slos.slis.type.latency'.toUpperCase()))
     })
 
     act(() => {
-      userEvent.click(container.querySelector('[name="healthSourceRef"]')!)
+      await userEvent.click(container.querySelector('[name="healthSourceRef"]')!)
     })
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
     act(() => {
-      userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
+      await userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
     })
 
     act(() => {
-      userEvent.click(getByText('cv.healthSource.newHealthSource'))
+      await userEvent.click(getByText('cv.healthSource.newHealthSource'))
     })
     const healthSourceDrawer: HTMLElement | null = document.querySelector('.health-source-right-drawer')
     expect(healthSourceDrawer).toBeTruthy()
     fireEvent.click(document.querySelector('[data-icon="cross"]')!)
 
     act(() => {
-      userEvent.click(getByText('cv.newMetric'))
+      await userEvent.click(getByText('cv.newMetric'))
     })
     const metricDrawer: HTMLElement | null = document.querySelector('.health-source-right-drawer')
     expect(metricDrawer).toBeTruthy()
     fireEvent.click(document.querySelector('[data-icon="cross"]')!)
 
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO"]')!)
     })
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
     act(() => {
-      userEvent.click(getByText('cancel'))
+      await userEvent.click(getByText('cancel'))
     })
   })
 
@@ -933,14 +933,14 @@ describe('Simple SLO V2', () => {
       </TestWrapper>
     )
     act(() => {
-      userEvent.click(getByText('save'))
+      await userEvent.click(getByText('save'))
     })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
     act(() => {
-      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
     act(() => {
-      userEvent.click(getByText('cancel'))
+      await userEvent.click(getByText('cancel'))
     })
   })
 
@@ -959,11 +959,11 @@ describe('Simple SLO V2', () => {
     )
 
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     expect(container.querySelector('[name="objectiveValue"]')).toHaveValue(99.99)
     act(() => {
-      userEvent.click(screen.getByText('next'))
+      await userEvent.click(screen.getByText('next'))
     })
     expect(container.querySelectorAll('[class*="intent-danger"]').length).toEqual(0)
   })

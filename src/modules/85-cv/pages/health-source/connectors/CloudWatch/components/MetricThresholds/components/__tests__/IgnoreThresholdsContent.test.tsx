@@ -51,7 +51,7 @@ describe('CloudWatch IgnoreThresholdTabContent', () => {
       ?.querySelector('[data-icon="chevron-down"]')
 
     expect(selectCaretMetricName).toBeInTheDocument()
-    userEvent.click(selectCaretMetricName!)
+    await userEvent.click(selectCaretMetricName!)
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(1))
     expect(document.querySelectorAll('[class*="bp3-menu"] li')[0]).toHaveTextContent('dataDogMetric')
   })
@@ -69,7 +69,7 @@ describe('CloudWatch IgnoreThresholdTabContent', () => {
       ?.querySelector('[data-icon="chevron-down"]')
 
     expect(selectCaretCriteriaType).toBeInTheDocument()
-    userEvent.click(selectCaretCriteriaType!)
+    await userEvent.click(selectCaretCriteriaType!)
 
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
 
@@ -81,7 +81,7 @@ describe('CloudWatch IgnoreThresholdTabContent', () => {
     )
 
     act(() => {
-      userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
+      await userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
     })
 
     expect(greaterThanInput).not.toBeInTheDocument()
@@ -96,13 +96,13 @@ describe('CloudWatch IgnoreThresholdTabContent', () => {
     const addButton = screen.getByTestId('AddThresholdButton')
 
     act(() => {
-      userEvent.click(addButton)
+      await userEvent.click(addButton)
     })
 
     expect(screen.getAllByTestId('ThresholdRow')).toHaveLength(2)
 
     act(() => {
-      userEvent.click(screen.getAllByText('trash')[0])
+      await userEvent.click(screen.getAllByText('trash')[0])
     })
 
     expect(screen.getAllByTestId('ThresholdRow')).toHaveLength(1)

@@ -32,7 +32,7 @@ const renderComponent = (): RenderResult => {
     </TestWrapper>
   )
 
-  userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
+  await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
 
   return result
 }
@@ -74,7 +74,7 @@ describe('useDeleteTargetGroupDialog', () => {
     expect(mutateMock).not.toHaveBeenCalled()
     expect(showToasterMock).not.toHaveBeenCalled()
 
-    userEvent.click(screen.getByRole('button', { name: 'delete' }))
+    await userEvent.click(screen.getByRole('button', { name: 'delete' }))
 
     await waitFor(() => {
       expect(mutateMock).toHaveBeenCalledWith(sampleTargetGroup.identifier)

@@ -104,7 +104,7 @@ describe('Filters reset on project change assertions', () => {
     refetchDashboardWidgets.mockClear()
 
     act(() => {
-      userEvent.click(screen.getByText('Healthy'))
+      await userEvent.click(screen.getByText('Healthy'))
     })
 
     expect(container.querySelector('div[data-test-id="Healthy_tooltip"]')?.parentElement).toHaveClass('Card--selected')

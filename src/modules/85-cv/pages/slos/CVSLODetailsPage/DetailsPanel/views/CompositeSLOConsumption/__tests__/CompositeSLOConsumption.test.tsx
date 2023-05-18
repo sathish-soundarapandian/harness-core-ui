@@ -61,7 +61,7 @@ describe('validate CompositeSLOConsumption', () => {
     const { getByText } = render(<Wrapper />)
     expect(getByText('API Failed')).toBeInTheDocument()
     act(() => {
-      userEvent.click(getByText('Retry'))
+      await userEvent.click(getByText('Retry'))
     })
     expect(refetch).toHaveBeenCalled()
   })

@@ -62,7 +62,7 @@ describe('FlagPrerequisites', () => {
       expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeVisible()
     })
 
-    userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
+    await userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
 
     const modal = screen.getByTestId('flag-prerequisite-modal')
     await waitFor(() => {
@@ -79,11 +79,11 @@ describe('FlagPrerequisites', () => {
       expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeVisible()
     })
 
-    userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
+    await userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
 
     await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeVisible())
 
-    userEvent.click(screen.getByTestId('prerequisites-button'))
+    await userEvent.click(screen.getByTestId('prerequisites-button'))
 
     await waitFor(() => expect(screen.getByTestId('prerequisites-form')).toBeVisible())
   })
@@ -94,14 +94,14 @@ describe('FlagPrerequisites', () => {
       expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeVisible()
     })
 
-    userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
+    await userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
     await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeVisible())
-    userEvent.click(screen.getByTestId('prerequisites-button'))
+    await userEvent.click(screen.getByTestId('prerequisites-button'))
 
     await waitFor(() => expect(screen.getByTestId('prerequisites-form')).toBeVisible())
 
     expect(screen.getByTestId('prerequisites-variations-dropdown-0')).toBeVisible()
-    userEvent.click(screen.getByTestId('prerequisites-dropdown-0'))
+    await userEvent.click(screen.getByTestId('prerequisites-dropdown-0'))
     mockFeature.prerequisites?.forEach(prerequisite => {
       expect(screen.getByText(prerequisite.feature)).toBeVisible()
     })
@@ -115,7 +115,7 @@ describe('FlagPrerequisites', () => {
 
     // click first row menu button
     const btn = getByTestId(rows[0], 'prerequisiteMenuBtn')
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     // wait for popover menu & elements to be visible (not just in document)
     await waitFor(() => {
@@ -124,7 +124,7 @@ describe('FlagPrerequisites', () => {
     })
 
     // click 'Edit'
-    userEvent.click(screen.getByRole('link', { name: /edit/ }))
+    await userEvent.click(screen.getByRole('link', { name: /edit/ }))
 
     // check modal, form & add prereq button is visible, and title is correct
     const modal = screen.getByTestId('flag-prerequisite-modal')
@@ -143,8 +143,8 @@ describe('FlagPrerequisites', () => {
     expect(rows[0].querySelectorAll('p')[0]).toHaveTextContent('Test_Paging_Flag')
 
     // click first row menu button, then click Edit
-    userEvent.click(btn)
-    userEvent.click(screen.getByRole('link', { name: /edit/ }))
+    await userEvent.click(btn)
+    await userEvent.click(screen.getByRole('link', { name: /edit/ }))
 
     await waitFor(() => {
       // check modal is visible & title correct

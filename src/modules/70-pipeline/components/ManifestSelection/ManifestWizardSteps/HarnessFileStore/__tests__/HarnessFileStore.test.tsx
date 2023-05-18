@@ -174,7 +174,7 @@ describe('Harness File Store tests', () => {
       </TestWrapper>
     )
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     expect(defaultProps.previousStep).toHaveBeenCalledWith(defaultProps.prevStepData)
   })
@@ -246,11 +246,11 @@ describe('Harness File Store tests', () => {
       </TestWrapper>
     )
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     expect(defaultProps.previousStep).toHaveBeenCalledWith(defaultProps.prevStepData)
     const submitButton = getElementByText(container, 'submit')
-    userEvent.click(submitButton!)
+    await userEvent.click(submitButton!)
     const titleText = getElementByText(container, 'Manifest details')
     expect(titleText).toBeDefined()
   })
@@ -325,7 +325,7 @@ describe('Harness File Store tests', () => {
         />
       </TestWrapper>
     )
-    userEvent.click(getByText('advancedTitle'))
+    await userEvent.click(getByText('advancedTitle'))
     expect(getByText('pipeline.manifestType.enableDeclarativeRollback')!).toBeInTheDocument()
 
     const enableDeclarativeRollbackCheckbox = queryByNameAttribute(
@@ -333,7 +333,7 @@ describe('Harness File Store tests', () => {
       container
     ) as HTMLInputElement
     await waitFor(() => expect(enableDeclarativeRollbackCheckbox).not.toBeChecked())
-    userEvent.click(getByText('pipeline.manifestType.enableDeclarativeRollback')!)
+    await userEvent.click(getByText('pipeline.manifestType.enableDeclarativeRollback')!)
     await waitFor(() => expect(enableDeclarativeRollbackCheckbox).toBeTruthy())
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() => {

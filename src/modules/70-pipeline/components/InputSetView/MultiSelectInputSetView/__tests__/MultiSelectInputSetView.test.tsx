@@ -55,7 +55,7 @@ describe('MultiSelectInputSetView tests', () => {
     const ghiOption = await findByText(selectListMenu as HTMLElement, 'ghi')
     expect(ghiOption).toBeInTheDocument()
     expect(queryByText(selectListMenu as HTMLElement, 'Option 1')).toBeNull()
-    userEvent.click(abcOption)
+    await userEvent.click(abcOption)
     expect(onChange).toHaveBeenCalledWith([{ label: 'abc', value: 'abc' }], 'MULTI_SELECT_OPTION', 'FIXED')
   })
 
@@ -104,7 +104,7 @@ describe('MultiSelectInputSetView tests', () => {
     expect(option1).toBeInTheDocument()
     const option2 = await findByText(selectListMenu as HTMLElement, 'Option 2')
     expect(option2).toBeInTheDocument()
-    userEvent.click(option1)
+    await userEvent.click(option1)
     expect(onChange).toHaveBeenCalledWith([{ label: 'Option 1', value: 'Option_1' }], 'MULTI_SELECT_OPTION', 'FIXED')
   })
 })

@@ -42,14 +42,14 @@ describe('Unit tests for ConfigureMonitoredServiceAlertConditions', () => {
     const { getByText, container } = render(<WrapperComponent {...props} />)
 
     expect(getByText('Add Condition')).toBeInTheDocument()
-    userEvent.click(getByText('Add Condition'))
+    await userEvent.click(getByText('Add Condition'))
 
     waitFor(() => expect(container.querySelector(`input[name=conditions.0.condition]`)).not.toBeNull())
     waitFor(() => expect(container.querySelector(`input[name=conditions.1.condition]`)).not.toBeNull())
 
     const deleteButton = container.querySelector('[data-name="trash"]')
     expect(deleteButton).toBeTruthy()
-    userEvent.click(deleteButton!)
+    await userEvent.click(deleteButton!)
 
     // Verify if condition row is deleted.
     waitFor(() => expect(container.querySelector(`input[name=conditions.0.condition]`)).not.toBeNull())

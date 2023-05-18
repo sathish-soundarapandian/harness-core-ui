@@ -89,7 +89,7 @@ describe('Monitored Service list', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('.context-menu-mock-edit')!)
+    await userEvent.click(container.querySelector('.context-menu-mock-edit')!)
 
     const path = screen.getByTestId('location')
 
@@ -151,7 +151,7 @@ describe('Monitored Service list', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('.context-menu-mock-delete')!)
+    await userEvent.click(container.querySelector('.context-menu-mock-delete')!)
 
     expect(container.querySelectorAll('.TableV2--body [role="row"]')).toHaveLength(2)
     await waitFor(() => expect(refetchServiceCountData).toBeCalledTimes(2))
@@ -164,7 +164,7 @@ describe('Monitored Service list', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('[data-icon="graph"]')!)
+    await userEvent.click(container.querySelector('[data-icon="graph"]')!)
 
     expect(container.querySelector('.DependencyGraph')).toBeInTheDocument()
   })
@@ -195,7 +195,7 @@ describe('Monitored Service list', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelector('.toggleFlagButton:first-child [data-name="on-btn"]')!)
+    await userEvent.click(container.querySelector('.toggleFlagButton:first-child [data-name="on-btn"]')!)
 
     expect(mutate).toHaveBeenCalledWith(undefined, {
       pathParams: {
@@ -222,7 +222,7 @@ describe('Monitored Service list', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelectorAll('[data-name="on-btn"]')[0])
+    await userEvent.click(container.querySelectorAll('[data-name="on-btn"]')[0])
 
     expect(mutate).not.toHaveBeenCalled()
   })
@@ -241,7 +241,7 @@ describe('Monitored Service list', () => {
       </TestWrapper>
     )
 
-    userEvent.click(container.querySelectorAll('[data-name="on-btn"]')[0])
+    await userEvent.click(container.querySelectorAll('[data-name="on-btn"]')[0])
 
     expect(mutate).toHaveBeenCalled()
     expect(refetchServiceCountData).toBeCalledTimes(2)
@@ -263,7 +263,7 @@ describe('Monitored Service list', () => {
       .spyOn(cvServices, 'useListMonitoredService')
       .mockImplementation(() => ({ data: riskMSListData, refetch: jest.fn() } as any))
 
-    userEvent.click(container.querySelector('[data-icon="offline-outline"]')!)
+    await userEvent.click(container.querySelector('[data-icon="offline-outline"]')!)
 
     expect(refetchServiceCountData).toBeCalledTimes(3)
     expect(screen.queryByText(`cv.monitoredServices.showingServiceAtRisk`)).toBeInTheDocument()
@@ -280,7 +280,7 @@ describe('Monitored Service list', () => {
     )
 
     jest.spyOn(cvServices, 'useListMonitoredService').mockImplementation(() => ({ refetch: jest.fn() } as any))
-    userEvent.click(container.querySelector('[data-icon="offline-outline"]')!)
+    await userEvent.click(container.querySelector('[data-icon="offline-outline"]')!)
 
     expect(refetchServiceCountData).toBeCalledTimes(3)
     expect(screen.queryByText(`cv.monitoredServices.showingServiceAtRisk`)).not.toBeInTheDocument()

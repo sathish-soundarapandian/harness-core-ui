@@ -58,7 +58,7 @@ describe('useCreateCompositeSloWarningModal', () => {
     await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
     await waitFor(() => expect(screen.getByText('cancel')).toBeInTheDocument())
     act(() => {
-      userEvent.click(screen.getByText('cancel'))
+      await userEvent.click(screen.getByText('cancel'))
     })
     expect(onChangeMock).toHaveBeenCalled()
   })
@@ -77,7 +77,7 @@ describe('useCreateCompositeSloWarningModal', () => {
     await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
     await waitFor(() => expect(screen.getByText('cancel')).toBeInTheDocument())
     act(() => {
-      userEvent.click(screen.getByText('cancel'))
+      await userEvent.click(screen.getByText('cancel'))
     })
     expect(onChangeMock).toHaveBeenCalled()
   })

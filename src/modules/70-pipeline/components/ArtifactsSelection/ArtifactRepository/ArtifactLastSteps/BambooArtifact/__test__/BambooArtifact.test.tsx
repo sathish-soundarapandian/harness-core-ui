@@ -222,7 +222,7 @@ describe('Bamboo Artifact tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByRole('button', { name: /back/i }))
+    await userEvent.click(screen.getByRole('button', { name: /back/i }))
 
     expect(container).toMatchSnapshot()
   })

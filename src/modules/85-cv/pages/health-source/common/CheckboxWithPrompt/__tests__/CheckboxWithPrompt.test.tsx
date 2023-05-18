@@ -36,7 +36,7 @@ describe('CheckboxWithPrompt', () => {
     expect(container.querySelector('input[type="checkbox"]')).toBeInTheDocument()
 
     act(() => {
-      userEvent.click(container.querySelector('input[type="checkbox"]')!)
+      await userEvent.click(container.querySelector('input[type="checkbox"]')!)
     })
 
     expect(onChange).not.toHaveBeenCalled()
@@ -45,7 +45,7 @@ describe('CheckboxWithPrompt', () => {
 
     const modalDeleteBtn = screen.queryAllByText('confirm')[0]
     act(() => {
-      userEvent.click(modalDeleteBtn!)
+      await userEvent.click(modalDeleteBtn!)
     })
 
     await waitFor(() => {
@@ -70,7 +70,7 @@ describe('CheckboxWithPrompt', () => {
     )
 
     act(() => {
-      userEvent.click(container.querySelector('input[type="checkbox"]')!)
+      await userEvent.click(container.querySelector('input[type="checkbox"]')!)
     })
 
     expect(onChange).toHaveBeenCalledWith(false, 'test checkbox name')

@@ -284,14 +284,14 @@ describe('Test ConfigureOptions', () => {
     const errorEl = await findByText(dialog, errorText)
     expect(errorEl).toBeInTheDocument()
     // Valid case - enter number here
-    userEvent.clear(allowedValuesField)
+    await userEvent.clear(allowedValuesField)
     await userEvent.type(allowedValuesField, '200')
     fireEvent.keyDown(allowedValuesField, { key: 'enter', keyCode: 13 })
     await waitFor(() => expect(queryByText(dialog, errorText)).not.toBeInTheDocument())
 
     // Click Submit
     const submitBtn = getByTextBody(dialog, 'submit')
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
     expect(onChange).toHaveBeenCalledWith('<+input>.allowedValues(200)', undefined, true)
   })
@@ -388,8 +388,8 @@ describe('Test ConfigureOptions', () => {
       )
     )
 
-    userEvent.clear(getByRole(configureOptionsDialog, 'spinbutton'))
-    userEvent.click(
+    await userEvent.clear(getByRole(configureOptionsDialog, 'spinbutton'))
+    await userEvent.click(
       getByRole(configureOptionsDialog, 'button', {
         name: /submit/i
       })

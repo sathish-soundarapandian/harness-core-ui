@@ -69,16 +69,16 @@ describe('Environments V2 test', () => {
     const sortButton = screen.queryByTestId('dropdown-button')
     await waitFor(() => expect(sortButton).toBeInTheDocument())
 
-    userEvent.click(sortButton!)
+    await userEvent.click(sortButton!)
     const sortAscending = screen.queryByText('AZ09')
-    userEvent.click(sortAscending!)
+    await userEvent.click(sortAscending!)
 
     expect(container).toMatchSnapshot()
 
     const gridToggle = screen.getByTestId('grid-view')
     await waitFor(() => expect(gridToggle).toBeInTheDocument())
 
-    userEvent.click(gridToggle)
+    await userEvent.click(gridToggle)
     await waitFor(() => {
       expect(screen.getByText('Env 2')).toBeInTheDocument()
     })

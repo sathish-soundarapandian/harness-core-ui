@@ -65,12 +65,12 @@ describe('RadioButtonQuestion', () => {
     )
 
     const radioButtons = container.querySelectorAll('input[type="radio"]')
-    userEvent.click(radioButtons[0])
+    await userEvent.click(radioButtons[0])
     expect(radioButtons[0]).toBeChecked()
     expect(radioButtons[1]).not.toBeChecked()
     expect(radioButtons[2]).not.toBeChecked()
 
-    userEvent.click(radioButtons[2])
+    await userEvent.click(radioButtons[2])
     expect(radioButtons[0]).not.toBeChecked()
     expect(radioButtons[1]).not.toBeChecked()
     expect(radioButtons[2]).toBeChecked()

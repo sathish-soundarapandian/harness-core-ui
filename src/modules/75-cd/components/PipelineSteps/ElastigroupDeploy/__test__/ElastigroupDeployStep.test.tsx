@@ -76,7 +76,7 @@ describe('Test Elastigroup Deploy Step', () => {
 
     const instanceField = container.querySelector('input[placeholder="instanceFieldOptions.instanceHolder"]')
     const optionalConfigAccordion = getByText('common.optionalConfig')
-    userEvent.click(optionalConfigAccordion)
+    await userEvent.click(optionalConfigAccordion)
 
     //initial empty form
     expect(container.querySelector('input[placeholder="pipeline.stepNamePlaceholder"]')).toBeTruthy()
@@ -102,7 +102,7 @@ describe('Test Elastigroup Deploy Step', () => {
     )
 
     const optionalConfigAccordion = getByText('common.optionalConfig')
-    userEvent.click(optionalConfigAccordion)
+    await userEvent.click(optionalConfigAccordion)
 
     expect(container).toMatchSnapshot()
   })

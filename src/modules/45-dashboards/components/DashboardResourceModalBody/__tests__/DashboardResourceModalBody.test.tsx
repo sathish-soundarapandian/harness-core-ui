@@ -99,8 +99,8 @@ describe('DashboardResourceModalBody', () => {
       .getByText('also_you_got_this (5)')
       .closest('.TableV2--row')
       ?.querySelector('input') as Element
-    userEvent.click(folderCheckboxFirst)
-    userEvent.click(folderCheckboxLast)
+    await userEvent.click(folderCheckboxFirst)
+    await userEvent.click(folderCheckboxLast)
 
     await waitFor(() => expect(onSelectChangeMock).toHaveBeenCalledWith(['12']))
     await waitFor(() => expect(onSelectChangeMock).toHaveBeenLastCalledWith(['41']))

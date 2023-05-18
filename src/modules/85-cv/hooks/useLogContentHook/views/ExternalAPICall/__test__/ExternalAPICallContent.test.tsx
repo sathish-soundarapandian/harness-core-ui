@@ -36,7 +36,9 @@ describe('ExternalAPICallContent', () => {
       screen.getByText('cv.fetchingDataFrom https://qva35651.live.dynatrace.com/api/v2/metrics/query')
     ).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.fetchingDataFrom https://qva35651.live.dynatrace.com/api/v2/metrics/query'))
+    await userEvent.click(
+      screen.getByText('cv.fetchingDataFrom https://qva35651.live.dynatrace.com/api/v2/metrics/query')
+    )
 
     await waitFor(() => expect(container).toMatchSnapshot())
   })

@@ -70,7 +70,7 @@ describe('CreateAFlagView', () => {
     expect(screen.queryByTestId('ffOnboardingSelectedFlag')).not.toBeInTheDocument()
     expect(refetchFlags).toHaveBeenCalled()
 
-    userEvent.click(selectInput as TargetElement)
+    await userEvent.click(selectInput as TargetElement)
 
     const dropdownOptions = screen.queryAllByRole('listitem')
     expect(dropdownOptions).toHaveLength(CF_DEFAULT_PAGE_SIZE)
@@ -85,13 +85,13 @@ describe('CreateAFlagView', () => {
     expect(screen.queryByTestId('ffOnboardingSelectedFlag')).not.toBeInTheDocument()
     expect(refetchFlags).toHaveBeenCalled()
 
-    userEvent.click(selectInput as TargetElement)
+    await userEvent.click(selectInput as TargetElement)
 
     const dropdownOptions = screen.queryAllByRole('listitem')
     expect(dropdownOptions).toHaveLength(CF_DEFAULT_PAGE_SIZE)
     expect(dropdownOptions[0]).toHaveTextContent('hello world')
 
-    userEvent.click(dropdownOptions[0])
+    await userEvent.click(dropdownOptions[0])
 
     expect(selectInput).toHaveValue('hello world')
     expect(setSelectedFlag).toBeCalledWith(mockFeatureFlags.features[0])
@@ -117,11 +117,11 @@ describe('CreateAFlagView', () => {
     renderComponent()
 
     const selectInput = document.querySelector('#selectOrCreateFlag') as TargetElement
-    userEvent.type(selectInput, 'Onboarding Flag 1', { allAtOnce: true })
+    await userEvent.type(selectInput, 'Onboarding Flag 1', { allAtOnce: true })
 
     // no options returned
     expect(document.getElementsByTagName('li')).toHaveLength(0)
-    userEvent.type(selectInput, '{enter}', { allAtOnce: true })
+    await userEvent.type(selectInput, '{enter}', { allAtOnce: true })
 
     await waitFor(() => {
       expect(createFeatureFlag).toBeCalled()

@@ -35,7 +35,7 @@ describe('Create Docker Step3Verify', () => {
 
     const doneBtn = getByRole('button', { name: 'done' })
     act(() => {
-      userEvent.click(doneBtn!)
+      await userEvent.click(doneBtn!)
     })
 
     expect(container).toMatchSnapshot()
@@ -49,7 +49,7 @@ describe('Create Docker Step3Verify', () => {
 
     const backBtn = container.querySelector('button') as HTMLButtonElement
 
-    userEvent.click(backBtn!)
+    await userEvent.click(backBtn!)
 
     expect(container).toMatchSnapshot()
   })

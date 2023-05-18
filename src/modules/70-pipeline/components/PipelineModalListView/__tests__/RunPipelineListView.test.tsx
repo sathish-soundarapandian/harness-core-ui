@@ -93,7 +93,7 @@ describe('PipelineModal List View', () => {
       })
     ).toBeInTheDocument()
 
-    userEvent.type(screen.getByRole('searchbox'), 'searchTerm')
+    await userEvent.type(screen.getByRole('searchbox'), 'searchTerm')
     expect(useGetPipelineListMock).toHaveBeenCalled()
   })
 

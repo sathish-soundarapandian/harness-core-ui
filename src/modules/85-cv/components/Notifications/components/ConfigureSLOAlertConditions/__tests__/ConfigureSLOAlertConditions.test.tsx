@@ -43,14 +43,14 @@ describe('Unit tests for ConfigureSLOAlertConditions ', () => {
     const { getByText, container } = render(<WrapperComponent {...props} />)
 
     expect(getByText('Add Condition')).toBeInTheDocument()
-    userEvent.click(getByText('Add Condition'))
+    await userEvent.click(getByText('Add Condition'))
 
     waitFor(() => expect(container.querySelector(`input[name=conditions.0.condition]`)).not.toBeNull())
     waitFor(() => expect(container.querySelector(`input[name=conditions.1.condition]`)).not.toBeNull())
 
     const deleteButton = container.querySelector('[data-name="trash"]')
     expect(deleteButton).toBeTruthy()
-    userEvent.click(deleteButton!)
+    await userEvent.click(deleteButton!)
 
     // Verify if condition row is deleted.
     waitFor(() => expect(container.querySelector(`input[name=conditions.0.condition]`)).not.toBeNull())
@@ -66,9 +66,9 @@ describe('Unit tests for ConfigureSLOAlertConditions ', () => {
 
     // Selecting condition 1
     const conditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any
-    userEvent.click(conditionDropdown)
+    await userEvent.click(conditionDropdown)
     const typeToSelect = getByText(sloConditionType)
-    userEvent.click(typeToSelect)
+    await userEvent.click(typeToSelect)
     expect(conditionDropdown.value).toBe(sloConditionType)
 
     //Selecting threshold
@@ -81,9 +81,9 @@ describe('Unit tests for ConfigureSLOAlertConditions ', () => {
 
     // Selecting condition 2
     const conditionDropdownOne = container.querySelector('input[name="conditions.0.condition"]') as any
-    userEvent.click(conditionDropdownOne)
+    await userEvent.click(conditionDropdownOne)
     const typeToSelectOne = getByText(sloConditionType)
-    userEvent.click(typeToSelectOne)
+    await userEvent.click(typeToSelectOne)
     expect(conditionDropdownOne.value).toBe(sloConditionType)
 
     //Selecting threshold
@@ -96,9 +96,9 @@ describe('Unit tests for ConfigureSLOAlertConditions ', () => {
 
     // Selecting condition 3
     const conditionDropdownThree = container.querySelector('input[name="conditions.0.condition"]') as any
-    userEvent.click(conditionDropdownThree)
+    await userEvent.click(conditionDropdownThree)
     const typeToSelectThree = getByText(sloConditionType)
-    userEvent.click(typeToSelectThree)
+    await userEvent.click(typeToSelectThree)
     expect(conditionDropdownThree.value).toBe(sloConditionType)
 
     //Selecting threshold
@@ -116,9 +116,9 @@ describe('Unit tests for ConfigureSLOAlertConditions ', () => {
 
     // Selecting condition 1
     const conditionDropdown = container.querySelector('input[name="conditions.0.condition"]') as any
-    userEvent.click(conditionDropdown)
+    await userEvent.click(conditionDropdown)
     const typeToSelect = getByText(sloConditionType)
-    userEvent.click(typeToSelect)
+    await userEvent.click(typeToSelect)
     expect(conditionDropdown.value).toBe(sloConditionType)
 
     //Selecting threshold
@@ -131,8 +131,8 @@ describe('Unit tests for ConfigureSLOAlertConditions ', () => {
 
     const continueButton = getByText('continue')
     const backButton = getByText('back')
-    userEvent.click(continueButton)
-    userEvent.click(backButton)
+    await userEvent.click(continueButton)
+    await userEvent.click(backButton)
     expect(continueButton).toBeInTheDocument()
     expect(backButton).toBeInTheDocument()
   })

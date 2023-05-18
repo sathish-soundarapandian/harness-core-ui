@@ -96,7 +96,7 @@ describe('<ExecutionActions /> tests', () => {
 
     expect(result!.container).toMatchSnapshot('container')
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -276,7 +276,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -301,7 +301,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -338,7 +338,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -363,7 +363,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -387,7 +387,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })
@@ -416,7 +416,7 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: /execution menu actions/i
       })

@@ -136,15 +136,15 @@ describe('Flag Settings Panel Governance', () => {
     expect(flag1Variation).toHaveValue('Variation 1')
 
     // change the variation value
-    userEvent.click(flag1Variation)
+    await userEvent.click(flag1Variation)
     const variation2 = screen.getAllByText('Variation 2')[0]
     expect(variation2).toBeInTheDocument()
-    userEvent.click(variation2)
+    await userEvent.click(variation2)
 
     // click save and assert modal appears
     const saveButton = await waitFor(() => screen.getByRole('button', { name: 'saveChanges' }))
     expect(saveButton).toBeInTheDocument()
-    userEvent.click(saveButton)
+    await userEvent.click(saveButton)
 
     await waitFor(() => expect(screen.getByText('GOVERNANCE MODAL')).toBeInTheDocument())
   })
@@ -164,15 +164,15 @@ describe('Flag Settings Panel Governance', () => {
     expect(flag1Variation).toHaveValue('Variation 1')
 
     // change the variation value
-    userEvent.click(flag1Variation)
+    await userEvent.click(flag1Variation)
     const variation2 = screen.getAllByText('Variation 2')[0]
     expect(variation2).toBeInTheDocument()
-    userEvent.click(variation2)
+    await userEvent.click(variation2)
 
     // click save and assert modal appears
     const saveButton = await waitFor(() => screen.getByRole('button', { name: 'saveChanges' }))
     expect(saveButton).toBeInTheDocument()
-    userEvent.click(saveButton)
+    await userEvent.click(saveButton)
 
     await waitFor(() => expect(screen.getByText('GOVERNANCE MODAL')).toBeInTheDocument())
   })

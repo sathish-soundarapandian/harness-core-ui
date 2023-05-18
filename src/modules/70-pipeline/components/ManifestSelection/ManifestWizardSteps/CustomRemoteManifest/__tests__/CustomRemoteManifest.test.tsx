@@ -124,10 +124,10 @@ describe('Custom remote tests', () => {
       fireEvent.change(queryByNameAttribute('valuesPaths[0].path')!, { target: { value: 'test-path' } })
     })
 
-    userEvent.click(getByText('advancedTitle'))
+    await userEvent.click(getByText('advancedTitle'))
     const skipResourceVersioningCheckbox = queryByNameAttribute('skipResourceVersioning')
     expect(skipResourceVersioningCheckbox).toBeTruthy()
-    userEvent.click(skipResourceVersioningCheckbox!)
+    await userEvent.click(skipResourceVersioningCheckbox!)
 
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() => {
@@ -195,7 +195,7 @@ describe('Custom remote tests', () => {
       </TestWrapper>
     )
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     expect(defaultProps.previousStep).toHaveBeenCalledWith(defaultProps.prevStepData)
   })
@@ -238,7 +238,7 @@ describe('Custom remote tests', () => {
     const filePathInput = queryByAttribute('name', container, 'filePath') as HTMLInputElement
     expect(filePathInput.value).toBe('<+input>')
 
-    userEvent.click(getByText('advancedTitle'))
+    await userEvent.click(getByText('advancedTitle'))
 
     const skipResourceVersioning = queryByAttribute('name', container, 'skipResourceVersioning') as HTMLInputElement
     expect(skipResourceVersioning.value).toBe('<+input>')
@@ -262,7 +262,7 @@ describe('Custom remote tests', () => {
     )
     const valuesPathsText = queryByText(container, 'pipeline.manifestType.valuesYamlPath')
     expect(valuesPathsText).toBeDefined()
-    userEvent.click(getByText('advancedTitle'))
+    await userEvent.click(getByText('advancedTitle'))
 
     //check command flag dropdown
     const defaultSelectDropdown = getByPlaceholderText('- pipeline.fieldPlaceholders.commandType -')
@@ -308,11 +308,11 @@ describe('Custom remote tests', () => {
       </TestWrapper>
     )
     const backButton = getByText('back').parentElement
-    userEvent.click(backButton!)
+    await userEvent.click(backButton!)
     await waitFor(() => expect(defaultProps.previousStep).toBeCalled())
     expect(defaultProps.previousStep).toHaveBeenCalledWith(defaultProps.prevStepData)
     const submitButton = getElementByText(container, 'submit')
-    userEvent.click(submitButton!)
+    await userEvent.click(submitButton!)
     const titleText = getElementByText(container, 'Manifest details')
     expect(titleText).toBeDefined()
   })

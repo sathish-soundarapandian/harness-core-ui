@@ -129,7 +129,7 @@ describe('Test VarFileList', () => {
     const removeLabel = getByTestId('remove-varFile-0')
 
     act(() => {
-      userEvent.click(removeLabel)
+      await userEvent.click(removeLabel)
     })
 
     expect(container.querySelector('span[data-icon="Inline"]')).toBeInTheDocument()

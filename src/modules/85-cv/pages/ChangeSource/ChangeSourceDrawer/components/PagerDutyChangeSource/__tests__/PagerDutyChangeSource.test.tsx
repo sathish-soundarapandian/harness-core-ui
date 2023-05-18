@@ -73,7 +73,7 @@ describe('Test PagerDuty Change Source', () => {
     )
 
     act(() => {
-      userEvent.click(container.querySelector(`[name="spec.pagerDutyServiceId"]`)!)
+      await userEvent.click(container.querySelector(`[name="spec.pagerDutyServiceId"]`)!)
     })
     const menuItemLabels = container.querySelectorAll('[class*="menuItemLabel"]')
     expect(menuItemLabels.length).toEqual(0)
@@ -151,7 +151,7 @@ describe('Test PagerDuty Change Source', () => {
 
     // renders both service value in dropdown
     act(() => {
-      userEvent.click(container.querySelector(`[name="spec.pagerDutyServiceId"]`)!)
+      await userEvent.click(container.querySelector(`[name="spec.pagerDutyServiceId"]`)!)
     })
     const menuItemLabels = container.querySelectorAll('[class*="menuItemLabel"]')
     await waitFor(() => expect(menuItemLabels.length).toEqual(2))

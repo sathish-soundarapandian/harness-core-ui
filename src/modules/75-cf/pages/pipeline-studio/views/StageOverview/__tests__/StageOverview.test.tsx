@@ -127,7 +127,7 @@ describe('Stage Overview Tests', () => {
 
   test(`it displays the save button as disabled until edit`, async () => {
     render(<RenderComponent initialValues={{}} />)
-    userEvent.click(screen.getByText('save'))
+    await userEvent.click(screen.getByText('save'))
     await waitFor(() => expect(createPipelineV2Promise).not.toBeCalled())
   })
 
@@ -160,9 +160,9 @@ describe('Stage Overview Tests', () => {
     )
     const nameTextbox = screen.getByPlaceholderText('common.namePlaceholder')
     await waitFor(() => expect(nameTextbox).toBeInTheDocument())
-    userEvent.click(nameTextbox)
-    userEvent.type(nameTextbox, 'Stage 1')
-    userEvent.click(screen.getByText('save'))
+    await userEvent.click(nameTextbox)
+    await userEvent.type(nameTextbox, 'Stage 1')
+    await userEvent.click(screen.getByText('save'))
     await waitFor(() => expect(createPipelineV2Promise).toBeCalled())
   })
 })

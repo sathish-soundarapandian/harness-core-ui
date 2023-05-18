@@ -23,7 +23,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
     )
 
     act(() => {
-      userEvent.click(screen.getByTestId(/updatePreferenceDrawerClose_button/))
+      await userEvent.click(screen.getByTestId(/updatePreferenceDrawerClose_button/))
     })
 
     expect(onHideCallbackMock).toHaveBeenCalled()
@@ -40,7 +40,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
     )
 
     act(() => {
-      userEvent.click(screen.getByTestId(/updatePreferenceDrawerSubmit_button/))
+      await userEvent.click(screen.getByTestId(/updatePreferenceDrawerSubmit_button/))
     })
 
     await waitFor(() => {
@@ -74,8 +74,8 @@ describe('UpdateEventPreferenceDrawerForm', () => {
     const reasonTextarea = screen.getByPlaceholderText('cv.logs.reasonPlaceholder')
 
     act(() => {
-      userEvent.clear(reasonTextarea)
-      userEvent.type(reasonTextarea, 'This is not a risk again')
+      await userEvent.clear(reasonTextarea)
+      await userEvent.type(reasonTextarea, 'This is not a risk again')
     })
 
     const eventPreferenceSubmitButton = screen.getByTestId('updatePreferenceDrawerSubmit_button')
@@ -83,7 +83,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
     expect(eventPreferenceSubmitButton).toBeInTheDocument()
 
     act(() => {
-      userEvent.click(eventPreferenceSubmitButton)
+      await userEvent.click(eventPreferenceSubmitButton)
     })
 
     await waitFor(() => {

@@ -52,13 +52,13 @@ describe('AppDIgnoreThresholdTabContent', () => {
     screen.debug(container)
 
     act(() => {
-      userEvent.click(screen.getByTestId('invalidMetricSelect'))
+      await userEvent.click(screen.getByTestId('invalidMetricSelect'))
     })
 
     expect(setFieldValueMock).not.toHaveBeenCalled()
 
     act(() => {
-      userEvent.click(screen.getByTestId('validMetricSelect'))
+      await userEvent.click(screen.getByTestId('validMetricSelect'))
     })
 
     expect(setFieldValueMock).toHaveBeenCalled()

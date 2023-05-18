@@ -39,7 +39,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
     const { getByTestId, getByText } = render(<WrapperComponent {...mockedProps} />)
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
-    userEvent.click(getByTestId('multiWidgetsIcon'))
+    await userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
 
     for (const annotation of mockedSecondaryEventsDetailsResponse.data.details.annotations) {
@@ -53,7 +53,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
     const multiWidgetsIcon = getByTestId('multiWidgetsIcon')
 
-    userEvent.click(multiWidgetsIcon)
+    await userEvent.click(multiWidgetsIcon)
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
   })
 
@@ -61,7 +61,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
     const { getByTestId, getByText, getAllByTestId } = render(<WrapperComponent {...mockedProps} />)
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
-    userEvent.click(getByTestId('multiWidgetsIcon'))
+    await userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
 
     const editAnnotationIcons = getAllByTestId('editAnnotations')
@@ -69,14 +69,14 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
 
     const editAnnotationIcon = editAnnotationIcons[0]
     await waitFor(() => expect(editAnnotationIcon).toBeInTheDocument())
-    userEvent.click(editAnnotationIcon)
+    await userEvent.click(editAnnotationIcon)
   })
 
   test('should be able to click on delete annotation link when annotations icon is clicked for nested annotations card', async () => {
     const { getByTestId, getByText, getAllByTestId } = render(<WrapperComponent {...mockedProps} />)
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
-    userEvent.click(getByTestId('multiWidgetsIcon'))
+    await userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
 
     const deleteAnnotationIcons = getAllByTestId('deleteAnnotations')
@@ -84,19 +84,19 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
 
     const deleteAnnotationIcon = deleteAnnotationIcons[0]
     await waitFor(() => expect(deleteAnnotationIcon).toBeInTheDocument())
-    userEvent.click(deleteAnnotationIcon)
+    await userEvent.click(deleteAnnotationIcon)
 
     expect(getByText('cv.slos.sloDetailsChart.deleteMessageConfirmation')).toBeInTheDocument()
 
     // Triggering the Delete
-    userEvent.click(getByText('delete'))
+    await userEvent.click(getByText('delete'))
   })
 
   test('should be able to click on delete annotation link when annotations icon is clicked for nested annotations card and cancel the delete', async () => {
     const { getByTestId, getByText, getAllByTestId } = render(<WrapperComponent {...mockedProps} />)
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
-    userEvent.click(getByTestId('multiWidgetsIcon'))
+    await userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
 
     const deleteAnnotationIcons = getAllByTestId('deleteAnnotations')
@@ -104,12 +104,12 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
 
     const deleteAnnotationIcon = deleteAnnotationIcons[0]
     await waitFor(() => expect(deleteAnnotationIcon).toBeInTheDocument())
-    userEvent.click(deleteAnnotationIcon)
+    await userEvent.click(deleteAnnotationIcon)
 
     expect(getByText('cv.slos.sloDetailsChart.deleteMessageConfirmation')).toBeInTheDocument()
 
     // Cancelling the Delete
-    userEvent.click(getByText('cancel'))
+    await userEvent.click(getByText('cancel'))
   })
 
   test('should render loading state when api to fetch annotation details is in loading state for nested annotations', async () => {
@@ -126,7 +126,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
     // Verify if downtime is present
-    userEvent.click(getByTestId('multiWidgetsIcon'))
+    await userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
 
     // Verify loading
@@ -149,7 +149,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
     // Verify if downtime is present
-    userEvent.click(getByTestId('multiWidgetsIcon'))
+    await userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
 
     // Verify error
@@ -170,7 +170,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
     // Verify if downtime is present
-    userEvent.click(getByTestId('multiWidgetsIcon'))
+    await userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
   })
 
@@ -196,7 +196,7 @@ describe('Unit tests for WidgetsWithSameStartTime', () => {
     await waitFor(() => expect(getByTestId('multiWidgetsIcon')).toBeInTheDocument())
 
     // Verify if downtime is present
-    userEvent.click(getByTestId('multiWidgetsIcon'))
+    await userEvent.click(getByTestId('multiWidgetsIcon'))
     expect(getByText('cv.sloDowntime.label')).toBeInTheDocument()
 
     // Verify if nested annotation is not  present

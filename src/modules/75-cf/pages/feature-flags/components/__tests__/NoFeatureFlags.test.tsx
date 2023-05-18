@@ -63,7 +63,7 @@ describe('NoFeatureFlags', () => {
       expect(screen.getByText('cf.featureFlags.newFlag')).toBeVisible()
     })
 
-    userEvent.click(screen.getByText('cf.featureFlags.newFlag'))
+    await userEvent.click(screen.getByText('cf.featureFlags.newFlag'))
 
     // Check New Flag modal is open
     await waitFor(() => {
@@ -81,7 +81,7 @@ describe('NoFeatureFlags', () => {
       expect(screen.getByText('cf.featureFlags.resetFilters')).toBeVisible()
     })
 
-    userEvent.click(screen.getByText('cf.featureFlags.resetFilters'))
+    await userEvent.click(screen.getByText('cf.featureFlags.resetFilters'))
 
     await waitFor(() => {
       expect(onClearFilter).toHaveBeenCalled()
@@ -97,7 +97,7 @@ describe('NoFeatureFlags', () => {
       expect(screen.getByText('cf.featureFlags.clearSearch')).toBeVisible()
     })
 
-    userEvent.click(screen.getByText('cf.featureFlags.clearSearch'))
+    await userEvent.click(screen.getByText('cf.featureFlags.clearSearch'))
 
     await waitFor(() => {
       expect(onClearSearch).toHaveBeenCalled()
@@ -114,7 +114,7 @@ describe('NoFeatureFlags', () => {
       expect(screen.getByText('cf.featureFlags.resetFilters')).toBeVisible()
     })
 
-    userEvent.click(screen.getByText('cf.featureFlags.resetFilters'))
+    await userEvent.click(screen.getByText('cf.featureFlags.resetFilters'))
 
     await waitFor(() => {
       expect(onClearFilter).toHaveBeenCalled()

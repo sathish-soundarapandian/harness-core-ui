@@ -127,7 +127,7 @@ describe('Deploy service stage specifications', () => {
     })
     const propagateFromDropdown = getByPlaceholderText('- pipeline.selectStagePlaceholder -')
     act(() => {
-      userEvent.selectOptions(propagateFromDropdown, 'st1')
+      await userEvent.selectOptions(propagateFromDropdown, 'st1')
     })
 
     //  Service 1 Option
@@ -229,7 +229,7 @@ describe('Deploy service stage specifications', () => {
     expect(getByText('deploymentTypeText')).toBeInTheDocument()
 
     const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
-    userEvent.click(serverlessLambda)
+    await userEvent.click(serverlessLambda)
     await waitFor(() => expect(getByText('pipeline.manifestType.addManifestLabel')).toBeInTheDocument())
   })
 
@@ -247,10 +247,10 @@ describe('Deploy service stage specifications', () => {
     expect(getByText('deploymentTypeText')).toBeDefined()
 
     const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
-    userEvent.click(serverlessLambda)
+    await userEvent.click(serverlessLambda)
     await waitFor(() => expect(getByText('pipeline.manifestType.addManifestLabel')).toBeDefined())
     const addManifestButton = getByText('pipeline.manifestType.addManifestLabel')
-    userEvent.click(addManifestButton)
+    await userEvent.click(addManifestButton)
 
     // Find Add Manifest dialog portal div
     const portalDivElements = document.getElementsByClassName('bp3-portal')
@@ -296,7 +296,7 @@ describe('Deploy service stage specifications', () => {
 
     // Select ECS deployment type
     const amazonEcs = getByText('pipeline.serviceDeploymentTypes.amazonEcs')
-    userEvent.click(amazonEcs)
+    await userEvent.click(amazonEcs)
 
     // By checking Add buttons, check if manifest section for each manifest type is rendered
     const allPlusAddManifestButtons = await findAllByText(/common.addName/)

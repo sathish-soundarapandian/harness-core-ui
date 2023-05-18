@@ -47,7 +47,7 @@ describe('InvalidYamlModal', () => {
 
     await waitFor(() => expect(screen.getByText('common.tryAgain')).toBeInTheDocument())
 
-    userEvent.click(screen.getByText('common.tryAgain'))
+    await userEvent.click(screen.getByText('common.tryAgain'))
 
     expect(handleRetryMock).toHaveBeenCalled()
   })

@@ -135,11 +135,11 @@ describe('Rules filter tests', () => {
     expect(getByText(drawer!, 'Filter')).toBeDefined()
 
     const connectorSelector = document.querySelector('input[name="created_by"]')
-    userEvent.click(connectorSelector!)
+    await userEvent.click(connectorSelector!)
     await waitFor(() => {
       expect(screen.getByText('Rishabh')).toBeInTheDocument()
     })
-    userEvent.click(screen.getAllByText('Rishabh')[0])
+    await userEvent.click(screen.getAllByText('Rishabh')[0])
     const applyBtn = getByText(drawer!, 'filters.apply')
     act(() => {
       fireEvent.click(applyBtn)

@@ -100,10 +100,10 @@ describe('ServiceEnvironmentInputSet', () => {
     expect(container.querySelector('[title="addService"]')).toBeInTheDocument()
     expect(container.querySelector('[title="addEnv"]')).toBeInTheDocument()
     act(() => {
-      userEvent.click(container.querySelector('[title="addEnv"]')!)
+      await userEvent.click(container.querySelector('[title="addEnv"]')!)
     })
     act(() => {
-      userEvent.click(container.querySelector('[title="onSelectEnv"]')!)
+      await userEvent.click(container.querySelector('[title="onSelectEnv"]')!)
     })
   })
 
@@ -142,10 +142,10 @@ describe('ServiceEnvironmentInputSet', () => {
     expect(getByText('cv.monitoredServices.serviceAndEnvironment')).toBeInTheDocument()
     expect(container.querySelector('[title="addService"]')).toBeInTheDocument()
     act(() => {
-      userEvent.click(container.querySelector('[title="addService"]')!)
+      await userEvent.click(container.querySelector('[title="addService"]')!)
     })
     act(() => {
-      userEvent.click(container.querySelector('[title="onSelectService"]')!)
+      await userEvent.click(container.querySelector('[title="onSelectService"]')!)
     })
   })
 
@@ -210,11 +210,11 @@ describe('ServiceEnvironmentInputSet', () => {
     expect(container.querySelector('[title="On Service Select"]')).toBeInTheDocument()
     expect(container.querySelector('[title="On Environment Select"]')).toBeInTheDocument()
     act(() => {
-      userEvent.click(container.querySelector('[title="On Service Select"]')!)
+      await userEvent.click(container.querySelector('[title="On Service Select"]')!)
     })
     expect(onInputSetChangeMock).toHaveBeenCalledWith('serviceRef', 'newService')
     act(() => {
-      userEvent.click(container.querySelector('[title="On Environment Select"]')!)
+      await userEvent.click(container.querySelector('[title="On Environment Select"]')!)
     })
     expect(onInputSetChangeMock).toHaveBeenNthCalledWith(2, 'environmentRef', 'newEnv')
 

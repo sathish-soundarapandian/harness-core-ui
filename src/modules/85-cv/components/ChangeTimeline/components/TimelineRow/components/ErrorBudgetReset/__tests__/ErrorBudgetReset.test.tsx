@@ -53,7 +53,7 @@ describe('ErrorBudgetReset', () => {
     const errorBudgetResetIcon = getByTestId('errorBudgetResetIcon')
     await waitFor(() => expect(errorBudgetResetIcon).toBeInTheDocument())
 
-    userEvent.click(errorBudgetResetIcon)
+    await userEvent.click(errorBudgetResetIcon)
     await waitFor(() => expect(getByText('cv.errorBudgetIncrease')).toBeInTheDocument())
   })
 
@@ -67,7 +67,7 @@ describe('ErrorBudgetReset', () => {
     const errorBudgetResetIcon = getByTestId('errorBudgetResetIcon')
     await waitFor(() => expect(errorBudgetResetIcon).toBeInTheDocument())
 
-    userEvent.click(errorBudgetResetIcon)
+    await userEvent.click(errorBudgetResetIcon)
     expect(getByTestId('loadingIcon')).toBeInTheDocument()
   })
 

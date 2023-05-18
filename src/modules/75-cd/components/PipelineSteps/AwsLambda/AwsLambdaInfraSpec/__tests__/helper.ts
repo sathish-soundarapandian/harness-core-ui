@@ -87,8 +87,8 @@ export const testConnectorRefChange = async (): Promise<void> => {
   await waitFor(() => expect(awsConnector1).toBeInTheDocument())
   const awsConnector2 = getAllByText(connectorSelectorDialog, 'Aws Connector 2')
   expect(awsConnector2).toHaveLength(2)
-  userEvent.click(awsConnector1)
+  await userEvent.click(awsConnector1)
   const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
-  userEvent.click(applySelected)
+  await userEvent.click(applySelected)
   await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
 }

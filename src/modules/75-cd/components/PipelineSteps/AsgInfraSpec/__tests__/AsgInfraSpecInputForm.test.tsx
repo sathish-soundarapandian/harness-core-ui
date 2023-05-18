@@ -99,7 +99,7 @@ describe('AsgInfraSpecSpecInputForm tests', () => {
     const connnectorRefInput = getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
     act(() => {
-      userEvent.click(connnectorRefInput!)
+      await userEvent.click(connnectorRefInput!)
     })
     const dialogs = document.getElementsByClassName('bp3-dialog')
     await waitFor(() => expect(dialogs).toHaveLength(1))
@@ -108,24 +108,24 @@ describe('AsgInfraSpecSpecInputForm tests', () => {
     await waitFor(() => expect(awsConnector1).toBeInTheDocument())
     const awsConnector2 = await findByText(connectorSelectorDialog, 'Aws Connector 2')
     expect(awsConnector2).toBeTruthy()
-    userEvent.click(awsConnector1)
+    await userEvent.click(awsConnector1)
     const applySelected = getElementByText(connectorSelectorDialog, 'entityReference.apply')
-    userEvent.click(applySelected)
+    await userEvent.click(applySelected)
 
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
 
     // Choose region
     const regionDropdownIcon = allDropDownIcons[1]
-    userEvent.click(regionDropdownIcon!)
+    await userEvent.click(regionDropdownIcon!)
     expect(portalDivs.length).toBe(2)
     const regionDropdownPortalDiv = portalDivs[1]
     const regionSelectListMenu = regionDropdownPortalDiv.querySelector('.bp3-menu')
     const usEastNVirginiaOption = await findByText(regionSelectListMenu as HTMLElement, 'US East (N. Virginia)')
     expect(usEastNVirginiaOption).not.toBeNull()
-    userEvent.click(usEastNVirginiaOption)
+    await userEvent.click(usEastNVirginiaOption)
 
     // submit form and verify
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() =>
       expect(onUpdate).toHaveBeenCalledWith({
         connectorRef: 'Aws_Connector_1',
@@ -190,7 +190,7 @@ describe('AsgInfraSpecSpecInputForm tests', () => {
     const regionInput = queryByNameAttribute('region', container)
     expect(regionInput).toBeInTheDocument()
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
 
     await waitFor(() => expect(getByText('fieldRequired')).toBeInTheDocument())
     expect(getAllByText('common.validation.fieldIsRequired')).toHaveLength(1)
@@ -225,7 +225,7 @@ describe('AsgInfraSpecSpecInputForm tests', () => {
     const regionInput = queryByNameAttribute('region', container)
     expect(regionInput).not.toBeInTheDocument()
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
 
     expect(queryByText('fieldRequired')).toBeNull()
     expect(queryByText('common.validation.fieldIsRequired')).toBeNull()

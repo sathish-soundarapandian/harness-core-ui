@@ -31,7 +31,7 @@ describe('LogAnalysisRowContextMenu', () => {
     expect(screen.getByTestId(/createdJiraTicketIdDisplay/)).toBeInTheDocument()
 
     act(() => {
-      userEvent.click(screen.getByTestId(/createdJiraTicketIdDisplay/))
+      await userEvent.click(screen.getByTestId(/createdJiraTicketIdDisplay/))
     })
 
     await waitFor(() => expect(openSpy).toHaveBeenCalledWith('abc.com', '_blank'))

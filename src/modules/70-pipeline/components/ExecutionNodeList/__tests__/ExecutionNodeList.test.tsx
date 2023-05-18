@@ -38,7 +38,7 @@ describe('ExecutionNodeList', () => {
     const instanceTab = screen.getByText('pipeline.execution.instanceList')
 
     expect(instanceTab).toBeInTheDocument()
-    userEvent.click(instanceTab)
+    await userEvent.click(instanceTab)
 
     await waitFor(() => {
       expect(screen.getByText('pipeline.execution.instances')).toBeInTheDocument()

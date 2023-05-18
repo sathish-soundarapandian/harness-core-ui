@@ -96,7 +96,7 @@ describe('TabTargeting', () => {
       expect(screen.getByText(`cf.featureFlags.flag${current}`)).toBeInTheDocument()
       expect(screen.queryByText(`cf.featureFlags.flagWillTurn${target}`)).not.toBeInTheDocument()
 
-      userEvent.click(switchEl)
+      await userEvent.click(switchEl)
 
       expect(screen.getByText(`cf.featureFlags.flagWillTurn${target}`)).toBeInTheDocument()
       expect(screen.queryByText(`cf.featureFlags.flag${current}`)).not.toBeInTheDocument()
@@ -112,7 +112,7 @@ describe('TabTargeting', () => {
     expect(editButton).toBeInTheDocument()
     expect(setEditing).not.toHaveBeenCalled()
 
-    userEvent.click(editButton)
+    await userEvent.click(editButton)
     expect(setEditing).toHaveBeenCalledWith(true)
   })
 

@@ -32,7 +32,7 @@ describe('Choose Provisioner tests', () => {
       </TestWrapper>
     )
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('button', {
         name: 'open provisioner'
       })
@@ -41,8 +41,8 @@ describe('Choose Provisioner tests', () => {
     expect(modal).toBeDefined()
     expect(getByText(modal!, 'cd.chooseProvisionerText')).toBeInTheDocument()
     const terragruntProv = await screen.findByTestId('provisioner-Terragrunt')
-    userEvent.click(terragruntProv)
-    userEvent.click(
+    await userEvent.click(terragruntProv)
+    await userEvent.click(
       screen.getByRole('button', {
         name: 'cd.setUpProvisionerBtnText'
       })

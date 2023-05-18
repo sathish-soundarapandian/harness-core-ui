@@ -35,7 +35,7 @@ describe('NoFlags', () => {
     expect(btn).toBeInTheDocument()
     expect(onClickMock).not.toHaveBeenCalled()
 
-    userEvent.click(btn)
+    await userEvent.click(btn)
 
     await waitFor(() => expect(onClickMock).toHaveBeenCalled())
   })

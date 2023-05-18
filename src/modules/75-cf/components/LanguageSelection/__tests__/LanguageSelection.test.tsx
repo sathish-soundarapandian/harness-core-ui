@@ -53,7 +53,7 @@ describe('LanguageSelection', () => {
     // assert NodeJS button to not have 'selected' as class name before it's been clicked
     expect(nodeJSButton).not.toHaveClass('selected')
 
-    userEvent.click(nodeJSButton)
+    await userEvent.click(nodeJSButton)
 
     // assert function is called
     expect(onSelectMock).toBeCalledWith(nodeJSEntry)

@@ -62,7 +62,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     expect(container).toMatchSnapshot()
 
-    userEvent.click(container.querySelector('[data-icon="chevron-down"]')!)
+    await userEvent.click(container.querySelector('[data-icon="chevron-down"]')!)
 
     await waitFor(() => expect(document.body.querySelector('.bp3-menu')).toBeInTheDocument())
 
@@ -70,7 +70,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     await act(async () => {
       const svc1 = await findByTextGlobal(menu, 'Service 1')
-      userEvent.click(svc1)
+      await userEvent.click(svc1)
     })
 
     await waitFor(() => {
@@ -119,7 +119,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
     expect(container).toMatchSnapshot()
 
     act(() => {
-      userEvent.click(edit)
+      await userEvent.click(edit)
     })
 
     const editModalTitle = await findByTextGlobal(document.body, 'editService')
@@ -129,13 +129,13 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     const name = queryByAttribute('name', dialog, 'name')!
 
-    userEvent.type(name, 'Service 4')
+    await userEvent.type(name, 'Service 4')
 
     const save = await findByTextGlobal(dialog, 'save')
 
     await waitFor(() => expect(save.parentElement!.classList).not.toContain('bp3-disabled'))
 
-    userEvent.click(save)
+    await userEvent.click(save)
 
     await waitFor(() => expect(dialog).not.toBeInTheDocument())
   })
@@ -162,7 +162,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
     expect(container).toMatchSnapshot()
 
     act(() => {
-      userEvent.click(delBtn)
+      await userEvent.click(delBtn)
     })
 
     const confirmationModal1 = await findByTextGlobal(
@@ -173,11 +173,11 @@ describe('DeployServiceEntityWidget - single service tests', () => {
     const cancel = await findByTextGlobal(confirmationModal1.parentElement!.parentElement!, 'cancel')
 
     act(() => {
-      userEvent.click(cancel)
+      await userEvent.click(cancel)
     })
 
     act(() => {
-      userEvent.click(delBtn)
+      await userEvent.click(delBtn)
     })
 
     const confirmationModal2 = await findByTextGlobal(
@@ -188,7 +188,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
     const apply = await findByTextGlobal(confirmationModal2.parentElement!.parentElement!, 'applyChanges')
 
     act(() => {
-      userEvent.click(apply)
+      await userEvent.click(apply)
     })
 
     expect(onUpdate).toHaveBeenLastCalledWith({ service: { serviceInputs: undefined, serviceRef: '' } })
@@ -216,7 +216,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
     const add = await findByTestId('add-new-service')
 
     act(() => {
-      userEvent.click(add)
+      await userEvent.click(add)
     })
 
     const addDialogTitle = await findByTextGlobal(document.body, 'newService')
@@ -225,13 +225,13 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     const name = queryByAttribute('name', dialog, 'name')!
 
-    userEvent.type(name, 'Service 4')
+    await userEvent.type(name, 'Service 4')
 
     const save = await findByTextGlobal(dialog, 'save')
 
     await waitFor(() => expect(save.parentElement!.classList).not.toContain('bp3-disabled'))
 
-    userEvent.click(save)
+    await userEvent.click(save)
 
     await waitFor(() => expect(dialog).not.toBeInTheDocument())
 
@@ -258,13 +258,13 @@ describe('DeployServiceEntityWidget - single service tests', () => {
     const fixedIcon = container.querySelector('.MultiTypeInput--btn')!
 
     act(() => {
-      userEvent.click(fixedIcon)
+      await userEvent.click(fixedIcon)
     })
 
     const runtimeMenu = await findByTextGlobal(document.body, 'Runtime input')
 
     act(() => {
-      userEvent.click(runtimeMenu)
+      await userEvent.click(runtimeMenu)
     })
 
     await waitFor(() => {
@@ -292,13 +292,13 @@ describe('DeployServiceEntityWidget - single service tests', () => {
     const fixedIcon = container.querySelector('.MultiTypeInput--btn')!
 
     act(() => {
-      userEvent.click(fixedIcon)
+      await userEvent.click(fixedIcon)
     })
 
     const expression = await findByTextGlobal(document.body, 'Expression')
 
     act(() => {
-      userEvent.click(expression)
+      await userEvent.click(expression)
     })
 
     await waitFor(() => {

@@ -171,18 +171,18 @@ describe('<TemplateStudioInternal /> tests', () => {
 
     const toggle = container.querySelector('[data-name="toggle-option-two"]')
     act(() => {
-      userEvent.click(toggle!)
+      await userEvent.click(toggle!)
     })
     await waitFor(() => expect(toggle?.className).toContain('PillToggle--selected'))
 
     const toggle2 = container.querySelector('[data-name="toggle-option-one"]')
     act(() => {
-      userEvent.click(toggle2!)
+      await userEvent.click(toggle2!)
     })
     await waitFor(() => expect(toggle2?.className).toContain('PillToggle--selected'))
 
     act(() => {
-      userEvent.click(toggle2!)
+      await userEvent.click(toggle2!)
     })
     await waitFor(() => expect(toggle2?.className).not.toEqual('PillToggle--item'))
   })
@@ -253,14 +253,14 @@ describe('yaml validation in template studio', () => {
     )
 
     const toggle = container.querySelector('[data-name="toggle-option-two"]')
-    userEvent.click(toggle!)
+    await userEvent.click(toggle!)
     expect(toggle?.className).toContain('PillToggle--selected')
 
     const toggle2 = container.querySelector('[data-name="toggle-option-one"]')
-    userEvent.click(toggle2!)
+    await userEvent.click(toggle2!)
     waitFor(() => expect(toggle2?.className).toContain('PillToggle--selected'))
 
-    userEvent.click(toggle2!)
+    await userEvent.click(toggle2!)
     waitFor(() => expect(toggle2?.className).not.toEqual('PillToggle--item'))
   })
 })

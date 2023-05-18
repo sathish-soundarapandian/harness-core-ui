@@ -43,10 +43,10 @@ describe('Test ConfigurePipeline component', () => {
       </TestWrapper>
     )
     await act(async () => {
-      userEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
+      await userEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
     })
     await act(async () => {
-      userEvent.click(getByText('ci.getStartedWithCI.generatePipelineConfig'))
+      await userEvent.click(getByText('ci.getStartedWithCI.generatePipelineConfig'))
     })
     expect(container.querySelectorAll('.bp3-card')[0]).toHaveClass('Card--selected')
   })
@@ -111,7 +111,7 @@ describe('Test ConfigurePipeline component', () => {
       </TestWrapper>
     )
     await act(async () => {
-      userEvent.click(getByText('common.seeAdvancedOptions'))
+      await userEvent.click(getByText('common.seeAdvancedOptions'))
     })
     expect(getByText('pipelineSteps.deploy.inputSet.branch')).toBeInTheDocument()
     expect(getByText('gitsync.gitSyncForm.yamlPathLabel')).toBeInTheDocument()
@@ -121,7 +121,7 @@ describe('Test ConfigurePipeline component', () => {
       </TestWrapper>
     )
     await act(async () => {
-      userEvent.click(getByText('common.seeAdvancedOptions'))
+      await userEvent.click(getByText('common.seeAdvancedOptions'))
     })
     const yamlPathValidationError = container.querySelector('div[class*="FormError--errorDiv"][data-name="branch"]')
     expect(yamlPathValidationError).toBeInTheDocument()

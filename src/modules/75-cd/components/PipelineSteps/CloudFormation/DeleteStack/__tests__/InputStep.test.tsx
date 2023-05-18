@@ -114,7 +114,7 @@ describe('Test cloudformation delete stack input set', () => {
 
     const timeoutInput = getByPlaceholderText('Enter w/d/h/m/s/ms')
     act(() => {
-      userEvent.type(timeoutInput!, '10m')
+      await userEvent.type(timeoutInput!, '10m')
     })
 
     expect(timeoutInput).toHaveDisplayValue('10m')
@@ -128,7 +128,7 @@ describe('Test cloudformation delete stack input set', () => {
     const { container } = renderComponent(data)
     const provId = queryByAttribute('name', container, 'test.spec.configuration.spec.provisionerIdentifier')
     act(() => {
-      userEvent.type(provId!, 'testID')
+      await userEvent.type(provId!, 'testID')
     })
     expect(provId).toHaveDisplayValue('testID')
   })
@@ -141,7 +141,7 @@ describe('Test cloudformation delete stack input set', () => {
 
     const stackName = queryByAttribute('name', container, 'test.spec.configuration.spec.stackName')
     act(() => {
-      userEvent.type(stackName!, 'testStackName')
+      await userEvent.type(stackName!, 'testStackName')
     })
 
     expect(stackName).toHaveDisplayValue('testStackName')

@@ -49,7 +49,7 @@ describe('User Profile Page', () => {
       </TestWrapper>
     )
     const logoutBtn = getByTestId('signout-link')
-    userEvent.click(logoutBtn)
+    await userEvent.click(logoutBtn)
 
     expect(mockLogout).toBeCalled()
     await waitFor(() =>
@@ -73,7 +73,7 @@ describe('User Profile Page', () => {
     )
 
     const logoutBtn = getByTestId('signout-link')
-    userEvent.click(logoutBtn)
+    await userEvent.click(logoutBtn)
 
     expect(mockLogout).toBeCalled()
     await waitFor(() => expect(setHrefSpy).toHaveBeenCalledWith('http://dummy.com'))

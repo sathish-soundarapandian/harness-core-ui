@@ -222,7 +222,7 @@ describe('ActiveServiceInstancesContent', () => {
     )
     expect(getByText('Retry')).toBeTruthy()
     expect(container).toMatchSnapshot()
-    userEvent.click(getByText('Retry'))
+    await userEvent.click(getByText('Retry'))
   })
 
   test('should render loading', () => {
@@ -270,7 +270,7 @@ describe('ActiveInstance Details Dialog', () => {
     )
 
     const moreDetailsButton = getByText('cd.serviceDashboard.moreDetails')
-    userEvent.click(moreDetailsButton!)
+    await userEvent.click(moreDetailsButton!)
     const popup = findDialogContainer()
     expect(popup).toBeTruthy()
     expect(popup).toMatchSnapshot()
@@ -287,13 +287,13 @@ describe('ActiveInstance Details Dialog', () => {
     )
 
     const moreDetailsButton = getByText('cd.serviceDashboard.moreDetails')
-    userEvent.click(moreDetailsButton!)
+    await userEvent.click(moreDetailsButton!)
     const popup = findDialogContainer()
     expect(popup).toBeTruthy()
 
     const expandButtons = document.querySelectorAll('.bp3-icon')
     expandButtons.forEach(expandButton => {
-      userEvent.click(expandButton)
+      await userEvent.click(expandButton)
     })
     expect(popup).toMatchSnapshot()
   })
@@ -309,12 +309,12 @@ describe('ActiveInstance Details Dialog', () => {
     )
 
     const moreDetailsButton = getByText('cd.serviceDashboard.moreDetails')
-    userEvent.click(moreDetailsButton!)
+    await userEvent.click(moreDetailsButton!)
     const popup = findDialogContainer()
     expect(popup).toBeTruthy()
 
     const pipelineLinks = getAllByTestId('pipeline-link')
-    userEvent.click(pipelineLinks[0])
+    await userEvent.click(pipelineLinks[0])
   })
 })
 
@@ -361,7 +361,7 @@ describe('ActiveInstance Tab states', () => {
 
     const deploymentsTab = getAllByRole('tab')[1]
     expect(deploymentsTab).toBeDefined()
-    userEvent.click(deploymentsTab)
+    await userEvent.click(deploymentsTab)
     expect(container).toMatchSnapshot()
   })
 
@@ -444,11 +444,11 @@ describe('DeploymentViewV2', () => {
     )
     const deploymentsTab = getAllByRole('tab')[1]
     expect(deploymentsTab).toBeDefined()
-    userEvent.click(deploymentsTab)
+    await userEvent.click(deploymentsTab)
 
     const moreDetails = getByText('cd.serviceDashboard.moreDetails')
     expect(moreDetails).toBeTruthy()
-    userEvent.click(moreDetails)
+    await userEvent.click(moreDetails)
     // expect(container).toMatchSnapshot()
     const moreDetailDailog = findDialogContainer()
     expect(moreDetailDailog).toBeTruthy()
@@ -456,7 +456,7 @@ describe('DeploymentViewV2', () => {
     const artifactName = getAllByText('artifact-1')
     expect(artifactName).toBeDefined()
 
-    userEvent.click(artifactName[1])
+    await userEvent.click(artifactName[1])
 
     expect(getByText('cd.serviceDashboard.deploymentDetails')).toBeTruthy()
   })
@@ -487,7 +487,7 @@ describe('DeploymentViewV2', () => {
       </TestWrapper>
     )
     expect(getByText('Retry')).toBeTruthy()
-    userEvent.click(getByText('Retry'))
+    await userEvent.click(getByText('Retry'))
   })
   test('when both are empty and switch to deployment tab', async () => {
     jest.spyOn(cdngServices, 'useGetEnvArtifactDetailsByServiceId').mockImplementation(() => {
@@ -516,7 +516,7 @@ describe('DeploymentViewV2', () => {
 
     const deploymentsTab = getAllByRole('tab')[1]
     expect(deploymentsTab).toBeDefined()
-    userEvent.click(deploymentsTab)
+    await userEvent.click(deploymentsTab)
 
     expect(getByText('pipeline.dashboards.noActiveDeployments')).toBeTruthy()
   })

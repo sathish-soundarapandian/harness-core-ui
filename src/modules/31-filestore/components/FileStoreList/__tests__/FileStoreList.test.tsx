@@ -126,7 +126,7 @@ describe('FileStoreList', () => {
     })
 
     const applyBtn = document.body.querySelector('button[aria-label="entityReference.apply"]')
-    userEvent.click(applyBtn!)
+    await userEvent.click(applyBtn!)
 
     await waitFor(() => expect(getByText('/t2confiog')).toBeInTheDocument())
   })

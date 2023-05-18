@@ -79,7 +79,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     const { getByText, getAllByText } = render(<WrapperComponent {...props} />)
     const addMetricButton = getByText('common.addName')
     await waitFor(() => expect(addMetricButton).toBeInTheDocument())
-    userEvent.click(addMetricButton)
+    await userEvent.click(addMetricButton)
     await waitFor(() => expect(getAllByText('common.addName')).toHaveLength(2))
   })
 
@@ -186,7 +186,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       const { getByTestId } = render(<WrapperComponent {...mockProps2} query="select *" />)
 
       await act(async () => {
-        userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
+        await userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
       })
 
       await waitFor(() => expect(screen.getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
@@ -196,7 +196,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       expect(getByTestId('jsonSelectorBtn')).not.toBeDisabled()
 
       act(() => {
-        userEvent.click(getByTestId('jsonSelectorBtn')!)
+        await userEvent.click(getByTestId('jsonSelectorBtn')!)
       })
 
       expect(document.body.querySelector('.bp3-drawer-header')?.textContent).toBe(
@@ -241,7 +241,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       )
 
       await act(async () => {
-        userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
+        await userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
       })
 
       await waitFor(() => expect(screen.getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
@@ -251,7 +251,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       )
 
       act(() => {
-        userEvent.click(fetchSampleDataButton)
+        await userEvent.click(fetchSampleDataButton)
       })
 
       expect(mutateFn).toHaveBeenCalledWith(logsTablePayloadMock)
@@ -295,7 +295,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       )
 
       await act(async () => {
-        userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
+        await userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
       })
 
       await waitFor(() => expect(screen.getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
@@ -343,7 +343,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       )
 
       await act(async () => {
-        userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
+        await userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
       })
 
       await waitFor(() => expect(screen.getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
@@ -399,7 +399,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       )
 
       await act(async () => {
-        userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
+        await userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
       })
 
       await waitFor(() => expect(screen.getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
@@ -409,7 +409,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       )
 
       act(() => {
-        userEvent.click(fetchSampleDataButton)
+        await userEvent.click(fetchSampleDataButton)
       })
 
       await waitFor(() => expect(container.querySelector('.TableV2--table')).toBeInTheDocument())
@@ -419,7 +419,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       const firstRow = container.querySelector('.TableV2--clickable:first-child') as Element
 
       act(() => {
-        userEvent.click(firstRow)
+        await userEvent.click(firstRow)
       })
 
       expect(showDrawerMock).toHaveBeenCalledWith({ rowData: sampleDataResponse[0] })
@@ -464,7 +464,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       )
 
       await act(async () => {
-        userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
+        await userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
       })
 
       await waitFor(() => expect(screen.getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
@@ -474,7 +474,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       )
 
       act(() => {
-        userEvent.click(fetchSampleDataButton)
+        await userEvent.click(fetchSampleDataButton)
       })
 
       await waitFor(() =>

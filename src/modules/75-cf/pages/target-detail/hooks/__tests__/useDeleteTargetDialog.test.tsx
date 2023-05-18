@@ -31,7 +31,7 @@ const renderComponent = (): RenderResult => {
     </TestWrapper>
   )
 
-  userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
+  await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
 
   return result
 }
@@ -72,7 +72,7 @@ describe('useDeleteTargetDialog', () => {
     expect(mutateMock).not.toHaveBeenCalled()
     expect(screen.queryByText('cf.messages.targetDeleted')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'delete' }))
+    await userEvent.click(screen.getByRole('button', { name: 'delete' }))
 
     await waitFor(() => {
       expect(mutateMock).toHaveBeenCalledWith(sampleTarget.identifier)
@@ -96,7 +96,7 @@ describe('useDeleteTargetDialog', () => {
 
     expect(screen.queryByText(message)).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByRole('button', { name: 'delete' }))
+    await userEvent.click(screen.getByRole('button', { name: 'delete' }))
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

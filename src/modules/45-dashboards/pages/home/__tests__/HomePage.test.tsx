@@ -54,11 +54,11 @@ describe('HomePage', () => {
     const mostViewedSelectionText: StringKeys = 'dashboards.dashboardSortingOptions.mostViewed'
 
     const sortByButton = screen.getByRole('button', { name: 'dashboards.sortBy Select Option chevron-down' })
-    userEvent.click(sortByButton)
+    await userEvent.click(sortByButton)
     await waitFor(() => expect(screen.getByText(mostViewedSelectionText)).toBeInTheDocument())
 
     const mostViewedButton = screen.getByText(mostViewedSelectionText)
-    userEvent.click(mostViewedButton)
+    await userEvent.click(mostViewedButton)
 
     await waitFor(() =>
       expect(
@@ -73,7 +73,7 @@ describe('HomePage', () => {
     renderComponent()
 
     const tagButton = screen.getByRole('button', { name: 'first_tag' })
-    userEvent.click(tagButton)
+    await userEvent.click(tagButton)
 
     await waitFor(() => expect(screen.getByRole('button', { name: 'filters.clearAll' })).toBeInTheDocument())
   })

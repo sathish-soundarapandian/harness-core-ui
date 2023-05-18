@@ -143,7 +143,7 @@ describe('Test Azure Web App Rollback step', () => {
     })
     const { getByPlaceholderText } = renderComponent(data())
     const timeout = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    act(() => userEvent.type(timeout, '10m'))
+    act(() => await userEvent.type(timeout, '10m'))
     expect(timeout).toHaveDisplayValue('10m')
   })
 

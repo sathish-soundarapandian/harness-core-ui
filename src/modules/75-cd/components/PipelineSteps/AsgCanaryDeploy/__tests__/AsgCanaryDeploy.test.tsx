@@ -31,13 +31,13 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement, fieldElement: HT
   // check if field has desired value
   await waitFor(() => expect(getElementByText(cogModal, 'common.configureOptions.regex')).toBeInTheDocument())
   const regexRadio = getElementByText(cogModal, 'common.configureOptions.regex')
-  userEvent.click(regexRadio)
+  await userEvent.click(regexRadio)
   const regexTextArea = queryByAttribute('name', cogModal, 'regExValues')
   act(() => {
     fireEvent.change(regexTextArea!, { target: { value: '<+input>.includes(/test/)' } })
   })
   const cogSubmit = getElementByText(cogModal, 'submit')
-  userEvent.click(cogSubmit)
+  await userEvent.click(cogSubmit)
   await waitFor(() => expect(fieldElement).toHaveDisplayValue('<+input>.regex(<+input>.includes(/test/))'))
 }
 
@@ -70,18 +70,18 @@ describe('Asg Canary Delete Step tests', () => {
     )
 
     const nameInput = queryByNameAttribute('name', container)
-    userEvent.type(nameInput!, 'Step 1')
+    await userEvent.type(nameInput!, 'Step 1')
     await waitFor(() => expect(nameInput).toHaveDisplayValue('Step 1'))
     expect(getByText('Step_1')).toBeInTheDocument()
 
     const timeoutInput = queryByNameAttribute('timeout', container)
-    userEvent.clear(timeoutInput!)
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.clear(timeoutInput!)
+    await userEvent.type(timeoutInput!, '20m')
     await waitFor(() => expect(timeoutInput).toHaveDisplayValue('20m'))
 
     let instanceInput = getByPlaceholderText('instanceFieldOptions.instanceHolder') as HTMLInputElement
-    userEvent.clear(instanceInput!)
-    userEvent.type(instanceInput!, '20')
+    await userEvent.clear(instanceInput!)
+    await userEvent.type(instanceInput!, '20')
     await waitFor(() => expect(instanceInput).toHaveDisplayValue('20'))
 
     const fixedInputIcons = container.querySelectorAll('span[data-icon="fixed-input"]')
@@ -91,10 +91,10 @@ describe('Asg Canary Delete Step tests', () => {
     expect(runtimeInputIcons.length).toBe(0)
 
     const instanceFixedInputBtn = fixedInputIcons[1]
-    userEvent.click(instanceFixedInputBtn)
+    await userEvent.click(instanceFixedInputBtn)
     await waitFor(() => expect(getByText('Runtime input')).toBeInTheDocument())
 
-    userEvent.click(getByText('Runtime input')!)
+    await userEvent.click(getByText('Runtime input')!)
     runtimeInputIcons = container.querySelectorAll('span[data-icon="runtime-input"]')
     await waitFor(() => expect(runtimeInputIcons.length).toBe(1))
     instanceInput = getByPlaceholderText(RUNTIME_INPUT_VALUE) as HTMLInputElement
@@ -104,7 +104,7 @@ describe('Asg Canary Delete Step tests', () => {
     expect(modals.length).toBe(0)
 
     const cogInstanceSelection = document.getElementById('configureOptions_instanceFieldOptions.instances')
-    userEvent.click(cogInstanceSelection!)
+    await userEvent.click(cogInstanceSelection!)
     await waitFor(() => expect(modals.length).toBe(1))
     const instanceSelectionOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(instanceSelectionOGModal, instanceInput)
@@ -162,26 +162,26 @@ describe('Asg Canary Delete Step tests', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(onUpdate).not.toHaveBeenCalled()
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.type(timeoutInput!, '20m')
 
     const instanceInput = getByPlaceholderText('instanceFieldOptions.instanceHolder')
-    userEvent.clear(instanceInput!)
-    userEvent.type(instanceInput!, '-1')
-    userEvent.click(submitBtn)
+    await userEvent.clear(instanceInput!)
+    await userEvent.type(instanceInput!, '-1')
+    await userEvent.click(submitBtn)
 
     await waitFor(() => expect(getByText('common.instanceValidation.minimumCountInstance')).toBeInTheDocument())
 
-    userEvent.clear(instanceInput!)
-    userEvent.type(instanceInput!, '20')
+    await userEvent.clear(instanceInput!)
+    await userEvent.type(instanceInput!, '20')
 
     await waitFor(() => expect(queryByText('common.instanceValidation.minimumCountInstance')).toBeFalsy())
 
     await waitFor(() => expect(instanceInput).toHaveDisplayValue('20'))
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
 
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({

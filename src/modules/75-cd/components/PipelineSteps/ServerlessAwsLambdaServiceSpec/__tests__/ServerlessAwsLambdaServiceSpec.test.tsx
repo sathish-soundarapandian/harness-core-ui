@@ -206,7 +206,7 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
       expect(artifactPathInput).toBeInTheDocument()
 
       const dropdownIcon = container.querySelector('[data-icon="chevron-down"]')?.parentElement as HTMLInputElement
-      userEvent.click(dropdownIcon)
+      await userEvent.click(dropdownIcon)
 
       await waitFor(() => {
         expect(fetchBuildDetails).toHaveBeenCalled()
@@ -248,7 +248,7 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
           onUpdate={onUpdateHandler}
         />
       )
-      userEvent.click(getByText('Submit'))
+      await userEvent.click(getByText('Submit'))
       expect(onUpdateHandler).not.toBeCalled()
     })
 
@@ -291,7 +291,7 @@ describe('ServerlessAwsLambdaServiceSpec tests', () => {
       expect(configOverridePathInput).toBeInTheDocument()
 
       const submitBtn = getByText('Submit')
-      userEvent.click(submitBtn)
+      await userEvent.click(submitBtn)
     })
   })
 

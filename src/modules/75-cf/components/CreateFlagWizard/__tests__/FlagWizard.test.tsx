@@ -43,7 +43,7 @@ describe('FlagWizard', () => {
       </TestWrapper>
     )
 
-    userEvent.type(screen.getByPlaceholderText('cf.creationModal.aboutFlag.ffNamePlaceholder'), 'TEST_FLAG')
+    await userEvent.type(screen.getByPlaceholderText('cf.creationModal.aboutFlag.ffNamePlaceholder'), 'TEST_FLAG')
 
     fireEvent.click(screen.getByText('next'))
 

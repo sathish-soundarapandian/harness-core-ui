@@ -76,7 +76,7 @@ describe('Verify CustomHealthSourceForm', () => {
 
     expect(container.querySelector('input[value="Group 1"]')).toBeInTheDocument()
 
-    userEvent.click(getByText('cv.customHealthSource.Querymapping.title'))
+    await userEvent.click(getByText('cv.customHealthSource.Querymapping.title'))
 
     await waitFor(() => expect(container.querySelector('input[value="GET"]')).toBeChecked())
 
@@ -101,33 +101,33 @@ describe('Verify CustomHealthSourceForm', () => {
     )
     await waitFor(() => expect(container.querySelector('input[name="endTime.timestampFormat"]')).toHaveValue('Seconds'))
 
-    userEvent.click(getByText('cv.monitoringSources.gcoLogs.fetchRecords'))
+    await userEvent.click(getByText('cv.monitoringSources.gcoLogs.fetchRecords'))
 
     // edit values
 
     await waitFor(() => expect(container.querySelector('input[value="POST"]')).not.toBeChecked())
-    userEvent.click(container.querySelector('input[value="POST"]')!)
+    await userEvent.click(container.querySelector('input[value="POST"]')!)
     await waitFor(() => expect(container.querySelector('input[value="POST"]')).toBeChecked())
 
     await waitFor(() => expect(container.querySelector('input[value="HOST_BASED"]')).not.toBeChecked())
     await waitFor(() => expect(container.querySelector('textarea[name="query"]')).not.toBeInTheDocument())
-    userEvent.click(container.querySelector('input[value="HOST_BASED"]')!)
+    await userEvent.click(container.querySelector('input[value="HOST_BASED"]')!)
     await waitFor(() => expect(container.querySelector('input[value="HOST_BASED"]')).toBeChecked())
 
-    userEvent.click(getByText('cv.healthSource.connectors.NewRelic.metricValueAndCharts'))
+    await userEvent.click(getByText('cv.healthSource.connectors.NewRelic.metricValueAndCharts'))
 
     await waitFor(() => expect(getByText('$.series.[*].length')).toBeInTheDocument())
     await waitFor(() => expect(getByText('$.series.[*].query_index')).toBeInTheDocument())
-    userEvent.click(getByText('cv.healthSource.connectors.buildChart'))
+    await userEvent.click(getByText('cv.healthSource.connectors.buildChart'))
 
-    userEvent.click(getByText('cv.monitoringSources.assign'))
+    await userEvent.click(getByText('cv.monitoringSources.assign'))
 
-    userEvent.click(container.querySelector('input[name="healthScore"]')!)
+    await userEvent.click(container.querySelector('input[name="healthScore"]')!)
     await waitFor(() => expect(container.querySelector('input[name="healthScore"]')).toBeChecked())
     await waitFor(() => expect(container.querySelector('input[name="sli"]')).toBeChecked())
 
-    userEvent.click(container.querySelector('input[value="Errors"]')!)
-    userEvent.click(container.querySelector('input[name="higherBaselineDeviation"]')!)
+    await userEvent.click(container.querySelector('input[value="Errors"]')!)
+    await userEvent.click(container.querySelector('input[name="higherBaselineDeviation"]')!)
   })
 
   test('should render CustomHealthSourceForm with no formikValue', async () => {
@@ -157,44 +157,44 @@ describe('Verify CustomHealthSourceForm', () => {
     )
 
     // Verify clicking on POST shows query textare
-    userEvent.click(getByText('cv.customHealthSource.Querymapping.title'))
+    await userEvent.click(getByText('cv.customHealthSource.Querymapping.title'))
     await waitFor(() => expect(container.querySelector('input[value="POST"]')).not.toBeChecked())
-    userEvent.click(container.querySelector('input[value="POST"]')!)
+    await userEvent.click(container.querySelector('input[value="POST"]')!)
     await waitFor(() => expect(container.querySelector('input[value="POST"]')).toBeChecked())
     await waitFor(() => expect(container.querySelector('textarea[name="query"]')).toBeInTheDocument())
 
     // Selecting HostBased updates Assign component
     await waitFor(() => expect(container.querySelector('input[value="HOST_BASED"]')).not.toBeChecked())
-    userEvent.click(container.querySelector('input[value="HOST_BASED"]')!)
+    await userEvent.click(container.querySelector('input[value="HOST_BASED"]')!)
     await waitFor(() => expect(container.querySelector('input[value="HOST_BASED"]')).toBeChecked())
 
-    userEvent.click(getByText('cv.monitoringSources.assign'))
+    await userEvent.click(getByText('cv.monitoringSources.assign'))
     await waitFor(() => expect(getByText('cv.monitoredServices.continuousVerification')).toBeInTheDocument())
-    userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
+    await userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
     await waitFor(() => expect(container.querySelector('input[name="continuousVerification"]')).toBeChecked())
     await waitFor(() => expect(container.querySelector('input[name="healthScore"]')).not.toBeInTheDocument())
 
-    userEvent.click(getByText('cv.customHealthSource.Querymapping.title'))
+    await userEvent.click(getByText('cv.customHealthSource.Querymapping.title'))
 
     await waitFor(() => expect(container.querySelector('input[value="SERVICE_BASED"]')).not.toBeChecked())
-    userEvent.click(container.querySelector('input[value="SERVICE_BASED"]')!)
+    await userEvent.click(container.querySelector('input[value="SERVICE_BASED"]')!)
     await waitFor(() => expect(container.querySelector('input[value="SERVICE_BASED"]')).toBeChecked())
 
-    userEvent.click(getByText('cv.monitoringSources.assign'))
+    await userEvent.click(getByText('cv.monitoringSources.assign'))
     await waitFor(() =>
       expect(getByText('cv.monitoredServices.monitoredServiceTabs.serviceHealth')).toBeInTheDocument()
     )
     await waitFor(() => expect(getByText('cv.slos.sli')).toBeInTheDocument())
 
-    userEvent.click(container.querySelector('input[name="healthScore"]')!)
+    await userEvent.click(container.querySelector('input[name="healthScore"]')!)
     await waitFor(() => expect(container.querySelector('input[name="sli"]')).toBeChecked())
-    userEvent.click(container.querySelector('input[name="sli"]')!)
+    await userEvent.click(container.querySelector('input[name="sli"]')!)
 
     await waitFor(() => expect(container.querySelector('input[name="healthScore"]')).toBeChecked())
     await waitFor(() => expect(container.querySelector('input[name="sli"]')).not.toBeChecked())
 
-    userEvent.click(container.querySelector('input[value="Errors"]')!)
-    userEvent.click(container.querySelector('input[name="higherBaselineDeviation"]')!)
+    await userEvent.click(container.querySelector('input[value="Errors"]')!)
+    await userEvent.click(container.querySelector('input[name="higherBaselineDeviation"]')!)
 
     await waitFor(() => expect(container.querySelector('input[name="continuousVerification"]')).not.toBeInTheDocument())
   })

@@ -38,7 +38,7 @@ describe('JsonSelectorWithDrawer', () => {
     )
 
     act(() => {
-      userEvent.click(screen.getByText(/test/))
+      await userEvent.click(screen.getByText(/test/))
     })
 
     await waitFor(() =>

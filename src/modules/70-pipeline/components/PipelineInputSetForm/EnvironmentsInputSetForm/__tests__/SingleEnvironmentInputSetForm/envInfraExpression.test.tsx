@@ -85,8 +85,8 @@ describe('Single Environment Input Set Form - Env and Infra Expression', () => {
     )
 
     // change env type to expression
-    userEvent.click(screen.getByTestId('multi-type-button'))
-    userEvent.click(getByText(findPopoverContainer()!, 'Expression'))
+    await userEvent.click(screen.getByTestId('multi-type-button'))
+    await userEvent.click(getByText(findPopoverContainer()!, 'Expression'))
     await waitFor(() => expect(findPopoverContainer()).toBeNull())
 
     // enter environment expression value
@@ -101,8 +101,8 @@ describe('Single Environment Input Set Form - Env and Infra Expression', () => {
     expect(screen.getByText('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')).toBeVisible()
 
     // change infra type to expression, 0 is env 1 is infra
-    userEvent.click(screen.getAllByTestId('multi-type-button')[1])
-    userEvent.click(getByText(findPopoverContainer()!, 'Expression'))
+    await userEvent.click(screen.getAllByTestId('multi-type-button')[1])
+    await userEvent.click(getByText(findPopoverContainer()!, 'Expression'))
     await waitFor(() => expect(findPopoverContainer()).toBeNull())
 
     // enter infra expression value

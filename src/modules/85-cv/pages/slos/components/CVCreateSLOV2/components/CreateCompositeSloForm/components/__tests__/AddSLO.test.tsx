@@ -155,7 +155,7 @@ describe('Validate  AddSLO', () => {
     expect(getByText('cv.CompositeSLO.AddSLO')).toBeInTheDocument()
     const firstWeight = container.querySelector('[name="weightagePercentage"]')
     act(() => {
-      userEvent.type(firstWeight!, '1')
+      await userEvent.type(firstWeight!, '1')
     })
     act(() => {
       fireEvent.click(getByText('Update'))

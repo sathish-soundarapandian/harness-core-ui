@@ -57,57 +57,57 @@ describe('Add Edit Service Override Test', () => {
     const textboxes = screen.getAllByRole('textbox')
 
     // select service
-    userEvent.click(textboxes[0])
+    await userEvent.click(textboxes[0])
     await waitFor(() => {
       expect(screen.getByText('svc_1')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getAllByRole('listitem')[0])
+    await userEvent.click(screen.getAllByRole('listitem')[0])
     await waitFor(() => {
       expect(textboxes[0]).toHaveValue('svc_1')
       expect(screen.queryAllByRole('listitem').length).toBe(0)
       expect(screen.getByText('variableLabel')).toBeInTheDocument()
     })
-    userEvent.click(screen.getByText('variableLabel'))
+    await userEvent.click(screen.getByText('variableLabel'))
 
     const newOverrideText = screen.getByText('common.newName common.override')
     expect(newOverrideText).toBeDefined()
-    userEvent.click(newOverrideText)
+    await userEvent.click(newOverrideText)
 
     // select variable
     const variableTextBox = screen.getAllByRole('textbox')
-    userEvent.click(variableTextBox[1])
+    await userEvent.click(variableTextBox[1])
     await waitFor(() => {
       expect(screen.getByText('var2')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getAllByRole('listitem')[1])
+    await userEvent.click(screen.getAllByRole('listitem')[1])
     await waitFor(() => {
       expect(variableTextBox[1]).toHaveValue('var2')
       expect(screen.queryAllByRole('listitem').length).toBe(0)
     })
 
     // change type to number
-    userEvent.click(variableTextBox[2])
+    await userEvent.click(variableTextBox[2])
     await waitFor(() => {
       expect(screen.getByText('number')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getAllByRole('listitem')[2])
+    await userEvent.click(screen.getAllByRole('listitem')[2])
     await waitFor(() => {
       expect(screen.queryAllByRole('listitem').length).toBe(0)
       expect(variableTextBox[2]).toHaveValue('number')
     })
 
     // override with number
-    userEvent.type(screen.getByRole('spinbutton'), '123')
+    await userEvent.type(screen.getByRole('spinbutton'), '123')
 
-    userEvent.click(screen.getAllByRole('button')[1])
+    await userEvent.click(screen.getAllByRole('button')[1])
     await waitFor(() => {
       expect(screen.getAllByRole('button')[1]).toHaveClass('PillToggle--item PillToggle--selected')
     })
 
-    userEvent.click(screen.getAllByRole('button')[0])
+    await userEvent.click(screen.getAllByRole('button')[0])
     await waitFor(() => {
       expect(screen.getAllByRole('button')[0]).toHaveClass('PillToggle--item PillToggle--selected')
     })

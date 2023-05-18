@@ -90,18 +90,18 @@ describe('FlagActivation', () => {
     // Edit flag variation
     await waitFor(() => expect(screen.getByText('cf.featureFlags.rules.editRules')).toBeInTheDocument())
 
-    userEvent.click(screen.getByText('cf.featureFlags.rules.editRules'))
+    await userEvent.click(screen.getByText('cf.featureFlags.rules.editRules'))
 
     expect(document.getElementsByName('onVariation')[0]).toBeInTheDocument()
 
-    userEvent.click(document.getElementsByName('onVariation')[0])
-    userEvent.click(screen.getByText('False'))
+    await userEvent.click(document.getElementsByName('onVariation')[0])
+    await userEvent.click(screen.getByText('False'))
 
     expect(document.getElementsByName('onVariation')[0]).toHaveValue('False')
     expect(screen.getByText('save')).toBeInTheDocument()
 
     // Assert modal appears
-    userEvent.click(screen.getByText('save'))
+    await userEvent.click(screen.getByText('save'))
 
     const saveToGitModal = document.getElementById('save-flag-to-git-modal-body')
     await waitFor(() => expect(saveToGitModal).toBeInTheDocument())

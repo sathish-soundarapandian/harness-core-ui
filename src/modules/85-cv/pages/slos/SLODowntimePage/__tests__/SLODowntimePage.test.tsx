@@ -153,7 +153,7 @@ describe('SLO Downtime page', () => {
     waitFor(() => expect(document.querySelector('[class*="menuItem"]')).not.toBeNull())
 
     act(() => {
-      userEvent.click(getByText('demoservice_demoenv'))
+      await userEvent.click(getByText('demoservice_demoenv'))
     })
 
     const clearFilters = getByText('common.filters.clearFilter')
@@ -204,14 +204,14 @@ describe('SLO Downtime page', () => {
     )
 
     act(() => {
-      userEvent.click(container.querySelectorAll('[type="checkbox"]')[0])
+      await userEvent.click(container.querySelectorAll('[type="checkbox"]')[0])
     })
 
     await expect(getByText('all')).toBeInTheDocument()
 
     // press add downtime button
     act(() => {
-      userEvent.click(container.querySelectorAll('[class="bp3-button-text"]')[0])
+      await userEvent.click(container.querySelectorAll('[class="bp3-button-text"]')[0])
     })
   })
 
@@ -234,14 +234,14 @@ describe('SLO Downtime page', () => {
 
     // deleting a downtime
     act(() => {
-      userEvent.click(container.querySelectorAll('[data-icon="main-trash"]')[0])
+      await userEvent.click(container.querySelectorAll('[data-icon="main-trash"]')[0])
     })
     await expect(getByText('delete')).toBeInTheDocument()
     fireEvent.click(getByText('delete'))
 
     // cancel after pressing delete icon
     act(() => {
-      userEvent.click(container.querySelectorAll('[data-icon="main-trash"]')[0])
+      await userEvent.click(container.querySelectorAll('[data-icon="main-trash"]')[0])
     })
     await expect(getByText('cancel')).toBeInTheDocument()
     fireEvent.click(getByText('cancel'))

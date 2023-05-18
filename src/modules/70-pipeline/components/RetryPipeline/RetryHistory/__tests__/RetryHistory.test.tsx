@@ -118,11 +118,11 @@ describe('Retry History Button tests', () => {
       name: 'pipeline.retryHistory'
     })
     expect(retryHistoryButton).not.toBeDisabled()
-    userEvent.click(retryHistoryButton)
+    await userEvent.click(retryHistoryButton)
     const retryHistoryExecutionList = await screen.findByTestId('retryHistoryExecutionList')
     expect(retryHistoryExecutionList).toMatchSnapshot('RetryHistoryExecutionList Snapshot')
     const executionDetailText = await screen.findByText('pipeline.recentExecutionText 2/2')
-    userEvent.click(executionDetailText)
+    await userEvent.click(executionDetailText)
     expect(mockHistoryPush).toBeCalledWith(
       '/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/pWoxb6ZARgCrf2fYtZ4k5Q/pipeline'
     )
@@ -140,7 +140,7 @@ describe('Retry History Button tests', () => {
     const retryHistoryButton = await screen.findByRole('button', {
       name: 'pipeline.retryHistory'
     })
-    userEvent.click(retryHistoryButton)
+    await userEvent.click(retryHistoryButton)
     const retryHistoryExecutionList = await screen.findByTestId('retryHistoryExecutionList')
     expect(retryHistoryExecutionList).toMatchSnapshot('RetryHistoryExecutionList Loading')
     expect(screen.getByText('Loading, please wait...')).toBeInTheDocument()
@@ -161,7 +161,7 @@ describe('Retry History Button tests', () => {
       </TestWrapper>
     )
     const viewLatestText = await screen.findByText('common.viewLatest')
-    userEvent.click(viewLatestText)
+    await userEvent.click(viewLatestText)
     expect(mockHistoryPush).toBeCalledWith(
       '/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/pWoxb6ZARgCrf2fYtZ4k5Q/pipeline'
     )

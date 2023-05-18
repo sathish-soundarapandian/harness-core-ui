@@ -106,7 +106,7 @@ describe('SLOCardContent', () => {
     expect(screen.getByText('cv.SLOPerformanceTrend')).toBeInTheDocument()
     expect(screen.queryByText('cv.sloRecalculationInProgress')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.errorBudget'))
+    await userEvent.click(screen.getByText('cv.errorBudget'))
 
     expect(screen.queryByTestId('error-budget-gauge')).toBeInTheDocument()
     expect(screen.getAllByText('cv.SLO')[0]).not.toHaveClass('PillToggle--selected')
@@ -114,7 +114,7 @@ describe('SLOCardContent', () => {
     expect(screen.getByText('cv.errorBudgetRemainingWithMins')).toBeInTheDocument()
     expect(screen.getByText('cv.errorBudgetBurnDown')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.SLO'))
+    await userEvent.click(screen.getByText('cv.SLO'))
 
     expect(screen.getAllByText('cv.SLO')[0]).toHaveClass('PillToggle--selected')
   })
@@ -134,7 +134,7 @@ describe('SLOCardContent', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByText('cv.errorBudget'))
+    await userEvent.click(screen.getByText('cv.errorBudget'))
 
     expect(screen.getByText('cv.errorBudget')).toHaveClass('PillToggle--selected')
 
@@ -168,11 +168,11 @@ describe('SLOCardContent', () => {
     expect(screen.getByTestId('timeline-slider-container')).toBeInTheDocument()
 
     expect(setSliderTimeRange).toBeCalledTimes(0)
-    userEvent.click(screen.getByTestId('timeline-slider-container'))
+    await userEvent.click(screen.getByTestId('timeline-slider-container'))
 
     expect(screen.getByText('reset')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('reset'))
+    await userEvent.click(screen.getByText('reset'))
 
     expect(screen.queryByText('reset')).not.toBeInTheDocument()
     expect(setSliderTimeRange).toBeCalledTimes(1)
@@ -192,17 +192,17 @@ describe('SLOCardContent', () => {
       </TestWrapper>
     )
 
-    userEvent.click(screen.getByText('cv.errorBudget'))
+    await userEvent.click(screen.getByText('cv.errorBudget'))
     expect(screen.queryByTestId('error-budget-gauge')).toBeInTheDocument()
 
     expect(screen.getByTestId('timeline-slider-container')).toBeInTheDocument()
-    userEvent.click(screen.getByTestId('timeline-slider-container'))
+    await userEvent.click(screen.getByTestId('timeline-slider-container'))
 
-    userEvent.click(screen.getByTestId('timeline-slider-container'))
+    await userEvent.click(screen.getByTestId('timeline-slider-container'))
 
     expect(screen.getByText('reset')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('reset'))
+    await userEvent.click(screen.getByText('reset'))
 
     expect(screen.queryByText('reset')).not.toBeInTheDocument()
   })
@@ -223,7 +223,7 @@ describe('SLOCardContent', () => {
 
     expect(screen.queryByTestId('SLOCard_UserHint_SLO')).not.toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.errorBudget'))
+    await userEvent.click(screen.getByText('cv.errorBudget'))
 
     expect(screen.queryByTestId('SLOCard_UserHint_ErrorBudget')).not.toBeInTheDocument()
   })
@@ -245,7 +245,7 @@ describe('SLOCardContent', () => {
 
     expect(screen.queryByTestId('SLOCard_UserHint_SLO')).toBeInTheDocument()
 
-    userEvent.click(screen.getByText('cv.errorBudget'))
+    await userEvent.click(screen.getByText('cv.errorBudget'))
 
     expect(screen.queryByTestId('SLOCard_UserHint_ErrorBudget')).toBeInTheDocument()
   })
