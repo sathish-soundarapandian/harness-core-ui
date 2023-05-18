@@ -9,6 +9,28 @@
     "module": "cd",
     "moduleInfo": {
       "cd": {
+        "gitopsExecutionSummary": {
+          "environments": [
+            {
+              "name": "env1",
+              "identifier": "env1"
+            },
+            {
+              "name": "env2",
+              "identifier": "env2"
+            }
+          ],
+          "clusters": [
+            {
+              "clusterName": "cluster1",
+              "clusterId": "cluster1"
+            },
+            {
+              "clusterName": "cluster2",
+              "clusterId": "cluster2"
+            }
+          ]
+        },
         "serviceInfo": {
           "identifier": "Order",
           "displayName": "Order",
@@ -24,8 +46,7 @@
         "infraExecutionSummary": {
           "identifier": "Production",
           "name": "Production",
-          "type": "Production",
-          "infrastructureIdentifier": "infra1"
+          "type": "Production"
         }
       }
     },
