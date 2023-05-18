@@ -99,6 +99,8 @@ export default function DeployEnvironmentEntityInputStep({
       ? 'expression'
       : undefined
   )
+
+  console.log('environmentsSelectedType', { environmentsSelectedType, values: formik.values })
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const getEnvironmentIdentifiers = useCallback(() => {

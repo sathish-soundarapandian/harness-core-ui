@@ -70,6 +70,13 @@ export default function SingleServiceInputSetForm({
     deploymentStage?.service?.serviceRef
   )
 
+  const environmentIdentifiers = defaultTo(
+    deploymentStageInputSet?.environment?.environmentRef,
+    deploymentStage?.environment?.environmentRef
+  )
+
+  console.log('stage', { deploymentStageInputSet, deploymentStage })
+
   const useFromStageInputSetValue = get(deploymentStageInputSet, 'service.useFromStage.stage')
 
   const [setupModeType, setSetupMode] = useState(
@@ -186,11 +193,15 @@ export default function SingleServiceInputSetForm({
               readonly={readonly}
               customStepProps={{
                 stageIdentifier,
+                isMultiEnvironment: false,
+                pathToEnvironments: 'environment',
+                deployToAllEnvironments: deploymentStage?.environmentGroup?.deployToAll,
                 deploymentType: deploymentStage?.deploymentType,
                 gitOpsEnabled: deploymentStage?.gitOpsEnabled,
                 deploymentMetadata: deploymentStage?.deploymentMetadata,
                 allValues: pick(deploymentStage, ['service']),
                 customDeploymentData: deploymentStage?.customDeploymentRef,
+                environmentIdentifiers: [environmentIdentifiers || ''],
                 childPipelineMetadata
               }}
               onUpdate={data => formik?.setFieldValue(`${path}.service`, get(data, 'service'))}

@@ -58,6 +58,10 @@ export interface DeployServiceEntityCustomProps {
   allValues?: DeployServiceEntityData
   customDeploymentData?: TemplateLinkConfig
   setupModeType: string
+  pathToEnvironments: string
+  envGroupIdentifier?: string
+  isMultiEnvironment?: boolean
+  deployToAllEnvironments?: boolean
 }
 
 export function isEditService(data: DeployServiceEntityData): boolean {

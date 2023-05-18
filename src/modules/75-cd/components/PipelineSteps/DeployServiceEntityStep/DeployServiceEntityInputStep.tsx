@@ -15,27 +15,47 @@ import {
   SelectOption,
   useToaster
 } from '@harness/uicore'
-import { cloneDeep, defaultTo, get, isEmpty, isNil, merge, set } from 'lodash-es'
+import {
+  cloneDeep,
+  cloneDeep,
+  defaultTo,
+  get,
+  isBoolean,
+  isEmpty,
+  isEqual,
+  isNil,
+  merge,
+  pick,
+  set,
+  set
+} from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { ServiceDefinition, ServiceYamlV2 } from 'services/cd-ng'
+import type { EnvironmentYamlV2, ServiceDefinition, ServiceYamlV2 } from 'services/cd-ng'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
-import { isMultiTypeExpression, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
+import { isMultiTypeExpression, isValueExpression, isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
+import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import type { DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
 import { useGetServicesData } from './useGetServicesData'
+import { useGetEnvironmentsData } from '../DeployEnvironmentEntityStep/DeployEnvironment/useGetEnvironmentsData'
+import {
+  createEnvTemplate,
+  createEnvValues
+} from '../DeployEnvironmentEntityStep/DeployEnvironmentEntityInputStepUtils'
+import type { DeployEnvironmentEntityConfig } from '../DeployEnvironmentEntityStep/types'
 import css from './DeployServiceEntityStep.module.scss'
 
 export interface DeployServiceEntityInputStepProps extends DeployServiceEntityCustomProps {
@@ -48,23 +68,35 @@ export interface DeployServiceEntityInputStepProps extends DeployServiceEntityCu
   }
   allowableTypes: AllowedTypes
   stepViewType: StepViewType
+  pathToEnvironments: string
+  envGroupIdentifier?: string
+  isMultiEnvironment?: boolean
+  deployToAllEnvironments?: boolean
+  areFiltersAdded?: boolean
+  environmentIdentifiers?: string[]
 }
 
 export function DeployServiceEntityInputStep({
   initialValues,
+  isMultiEnvironment,
+  pathToEnvironments,
+  envGroupIdentifier,
+  deployToAllEnvironments,
   inputSetData,
   allowableTypes,
   deploymentType,
+  stepViewType,
   gitOpsEnabled,
   deploymentMetadata,
-  customDeploymentData
+  customDeploymentData,
+  environmentIdentifiers
 }: DeployServiceEntityInputStepProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { showWarning } = useToaster()
   const { expressions } = useVariablesExpression()
-  const { updateStageFormTemplate } = useStageFormContext()
+  const { updateStageFormTemplate, getStageFormTemplate } = useStageFormContext()
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
-  const formik = useFormikContext()
+  const formik = useFormikContext<DeployServiceEntityData | DeployEnvironmentEntityConfig>()
 
   const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentData || {}
   const shouldAddCustomDeploymentData =
@@ -108,6 +140,99 @@ export function DeployServiceEntityInputStep({
     ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {}),
     lazyService: isMultiTypeExpression(serviceInputType)
   })
+
+  // pathPrefix contains the outer formik path but does not include the path to environments
+  const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+  // fullPath contains the outer formik path and the path to environments
+  const fullPath = pathPrefix + pathToEnvironments
+
+  // const environmentValue = get(initialValues, `environment.environmentRef`)
+  // const environmentValues: EnvironmentYamlV2[] = get(initialValues, defaultTo(pathToEnvironments, ''))
+  const mainEntityPath = isMultiEnvironment ? pathToEnvironments?.split('.')[0] : pathToEnvironments
+  const pathForDeployToAll = `${mainEntityPath}.deployToAll`
+
+  // // environmentsSelectedType is to handle deployToAll/runtime envs
+  // // 'all' is for deployToAll, 'runtime' when envs is marked runtime
+  // const [environmentsSelectedType, setEnvironmentsSelectedType] = useState<
+  //   'all' | 'runtime' | 'other' | 'expression' | undefined
+  // >(
+  //   get(formik.values, pathForDeployToAll) === true
+  //     ? 'all'
+  //     : !isMultiEnvironment && isValueExpression(get(formik.values, 'environment.environmentRef'))
+  //     ? 'expression'
+  //     : undefined
+  // )
+
+  const {
+    environmentsList,
+    environmentsData,
+    loadingEnvironmentsList,
+    loadingEnvironmentsData,
+    // This is required only when updating the entities list
+    updatingEnvironmentsData,
+    nonExistingEnvironmentIdentifiers
+  } = useGetEnvironmentsData({ envIdentifiers: environmentIdentifiers || [], envGroupIdentifier, serviceIdentifiers })
+
+  console.log('environmentIdentifiers', { environmentIdentifiers, serviceIdentifiers })
+
+  // ! This effect should only run when environments are selected and their data has completely loaded
+  useDeepCompareEffect(() => {
+    // If selected environments data has not loaded.
+    // The 2nd condition is to prevent update until environments data load for all environments
+    if (!environmentsData.length || environmentIdentifiers?.length !== environmentsData.length) {
+      return
+    }
+
+    // updated template based on selected environments
+    const existingTemplate = getStageFormTemplate<EnvironmentYamlV2[]>(fullPath)
+    const newEnvironmentsTemplate: EnvironmentYamlV2[] = createEnvTemplate(
+      existingTemplate as EnvironmentYamlV2[],
+      environmentIdentifiers,
+      cloneDeep(environmentsData),
+      gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions',
+      serviceIdentifiers
+    )
+
+    // updated values based on selected environments
+    const existingEnvironmentValues = get(formik.values, pathToEnvironments)
+    const newEnvironmentsValues = createEnvValues(
+      isMultiEnvironment ? existingEnvironmentValues : [existingEnvironmentValues],
+      environmentIdentifiers,
+      cloneDeep(environmentsData),
+      deployToAllEnvironments || false,
+      gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions',
+      serviceIdentifiers,
+      isMultiEnvironment || false,
+      stepViewType
+    )
+
+    const areEnvironmentsRuntimeUnderEnvGroup = !isBoolean(deployToAllEnvironments) && envGroupIdentifier
+    if (isMultiEnvironment) {
+      const newFormikValues = { ...formik.values }
+      if (areFiltersAdded) {
+        set(
+          newFormikValues,
+          pathToEnvironments,
+          newEnvironmentsValues.map(envValue => pick(envValue, 'environmentRef'))
+        )
+      } else {
+        updateStageFormTemplate(newEnvironmentsTemplate, fullPath)
+
+        // update form values
+        set(newFormikValues, pathToEnvironments, newEnvironmentsValues)
+      }
+
+      if (areEnvironmentsRuntimeUnderEnvGroup) {
+        set(newFormikValues, pathForDeployToAll, false)
+      }
+      formik.setFieldValue(mainEntityPath, get(newFormikValues, mainEntityPath))
+    } else {
+      updateStageFormTemplate(newEnvironmentsTemplate[0], fullPath)
+      formik.setFieldValue(mainEntityPath, newEnvironmentsValues[0])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [environmentsData, environmentIdentifiers, envGroupIdentifier])
+
   const isMultiSvcTemplate =
     getMultiTypeFromValue(servicesTemplate as unknown as string) === MultiTypeInputType.RUNTIME ||
     (Array.isArray(servicesTemplate) &&
