@@ -27,6 +27,10 @@ import {
   DropDown,
   useToaster
 } from '@harness/uicore'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+
 import { Color, FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
@@ -118,7 +122,12 @@ export default function PageTemplate({
   const searchRef = useRef<ExpandingSearchInputHandle>()
 
   const hasFilterIdentifier = getHasFilterIdentifier(filterIdentifier)
-
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const {
     data: forceDeleteSettings,
     loading: forceDeleteSettingsLoading,
@@ -128,7 +137,7 @@ export default function PageTemplate({
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: !isForceDeleteAllowed
+    lazy: !hasRBACViewPermission && !isForceDeleteAllowed
   })
 
   React.useEffect(() => {

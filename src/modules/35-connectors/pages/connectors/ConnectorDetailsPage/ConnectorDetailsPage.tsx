@@ -19,6 +19,10 @@ import {
   ResponseConnectorResponse,
   useGetSettingValue
 } from 'services/cd-ng'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -258,10 +262,16 @@ const ConnectorDetailsPage: React.FC<ConnectorDetailsPageProps> = props => {
     history.push(routes.toConnectors({ accountId, projectIdentifier, orgIdentifier, module }))
   }
   const { PL_FORCE_DELETE_CONNECTOR_SECRET } = useFeatureFlags()
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   const { getRBACErrorMessage } = useRBACError()

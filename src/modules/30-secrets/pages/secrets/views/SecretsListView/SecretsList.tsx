@@ -46,6 +46,8 @@ import { SettingType } from '@common/constants/Utils'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { SECRETS_DEFAULT_PAGE_INDEX, SECRETS_DEFAULT_PAGE_SIZE } from '../../Constants'
+import { usePermission } from '@rbac/hooks/usePermission'
+
 import css from './SecretsList.module.scss'
 
 interface SecretsListProps {
@@ -328,11 +330,17 @@ const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch }) => {
   const { pathname } = useLocation()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const { PL_FORCE_DELETE_CONNECTOR_SECRET, PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   useEffect(() => {

@@ -31,6 +31,10 @@ import { yamlPathRegex } from '@common/utils/StringUtils'
 import { ConnectorInfoDTO, GetConnectorQueryParams, useGetConnector, useGetSettingValue } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+
 import css from './GitSyncForm.module.scss'
 
 export interface GitSyncFormFields {
@@ -128,7 +132,12 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
       projectIdentifier: getConnectorScope() === Scope.PROJECT ? projectIdentifier : undefined
     }
   }
-
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const {
     data: defaultConnectorSetting,
     error: defaultConnectorSettingError,
@@ -140,7 +149,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
       orgIdentifier,
       projectIdentifier
     },
-    lazy: !!(formikProps.values.connectorRef || connectorRef) || skipDefaultConnectorSetting
+    lazy: !hasRBACViewPermission && (!!(formikProps.values.connectorRef || connectorRef) || skipDefaultConnectorSetting)
   })
 
   const {

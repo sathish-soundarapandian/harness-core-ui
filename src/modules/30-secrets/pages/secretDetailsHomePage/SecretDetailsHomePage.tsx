@@ -26,6 +26,9 @@ import SecretDetails from '../secretDetails/SecretDetails'
 import SecretReferences from '../secretReferences/SecretReferences'
 import { SecretMenuItem } from '../secrets/views/SecretsListView/SecretsList'
 import css from './SecretDetailsHomePage.module.scss'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 interface OptionalIdentifiers {
   module?: Module
@@ -66,10 +69,16 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
   const { selectedProject } = useAppStore()
   const { getRBACErrorMessage } = useRBACError()
   const { PL_FORCE_DELETE_CONNECTOR_SECRET } = useFeatureFlags()
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   useEffect(() => {

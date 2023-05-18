@@ -29,6 +29,8 @@ import {
   useUpdateOverlayInputSetForPipeline,
   useYamlDiffForInputSet
 } from 'services/pipeline-ng'
+import { usePermission } from '@rbac/hooks/usePermission'
+
 import { useGetSettingValue } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -143,11 +145,16 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     inputSetIdentifier: '',
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })
-
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const { data: allowDifferentRepoSettings, error: allowDifferentRepoSettingsError } = useGetSettingValue({
     identifier: SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS,
     queryParams: { accountIdentifier: accountId },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   React.useEffect(() => {

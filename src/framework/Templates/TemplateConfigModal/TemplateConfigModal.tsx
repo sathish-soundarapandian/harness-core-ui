@@ -32,8 +32,6 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import RbacButton from '@rbac/components/Button/Button'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { EntityGitDetails, NGTemplateInfoConfig } from 'services/template-ng'
 import { TemplatePreview } from '@templates-library/components/TemplatePreview/TemplatePreview'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
@@ -65,6 +63,10 @@ import {
   ICON_FILE_MAX_SIZE_IN_KB,
   ICON_FILE_SUPPORTED_TYPES
 } from '../templates'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+
 import css from './TemplateConfigModal.module.scss'
 
 export enum Fields {
@@ -691,7 +693,12 @@ const TemplateConfigModal = (
     }),
     [basicTemplateDetailsHandle.current]
   )
-
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const {
     data: enforceGitXSetting,
     error: enforceGitXSettingError,
@@ -703,7 +710,7 @@ const TemplateConfigModal = (
       orgIdentifier,
       projectIdentifier
     },
-    lazy: !isInlineRemoteSelectionApplicable
+    lazy: !hasRBACViewPermission && !isInlineRemoteSelectionApplicable
   })
 
   React.useEffect(() => {

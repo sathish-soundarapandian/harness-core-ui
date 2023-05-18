@@ -45,6 +45,8 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Sort, SortFields } from '@common/utils/listUtils'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
+import { usePermission } from '@rbac/hooks/usePermission'
+
 import { ServicesQueryParams, ServiceTabs, useServicesQueryParamOptions } from '../utils/ServiceUtils'
 import css from './ServicesListPage.module.scss'
 
@@ -94,13 +96,18 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
       showModal()
     }
   }, [isEdit])
-
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   useEffect(() => {

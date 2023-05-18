@@ -24,6 +24,8 @@ import {
   ModalDialog,
   OverlaySpinner
 } from '@harness/uicore'
+import { usePermission } from '@rbac/hooks/usePermission'
+
 import { Divider } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -112,7 +114,12 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
     debounce: 400,
     lazy: !isOpen
   })
-
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const {
     data: enforceGitXSetting,
     error: enforceGitXSettingError,
@@ -124,7 +131,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
       orgIdentifier,
       projectIdentifier
     },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   React.useEffect(() => {

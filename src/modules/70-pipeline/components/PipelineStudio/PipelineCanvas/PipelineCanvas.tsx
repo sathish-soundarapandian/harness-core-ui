@@ -66,6 +66,10 @@ import PipelineYamlView from '../PipelineYamlView/PipelineYamlView'
 import { RightBar } from '../RightBar/RightBar'
 import usePipelineErrors from './PipelineErrors/usePipelineErrors'
 import { PipelineCanvasHeader } from './PipelineCanvasHeader'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+
 import css from './PipelineCanvas.module.scss'
 
 interface OtherModalProps {
@@ -264,6 +268,12 @@ export function PipelineCanvas({
 
   useSaveTemplateListener()
 
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const {
     data: enforceGitXSetting,
     error: enforceGitXSettingError,
@@ -275,7 +285,7 @@ export function PipelineCanvas({
       orgIdentifier,
       projectIdentifier
     },
-    lazy: isGitSyncEnabled || pipelineIdentifier !== DefaultNewPipelineId
+    lazy: !hasRBACViewPermission && (isGitSyncEnabled || pipelineIdentifier !== DefaultNewPipelineId)
   })
 
   const getPipelineStoreType = (): StoreMetadata['storeType'] => {

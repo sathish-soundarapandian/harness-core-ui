@@ -28,6 +28,8 @@ import {
   LastUpdatedBy,
   withInfrastructure
 } from './InfrastructureListColumns'
+import { usePermission } from '@rbac/hooks/usePermission'
+
 import EmptyInfrastructure from '../images/EmptyInfrastructure.svg'
 
 export default function InfrastructureList({
@@ -50,12 +52,18 @@ export default function InfrastructureList({
   const { updateQueryParams } = useUpdateQueryParams<EnvironmentQueryParams>()
   const [infraDetailsToBeDeleted, setInfraDetailsToBeDeleted] = React.useState<InfraDetails>()
 
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   React.useEffect(() => {

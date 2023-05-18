@@ -11,6 +11,10 @@ import { useToaster } from '@harness/uicore'
 import { useGetSettingValue } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SettingType } from '@common/constants/Utils'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+
 import { getErrorMessage } from '../utils'
 
 const useIsGithubWebhookAuthenticationEnabled = (): {
@@ -20,6 +24,12 @@ const useIsGithubWebhookAuthenticationEnabled = (): {
   const { showError } = useToaster()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const {
     data: projectSettingData,
     loading: isGithubWebhookAuthenticationDataLoading,
@@ -31,7 +41,7 @@ const useIsGithubWebhookAuthenticationEnabled = (): {
       orgIdentifier,
       projectIdentifier
     },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   useEffect(() => {

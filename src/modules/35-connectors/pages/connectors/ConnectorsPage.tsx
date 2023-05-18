@@ -55,6 +55,8 @@ import {
   UNSAVED_FILTER,
   flattenObject
 } from '@common/components/Filter/utils/FilterUtils'
+import { usePermission } from '@rbac/hooks/usePermission'
+
 import { useStrings } from 'framework/strings'
 import type { FilterInterface, FilterDataInterface } from '@common/components/Filter/Constants'
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
@@ -133,10 +135,17 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   useDocumentTitle(getString('connectorsLabel'))
   const { trackEvent } = useTelemetry()
   const { PL_FORCE_DELETE_CONNECTOR_SECRET } = useFeatureFlags()
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
+  console.log({ hasRBACViewPermission })
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   useEffect(() => {

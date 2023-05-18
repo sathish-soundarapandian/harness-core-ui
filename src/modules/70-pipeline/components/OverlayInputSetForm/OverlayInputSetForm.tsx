@@ -87,6 +87,10 @@ import {
   getCreateUpdateRequestBodyOptions,
   getInputSetReference
 } from './OverlayInputSetUtils'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+
 import css from './OverlayInputSetForm.module.scss'
 
 export interface OverlayInputSetDTO extends Omit<OverlayInputSetResponse, 'identifier'> {
@@ -236,11 +240,16 @@ export function OverlayInputSetForm({
     inputSetIdentifier: defaultTo(identifier, ''),
     lazy: true
   })
-
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const { data: allowDifferentRepoSettings, error: allowDifferentRepoSettingsError } = useGetSettingValue({
     identifier: SettingType.ALLOW_DIFFERENT_REPO_FOR_INPUT_SETS,
     queryParams: { accountIdentifier: accountId },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   React.useEffect(() => {

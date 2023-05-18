@@ -52,6 +52,9 @@ import EnvironmentTabs from '../EnvironmentsV2/EnvironmentTabs'
 import { EnvironmentGroupsFilters } from './EnvironmentGroupsFilters/EnvironmentGroupsFilters'
 import { getHasFilterIdentifier, getHasFilters } from './EnvironmentGroupsFilters/filterUtils'
 import { EnvironmentGroupListQueryParams, Sort, SortFields } from './utils'
+import { usePermission } from '@rbac/hooks/usePermission'
+
+
 import {
   PageQueryParamsWithDefaults,
   PAGE_TEMPLATE_DEFAULT_PAGE_INDEX,
@@ -66,7 +69,12 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const {
     data: forceDeleteSettings,
     loading: forceDeleteSettingsLoading,
@@ -76,7 +84,7 @@ export default function EnvironmentGroupsPage(): React.ReactElement {
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   React.useEffect(() => {

@@ -62,6 +62,8 @@ import { RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import type { Sort, SortFields } from '@common/utils/listUtils'
 import { ServiceTabs } from '../utils/ServiceUtils'
+import { usePermission } from '@rbac/hooks/usePermission'
+
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
 export enum DeploymentStatus {
@@ -563,13 +565,18 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
-
+  const [hasRBACViewPermission] = usePermission({
+    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
+    resource: {
+      resourceType: ResourceType.SETTING
+    }
+  })
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: {
       accountIdentifier: accountId
     },
-    lazy: false
+    lazy: !hasRBACViewPermission
   })
 
   React.useEffect(() => {
