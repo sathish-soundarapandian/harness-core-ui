@@ -78,9 +78,9 @@ exports[`PricePreview ci credit card render ci 1`] = `
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-bottom-small"
         >
           <p
-            class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
+            class="StyledProps--font StyledProps--main"
           >
-            common.subscriptions.usage.developers
+            200  common.subscriptions.usage.developers/month
           </p>
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
@@ -95,7 +95,7 @@ exports[`PricePreview ci credit card render ci 1`] = `
           <p
             class="StyledProps--font StyledProps--main"
           >
-            200 x $0.00 common.perDeveloper
+            200  common.subscriptions.usage.developers/year
           </p>
           0
         </div>
@@ -253,9 +253,9 @@ exports[`PricePreview render 1`] = `
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-bottom-small"
         >
           <p
-            class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
+            class="StyledProps--font StyledProps--main"
           >
-            common.subscriptions.usage.developers
+            25  common.subscriptions.usage.developers/month
           </p>
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
@@ -270,7 +270,7 @@ exports[`PricePreview render 1`] = `
           <p
             class="StyledProps--font StyledProps--main"
           >
-            25 x $0.00 common.perDeveloper
+            25  common.subscriptions.usage.developers/year
           </p>
           0
         </div>
@@ -281,11 +281,18 @@ exports[`PricePreview render 1`] = `
         <div
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-bottom-small"
         >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
+          <div
+            class="Layout--vertical StyledProps--main"
           >
-            authSettings.costCalculator.maus
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              12K authSettings.costCalculator.maus/month
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+            />
+          </div>
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
           >
@@ -302,7 +309,7 @@ exports[`PricePreview render 1`] = `
             <p
               class="StyledProps--font StyledProps--main"
             >
-              12K authSettings.costCalculator.maus
+              12K authSettings.costCalculator.maus/year
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"

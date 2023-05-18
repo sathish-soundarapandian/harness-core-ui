@@ -792,20 +792,16 @@ exports[`useSubscriptionModal render 1`] = `
                 class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-bottom-small"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
-                >
-                  common.subscriptions.usage.developers
-                </p>
-              </div>
-              <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
-              >
-                <p
                   class="StyledProps--font StyledProps--main"
                 >
-                  1 x $0.00 common.perDeveloper
+                  1  common.subscriptions.usage.developer/month
                 </p>
-                0
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
+                >
+                  $0.00
+                  common.perMonth
+                </p>
               </div>
             </div>
             <div
@@ -814,28 +810,24 @@ exports[`useSubscriptionModal render 1`] = `
               <div
                 class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-bottom-small"
               >
-                <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
-                >
-                  authSettings.costCalculator.maus
-                </p>
-              </div>
-              <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
-              >
                 <div
                   class="Layout--vertical StyledProps--main"
                 >
                   <p
                     class="StyledProps--font StyledProps--main"
                   >
-                    100 authSettings.costCalculator.maus
+                    100 authSettings.costCalculator.maus/month
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
                   />
                 </div>
-                0
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
+                >
+                  $0.00
+                  common.perMonth
+                </p>
               </div>
             </div>
             <div
@@ -1483,20 +1475,16 @@ exports[`useSubscriptionModal render CI credit card 1`] = `
                 class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-bottom-small"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
-                >
-                  common.subscriptions.usage.developers
-                </p>
-              </div>
-              <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-start"
-              >
-                <p
                   class="StyledProps--font StyledProps--main"
                 >
-                  1 x $0.00 common.perDeveloper
+                  1  common.subscriptions.usage.developer/month
                 </p>
-                0
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold"
+                >
+                  $0.00
+                  common.perMonth
+                </p>
               </div>
             </div>
             <div
