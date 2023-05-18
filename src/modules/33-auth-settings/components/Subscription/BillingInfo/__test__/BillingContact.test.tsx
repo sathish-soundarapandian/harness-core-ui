@@ -47,7 +47,7 @@ describe('BillingContact', () => {
     })
   })
 
-  test('set companyName', () => {
+  test('set companyName', async () => {
     const { container } = render(
       <TestWrapper>
         <Formik<InitialBillingInfo> formName="test-form" initialValues={billingInfo} onSubmit={jest.fn()}>
@@ -64,14 +64,14 @@ describe('BillingContact', () => {
       </TestWrapper>
     )
     const formEl = container.querySelector('[name=companyName]') as Element
-    act(() => {
-      userEvent.clear(formEl)
-      userEvent.type(formEl, 'another company')
+    await act(async () => {
+      await userEvent.clear(formEl)
+      await userEvent.type(formEl, 'another company')
     })
     expect(formEl).toHaveValue('another company')
   })
 
-  test('set zipCode', () => {
+  test('set zipCode', async () => {
     const { container } = render(
       <TestWrapper>
         <Formik<InitialBillingInfo> formName="test-form" initialValues={billingInfo} onSubmit={jest.fn()}>
@@ -88,14 +88,14 @@ describe('BillingContact', () => {
       </TestWrapper>
     )
     const formEl = container.querySelector('[name=zipCode]') as Element
-    act(() => {
-      userEvent.clear(formEl)
-      userEvent.type(formEl, '54321')
+    await act(async () => {
+      await userEvent.clear(formEl)
+      await userEvent.type(formEl, '54321')
     })
     expect(formEl).toHaveValue('54321')
   })
 
-  test('set billingAddress', () => {
+  test('set billingAddress', async () => {
     const { container } = render(
       <TestWrapper>
         <Formik<InitialBillingInfo> formName="test-form" initialValues={billingInfo} onSubmit={jest.fn()}>
@@ -112,14 +112,14 @@ describe('BillingContact', () => {
       </TestWrapper>
     )
     const formEl = container.querySelector('[name=billingAddress]') as Element
-    act(() => {
-      userEvent.clear(formEl)
-      userEvent.type(formEl, 'new billing address')
+    await act(async () => {
+      await userEvent.clear(formEl)
+      await userEvent.type(formEl, 'new billing address')
     })
     expect(formEl).toHaveValue('new billing address')
   })
 
-  test('set city', () => {
+  test('set city', async () => {
     const { container } = render(
       <TestWrapper>
         <Formik<InitialBillingInfo> formName="test-form" initialValues={billingInfo} onSubmit={jest.fn()}>
@@ -136,10 +136,12 @@ describe('BillingContact', () => {
       </TestWrapper>
     )
     const formEl = container.querySelector('[name=zipCode]') as Element
-    act(() => {
-      userEvent.clear(formEl)
-      userEvent.type(formEl, 'austin')
+
+    await act(async () => {
+      await userEvent.clear(formEl)
+      await userEvent.type(formEl, 'austin')
     })
+
     expect(formEl).toHaveValue('austin')
   })
 

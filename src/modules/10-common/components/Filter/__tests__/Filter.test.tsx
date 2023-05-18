@@ -70,7 +70,7 @@ describe('Test Filter component', () => {
     const filterNameInput = await screen.findByPlaceholderText('filters.typeFilterName')
 
     userEvent.clear(filterNameInput)
-    userEvent.type(filterNameInput, 'foo')
+    await userEvent.type(filterNameInput, 'foo')
     userEvent.click(screen.getByLabelText('save'))
 
     expect(await screen.findByText('filters.invalidCriteria')).toBeInTheDocument()

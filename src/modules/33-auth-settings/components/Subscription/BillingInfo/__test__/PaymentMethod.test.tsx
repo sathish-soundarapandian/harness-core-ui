@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
 import userEvent from '@testing-library/user-event'
@@ -44,8 +44,15 @@ describe('PaymentMethod', () => {
         </Elements>
       </TestWrapper>
     )
-    userEvent.clear(getByTestId('nameOnCard'))
-    userEvent.type(getByTestId('nameOnCard'), 'John Doe')
+
+    await act(async () => {
+      await userEvent.clear(getByTestId('nameOnCard'))
+    })
+
+    await act(async () => {
+      await userEvent.type(getByTestId('nameOnCard'), 'John Doe', { delay: 0 })
+    })
+
     await waitFor(() => {
       expect(setNameOnCardMock).toHaveBeenCalledWith('John Doe')
     })

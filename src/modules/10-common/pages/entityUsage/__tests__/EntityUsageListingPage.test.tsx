@@ -67,12 +67,12 @@ describe('Entity Usage Listing Page', () => {
 
     // signal traverse to next page
     const buttons = screen.getAllByRole('button')
-    userEvent.click(buttons[3])
+    await userEvent.click(buttons[3])
 
     expect(setPageMock).toHaveBeenCalledWith(1)
 
     // signal search query
-    userEvent.type(screen.getByRole('searchbox'), 'test   ')
+    await userEvent.type(screen.getByRole('searchbox'), 'test   ')
 
     await waitFor(() => expect(setSearchTermMock).toHaveBeenCalledWith('test'))
     // do not need await here. If setSearchTermMock has been called, then so has setPageMock
@@ -106,12 +106,12 @@ describe('Entity Usage Listing Page', () => {
 
     // signal traverse to next page
     const buttons = screen.getAllByRole('button')
-    userEvent.click(buttons[3])
+    await userEvent.click(buttons[3])
 
     expect(setPageMock).toHaveBeenCalledWith(1)
 
     // signal search query
-    userEvent.type(screen.getByRole('searchbox'), 'test   ')
+    await userEvent.type(screen.getByRole('searchbox'), 'test   ')
 
     await waitFor(() => expect(setSearchTermMock).toHaveBeenCalledWith('test'))
     // do not need await here. If setSearchTermMock has been called, then so has setPageMock
