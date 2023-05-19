@@ -11,6 +11,7 @@ declare const styles: {
   readonly gitOpsAppsLi: string
   readonly gitOpsEnvText: string
   readonly main: string
+  readonly primary6: string
   readonly serviceName: string
   readonly serviceWrapper: string
   readonly stageItemDetails: string

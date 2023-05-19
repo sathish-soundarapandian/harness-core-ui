@@ -216,7 +216,12 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
                   </Layout.Vertical>
                 }
               >
-                <span>{Math.abs(gitOpsClusters.length)}</span>
+                <Layout.Horizontal>
+                  <Text>{gitOpsClusters[0].name}...</Text>
+                  <span className={css.primary6} style={{ textDecoration: 'underline dotted' }}>
+                    +{Math.abs(gitOpsClusters.length - 1)}
+                  </span>
+                </Layout.Horizontal>
               </Popover>
             ) : null}
           </div>
