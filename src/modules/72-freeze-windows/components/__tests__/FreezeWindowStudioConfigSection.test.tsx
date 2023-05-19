@@ -14,9 +14,10 @@ import {
   fireEvent,
   waitFor,
   within,
-  getByTestId
+  getByTestId,
+  act
 } from '@testing-library/react'
-import userEvent, { TargetElement } from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { getOrganizationAggregateDTOListMockData } from '@projects-orgs/pages/organizations/__tests__/OrganizationsMockData'
@@ -77,17 +78,17 @@ describe('Freeze Window Studio Config Section', () => {
 
     expect(document.getElementsByClassName('configFormContainer')[0]).toMatchSnapshot('Add Rule form snapshot')
 
-    const inputEl = document.querySelector('input[name="entity[0].name"]')
+    const inputEl = document.querySelector('input[name="entity[0].name"]') as HTMLElement
 
     // Fields should be renderer
     expect(inputEl).toBeDefined()
     expect(getAllByText('services')).toBeDefined()
     expect(getByText('envType')).toBeDefined()
 
-    await userEvent.type(inputEl as TargetElement, 'Rule Number 1')
+    await userEvent.type(inputEl, 'Rule Number 1')
 
-    const tickButton = container.querySelector('.tickButton')
-    await userEvent.click(tickButton as TargetElement)
+    const tickButton = container.querySelector('.tickButton') as HTMLElement
+    await userEvent.click(tickButton)
 
     expect(await screen.findByText('Rule Number 1')).toBeInTheDocument()
 
@@ -97,11 +98,11 @@ describe('Freeze Window Studio Config Section', () => {
     await userEvent.click(getByText('Add rule'))
     expect(await screen.findByText('envType')).toBeInTheDocument()
 
-    const inputEl2 = document.querySelector('input[name="entity[1].name"]')
-    await userEvent.type(inputEl2 as TargetElement, 'Rule Number 2')
+    const inputEl2 = document.querySelector('input[name="entity[1].name"]') as HTMLElement
+    await userEvent.type(inputEl2, 'Rule Number 2')
 
-    const tickButton2 = container.querySelector('.tickButton')
-    await userEvent.click(tickButton2 as TargetElement)
+    const tickButton2 = container.querySelector('.tickButton') as HTMLElement
+    await userEvent.click(tickButton2)
 
     expect(await screen.findByText('Rule Number 2')).toBeInTheDocument()
     expect(document.getElementsByClassName('configFormContainer')[1]).toBeInTheDocument()
@@ -140,7 +141,7 @@ describe('Freeze Window Studio Config Section', () => {
       'Add Rule form snapshot - Account Level'
     )
 
-    const inputEl = document.querySelector('input[name="entity[0].name"]')
+    const inputEl = document.querySelector('input[name="entity[0].name"]') as HTMLElement
 
     // Fields should be renderer
     expect(inputEl).toBeDefined()
@@ -151,7 +152,7 @@ describe('Freeze Window Studio Config Section', () => {
     expect(getAllByText('services')).toBeDefined()
     expect(getByText('envType')).toBeDefined()
 
-    await userEvent.type(inputEl as TargetElement, 'Rule Number 1')
+    await userEvent.type(inputEl, 'Rule Number 1')
 
     await userEvent.click(document.querySelector('input[name="entity[0].ExcludeOrgCheckbox"]') as HTMLElement)
     const excludeOrgs = document.querySelector('input[name="entity[0].ExcludeOrg"]') as HTMLElement
@@ -159,8 +160,8 @@ describe('Freeze Window Studio Config Section', () => {
     await userEvent.type(excludeOrgs, 'v2')
     expect(excludeOrgs).toHaveValue('v2')
 
-    const tickButton = container.querySelector('.tickButton')
-    await userEvent.click(tickButton as TargetElement)
+    const tickButton = container.querySelector('.tickButton') as HTMLElement
+    await userEvent.click(tickButton)
 
     expect(await screen.findByText('Rule Number 1')).toBeInTheDocument()
 
@@ -173,18 +174,18 @@ describe('Freeze Window Studio Config Section', () => {
     await userEvent.click(getByText('Add rule'))
     expect(await screen.findByText('envType')).toBeInTheDocument()
 
-    const inputEl2 = document.querySelector('input[name="entity[1].name"]')
-    await userEvent.type(inputEl2 as TargetElement, 'Rule Number 2')
+    const inputEl2 = document.querySelector('input[name="entity[1].name"]') as HTMLElement
+    await userEvent.type(inputEl2, 'Rule Number 2')
 
-    const tickButton2 = container.querySelector('.tickButton')
-    await userEvent.click(tickButton2 as TargetElement)
+    const tickButton2 = container.querySelector('.tickButton') as HTMLElement
+    await userEvent.click(tickButton2)
 
     expect(await screen.findByText('Rule Number 2')).toBeInTheDocument()
 
     const secondRule = getByTestId(container, 'config-view-mode_1')
-    const deleteButton = secondRule.querySelector('[data-icon="main-trash"]')
+    const deleteButton = secondRule.querySelector('[data-icon="main-trash"]') as HTMLElement
     expect(deleteButton).toBeInTheDocument()
-    await userEvent.click(deleteButton as TargetElement)
+    await userEvent.click(deleteButton)
   })
 
   test('it should render Config section Tabs onNext and onBack', async () => {
@@ -207,9 +208,10 @@ describe('Freeze Window Studio Config Section', () => {
     ])
 
     const createNewForm = document.getElementsByClassName('createNewFreezeForm')[0]
-    const continueBtn = createNewForm.querySelector('button')
-    await userEvent.click(continueBtn as TargetElement)
-    await waitForElementToBeRemoved(createNewForm)
+    const continueBtn = createNewForm.querySelector('button') as HTMLElement
+    await act(async () => {
+      await userEvent.click(continueBtn)
+    })
     expect(createNewForm).not.toBeInTheDocument()
     const continueButton = getByRole('button', { name: 'continue' })
     expect(continueButton).toBeDefined()
@@ -217,7 +219,7 @@ describe('Freeze Window Studio Config Section', () => {
     // Move to config Tab
     await userEvent.click(continueButton)
 
-    expect(await screen.findByText('common.coverage')).toBeInTheDocument()
+    expect(await screen.findAllByText('common.coverage')).toHaveLength(2)
   })
 
   test('test ScheduleSection invalid duration - error toaster ', async () => {
@@ -285,7 +287,7 @@ describe('Freeze Window Studio Config Section', () => {
     const addRule = getByText('Add rule')
     await userEvent.click(addRule)
     expect(await screen.findByText('envType')).toBeInTheDocument()
-    const inputEl = document.querySelector('input[name="entity[0].name"]')
+    const inputEl = document.querySelector('input[name="entity[0].name"]') as HTMLElement
 
     // Fields should be renderer
     expect(inputEl).toBeDefined()
@@ -294,7 +296,7 @@ describe('Freeze Window Studio Config Section', () => {
     expect(getAllByText('services')).toBeTruthy()
     expect(getByText('envType')).toBeInTheDocument()
 
-    await userEvent.type(inputEl as TargetElement, 'Rule Number 1')
+    await userEvent.type(inputEl, 'Rule Number 1')
 
     await userEvent.click(document.querySelector('input[name="entity[0].ExcludeProjCheckbox"]') as HTMLElement)
     const excludeProject = document.querySelector('input[name="entity[0].ExcludeProj"]') as HTMLElement
@@ -311,8 +313,8 @@ describe('Freeze Window Studio Config Section', () => {
     await userEvent.click(await within(envTypeDropdownOptions).findByText('common.allEnvironments'))
 
     //save
-    const tickButton = container.querySelector('.tickButton')
-    await userEvent.click(tickButton as TargetElement)
+    const tickButton = container.querySelector('.tickButton') as HTMLElement
+    await userEvent.click(tickButton)
 
     expect(await screen.findByText('Rule Number 1')).toBeInTheDocument()
     expect(getByText('envType: common.allEnvironments')).toBeInTheDocument()

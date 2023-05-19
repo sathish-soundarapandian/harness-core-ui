@@ -719,7 +719,7 @@ describe('Manifest Details tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('expand advanced section - when type is k8smanifest', () => {
+  test('expand advanced section - when type is k8smanifest', async () => {
     const defaultProps = {
       ...props,
       prevStepData: {

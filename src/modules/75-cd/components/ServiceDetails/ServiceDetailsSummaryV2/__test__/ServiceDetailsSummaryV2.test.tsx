@@ -6,7 +6,17 @@
  */
 
 import React from 'react'
-import { findByText, getAllByText, render, waitFor, getByText, screen, fireEvent, within } from '@testing-library/react'
+import {
+  findByText,
+  getAllByText,
+  render,
+  waitFor,
+  getByText,
+  screen,
+  fireEvent,
+  within,
+  act
+} from '@testing-library/react'
 import * as routerMock from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
@@ -137,7 +147,7 @@ const configurations = (): void => {
   })
 }
 
-const toggleToArtifact = (container: HTMLElement): void => {
+const toggleToArtifact = async (container: HTMLElement): Promise<void> => {
   //toggle to artifact view
   const artifactTab = container.querySelector('[data-name="toggle-option-two"]')
   expect(artifactTab).toBeInTheDocument()
@@ -259,7 +269,7 @@ describe('Service Detail Summary - ', () => {
     )
 
     //toggle to artifact view
-    toggleToArtifact(container)
+    await toggleToArtifact(container)
 
     // artifact card click
     const artifactName = getByText(container, 'testArtifactDisplayName')
@@ -338,7 +348,7 @@ describe('Service Detail Summary - ', () => {
     )
 
     //toggle to artifact view
-    toggleToArtifact(container)
+    await toggleToArtifact(container)
 
     // artifact card click
     const artifactName = getByText(container, 'testArtifactDisplayName')
@@ -363,7 +373,7 @@ describe('Service Detail Summary - ', () => {
 
 describe('Service Detail Summary - other states (empty, loading, error)', () => {
   configurations()
-  test('Test ServiceDetailsDialog - empty states', () => {
+  test('Test ServiceDetailsDialog - empty states', async () => {
     jest.spyOn(cdng, 'useGetActiveInstanceGroupedByEnvironment').mockImplementation(() => {
       return {
         data: null,
@@ -396,7 +406,7 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     expect(findByText(fullTableDialog!, 'cd.environmentDetailPage.noInstancesToShow')).toBeTruthy()
   })
 
-  test('Test ServiceDetailsDialog - error states', () => {
+  test('Test ServiceDetailsDialog - error states', async () => {
     jest.spyOn(cdng, 'useGetActiveInstanceGroupedByEnvironment').mockImplementation(() => {
       return {
         data: null,
@@ -422,17 +432,26 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     const viewInTableBtn = container.querySelector(
       'button[aria-label="cd.environmentDetailPage.viewInTable"]'
     ) as HTMLButtonElement
-    await userEvent.click(viewInTableBtn)
+
+    await act(async () => {
+      await userEvent.click(viewInTableBtn)
+    })
+
     const fullTableDialog = findDialogContainer()
 
     const retry = fullTableDialog!.querySelectorAll('button[aria-label="Retry"]')
-    await userEvent.click(retry[0])
-    await userEvent.click(retry[1])
+
+    await act(async () => {
+      await userEvent.click(retry[0])
+    })
+    await act(async () => {
+      await userEvent.click(retry[1])
+    })
     expect(fullTableDialog!.querySelector('[data-test="ServiceEnvTableError"]')).toBeTruthy()
     expect(fullTableDialog!.querySelector('[data-test="ServiceInstancesError"]')).toBeTruthy()
   })
 
-  test('Test ServiceDetailsDialog - loading states', () => {
+  test('Test ServiceDetailsDialog - loading states', async () => {
     jest.spyOn(cdng, 'useGetActiveInstanceGroupedByEnvironment').mockImplementation(() => {
       return {
         data: null,
@@ -465,7 +484,7 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     expect(fullTableDialog!.querySelector('[data-test="ServiceEnvTableLoading"]')).toBeTruthy()
   })
 
-  test('Test ServiceDetailsCardView - error states', () => {
+  test('Test ServiceDetailsCardView - error states', async () => {
     jest.spyOn(commonHooks, 'useMutateAsGet').mockImplementation(() => {
       return { loading: false, error: 'Some error occurred', data: undefined, refetch: jest.fn() } as any
     })
@@ -476,6 +495,7 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     )
 
     const retry = container.querySelector('button[aria-label="Retry"]')
+
     await userEvent.click(retry!)
     expect(container.querySelector('[data-test="ServiceDetailsEnvCardError"]')).toBeTruthy()
   })
@@ -507,7 +527,7 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     expect(getByText(container, 'pipeline.ServiceDetail.envCardEmptyStateMsg')).toBeTruthy()
   })
 
-  test('Test ServiceArtifactTable - empty states', () => {
+  test('Test ServiceArtifactTable - empty states', async () => {
     jest.spyOn(cdng, 'useGetActiveInstanceGroupedByArtifact').mockImplementation(() => {
       return {
         data: null,
@@ -542,7 +562,7 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     expect(findByText(fullTableDialog!, 'cd.environmentDetailPage.selectArtifactMsg')).toBeTruthy()
   })
 
-  test('Test ServiceArtifactTable - error states', () => {
+  test('Test ServiceArtifactTable - error states', async () => {
     jest.spyOn(cdng, 'useGetActiveInstanceGroupedByArtifact').mockImplementation(() => {
       return {
         data: null,
@@ -580,7 +600,7 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     expect(fullTableDialog!.querySelector('[data-test="ServiceInstancesError"]')).toBeTruthy()
   })
 
-  test('Test ServiceArtifactTable - loading states', () => {
+  test('Test ServiceArtifactTable - loading states', async () => {
     jest.spyOn(cdng, 'useGetActiveInstanceGroupedByArtifact').mockImplementation(() => {
       return {
         data: null,

@@ -351,7 +351,7 @@ describe('SSH artifactory artifact', () => {
     jest.spyOn(pipelineng, 'useGetRepositoriesDetailsForArtifactory').getMockImplementation()
   })
 
-  test(`renders Generic Artifactory view by default`, () => {
+  test(`renders Generic Artifactory view by default`, async () => {
     const { container, getByPlaceholderText } = render(
       <TestWrapper>
         <Artifactory key={'key'} initialValues={genericArtifactoryInitialValues} {...sshDeploymentTypeProps} />

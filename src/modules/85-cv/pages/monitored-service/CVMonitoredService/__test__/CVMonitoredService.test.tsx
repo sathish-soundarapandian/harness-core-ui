@@ -71,6 +71,10 @@ describe('Monitored Service list', () => {
     useLicenseStoreMock.mockReturnValue(licenseWithSRMActive as unknown as useLicenseStore.LicenseStoreContextProps)
   })
 
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('Service listing component renders', async () => {
     const { container } = render(
       <TestWrapper {...testWrapperProps}>
@@ -154,7 +158,7 @@ describe('Monitored Service list', () => {
     await userEvent.click(container.querySelector('.context-menu-mock-delete')!)
 
     expect(container.querySelectorAll('.TableV2--body [role="row"]')).toHaveLength(2)
-    await waitFor(() => expect(refetchServiceCountData).toBeCalledTimes(2))
+    await waitFor(() => expect(refetchServiceCountData).toBeCalledTimes(3))
   })
 
   test('Test Dependency Graph renders', async () => {
@@ -208,7 +212,7 @@ describe('Monitored Service list', () => {
         projectIdentifier: '1234_project'
       }
     })
-    await waitFor(() => expect(refetchServiceCountData).toBeCalledTimes(2))
+    await waitFor(() => expect(refetchServiceCountData).toBeCalledTimes(3))
   })
 
   test('Loading state', async () => {

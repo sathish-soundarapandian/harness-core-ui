@@ -72,8 +72,8 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
 describe('Unit tests for createAppd monitoring source', () => {
   const refetchMock = jest.fn()
 
+  beforeEach(() => jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true))
   beforeAll(() => {
-    beforeEach(() => jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true))
     jest
       .spyOn(cvServices, 'useGetAppDynamicsTiers')
       .mockImplementation(() => ({ loading: false, error: null, data: appTier, refetch: refetchMock } as any))
@@ -332,7 +332,7 @@ describe('Unit tests for createAppd monitoring source', () => {
       expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
 
       const modalDeleteBtn = screen.queryAllByText('confirm')[0]
-      act(() => {
+      await act(async () => {
         await userEvent.click(modalDeleteBtn!)
       })
 

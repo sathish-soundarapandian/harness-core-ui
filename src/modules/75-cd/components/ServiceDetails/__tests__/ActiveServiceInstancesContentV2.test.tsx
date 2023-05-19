@@ -208,7 +208,7 @@ describe('ActiveServiceInstancesContent', () => {
     )
     expect(container).toMatchSnapshot()
   })
-  test('should render error', () => {
+  test('should render error', async () => {
     jest.spyOn(cdngServices, 'useGetActiveServiceInstances').mockImplementation(() => {
       return { loading: false, error: true, data: noData, refetch: jest.fn() } as any
     })
@@ -292,7 +292,7 @@ describe('ActiveInstance Details Dialog', () => {
     expect(popup).toBeTruthy()
 
     const expandButtons = document.querySelectorAll('.bp3-icon')
-    expandButtons.forEach(expandButton => {
+    expandButtons.forEach(async expandButton => {
       await userEvent.click(expandButton)
     })
     expect(popup).toMatchSnapshot()
@@ -341,7 +341,7 @@ describe('ActiveInstance Tab states', () => {
     expect(getByText('cd.serviceDashboard.headers.instances')).toBeTruthy()
   })
 
-  test('change tab to deployments', () => {
+  test('change tab to deployments', async () => {
     jest.spyOn(cdngServices, 'useGetEnvArtifactDetailsByServiceId').mockImplementation(() => {
       return {
         data: dataMock

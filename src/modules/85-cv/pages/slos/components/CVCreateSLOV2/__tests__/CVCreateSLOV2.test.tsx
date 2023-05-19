@@ -7,8 +7,7 @@
 
 import React from 'react'
 import { omit } from 'lodash-es'
-import { act } from 'react-dom/test-utils'
-import { findByText, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { findByText, fireEvent, render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as cvServices from 'services/cv'
 import routes from '@common/RouteDefinitions'
@@ -44,7 +43,7 @@ import { SLOType } from '../CVCreateSLOV2.constants'
 import { SLOV2FormMock } from '../components/CreateSimpleSloForm/__tests__/CreateSimpleSloForm.utils.mock'
 import { SLOFormulaType, SLOV2Form } from '../CVCreateSLOV2.types'
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 const testPath = routes.toCVSLODetailsPage({
   identifier: ':identifier',
@@ -145,7 +144,8 @@ jest.mock('@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSour
 
 describe('CVCreateSloV2', () => {
   beforeEach(() => {
-    jest.setTimeout(30000)
+    // jest.setTimeout(30000)
+    jest.runAllTimers()
   })
 
   test('CVCreateSLOV2 when isComposite is false', async () => {
@@ -160,8 +160,8 @@ describe('CVCreateSloV2', () => {
         <CVCreateSLOV2 />
       </TestWrapper>
     )
-    act(() => {
-      await userEvent.click(getByText('next'))
+    await act(() => {
+      return userEvent.click(getByText('next'))
     })
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.nameValidation').length).toEqual(2))
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.userJourneyRequired').length).toEqual(2))
@@ -174,17 +174,17 @@ describe('CVCreateSloV2', () => {
     expect(container).toMatchSnapshot()
 
     // Save should validate all Steps
-    act(() => {
-      await userEvent.click(screen.getByText('save'))
+    await act(() => {
+      return userEvent.click(screen.getByText('save'))
     })
-    act(() => {
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Configure_Service_Level_Indicatiors"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Configure_Service_Level_Indicatiors"]')!)
     })
-    act(() => {
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO"]')!)
     })
-    act(() => {
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
   })
 
@@ -194,15 +194,15 @@ describe('CVCreateSloV2', () => {
         <CVCreateSLOV2 isComposite />
       </TestWrapper>
     )
-    act(() => {
-      await userEvent.click(getByText('save'))
+    await act(() => {
+      return userEvent.click(getByText('save'))
     })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
-    act(() => {
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
-    act(() => {
-      await userEvent.click(getByText('cancel'))
+    await act(() => {
+      return userEvent.click(getByText('cancel'))
     })
     expect(container).toMatchSnapshot()
   })
@@ -212,8 +212,8 @@ describe('CVCreateSloV2', () => {
         <CVCreateSLOV2 isComposite />
       </TestWrapper>
     )
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.nameValidation').length).toEqual(2))
     await waitFor(() => expect(screen.getAllByText('cv.slos.validations.userJourneyRequired').length).toEqual(2))
@@ -226,8 +226,8 @@ describe('CVCreateSloV2', () => {
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"] [icon="ring"]')).toBeInTheDocument()
 
     // Save should validate all Steps
-    act(() => {
-      await userEvent.click(screen.getByText('save'))
+    await act(() => {
+      return userEvent.click(screen.getByText('save'))
     })
     await waitFor(() => {
       expect(
@@ -241,20 +241,20 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    act(() => {
-      await userEvent.type(sloName!, 'composite slo 1')
+    await act(() => {
+      return userEvent.type(sloName!, 'composite slo 1')
     })
 
     // Cancel should open modal
-    act(() => {
-      await userEvent.click(screen.getByText('cancel'))
+    await act(() => {
+      return userEvent.click(screen.getByText('cancel'))
     })
     const modal = findDialogContainer()
     expect(modal).toBeTruthy()
     fireEvent.click(await findByText(modal!, 'cancel'))
 
-    act(() => {
-      await userEvent.click(screen.getByText('cancel'))
+    await act(() => {
+      return userEvent.click(screen.getByText('cancel'))
     })
     fireEvent.click(await findByText(modal!, 'common.ok'))
   })
@@ -275,8 +275,8 @@ describe('CVCreateSloV2', () => {
     )
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toHaveValue(SLODetailsData.resource.serviceLevelObjectiveV2.name))
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     expect(container.querySelector('input[value="Window"]')).toBeChecked()
     await waitFor(() => expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.name)).toBeInTheDocument())
@@ -293,8 +293,8 @@ describe('CVCreateSloV2', () => {
         SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.spec.periodLength.split('')[0]
       )
     )
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     await waitFor(() =>
       expect(getByText(SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.type)).toBeInTheDocument()
@@ -304,8 +304,8 @@ describe('CVCreateSloV2', () => {
         getByText(`${SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.spec.periodLength}`)
       ).toBeInTheDocument()
     )
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     SLODetailsData.resource.serviceLevelObjectiveV2.spec.serviceLevelObjectivesDetails.forEach(async sloObjective => {
       await waitFor(() => expect(getByText(sloObjective.serviceLevelObjectiveRef)).toBeInTheDocument())
@@ -315,8 +315,8 @@ describe('CVCreateSloV2', () => {
         SLODetailsData.resource.serviceLevelObjectiveV2.sloTarget.sloTargetPercentage
       )
     )
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     await waitFor(() =>
       expect(
@@ -336,24 +336,24 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     expect(screen.getByText('new slov2')).toBeInTheDocument()
     expect(screen.getByText('Second_Journey')).toBeInTheDocument()
 
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     expect(screen.getByText('Rolling')).toBeInTheDocument()
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     expect(screen.getByText('hHJYxnUFTCypZdmYr0Q0tQ')).toBeInTheDocument()
     expect(screen.getByText('7b-_GIZxRu6VjFqAqqdVDQ')).toBeInTheDocument()
 
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     expect(screen.getByText('87%')).toBeInTheDocument()
   })
@@ -369,21 +369,21 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
 
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
 
-    act(() => {
-      await userEvent.click(screen.getByText('back'))
+    await act(() => {
+      return userEvent.click(screen.getByText('back'))
     })
 
     const periodTypeDropDown = container.querySelectorAll('[icon="chevron-down"]')[0]
-    act(() => {
-      await userEvent.click(periodTypeDropDown!)
+    await act(() => {
+      return userEvent.click(periodTypeDropDown!)
     })
 
     await waitFor(() => {
@@ -397,8 +397,8 @@ describe('CVCreateSloV2', () => {
       'cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'
     )
 
-    act(() => {
-      await userEvent.click(document.querySelectorAll('ul.bp3-menu li')[1]!)
+    await act(() => {
+      return userEvent.click(document.querySelectorAll('ul.bp3-menu li')[1]!)
     })
 
     expect(container.querySelector('[name="periodType"]')).toHaveValue(
@@ -408,8 +408,8 @@ describe('CVCreateSloV2', () => {
     const modal = findDialogContainer()
     const cancelButton = await findByText(modal!, 'cancel')
 
-    act(() => {
-      await userEvent.click(cancelButton)
+    await act(() => {
+      return userEvent.click(cancelButton)
     })
 
     expect(container.querySelector('[name="periodType"]')).toHaveValue(
@@ -417,8 +417,8 @@ describe('CVCreateSloV2', () => {
     )
 
     // click again
-    act(() => {
-      await userEvent.click(periodTypeDropDown!)
+    await act(() => {
+      return userEvent.click(periodTypeDropDown!)
     })
 
     await waitFor(() => {
@@ -432,14 +432,14 @@ describe('CVCreateSloV2', () => {
       'cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'
     )
 
-    await act(() => {
-      await userEvent.click(document.querySelectorAll('ul.bp3-menu li')[1]!)
+    await await act(() => {
+      return userEvent.click(document.querySelectorAll('ul.bp3-menu li')[1]!)
     })
 
     const okButton = await findByText(findDialogContainer()!, 'common.ok')
 
-    await act(() => {
-      await userEvent.click(okButton)
+    await await act(() => {
+      return userEvent.click(okButton)
     })
 
     expect(container.querySelector('[name="periodType"]')).toHaveValue(
@@ -464,25 +464,25 @@ describe('CVCreateSloV2', () => {
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
 
-    act(() => {
+    await act(async () => {
       await userEvent.clear(sloName!)
       await userEvent.type(sloName!, 'updated composite slo')
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
     })
 
     fireEvent.change(container.querySelector('[name="SLOTargetPercentage"]')!, { target: { value: 99 } })
 
-    await userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
+    return userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
     expect(container.querySelector('input[value="WeightedAverage"]')).toBeChecked()
 
-    act(() => {
-      await userEvent.click(screen.getByText('save'))
+    await act(() => {
+      return userEvent.click(screen.getByText('save'))
     })
 
     await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
-    act(() => {
-      await userEvent.click(document.querySelector('.bp3-dialog button')!)
+    await act(() => {
+      return userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
 
     expect(updateSLO).toHaveBeenCalledWith(updateSLOMock)
@@ -502,21 +502,21 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
 
-    await userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
+    return userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
     expect(container.querySelector('input[value="WeightedAverage"]')).toBeChecked()
-    act(() => {
-      await userEvent.click(container.querySelector('input[value="LeastPerformance"]')!)
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(container.querySelector('input[value="LeastPerformance"]')!)
+      return userEvent.click(screen.getByText('next'))
     })
 
-    act(() => {
-      await userEvent.click(screen.getByText('save'))
+    await act(() => {
+      return userEvent.click(screen.getByText('save'))
     })
 
     await waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
-    act(() => {
-      await userEvent.click(document.querySelector('.bp3-dialog button')!)
+    await act(() => {
+      return userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
 
     const {
@@ -553,26 +553,27 @@ describe('CVCreateSloV2', () => {
       </TestWrapper>
     )
 
-    act(() => {
+    await act(async () => {
       const sloName = container.querySelector('input[name ="name"]')
       waitFor(() => expect(sloName).toBeInTheDocument())
       await userEvent.clear(sloName!)
-      await userEvent.type(sloName!, 'updated composite slo')
+      return userEvent.type(sloName!, 'updated composite slo')
     })
-    act(() => {
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
+
+    await act(() => {
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO_Target"]')!)
     })
 
     fireEvent.change(container.querySelector('[name="SLOTargetPercentage"]')!, { target: { value: 99 } })
 
-    act(() => {
-      await userEvent.click(screen.getByText('cancel'))
+    await act(() => {
+      return userEvent.click(screen.getByText('cancel'))
     })
 
     waitFor(() => expect(document.querySelector('.bp3-dialog')).toBeInTheDocument())
 
-    act(() => {
-      await userEvent.click(document.querySelector('.bp3-dialog button')!)
+    await act(() => {
+      return userEvent.click(document.querySelector('.bp3-dialog button')!)
     })
   })
 
@@ -592,12 +593,14 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    act(() => {
-      await userEvent.clear(sloName!)
-      await userEvent.type(sloName!, 'updated composite slo')
+    await act(() => {
+      return userEvent.clear(sloName!)
     })
     await act(() => {
-      await userEvent.click(screen.getByText('save'))
+      return userEvent.type(sloName!, 'updated composite slo')
+    })
+    await await act(() => {
+      return userEvent.click(screen.getByText('save'))
     })
 
     await waitFor(() => expect(screen.getByText('cv.CompositeSLO.compositeSloUpdated')).toBeInTheDocument())
@@ -623,17 +626,19 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    act(() => {
-      await userEvent.clear(sloName!)
-      await userEvent.type(sloName!, 'updated composite slo')
+    await act(() => {
+      return userEvent.clear(sloName!)
+    })
+    await act(() => {
+      return userEvent.type(sloName!, 'updated composite slo')
     })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
-    act(() => {
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
 
-    await act(() => {
-      await userEvent.click(screen.getByText('save'))
+    await await act(() => {
+      return userEvent.click(screen.getByText('save'))
     })
   })
 
@@ -657,17 +662,19 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    act(() => {
-      await userEvent.clear(sloName!)
-      await userEvent.type(sloName!, 'updated composite slo')
+    await act(() => {
+      return userEvent.clear(sloName!)
+    })
+    await act(() => {
+      return userEvent.type(sloName!, 'updated composite slo')
     })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
-    act(() => {
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
 
-    await act(() => {
-      await userEvent.click(screen.getByText('save'))
+    await await act(() => {
+      return userEvent.click(screen.getByText('save'))
     })
   })
 
@@ -691,17 +698,19 @@ describe('CVCreateSloV2', () => {
 
     const sloName = container.querySelector('input[name ="name"]')
     await waitFor(() => expect(sloName).toBeInTheDocument())
-    act(() => {
-      await userEvent.clear(sloName!)
-      await userEvent.type(sloName!, 'updated composite slo')
+    await act(() => {
+      return userEvent.clear(sloName!)
+    })
+    await act(() => {
+      return userEvent.type(sloName!, 'updated composite slo')
     })
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
-    act(() => {
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
 
-    await act(() => {
-      await userEvent.click(screen.getByText('save'))
+    await await act(() => {
+      return userEvent.click(screen.getByText('save'))
     })
   })
 
@@ -716,12 +725,12 @@ describe('CVCreateSloV2', () => {
         <CVCreateSLOV2 isComposite />
       </TestWrapper>
     )
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     await waitFor(() => expect(screen.getByText('new slov2')).toBeInTheDocument())
-    act(() => {
-      await userEvent.click(screen.getByText('save'))
+    await act(() => {
+      return userEvent.click(screen.getByText('save'))
     })
     await waitFor(() => expect(screen.getByText('cv.CompositeSLO.compositeSloCreated')).toBeInTheDocument())
   })
@@ -737,21 +746,27 @@ describe('CVCreateSloV2', () => {
         <CVCreateSLOV2 isComposite />
       </TestWrapper>
     )
-    act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('[data-testid="steptitle_Add_SLOs"]')!)
     })
     const firstWeight = container.querySelector('[name="weightagePercentage"]')
-    act(() => {
+    await act(async () => {
       await userEvent.clear(firstWeight!)
+    })
+    await act(async () => {
       await userEvent.type(firstWeight!, '55')
     })
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByText('next'))
     })
+
     expect(screen.getByText('45%')).toBeInTheDocument()
-    act(() => {
-      await userEvent.clear(firstWeight!)
-      await userEvent.type(firstWeight!, '101')
+
+    await act(() => {
+      return userEvent.clear(firstWeight!)
+    })
+    await act(() => {
+      return userEvent.type(firstWeight!, '101')
     })
   })
 
@@ -825,28 +840,28 @@ describe('Simple SLO V2', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
 
-    act(() => {
-      await userEvent.click(container.querySelector('[value="Ratio"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[value="Ratio"]')!)
     })
 
-    act(() => {
-      await userEvent.click(container.querySelector('[name="goodRequestMetric"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[name="goodRequestMetric"]')!)
     })
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    act(() => {
-      await userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
+    await act(() => {
+      return userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
     })
 
-    act(() => {
-      await userEvent.click(container.querySelector('[name="validRequestMetric"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[name="validRequestMetric"]')!)
     })
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(4))
-    act(() => {
-      await userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
+    await act(() => {
+      return userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
     })
   })
   test('Edit simple slo v2', async () => {
@@ -864,48 +879,48 @@ describe('Simple SLO V2', () => {
 
     expect(container.querySelector('input[ name="name"')).toHaveValue('SLO1')
 
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     expect(getByText('service_appd_env_appd')).toBeInTheDocument()
     expect(getByText('cv.slos.slis.HealthSource')).toBeInTheDocument()
     expect(getByText('cv.healthSource.newHealthSource')).toBeInTheDocument()
     expect(container.querySelector('input[value="Good"]')).toBeChecked()
 
-    act(() => {
-      await userEvent.click(getByText('cv.slos.slis.type.latency'.toUpperCase()))
+    await act(() => {
+      return userEvent.click(getByText('cv.slos.slis.type.latency'.toUpperCase()))
     })
 
-    act(() => {
-      await userEvent.click(container.querySelector('[name="healthSourceRef"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[name="healthSourceRef"]')!)
     })
     await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
-    act(() => {
-      await userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
+    await act(() => {
+      return userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
     })
 
-    act(() => {
-      await userEvent.click(getByText('cv.healthSource.newHealthSource'))
+    await act(() => {
+      return userEvent.click(getByText('cv.healthSource.newHealthSource'))
     })
     const healthSourceDrawer: HTMLElement | null = document.querySelector('.health-source-right-drawer')
     expect(healthSourceDrawer).toBeTruthy()
     fireEvent.click(document.querySelector('[data-icon="cross"]')!)
 
-    act(() => {
-      await userEvent.click(getByText('cv.newMetric'))
+    await act(() => {
+      return userEvent.click(getByText('cv.newMetric'))
     })
     const metricDrawer: HTMLElement | null = document.querySelector('.health-source-right-drawer')
     expect(metricDrawer).toBeTruthy()
     fireEvent.click(document.querySelector('[data-icon="cross"]')!)
 
-    act(() => {
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO"]')!)
     })
-    act(() => {
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    await act(() => {
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
-    act(() => {
-      await userEvent.click(getByText('cancel'))
+    await act(() => {
+      return userEvent.click(getByText('cancel'))
     })
   })
 
@@ -932,19 +947,21 @@ describe('Simple SLO V2', () => {
         <CVCreateSLOV2 />
       </TestWrapper>
     )
-    act(() => {
+    await act(async () => {
       await userEvent.click(getByText('save'))
     })
+
     expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
-    act(() => {
-      await userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+
+    await act(() => {
+      return userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
     })
-    act(() => {
-      await userEvent.click(getByText('cancel'))
+    await act(() => {
+      return userEvent.click(getByText('cancel'))
     })
   })
 
-  test('should load ratio based with objective value 99.99', () => {
+  test('should load ratio based with objective value 99.99', async () => {
     jest
       .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
       .mockImplementation(() => ({ data: ratioBasedSLO, loading: false, error: null, refetch: jest.fn() } as any))
@@ -958,12 +975,12 @@ describe('Simple SLO V2', () => {
       </TestWrapper>
     )
 
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     expect(container.querySelector('[name="objectiveValue"]')).toHaveValue(99.99)
-    act(() => {
-      await userEvent.click(screen.getByText('next'))
+    await act(() => {
+      return userEvent.click(screen.getByText('next'))
     })
     expect(container.querySelectorAll('[class*="intent-danger"]').length).toEqual(0)
   })

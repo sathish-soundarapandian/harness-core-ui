@@ -146,7 +146,7 @@ describe('Subscriptions Page', () => {
       refetch: jest.fn()
     }
   })
-  jest.useFakeTimers('modern')
+  jest.useFakeTimers({ advanceTimers: true })
   jest.setSystemTime(new Date('2020-01-19'))
 
   test('it renders the subscriptions page', async () => {

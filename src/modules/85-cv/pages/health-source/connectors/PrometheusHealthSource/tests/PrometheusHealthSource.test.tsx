@@ -191,13 +191,13 @@ describe('Unit tests for PrometheusHealthSource', () => {
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.customizeQuery')).not.toBeNull())
     expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('button[class*="manualQuery"]')!)
     })
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.isManualQuery')).not.toBeNull())
     expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(2)
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(getByText('submit'))
     })
 
@@ -216,13 +216,13 @@ describe('Unit tests for PrometheusHealthSource', () => {
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.customizeQuery')).not.toBeNull())
     expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('button[class*="manualQuery"]')!)
     })
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.isManualQuery')).not.toBeNull())
     expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(2)
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(getByText('submit'))
     })
 
@@ -241,7 +241,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
   })
 
   describe('Metric thresholds', () => {
-    test('should render metric thresholds', () => {
+    test('should render metric thresholds', async () => {
       jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
 
       render(<WrapperComponent data={mockDataWitCVEnabled} onSubmit={jest.fn()} />)
@@ -258,7 +258,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
 
       expect(screen.getByText(/submit/)).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(screen.getByText(/submit/))
       })
     })

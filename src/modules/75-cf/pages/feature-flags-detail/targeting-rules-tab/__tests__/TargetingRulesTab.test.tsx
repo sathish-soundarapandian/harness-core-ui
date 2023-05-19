@@ -411,7 +411,7 @@ describe('TargetingRulesTab', () => {
       expect(screen.queryByText('cf.featureFlags.percentageRollout')).not.toBeInTheDocument()
     })
 
-    test('it should remove percentage rollout correctly', () => {
+    test('it should remove percentage rollout correctly', async () => {
       renderComponent()
 
       await userEvent.click(screen.getByTestId('remove_percentage_rollout_1'))

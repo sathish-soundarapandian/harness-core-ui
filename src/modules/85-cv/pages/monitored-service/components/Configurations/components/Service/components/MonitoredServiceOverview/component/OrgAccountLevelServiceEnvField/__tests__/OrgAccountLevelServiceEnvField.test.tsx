@@ -134,10 +134,10 @@ describe('OrgAccountLevelServiceEnvField', () => {
       <Wrapper isTemplate serviceOnSelect={serviceOnSelect} environmentOnSelect={environmentOnSelect} />
     )
 
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('[title="Add New Service"]')!)
     })
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('[title="On Change Service"]')!)
     })
     expect(serviceOnSelect).toHaveBeenCalledWith({
@@ -146,7 +146,7 @@ describe('OrgAccountLevelServiceEnvField', () => {
     })
 
     expect(container.querySelector('[title="Add New Environment"]')).toBeInTheDocument()
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('[title="On Change Environment"]')!)
     })
     expect(environmentOnSelect).toHaveBeenCalledWith({
@@ -183,14 +183,14 @@ describe('OrgAccountLevelServiceEnvField', () => {
         </Container>
       )
     })
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('[title="Add New Service"]')!)
     })
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('[title="On Change Service"]')!)
     })
     expect(serviceOnSelect).toHaveBeenCalledWith({ name: 'service1' })
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('[title="On Change Environment"]')!)
     })
     expect(environmentOnSelect).toHaveBeenCalledWith({ name: 'env1' })
@@ -265,10 +265,10 @@ describe('OrgAccountLevelServiceEnvField', () => {
     const { container } = render(
       <Wrapper isTemplate={false} serviceOnSelect={serviceOnSelect} environmentOnSelect={environmentOnSelect} />
     )
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('[title="Add New Service"]')!)
     })
-    await act(() => {
+    await act(async () => {
       await userEvent.click(document.querySelector('[title="create Service"]')!)
     })
     expect(serviceOnSelect).toHaveBeenCalledWith({
@@ -313,10 +313,10 @@ describe('OrgAccountLevelServiceEnvField', () => {
     const { container } = render(
       <Wrapper isTemplate={false} serviceOnSelect={serviceOnSelect} environmentOnSelect={environmentOnSelect} />
     )
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('[title="Add New Environment"]')!)
     })
-    await act(() => {
+    await act(async () => {
       await userEvent.click(document.querySelector('[title="create Environment"]')!)
     })
     expect(environmentOnSelect).toHaveBeenCalledWith({

@@ -177,12 +177,12 @@ describe('Unit tests for LogAnalysisRow', () => {
   })
 
   describe('Log feedback', () => {
-    test('should not render update event preference button, if the feature flag is disabled', () => {
+    test('should not render update event preference button, if the feature flag is disabled', async () => {
       const { container } = render(<WrapperComponent {...initialProps} />)
 
       const contextMenuOptionButton = container.querySelector('[data-icon="Options"]:first-child') as HTMLElement
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(contextMenuOptionButton)
       })
 
@@ -193,7 +193,7 @@ describe('Unit tests for LogAnalysisRow', () => {
       expect(viewDetailsButton).toBeInTheDocument()
       expect(updateEventPreferenceButton).not.toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(viewDetailsButton)
       })
 
@@ -221,7 +221,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const contextMenuOptionButton = container.querySelector('[data-icon="Options"]:first-child') as HTMLElement
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(contextMenuOptionButton)
       })
 
@@ -231,7 +231,7 @@ describe('Unit tests for LogAnalysisRow', () => {
       expect(viewDetailsButton).toBeInTheDocument()
       expect(updateEventPreferenceButton).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(viewDetailsButton)
       })
 
@@ -240,7 +240,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       expect(updateEventPreferenceButtonInDrawer).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(updateEventPreferenceButtonInDrawer)
       })
 
@@ -252,7 +252,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const eventPriorityDropdown = screen.getByPlaceholderText('- Select -')
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(eventPriorityDropdown)
       })
 
@@ -262,13 +262,13 @@ describe('Unit tests for LogAnalysisRow', () => {
       expect(screen.getByText('cv.logs.eventPriorityValues.highRisk')).toBeInTheDocument()
       expect(screen.getByText('cv.logs.eventPriorityValues.default')).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(screen.getByText('cv.logs.eventPriorityValues.notARiskIgnore'))
       })
 
       const reasonTextarea = screen.getByPlaceholderText('cv.logs.reasonPlaceholder')
 
-      act(() => {
+      await act(async () => {
         await userEvent.type(reasonTextarea, 'This is not a risk')
       })
 
@@ -276,7 +276,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       expect(eventPreferenceSubmitButton).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(eventPreferenceSubmitButton)
       })
 
@@ -333,7 +333,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const contextMenuOptionButton = container.querySelector('[data-icon="Options"]:first-child') as HTMLElement
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(contextMenuOptionButton)
       })
 
@@ -343,7 +343,7 @@ describe('Unit tests for LogAnalysisRow', () => {
       expect(viewDetailsButton).toBeInTheDocument()
       expect(updateEventPreferenceButton).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(viewDetailsButton)
       })
 
@@ -358,7 +358,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       expect(updateEventPreferenceButtonInDrawer).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(updateEventPreferenceButtonInDrawer)
       })
 
@@ -378,7 +378,7 @@ describe('Unit tests for LogAnalysisRow', () => {
         expect(screen.getByTestId('feedbackHistory-summary')).toBeInTheDocument()
       })
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(feedbackHistory)
       })
 
@@ -391,7 +391,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       expect(eventPriorityDropdown).toHaveValue('cv.logs.eventPriorityValues.mediumRisk')
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(eventPriorityDropdown)
       })
 
@@ -401,7 +401,7 @@ describe('Unit tests for LogAnalysisRow', () => {
       expect(screen.getAllByText('cv.logs.eventPriorityValues.highRisk')).toHaveLength(2)
       expect(screen.getByText('cv.logs.eventPriorityValues.default')).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(screen.getByText('cv.logs.eventPriorityValues.notARiskIgnore'))
       })
 
@@ -409,7 +409,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       expect(reasonTextarea).toHaveValue('Some reason')
 
-      act(() => {
+      await act(async () => {
         await userEvent.clear(reasonTextarea)
         await userEvent.type(reasonTextarea, 'This is not a risk')
       })
@@ -418,7 +418,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       expect(eventPreferenceSubmitButton).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(eventPreferenceSubmitButton)
       })
 
@@ -439,7 +439,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       expect(refetchLogAnalysisMock).not.toHaveBeenCalled()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(screen.getByTestId(/DrawerClose_button/))
       })
 
@@ -451,12 +451,12 @@ describe('Unit tests for LogAnalysisRow', () => {
   })
 
   describe('Log Jira creation', () => {
-    test('should not render create jira button if the feature flag is disabled', () => {
+    test('should not render create jira button if the feature flag is disabled', async () => {
       const { container } = render(<WrapperComponent {...initialProps} />)
 
       const contextMenuOptionButton = container.querySelector('[data-icon="Options"]:first-child') as HTMLElement
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(contextMenuOptionButton)
       })
 
@@ -469,7 +469,7 @@ describe('Unit tests for LogAnalysisRow', () => {
       expect(viewJiraButton).not.toBeInTheDocument()
       expect(createJiraButton).not.toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(viewDetailsButton)
       })
 
@@ -487,7 +487,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const contextMenuOptionButton = container.querySelector('[data-icon="Options"]:first-child') as HTMLElement
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(contextMenuOptionButton)
       })
 
@@ -500,7 +500,7 @@ describe('Unit tests for LogAnalysisRow', () => {
       expect(viewJiraButton).not.toBeInTheDocument()
       expect(createJiraButton).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(viewDetailsButton)
       })
 
@@ -564,7 +564,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const contextMenuOptionButton = container.querySelector('[data-icon="Options"]:first-child') as HTMLElement
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(contextMenuOptionButton)
       })
 
@@ -577,7 +577,7 @@ describe('Unit tests for LogAnalysisRow', () => {
       expect(viewJiraButton).not.toBeInTheDocument()
       expect(createJiraButton).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(createJiraButton)
       })
 
@@ -586,7 +586,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const projectsDropdown = document.querySelector('input[name="projectKey"]')
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(projectsDropdown!)
       })
 
@@ -594,7 +594,7 @@ describe('Unit tests for LogAnalysisRow', () => {
       expect(screen.getByText('Infrastructure Evolution')).toBeInTheDocument()
 
       expect(getIssueTypesRefetch).not.toHaveBeenCalled()
-      act(() => {
+      await act(async () => {
         await userEvent.click(screen.getByText('Observability Integrations Platform'))
       })
 
@@ -608,14 +608,14 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const issueTypeDropdown = document.querySelector('input[name="issueType"]')
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(issueTypeDropdown!)
       })
 
       expect(screen.getByText('Story')).toBeInTheDocument()
       expect(screen.getByText('RCA-Subtask')).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(screen.getByText('Story'))
       })
 
@@ -625,14 +625,14 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const prioritiesDropdown = document.querySelector('input[name="priority"]')
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(prioritiesDropdown!)
       })
 
       expect(screen.getByText('P1')).toBeInTheDocument()
       expect(screen.getByText('P2')).toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(screen.getByText('P1'))
       })
 
@@ -642,13 +642,13 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const ticketTitle = screen.getByPlaceholderText(/pipeline.jiraCreateStep.summaryPlaceholder/)
 
-      act(() => {
+      await act(async () => {
         await userEvent.type(ticketTitle, 'New ticket to fix')
       })
 
       const ticketdescription = screen.getByPlaceholderText(/pipeline.jiraCreateStep.descriptionPlaceholder/)
 
-      act(() => {
+      await act(async () => {
         await userEvent.type(ticketdescription, 'New description')
       })
 
@@ -659,13 +659,13 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const addFieldButton = screen.getByText('pipeline.jiraCreateStep.addFields')
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(addFieldButton)
       })
 
       const keyInput = screen.getByPlaceholderText(/pipeline.keyPlaceholder/)
 
-      act(() => {
+      await act(async () => {
         await userEvent.type(keyInput, 'key1')
       })
 
@@ -680,7 +680,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const deleteFieldButton = document.querySelector('span[data-icon="main-trash"]')
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(deleteFieldButton!)
       })
 
@@ -690,7 +690,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const submitButton = screen.getByTestId('jiraDrawerSubmit_button')
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(submitButton)
       })
 
@@ -723,7 +723,7 @@ describe('Unit tests for LogAnalysisRow', () => {
 
       const contextMenuOptionButton = container.querySelector('[data-icon="Options"]:first-child') as HTMLElement
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(contextMenuOptionButton)
       })
 
@@ -736,7 +736,7 @@ describe('Unit tests for LogAnalysisRow', () => {
       expect(viewJiraButton).toBeInTheDocument()
       expect(createJiraButton).not.toBeInTheDocument()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(viewJiraButton)
       })
 

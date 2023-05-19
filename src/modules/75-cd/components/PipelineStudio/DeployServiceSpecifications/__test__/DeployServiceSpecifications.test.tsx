@@ -7,7 +7,7 @@
 
 /* eslint-disable jest/no-disabled-tests */
 import React from 'react'
-import { act, fireEvent, render, waitFor, getByText as getElementByText, within } from '@testing-library/react'
+import { act, fireEvent, render, waitFor, getByText as getElementByText, within, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { noop } from 'lodash-es'
 import { Formik } from '@harness/uicore'
@@ -109,7 +109,7 @@ describe('Deploy service stage specifications', () => {
     factory.registerStep(new ECSServiceSpec())
   })
   test(`Propagate from option and dropdown to select previous stage and service should be present`, async () => {
-    const { getByPlaceholderText, getByText } = render(
+    const { getByText } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
           <PipelineContext.Provider value={getOverrideContextValue()}>
@@ -122,11 +122,11 @@ describe('Deploy service stage specifications', () => {
     )
 
     const propagateFromDropdownDiv = document.getElementsByClassName('stageSelectDropDown')[0]
-    act(() => {
-      fireEvent.click(propagateFromDropdownDiv)
+    await act(async () => {
+      await userEvent.click(propagateFromDropdownDiv)
     })
-    const propagateFromDropdown = getByPlaceholderText('- pipeline.selectStagePlaceholder -')
-    act(() => {
+    const propagateFromDropdown = screen.getByPlaceholderText(/pipeline.selectStagePlaceholder/)
+    await act(async () => {
       await userEvent.selectOptions(propagateFromDropdown, 'st1')
     })
 

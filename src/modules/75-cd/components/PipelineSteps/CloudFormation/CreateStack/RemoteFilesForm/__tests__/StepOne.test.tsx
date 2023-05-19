@@ -188,7 +188,7 @@ describe('Test cloudformation remote wizard step one', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('should click each repo option', () => {
+  test('should click each repo option', async () => {
     const data = {
       type: 'CreateStack',
       name: 'createStack',
@@ -396,7 +396,7 @@ describe('Test cloudformation remote wizard step one', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('should render submit step one', () => {
+  test('should render submit step one', async () => {
     const data = {
       type: 'CreateStack',
       name: 'createStack',
@@ -448,7 +448,7 @@ describe('Test cloudformation remote wizard step one', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('should render error when submitting', () => {
+  test('should render error when submitting', async () => {
     const data = {
       type: 'CreateStack',
       name: 'createStack',

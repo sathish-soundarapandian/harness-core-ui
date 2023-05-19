@@ -195,7 +195,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
 
       expect(getByTestId('jsonSelectorBtn')).not.toBeDisabled()
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(getByTestId('jsonSelectorBtn')!)
       })
 
@@ -250,7 +250,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         /cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText/
       )
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(fetchSampleDataButton)
       })
 
@@ -408,7 +408,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         /cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText/
       )
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(fetchSampleDataButton)
       })
 
@@ -418,7 +418,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
 
       const firstRow = container.querySelector('.TableV2--clickable:first-child') as Element
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(firstRow)
       })
 
@@ -473,7 +473,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         /cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText/
       )
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(fetchSampleDataButton)
       })
 
