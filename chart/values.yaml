@@ -4,31 +4,6 @@
 global:
   loadbalancerURL: ""
   imagePullSecrets: []
-  ingress:
-    # -- create ingress objects
-    enabled: false
-    # -- set ingress object classname
-    className: harness
-    # -- set host of ingressObjects
-    hosts:
-      - my-host.example.org
-    # -- set tls for ingress objects
-    tls:
-      enabled: true
-      secretName: ''
-    # -- add annotations to ingress objects
-    objects:
-      annotations: {}
-  istio:
-    # -- create virtualServices objects
-    enabled: false
-    # -- create gateway and use in virtualservice
-    gateway:
-      create: false
-    # -- if gateway not created, use specified gateway and host
-    virtualService:
-      gateways:
-      hosts:
 replicaCount: 1
 maxSurge: 1
 maxUnavailable: 0
@@ -127,3 +102,5 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+additionalConfigs: {}
