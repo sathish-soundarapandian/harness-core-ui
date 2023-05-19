@@ -10,7 +10,7 @@ import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { Popover, Text } from '@harness/uicore'
+import { Layout, Popover, Text } from '@harness/uicore'
 
 import { String as StrTemplate } from 'framework/strings'
 import type { Application, GitOpsExecutionSummary } from 'services/cd-ng'
@@ -200,21 +200,25 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
         {gitOpsClusters.length ? (
           <div>
             <StrTemplate className={css.title} tagName="div" stringID="common.clusters" />
-
-            <>
-              {gitOpsClusters.map(cluster => {
-                return (
-                  <Text
-                    lineClamp={1}
-                    className={css.stageItemDetails}
-                    margin={{ right: 'xsmall' }}
-                    key={cluster.identifier}
-                  >
-                    {cluster.name}
-                  </Text>
-                )
-              })}
-            </>
+            {gitOpsClusters.length ? (
+              <Popover
+                interactionKind={PopoverInteractionKind.HOVER}
+                // className={Classes.DARK}
+                content={
+                  <Layout.Vertical spacing="small" padding="medium" style={{ maxWidth: 500 }}>
+                    {gitOpsClusters.map((cluster: any, index: number) => {
+                      return (
+                        <div key={index}>
+                          <span>{cluster.name}</span>
+                        </div>
+                      )
+                    })}
+                  </Layout.Vertical>
+                }
+              >
+                <span>{Math.abs(gitOpsClusters.length)}</span>
+              </Popover>
+            ) : null}
           </div>
         ) : (
           <div>
