@@ -35,7 +35,7 @@ jest.mock('services/cd-ng', () => ({
   useDeleteManyFreezes: jest.fn().mockReturnValue({ data: null, loading: false })
 }))
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 const PROJECT_LEVEL_FREEZE_ROUTE = routes.toFreezeWindows({ ...projectPathProps, ...modulePathProps })
 

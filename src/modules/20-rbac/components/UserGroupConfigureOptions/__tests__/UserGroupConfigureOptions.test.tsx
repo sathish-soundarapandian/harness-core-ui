@@ -40,7 +40,7 @@ const openConfigureOptionsModal = async (): Promise<void> => {
   expect(await screen.findByText('common.configureOptions.configureOptions')).toBeInTheDocument()
 }
 
-const selectAllowedValuesRadio = (): void => {
+const selectAllowedValuesRadio = async (): Promise<void> => {
   const allowedValuesRadio = screen.getByDisplayValue('AllowedValues')
   await userEvent.click(allowedValuesRadio)
 }
@@ -54,7 +54,7 @@ describe('test <UserGroupConfigureOptions />', () => {
       </TestWrapper>
     )
     await openConfigureOptionsModal()
-    selectAllowedValuesRadio()
+    await selectAllowedValuesRadio()
 
     const userGroupPlaceholder = await screen.findByText('common.selectUserGroups')
     await userEvent.click(userGroupPlaceholder)
@@ -85,7 +85,7 @@ describe('test <UserGroupConfigureOptions />', () => {
       </TestWrapper>
     )
     await openConfigureOptionsModal()
-    selectAllowedValuesRadio()
+    await selectAllowedValuesRadio()
 
     const userGroupPlaceholder = await screen.findByText('common.selectUserGroups')
     expect(userGroupPlaceholder).toBeInTheDocument()

@@ -32,8 +32,6 @@ const renderComponent = (): RenderResult => {
     </TestWrapper>
   )
 
-  await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
-
   return result
 }
 
@@ -59,6 +57,8 @@ describe('useDeleteTargetGroupDialog', () => {
   test('it should display the dialog', async () => {
     renderComponent()
 
+    await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
+
     expect(screen.getByText('cf.segments.delete.title')).toBeInTheDocument()
     expect(screen.getByText('cf.segments.delete.message')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'delete' })).toBeInTheDocument()
@@ -70,6 +70,8 @@ describe('useDeleteTargetGroupDialog', () => {
     useDeleteSegmentMock.mockReturnValue(buildMock({ mutate: mutateMock }))
 
     renderComponent()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
 
     expect(mutateMock).not.toHaveBeenCalled()
     expect(showToasterMock).not.toHaveBeenCalled()

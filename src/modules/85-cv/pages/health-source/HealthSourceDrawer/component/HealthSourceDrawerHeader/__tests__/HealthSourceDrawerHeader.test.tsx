@@ -11,9 +11,7 @@ import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import HealthSourceDrawerHeader from '../HealthSourceDrawerHeader'
 
-describe('Validate HealthSourceDrawerHeader', async () => {
-  //
-
+describe('Validate HealthSourceDrawerHeader', () => {
   test('should render in cv', async () => {
     const { container, getByText } = render(
       <TestWrapper>

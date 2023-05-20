@@ -80,7 +80,7 @@ describe('CloudWatch IgnoreThresholdTabContent', () => {
       'cv.monitoringSources.appD.percentageDeviation'
     )
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
     })
 
@@ -88,20 +88,20 @@ describe('CloudWatch IgnoreThresholdTabContent', () => {
     expect(lessThanInput).toBeInTheDocument()
   })
 
-  test('should check whether a new row is added when Add Threshold button is clicked', () => {
+  test('should check whether a new row is added when Add Threshold button is clicked', async () => {
     render(<WrappingComponent />)
 
     expect(screen.getAllByTestId('ThresholdRow')).toHaveLength(1)
 
     const addButton = screen.getByTestId('AddThresholdButton')
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(addButton)
     })
 
     expect(screen.getAllByTestId('ThresholdRow')).toHaveLength(2)
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getAllByText('trash')[0])
     })
 

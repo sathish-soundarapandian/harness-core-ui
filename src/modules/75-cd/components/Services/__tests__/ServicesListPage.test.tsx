@@ -82,7 +82,7 @@ describe('ServicesListPage', () => {
     await waitFor(() => expect(getByText('cd.serviceList.noIdentifier')).toBeInTheDocument())
   })
 
-  test('Should open Add-ServiceModal, grid and list view on click', () => {
+  test('Should open Add-ServiceModal, grid and list view on click', async () => {
     mockImport('services/cd-ng', {
       useGetServiceList: () => ({
         data: serviceListResponse,

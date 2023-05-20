@@ -43,7 +43,7 @@ const openConfigureOptionsModal = async (): Promise<void> => {
   expect(await screen.findByText('common.configureOptions.configureOptions')).toBeInTheDocument()
 }
 
-const selectAllowedValuesRadio = (): void => {
+const selectAllowedValuesRadio = async (): Promise<void> => {
   const allowedValuesRadio = screen.getByDisplayValue('AllowedValues')
   await userEvent.click(allowedValuesRadio)
 }
@@ -58,11 +58,11 @@ describe('test <ConnectorConfigureOptions />', () => {
     )
     await openConfigureOptionsModal()
 
-    selectAllowedValuesRadio()
+    await selectAllowedValuesRadio()
 
     const placeholder = await screen.findByText('common.entityPlaceholderText')
     await userEvent.click(placeholder)
-    const accountTab = await screen.findByText(/account/i)
+    const accountTab = await screen.findByText(/^account$/i)
     await userEvent.click(accountTab)
 
     const connectorToSelect = await screen.findByText('jira_test')
@@ -89,7 +89,7 @@ describe('test <ConnectorConfigureOptions />', () => {
     )
     await openConfigureOptionsModal()
 
-    selectAllowedValuesRadio()
+    await selectAllowedValuesRadio()
 
     const placeholder = await screen.findByText('common.entityPlaceholderText')
     expect(placeholder).toBeInTheDocument()

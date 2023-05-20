@@ -117,7 +117,7 @@ describe('Validate CVMultiTypeQuery', () => {
       </TestWrapper>
     )
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('[icon="fullscreen"]')!)
     })
 

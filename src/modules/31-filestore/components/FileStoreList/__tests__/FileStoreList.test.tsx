@@ -62,7 +62,7 @@ jest.mock('services/cd-ng', () => ({
   useCreate: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 describe('FileStoreList', () => {
   test('should render FileStoreList component', async () => {

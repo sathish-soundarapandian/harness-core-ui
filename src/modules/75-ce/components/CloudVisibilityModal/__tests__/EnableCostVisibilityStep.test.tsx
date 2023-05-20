@@ -42,7 +42,7 @@ const props = {
   closeModal: jest.fn()
 }
 
-describe('Should be able to Disable Reporting', async () => {
+describe('Should be able to Disable Reporting', () => {
   test('Install Components', async () => {
     const { container } = render(
       <TestWrapper>

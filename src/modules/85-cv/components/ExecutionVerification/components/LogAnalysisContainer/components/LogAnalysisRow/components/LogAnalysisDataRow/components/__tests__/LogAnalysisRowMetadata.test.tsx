@@ -30,7 +30,7 @@ describe('LogAnalysisRowContextMenu', () => {
     expect(screen.getByTestId(/feedbackContainer/)).toBeInTheDocument()
     expect(screen.getByTestId(/createdJiraTicketIdDisplay/)).toBeInTheDocument()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByTestId(/createdJiraTicketIdDisplay/))
     })
 

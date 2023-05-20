@@ -42,7 +42,7 @@ const renderComponent = (): void => {
 }
 
 describe('AddTargetingButton', () => {
-  test('it should default to identifier if name not present', () => {
+  test('it should default to identifier if name not present', async () => {
     renderComponent()
 
     await userEvent.click(screen.getByText('cf.featureFlags.rules.addTargeting'))

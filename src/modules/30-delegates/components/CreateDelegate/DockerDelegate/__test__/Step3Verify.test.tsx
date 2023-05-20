@@ -34,13 +34,13 @@ describe('Create Docker Step3Verify', () => {
     )
 
     const doneBtn = getByRole('button', { name: 'done' })
-    act(() => {
+    await act(async () => {
       await userEvent.click(doneBtn!)
     })
 
     expect(container).toMatchSnapshot()
   })
-  test('render data and go back', () => {
+  test('render data and go back', async () => {
     const { container } = render(
       <TestWrapper>
         <Step3Verify />

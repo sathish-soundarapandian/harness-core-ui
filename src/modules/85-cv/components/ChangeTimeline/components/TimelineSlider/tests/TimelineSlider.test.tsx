@@ -145,7 +145,7 @@ describe('Unit tests for timeline slider', () => {
     await waitFor(() => expect(container.querySelector('[class*="sliderContainer"]')).not.toBeNull())
   })
 
-  test('Ensure zoom callback is handled properly', () => {
+  test('Ensure zoom callback is handled properly', async () => {
     const onSliderDragEnd = jest.fn()
     const onZoom = jest.fn()
 

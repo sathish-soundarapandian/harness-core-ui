@@ -111,7 +111,7 @@ describe('HealthScoreCard Tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('Error state', () => {
+  test('Error state', async () => {
     const errorMessage = 'TEST ERROR MESSAGE'
 
     ;(cvService.useGetMonitoredServiceScores as jest.Mock).mockReturnValue({

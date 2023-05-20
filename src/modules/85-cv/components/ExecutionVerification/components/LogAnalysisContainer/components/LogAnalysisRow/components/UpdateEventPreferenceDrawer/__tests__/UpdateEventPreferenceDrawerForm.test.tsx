@@ -12,7 +12,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
-  test('UpdateEventPreferenceDrawerForm calls correct function upon submitting the form', () => {
+  test('UpdateEventPreferenceDrawerForm calls correct function upon submitting the form', async () => {
     render(
       <TestWrapper
         path="/:accountId/:projectIdentifier/:orgIdentifier"
@@ -22,7 +22,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
       </TestWrapper>
     )
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByTestId(/updatePreferenceDrawerClose_button/))
     })
 
@@ -39,7 +39,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
       </TestWrapper>
     )
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByTestId(/updatePreferenceDrawerSubmit_button/))
     })
 
@@ -73,7 +73,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
 
     const reasonTextarea = screen.getByPlaceholderText('cv.logs.reasonPlaceholder')
 
-    act(() => {
+    await act(async () => {
       await userEvent.clear(reasonTextarea)
       await userEvent.type(reasonTextarea, 'This is not a risk again')
     })
@@ -82,7 +82,7 @@ describe('UpdateEventPreferenceDrawerForm', () => {
 
     expect(eventPreferenceSubmitButton).toBeInTheDocument()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(eventPreferenceSubmitButton)
     })
 

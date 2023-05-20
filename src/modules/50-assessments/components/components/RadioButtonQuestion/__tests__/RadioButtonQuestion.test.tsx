@@ -54,7 +54,7 @@ describe('RadioButtonQuestion', () => {
     })
   })
 
-  test('should select a response when a radio button is clicked', () => {
+  test('should select a response when a radio button is clicked', async () => {
     const { container } = render(
       <RadioButtonQuestion
         questionNumber={questionNumber}

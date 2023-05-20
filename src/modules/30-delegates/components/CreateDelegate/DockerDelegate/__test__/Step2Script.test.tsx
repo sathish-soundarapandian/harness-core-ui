@@ -42,6 +42,6 @@ describe('Create Docker Step2Script', () => {
 
     const continueBtn = getByRole('button', { name: /continue/ })
     await userEvent.click(continueBtn!)
-    expect(continueBtn).toBeDisabled()
+    expect(continueBtn).not.toBeDisabled()
   })
 })

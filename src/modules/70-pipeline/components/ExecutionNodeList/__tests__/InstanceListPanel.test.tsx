@@ -117,7 +117,7 @@ describe('InstanceListPanel', () => {
     const { container } = renderInstanceListPanel()
     const nodeNames = getNodeNames()
 
-    nodeNames.forEach(nodeName => {
+    nodeNames.forEach(async nodeName => {
       const checkbox = container.querySelector(`input[name="instanceCheckbox-${nodeName}"]`)
 
       expect(checkbox).toBeInTheDocument()
@@ -135,7 +135,7 @@ describe('InstanceListPanel', () => {
     const nodeNames = getNodeNames()
     const someNodeNames = nodeNames.slice(0, Math.floor(nodeNames.length / 2))
 
-    someNodeNames.forEach(nodeName => {
+    someNodeNames.forEach(async nodeName => {
       const checkbox = container.querySelector(`input[name="instanceCheckbox-${nodeName}"]`)
 
       expect(checkbox).toBeInTheDocument()

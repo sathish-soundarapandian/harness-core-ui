@@ -25,7 +25,7 @@ import services from './mocks/services.json'
 import environments from './mocks/environments.json'
 import pipelines from './mocks/pipelinesWithRecentExecutions.json'
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 const showMigrateResourceModal = jest.fn()
 const openRunPipelineModal = jest.fn()

@@ -37,7 +37,7 @@ describe('JsonSelectorWithDrawer', () => {
       </TestWrapper>
     )
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByText(/test/))
     })
 

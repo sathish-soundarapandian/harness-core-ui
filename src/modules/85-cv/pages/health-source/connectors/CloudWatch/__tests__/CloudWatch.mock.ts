@@ -64,7 +64,7 @@ export const mockDataTemplate: CloudWatchSetupSource = {
         ...mockData.healthSourceList[0].spec,
         metricDefinitions: [
           {
-            identifier: 'CustomMetric 1',
+            identifier: 'customMetric1',
             metricName: 'CustomMetric 1',
             riskProfile: {
               riskCategory: 'Infrastructure',

@@ -12,7 +12,7 @@ jest.mock('../../ExecutionVerificationSummary/ExecutionVerificationSummary', () 
 })
 
 describe('ExecutionVerificationStepShortView', () => {
-  test('ExecutionVerificationStepShortView should render the right policy details', () => {
+  test('ExecutionVerificationStepShortView should render the right policy details', async () => {
     const { container } = render(
       <TestWrapper>
         <ExecutionVerificationStepShortView
@@ -29,7 +29,7 @@ describe('ExecutionVerificationStepShortView', () => {
     expect(screen.getByTestId(/ExecutionVerificationSummary/)).toBeInTheDocument()
     expect(policyTab).toBeInTheDocument()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(policyTab)
     })
 

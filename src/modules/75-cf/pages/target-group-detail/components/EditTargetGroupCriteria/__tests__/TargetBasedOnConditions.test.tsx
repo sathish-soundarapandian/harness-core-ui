@@ -159,12 +159,12 @@ describe('TargetBasedOnConditions', () => {
     expect(screen.queryAllByText('common.or')).toHaveLength(0)
 
     await userEvent.click(addRowBtn)
-    await waitFor(() => expect(screen.queryAllByText('common.or')).toHaveLength(0))
-
-    await userEvent.click(addRowBtn)
     await waitFor(() => expect(screen.queryAllByText('common.or')).toHaveLength(1))
 
     await userEvent.click(addRowBtn)
     await waitFor(() => expect(screen.queryAllByText('common.or')).toHaveLength(2))
+
+    await userEvent.click(addRowBtn)
+    await waitFor(() => expect(screen.queryAllByText('common.or')).toHaveLength(3))
   })
 })

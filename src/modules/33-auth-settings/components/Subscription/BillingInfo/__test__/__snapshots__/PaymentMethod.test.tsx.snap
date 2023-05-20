@@ -102,7 +102,3 @@ exports[`PaymentMethod render 1`] = `
   </div>
 </div>
 `;
-
-exports[`PaymentMethod setNameOnCard 1`] = `<div />`;
-
-exports[`PaymentMethod setNameOnCard 2`] = `<div />`;

@@ -55,6 +55,11 @@ jest.mock('services/pipeline-ng', () => ({
 }))
 
 describe('INPUT SET SELECTOR -> Input Sets Error Exp', () => {
+  beforeAll(() => {
+    jest.useFakeTimers({ advanceTimers: true })
+    jest.runAllTimers()
+  })
+
   test('Input Set - should open reconcile dialog on clicking reconcile button', async () => {
     jest.spyOn(pipelineng, 'useGetInputSetsListForPipeline').mockImplementation((): any => mockInvalidInputSetsList)
     render(

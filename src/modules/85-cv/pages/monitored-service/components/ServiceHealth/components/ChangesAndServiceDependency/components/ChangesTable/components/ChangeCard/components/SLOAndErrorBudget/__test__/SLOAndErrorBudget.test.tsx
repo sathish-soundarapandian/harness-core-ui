@@ -88,7 +88,7 @@ describe('SLOAndErrorBudget', () => {
     expect(container.querySelectorAll('span[data-icon="steps-spinner"]')).toHaveLength(3)
   })
 
-  test('should handle error state of graph', () => {
+  test('should handle error state of graph', async () => {
     const errorMessage = 'TEST ERROR MESSAGE'
     const refetch = jest.fn()
     jest

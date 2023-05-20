@@ -46,7 +46,7 @@ const renderComponent = (props: Partial<FlagElemBooleanProps> = {}): void => {
 }
 
 describe('FlagElemBoolean', () => {
-  test('it should render flag type options and handle change correctly', () => {
+  test('it should render flag type options and handle change correctly', async () => {
     const flagToggleMock = jest.fn()
     renderComponent({ toggleFlagType: flagToggleMock })
 
@@ -63,7 +63,7 @@ describe('FlagElemBoolean', () => {
     expect(flagToggleMock).toHaveBeenCalled()
   })
 
-  test('it should update "True" value on input change', () => {
+  test('it should update "True" value on input change', async () => {
     renderComponent()
 
     const trueValueInput = document.getElementsByName('variations[0].name')[0]
@@ -75,7 +75,7 @@ describe('FlagElemBoolean', () => {
     expect(trueValueInput).toHaveValue('newTrueValue')
   })
 
-  test('it should update "False" value on input change', () => {
+  test('it should update "False" value on input change', async () => {
     renderComponent()
 
     const falseValueInput = document.getElementsByName('variations[1].name')[0]
@@ -87,7 +87,7 @@ describe('FlagElemBoolean', () => {
     expect(falseValueInput).toHaveValue('newFalseValue')
   })
 
-  test('it should call previousStep callback on "back" click', () => {
+  test('it should call previousStep callback on "back" click', async () => {
     const previousStepMock = jest.fn()
     const previouStepDataMock = { name: 'test 1' }
     renderComponent({ previousStep: previousStepMock, prevStepData: previouStepDataMock })

@@ -39,23 +39,23 @@ describe('Azure Slot Deployment step', () => {
     expect(container).toMatchSnapshot()
 
     const name = container.querySelector('input[name="name"]')
-    act(() => await userEvent.type(name!, 'New azure slot deployment'))
+    await act(async () => await userEvent.type(name!, 'New azure slot deployment'))
     expect(name).toHaveDisplayValue('New azure slot deployment')
 
     const id = getByText('New_azure_slot_deployment')
     expect(id!).toBeDefined()
 
     const timeout = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    act(() => await userEvent.clear(timeout!))
-    act(() => await userEvent.type(timeout!, '10s'))
+    await act(async () => await userEvent.clear(timeout!))
+    await act(async () => await userEvent.type(timeout!, '10s'))
     expect(timeout).toHaveDisplayValue('10s')
 
     const webApp = getByPlaceholderText('Specify web app name')
-    act(() => await userEvent.type(webApp!, 'New azure web App Name'))
+    await act(async () => await userEvent.type(webApp!, 'New azure web App Name'))
     expect(webApp).toHaveDisplayValue('New azure web App Name')
 
     const deploymentSlot = getByPlaceholderText('Specify deployment slot')
-    act(() => await userEvent.type(deploymentSlot!, 'New azure deployment Slot'))
+    await act(async () => await userEvent.type(deploymentSlot!, 'New azure deployment Slot'))
     expect(deploymentSlot).toHaveDisplayValue('New azure deployment Slot')
 
     await act(() => ref.current?.submitForm()!)

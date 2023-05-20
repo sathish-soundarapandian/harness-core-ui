@@ -26,7 +26,7 @@ describe('CloudWatchTemplates', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
-  test('should render CloudWatch template elements if it is template', () => {
+  test('should render CloudWatch template elements if it is template', async () => {
     const onSubmit = jest.fn()
     const { container } = render(
       <TestWrapper>
@@ -36,7 +36,7 @@ describe('CloudWatchTemplates', () => {
 
     const assignAccordion = screen.getByText(/cv.monitoringSources.assign/)
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(assignAccordion!)
     })
 
@@ -50,7 +50,7 @@ describe('CloudWatchTemplates', () => {
     expect(serviceInstancePathInput).toHaveValue('<+input>')
     expect(expressionInput).toHaveValue('<+monitoredService.name>')
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByText('submit'))
     })
 

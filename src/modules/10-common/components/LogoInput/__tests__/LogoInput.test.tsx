@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -38,8 +38,9 @@ describe('<LogoInput /> tests', () => {
 
     expect(uploadIcon).toBeInTheDocument()
 
-    await act(async () => {
-      await userEvent.upload(input, file)
+    await waitFor(async () => {
+      // https://stackoverflow.com/questions/69893693/react-testing-library-userevent-upload-to-input-cannot-find-tolowercase
+      fireEvent.change(input, { target: { files: { item: () => file, length: 1, 0: file } } })
     })
 
     await waitFor(() => {

@@ -53,14 +53,14 @@ describe('validate CompositeSLOConsumption', () => {
     expect(container.querySelector('[data-icon="steps-spinner"]')).toBeInTheDocument()
   })
 
-  test('should render CompositeSLOConsumption in error state', () => {
+  test('should render CompositeSLOConsumption in error state', async () => {
     const refetch = jest.fn()
     jest
       .spyOn(cvServices, 'useGetSloConsumptionBreakdownView')
       .mockReturnValue({ data: {}, loading: false, error: { message: 'API Failed' }, refetch } as any)
     const { getByText } = render(<Wrapper />)
     expect(getByText('API Failed')).toBeInTheDocument()
-    act(() => {
+    await act(async () => {
       await userEvent.click(getByText('Retry'))
     })
     expect(refetch).toHaveBeenCalled()

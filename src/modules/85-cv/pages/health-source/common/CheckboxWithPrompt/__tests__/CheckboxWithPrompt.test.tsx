@@ -35,7 +35,7 @@ describe('CheckboxWithPrompt', () => {
 
     expect(container.querySelector('input[type="checkbox"]')).toBeInTheDocument()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('input[type="checkbox"]')!)
     })
 
@@ -44,7 +44,7 @@ describe('CheckboxWithPrompt', () => {
     expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
 
     const modalDeleteBtn = screen.queryAllByText('confirm')[0]
-    act(() => {
+    await act(async () => {
       await userEvent.click(modalDeleteBtn!)
     })
 
@@ -69,7 +69,7 @@ describe('CheckboxWithPrompt', () => {
       </TestWrapper>
     )
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('input[type="checkbox"]')!)
     })
 

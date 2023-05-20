@@ -31,8 +31,6 @@ const renderComponent = (): RenderResult => {
     </TestWrapper>
   )
 
-  await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
-
   return result
 }
 
@@ -57,6 +55,8 @@ describe('useDeleteTargetDialog', () => {
   test('it should display the dialog', async () => {
     renderComponent()
 
+    await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
+
     expect(screen.getByText('cf.targets.deleteTarget')).toBeInTheDocument()
     expect(screen.getByText('cf.targets.deleteTargetMessage')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'delete' })).toBeInTheDocument()
@@ -68,6 +68,8 @@ describe('useDeleteTargetDialog', () => {
     useDeleteTargetMock.mockReturnValue(buildMock({ mutate: mutateMock }))
 
     renderComponent()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
 
     expect(mutateMock).not.toHaveBeenCalled()
     expect(screen.queryByText('cf.messages.targetDeleted')).not.toBeInTheDocument()
@@ -93,6 +95,8 @@ describe('useDeleteTargetDialog', () => {
     } as any)
 
     renderComponent()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open dialog' }))
 
     expect(screen.queryByText(message)).not.toBeInTheDocument()
 

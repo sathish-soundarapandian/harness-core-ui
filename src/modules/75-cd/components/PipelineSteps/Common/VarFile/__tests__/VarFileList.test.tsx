@@ -128,7 +128,7 @@ describe('Test VarFileList', () => {
     const { getByTestId, container } = renderComponent(defaultProps)
     const removeLabel = getByTestId('remove-varFile-0')
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(removeLabel)
     })
 

@@ -83,7 +83,7 @@ describe('UserGroup Expression Input tests', () => {
       </TestWrapper>
     )
 
-    act(() => {
+    await act(async () => {
       await userEvent.type(container.querySelector('input[name="spec.approvers.userGroups"]')!, '<+test>')
     })
 

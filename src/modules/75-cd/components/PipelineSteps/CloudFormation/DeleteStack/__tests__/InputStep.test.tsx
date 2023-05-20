@@ -108,12 +108,12 @@ describe('Test cloudformation delete stack input set', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('timeout should be updated', () => {
+  test('timeout should be updated', async () => {
     const data = {}
     const { container, getByPlaceholderText } = renderComponent(data)
 
     const timeoutInput = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    act(() => {
+    act(async () => {
       await userEvent.type(timeoutInput!, '10m')
     })
 
@@ -121,26 +121,26 @@ describe('Test cloudformation delete stack input set', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('provisionerIdentifier should be updated', () => {
+  test('provisionerIdentifier should be updated', async () => {
     const data = {
       provisionerIdentifier: RUNTIME_INPUT_VALUE
     }
     const { container } = renderComponent(data)
     const provId = queryByAttribute('name', container, 'test.spec.configuration.spec.provisionerIdentifier')
-    act(() => {
+    await act(async () => {
       await userEvent.type(provId!, 'testID')
     })
     expect(provId).toHaveDisplayValue('testID')
   })
 
-  test('stack name should be updated', () => {
+  test('stack name should be updated', async () => {
     const data = {
       stackName: RUNTIME_INPUT_VALUE
     }
     const { container } = renderComponent(data)
 
     const stackName = queryByAttribute('name', container, 'test.spec.configuration.spec.stackName')
-    act(() => {
+    await act(async () => {
       await userEvent.type(stackName!, 'testStackName')
     })
 

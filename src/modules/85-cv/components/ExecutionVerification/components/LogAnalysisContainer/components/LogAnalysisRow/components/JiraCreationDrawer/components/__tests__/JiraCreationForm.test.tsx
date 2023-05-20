@@ -103,7 +103,7 @@ describe('JiraViewDetails', () => {
 
     const addFieldButton = screen.getByText(/pipeline.jiraCreateStep.addFields/)
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(addFieldButton)
     })
 
@@ -112,19 +112,19 @@ describe('JiraViewDetails', () => {
 
     await waitFor(() => expect(keyInput).toBeInTheDocument())
 
-    act(() => {
+    await act(async () => {
       await userEvent.type(keyInput, 'key1')
     })
 
     await waitFor(() => expect(keyInput).toHaveValue('key1'))
 
-    act(() => {
+    await act(async () => {
       await userEvent.type(valueInput, 'value1')
     })
 
     await waitFor(() => expect(valueInput).toHaveValue('value1'))
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(addFieldButton)
     })
 
@@ -134,7 +134,7 @@ describe('JiraViewDetails', () => {
 
     const deleteIcon = container.querySelector('[data-icon="main-trash"]:last-child')
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(deleteIcon!)
     })
 
@@ -149,7 +149,7 @@ describe('JiraViewDetails', () => {
       </TestWrapper>
     )
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByTestId('jiraDrawerClose_button'))
     })
 

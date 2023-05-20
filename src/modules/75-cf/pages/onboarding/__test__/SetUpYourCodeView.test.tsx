@@ -49,7 +49,7 @@ describe('SetUpYourCodeView', () => {
     expect(screen.getByRole('radio', { name: 'cf.onboarding.ios' })).not.toBeChecked()
   })
 
-  test('It should set the selected xamarin option on click of radio', () => {
+  test('It should set the selected xamarin option on click of radio', async () => {
     renderComponent()
 
     expect(screen.getByText('cf.onboarding.setUpYourCode')).toBeVisible()

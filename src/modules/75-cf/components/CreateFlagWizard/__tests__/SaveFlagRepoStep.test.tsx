@@ -103,7 +103,7 @@ describe('SaveFlagRepoStep', () => {
     )
   })
 
-  test('it should call previousStep callback on "back" click', () => {
+  test('it should call previousStep callback on "back" click', async () => {
     const previousStepMock = jest.fn()
     const previouStepDataMock = { name: 'test 1' }
     renderComponent({ previousStep: previousStepMock, prevStepData: previouStepDataMock })

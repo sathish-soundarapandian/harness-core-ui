@@ -103,7 +103,7 @@ describe('Filters reset on project change assertions', () => {
 
     refetchDashboardWidgets.mockClear()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByText('Healthy'))
     })
 

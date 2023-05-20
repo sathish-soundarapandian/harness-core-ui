@@ -65,7 +65,7 @@ describe('Test azure arm rollback input step', () => {
     expect(provId).toBeInTheDocument()
   })
 
-  test('timeout should be updated', () => {
+  test('timeout should be updated', async () => {
     const data = {
       type: StepType.AzureArmRollback,
       name: 'test name',
@@ -82,7 +82,7 @@ describe('Test azure arm rollback input step', () => {
     expect(timeout).toHaveDisplayValue('10m')
   })
 
-  test('provisionerIdentifier should be updated', () => {
+  test('provisionerIdentifier should be updated', async () => {
     const data = {
       type: StepType.AzureArmRollback,
       name: 'test name',
