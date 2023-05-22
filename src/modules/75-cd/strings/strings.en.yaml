@@ -816,7 +816,7 @@ getStartedWithCD:
   artifactInManifest: No, it is hard-coded in my manifest
   giveSample: Give me a Sample
   artifactReferencedInManifest: Fantastic! If your artifact is already referenced in your manifest you are ready to continue to the next step.
-  tryCICTA: '<b>Developer</b>? Check out Harness <a target="_blank" href="{{ciurl}}">Continuous Integration</a> to build and test your code x4 faster with hosted builds and test intelligence. <a target="_blank" href="{{docurl}}">CI or CD?</a>'
+  tryCICTA: '<b>Developer</b>? Check out Harness <a target="_blank" href="{{ciurl}}">Continuous Integration</a> to build and test your code 4x faster with hosted builds and test intelligence. <a target="_blank" href="{{docurl}}">CI or CD?</a>'
   standardization: 'Standardization: Create consistent, standard deployment processes across the organization'
   quality: 'Quality: Reduce the percentage of deployments that cause failures in production'
   restore: 'Time to restore: Quicker triage of failures in production and time to restore services'
