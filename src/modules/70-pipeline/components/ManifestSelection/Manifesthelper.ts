@@ -79,7 +79,8 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   GoogleCloudFunctionGenOneDefinition: 'GoogleCloudFunctionGenOneDefinition',
   HelmRepoOverride: 'HelmRepoOverride',
   AwsLambdaFunctionDefinition: 'AwsLambdaFunctionDefinition',
-  AwsLambdaFunctionAliasDefinition: 'AwsLambdaFunctionAliasDefinition'
+  AwsLambdaFunctionAliasDefinition: 'AwsLambdaFunctionAliasDefinition',
+  AwsSamDirectory: 'AwsSamDirectory'
 }
 
 export const TASManifestTypes = [ManifestDataType.TasManifest, ManifestDataType.TasVars, ManifestDataType.TasAutoScaler]
@@ -158,7 +159,7 @@ export const allowedManifestTypes: Record<ServiceDefinition['type'], Array<Manif
   Elastigroup: [],
   GoogleCloudFunctions: [ManifestDataType.GoogleCloudFunctionDefinition],
   AwsLambda: [ManifestDataType.AwsLambdaFunctionDefinition, ManifestDataType.AwsLambdaFunctionAliasDefinition],
-  AWS_SAM: []
+  AWS_SAM: [ManifestDataType.AwsSamDirectory]
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [
@@ -220,7 +221,8 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   GoogleCloudFunctionGenOneDefinition: gitStoreTypesWithHarnessStoreType,
   HelmRepoOverride: [ManifestStoreMap.Http, ManifestStoreMap.OciHelmChart, ManifestStoreMap.S3, ManifestStoreMap.Gcs],
   AwsLambdaFunctionDefinition: [...gitStoreTypes, ManifestStoreMap.Harness],
-  AwsLambdaFunctionAliasDefinition: [...gitStoreTypes, ManifestStoreMap.Harness]
+  AwsLambdaFunctionAliasDefinition: [...gitStoreTypes, ManifestStoreMap.Harness],
+  AwsSamDirectory: [...gitStoreTypes, ManifestStoreMap.Harness]
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -247,7 +249,8 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   GoogleCloudFunctionGenOneDefinition: 'service-google-functions',
   HelmRepoOverride: 'service-helm',
   AwsLambdaFunctionDefinition: 'service-aws-native-lambda',
-  AwsLambdaFunctionAliasDefinition: 'service-aws-native-lambda'
+  AwsLambdaFunctionAliasDefinition: 'service-aws-native-lambda',
+  AwsSamDirectory: 'service-aws-sam'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -274,7 +277,8 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   GoogleCloudFunctionGenOneDefinition: 'pipeline.manifestTypeLabels.GoogleCloudFunctionDefinitionGenOne',
   HelmRepoOverride: 'pipeline.manifestTypeLabels.HelmRepoOverride',
   AwsLambdaFunctionDefinition: 'pipeline.manifestTypeLabels.AwsLambdaFunctionDefinition',
-  AwsLambdaFunctionAliasDefinition: 'pipeline.manifestTypeLabels.AwsLambdaFunctionAliasDefinition'
+  AwsLambdaFunctionAliasDefinition: 'pipeline.manifestTypeLabels.AwsLambdaFunctionAliasDefinition',
+  AwsSamDirectory: 'pipeline.manifestTypeLabels.AwsSamDirectory'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [
@@ -306,7 +310,7 @@ export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',
-  Bitbucket: 'pipeline.manifestType.bitBucketLabel',
+  Bitbucket: 'common.repo_provider.bitbucketLabel',
   Http: 'pipeline.manifestType.httpHelmRepoConnectorLabel',
   OciHelmChart: 'pipeline.manifestType.ociHelmConnectorLabel',
   S3: 'connectors.S3',
@@ -334,7 +338,7 @@ export const ManifestToConnectorLabelMap: Record<ManifestStoreWithoutConnector, 
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',
-  Bitbucket: 'pipeline.manifestType.bitBucketLabel',
+  Bitbucket: 'common.repo_provider.bitbucketLabel',
   Http: 'connectors.title.helmConnector',
   OciHelmChart: 'connectors.title.ociHelmConnector',
   S3: 'pipeline.manifestToConnectorLabelMap.AWSLabel',
@@ -436,7 +440,8 @@ export function getManifestLocation(manifestType: ManifestTypes, manifestStore: 
       ManifestDataType.GoogleCloudFunctionDefinition,
       ManifestDataType.GoogleCloudFunctionGenOneDefinition,
       ManifestDataType.AwsLambdaFunctionDefinition,
-      ManifestDataType.AwsLambdaFunctionAliasDefinition
+      ManifestDataType.AwsLambdaFunctionAliasDefinition,
+      ManifestDataType.AwsSamDirectory
     ].includes(manifestType):
       return 'store.spec.paths'
     case manifestType === ManifestDataType.Kustomize:
@@ -470,12 +475,18 @@ export const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefin
   return `${selectedDeploymentType}DeploymentTypeManifests`
 }
 
-export const getManifestsFirstStepTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
-  return `${selectedDeploymentType}FirstManifestStep`
+export const getManifestsFirstStepTooltipId = (
+  selectedDeploymentType: ServiceDefinition['type'],
+  manifestType: ManifestTypes
+): string => {
+  return `${selectedDeploymentType}_${manifestType}_FirstManifestStep`
 }
 
-export const getManifestsSecondStepTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
-  return `${selectedDeploymentType}SecondManifestStep`
+export const getManifestsSecondStepTooltipId = (
+  selectedDeploymentType: ServiceDefinition['type'],
+  manifestType: ManifestTypes
+): string => {
+  return `${selectedDeploymentType}_${manifestType}_SecondManifestStep`
 }
 
 const getConnectorRef = (prevStepData: ConnectorConfigDTO): string => {

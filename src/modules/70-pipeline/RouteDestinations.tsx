@@ -82,6 +82,7 @@ import { ExecutionListPage } from './pages/execution-list-page/ExecutionListPage
 import EnvironmentResourceRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentResourceRenderer'
 import EnvironmentAttributeRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentAttributeRenderer'
 import { BuildCommits } from './pages/execution/ExecutionLandingPage/Commits/BuildCommits'
+import { getPipelineExecutionEventAdditionalDetails } from './utils/auditTrailUtils'
 /**
  * Register RBAC resources
  */
@@ -397,7 +398,8 @@ AuditTrailFactory.registerResourceHandler('PIPELINE_EXECUTION', {
       })
     }
     return undefined
-  }
+  },
+  additionalDetails: getPipelineExecutionEventAdditionalDetails
 })
 
 export function RedirectToPipelineDetailHome(): React.ReactElement {

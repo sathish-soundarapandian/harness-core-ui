@@ -160,11 +160,7 @@ export const NotificationsCard: React.FC<NotificationsCardProps> = ({ timeRange 
   const response = data?.data?.response
 
   const renderBadges = () => {
-    if (!response?.deploymentsOverview) {
-      return null
-    }
-
-    if (showBadgesCard(response?.deploymentsOverview)) {
+    if (response?.deploymentsOverview && showBadgesCard(response?.deploymentsOverview)) {
       const badgesArr = Object.keys(response?.deploymentsOverview)
       return badgesArr.map((key, index) =>
         getBadge(key, (response?.deploymentsOverview as any)[key], index === badgesArr.length - 1)

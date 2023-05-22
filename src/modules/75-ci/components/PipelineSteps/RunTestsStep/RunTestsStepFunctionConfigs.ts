@@ -55,6 +55,14 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.Text
   },
   {
+    name: 'spec.testRoot',
+    type: TransformValuesTypes.Text
+  },
+  {
+    name: 'spec.testGlobs',
+    type: TransformValuesTypes.Text
+  },
+  {
     name: 'spec.namespaces',
     type: TransformValuesTypes.Text
   },
@@ -183,6 +191,16 @@ export const getEditViewValidateFieldsConfig = (
     label: 'packagesLabel'
   },
   {
+    name: 'spec.testRoot',
+    type: ValidationFieldTypes.Text,
+    label: 'ci.runTestsStep.testRoot'
+  },
+  {
+    name: 'spec.testGlobs',
+    type: ValidationFieldTypes.Text,
+    label: 'ci.runTestsStep.testGlobs'
+  },
+  {
     name: 'spec.namespaces',
     type: ValidationFieldTypes.Text,
     label: 'ci.runTestsStep.namespaces',
@@ -269,6 +287,16 @@ export function getInputSetViewValidateFieldsConfig(
       name: 'spec.packages',
       type: ValidationFieldTypes.Text,
       label: 'packagesLabel'
+    },
+    {
+      name: 'spec.testRoot',
+      type: ValidationFieldTypes.Text,
+      label: 'ci.runTestsStep.testRoot'
+    },
+    {
+      name: 'spec.testGlobs',
+      type: ValidationFieldTypes.Text,
+      label: 'ci.runTestsStep.testGlobs'
     },
     {
       name: 'spec.namespaces',

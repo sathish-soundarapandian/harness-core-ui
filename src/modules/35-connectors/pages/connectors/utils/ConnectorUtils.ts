@@ -2616,7 +2616,7 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
     case Connectors.Bamboo:
       return 'service-bamboo'
     case Connectors.AZURE_ARTIFACTS:
-      return 'service-azure-artifact-connector'
+      return 'service-azure-artifacts'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'custom-sm'
     case Connectors.GcpSecretManager:
@@ -2713,7 +2713,7 @@ export const getConnectorDisplayName = (type: string): string => {
     case Connectors.TERRAFORM_CLOUD:
       return 'Terraform Cloud'
     case Connectors.SignalFX:
-      return 'Splunk Observability'
+      return 'Splunk Observability [SignalFX]'
     default:
       return ''
   }

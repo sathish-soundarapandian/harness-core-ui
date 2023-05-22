@@ -16,38 +16,15 @@ exports[`Retry History Button tests render retry history execution list on loadi
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey700"
-          style="font-size: 20px; display: flex; align-items: center;"
+          style="font-size: 20px;"
         >
-          <span
-            class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
-            data-icon="execution-history"
-          >
-            <svg
-              height="24"
-              viewBox="0 0 24 24"
-              width="24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8.24 6.45a6.536 6.536 0 114.022 11.687h0l-.31.003h-.048l-.002.047-.046.992-.002.05.05.003.356.018h.002A7.65 7.65 0 107.446 5.657L6.049 4.26l-.086-.085v4.224h4.224l-.085-.085L8.239 6.45z"
-                fill="#22222A"
-                stroke="#22222A"
-                stroke-width="0.1"
-              />
-              <path
-                d="M5.39 12.257l-.052-.657H5l.012.693.377-.036zm-.156 1.408l.442-.13-.174-.63-.412.078.144.682zm.482 1.313l.482-.25-.29-.582-.465.186.273.646zm.334.617l.393.585.49-.386-.392-.515-.49.316zm1.801 1.101l-.48-.428-.48.46.497.502.463-.534zm.516.38l-.434.609.588.402.394-.683-.548-.328zm.779 1.356l.657.285.284-.823-.597-.216-.344.754zm2.177-.281l-.623-.098-.214.886.704.155.133-.943z"
-                fill="#22222A"
-              />
-              <path
-                d="M14.064 8.578h0a.606.606 0 01.858 0m-.858 0h.858m-.858 0l-.001.001-2.05 2.137a.984.984 0 10.005 1.952l2.913 2.621a.607.607 0 00.856-.86h0l-.004-.003-2.91-2.618a.866.866 0 000-.235l2.05-2.138m-.859-.857l.859.857m0-.857a.607.607 0 010 .857m0-.857v.857"
-                fill="currentColor"
-                stroke="#22222A"
-                stroke-width="0.2"
-              />
-            </svg>
-          </span>
-          pipeline.retryHistory
+          executionHeaderText
         </p>
+      </div>
+      <div
+        class="pipelineRunSeq"
+      >
+        execution.pipelineIdentifierTextCD
       </div>
     </div>
     <div>

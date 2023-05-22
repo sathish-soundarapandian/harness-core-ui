@@ -30,7 +30,7 @@ export const DeleteProjectOrgButtons: React.FC<DeleteProjectOrgButtonsProps> = (
     <Layout.Vertical spacing="none">
       <Checkbox
         margin={{ top: 'none', bottom: 'medium' }}
-        label={getString('projectsOrgs.yesIamSure')}
+        label={getString('authSettings.yesIamSure')}
         onChange={(event: React.FormEvent<HTMLInputElement>) => {
           setDoubleCheckDelete(event.currentTarget.checked)
         }}

@@ -110,7 +110,7 @@ describe('Project List', () => {
         await waitFor(() => getByText(document.body, 'projectCard.confirmDeleteTitle'))
         const form = findDialogContainer()
         expect(form).toBeTruthy()
-        const chckBox = queryByText(form as HTMLElement, 'projectsOrgs.yesIamSure')
+        const chckBox = queryByText(form as HTMLElement, 'authSettings.yesIamSure')
         fireEvent.click(chckBox!)
         await waitFor(() => expect(queryByText(form as HTMLElement, 'delete')).not.toBeDisabled())
         const deleteBtn = queryByText(form as HTMLElement, 'delete')

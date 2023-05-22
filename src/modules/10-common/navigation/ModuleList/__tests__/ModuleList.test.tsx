@@ -43,8 +43,7 @@ describe('ModuleList', () => {
         defaultAppStoreValues={{
           featureFlags: {
             CING_ENABLED: true,
-            CVNG_ENABLED: true,
-            CFNG_ENABLED: true
+            CVNG_ENABLED: true
           }
         }}
       >
@@ -67,8 +66,7 @@ describe('ModuleList', () => {
         defaultAppStoreValues={{
           featureFlags: {
             CING_ENABLED: true,
-            CVNG_ENABLED: true,
-            CFNG_ENABLED: true
+            CVNG_ENABLED: true
           }
         }}
       >
@@ -88,8 +86,7 @@ describe('ModuleList', () => {
         defaultAppStoreValues={{
           featureFlags: {
             CING_ENABLED: true,
-            CVNG_ENABLED: true,
-            CFNG_ENABLED: true
+            CVNG_ENABLED: true
           }
         }}
       >

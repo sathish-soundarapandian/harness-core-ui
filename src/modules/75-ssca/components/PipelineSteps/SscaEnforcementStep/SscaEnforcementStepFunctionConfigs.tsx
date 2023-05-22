@@ -18,10 +18,6 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.Text
   },
   {
-    name: 'timeout',
-    type: TransformValuesTypes.Text
-  },
-  {
     name: 'spec.source.type',
     type: TransformValuesTypes.List
   },
@@ -34,7 +30,11 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.Text
   },
   {
-    name: 'spec.verifyAttestation.publicKey',
+    name: 'spec.verifyAttestation.type',
+    type: TransformValuesTypes.Text
+  },
+  {
+    name: 'spec.verifyAttestation.spec.publicKey',
     type: TransformValuesTypes.Text
   },
   {
@@ -43,6 +43,10 @@ export const transformValuesFieldsConfig = [
   },
   {
     name: 'spec.policy.store.spec.file',
+    type: TransformValuesTypes.Text
+  },
+  {
+    name: 'timeout',
     type: TransformValuesTypes.Text
   }
 ]
@@ -61,7 +65,7 @@ export const editViewValidateFieldsConfig = [
     isRequired: true
   },
   {
-    name: 'spec.verifyAttestation.publicKey',
+    name: 'spec.verifyAttestation.spec.publicKey',
     type: ValidationFieldTypes.Text,
     label: 'ssca.publicKey',
     isRequired: true
@@ -115,7 +119,7 @@ export const getInputSetViewValidateFieldsConfig = (
       isRequired
     },
     {
-      name: 'spec.verifyAttestation.publicKey',
+      name: 'spec.verifyAttestation.spec.publicKey',
       type: ValidationFieldTypes.Text,
       label: 'ssca.publicKey',
       isRequired

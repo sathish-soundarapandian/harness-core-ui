@@ -103,8 +103,8 @@ export const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
             render={({ push, remove }) => (
               <>
                 {Array.isArray(value) &&
-                  value.map((_currValue, index: number) => (
-                    <div className={cx(css.group, css.withoutAligning)} key={index}>
+                  value.map(({ id }, index: number) => (
+                    <div className={cx(css.group, css.withoutAligning)} key={id}>
                       <div>
                         {index === 0 && (
                           <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ bottom: 'xsmall' }}>

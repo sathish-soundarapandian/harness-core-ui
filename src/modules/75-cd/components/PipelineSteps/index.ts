@@ -132,6 +132,7 @@ import { K8sAwsInfrastructureSpec } from './K8sAwsInfrastructureSpec/K8sAwsInfra
 import { DeployCloudFunctionStepGenOne } from './GoogleCloudFunction/GenOne/DeployCloudFunctionStepGenOne'
 import { DeployCloudFunctionRollbackStepGenOne } from './GoogleCloudFunction/GenOne/DeployCloudFunctionRollbackStepGenOne'
 import { K8sBlueGreenStageScaleDownStep } from './K8sBlueGreenStageScaleDownStep/K8sBlueGreenStageScaleDownStep'
+import { AwsSamServiceSpec } from './AwsSam/AwsSamServiceSpec/AwsSamServiceSpec'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -258,3 +259,4 @@ factory.registerStep(new AwsLambdaDeployStep())
 factory.registerStep(new AwsLambdaRollbackStep())
 factory.registerStep(new TerraformCloudRun())
 factory.registerStep(new TerraformCloudRollback())
+factory.registerStep(new AwsSamServiceSpec())

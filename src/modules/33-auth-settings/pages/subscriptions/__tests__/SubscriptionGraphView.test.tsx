@@ -9,13 +9,13 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ModuleName } from 'framework/types/ModuleName'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import SubscriptionGraphView from '../overview/SubscriptionGraphVIew'
 
 const featureFlags = {
   CVNG_ENABLED: true,
   CING_ENABLED: true,
-  CENG_ENABLED: true,
-  CFNG_ENABLED: true
+  CENG_ENABLED: true
 }
 
 describe('Subscriptions graph view undefined module flow  ', () => {
@@ -25,8 +25,8 @@ describe('Subscriptions graph view undefined module flow  ', () => {
         defaultAppStoreValues={{ featureFlags }}
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CF: { edition: 'FREE', status: 'ACTIVE' },
-            CHAOS: { edition: 'FREE', status: 'ACTIVE' }
+            CF: { edition: 'FREE', status: LICENSE_STATE_VALUES.ACTIVE },
+            CHAOS: { edition: 'FREE', status: LICENSE_STATE_VALUES.ACTIVE }
           }
         }}
       >

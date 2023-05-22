@@ -155,6 +155,8 @@ export const healthSourceTypeMappingForReferenceField = (
   switch (type) {
     case HealthSourceTypes.Elk as ConnectorInfoDTO['type']:
       return Connectors.ELK
+    case HealthSourceTypes.GrafanaLoki as ConnectorInfoDTO['type']:
+      return Connectors.CUSTOM
     default:
       return type
   }

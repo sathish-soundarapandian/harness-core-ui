@@ -9,6 +9,7 @@ import React from 'react'
 import { render, act, waitFor, fireEvent } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
+import { InputTypes, fillAtForm } from '@common/utils/JestFormHelper'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'
@@ -620,6 +621,56 @@ describe('RunTests Step', () => {
       )
 
       expect(container).toMatchSnapshot()
+    })
+  })
+
+  describe('Add Step', () => {
+    test('should render properly for FF CI_PYTHON_TI', async () => {
+      jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+        CI_PYTHON_TI: true
+      })
+      const { container, getByText } = render(
+        <TestStepWidget initialValues={{}} type={StepType.RunTests} stepViewType={StepViewType.Edit} />
+      )
+
+      act(() => {
+        fireEvent.click(getByText('pipeline.additionalConfiguration'))
+      })
+
+      const dropdownSelects = container.querySelectorAll('[icon="chevron-down"]')
+
+      await waitFor(() => {
+        // Language dropdown
+        fireEvent.click(dropdownSelects[1])
+        const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
+        expect(menuItemLabels?.length).toEqual(5)
+        expect(menuItemLabels?.[0].innerHTML).toEqual('ci.runTestsStep.csharp')
+        expect(menuItemLabels?.[1].innerHTML).toEqual('ci.runTestsStep.java')
+        expect(menuItemLabels?.[2].innerHTML).toEqual('ci.runTestsStep.kotlin')
+        expect(menuItemLabels?.[3].innerHTML).toEqual('ci.runTestsStep.scala')
+        expect(menuItemLabels?.[4].innerHTML).toEqual('common.python')
+      })
+
+      fillAtForm([
+        {
+          container,
+          type: InputTypes.SELECT,
+          fieldId: 'spec.language',
+          value: 'Python'
+        }
+      ])
+
+      await waitFor(() => {
+        // Build tool dropdown
+        fireEvent.click(dropdownSelects[2])
+        const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
+        expect(menuItemLabels?.length).toEqual(2)
+        expect(menuItemLabels?.[0].innerHTML).toEqual('ci.runTestsStep.pytest')
+        expect(menuItemLabels?.[1].innerHTML).toEqual('ci.runTestsStep.unittest')
+      })
+
+      expect(getByText('ci.runTestsStep.testRoot')).toBeInTheDocument()
+      expect(getByText('ci.runTestsStep.testGlobs')).toBeInTheDocument()
     })
   })
 })

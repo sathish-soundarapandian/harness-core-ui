@@ -56,6 +56,7 @@ export interface useNavModuleInfoReturnType {
   hasLicense?: boolean
   color: string
   backgroundColor?: string
+  backgroundColorLight?: string
 }
 
 interface ModuleInfo {
@@ -65,6 +66,7 @@ interface ModuleInfo {
   featureFlagName?: FeatureFlag
   color: string
   backgroundColor?: string
+  backgroundColorLight?: string
 }
 
 export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
@@ -73,7 +75,8 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     label: 'common.cdAndGitops',
     getHomePageUrl: (accountId: string) => routes.toCD({ accountId }),
     color: '--cd-border',
-    backgroundColor: '--cd-background'
+    backgroundColor: '--cd-background',
+    backgroundColorLight: '--cd-background-light'
   },
   [ModuleName.CI]: {
     icon: 'ci-main',
@@ -81,7 +84,8 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toCI({ accountId }),
     featureFlagName: FeatureFlag.CING_ENABLED,
     color: '--ci-border',
-    backgroundColor: '--ci-background'
+    backgroundColor: '--ci-background',
+    backgroundColorLight: '--ci-background-light'
   },
   [ModuleName.CV]: {
     icon: 'cv-main',
@@ -89,15 +93,16 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toCV({ accountId }),
     featureFlagName: FeatureFlag.CVNG_ENABLED,
     color: '--srm-border',
-    backgroundColor: '--srm-background'
+    backgroundColor: '--srm-background',
+    backgroundColorLight: '--srm-background-light'
   },
   [ModuleName.CF]: {
     icon: 'ff-solid',
     label: 'common.purpose.cf.continuous',
     getHomePageUrl: (accountId: string) => routes.toCF({ accountId }),
-    featureFlagName: FeatureFlag.CFNG_ENABLED,
     color: '--ff-border',
-    backgroundColor: '--ff-background'
+    backgroundColor: '--ff-background',
+    backgroundColorLight: '--ff-background-light'
   },
   [ModuleName.CE]: {
     icon: 'ce-main',
@@ -105,21 +110,24 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toCE({ accountId }),
     featureFlagName: FeatureFlag.CENG_ENABLED,
     color: '--ccm-border',
-    backgroundColor: '--ccm-background'
+    backgroundColor: '--ccm-background',
+    backgroundColorLight: '--ccm-background-light'
   },
   [ModuleName.STO]: {
     icon: 'sto-color-filled',
     label: 'common.purpose.sto.continuous',
     getHomePageUrl: (accountId: string) => routes.toSTO({ accountId }),
     color: '--sto-border',
-    backgroundColor: '--sto-background'
+    backgroundColor: '--sto-background',
+    backgroundColorLight: '--sto-background-light'
   },
   [ModuleName.CHAOS]: {
     icon: 'chaos-main',
     label: 'common.purpose.chaos.continuous',
     getHomePageUrl: (accountId: string) => routes.toChaos({ accountId }),
     color: '--chaos-border',
-    backgroundColor: '--chaos-background'
+    backgroundColor: '--chaos-background',
+    backgroundColorLight: '--chaos-background-light'
   },
   [ModuleName.CODE]: {
     icon: 'code',

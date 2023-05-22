@@ -37,7 +37,7 @@ customConnectorDetails: Custom Health Connector Details
 prometheusLabel: Prometheus
 dynatraceLabel: Dynatrace
 appdLabel: AppDynamics
-signalFXLabel: Splunk Observability
+signalFXLabel: Splunk Observability [SignalFX]
 newRelicLabel: New Relic
 splunkLabel: Splunk
 customLabel: Custom Health

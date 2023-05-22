@@ -206,7 +206,10 @@ export enum StepType {
   Sniper = 'Sniper',
   Metasploit = 'Metasploit',
   Brakeman = 'Brakeman',
-  KubernetesAws = 'KubernetesAws'
+  Fossa = 'Fossa',
+  Semgrep = 'Semgrep',
+  KubernetesAws = 'KubernetesAws',
+  AwsSam = 'AWS_SAM'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

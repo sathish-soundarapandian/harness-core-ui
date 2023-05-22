@@ -806,13 +806,13 @@ export function StageInputSetFormInternal({
             {(deploymentStageTemplate.infrastructure as any)?.spec?.annotations &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.annotations`,
-                stringKey: 'common.annotations',
+                stringKey: 'ci.annotations',
                 hasValuesAsRuntimeInput: true
               })}
             {(deploymentStageTemplate.infrastructure as any)?.spec?.hostNames &&
               renderMultiTypeListInputSet({
                 name: `${namePath}infrastructure.spec.hostNames`,
-                labelKey: 'common.hostNames',
+                labelKey: 'ci.buildInfra.hostNames',
                 tooltipId: 'hostNames'
               })}
             {hasContainerSecurityContextFields && (

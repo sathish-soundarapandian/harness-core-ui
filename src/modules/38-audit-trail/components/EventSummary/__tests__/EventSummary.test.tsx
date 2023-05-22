@@ -9,7 +9,20 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
+import type { AuditEventData } from 'services/audit'
 import EventSummary from '../EventSummary'
+
+AuditTrailFactory.registerResourceHandler('PIPELINE_EXECUTION', {
+  moduleIcon: {
+    name: 'cd-main'
+  },
+  moduleLabel: 'common.purpose.cd.continuous',
+  resourceLabel: 'auditTrail.resourceLabel.pipelineExecution',
+  additionalDetails: (_auditEventData?: AuditEventData): any => ({
+    'Pipeline Identifier': 'dummyPipeline'
+  })
+})
 
 describe('Event summary test', () => {
   test('render', async () => {
@@ -57,6 +70,58 @@ describe('Event summary test', () => {
     expect(drawer).toMatchSnapshot()
     const supplementaryText = screen.queryByText('auditTrail.supplementaryDetails')
     expect(supplementaryText).toBeDefined()
+  })
+
+  test('with auditEvent data', async () => {
+    render(
+      <TestWrapper>
+        <EventSummary
+          auditEvent={{
+            insertId: 'dummy',
+            auditId: '6217745b7f53a424fd70e323',
+            resourceScope: {
+              accountIdentifier: 'dummyAccount'
+            },
+            timestamp: 1645704281030,
+            authenticationInfo: {
+              principal: {
+                type: 'SYSTEM',
+                identifier: 'SYSTEM'
+              },
+              labels: {
+                userId: '2VA3XtI_Q-eJpCVV4Q1_gw',
+                username: 'nataraja@harness.io'
+              }
+            },
+            resource: { identifier: 'dummy', type: 'PIPELINE_EXECUTION' },
+            module: 'PMS',
+            action: 'END',
+            auditEventData: {
+              accountIdentifier: 'dummyAccount',
+              orgIdentifier: 'dummyOrg',
+              projectIdentifier: 'dummyProject',
+              pipelineIdentifier: 'dummyPipeline',
+              stageIdentifier: null,
+              stageType: '',
+              planExecutionId: 'qJesyKLUQhaHCMlyHVd8xA',
+              nodeExecutionId: null,
+              status: 'FAILED',
+              startTs: 1684268040379,
+              endTs: 1684268046393
+            } as any
+          }}
+        />
+      </TestWrapper>
+    )
+
+    const supplementaryText = await screen.findByText('auditTrail.supplementaryDetails')
+    expect(supplementaryText).toBeDefined()
+    expect(screen.getByText('Pipeline Identifier')).toBeDefined()
+    expect(screen.getByText('dummyPipeline')).toBeDefined()
+    const stageIdentifier = screen.queryByText('Stage Identifier')
+    expect(stageIdentifier).not.toBeInTheDocument()
+    const stageType = screen.queryByText('Stage Type')
+    expect(stageType).not.toBeInTheDocument()
   })
 
   test('without requestMethod and ip', async () => {

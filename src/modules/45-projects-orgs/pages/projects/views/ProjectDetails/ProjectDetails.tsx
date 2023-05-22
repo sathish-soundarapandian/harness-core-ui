@@ -48,6 +48,7 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
 import { isOnPrem } from '@common/utils/utils'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectDetails.module.scss'
 
@@ -59,9 +60,9 @@ const ProjectDetails: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const { selectedTimeRange } = useLandingDashboardContext()
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
   const showProjectOverview = NEW_LEFT_NAVBAR_SETTINGS && !isOnPrem()
-  const { licenseInformation } = useLicenseStore()
+  const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const invitePermission = {
     resourceScope: {
       accountIdentifier: accountId,
@@ -134,10 +135,14 @@ const ProjectDetails: React.FC = () => {
 
     if (shouldVisible && projectData.modules.includes(ModuleName.CD)) infoCards.push(ModuleName.CD)
     if (CING_ENABLED && projectData.modules.includes(ModuleName.CI)) infoCards.push(ModuleName.CI)
-    if (CFNG_ENABLED && projectData.modules.includes(ModuleName.CF)) infoCards.push(ModuleName.CF)
+    if (FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE && projectData.modules.includes(ModuleName.CF))
+      infoCards.push(ModuleName.CF)
     if (CENG_ENABLED && projectData.modules.includes(ModuleName.CE)) infoCards.push(ModuleName.CE)
     if (CVNG_ENABLED && projectData.modules.includes(ModuleName.CV)) infoCards.push(ModuleName.CV)
-    if (licenseInformation['STO']?.status === 'ACTIVE' && projectData.modules.includes(ModuleName.STO))
+    if (
+      licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE &&
+      projectData.modules.includes(ModuleName.STO)
+    )
       infoCards.push(ModuleName.STO)
 
     return infoCards.map(module => (

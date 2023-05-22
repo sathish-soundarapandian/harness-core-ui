@@ -187,14 +187,14 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
 
             <Message stepsDataLoading={stepsDataLoading} />
 
-            {stepCategories?.map((stepCategory: StepCategory, i) => {
+            {stepCategories?.map((stepCategory: StepCategory) => {
               const categorySteps: JSX.Element[] = []
               /* istanbul ignore else */ if (stepCategory?.stepsData) {
-                stepCategory.stepsData.forEach((stepData: StepData) => {
+                stepCategory.stepsData.forEach((stepData: StepData, index: number) => {
                   categorySteps.push(
                     <section
                       className={css.step}
-                      key={`${stepData.name}-${i}`}
+                      key={`${stepData.name}-${index}`}
                       onClick={() => {
                         if (stepData.type !== 'Placeholder' && !stepData.disabled) {
                           onSelect({

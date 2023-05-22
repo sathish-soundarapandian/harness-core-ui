@@ -161,6 +161,11 @@ export default function ServiceHealth({
     [timestamps]
   )
 
+  const changesTableAndSourceCardStartAndEndtimeWithSlider = useMemo(
+    () => (showTimelineSlider ? Object.values(timeRange || {}) : changesTableAndSourceCardStartAndEndtime),
+    [showTimelineSlider, timeRange, changesTableAndSourceCardStartAndEndtime]
+  )
+
   const resetSlider = useCallback(() => {
     setTimeRange({ startTime: 0, endTime: 0 })
     setShowTimelineSlider(false)
@@ -186,8 +191,8 @@ export default function ServiceHealth({
                 <>
                   <ChangesSourceCard
                     monitoredServiceIdentifier={monitoredServiceIdentifier}
-                    startTime={changesTableAndSourceCardStartAndEndtime[0]}
-                    endTime={changesTableAndSourceCardStartAndEndtime[1]}
+                    startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
+                    endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}
                   />
                   <Layout.Horizontal margin={{ top: 'small', bottom: 'large' }}>
                     <Icon margin={{ right: 'small' }} name="main-issue" color={Color.PRIMARY_7} />
@@ -244,12 +249,8 @@ export default function ServiceHealth({
         <Layout.Horizontal spacing="medium">
           <Container width="60%">
             <ChangesTable
-              startTime={
-                showTimelineSlider ? (timeRange?.startTime as number) : changesTableAndSourceCardStartAndEndtime[0]
-              }
-              endTime={
-                showTimelineSlider ? (timeRange?.endTime as number) : changesTableAndSourceCardStartAndEndtime[1]
-              }
+              startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
+              endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}
               hasChangeSource={hasChangeSource}
               monitoredServiceIdentifier={monitoredServiceIdentifier}
             />

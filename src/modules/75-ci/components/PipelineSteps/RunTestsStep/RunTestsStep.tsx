@@ -41,6 +41,8 @@ export interface RunTestsStepSpec {
   buildEnvironment?: string // only for C#
   frameworkVersion?: string // only for C#
   runOnlySelectedTests?: boolean
+  testRoot?: string
+  testGlobs?: string
   testAnnotations?: string // only for Java
   preCommand?: string
   postCommand?: string

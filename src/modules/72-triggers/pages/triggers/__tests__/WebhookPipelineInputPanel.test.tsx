@@ -16,7 +16,6 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { useStrings } from 'framework/strings'
 import * as hooks from '@common/hooks'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import { DEFAULT_TRIGGER_BRANCH } from '@triggers/components/Triggers/utils'
 import {
   GetTemplateFromPipelineResponse,
   GetTemplateStageVariablesFromPipelineResponse,
@@ -175,7 +174,7 @@ describe('WebhookPipelineInputPanel Triggers tests', () => {
       )
       expect(container).toMatchSnapshot()
       expect(container.querySelector('[name="pipeline.properties.ci.codebase.build.spec.branch"]')).toHaveValue(
-        DEFAULT_TRIGGER_BRANCH
+        '<+trigger.branch>'
       )
     })
   })

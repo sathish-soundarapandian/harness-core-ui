@@ -901,7 +901,7 @@ export interface ClusteredLog {
   verificationTaskId?: string
 }
 
-export interface CompositeServiceLevelObjectiveSpec {
+export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
   evaluationType?: 'Window' | 'Request'
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
   sloFormulaType?: 'WeightedAverage' | 'LeastPerformance'
@@ -2690,6 +2690,7 @@ export interface HealthSource {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
   version?: 'v2'
 }
 
@@ -2717,6 +2718,7 @@ export interface HealthSourceDTO {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
@@ -2750,6 +2752,7 @@ export interface HealthSourceParamValuesRequest {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
 }
 
 export interface HealthSourceParamValuesResponse {
@@ -2786,6 +2789,7 @@ export interface HealthSourceRecordsRequest {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
   providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -2807,6 +2811,7 @@ export interface HealthSourceRecordsRequest {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   query: string
   startTime: number
 }
@@ -2833,6 +2838,7 @@ export interface HealthSourceRecordsResponse {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   rawRecords?: { [key: string]: any }[]
 }
 
@@ -2872,6 +2878,7 @@ export interface HealthSourceV2 {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
 }
 
 export interface HistoricalTrend {
@@ -3485,6 +3492,7 @@ export interface MetricPack {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   identifier?: string
   lastUpdatedAt?: number
   metrics?: MetricDefinition[]
@@ -3517,6 +3525,7 @@ export interface MetricPackDTO {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   identifier?: string
   metrics?: MetricDefinitionDTO[]
   orgIdentifier?: string
@@ -4388,6 +4397,7 @@ export interface QueryRecordsRequest {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
   providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -4409,6 +4419,7 @@ export interface QueryRecordsRequest {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   query: string
   startTime: number
 }
@@ -5927,7 +5938,7 @@ export interface SLIOnboardingGraphs {
 }
 
 export interface SLOConsumptionBreakdown {
-  contributedErrorBudgetBurned: number
+  contributedErrorBudgetBurned?: number
   environmentIdentifier?: string
   errorBudgetBurned: number
   monitoredServiceIdentifier?: string
@@ -6626,6 +6637,7 @@ export interface TimeSeriesMetricDataDTO {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   deeplinkURL?: string
   environmentIdentifier?: string
   groupName?: string
@@ -6652,6 +6664,7 @@ export interface TimeSeriesMetricDataDTO {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
   monitoredServiceIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -6758,6 +6771,7 @@ export interface TimeSeriesThreshold {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
   metricGroupName?: string
@@ -6804,6 +6818,7 @@ export interface TimeSeriesThresholdDTO {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   metricGroupName?: string
   metricName?: string
   metricPackIdentifier?: string
@@ -6868,6 +6883,7 @@ export interface TransactionMetricInfo {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   nodeRiskCountDTO?: NodeRiskCountDTO
   nodes?: HostData[]
   transactionMetric?: TransactionMetric
@@ -12585,6 +12601,7 @@ export interface GetMetricPacksQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type GetMetricPacksProps = Omit<
@@ -12656,6 +12673,7 @@ export interface SaveMetricPacksQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type SaveMetricPacksProps = Omit<
@@ -15285,6 +15303,7 @@ export interface GetLabelNamesQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type GetLabelNamesProps = Omit<
@@ -15361,6 +15380,7 @@ export interface GetLabeValuesQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type GetLabeValuesProps = Omit<
@@ -15437,6 +15457,7 @@ export interface GetMetricNamesQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type GetMetricNamesProps = Omit<
@@ -15513,6 +15534,7 @@ export interface GetSampleDataQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type GetSampleDataProps = Omit<

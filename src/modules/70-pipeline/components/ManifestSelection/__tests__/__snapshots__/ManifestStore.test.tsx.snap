@@ -583,7 +583,7 @@ exports[`ManifestSelection tests renders without crashing 1`] = `
                         <p
                           class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
                         >
-                          pipeline.manifestType.bitBucketLabel
+                          common.repo_provider.bitbucketLabel
                         </p>
                         <input
                           name="store"

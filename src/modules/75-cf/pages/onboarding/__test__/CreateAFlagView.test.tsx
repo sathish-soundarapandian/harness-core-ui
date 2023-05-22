@@ -30,6 +30,8 @@ const renderComponent = (props?: Partial<CreateAFlagViewProps>): RenderResult =>
 
 describe('CreateAFlagView', () => {
   const spyGetAllFeatures = jest.spyOn(ffServices, 'useGetAllFeatures')
+  const useCreateFeatureFlagMock = jest.spyOn(ffServices, 'useCreateFeatureFlag')
+
   const refetchFlags = jest.fn()
 
   beforeEach(() => {
@@ -59,6 +61,62 @@ describe('CreateAFlagView', () => {
     expect(selectInput).toHaveValue('')
     expect(selectInput).toHaveAttribute('placeholder', 'cf.onboarding.selectOrCreateFlag')
     expect(screen.queryByTestId('ffOnboardingSelectedFlag')).not.toBeInTheDocument()
+  })
+
+  test('It should show a text input if there are no existing flags and allow user to create a new flag', async () => {
+    const myNewFlag = 'My New Flag'
+
+    const mutateCreateMock = jest.fn()
+
+    useCreateFeatureFlagMock.mockReturnValue({
+      mutate: mutateCreateMock,
+      loading: false,
+      error: null
+    } as any)
+
+    mutateCreateMock.mockResolvedValue({})
+
+    spyGetAllFeatures.mockReturnValue({
+      data: { features: [], itemCount: 0, pageCount: 0, pageIndex: 0, pageSize: CF_DEFAULT_PAGE_SIZE },
+
+      loading: false,
+      error: null,
+      refetch: refetchFlags
+    } as any)
+
+    renderComponent()
+
+    const createNewFlagTextbox = screen.getByRole('textbox', { name: 'cf.onboarding.typeNewFeatureName' })
+
+    expect(createNewFlagTextbox).toBeInTheDocument()
+
+    userEvent.type(createNewFlagTextbox, myNewFlag)
+    userEvent.click(screen.getByRole('button', { name: 'common.createFlag' }))
+
+    await waitFor(() =>
+      expect(mutateCreateMock).toHaveBeenCalledWith({
+        archived: false,
+        defaultOffVariation: 'false',
+        defaultOnVariation: 'true',
+        identifier: 'my_new_flag',
+        kind: 'boolean',
+        name: myNewFlag,
+        permanent: false,
+        project: 'dummy',
+        variations: [
+          {
+            identifier: 'true',
+            name: 'True',
+            value: 'true'
+          },
+          {
+            identifier: 'false',
+            name: 'False',
+            value: 'false'
+          }
+        ]
+      })
+    )
   })
 
   test('It should retrieve existing feature flags and list these as options in the Select component', () => {

@@ -59,7 +59,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import useCreateDelegateViaCommandsModal from '@delegates/pages/delegates/delegateCommandLineCreation/components/useCreateDelegateViaCommandsModal'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { Category, DelegateActions } from '@common/constants/TrackingConstants'
+import { Category, DelegateActions, CDActions } from '@common/constants/TrackingConstants'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { getDelegateStatusSelectOptions } from './utils/DelegateHelper'
@@ -241,6 +241,9 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
       setAppliedFilter(updatedFilter)
     }
     await refetchFilterList()
+    trackEvent(CDActions.ApplyAdvancedFilter, {
+      category: Category.DELEGATE
+    })
     setIsRefreshingFilters(false)
   }
 
@@ -332,6 +335,9 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
         setPage(0)
         hideFilterDrawer()
         setIsFilterOpen(false)
+        trackEvent(CDActions.ApplyAdvancedFilter, {
+          category: Category.DELEGATE
+        })
       } else {
         showError(getString('filters.invalidCriteria'))
       }
@@ -436,6 +442,9 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
       }
       setShowDelegateLoader(true)
       refetchDelegates(updatedQueryParams, selectedFilter?.filterProperties)
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.DELEGATE
+      })
     } else {
       reset()
     }

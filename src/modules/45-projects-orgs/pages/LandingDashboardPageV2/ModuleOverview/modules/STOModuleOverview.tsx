@@ -6,12 +6,17 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
+import routes from '@common/RouteDefinitions'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
 import DefaultFooter from '../EmptyState/DefaultFooter'
 
 const STOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded }) => {
+  const { accountId } = useParams<AccountPathProps>()
+
   if (isExpanded) {
     return (
       <EmptyStateExpandedView
@@ -23,7 +28,12 @@ const STOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded }) =>
           'common.moduleDetails.sto.expanded.list.four',
           'common.moduleDetails.sto.expanded.list.five'
         ]}
-        footer={<DefaultFooter learnMoreLink="https://docs.harness.io/category/txlccquh5c-sto-category" />}
+        footer={
+          <DefaultFooter
+            learnMoreLink="https://docs.harness.io/category/txlccquh5c-sto-category"
+            getStartedLink={routes.toSTO({ accountId })}
+          />
+        }
       />
     )
   }

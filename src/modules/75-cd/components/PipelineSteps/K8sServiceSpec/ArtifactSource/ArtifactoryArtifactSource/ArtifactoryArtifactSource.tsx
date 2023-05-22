@@ -33,11 +33,11 @@ import {
   SidecarArtifact,
   useGetBuildDetailsForArtifactoryArtifactWithYaml,
   useGetImagePathsForArtifactoryV2,
-  useGetService,
   useGetBuildDetailsForArtifactoryArtifact,
   useGetImagePathsForArtifactory,
   ArtifactListConfig,
-  ArtifactSource
+  ArtifactSource,
+  useGetServiceV2
 } from 'services/cd-ng'
 
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -47,11 +47,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
   getHelpeTextForTags,
-  isAzureWebAppGenericDeploymentType,
-  isCustomDTGenericDeploymentType,
   isServerlessDeploymentType,
-  isSshWinRmGenericDeploymentType,
-  isTasGenericDeploymentType,
   RepositoryFormatTypes,
   ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
@@ -220,13 +216,14 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
   const { expressions } = useVariablesExpression()
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
-  const { data: service, loading: serviceLoading } = useGetService({
+  const { data: service, loading: serviceLoading } = useGetServiceV2({
+    serviceIdentifier: serviceIdentifier as string,
     queryParams: {
-      accountId,
+      accountIdentifier: accountId,
       orgIdentifier,
-      projectIdentifier
-    },
-    serviceIdentifier: serviceIdentifier as string
+      projectIdentifier,
+      fetchResolvedYaml: true
+    }
   })
   const [repoFormat, setRepoFormat] = useState(
     defaultTo(
@@ -265,126 +262,28 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
 
   const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
 
-  const [isAzureWebAppGenericSelected, setIsAzureWebAppGenericSelected] = useState(
-    repoFormat ? isAzureWebAppGenericDeploymentType(selectedDeploymentType, repoFormat) : false
-  )
-
-  const [isCustomDeploymentGenericSelected, setIsCustomDeploymentGenericSelected] = useState(
-    repoFormat ? isCustomDTGenericDeploymentType(selectedDeploymentType, repoFormat) : false
-  )
-
-  const [isTasGenericSelected, setIsTasGenericSelected] = useState(
-    repoFormat ? isCustomDTGenericDeploymentType(selectedDeploymentType, repoFormat) : false
-  )
-
-  const [isSshOrWinRmGenericSelected, setIsSshOrWinRmGenericSelected] = useState(
-    repoFormat ? isSshWinRmGenericDeploymentType(selectedDeploymentType, repoFormat) : false
-  )
-
   const [isGenericArtifactory, setIsGenericArtifactory] = useState(
-    isServerlessDeploymentTypeSelected ||
-      isSshOrWinRmGenericSelected ||
-      isAzureWebAppGenericSelected ||
-      isCustomDeploymentGenericSelected ||
-      isTasGenericSelected ||
-      repoFormat === RepositoryFormatTypes.Generic
+    isServerlessDeploymentTypeSelected || repoFormat === RepositoryFormatTypes.Generic
   )
 
   useEffect(() => {
-    let serviceRepoFormat
+    const parsedService = parse(defaultTo(service?.data?.service?.yaml, ''))
     /* istanbul ignore else */
-    if (service) {
-      const parsedService = service?.data?.yaml && parse(service?.data?.yaml)
-      // to be refactored for some fields once generic dependency is resolved via V2
-      const artifactsInfo = get(parsedService, `service.serviceDefinition.spec.artifacts`) as ArtifactListConfig
-      artifactsInfo?.primary?.sources?.forEach(artifactInfo => {
-        if (artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier) {
-          serviceRepoFormat = artifactInfo?.spec?.repositoryFormat
-          setRepoFormat(serviceRepoFormat)
-        }
-      })
-    }
-
-    setIsSshOrWinRmGenericSelected(
-      serviceRepoFormat ? isSshWinRmGenericDeploymentType(selectedDeploymentType, serviceRepoFormat) : false
-    )
-  }, [service, artifact, selectedDeploymentType])
-
-  useEffect(() => {
-    let serviceRepoFormat
-    /* istanbul ignore else */
-    if (service) {
-      const parsedService = service?.data?.yaml && parse(service?.data?.yaml)
-      // to be refactored for some fields once generic dependency is resolved via V2
-      const artifactsInfo = get(parsedService, `service.serviceDefinition.spec.artifacts`) as ArtifactListConfig
-      artifactsInfo?.primary?.sources?.map(artifactInfo => {
-        if (artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier) {
-          serviceRepoFormat = artifactInfo?.spec?.repositoryFormat
-          setRepoFormat(serviceRepoFormat)
-        }
-      })
-    }
-
-    setIsTasGenericSelected(
-      serviceRepoFormat ? isTasGenericDeploymentType(selectedDeploymentType, serviceRepoFormat) : false
-    )
-  }, [service, artifact, selectedDeploymentType])
-
-  useEffect(() => {
-    let serviceRepoFormat
-    /* istanbul ignore else */
-    if (service) {
-      const parsedService = service?.data?.yaml && parse(service?.data?.yaml)
-      serviceRepoFormat = get(
-        parsedService,
-        `service.serviceDefinition.spec.artifacts.${artifactPath}.spec.repositoryFormat`
+    if (parsedService) {
+      const artifactsList = get(parsedService, `service.serviceDefinition.spec.artifacts`) as ArtifactListConfig
+      const artifactDetailsFromServiceYaml = artifactsList?.primary?.sources?.find(
+        artifactInfo => artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier
       )
-
-      setRepoFormat(serviceRepoFormat)
+      const serviceRepoFormat = artifactDetailsFromServiceYaml?.spec?.repositoryFormat
+      if (serviceRepoFormat) {
+        setRepoFormat(serviceRepoFormat)
+      }
     }
-
-    setIsAzureWebAppGenericSelected(
-      serviceRepoFormat ? isAzureWebAppGenericDeploymentType(selectedDeploymentType, serviceRepoFormat) : false
-    )
-  }, [service, artifactPath, selectedDeploymentType])
-
-  useEffect(() => {
-    let serviceRepoFormat
-    /* istanbul ignore else */
-    if (service) {
-      const parsedService = service?.data?.yaml && parse(service?.data?.yaml)
-      // to be refactored for some fields once generic dependency is resolved via V2
-      const artifactsInfo = get(parsedService, `service.serviceDefinition.spec.artifacts`) as ArtifactListConfig
-      artifactsInfo?.primary?.sources?.map(artifactInfo => {
-        if (artifactInfo?.identifier === (artifact as ArtifactSource)?.identifier) {
-          serviceRepoFormat = artifactInfo?.spec?.repositoryFormat
-          setRepoFormat(serviceRepoFormat)
-        }
-      })
-    }
-
-    setIsCustomDeploymentGenericSelected(
-      serviceRepoFormat ? isCustomDTGenericDeploymentType(selectedDeploymentType, serviceRepoFormat) : false
-    )
   }, [service, artifact, selectedDeploymentType])
 
   useEffect(() => {
-    setIsGenericArtifactory(
-      isServerlessDeploymentTypeSelected ||
-        isSshOrWinRmGenericSelected ||
-        isAzureWebAppGenericSelected ||
-        isCustomDeploymentGenericSelected ||
-        isTasGenericSelected ||
-        repoFormat === RepositoryFormatTypes.Generic
-    )
-  }, [
-    isServerlessDeploymentTypeSelected,
-    isSshOrWinRmGenericSelected,
-    isAzureWebAppGenericSelected,
-    isCustomDeploymentGenericSelected,
-    isTasGenericSelected,
-    repoFormat
-  ])
+    setIsGenericArtifactory(isServerlessDeploymentTypeSelected || repoFormat === RepositoryFormatTypes.Generic)
+  }, [isServerlessDeploymentTypeSelected, repoFormat])
 
   const connectorRef = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
@@ -776,7 +675,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               fieldPath={`artifacts.${artifactPath}.spec.repository`}
               template={template}
               serviceId={isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined}
-              useRepositoriesV2={true}
+              useRepositoriesV2={!useArtifactV1Data}
               pipelineRuntimeYaml={pipelineRuntimeYaml}
               pipelineIdentifier={pipelineIdentifier}
               fqnPath={getFqnPath(

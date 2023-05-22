@@ -11,7 +11,6 @@ import {
   Popover,
   ButtonProps,
   useConfirmationDialog,
-  getErrorInfoFromErrorObject,
   Layout,
   ButtonSize,
   ButtonVariation
@@ -43,6 +42,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { PipelineExecutionActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import { useOpenRetryPipelineModal } from './useOpenRetryPipelineModal'
@@ -198,7 +198,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { isCompareMode } = useExecutionCompareContext()
   const { trackEvent } = useTelemetry()
-
+  const { getRBACErrorMessage } = useRBACError()
   const { openDialog: openAbortDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
     contentText: getString('pipeline.execution.dialogMessages.abortExecution'),
@@ -266,7 +266,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
       })
       showSuccess(successMessage)
     } catch (e) {
-      const errorMessage = getErrorInfoFromErrorObject(e)
+      const errorMessage = getRBACErrorMessage(e)
       showError(errorMessage)
     }
   }

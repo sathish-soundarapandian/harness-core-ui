@@ -10,6 +10,12 @@ import { Color, FontVariation } from '@harness/design-system'
 import React from 'react'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
+import {
+  HARNESS_COMMUNITY_SLACK_LINK,
+  HARNESS_JFROG,
+  HARNESS_SUPPORT_PAGE,
+  HARNESS_TUTORIALS
+} from '@common/components/ResourceCenter/utils'
 import teamSvg from './images/team.svg'
 import jfrogSvg from './images/configure_jfrog.svg'
 import css from './ResourcesCard.module.scss'
@@ -45,7 +51,7 @@ const ResourcesCard: React.FC<ResourcesCardProps> = props => {
       {descriptionImage}
       <Layout.Horizontal flex className={css.seeMoreContainer}>
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_300}>{`${getString('common.seeMore')}`}</Text>
-        <Icon margin={{ left: 'medium' }} name="main-chevron-right" size={8} color={Color.GREY_300} />
+        <Icon padding={{ left: 'tiny' }} name="main-chevron-right" size={8} color={Color.GREY_300} />
       </Layout.Horizontal>
       {backgroundImage && <Icon className={css.backgroundImage} name={backgroundImage} size={120} />}
     </Layout.Vertical>
@@ -87,6 +93,9 @@ const ResourcesCardContainer: React.FC = () => {
             </Layout.Horizontal>
           }
           description={getString('common.harnessCommunityTitle')}
+          onClick={() => {
+            window.open(HARNESS_COMMUNITY_SLACK_LINK, '_blank', 'noreferrer')
+          }}
         />
 
         <ResourcesCard
@@ -94,6 +103,9 @@ const ResourcesCardContainer: React.FC = () => {
           title={getHarnessTitle(getString('common.resourceCenter.bottomlayout.university').toLowerCase())}
           description={getString('common.purpose.cd.introductionText')}
           subTitle={getString('common.purpose.cd.introductionConcepts')}
+          onClick={() => {
+            window.open(HARNESS_TUTORIALS, '_blank', 'noreferrer')
+          }}
         />
 
         <ResourcesCard
@@ -102,11 +114,17 @@ const ResourcesCardContainer: React.FC = () => {
           descriptionImage={<img src={teamSvg} className={css.teamImage} />}
           description={getString('common.support.title')}
           subTitle={getString('common.support.subtitle')}
+          onClick={() => {
+            window.open(HARNESS_SUPPORT_PAGE, '_blank', 'noreferrer')
+          }}
         />
         <ResourcesCard
           className={css.jfrog}
           descriptionImage={<img src={jfrogSvg} className={css.jfrogImage} />}
           title={<Text font={{ variation: FontVariation.H6 }}>{getString('common.configureJfrog')}</Text>}
+          onClick={() => {
+            window.open(HARNESS_JFROG, '_blank', 'noreferrer')
+          }}
         />
       </Container>
     </Container>

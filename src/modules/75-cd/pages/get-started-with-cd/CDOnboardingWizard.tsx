@@ -56,12 +56,20 @@ const CDWizardWithAB: React.FC = () => {
 const CDWizardHooks: React.FC = () => {
   const FLOW_TYPE = useFeatureFlag(FeatureFlag.PLG_SERVICE_DELEGATE_AB)
   const trackExposure = useFeatureFlag(FeatureFlag.PLG_SERVICE_DELEGATE_EXPOSURE_ENABLED)
+  const ONBOARDING_FLOW_TYPE = useFeatureFlag(FeatureFlag.PLG_CD_GET_STARTED_AB)
+  const trackOnobardingExposure = useFeatureFlag(FeatureFlag.PLG_GET_STARTED_EXPOSURE_ENABLED)
   const { trackEvent } = useTelemetry()
   useEffect(() => {
     trackExposure &&
       trackEvent(EXPOSURE_EVENT, {
         flag_key: FeatureFlag.PLG_SERVICE_DELEGATE_AB,
         variant: FLOW_TYPE
+      })
+
+    trackOnobardingExposure &&
+      trackEvent(EXPOSURE_EVENT, {
+        flag_key: FeatureFlag.PLG_CD_GET_STARTED_AB,
+        variant: ONBOARDING_FLOW_TYPE
       })
   }, [])
   return <DeployProvisioningWizard flowType={FLOW_TYPE} />

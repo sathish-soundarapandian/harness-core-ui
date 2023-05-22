@@ -30,7 +30,11 @@ export const mockRetryHistory: UseGetMockDataWithMutateAndRefetch<ResponseRetryH
           endTs: 1674471302466,
           status: 'Aborted'
         }
-      ]
+      ],
+      retryStagesMetadata: {
+        retryStagesIdentifier: ['s2'],
+        skipStagesIdentifier: ['s1']
+      }
     },
     metaData: null as unknown as undefined,
     correlationId: '04b10adc-2516-4185-bc53-67c35d12ab01'

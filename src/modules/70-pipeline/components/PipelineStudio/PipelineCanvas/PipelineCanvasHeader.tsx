@@ -18,8 +18,7 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
-  shouldShowError,
-  getErrorInfoFromErrorObject
+  shouldShowError
 } from '@harness/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -59,6 +58,7 @@ import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -127,7 +127,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
   const { isYamlEditable } = pipelineView
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
-
+  const { getRBACErrorMessage } = useRBACError()
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
   const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
@@ -163,7 +163,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
 
   React.useEffect(() => {
     if (reconcileError && shouldShowError(reconcileError)) {
-      showError(getErrorInfoFromErrorObject(reconcileError))
+      showError(getRBACErrorMessage(reconcileError as RBACError))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reconcileError])
@@ -197,7 +197,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
       } catch (e) {
         clear()
         setYamlError(true)
-        showError(defaultTo(e.message, getString('invalidYamlText')))
+        showError(defaultTo(getRBACErrorMessage(e), getString('invalidYamlText')))
         return false
       }
     }

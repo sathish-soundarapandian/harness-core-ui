@@ -190,7 +190,7 @@ export function useSaveInputSetV1(inputSetInfo: InputSetInfo): UseSaveInputSetRe
         if (!isGitSyncEnabled && initialStoreMetadata.storeType !== StoreType.REMOTE) {
           showError(getRBACErrorMessage(e), undefined, 'pipeline.update.create.inputset')
         } else {
-          showError(e)
+          showError(getRBACErrorMessage(e) || e)
         }
       }
       return {

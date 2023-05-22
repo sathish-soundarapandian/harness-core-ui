@@ -355,7 +355,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
                     >
-                      common.annotations
+                      ci.annotations
                     </p>
                   </span>
                 </div>
@@ -994,7 +994,7 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
                     >
-                      common.annotations
+                      ci.annotations
                     </p>
                   </span>
                 </div>
@@ -1633,7 +1633,7 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
                     >
-                      common.annotations
+                      ci.annotations
                     </p>
                   </span>
                 </div>
@@ -2272,7 +2272,7 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
                     >
-                      common.annotations
+                      ci.annotations
                     </p>
                   </span>
                 </div>

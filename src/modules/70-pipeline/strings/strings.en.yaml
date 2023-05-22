@@ -367,7 +367,6 @@ manifestType:
   manifestTyperequired: Manifest Type is required
   gitConnectorLabel: 'Git'
   azureRepoConnectorLabel: 'Azure Repo'
-  bitBucketLabel: 'Bitbucket'
   InheritFromManifest: 'Inherit From Manifest'
   customRemote: 'Custom Remote'
   httpHelmRepoConnectorLabel: 'HTTP Helm'
@@ -486,6 +485,7 @@ manifestTypeLabels:
   HelmRepoOverride: Helm Repo Override
   AwsLambdaFunctionDefinition: AWS Lambda Function Definition
   AwsLambdaFunctionAliasDefinition: AWS Lambda Function Alias Definition
+  AwsSamDirectory: AWS SAM Directory
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:
@@ -1364,9 +1364,11 @@ singleStageExecution: 'SELECTIVE STAGE EXECUTION:'
 multiStageExecution: 'MULTIPLE STAGES EXECUTION'
 allStages: All Stages
 retryHistory: Retry History
-retryHistoryDescription: List of retries for my Pipeline
+retryHistoryTotalCount: 'Total {{moduleText}}: {{totalCount}}'
 recentExecutionText: Most Recent Execution
-viewLatestExecution: You are viewing an older execution of this pipeline.
+recentBuildText: Most Recent Build
+buildHeaderText: Build History
+viewLatestExecution: You're viewing an older {{type}}
 featureRestriction:
   integratedApprovalsJira: Integrated Approvals with Jira
   serviceLimitExceeded: You have reached the Service License limit.
@@ -1824,3 +1826,12 @@ serviceHooks:
   error:
     actionsRequired: Actions is required
     duplicateIdError: 'A Service Hook with same identifier {{ servciceHookIdentifier }} already exists. Please provide a new unique identifier and save again.'
+pipelineExecutionEventData:
+  accountIdentifier: Account Identifier
+  orgIdentifier: Organization Identifier
+  projectIdentifier: Project Identifier
+  pipelineIdentifier: Pipeline Identifier
+  stageIdentifier: Stage Identifier
+  stageType: Stage Type
+retried: retried
+stageExecutedBefore: This stage has been re-executed.

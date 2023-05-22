@@ -242,6 +242,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({
                         >
                           <ArtifactSourceConfigRuntimeInputs
                             template={inputSetTemplate as ArtifactSourceConfigDetails}
+                            allValues={formikProps.values?.data as ArtifactSourceConfigDetails}
                             allowableTypes={allowableTypes}
                             readonly
                             path={'data'}

@@ -28,13 +28,16 @@ const runtimeValues = {
       }
     },
     verifyAttestation: {
-      publicKey: RUNTIME_INPUT_VALUE
+      type: 'cosign',
+      spec: {
+        publicKey: RUNTIME_INPUT_VALUE
+      }
     },
     policy: {
       store: {
         type: 'Harness',
         spec: {
-          file: ['testFilePath']
+          file: 'testFilePath'
         }
       }
     }
@@ -54,13 +57,16 @@ const fixedValues = {
       }
     },
     verifyAttestation: {
-      publicKey: 'testKey'
+      type: 'cosign',
+      spec: {
+        publicKey: 'testKey'
+      }
     },
     policy: {
       store: {
         type: 'Harness',
         spec: {
-          file: ['testFilePath']
+          file: 'testFilePath'
         }
       }
     }
@@ -92,7 +98,7 @@ describe('Ssca Enforcement Step', () => {
     )
 
     await act(() => ref.current?.submitForm()!)
-    expect(onUpdate).toHaveBeenCalledWith(runtimeValues)
+    expect(onUpdate).toHaveBeenLastCalledWith(runtimeValues)
   })
 
   test('input set view', async () => {

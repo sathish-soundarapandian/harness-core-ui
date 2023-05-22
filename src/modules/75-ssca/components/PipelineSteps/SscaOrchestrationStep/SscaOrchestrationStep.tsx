@@ -43,7 +43,11 @@ export interface SscaOrchestrationStepSpec {
     }
   }
   attestation: {
-    privateKey: string
+    type: 'cosign' //TODO: update once BE changes are available in type definition
+    spec: {
+      privateKey: string
+      password: string
+    }
   }
   infrastructure?: {
     type: string

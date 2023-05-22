@@ -330,7 +330,7 @@ function SavePipelinePopover(
         latestPipeline =
           payload?.pipeline || (parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig)
       } /* istanbul ignore next */ catch (err) {
-        showError(err.message || err, undefined, 'pipeline.save.gitinfo.error')
+        showError(getRBACErrorMessage(err) || err, undefined, 'pipeline.save.gitinfo.error')
       }
     }
 

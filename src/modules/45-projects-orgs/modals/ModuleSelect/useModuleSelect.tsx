@@ -31,6 +31,7 @@ import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStor
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import css from './useModuleSelect.module.scss'
 
 export interface UseModuleSelectModalProps {
@@ -244,8 +245,8 @@ export const useModuleSelectModal = ({
   const [selectedModuleName, setSelectedModuleName] = React.useState<ModuleName>()
   const [projectData, setProjectData] = React.useState<Project>()
 
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CET_ENABLED } = useFeatureFlags()
-  const { licenseInformation } = useLicenseStore()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CET_ENABLED } = useFeatureFlags()
+  const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const modalProps: IDialogProps = {
     isOpen: true,
     enforceFocus: false,
@@ -269,7 +270,7 @@ export const useModuleSelectModal = ({
       name: ModuleName.CI
     })
   }
-  if (CFNG_ENABLED) {
+  if (FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
     infoCards.push({
       name: ModuleName.CF
     })
@@ -284,12 +285,12 @@ export const useModuleSelectModal = ({
       name: ModuleName.CV
     })
   }
-  if (licenseInformation['STO']?.status === 'ACTIVE') {
+  if (licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE) {
     infoCards.push({
       name: ModuleName.STO
     })
   }
-  if (licenseInformation['CHAOS']?.status === 'ACTIVE') {
+  if (licenseInformation['CHAOS']?.status === LICENSE_STATE_VALUES.ACTIVE) {
     infoCards.push({
       name: ModuleName.CHAOS
     })

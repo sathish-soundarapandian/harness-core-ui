@@ -214,7 +214,7 @@ export interface GitProvider {
 export const AllSaaSGitProviders: GitProvider[] = [
   { icon: 'github', label: 'common.repo_provider.githubLabel', type: Connectors.GITHUB },
   { icon: 'gitlab', label: 'common.repo_provider.gitlabLabel', type: Connectors.GITLAB },
-  { icon: 'bitbucket-blue', label: 'pipeline.manifestType.bitBucketLabel', type: Connectors.BITBUCKET }
+  { icon: 'bitbucket-blue', label: 'common.repo_provider.bitbucketLabel', type: Connectors.BITBUCKET }
 ]
 
 export const AllOnPremGitProviders: GitProvider[] = [

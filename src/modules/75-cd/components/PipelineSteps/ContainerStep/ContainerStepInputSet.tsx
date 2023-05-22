@@ -390,7 +390,7 @@ function ContainerStepInputSetBasic(props: ContainerStepProps): React.ReactEleme
         (infrastructureSpec?.annotations && Object.entries(infrastructureSpec?.annotations).length > 0)) &&
         renderMultiTypeMapInputSet({
           fieldName: `${prefix}spec.infrastructure.spec.annotations`,
-          stringKey: 'common.annotations',
+          stringKey: 'ci.annotations',
           hasValuesAsRuntimeInput: true
         })}
 

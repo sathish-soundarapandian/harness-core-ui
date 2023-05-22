@@ -114,7 +114,7 @@ const ModuleOverview: React.FC<ModuleOverviewProps> = ({
 }) => {
   const { label, Component, imageSrc } = moduleLabelMap[module]
   const { getString } = useStrings()
-  const { color, icon, backgroundColor, hasLicense } = useNavModuleInfo(module)
+  const { color, icon, backgroundColorLight, hasLicense } = useNavModuleInfo(module)
   const showEmptyState = !hasLicense
 
   const containerStyle = cx(css.container, {
@@ -127,7 +127,7 @@ const ModuleOverview: React.FC<ModuleOverviewProps> = ({
   return (
     <Container
       className={cx(css.parent, className)}
-      style={{ borderColor: `var(${color})`, backgroundColor: `var(${backgroundColor})`, ...style }}
+      style={{ borderColor: `var(${color})`, backgroundColor: `var(${backgroundColorLight})`, ...style }}
     >
       <Layout.Vertical className={containerStyle} onClick={onClick}>
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
@@ -136,7 +136,7 @@ const ModuleOverview: React.FC<ModuleOverviewProps> = ({
           </Text>
           <Icon className={css.icon} name={icon} size={isExpanded ? 68 : 32} />
         </Layout.Horizontal>
-        <Container className={css.flex1}>
+        <Container className={css.moduleDetailsContainer}>
           {Component ? <Component isExpanded={isExpanded} timeRange={timeRange} isEmptyState={showEmptyState} /> : null}
         </Container>
         <Text className={css.clickToExpandText} color={Color.GREY_400} font={{ variation: FontVariation.TINY }}>

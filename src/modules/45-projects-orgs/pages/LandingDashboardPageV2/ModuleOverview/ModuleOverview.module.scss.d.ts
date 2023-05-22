@@ -14,9 +14,9 @@ declare const styles: {
   readonly dataState: string
   readonly expanded: string
   readonly ffColorBox: string
-  readonly flex1: string
   readonly icon: string
   readonly imageExpanded: string
+  readonly moduleDetailsContainer: string
   readonly parent: string
   readonly zeroState: string
 }

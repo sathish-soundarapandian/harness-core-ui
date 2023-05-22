@@ -14,6 +14,8 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'
+import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import {
   getFormValuesInCorrectFormat,
@@ -27,8 +29,6 @@ import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { useStrings } from 'framework/strings'
 import type { SbomSource } from 'services/ci'
-import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
-import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { AllMultiTypeInputTypesForStep } from '../utils'
 import type {
   SscaEnforcementStepData,
@@ -165,7 +165,7 @@ const SscaEnforcementStepEdit = (
                     tooltipProps={{ dataTooltipId: 'image' }}
                     placeholder={getString('imagePlaceholder')}
                   >
-                    {getString('ssca.enforcementStep.attestedImage')}
+                    {getString('image')}
                   </Text>
                 }
                 multiTextInputProps={{
@@ -202,14 +202,13 @@ const SscaEnforcementStepEdit = (
                 {getString('ssca.enforcementStep.policyConfiguration')}
               </Text>
 
-              <FileStoreList
-                name="spec.policy.store.spec.file"
+              <FileStoreSelectField
                 label={getString('common.git.filePath')}
-                type={FILE_TYPE_VALUES.FILE_STORE}
-                allowOnlyOne={true}
-                formik={formik}
-                expressions={expressions}
-                labelClassName={css.fileStoreLabel}
+                name="spec.policy.store.spec.file"
+                onChange={newValue => {
+                  formik?.setFieldValue('spec.policy.store.spec.file', newValue)
+                }}
+                fileUsage={FileUsage.CONFIG}
               />
 
               <Accordion>

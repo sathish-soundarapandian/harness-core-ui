@@ -278,7 +278,7 @@ describe('Deploy service stage specifications', () => {
     expect(getElementByText(portalDiv, 'pipeline.manifestType.gitConnectorLabel')).toBeDefined()
     expect(getElementByText(portalDiv, 'common.repo_provider.githubLabel')).toBeDefined()
     expect(getElementByText(portalDiv, 'common.repo_provider.gitlabLabel')).toBeDefined()
-    expect(getElementByText(portalDiv, 'pipeline.manifestType.bitBucketLabel')).toBeDefined()
+    expect(getElementByText(portalDiv, 'common.repo_provider.bitbucketLabel')).toBeDefined()
   })
 
   test('when deploymentType is ECS, ECS related UI should appear', async () => {

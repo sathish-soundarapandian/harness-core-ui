@@ -273,9 +273,9 @@ export default function SelectDeploymentType({
     NG_SVC_ENV_REDESIGN,
     SPOT_ELASTIGROUP_NG,
     CDS_TAS_NG,
-    CDS_ASG_NG,
     CDS_GOOGLE_CLOUD_FUNCTION,
-    CDS_AWS_NATIVE_LAMBDA
+    CDS_AWS_NATIVE_LAMBDA,
+    CDP_AWS_SAM
   } = useFeatureFlags()
 
   // Supported in NG (Next Gen - The one for which you are coding right now)
@@ -284,17 +284,17 @@ export default function SelectDeploymentType({
       NG_SVC_ENV_REDESIGN,
       SPOT_ELASTIGROUP_NG,
       CDS_TAS_NG,
-      CDS_ASG_NG,
       CDS_GOOGLE_CLOUD_FUNCTION,
-      CDS_AWS_NATIVE_LAMBDA
+      CDS_AWS_NATIVE_LAMBDA,
+      CDP_AWS_SAM
     })
   }, [
     NG_SVC_ENV_REDESIGN,
     SPOT_ELASTIGROUP_NG,
     CDS_TAS_NG,
-    CDS_ASG_NG,
     CDS_GOOGLE_CLOUD_FUNCTION,
-    CDS_AWS_NATIVE_LAMBDA
+    CDS_AWS_NATIVE_LAMBDA,
+    CDP_AWS_SAM
   ])
 
   // Suppported in CG (First Gen - Old Version of Harness App)

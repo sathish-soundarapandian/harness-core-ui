@@ -89,6 +89,8 @@ declare interface Window {
   MonacoEnvironment: any
   YT?: any
   onYouTubeIframeAPIReady?: () => void
+  getIP?: (ipJson: { ip: string }) => void
+  currentIP?: string | undefined
 }
 
 declare interface WindowEventMap {

@@ -19,8 +19,7 @@ import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 
 import NewInputSetModal from '@pipeline/components/InputSetForm/NewInputSetModal'
 import { useInputSetsV1 } from '@pipeline/v1/components/RunPipelineModalV1/useInputSetsV1'
-import { getTriggerInputSetsBranchQueryParameter } from '@triggers/components/Triggers/utils'
-import { getErrorMessage } from '../../utils/TriggersWizardPageUtils'
+import { getTriggerInputSetsBranchQueryParameter, getErrorMessage } from '../../utils/TriggersWizardPageUtils'
 import css from '../WebhookPipelineInputPanel.module.scss'
 
 interface WebhookPipelineInputPanelPropsInterface {

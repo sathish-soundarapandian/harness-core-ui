@@ -1,15 +1,8 @@
-/*
- * Copyright 2023 Harness Inc. All rights reserved.
- * Use of this source code is governed by the PolyForm Shield 1.0.0 license
- * that can be found in the licenses directory at the root of this repository, also available at
- * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
- */
-
 import React from 'react'
 import type { AllowedTypes } from '@harness/uicore'
 import { Layout } from '@harness/uicore'
 import { connect } from 'formik'
-import type { DeploymentStageConfig, StepGroupElementConfigV2 } from 'services/cd-ng'
+import type { DeploymentStageConfig, StepGroupElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { StageType } from '@pipeline/utils/stageHelpers'
@@ -18,7 +11,7 @@ import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'
 import type { StageInputSetFormProps } from './StageInputSetForm'
 
 export function StepGroupFormSetInternal(props: {
-  template: StepGroupElementConfigV2
+  template: StepGroupElementConfig
   formik: StageInputSetFormProps['formik']
   path: string
   allValues?: any

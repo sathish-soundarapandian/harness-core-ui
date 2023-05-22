@@ -31,6 +31,8 @@ stepDescription:
   Prowler: Use Prowler to test for vulnerabilities.
   Sniper: Use Sniper to test for vulnerabilities.
   Metasploit: Use Metasploit to test for vulnerabilities.
+  Fossa: Use Fossa to test for vulnerabilities.
+  Semgrep: Use Semgrep to test for vulnerabilities.
 stepField:
   mode: Scan Mode
   config: Scan Configuration

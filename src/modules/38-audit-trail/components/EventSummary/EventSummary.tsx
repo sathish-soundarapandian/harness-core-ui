@@ -10,7 +10,7 @@ import { Drawer, IDrawerProps } from '@blueprintjs/core'
 import { Avatar, Card, Container, Layout, TableV2, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import type { Column, Renderer, CellProps } from 'react-table'
-import { useStrings } from 'framework/strings'
+import { StringKeys, useStrings } from 'framework/strings'
 import type { AuditEventDTO } from 'services/audit'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
@@ -61,6 +61,21 @@ const renderResourceName: Renderer<CellProps<AuditEventDTO>> = ({ row }) => {
   )
 }
 
+const AdditionalDetailRow: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+  <>
+    <Text
+      color={Color.GREY_350}
+      font={{ variation: FontVariation.SMALL_SEMI }}
+      margin={{ bottom: 'xsmall', top: 'xlarge' }}
+    >
+      {label}
+    </Text>
+    <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY }}>
+      {value}
+    </Text>
+  </>
+)
+
 const EventSummary: React.FC<EventSummaryProps> = ({ onClose, auditEvent }) => {
   const {
     auditId,
@@ -68,11 +83,13 @@ const EventSummary: React.FC<EventSummaryProps> = ({ onClose, auditEvent }) => {
     timestamp,
     httpRequestInfo: { requestMethod } = {},
     requestMetadata: { clientIP } = {},
-    resource
+    resource,
+    auditEventData
   } = auditEvent
 
   const { getString } = useStrings()
-  const { moduleLabel = 'na' } = AuditTrailFactory.getResourceHandler(auditEvent.resource.type) || {}
+  const { moduleLabel = 'na', additionalDetails } = AuditTrailFactory.getResourceHandler(auditEvent.resource.type) || {}
+  const resourceEventAdditionalDetails = additionalDetails?.(auditEventData)
 
   const subTitle = {
     [getString('common.moduleLabel')]: getString(moduleLabel),
@@ -144,19 +161,19 @@ const EventSummary: React.FC<EventSummaryProps> = ({ onClose, auditEvent }) => {
   const renderSupplementaryDetails = (): ReactElement => {
     return (
       <>
-        <Text
-          color={Color.GREY_350}
-          font={{ variation: FontVariation.SMALL_SEMI }}
-          margin={{ bottom: 'xsmall', top: 'xlarge' }}
-        >
-          {getString('auditTrail.eventSource')}
-        </Text>
-        <Text color={Color.GREY_800} font={{ variation: FontVariation.BODY }}>
-          {getString('auditTrail.http', {
-            method: requestMethod,
-            clientIP
-          })}
-        </Text>
+        {requestMethod && clientIP && (
+          <AdditionalDetailRow
+            label={getString('auditTrail.eventSource')}
+            value={getString('auditTrail.http', {
+              method: requestMethod,
+              clientIP
+            })}
+          />
+        )}
+        {resourceEventAdditionalDetails &&
+          Object.entries(resourceEventAdditionalDetails).map(([key, value]) => (
+            <AdditionalDetailRow key={key} label={getString(key as StringKeys)} value={value as string} />
+          ))}
       </>
     )
   }
@@ -172,7 +189,7 @@ const EventSummary: React.FC<EventSummaryProps> = ({ onClose, auditEvent }) => {
       key: 'supplementaryDetails',
       title: getString('auditTrail.supplementaryDetails'),
       content: renderSupplementaryDetails(),
-      condition: Boolean(requestMethod && clientIP)
+      condition: Boolean((requestMethod && clientIP) || resourceEventAdditionalDetails)
     }
   ]
 

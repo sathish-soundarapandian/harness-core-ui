@@ -310,8 +310,17 @@ billingInfo:
 allowlist: Allowlist
 ipAllowlist: IP Allowlist
 ipAddress:
+  determiningCurrentIp: 'Determining your IP Address...'
+  yourIpAddressIs: 'Your IP Address is: {{ipAddress}}'
+  unableToDetermineIp: 'Unable to determine your IP Address'
+  includesYourIpAddress: '(Includes your IP Address)'
   deleteIpAddressDialogContent: 'Are you sure you want to delete IP Address [{{name}}] from Allowlist?'
   deleteIpAddressDialogTitle: Delete IP Address
+  enableIpAddressDialogContent: 'Are you sure you want to enable IP Allowlist [{{name}}]?'
+  enableIpAddressDialogWarningFail: 'Your IP Address [{{ipAddress}}] is not a part of this allowlist. If you enable this, you will lose access to Harness and your session will be terminated.'
+  enableIpAddressDialogWarningSuccess: 'Access from other IP Addresses will be blocked once you enable this.'
+  noCurrentIpEnableIpAddressDialogWarning: 'Please make sure that your IP address is part of the IP allowlist that you are enabling—else, you will lose access and your session will be terminated.'
+  enableIpAddressDialogTitle: Enable IP Allowlist
   deleteSuccessful: 'IP Allowlist [{{name}}] deleted successfully'
   errorWhileDeleting: 'An error occurred while deleting IP Allowlist [{{name}}]'
   ipAllowlistCreated: 'IP Allowlist [{{name}}] created successfully'
@@ -348,3 +357,4 @@ urlIdentityProvider: URL and Identity Provider
 newSamlProvider: New SAML Provider
 identityProviderLabel: Identity Provider
 additionalFunctions: Additional Functions
+yesIamSure: Yes, I am very sure

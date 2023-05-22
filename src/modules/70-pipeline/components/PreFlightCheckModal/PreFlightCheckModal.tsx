@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { isEmpty, omitBy } from 'lodash-es'
+import { defaultTo, isEmpty, omitBy } from 'lodash-es'
 import { Link } from 'react-router-dom'
 import cx from 'classnames'
 import { PopoverInteractionKind, Position, ProgressBar } from '@blueprintjs/core'
@@ -31,6 +31,7 @@ import type { GitQueryParams, Module } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import css from './PreFlightCheckModal.module.scss'
 
 enum Section {
@@ -516,13 +517,18 @@ export function PreFlightCheckModal({
 }: PreFlightCheckModalProps & GitQueryParams): React.ReactElement {
   const [preFlightCheckId, setPreFlightCheckId] = useState<string | undefined>()
   const [preFlightCheckData, setPreFlightCheckData] = useState<ResponsePreFlightDTO | null>()
-
+  const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const processResponseError = (error?: { message?: string }): void => {
-    showError(error?.message ? error?.message : getString('somethingWentWrong'), undefined, 'pipeline.preflight.error')
+    const rbacError: RBACError = { data: defaultTo(error, ''), message: defaultTo(error?.message, '') }
+    showError(
+      defaultTo(getRBACErrorMessage(rbacError, true), getString('somethingWentWrong')),
+      undefined,
+      'pipeline.preflight.error'
+    )
     onCloseButtonClick()
   }
 

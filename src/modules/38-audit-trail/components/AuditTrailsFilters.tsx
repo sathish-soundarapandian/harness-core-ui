@@ -15,6 +15,8 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { removeNullAndEmpty } from '@common/components/Filter/utils/FilterUtils'
 import { useStrings } from 'framework/strings'
 import { formToLabelMap, getFormValuesFromFilterProperties } from '@audit-trail/utils/RequestUtil'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDActions, Category } from '@common/constants/TrackingConstants'
 import FilterDrawer from './FilterDrawer/FilterDrawer'
 
 interface AuditFiltersProps {
@@ -25,7 +27,7 @@ const AuditTrailsFilters: React.FC<AuditFiltersProps> = ({ applyFilters }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [selectedFilter, setSelectedFilter] = useState<FilterDTO | undefined>()
   const { getString } = useStrings()
-
+  const { trackEvent } = useTelemetry()
   const fieldToLabelMapping = new Map<string, string>()
   fieldToLabelMapping.set('users', getString('common.userLabel'))
   fieldToLabelMapping.set('organizations', getString('orgLabel'))
@@ -46,6 +48,9 @@ const AuditTrailsFilters: React.FC<AuditFiltersProps> = ({ applyFilters }) => {
     let filter
     if (identifier) {
       filter = filterResponse?.data?.content?.find(filtr => filtr.identifier === identifier)
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.AUDIT_TRAIL
+      })
     }
     setSelectedFilter(filter)
     applyFilters?.(filter?.filterProperties || {})
@@ -60,6 +65,9 @@ const AuditTrailsFilters: React.FC<AuditFiltersProps> = ({ applyFilters }) => {
         selectedFilter={selectedFilter}
         selectFilter={setSelectedFilter}
         applyFilter={(filter: FilterDTO) => {
+          trackEvent(CDActions.ApplyAdvancedFilter, {
+            category: Category.AUDIT_TRAIL
+          })
           closeDrawer()
           setSelectedFilter(filter)
           applyFilters?.(filter.filterProperties)

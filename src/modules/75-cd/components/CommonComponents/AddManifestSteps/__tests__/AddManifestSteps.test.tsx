@@ -12,6 +12,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import MonacoEditorMock from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { AddManifestSteps } from '../AddManifestSteps'
 
 const suggestedManifest = {
@@ -48,6 +49,7 @@ describe('AddManifestSteps tests', () => {
     const { container } = render(
       <TestWrapper>
         <AddManifestSteps
+          manifestType={ManifestDataType.GoogleCloudFunctionDefinition}
           selectedDeploymentType={ServiceDeploymentType.GoogleCloudFunctions}
           manifestFileName={manifestFileName}
           suggestedManifestYaml={suggestedManifestYaml}

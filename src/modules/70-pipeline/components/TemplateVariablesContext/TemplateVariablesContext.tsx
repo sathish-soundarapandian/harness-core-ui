@@ -19,7 +19,7 @@ import {
   VariableMergeServiceResponse
 } from 'services/template-ng'
 import type { UseMutateAsGetReturn } from '@common/hooks/useMutateAsGet'
-import type { StageElementConfig, StepElementConfig, StepGroupElementConfigV2 } from 'services/cd-ng'
+import type { StageElementConfig, StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { ServiceExpressionProperties } from 'services/pipeline-ng'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
@@ -46,7 +46,7 @@ export interface MonitoredServiceConfig {
 }
 
 export interface TemplateVariablesData {
-  variablesTemplate: StepElementConfig | StageElementConfig | MonitoredServiceConfig | StepGroupElementConfigV2
+  variablesTemplate: StepElementConfig | StageElementConfig | MonitoredServiceConfig | StepGroupElementConfig
   originalTemplate: NGTemplateInfoConfig
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   serviceExpressionPropertiesList: ServiceExpressionProperties[]

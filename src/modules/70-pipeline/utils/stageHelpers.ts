@@ -76,7 +76,8 @@ export enum ServiceDeploymentType {
   SshWinRmAzure = 'SshWinRmAzure',
   Asg = 'Asg',
   GoogleCloudFunctions = 'GoogleCloudFunctions',
-  AwsLambda = 'AwsLambda'
+  AwsLambda = 'AwsLambda',
+  AwsSam = 'AWS_SAM'
 }
 
 export enum RepositoryFormatTypes {
@@ -369,7 +370,11 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
 }
 
 export const isOnlyOneManifestAllowedForDeploymentType = (deploymentType: ServiceDefinition['type']) => {
-  return isServerlessDeploymentType(deploymentType) || deploymentType === ServiceDeploymentType.AwsLambda
+  return (
+    isServerlessDeploymentType(deploymentType) ||
+    deploymentType === ServiceDeploymentType.AwsLambda ||
+    deploymentType === ServiceDeploymentType.AwsSam
+  )
 }
 
 export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
@@ -733,6 +738,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.GoogleCloudFunctionsService
     case ServiceDeploymentType.AwsLambda:
       return StepType.AwsLambdaService
+    case ServiceDeploymentType.AwsSam:
+      return StepType.AwsSam
     default:
       return StepType.K8sServiceSpec
   }

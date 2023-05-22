@@ -1034,6 +1034,27 @@ exports[`Test ChangeSourceCard validate loading 1`] = `
             />
           </div>
         </div>
+        <div
+          class="StyledProps--font StyledProps--main loadingBlock"
+          data-testid="loading-block"
+        >
+          <div
+            class="StyledProps--font StyledProps--main bp3-skeleton StyledProps--margin-right-small"
+            style="width: 30px; height: 30px;"
+          />
+          <div
+            class="StyledProps--font StyledProps--main"
+          >
+            <div
+              class="StyledProps--font StyledProps--main bp3-skeleton StyledProps--margin-top-xsmall StyledProps--margin-bottom-xsmall"
+              style="width: 72px; height: 5px;"
+            />
+            <div
+              class="StyledProps--font StyledProps--main bp3-skeleton"
+              style="width: 28px; height: 5px;"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>

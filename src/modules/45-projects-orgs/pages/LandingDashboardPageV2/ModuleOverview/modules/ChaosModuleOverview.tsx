@@ -6,12 +6,17 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
+import routes from '@common/RouteDefinitions'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
 import DefaultFooter from '../EmptyState/DefaultFooter'
 
 const ChaosModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded }) => {
+  const { accountId } = useParams<AccountPathProps>()
+
   if (isExpanded) {
     return (
       <EmptyStateExpandedView
@@ -21,7 +26,12 @@ const ChaosModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded }) 
           'common.moduleDetails.chaos.expanded.list.two',
           'common.moduleDetails.chaos.expanded.list.three'
         ]}
-        footer={<DefaultFooter learnMoreLink="https://docs.harness.io/category/zgffarnh1m-ci-category" />}
+        footer={
+          <DefaultFooter
+            learnMoreLink="https://docs.harness.io/category/zgffarnh1m-ci-category"
+            getStartedLink={routes.toChaos({ accountId })}
+          />
+        }
       />
     )
   }

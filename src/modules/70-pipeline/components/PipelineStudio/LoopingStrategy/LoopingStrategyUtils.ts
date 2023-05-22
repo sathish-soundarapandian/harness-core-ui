@@ -8,7 +8,7 @@
 import { isEmpty } from 'lodash-es'
 
 import type { StringsMap } from 'stringTypes'
-import type { StepElementConfig, StepGroupElementConfigV2 } from 'services/cd-ng'
+import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { StepOrStepGroupOrTemplateStepData } from '../StepCommands/StepCommandTypes'
 import { getFlattenedSteps } from '../CommonUtils/CommonUtils'
@@ -31,7 +31,7 @@ export const getAvailableStrategies = (
   step?: StepOrStepGroupOrTemplateStepData
 ): Record<LoopingStrategyEnum, LoopingStrategy> => {
   const stepType = (step as StepElementConfig)?.type
-  const allSteps = getFlattenedSteps((step as StepGroupElementConfigV2)?.steps)
+  const allSteps = getFlattenedSteps((step as StepGroupElementConfig)?.steps)
 
   let disabled = stepType === StepType.Command
   // Ideally step group should have type as StepType.StepGroup.

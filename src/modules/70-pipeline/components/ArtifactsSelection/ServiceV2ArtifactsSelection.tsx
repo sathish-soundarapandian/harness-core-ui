@@ -82,7 +82,6 @@ import {
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES,
   getInitialSelectedArtifactValue,
-  isAllowedAzureArtifactDeploymentTypes,
   isAllowedBambooArtifactDeploymentTypes,
   isAllowedCustomArtifactDeploymentTypes,
   isSidecarAllowed,
@@ -166,13 +165,8 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const {
-    CUSTOM_ARTIFACT_NG,
-    AZURE_ARTIFACTS_NG,
-    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS,
-    CDS_SERVICE_CONFIG_LAST_STEP,
-    BAMBOO_ARTIFACT_NG
-  } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS, CDS_SERVICE_CONFIG_LAST_STEP, BAMBOO_ARTIFACT_NG } =
+    useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
@@ -182,13 +176,6 @@ export default function ServiceV2ArtifactsSelection({
       isAllowedCustomArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
-    }
-    if (
-      isAllowedAzureArtifactDeploymentTypes(deploymentType) &&
-      AZURE_ARTIFACTS_NG &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
     }
     if (
       [ServiceDeploymentType.AzureWebApp, ServiceDeploymentType.TAS].includes(

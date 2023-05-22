@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent } from 'react'
+import React, { FormEvent, useCallback } from 'react'
 import {
   Text,
   Formik,
@@ -85,7 +85,9 @@ const BuildTool = {
   GRADLE: 'Gradle',
   DOTNET: 'Dotnet',
   NUNITCONSOLE: 'Nunitconsole',
-  SBT: 'SBT'
+  SBT: 'SBT',
+  PY_TEST: 'Pytest',
+  UNIT_TEST: 'Unittest'
 }
 
 const ET_COMMANDS_START = '#ET-SETUP-BEGIN'
@@ -137,6 +139,11 @@ const getScalaBuildToolOptions = (getString: UseStringsReturn['getString']): Sel
   { label: getString('ci.runTestsStep.sbt'), value: BuildTool.SBT }
 ]
 
+const getPythonBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('ci.runTestsStep.pytest'), value: BuildTool.PY_TEST },
+  { label: getString('ci.runTestsStep.unittest'), value: BuildTool.UNIT_TEST }
+]
+
 export const getBuildEnvironmentOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
   { label: getString('ci.runTestsStep.dotNetCore'), value: 'Core' }
 ]
@@ -160,8 +167,14 @@ const enum Language {
   Java = 'Java',
   Csharp = 'Csharp',
   Kotlin = 'Kotlin',
-  Scala = 'Scala'
+  Scala = 'Scala',
+  Python = 'Python'
 }
+
+const getLanguageOptionsIncludingPython = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  ...getLanguageOptions(getString),
+  { label: getString('common.python'), value: Language.Python }
+]
 
 const getLanguageOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
   { label: getString('ci.runTestsStep.csharp'), value: Language.Csharp },
@@ -186,6 +199,8 @@ const getBuildToolOptions = (
     return getCSharpBuildToolOptions(getString)
   } else if (language === Language.Scala) {
     return getScalaBuildToolOptions(getString)
+  } else if (language === Language.Python) {
+    return getPythonBuildToolOptions(getString)
   }
   return undefined
 }
@@ -243,7 +258,7 @@ export const RunTestsStepBase = (
       selectionState: { selectedStageId }
     }
   } = usePipelineContext()
-  const { TI_DOTNET, CVNG_ENABLED } = useFeatureFlags()
+  const { TI_DOTNET, CVNG_ENABLED, CI_PYTHON_TI } = useFeatureFlags()
   // temporary enable in QA for docs
   const isQAEnvironment = window.location.origin === qaLocation
   const [mavenSetupQuestionAnswer, setMavenSetupQuestionAnswer] = React.useState('yes')
@@ -447,6 +462,13 @@ export const RunTestsStepBase = (
     [expressions]
   )
 
+  const getOptionsForTILanguage = useCallback((): SelectOption[] => {
+    if (CI_PYTHON_TI) {
+      return getLanguageOptionsIncludingPython(getString)
+    }
+    return isQAEnvironment || TI_DOTNET ? getLanguageOptions(getString) : getSubsetLanguageOptions(getString)
+  }, [isQAEnvironment, TI_DOTNET, CI_PYTHON_TI])
+
   return (
     <Formik
       initialValues={getInitialValuesInCorrectFormat<RunTestsStepData, RunTestsStepDataUI>(
@@ -454,7 +476,7 @@ export const RunTestsStepBase = (
         transformValuesFieldsConfig,
         {
           buildToolOptions,
-          languageOptions: getLanguageOptions(getString),
+          languageOptions: CI_PYTHON_TI ? getOptionsForTILanguage() : getLanguageOptions(getString),
           imagePullPolicyOptions: getImagePullPolicyOptions(getString),
           shellOptions: getCIRunTestsStepShellOptions(getString),
           buildEnvironmentOptions: getBuildEnvironmentOptions(getString),
@@ -543,8 +565,7 @@ export const RunTestsStepBase = (
                 name: 'spec.language',
                 fieldLabelKey: 'languageLabel',
                 tooltipId: 'runTestsLanguage',
-                selectFieldOptions:
-                  isQAEnvironment || TI_DOTNET ? getLanguageOptions(getString) : getSubsetLanguageOptions(getString),
+                selectFieldOptions: getOptionsForTILanguage(),
                 onSelectChange: option => {
                   const newBuildToolOptions = getBuildToolOptions(getString, option?.value as string)
                   const newValues = { ...formik.values }
@@ -809,6 +830,28 @@ gradle.projectsEvaluated {
                         disabled={readonly}
                       />
                     </Container>
+                    {CI_PYTHON_TI && selectedLanguageValue === Language.Python && (
+                      <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
+                        {renderMultiTypeTextField({
+                          name: 'spec.testRoot',
+                          fieldLabelKey: 'ci.runTestsStep.testRoot',
+                          tooltipId: 'testRoot',
+                          renderOptionalSublabel: true,
+                          allowableTypes: AllMultiTypeInputTypesForStep
+                        })}
+                      </Container>
+                    )}
+                    {CI_PYTHON_TI && selectedLanguageValue === Language.Python && (
+                      <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
+                        {renderMultiTypeTextField({
+                          name: 'spec.testGlobs',
+                          fieldLabelKey: 'ci.runTestsStep.testGlobs',
+                          tooltipId: 'testGlobs',
+                          renderOptionalSublabel: true,
+                          allowableTypes: AllMultiTypeInputTypesForStep
+                        })}
+                      </Container>
+                    )}
                     {selectedLanguageValue === Language.Java && (
                       <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
                         {renderMultiTypeTextField({

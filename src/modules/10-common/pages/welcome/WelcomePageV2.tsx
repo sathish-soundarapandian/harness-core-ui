@@ -40,14 +40,15 @@ import {
 import { moduleToModuleNameMapping, Module } from 'framework/types/ModuleName'
 import type { StartFreeLicenseQueryParams, ResponseModuleLicenseDTO, ModuleLicenseDTO } from 'services/cd-ng'
 import { useUpdateAccountDefaultExperienceNG, useStartFreeLicense } from 'services/cd-ng'
+import type { PLG_CD_GET_STARTED_VARIANTS } from '@common/components/ConfigureOptions/constants'
 import { modulesInfo, ModuleInfoValue } from './ModulesData'
 import css from './WelcomePage.module.scss'
 
-export default function WelcomePageV2(): JSX.Element {
+export default function WelcomePageV2(props: { getStartedVariant?: string }): JSX.Element {
   const HarnessLogo = HarnessIcons['harness-logo-black']
-  const { CREATE_DEFAULT_PROJECT, AUTO_FREE_MODULE_LICENSE, CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED } =
+  const { CREATE_DEFAULT_PROJECT, AUTO_FREE_MODULE_LICENSE, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED } =
     useFeatureFlags()
-  const { licenseInformation, updateLicenseStore } = useLicenseStore()
+  const { FF_LICENSE_STATE, licenseInformation, updateLicenseStore } = useLicenseStore()
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
   const { trackEvent } = useTelemetry()
@@ -85,13 +86,13 @@ export default function WelcomePageV2(): JSX.Element {
         cd: true,
         cv: CVNG_ENABLED,
         ci: CING_ENABLED,
-        cf: CFNG_ENABLED,
+        cf: FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
         ce: CENG_ENABLED,
         chaos: true
       }
       return Boolean(moduleStatusMap[moduleSelected])
     },
-    [CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED]
+    [CVNG_ENABLED, CING_ENABLED, FF_LICENSE_STATE, CENG_ENABLED]
   )
   const trackLearnMore = (moduleSelected: string): void =>
     trackEvent(PurposeActions.LearnMoreClicked, { category: Category.SIGNUP, module: moduleSelected })
@@ -132,9 +133,11 @@ export default function WelcomePageV2(): JSX.Element {
                     [licenseStateName]: LICENSE_STATE_VALUES.ACTIVE
                   })
                 }
-                const defaultURL = getModuleToDefaultURLMap(accountId, moduleSelected as Module)[
-                  moduleSelected as Module
-                ]
+                const defaultURL = getModuleToDefaultURLMap(
+                  accountId,
+                  moduleSelected as Module,
+                  props?.getStartedVariant as PLG_CD_GET_STARTED_VARIANTS
+                )[moduleSelected as Module]
                 CREATE_DEFAULT_PROJECT
                   ? history.push(defaultURL)
                   : history.push(routes.toModuleHome({ accountId, module: moduleSelected, source: 'purpose' }))

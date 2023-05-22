@@ -62,7 +62,6 @@ export interface StringsMap {
   'common.allowFirstGenAccess': string
   'common.and': string
   'common.andCaps': string
-  'common.annotations': string
   'common.annually': string
   'common.any': string
   'common.apiKeys': string
@@ -160,6 +159,7 @@ export interface StringsMap {
   'common.clickToKnowMore': string
   'common.clientId': string
   'common.clientSecret': string
+  'common.cloudSpends': string
   'common.cloudSpendsIn': string
   'common.cluster': string
   'common.clusterName': string
@@ -528,7 +528,6 @@ export interface StringsMap {
   'common.history': string
   'common.home': string
   'common.hostLabel': string
-  'common.hostNames': string
   'common.hourly': string
   'common.iacm': string
   'common.iacmText': string
@@ -2214,18 +2213,25 @@ export interface StringsMap {
   'authSettings.ipAddress.deleteIpAddressDialogContent': string
   'authSettings.ipAddress.deleteIpAddressDialogTitle': string
   'authSettings.ipAddress.deleteSuccessful': string
+  'authSettings.ipAddress.determiningCurrentIp': string
   'authSettings.ipAddress.duplicateIdError': string
+  'authSettings.ipAddress.enableIpAddressDialogContent': string
+  'authSettings.ipAddress.enableIpAddressDialogTitle': string
+  'authSettings.ipAddress.enableIpAddressDialogWarningFail': string
+  'authSettings.ipAddress.enableIpAddressDialogWarningSuccess': string
   'authSettings.ipAddress.errorWhileCreating': string
   'authSettings.ipAddress.errorWhileDeleting': string
   'authSettings.ipAddress.errorWhileUpdating': string
   'authSettings.ipAddress.errorWhileValidating': string
   'authSettings.ipAddress.inRange': string
+  'authSettings.ipAddress.includesYourIpAddress': string
   'authSettings.ipAddress.invalid': string
   'authSettings.ipAddress.ipAddressCIDR': string
   'authSettings.ipAddress.ipAllowlistCreated': string
   'authSettings.ipAddress.ipAllowlistUpdated': string
   'authSettings.ipAddress.ipInvalid': string
   'authSettings.ipAddress.ipRequired': string
+  'authSettings.ipAddress.noCurrentIpEnableIpAddressDialogWarning': string
   'authSettings.ipAddress.noIPsAllowlisted': string
   'authSettings.ipAddress.notAPartOfAllowlist': string
   'authSettings.ipAddress.notInRange': string
@@ -2233,8 +2239,10 @@ export interface StringsMap {
   'authSettings.ipAddress.testIP': string
   'authSettings.ipAddress.testIPIfInRange': string
   'authSettings.ipAddress.testIPIfPartOfAllowlist': string
+  'authSettings.ipAddress.unableToDetermineIp': string
   'authSettings.ipAddress.useMyCurrentIP': string
   'authSettings.ipAddress.validateUniqueIdentifierError': string
+  'authSettings.ipAddress.yourIpAddressIs': string
   'authSettings.ipAllowlist': string
   'authSettings.keepAtLeastOneProviderEnabled': string
   'authSettings.ldap.addGroupQueryDescription': string
@@ -2379,6 +2387,7 @@ export interface StringsMap {
   'authSettings.useHarnessUsernameAndPassword': string
   'authSettings.usePublicOAuth': string
   'authSettings.whitelistedDomainsDisabled': string
+  'authSettings.yesIamSure': string
   'authSettings.yourAccountWillBeLockedOut': string
   'connectors.ECR.fullName': string
   'connectors.ECR.name': string
@@ -3601,7 +3610,6 @@ export interface StringsMap {
   'projectsOrgs.welcome': string
   'projectsOrgs.welcomeSecondLine': string
   'projectsOrgs.whyCreateProject': string
-  'projectsOrgs.yesIamSure': string
   'projectsOrgs.youHaveNoProjects': string
   'assessments.basedOnResultsHarnessRecommendations': string
   'assessments.benchmark': string
@@ -3887,6 +3895,7 @@ export interface StringsMap {
   'pipeline.barriers.tooltips.timeout': string
   'pipeline.barriers.validation.barrierNamerequired': string
   'pipeline.bucketNameHelperText': string
+  'pipeline.buildHeaderText': string
   'pipeline.buildInfra.addCapabilities': string
   'pipeline.buildInfra.allowPrivilegeEscalation': string
   'pipeline.buildInfra.automountServiceAccountToken': string
@@ -4478,7 +4487,6 @@ export interface StringsMap {
   'pipeline.manifestType.azureRepoConnectorLabel': string
   'pipeline.manifestType.basePath': string
   'pipeline.manifestType.basePathPlaceholder': string
-  'pipeline.manifestType.bitBucketLabel': string
   'pipeline.manifestType.branchPlaceholder': string
   'pipeline.manifestType.bucketName': string
   'pipeline.manifestType.bucketNamePlaceholder': string
@@ -4567,6 +4575,7 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.AwsLambdaFunctionAliasDefinition': string
   'pipeline.manifestTypeLabels.AwsLambdaFunctionDefinition': string
   'pipeline.manifestTypeLabels.AwsSAM': string
+  'pipeline.manifestTypeLabels.AwsSamDirectory': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
   'pipeline.manifestTypeLabels.EcsScalableTargetDefinition': string
   'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition': string
@@ -4691,6 +4700,12 @@ export interface StringsMap {
   'pipeline.pipelineChaining.pipelineOutputs': string
   'pipeline.pipelineChaining.removeOutput': string
   'pipeline.pipelineChaining.selectPipeline': string
+  'pipeline.pipelineExecutionEventData.accountIdentifier': string
+  'pipeline.pipelineExecutionEventData.orgIdentifier': string
+  'pipeline.pipelineExecutionEventData.pipelineIdentifier': string
+  'pipeline.pipelineExecutionEventData.projectIdentifier': string
+  'pipeline.pipelineExecutionEventData.stageIdentifier': string
+  'pipeline.pipelineExecutionEventData.stageType': string
   'pipeline.pipelineInputPanel.automaticallyExtractedFromText': string
   'pipeline.pipelineInputPanel.existing': string
   'pipeline.pipelineInputPanel.noRuntimeInputs': string
@@ -4739,6 +4754,7 @@ export interface StringsMap {
   'pipeline.queueStep.scope': string
   'pipeline.queueStep.scopePlaceholder': string
   'pipeline.queueStep.scopeRequired': string
+  'pipeline.recentBuildText': string
   'pipeline.recentExecutionText': string
   'pipeline.recentExecutions': string
   'pipeline.reconcileDialog.subtitle': string
@@ -4768,8 +4784,9 @@ export interface StringsMap {
   'pipeline.resourceConstraints.title': string
   'pipeline.resourceConstraints.traditionalInfraEntity': string
   'pipeline.resourceConstraints.yourPipeline': string
+  'pipeline.retried': string
   'pipeline.retryHistory': string
-  'pipeline.retryHistoryDescription': string
+  'pipeline.retryHistoryTotalCount': string
   'pipeline.retryPipeline': string
   'pipeline.rightBar.editCodebaseConfiguration': string
   'pipeline.rightBar.mergeCommit': string
@@ -4897,6 +4914,7 @@ export interface StringsMap {
   'pipeline.stageDataDeleteWarningText': string
   'pipeline.stageDataDeleteWarningTitle': string
   'pipeline.stageDependencyError': string
+  'pipeline.stageExecutedBefore': string
   'pipeline.stageExecutionSettings': string
   'pipeline.stageExecutionsHelperText': string
   'pipeline.stageVariables': string
@@ -5780,6 +5798,12 @@ export interface StringsMap {
   'cd.getStartedWithCD.backToClusterList': string
   'cd.getStartedWithCD.backToRepoList': string
   'cd.getStartedWithCD.cdWizardEventName': string
+  'cd.getStartedWithCD.cdresources.cdbasics': string
+  'cd.getStartedWithCD.cdresources.cdtuts': string
+  'cd.getStartedWithCD.cdresources.firstcdpipeline': string
+  'cd.getStartedWithCD.cdresources.pipelineModeling': string
+  'cd.getStartedWithCD.cdresources.svcinfra': string
+  'cd.getStartedWithCD.cdresources.terraformcli': string
   'cd.getStartedWithCD.checkAgentStatus': string
   'cd.getStartedWithCD.checkAnnonymously': string
   'cd.getStartedWithCD.checkAuthSettings': string
@@ -5830,6 +5854,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.failedSourceText': string
   'cd.getStartedWithCD.failedToAuthenticate': string
   'cd.getStartedWithCD.failedToProvisionCluster': string
+  'cd.getStartedWithCD.frequency': string
+  'cd.getStartedWithCD.getStartedBtn': string
   'cd.getStartedWithCD.gitOpsAgent': string
   'cd.getStartedWithCD.gitURL': string
   'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
@@ -5887,11 +5913,13 @@ export interface StringsMap {
   'cd.getStartedWithCD.onBoardingSubTitle': string
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.prepareCluserInfo': string
+  'cd.getStartedWithCD.productivity': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.provideMyOwn': string
   'cd.getStartedWithCD.provisionedSuccessfully': string
   'cd.getStartedWithCD.provisioningInProgress': string
   'cd.getStartedWithCD.provisioningText': string
+  'cd.getStartedWithCD.quality': string
   'cd.getStartedWithCD.redisCache': string
   'cd.getStartedWithCD.redisCacheInstalled': string
   'cd.getStartedWithCD.registryDetails': string
@@ -5899,6 +5927,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.repoServer': string
   'cd.getStartedWithCD.repoServerInstalled': string
   'cd.getStartedWithCD.reposubheading': string
+  'cd.getStartedWithCD.restore': string
   'cd.getStartedWithCD.retryProvisioningHostedCluster': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
   'cd.getStartedWithCD.sampleAppOnDockerRegistry': string
@@ -5929,6 +5958,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.setupaNewDelegate': string
   'cd.getStartedWithCD.sourceDetails': string
   'cd.getStartedWithCD.sourceOrSampleCode': string
+  'cd.getStartedWithCD.standardization': string
   'cd.getStartedWithCD.successFull': string
   'cd.getStartedWithCD.successfullyAuthenticated': string
   'cd.getStartedWithCD.syncApplication': string
@@ -5937,11 +5967,14 @@ export interface StringsMap {
   'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.testesSuccessfully': string
   'cd.getStartedWithCD.tryAnotherCreds': string
+  'cd.getStartedWithCD.tryCICTA': string
   'cd.getStartedWithCD.useOwnManifest': string
   'cd.getStartedWithCD.useSample': string
   'cd.getStartedWithCD.usernameAndPassword': string
+  'cd.getStartedWithCD.velocity': string
   'cd.getStartedWithCD.viewDelegateDetails': string
   'cd.getStartedWithCD.whatDelegateSec': string
+  'cd.getStartedWithCD.whyHarnessCD': string
   'cd.getStartedWithCD.workloadDeploy': string
   'cd.gitFetchTypeRequired': string
   'cd.gitOps': string
@@ -7966,6 +7999,7 @@ export interface StringsMap {
   'cf.onboarding.title': string
   'cf.onboarding.toggleError': string
   'cf.onboarding.tryItOut': string
+  'cf.onboarding.typeNewFeatureName': string
   'cf.onboarding.validatingFlagInfo': string
   'cf.onboarding.validatingYourFlag': string
   'cf.onboarding.youCreated': string
@@ -8180,6 +8214,7 @@ export interface StringsMap {
   'ci.GHAPluginUsesPlaceholder': string
   'ci.GHAPluginWithKeyPlaceholder': string
   'ci.advancedLabel': string
+  'ci.annotations': string
   'ci.artifactoryConnectorLabel': string
   'ci.baseConnectorImage': string
   'ci.bitrisePluginUsesPlaceholder': string
@@ -8190,6 +8225,7 @@ export interface StringsMap {
   'ci.buildInfra.awsVM.isRequiredWhen': string
   'ci.buildInfra.awsVM.os': string
   'ci.buildInfra.cloud': string
+  'ci.buildInfra.hostNames': string
   'ci.buildInfra.info.cloud': string
   'ci.buildInfra.info.local1': string
   'ci.buildInfra.info.local2': string
@@ -8342,10 +8378,14 @@ export interface StringsMap {
   'ci.runTestsStep.maven': string
   'ci.runTestsStep.nUnitConsole': string
   'ci.runTestsStep.namespaces': string
+  'ci.runTestsStep.pytest': string
   'ci.runTestsStep.sbt': string
   'ci.runTestsStep.scala': string
   'ci.runTestsStep.sixPointZero': string
+  'ci.runTestsStep.testGlobs': string
   'ci.runTestsStep.testReportPaths': string
+  'ci.runTestsStep.testRoot': string
+  'ci.runTestsStep.unittest': string
   'ci.runTestsStep.validation.namespacesRequiredWhenCsharp': string
   'ci.save': string
   'ci.secrets': string
@@ -9526,6 +9566,7 @@ export interface StringsMap {
   'sto.stepDescription.CustomIngestion': string
   'sto.stepDescription.Fortify': string
   'sto.stepDescription.FortifyOnDemand': string
+  'sto.stepDescription.Fossa': string
   'sto.stepDescription.Gitleaks': string
   'sto.stepDescription.Grype': string
   'sto.stepDescription.Mend': string
@@ -9537,6 +9578,7 @@ export interface StringsMap {
   'sto.stepDescription.PrismaCloud': string
   'sto.stepDescription.Prowler': string
   'sto.stepDescription.ScoutSuite': string
+  'sto.stepDescription.Semgrep': string
   'sto.stepDescription.Sniper': string
   'sto.stepDescription.Snyk': string
   'sto.stepDescription.Sonarqube': string

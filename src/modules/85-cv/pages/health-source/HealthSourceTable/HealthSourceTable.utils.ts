@@ -35,6 +35,7 @@ export const getTypeByFeature = (feature: string, getString: UseStringsReturn['g
     case HealthSourceTypes.Splunk:
     case HealthSourceTypes.Elk:
     case HealthSourceTypes.SumologicLogs:
+    case HealthSourceTypes.GrafanaLokiLogs:
       return getString('pipeline.verification.analysisTab.logs')
     default:
       return getString('common.repo_provider.customLabel')
@@ -109,7 +110,11 @@ export const getIconBySourceType = (type: string): IconName => {
     case 'SUMOLOGIC_METRICS':
     case 'SUMOLOGIC_LOG':
       return 'service-sumologic'
-
+    case HealthSourceTypes.GrafanaLoki:
+    case HealthSourceTypes.GrafanaLokiLogs:
+    case 'GRAFANA_LOKI_LOGS': {
+      return 'service-grafana-loki'
+    }
     default:
       return 'placeholder'
   }

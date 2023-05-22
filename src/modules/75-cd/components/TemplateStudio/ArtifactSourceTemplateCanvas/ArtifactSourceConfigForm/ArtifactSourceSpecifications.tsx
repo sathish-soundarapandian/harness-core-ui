@@ -78,22 +78,13 @@ interface ArtifactSourceConnectorProps {
 
 type Params = {
   CUSTOM_ARTIFACT_NG?: boolean
-  AZURE_ARTIFACTS_NG?: boolean
   AZURE_WEBAPP_NG_JENKINS_ARTIFACTS?: boolean
 }
 
-const getEnabledArtifactTypesList = ({
-  CUSTOM_ARTIFACT_NG,
-  AZURE_ARTIFACTS_NG,
-  AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
-}: Params) => {
+const getEnabledArtifactTypesList = ({ CUSTOM_ARTIFACT_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS }: Params) => {
   return Object.values(ENABLED_ARTIFACT_TYPES).filter((artifactType: ArtifactType) => {
     if (artifactType === ENABLED_ARTIFACT_TYPES.CustomArtifact) {
       return !!CUSTOM_ARTIFACT_NG
-    }
-
-    if (artifactType === ENABLED_ARTIFACT_TYPES.AzureArtifacts) {
-      return !!AZURE_ARTIFACTS_NG
     }
 
     if (artifactType === ENABLED_ARTIFACT_TYPES.Jenkins) {
@@ -199,7 +190,7 @@ export function ArtifactSourceSpecifications(props: {
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
 
   const [selectedArtifactType, setSelectedArtifactType] = React.useState<ArtifactType>(formValues?.artifactType)
-  const { CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS } = useFeatureFlags()
 
   const artifactConnectorType = ArtifactToConnectorMap[selectedArtifactType]
 
@@ -222,10 +213,9 @@ export function ArtifactSourceSpecifications(props: {
     () =>
       getEnabledArtifactTypesList({
         CUSTOM_ARTIFACT_NG,
-        AZURE_ARTIFACTS_NG,
         AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
       }),
-    [CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS]
+    [CUSTOM_ARTIFACT_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS]
   )
 
   const handleArtifactTypeSelection = (artifactType: ArtifactType) => {

@@ -16,7 +16,7 @@ import { useStrings, UseStringsReturn } from 'framework/strings'
 import type {
   ExecutionElementConfig,
   StepElementConfig,
-  StepGroupElementConfigV2,
+  StepGroupElementConfig,
   StageElementConfig
 } from 'services/cd-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -40,11 +40,6 @@ import type { CommandFlags } from '@pipeline/components/ManifestSelection/Manife
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { usePrevious } from '@common/hooks/usePrevious'
-import {
-  getModifiedFormikValues,
-  K8sDirectInfraStepGroupElementConfig,
-  StepGroupFormikValues
-} from '@pipeline/components/PipelineSteps/Steps/StepGroupStep/StepGroupUtil'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -100,7 +95,7 @@ const checkDuplicateStep = (
 }
 
 export const updateStepWithinStage = (
-  execution: ExecutionElementConfig | StepGroupElementConfigV2,
+  execution: ExecutionElementConfig | StepGroupElementConfig,
   processingNodeIdentifier: string,
   processedNode: StepElementConfig | TemplateStepNode,
   isRollback: boolean
@@ -173,136 +168,105 @@ const processNodeImpl = (
   item: Partial<Values>,
   data: any,
   trackEvent: TrackEvent
-): StepElementConfig & TemplateStepNode & StepGroupElementConfigV2 => {
-  return produce(
-    data.stepConfig.node as StepElementConfig &
-      TemplateStepNode &
-      StepGroupElementConfigV2 &
-      K8sDirectInfraStepGroupElementConfig,
-    node => {
-      // Add/replace values only if they are present
-      addReplace(item, node)
+): StepElementConfig & TemplateStepNode & StepGroupElementConfig => {
+  return produce(data.stepConfig.node as StepElementConfig & TemplateStepNode & StepGroupElementConfig, node => {
+    // Add/replace values only if they are present
+    addReplace(item, node)
 
-      // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
-      if (
-        (Array.isArray(item.failureStrategies) && item.failureStrategies.length > 0) ||
-        isValueRuntimeInput(item.failureStrategies as any)
-      ) {
-        node.failureStrategies = item.failureStrategies
+    // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
+    if (
+      (Array.isArray(item.failureStrategies) && item.failureStrategies.length > 0) ||
+      isValueRuntimeInput(item.failureStrategies as any)
+    ) {
+      node.failureStrategies = item.failureStrategies
 
-        if (Array.isArray(item.failureStrategies)) {
-          const telemetryData = item.failureStrategies.map(strategy => ({
-            onError: strategy.onFailure?.errors?.join(', '),
-            action: strategy.onFailure?.action?.type
-          }))
-          telemetryData.length &&
-            trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
-        }
-      } else {
-        delete node.failureStrategies
+      if (Array.isArray(item.failureStrategies)) {
+        const telemetryData = item.failureStrategies.map(strategy => ({
+          onError: strategy.onFailure?.errors?.join(', '),
+          action: strategy.onFailure?.action?.type
+        }))
+        telemetryData.length && trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
       }
-
-      if (!data.stepConfig?.isStepGroup && item.delegateSelectors) {
-        set(node, 'spec.delegateSelectors', item.delegateSelectors)
-      } else if (data.stepConfig?.isStepGroup && item.delegateSelectors) {
-        set(node, 'delegateSelectors', item.delegateSelectors)
-      }
-
-      if ((item as StepElementConfig)?.spec?.commandOptions) {
-        set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
-      }
-
-      // Looping strategies which are found in Advanced tab of steps
-      // Step group which has all of its steps as Command steps will have repeat looping strategy as default strategy
-      if (isEmpty(item.strategy)) {
-        delete (node as any).strategy
-      } else {
-        set(node, 'strategy', item.strategy)
-      }
-
-      if (item?.policySets) {
-        set(node, 'enforce.policySets', item.policySets)
-      }
-
-      if (item.commandFlags && item.commandFlags.length > 0) {
-        const commandFlags = item.commandFlags.map((commandFlag: CommandFlags) =>
-          commandFlag.commandType && commandFlag.flag
-            ? {
-                commandType: commandFlag.commandType,
-                flag: commandFlag.flag
-              }
-            : {}
-        )
-        const filteredCommandFlags = commandFlags.filter((currFlag: CommandFlags) => !isEmpty(currFlag))
-        set(node, 'spec.commandFlags', filteredCommandFlags)
-      }
-
-      // Delete values if they were already added and now removed
-      if (node.timeout && !(item as StepElementConfig).timeout) delete node.timeout
-      if (node.description && !(item as StepElementConfig).description) delete node.description
-      if (node.failureStrategies && !item.failureStrategies) delete node.failureStrategies
-      if (node.enforce?.policySets && (!item?.policySets || item.policySets?.length === 0)) {
-        delete node.enforce
-      }
-      if (
-        !data.stepConfig?.isStepGroup &&
-        node.spec?.delegateSelectors &&
-        (!item.delegateSelectors || item.delegateSelectors?.length === 0)
-      ) {
-        delete node.spec.delegateSelectors
-      }
-      if (node.spec?.commandFlags && (!item.commandFlags || item.commandFlags?.length === 0)) {
-        delete node.spec.commandFlags
-      }
-      if (
-        data.stepConfig?.isStepGroup &&
-        node.delegateSelectors &&
-        (!item.delegateSelectors || item.delegateSelectors?.length === 0)
-      ) {
-        delete node.delegateSelectors
-      }
-
-      if (
-        node.spec?.commandOptions &&
-        (!(item as StepElementConfig)?.spec?.commandOptions ||
-          (item as StepElementConfig)?.spec?.commandOptions?.length === 0)
-      ) {
-        delete (item as StepElementConfig)?.spec?.commandOptions
-        delete node.spec.commandOptions
-      }
-
-      if (item.template) {
-        node.template = item.template
-      }
-      if ((item as StepElementConfig).spec) {
-        node.spec = Object.assign(defaultTo(node.spec, {}), (item as StepElementConfig).spec)
-      }
-
-      if (
-        data.stepConfig?.isStepGroup &&
-        (item as K8sDirectInfraStepGroupElementConfig)?.stepGroupInfra &&
-        (item as K8sDirectInfraStepGroupElementConfig)?.stepGroupInfra?.type === 'KubernetesDirect'
-      ) {
-        // When container step group and values are already transformed (no direct formik values)
-        if ((item as K8sDirectInfraStepGroupElementConfig).sharedPaths) {
-          set(node, 'sharedPaths', (item as K8sDirectInfraStepGroupElementConfig)?.sharedPaths)
-        }
-        if ((item as K8sDirectInfraStepGroupElementConfig).stepGroupInfra) {
-          set(node, 'stepGroupInfra', (item as K8sDirectInfraStepGroupElementConfig)?.stepGroupInfra)
-        }
-      } else if (data.stepConfig?.isStepGroup) {
-        // When it is step group and formik values are directly sent here from Apply Changes
-        const modifiedValues = getModifiedFormikValues(
-          defaultTo(item, {}) as StepGroupFormikValues,
-          (item as StepGroupFormikValues)?.type === 'KubernetesDirect'
-        )
-        set(node, 'identifier', modifiedValues.identifier)
-        set(node, 'name', modifiedValues.name)
-        set(node, 'sharedPaths', modifiedValues.sharedPaths)
-        set(node, 'stepGroupInfra', modifiedValues.stepGroupInfra)
-      }
+    } else {
+      delete node.failureStrategies
     }
-  )
+
+    if (!data.stepConfig?.isStepGroup && item.delegateSelectors) {
+      set(node, 'spec.delegateSelectors', item.delegateSelectors)
+    } else if (data.stepConfig?.isStepGroup && item.delegateSelectors) {
+      set(node, 'delegateSelectors', item.delegateSelectors)
+    }
+
+    if ((item as StepElementConfig)?.spec?.commandOptions) {
+      set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
+    }
+
+    // Looping strategies which are found in Advanced tab of steps
+    // Step group which has all of its steps as Command steps will have repeat looping strategy as default strategy
+    if (isEmpty(item.strategy)) {
+      delete (node as any).strategy
+    } else {
+      set(node, 'strategy', item.strategy)
+    }
+
+    if (item?.policySets) {
+      set(node, 'enforce.policySets', item.policySets)
+    }
+
+    if (item.commandFlags) {
+      const commandFlags = item.commandFlags.map((commandFlag: CommandFlags) =>
+        commandFlag.commandType && commandFlag.flag
+          ? {
+              commandType: commandFlag.commandType,
+              flag: commandFlag.flag
+            }
+          : {}
+      )
+      const filteredCommandFlags = commandFlags.filter((currFlag: CommandFlags) => !isEmpty(currFlag))
+      set(node, 'spec.commandFlags', filteredCommandFlags)
+    }
+
+    // Delete values if they were already added and now removed
+    if (node.timeout && !(item as StepElementConfig).timeout) delete node.timeout
+    if (node.description && !(item as StepElementConfig).description) delete node.description
+    if (node.failureStrategies && !item.failureStrategies) delete node.failureStrategies
+    if (node.enforce?.policySets && (!item?.policySets || item.policySets?.length === 0)) {
+      delete node.enforce
+    }
+    if (
+      !data.stepConfig?.isStepGroup &&
+      node.spec?.delegateSelectors &&
+      (!item.delegateSelectors || item.delegateSelectors?.length === 0)
+    ) {
+      delete node.spec.delegateSelectors
+    }
+    if (node.spec?.commandFlags && (!item.commandFlags || item.commandFlags?.length === 0)) {
+      delete node.spec.commandFlags
+    }
+    if (
+      data.stepConfig?.isStepGroup &&
+      node.delegateSelectors &&
+      (!item.delegateSelectors || item.delegateSelectors?.length === 0)
+    ) {
+      delete node.delegateSelectors
+    }
+
+    if (
+      node.spec?.commandOptions &&
+      (!(item as StepElementConfig)?.spec?.commandOptions ||
+        (item as StepElementConfig)?.spec?.commandOptions?.length === 0)
+    ) {
+      delete (item as StepElementConfig)?.spec?.commandOptions
+      delete node.spec.commandOptions
+    }
+
+    if (item.template) {
+      node.template = item.template
+    }
+    if ((item as StepElementConfig).spec) {
+      node.spec = Object.assign(defaultTo(node.spec, {}), (item as StepElementConfig).spec)
+    }
+  })
 }
 
 const updateWithNodeIdentifier = async (
@@ -1010,7 +974,7 @@ export function RightDrawer(): React.ReactElement {
         <StepCommands
           showHelpPanel={showHelpPanel}
           helpPanelVisible={helpPanelVisible}
-          step={data.stepConfig.node as StepElementConfig | StepGroupElementConfigV2}
+          step={data.stepConfig.node as StepElementConfig | StepGroupElementConfig}
           isReadonly={isReadonly}
           ref={formikRef}
           checkDuplicateStep={checkDuplicateStep.bind(null, formikRef, data, getString)}

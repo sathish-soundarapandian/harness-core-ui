@@ -33,7 +33,8 @@ export const deploymentIconMap: Record<string, IconName> = {
   [ServiceDeploymentType.Elastigroup]: 'elastigroup',
   [ServiceDeploymentType.Asg]: 'aws-asg',
   [ServiceDeploymentType.GoogleCloudFunctions]: 'service-google-functions',
-  [ServiceDeploymentType.AwsLambda]: 'service-aws-native-lambda'
+  [ServiceDeploymentType.AwsLambda]: 'service-aws-native-lambda',
+  [ServiceDeploymentType.AwsSam]: 'service-aws-sam'
 }
 
 export interface DeploymentTypeItem {
@@ -52,6 +53,7 @@ export interface GetNgSupportedDeploymentTypesProps {
   CDS_ASG_NG?: boolean
   CDS_GOOGLE_CLOUD_FUNCTION?: boolean
   CDS_AWS_NATIVE_LAMBDA?: boolean
+  CDP_AWS_SAM?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
@@ -59,9 +61,9 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
     NG_SVC_ENV_REDESIGN,
     SPOT_ELASTIGROUP_NG,
     CDS_TAS_NG,
-    CDS_ASG_NG,
     CDS_GOOGLE_CLOUD_FUNCTION,
-    CDS_AWS_NATIVE_LAMBDA
+    CDS_AWS_NATIVE_LAMBDA,
+    CDP_AWS_SAM
   } = props
 
   const baseTypes: DeploymentTypeItem[] = [
@@ -89,6 +91,11 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.winrm',
       icon: deploymentIconMap[ServiceDeploymentType.WinRm],
       value: ServiceDeploymentType.WinRm
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.asg',
+      icon: deploymentIconMap[ServiceDeploymentType.Asg],
+      value: ServiceDeploymentType.Asg
     }
   ]
 
@@ -97,6 +104,14 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.awsLambda',
       icon: deploymentIconMap[ServiceDeploymentType.AwsLambda],
       value: ServiceDeploymentType.AwsLambda
+    })
+  }
+
+  if (NG_SVC_ENV_REDESIGN && CDP_AWS_SAM) {
+    baseTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.awsSAM',
+      icon: deploymentIconMap[ServiceDeploymentType.AwsSam],
+      value: ServiceDeploymentType.AwsSam
     })
   }
 
@@ -134,13 +149,6 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.tas',
       icon: deploymentIconMap[ServiceDeploymentType.TAS],
       value: ServiceDeploymentType.TAS
-    })
-  }
-  if (CDS_ASG_NG) {
-    baseTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.asg',
-      icon: deploymentIconMap[ServiceDeploymentType.Asg],
-      value: ServiceDeploymentType.Asg
     })
   }
 

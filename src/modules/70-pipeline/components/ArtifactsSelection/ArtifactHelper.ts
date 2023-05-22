@@ -264,7 +264,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
     ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
     ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
-    ENABLED_ARTIFACT_TYPES.AmazonMachineImage
+    ENABLED_ARTIFACT_TYPES.AmazonMachineImage,
+    ENABLED_ARTIFACT_TYPES.AzureArtifacts
   ],
   TAS: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -277,7 +278,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr,
     ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry,
     ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
-    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry
+    ENABLED_ARTIFACT_TYPES.GithubPackageRegistry,
+    ENABLED_ARTIFACT_TYPES.AzureArtifacts
   ],
   GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage],
   AwsLambda: [

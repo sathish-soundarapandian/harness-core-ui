@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Tabs, TableV2, Text, Icon, Layout } from '@harness/uicore'
+import { Container, TableV2, Text, Icon, Layout } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Link, useParams } from 'react-router-dom'
@@ -93,16 +93,26 @@ export const Favorites = () => {
 export const PreferencesCard = () => {
   const { getString } = useStrings()
   return (
-    <Container className={css.container}>
-      <Tabs
+    <Layout.Vertical className={css.container}>
+      <Container className={css.header}>
+        <Text color={Color.GREY_800} font={{ variation: FontVariation.CARD_TITLE }}>
+          {getString('common.recents')}
+        </Text>
+      </Container>
+      <Container padding={{ top: 'small' }}>
+        <RecentProjects />
+      </Container>
+
+      {/* we will uncomment the below code along with favorites chanhges */}
+      {/* <Tabs
         className={css.tabs}
         id="preferenceCardTabs"
         tabList={[
           { id: 'recents', title: getString('common.recents'), panel: <RecentProjects /> },
           { id: 'favorites', title: getString('common.favorites'), panel: <Favorites /> }
         ]}
-      />
-    </Container>
+      /> */}
+    </Layout.Vertical>
   )
 }
 

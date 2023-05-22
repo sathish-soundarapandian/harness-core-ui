@@ -21,6 +21,7 @@ import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtil
 import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
 import { getDateLabelToDisplayText } from '@common/components/TimeRangePicker/TimeRangePicker'
 import { numberFormatter } from '@common/utils/utils'
+import routes from '@common/RouteDefinitions'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
@@ -83,7 +84,12 @@ const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
             'common.moduleDetails.cd.expanded.list.three',
             'common.moduleDetails.cd.expanded.list.four'
           ]}
-          footer={<DefaultFooter learnMoreLink="https://docs.harness.io/category/pfzgb4tg05-howto-cd" />}
+          footer={
+            <DefaultFooter
+              learnMoreLink="https://docs.harness.io/category/pfzgb4tg05-howto-cd"
+              getStartedLink={routes.toCD({ accountId })}
+            />
+          }
         />
       )
     }
@@ -127,6 +133,7 @@ const CDModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
               }).toUpperCase()
             : undefined
         }
+        yAxisLabel={getString('deploymentsText')}
       />
     </>
   )

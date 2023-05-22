@@ -8,10 +8,14 @@
 import { Classes } from '@blueprintjs/core'
 import { Container } from '@harness/uicore'
 import React, { useMemo } from 'react'
-import { NUM_OF_LOADING_BLOCKS_TO_SHOW } from './ChangesSourceLoading.constants'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { NUM_OF_LOADING_BLOCKS_TO_SHOW, NUM_OF_LOADING_BLOCKS_TO_SHOW_WITH_CE } from './ChangesSourceLoading.constants'
 import css from './ChangesSourceLoading.module.scss'
 
 export default function ChangesSourceLoading(): JSX.Element {
+  const isChaosFEEnabled = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_CE)
+
   const LoadingBlock = (): JSX.Element => {
     return (
       <Container data-testid="loading-block" className={css.loadingBlock}>
@@ -26,7 +30,11 @@ export default function ChangesSourceLoading(): JSX.Element {
 
   const loadingBlocks = useMemo(() => {
     const loadingFields: JSX.Element[] = []
-    for (let i = 1; i <= NUM_OF_LOADING_BLOCKS_TO_SHOW; i++) {
+    for (
+      let i = 1;
+      i <= (isChaosFEEnabled ? NUM_OF_LOADING_BLOCKS_TO_SHOW_WITH_CE : NUM_OF_LOADING_BLOCKS_TO_SHOW);
+      i++
+    ) {
       loadingFields.push(<LoadingBlock key={i} />)
     }
     return loadingFields

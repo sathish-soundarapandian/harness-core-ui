@@ -26,7 +26,7 @@ jest.mock('services/cd-ng', () => ({
   useGetBuildDetailsForArtifactoryArtifactWithYaml: jest
     .fn()
     .mockReturnValue({ mutate: jest.fn(), cancel: jest.fn(), loading: false }),
-  useGetService: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
+  useGetServiceV2: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
 }))
 
 jest.spyOn(artifactSourceUtils, 'fromPipelineInputTriggerTab')

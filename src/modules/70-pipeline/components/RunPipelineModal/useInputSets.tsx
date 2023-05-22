@@ -7,8 +7,9 @@
 
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import type { GetDataError } from 'restful-react'
-import { get, isEmpty, isUndefined, memoize, remove } from 'lodash-es'
+import { get, isEmpty, isUndefined, memoize, remove, set } from 'lodash-es'
 
+import produce from 'immer'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import {
@@ -25,9 +26,16 @@ import {
 } from '@pipeline/utils/runPipelineUtils'
 
 import type { Pipeline } from '@pipeline/utils/types'
+import { useGlobalEventListener } from '@common/hooks'
 import type { InputSetValue } from '../InputSetSelector/utils'
 
 const memoizedParse = memoize(parse)
+
+declare global {
+  interface WindowEventMap {
+    UPDATE_INPUT_SET_TEMPLATE: CustomEvent<{ data: unknown; path: string }>
+  }
+}
 
 export interface UseInputSetsProps {
   accountId: string
@@ -200,6 +208,18 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     inputSetData?.data?.pipelineYaml,
     executionInputSetTemplateYaml
   ])
+
+  useGlobalEventListener('UPDATE_INPUT_SET_TEMPLATE', event => {
+    const { detail } = event
+    if (!detail.path) return
+
+    setInputSetTemplate(prev =>
+      produce(prev, draft => {
+        if (!draft.pipeline) return draft
+        set(draft, `pipeline.${detail.path}`, detail.data)
+      })
+    )
+  })
 
   useEffect(() => {
     if (inputSetData?.data?.errorResponse) {

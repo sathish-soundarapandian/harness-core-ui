@@ -1,5 +1,5 @@
 mysourceCodeManagers: My Source Code Managers
-accessTokensForGitProviders: Access token for Git providers
+accessTokensForGitProviders: Access tokens for Git providers
 basicInformation: Basic Information
 changePassword: Change Password
 passwordReqs: 'Password must meet the requirements.'

@@ -27,6 +27,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import css from './StepTemplateDiagram.module.scss'
 
 export const StepTemplateDiagram = (): JSX.Element => {
@@ -39,8 +41,10 @@ export const StepTemplateDiagram = (): JSX.Element => {
   const [stepPaletteModuleInfos, setStepPaletteModuleInfos] = React.useState<StepPalleteModuleInfo[]>([])
   const { module } = useParams<ModulePathParams>()
   const [isStepSelectorOpen, setIsStepSelectorOpen] = React.useState<boolean>()
-  const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CING_ENABLED } = useFeatureFlags()
+  const { FF_LICENSE_STATE } = useLicenseStore()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
+
   const openStepSelector = React.useCallback(() => {
     setIsStepSelectorOpen(true)
   }, [setIsStepSelectorOpen])
@@ -80,13 +84,13 @@ export const StepTemplateDiagram = (): JSX.Element => {
     } else if (module === 'cf') {
       setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.FEATURE))
     } else {
-      if (shouldVisible && CING_ENABLED && CFNG_ENABLED) {
+      if (shouldVisible && CING_ENABLED && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
         setStepPaletteModuleInfos(getAllStepPaletteModuleInfos())
       } else if (shouldVisible) {
         setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.DEPLOY))
       } else if (CING_ENABLED) {
         setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.BUILD))
-      } else if (CFNG_ENABLED) {
+      } else if (FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
         setStepPaletteModuleInfos(getStepPaletteModuleInfosFromStage(StageType.FEATURE))
       }
     }

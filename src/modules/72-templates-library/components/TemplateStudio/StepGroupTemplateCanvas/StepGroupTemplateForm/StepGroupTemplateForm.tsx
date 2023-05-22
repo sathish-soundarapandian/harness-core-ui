@@ -16,7 +16,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 
-import type { StepGroupElementConfigV2 } from 'services/cd-ng'
+import type { StepGroupElementConfig } from 'services/cd-ng'
 import type { Values } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { AdvancedStepsWithRef } from '@pipeline/components/PipelineSteps/AdvancedSteps/AdvancedSteps'
@@ -54,7 +54,7 @@ const StepGroupTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX
   }))
 
   const onSubmitStep = async (item: Partial<Values>): Promise<void> => {
-    const processNode: any = getStepDataFromValues(item, template.spec as StepGroupElementConfigV2)
+    const processNode: any = getStepDataFromValues(item, template.spec as StepGroupElementConfig)
     if (!isEmpty(processNode?.spec?.delegateSelectors)) {
       processNode.delegateSelectors = processNode?.spec?.delegateSelectors
     } else {

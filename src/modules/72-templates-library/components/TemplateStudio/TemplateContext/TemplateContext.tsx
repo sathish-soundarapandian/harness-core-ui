@@ -49,6 +49,7 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
 import { ActionReturnType, TemplateContextActions } from './TemplateActions'
 import { isNewTemplate } from '../TemplateStudioUtils'
@@ -870,8 +871,8 @@ export const TemplateProvider: React.FC<{
 }> = ({ queryParams, module, templateIdentifier, versionLabel, templateType, children }) => {
   const { repoIdentifier, branch } = queryParams
   const { supportingTemplatesGitx } = useAppStore()
-  const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
+  const { CING_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -1004,8 +1005,8 @@ export const TemplateProvider: React.FC<{
       module,
       isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
       isCDEnabled: shouldVisible,
-      isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
-      isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
+      isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
+      isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
       isApprovalStageEnabled: true
     })
 

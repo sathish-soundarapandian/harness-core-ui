@@ -10,7 +10,7 @@ import { AllowedTypes, NestedAccordionPanel, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 
-import type { StepElementConfig, StepGroupElementConfigV2, ExecutionWrapperConfig } from 'services/cd-ng'
+import type { StepElementConfig, StepGroupElementConfig, ExecutionWrapperConfig } from 'services/cd-ng'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -106,8 +106,8 @@ export function StepCardPanel(props: StepCardProps): React.ReactElement {
 
 export interface StepGroupCardProps {
   steps: Array<{
-    step: StepElementConfig | TemplateStepNode | StepGroupElementConfigV2
-    originalStep: StepElementConfig | TemplateStepNode | StepGroupElementConfigV2
+    step: StepElementConfig | TemplateStepNode | StepGroupElementConfig
+    originalStep: StepElementConfig | TemplateStepNode | StepGroupElementConfig
     path: string
   }>
   stageIdentifier: string

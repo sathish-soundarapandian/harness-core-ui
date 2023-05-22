@@ -301,7 +301,7 @@ function SavePipelinePopoverV1(
         latestPipeline =
           payload?.pipeline || (parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig)
       } /* istanbul ignore next */ catch (err) {
-        showError(err.message || err, undefined, 'pipeline.save.gitinfo.error')
+        showError(getRBACErrorMessage(err) || err, undefined, 'pipeline.save.gitinfo.error')
       }
     }
 
@@ -386,7 +386,7 @@ function SavePipelinePopoverV1(
       try {
         latestPipeline = parse<PipelineInfoConfig>(yamlHandler.getLatestYaml())
       } /* istanbul ignore next */ catch (err) {
-        showError(err.message || err, undefined, 'pipeline.save.pipeline.error')
+        showError(getRBACErrorMessage(err) || err, undefined, 'pipeline.save.pipeline.error')
       }
     }
 

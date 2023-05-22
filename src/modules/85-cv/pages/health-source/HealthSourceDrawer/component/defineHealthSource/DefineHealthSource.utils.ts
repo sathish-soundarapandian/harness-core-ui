@@ -136,6 +136,10 @@ export const getConnectorTypeName = (name: HealthSourceTypes): string => {
     case HealthSourceTypes.SplunkSignalFXMetrics:
       connectorTypeName = Connectors.SignalFX
       break
+    case HealthSourceTypes.GrafanaLoki:
+    case HealthSourceTypes.GrafanaLokiLogs:
+      connectorTypeName = HealthSourceTypes.GrafanaLoki
+      break
     default:
       connectorTypeName = name
   }
@@ -292,6 +296,15 @@ export const getFeatureOption = (
       ]
     }
 
+    case HealthSourceTypes.GrafanaLoki: {
+      return [
+        {
+          label: HealthSourceProducts[HealthSourceTypes.GrafanaLoki].label,
+          value: HealthSourceProducts[HealthSourceTypes.GrafanaLoki].value
+        }
+      ]
+    }
+
     default:
       return []
   }
@@ -318,6 +331,8 @@ export function getProductBasedOnType(
       return getFeatureOption(HealthSourceTypes.Elk, getString)[0]
     case HealthSourceTypes.SplunkSignalFXMetrics:
       return getFeatureOption(Connectors.SignalFX, getString)[0]
+    case HealthSourceTypes.GrafanaLokiLogs:
+      return getFeatureOption(HealthSourceTypes.GrafanaLoki, getString)[0]
     default:
       return { ...currProduct } as SelectOption
   }

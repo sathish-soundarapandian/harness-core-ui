@@ -63,7 +63,8 @@ const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null): 
       ManifestDataType.GoogleCloudFunctionDefinition,
       ManifestDataType.GoogleCloudFunctionGenOneDefinition,
       ManifestDataType.AwsLambdaFunctionDefinition,
-      ManifestDataType.AwsLambdaFunctionAliasDefinition
+      ManifestDataType.AwsLambdaFunctionAliasDefinition,
+      ManifestDataType.AwsSamDirectory
     ].includes(selectedManifest)
   )
 }

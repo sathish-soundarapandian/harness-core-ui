@@ -35,6 +35,8 @@ declare const styles: {
   readonly primaryIcon: string
   readonly readonly: string
   readonly renderPopover: string
+  readonly retriedPopoverStyle: string
+  readonly retriedTextStyle: string
   readonly right: string
   readonly rotate: string
   readonly runningNode: string

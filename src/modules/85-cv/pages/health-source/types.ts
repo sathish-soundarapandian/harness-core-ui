@@ -46,8 +46,10 @@ export enum HealthSourceTypes {
   SumoLogic = 'SumoLogic',
   SumologicMetrics = 'SumologicMetrics',
   SumologicLogs = 'SumologicLogs',
-  SignalFX = 'Splunk Observability',
-  SplunkSignalFXMetrics = 'SplunkSignalFXMetrics'
+  SignalFX = 'Splunk Observability [SignalFX]',
+  SplunkSignalFXMetrics = 'SplunkSignalFXMetrics',
+  GrafanaLoki = 'GrafanaLoki',
+  GrafanaLokiLogs = 'GrafanaLokiLogs'
 }
 
 export type CommonNonCustomMetricFieldsType = {

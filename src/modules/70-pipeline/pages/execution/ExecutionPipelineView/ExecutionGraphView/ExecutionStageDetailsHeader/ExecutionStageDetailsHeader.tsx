@@ -10,6 +10,7 @@ import { defaultTo, find, get, identity, isEmpty } from 'lodash-es'
 
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { String as StrTemplate, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
@@ -41,7 +42,8 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     refetch,
     pipelineExecutionDetail,
     allNodeMap,
-    selectedStageExecutionId
+    selectedStageExecutionId,
+    retriedHistoryInfo
   } = useExecutionContext()
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
@@ -62,6 +64,21 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     pipelineExecutionDetail?.pipelineExecutionSummary?.failureInfo?.responseMessages,
     []
   )
+
+  // check if the stage is retried or not
+  const isStageRetried = React.useMemo(() => {
+    const nodeUuid = defaultTo(stage?.nodeUuid, '')
+    const stageNodeIdentifier =
+      pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap?.[nodeUuid]?.nodeIdentifier ||
+      stage?.nodeIdentifier
+
+    return retriedHistoryInfo?.retriedStages?.includes(defaultTo(stageNodeIdentifier, ''))
+  }, [
+    pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap,
+    retriedHistoryInfo?.retriedStages,
+    stage?.nodeIdentifier,
+    stage?.nodeUuid
+  ])
 
   const errorMessage =
     responseMessages.length > 0
@@ -154,7 +171,9 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
       <div className={css.stageDetails}>
         <div className={css.lhs} data-has-sibling={Boolean(stage && stageDetail?.component)}>
           <div className={css.stageTop}>
-            <div className={css.stageName}>{stage?.name}</div>
+            <Text margin={{ bottom: 'small' }} font={{ variation: FontVariation.H6 }} lineClamp={1}>
+              {stage?.name}
+            </Text>
             {!hideExecutionActionButtons &&
               (!!pipelineExecutionDetail?.pipelineExecutionSummary?.allowStageExecutions &&
               isExecutionComplete(stage?.status as ExecutionStatus) ? (
@@ -249,6 +268,16 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
               })
             : null}
         </div>
+        {isStageRetried ? (
+          <Text
+            font={{ variation: FontVariation.BODY }}
+            icon="re-executed"
+            margin={{ top: 0, bottom: 0, left: 'large', right: 'large' }}
+            color={Color.GREY_600}
+          >
+            {getString('pipeline.stageExecutedBefore')}
+          </Text>
+        ) : null}
       </div>
 
       {shouldShowError ? (

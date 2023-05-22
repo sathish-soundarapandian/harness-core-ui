@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
 import ChangesSourceCard from '../ChangesSourceCard'
@@ -26,10 +25,13 @@ import { calculateChangePercentage } from '../ChangesSourceCard.utils'
 
 const monitoredServiceIdentifier = 'monitored_service_identifier'
 
+const WrapperComponent = (): JSX.Element => (
+  <TestWrapper defaultFeatureFlagValues={{ SRM_INTERNAL_CHANGE_SOURCE_CE: true }}>
+    <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
+  </TestWrapper>
+)
+
 describe('Test ChangeSourceCard', () => {
-  beforeAll(() => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
-  })
   test('should render with positive change', async () => {
     jest.spyOn(cvService, 'useGetMonitoredServiceChangeEventSummary').mockImplementation(
       () =>
@@ -40,11 +42,7 @@ describe('Test ChangeSourceCard', () => {
           loading: false
         } as any)
     )
-    const { container } = render(
-      <TestWrapper>
-        <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
-      </TestWrapper>
-    )
+    const { container } = render(<WrapperComponent />)
     expect(container.querySelectorAll('.iconContainer span[data-icon="main-caret-up"]').length).toEqual(5)
     container.querySelectorAll('.tickerValue[data-test="tickerValue"]').forEach((item, index) => {
       expect(item.textContent).toEqual(expectedPositiveTextContent[index])
@@ -62,11 +60,7 @@ describe('Test ChangeSourceCard', () => {
           loading: false
         } as any)
     )
-    const { container } = render(
-      <TestWrapper>
-        <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
-      </TestWrapper>
-    )
+    const { container } = render(<WrapperComponent />)
     expect(container.querySelectorAll('.iconContainer span[data-icon="main-caret-down"]').length).toEqual(5)
     container.querySelectorAll('.tickerValue[data-test="tickerValue"]').forEach((item, index) => {
       expect(item.textContent).toEqual(expectedNegativeTextContent[index])
@@ -84,11 +78,7 @@ describe('Test ChangeSourceCard', () => {
           loading: false
         } as any)
     )
-    const { container } = render(
-      <TestWrapper>
-        <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
-      </TestWrapper>
-    )
+    const { container } = render(<WrapperComponent />)
     expect(container.querySelectorAll('.iconContainer span[data-icon="main-caret-up"]').length).toEqual(5)
     container.querySelectorAll('.tickerValue[data-test="tickerValue"]').forEach((item, index) => {
       expect(item.textContent).toEqual(expectedAbove100PositiveTextContent[index])
@@ -106,13 +96,28 @@ describe('Test ChangeSourceCard', () => {
           loading: true
         } as any)
     )
-    const { container, getAllByTestId } = render(
-      <TestWrapper>
+    const { container, getAllByTestId } = render(<WrapperComponent />)
+    expect(getAllByTestId('loading-block')).toHaveLength(6)
+    expect(container).toMatchSnapshot()
+  })
+
+  test('validate loading with CE feature flag off', async () => {
+    jest.spyOn(cvService, 'useGetMonitoredServiceChangeEventSummary').mockImplementation(
+      () =>
+        ({
+          data: null,
+          refetch: jest.fn(),
+          error: null,
+          loading: true
+        } as any)
+    )
+
+    const { getAllByTestId } = render(
+      <TestWrapper defaultFeatureFlagValues={{ SRM_INTERNAL_CHANGE_SOURCE_CE: false }}>
         <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
       </TestWrapper>
     )
     expect(getAllByTestId('loading-block')).toHaveLength(5)
-    expect(container).toMatchSnapshot()
   })
 
   test('validate error state', async () => {
@@ -125,11 +130,7 @@ describe('Test ChangeSourceCard', () => {
           loading: false
         } as any)
     )
-    const { container, getByText } = render(
-      <TestWrapper>
-        <ChangesSourceCard monitoredServiceIdentifier={monitoredServiceIdentifier} startTime={0} endTime={0} />
-      </TestWrapper>
-    )
+    const { container, getByText } = render(<WrapperComponent />)
 
     expect(getByText('cv.monitoredServices.failedToFetchSummaryData')).toBeTruthy()
     expect(container).toMatchSnapshot()

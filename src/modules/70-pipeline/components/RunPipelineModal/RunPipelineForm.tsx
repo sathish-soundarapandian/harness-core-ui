@@ -451,7 +451,7 @@ function RunPipelineFormBasic({
 
   useEffect(() => {
     if (inputSetsError) {
-      showError(getRBACErrorMessage(inputSetsError))
+      showError(getRBACErrorMessage(inputSetsError, true))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputSetsError])
@@ -587,7 +587,7 @@ function RunPipelineFormBasic({
           }
         }
       } catch (error: any) {
-        showWarning(defaultTo(getRBACErrorMessage(error), getString('runPipelineForm.runPipelineFailed')))
+        showWarning(defaultTo(getRBACErrorMessage(error, true), getString('runPipelineForm.runPipelineFailed')))
       }
 
       return valuesPipeline as PipelineInfoConfig

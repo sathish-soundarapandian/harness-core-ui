@@ -32,7 +32,8 @@ import {
   getArtifactFormData,
   helperTextData,
   isFieldFixedAndNonEmpty,
-  shouldHideHeaderAndNavBtns
+  shouldHideHeaderAndNavBtns,
+  resetFieldValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
@@ -303,6 +304,10 @@ function FormComponent(
               expressions,
               allowableTypes
             }}
+            onChange={() => {
+              resetFieldValue(formik, 'spec.version')
+              resetFieldValue(formik, 'spec.digest')
+            }}
           />
           {getMultiTypeFromValue(formik.values.spec.package) === MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
@@ -325,6 +330,9 @@ function FormComponent(
             radioGroup={{ inline: true }}
             items={tagOptions}
             className={css.radioGroup}
+            onChange={() => {
+              resetFieldValue(formik, 'spec.digest')
+            }}
           />
         </div>
         {formik.values.versionType === 'value' ? (
@@ -352,6 +360,9 @@ function FormComponent(
                   items: getBuilds(),
                   allowCreatingNewItems: true,
                   usePortal: isTemplateContext
+                },
+                onChange: () => {
+                  resetFieldValue(formik, 'spec.digest')
                 },
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (

@@ -22,6 +22,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { PermissionRequest } from '@rbac/hooks/usePermission'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 
 interface ContextMenuProps {
   project: Project
@@ -37,8 +38,8 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { project, editProject, collaborators, setMenuOpen, openDialog } = props
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CET_ENABLED } = useFeatureFlags()
-  const { licenseInformation } = useLicenseStore()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CET_ENABLED } = useFeatureFlags()
+  const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
 
   const permissionRequest: Optional<PermissionRequest, 'permission'> = {
     resourceScope: {
@@ -187,7 +188,7 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
           onClick={handleCI}
         />
       ) : null}
-      {CFNG_ENABLED && project.modules?.includes(ModuleName.CF) ? (
+      {FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE && project.modules?.includes(ModuleName.CF) ? (
         <Menu.Item
           text={
             <Layout.Horizontal spacing="xsmall">
@@ -221,7 +222,8 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
         />
       ) : null}
 
-      {licenseInformation['STO']?.status === 'ACTIVE' && project.modules?.includes(ModuleName.STO) ? (
+      {licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE &&
+      project.modules?.includes(ModuleName.STO) ? (
         <Menu.Item
           text={
             <Layout.Horizontal spacing="xsmall">
@@ -233,7 +235,8 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
         />
       ) : null}
 
-      {licenseInformation['CHAOS']?.status === 'ACTIVE' && project.modules?.includes(ModuleName.CHAOS) ? (
+      {licenseInformation['CHAOS']?.status === LICENSE_STATE_VALUES.ACTIVE &&
+      project.modules?.includes(ModuleName.CHAOS) ? (
         <Menu.Item
           text={
             <Layout.Horizontal spacing="xsmall">

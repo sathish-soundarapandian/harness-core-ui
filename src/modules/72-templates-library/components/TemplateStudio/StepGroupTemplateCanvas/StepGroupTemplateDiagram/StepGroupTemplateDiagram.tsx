@@ -32,6 +32,7 @@ import { AddStageView } from '@pipeline/components/PipelineStages/views/AddStage
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import type { PipelineStageProps } from '@pipeline/components/PipelineStages/PipelineStage'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { TemplateContext } from '../../TemplateContext/TemplateContext'
 
 export function StepGroupTemplateDiagram(): React.ReactElement {
@@ -56,8 +57,8 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
   } = React.useContext(TemplateContext)
 
   const { getString } = useStrings()
-  const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
+  const { CING_ENABLED } = useFeatureFlags()
   const selectedStage = getStageFromPipeline(selectedStageId).stage
   const originalStage = getStageFromPipeline(selectedStageId, originalPipeline).stage
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
@@ -74,13 +75,16 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
     )
 
     tempStages.push(
-      stagesCollection.getStage(StageType.FEATURE, !!licenseInformation['CF'] && !!CFNG_ENABLED, getString)
+      stagesCollection.getStage(StageType.FEATURE, FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE, getString)
         ?.props as PipelineStageProps
     )
 
     tempStages.push(
-      stagesCollection.getStage(StageType.SECURITY, licenseInformation['STO']?.status === 'ACTIVE', getString)
-        ?.props as PipelineStageProps
+      stagesCollection.getStage(
+        StageType.SECURITY,
+        licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
+        getString
+      )?.props as PipelineStageProps
     )
     tempStages.push(stagesCollection.getStage(StageType.APPROVAL, true, getString)?.props as PipelineStageProps)
 

@@ -27,6 +27,7 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { getCDTrialDialog } from './CDTrial/useCDTrialModal'
 import { getCITrialDialog } from './CITrial/useCITrialModal'
 import { getPipelineStages } from './PipelineStagesUtils'
@@ -81,8 +82,8 @@ export default function PipelineStudio(): React.ReactElement {
       })
     )
   }
-  const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CFNG_ENABLED, IACM_ENABLED } = useFeatureFlags()
+  const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
+  const { CING_ENABLED, IACM_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
@@ -106,8 +107,8 @@ export default function PipelineStudio(): React.ReactElement {
           module,
           isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
           isCDEnabled: shouldVisible,
-          isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
-          isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
+          isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
+          isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
           isIACMEnabled: IACM_ENABLED,
           isApprovalStageEnabled: true,
           isPipelineChainingEnabled: true

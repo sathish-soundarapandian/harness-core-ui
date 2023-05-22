@@ -84,6 +84,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { CDActions, Category } from '@common/constants/TrackingConstants'
 import ConnectorsListView from './views/ConnectorsListView'
 import {
   createRequestBodyPayload,
@@ -405,6 +406,9 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
       setAppliedFilter(updatedFilter)
       updateQueryParams({ page: CONNECTORS_PAGE_INDEX })
     }
+    trackEvent(CDActions.ApplyAdvancedFilter, {
+      category: Category.CONNECTOR
+    })
     await refetchFilterList()
     setIsRefreshingFilters(false)
   }
@@ -448,6 +452,9 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
         setAppliedFilter({ ...unsavedFilter, filterProperties: filterFromFormData })
         updateQueryParams({ page: CONNECTORS_PAGE_INDEX })
         hideFilterDrawer()
+        trackEvent(CDActions.ApplyAdvancedFilter, {
+          category: Category.CONNECTOR
+        })
       } else {
         showError(getString('filters.invalidCriteria'))
       }
@@ -529,6 +536,9 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
       const selectedFilter = getFilterByIdentifier(option.value?.toString())
       setAppliedFilter(selectedFilter)
       updateQueryParams({ page: CONNECTORS_PAGE_INDEX })
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.CONNECTOR
+      })
     } else {
       reset()
     }

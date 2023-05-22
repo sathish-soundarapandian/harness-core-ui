@@ -16,6 +16,7 @@ import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
 import { getDateLabelToDisplayText } from '@common/components/TimeRangePicker/TimeRangePicker'
 import { useStrings } from 'framework/strings'
 import { numberFormatter } from '@common/utils/utils'
+import routes from '@common/RouteDefinitions'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
@@ -45,7 +46,12 @@ const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
       return (
         <EmptyStateExpandedView
           title={'common.moduleDetails.ce.expanded.title'}
-          footer={<DefaultFooter learnMoreLink="https://docs.harness.io/category/exgoemqhji-ccm" />}
+          footer={
+            <DefaultFooter
+              learnMoreLink="https://docs.harness.io/category/exgoemqhji-ccm"
+              getStartedLink={routes.toCE({ accountId })}
+            />
+          }
         />
       )
     }
@@ -99,6 +105,7 @@ const CEModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
             }).toUpperCase()
           : undefined
       }
+      yAxisLabel={getString('common.cloudSpends')}
     />
   )
 }

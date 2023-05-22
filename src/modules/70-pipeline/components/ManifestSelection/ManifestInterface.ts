@@ -43,6 +43,7 @@ export type ManifestTypes =
   | 'HelmRepoOverride'
   | 'AwsLambdaFunctionDefinition'
   | 'AwsLambdaFunctionAliasDefinition'
+  | 'AwsSamDirectory'
 
 export type PrimaryManifestType =
   | 'K8sManifest'

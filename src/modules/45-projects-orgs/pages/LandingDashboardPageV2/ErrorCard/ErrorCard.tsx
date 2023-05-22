@@ -37,9 +37,8 @@ const ErrorCard: React.FC<ErrorCardProps> = props => {
       return (
         <Layout.Vertical
           className={css.callout}
-          padding={{ top: 'medium', bottom: 'small', right: 'small', left: 'small' }}
-          margin={{ top: 'small' }}
-          flex
+          margin={{ top: 'medium', bottom: 'small' }}
+          flex={{ justifyContent: 'center' }}
         >
           <Icon name="warning-sign" color={Color.ORANGE_700} />
           <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.ORANGE_700} margin={{ top: 'medium' }}>

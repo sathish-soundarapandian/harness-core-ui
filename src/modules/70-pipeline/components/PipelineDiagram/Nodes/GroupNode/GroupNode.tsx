@@ -9,12 +9,15 @@ import React, { CSSProperties, useRef } from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
 import { Icon, IconName, Text, Layout, Container } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
+import { Popover, Position } from '@blueprintjs/core'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/exports'
+import { useStrings } from 'framework/strings'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
+import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import { NodeType, BaseReactComponentProps } from '../../types'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
@@ -46,6 +49,8 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
     DynamicPopoverHandlerBinding<{ nodesInfo: Node[]; isExecutionView: boolean }> | undefined
   >()
+  const { retriedHistoryInfo } = useExecutionContext()
+  const { getString } = useStrings()
   const canvasClickListener = React.useCallback((): void => dynamicPopoverHandler?.hide(), [dynamicPopoverHandler])
   const nodeRef = useRef<HTMLDivElement | null>(null)
   const nodesInfo = React.useMemo(() => {
@@ -154,12 +159,40 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
           {node.isTemplateNode && (
             <Icon name={'template-library'} size={6} className={groupnodecss.secondaryIcon} color={Color.PRIMARY_7} />
           )}
-          <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">
-            <Icon name={node.icon} />
-            <Text lineClamp={1} width={200} font={{ weight: 'semi-bold', size: 'small' }} color={Color.GREY_800}>
-              {node.name}
-            </Text>
-            {isExecutionView && <ExecutionStatusLabel status={node?.status as ExecutionStatus} />}
+          <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }} spacing="small">
+            <Layout.Horizontal spacing="small">
+              <Icon name={node.icon} />
+              <Text
+                lineClamp={2}
+                className={groupnodecss.groupNodeName}
+                font={{ weight: 'semi-bold', size: 'small' }}
+                color={Color.GREY_800}
+              >
+                {node.name}
+              </Text>
+            </Layout.Horizontal>
+            <Layout.Horizontal spacing="small">
+              {retriedHistoryInfo?.retriedStages?.includes(defaultTo(node?.identifier, '')) ? (
+                <Popover
+                  interactionKind="hover"
+                  popoverClassName={css.retriedPopoverStyle}
+                  position={Position.TOP_LEFT}
+                  modifiers={{ preventOverflow: { escapeWithReference: true } }}
+                  content={
+                    <Text
+                      font={{ variation: FontVariation.BODY }}
+                      className={css.retriedTextStyle}
+                      color={Color.GREY_200}
+                    >
+                      {getString('pipeline.stageExecutedBefore')}
+                    </Text>
+                  }
+                >
+                  <Icon name="re-executed" />
+                </Popover>
+              ) : null}
+              {isExecutionView && <ExecutionStatusLabel status={node?.status as ExecutionStatus} />}
+            </Layout.Horizontal>
           </Layout.Horizontal>
         </Container>
       )

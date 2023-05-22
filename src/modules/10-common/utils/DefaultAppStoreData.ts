@@ -38,8 +38,7 @@ export const defaultAppStoreValues: Omit<AppStoreContextProps, 'updateAppStore'>
   featureFlags: {
     CVNG_ENABLED: true,
     CING_ENABLED: true,
-    CENG_ENABLED: true,
-    CFNG_ENABLED: true
+    CENG_ENABLED: true
   },
   currentUserInfo: {
     uuid: 'dummyId',

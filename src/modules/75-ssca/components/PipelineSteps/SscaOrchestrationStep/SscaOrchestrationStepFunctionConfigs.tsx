@@ -27,16 +27,20 @@ export const transformValuesFieldsConfig = (stepType: StepType) => [
     type: TransformValuesTypes.List
   },
   {
+    name: 'spec.attestation.type',
+    type: TransformValuesTypes.Text
+  },
+  {
+    name: 'spec.attestation.spec.privateKey',
+    type: TransformValuesTypes.Text
+  },
+  {
+    name: 'spec.attestation.spec.password',
+    type: TransformValuesTypes.Text
+  },
+  {
     name: 'spec.source.type',
     type: TransformValuesTypes.List
-  },
-  {
-    name: 'spec.attestation.privateKey',
-    type: TransformValuesTypes.Text
-  },
-  {
-    name: 'timeout',
-    type: TransformValuesTypes.Text
   },
   {
     name: 'spec.source.spec.connector',
@@ -69,7 +73,11 @@ export const transformValuesFieldsConfig = (stepType: StepType) => [
           type: TransformValuesTypes.Text
         }
       ]
-    : [])
+    : []),
+  {
+    name: 'timeout',
+    type: TransformValuesTypes.Text
+  }
 ]
 
 export const editViewValidateFieldsConfig = (stepType: StepType) => [
@@ -104,9 +112,15 @@ export const editViewValidateFieldsConfig = (stepType: StepType) => [
     isRequired: true
   },
   {
-    name: 'spec.attestation.privateKey',
+    name: 'spec.attestation.spec.privateKey',
     type: ValidationFieldTypes.Text,
     label: 'connectors.serviceNow.privateKey',
+    isRequired: true
+  },
+  {
+    name: 'spec.attestation.spec.password',
+    type: ValidationFieldTypes.Text,
+    label: 'password',
     isRequired: true
   },
   {
@@ -182,9 +196,15 @@ export const getInputSetViewValidateFieldsConfig =
         isRequired
       },
       {
-        name: 'spec.attestation.privateKey',
+        name: 'spec.attestation.spec.privateKey',
         type: ValidationFieldTypes.Text,
         label: 'connectors.serviceNow.privateKey',
+        isRequired
+      },
+      {
+        name: 'spec.attestation.spec.password',
+        type: ValidationFieldTypes.Text,
+        label: 'password',
         isRequired
       },
       {

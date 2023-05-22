@@ -27,6 +27,7 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectListView.module.scss'
 
@@ -78,8 +79,8 @@ export const RenderColumnOrganization: Renderer<CellProps<ProjectAggregateDTO>> 
 }
 
 const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CET_ENABLED } = useFeatureFlags()
-  const { licenseInformation } = useLicenseStore()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CET_ENABLED } = useFeatureFlags()
+  const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const data = row.original
   const shouldShowModules = data.projectResponse.project.modules?.length
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
@@ -95,7 +96,7 @@ const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) 
       icons.push(<Icon name={getModuleIcon(ModuleName.CI)} size={20} key={ModuleName.CI} />)
     }
 
-    if (CFNG_ENABLED && modules?.includes(ModuleName.CF)) {
+    if (FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE && modules?.includes(ModuleName.CF)) {
       icons.push(<Icon name={getModuleIcon(ModuleName.CF)} size={20} key={ModuleName.CF} />)
     }
 
@@ -107,11 +108,11 @@ const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) 
       icons.push(<Icon name={getModuleIcon(ModuleName.CV)} size={20} key={ModuleName.CV} />)
     }
 
-    if (licenseInformation['STO']?.status === 'ACTIVE' && modules?.includes(ModuleName.STO)) {
+    if (licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE && modules?.includes(ModuleName.STO)) {
       icons.push(<Icon name={getModuleIcon(ModuleName.STO)} size={20} key={ModuleName.STO} />)
     }
 
-    if (licenseInformation['CHAOS']?.status === 'ACTIVE' && modules?.includes(ModuleName.CHAOS)) {
+    if (licenseInformation['CHAOS']?.status === LICENSE_STATE_VALUES.ACTIVE && modules?.includes(ModuleName.CHAOS)) {
       icons.push(<Icon name={getModuleIcon(ModuleName.CHAOS)} size={20} key={ModuleName.CHAOS} />)
     }
 

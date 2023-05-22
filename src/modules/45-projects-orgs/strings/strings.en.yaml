@@ -4,7 +4,6 @@ noCollaborators: No Collaborators
 moduleSuccess: '{{$.common.purpose.moduleSuccess}}'
 placeholder: '23'
 confirmDeleteTitle: Delete organization
-yesIamSure: Yes, I am very sure
 orgDeletedMessage: Organization '{{name}}' is deleted
 orgName: Organization Name
 purposeList:

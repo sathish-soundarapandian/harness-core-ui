@@ -290,6 +290,50 @@ exports[`DeployServiceDefinition Changing the deployment type when the stage con
                 value="WinRm"
               />
             </label>
+            <label
+              class="Thumbnail--squareCardContainer"
+            >
+              <div
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                tabindex="0"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="aws-asg"
+                >
+                  <svg
+                    fill="none"
+                    height="26"
+                    viewBox="0 0 33 33"
+                    width="26"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g
+                      clip-rule="evenodd"
+                      fill-rule="evenodd"
+                    >
+                      <path
+                        d="M10.038 8.518h2.184v1.187h-2.184zm5.89 21.986l-5.89-6.014v-1.188l5.89 5.879 5.892-5.879v1.188l-5.891 6.014zM21.82 8.518h-2.196v1.187h2.196zm-2.196 4.044v1.367l-2.504 2.575-.628-.645 1.284-1.352zm-7.402 0v1.367l2.512 2.575.63-.646zm13.265 9.165l-6.146-5.87v1.212l6.146 5.953zm2.59-2.903h-2.59v1.17h5.18v-1.17zm-15.418-2.968l-6.147 5.871v1.295l6.147-5.953zm-6.147 2.968H1.333v1.17h5.18v-1.17z"
+                        fill="#a15320"
+                      />
+                      <path
+                        d="M12.222 23.302h-2.184l5.89 5.878 5.892-5.878h-2.196v-4.224l-2.504-2.575-.628-.645 1.284-1.352 1.848-1.945V8.517h2.196l-5.891-6.014-5.891 6.014h2.184v4.044l3.142 3.297-.63.645-2.512 2.575zm13.265-1.575l-6.146-5.871 6.146-5.871v2.885h5.18v5.953h-5.18zm-12.828-5.871l-6.147 5.87v-2.903H1.333V12.87h5.18V9.985l6.146 5.87z"
+                        fill="#f48433"
+                      />
+                    </g>
+                  </svg>
+                </span>
+              </div>
+              <p
+                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+              >
+                pipeline.serviceDeploymentTypes.asg
+              </p>
+              <input
+                type="checkbox"
+                value="Asg"
+              />
+            </label>
           </div>
         </div>
       </div>
@@ -634,6 +678,50 @@ exports[`DeployServiceDefinition checking on the gitops with other stage data sh
                 value="WinRm"
               />
             </label>
+            <label
+              class="Thumbnail--squareCardContainer"
+            >
+              <div
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                tabindex="0"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="aws-asg"
+                >
+                  <svg
+                    fill="none"
+                    height="26"
+                    viewBox="0 0 33 33"
+                    width="26"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g
+                      clip-rule="evenodd"
+                      fill-rule="evenodd"
+                    >
+                      <path
+                        d="M10.038 8.518h2.184v1.187h-2.184zm5.89 21.986l-5.89-6.014v-1.188l5.89 5.879 5.892-5.879v1.188l-5.891 6.014zM21.82 8.518h-2.196v1.187h2.196zm-2.196 4.044v1.367l-2.504 2.575-.628-.645 1.284-1.352zm-7.402 0v1.367l2.512 2.575.63-.646zm13.265 9.165l-6.146-5.87v1.212l6.146 5.953zm2.59-2.903h-2.59v1.17h5.18v-1.17zm-15.418-2.968l-6.147 5.871v1.295l6.147-5.953zm-6.147 2.968H1.333v1.17h5.18v-1.17z"
+                        fill="#a15320"
+                      />
+                      <path
+                        d="M12.222 23.302h-2.184l5.89 5.878 5.892-5.878h-2.196v-4.224l-2.504-2.575-.628-.645 1.284-1.352 1.848-1.945V8.517h2.196l-5.891-6.014-5.891 6.014h2.184v4.044l3.142 3.297-.63.645-2.512 2.575zm13.265-1.575l-6.146-5.871 6.146-5.871v2.885h5.18v5.953h-5.18zm-12.828-5.871l-6.147 5.87v-2.903H1.333V12.87h5.18V9.985l6.146 5.87z"
+                        fill="#f48433"
+                      />
+                    </g>
+                  </svg>
+                </span>
+              </div>
+              <p
+                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+              >
+                pipeline.serviceDeploymentTypes.asg
+              </p>
+              <input
+                type="checkbox"
+                value="Asg"
+              />
+            </label>
           </div>
         </div>
       </div>
@@ -976,6 +1064,50 @@ exports[`DeployServiceDefinition should render DeployServiceDefinition and switc
               <input
                 type="checkbox"
                 value="WinRm"
+              />
+            </label>
+            <label
+              class="Thumbnail--squareCardContainer"
+            >
+              <div
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                tabindex="0"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="aws-asg"
+                >
+                  <svg
+                    fill="none"
+                    height="26"
+                    viewBox="0 0 33 33"
+                    width="26"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g
+                      clip-rule="evenodd"
+                      fill-rule="evenodd"
+                    >
+                      <path
+                        d="M10.038 8.518h2.184v1.187h-2.184zm5.89 21.986l-5.89-6.014v-1.188l5.89 5.879 5.892-5.879v1.188l-5.891 6.014zM21.82 8.518h-2.196v1.187h2.196zm-2.196 4.044v1.367l-2.504 2.575-.628-.645 1.284-1.352zm-7.402 0v1.367l2.512 2.575.63-.646zm13.265 9.165l-6.146-5.87v1.212l6.146 5.953zm2.59-2.903h-2.59v1.17h5.18v-1.17zm-15.418-2.968l-6.147 5.871v1.295l6.147-5.953zm-6.147 2.968H1.333v1.17h5.18v-1.17z"
+                        fill="#a15320"
+                      />
+                      <path
+                        d="M12.222 23.302h-2.184l5.89 5.878 5.892-5.878h-2.196v-4.224l-2.504-2.575-.628-.645 1.284-1.352 1.848-1.945V8.517h2.196l-5.891-6.014-5.891 6.014h2.184v4.044l3.142 3.297-.63.645-2.512 2.575zm13.265-1.575l-6.146-5.871 6.146-5.871v2.885h5.18v5.953h-5.18zm-12.828-5.871l-6.147 5.87v-2.903H1.333V12.87h5.18V9.985l6.146 5.87z"
+                        fill="#f48433"
+                      />
+                    </g>
+                  </svg>
+                </span>
+              </div>
+              <p
+                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+              >
+                pipeline.serviceDeploymentTypes.asg
+              </p>
+              <input
+                type="checkbox"
+                value="Asg"
               />
             </label>
           </div>

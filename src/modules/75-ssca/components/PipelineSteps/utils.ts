@@ -27,6 +27,10 @@ export const commonDefaultSpecValues: SscaOrchestrationStepData['spec'] = {
     }
   },
   attestation: {
-    privateKey: ''
+    type: 'cosign',
+    spec: {
+      privateKey: '',
+      password: ''
+    }
   }
 }

@@ -41,6 +41,7 @@ import {
 } from 'services/cd-ng'
 import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   packageTypeItems,
   ExecutionType,
@@ -119,7 +120,7 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
   const [isVerifyEnabled, setIsVerifyEnabled] = React.useState(false)
   const isWinRm = isWinRmDeploymentType(serviceDefinitionType())
   const { accountId } = useParams<AccountPathProps>()
-
+  const { getRBACErrorMessage } = useRBACError()
   const packageTypes = React.useMemo(() => {
     return isWinRm ? packageTypeItemsWinrm : packageTypeItems
   }, [isWinRm])
@@ -201,7 +202,7 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
         }
       }
     } catch (e) {
-      showError(e.data?.message)
+      showError(getRBACErrorMessage(e))
     }
   }
 

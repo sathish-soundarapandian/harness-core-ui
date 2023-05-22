@@ -25,18 +25,12 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import IDPAdminSideNav from './components/IDPAdminSideNav/IDPAdminSideNav'
 import type { IDPCustomMicroFrontendProps } from './interfaces/IDPCustomMicroFrontendProps.types'
 import './idp.module.scss'
 
-RbacFactory.registerResourceTypeHandler(ResourceType.IDP_SETTINGS, {
-  icon: 'idp',
-  label: 'common.purpose.idp.name',
-  labelSingular: 'common.purpose.idp.name',
-  permissionLabels: {
-    [PermissionIdentifier.IDP_SETTINGS_MANAGE]: <String stringID="rbac.permissionLabels.manage" />
-  }
-})
 // eslint-disable-next-line import/no-unresolved
 const IDPMicroFrontend = React.lazy(() => import('idp/MicroFrontendApp'))
 
@@ -72,27 +66,44 @@ function RedirectToIDPDefaultPath(): React.ReactElement {
   return <></>
 }
 
-export default (
-  <>
-    <RouteWithLayout path={routes.toIDPDefaultPath({ ...accountPathProps })} layout={MinimalLayout}>
-      <RedirectToIDPDefaultPath />
-    </RouteWithLayout>
+function IDPRoutes(): React.ReactElement {
+  const isIDPEnabled = useFeatureFlag(FeatureFlag.IDP_ENABLED)
 
-    <RouteWithLayout path={routes.toIDP({ ...accountPathProps })} layout={MinimalLayout}>
-      <ChildAppMounter ChildApp={IDPMicroFrontend} />
-    </RouteWithLayout>
+  if (isIDPEnabled) {
+    RbacFactory.registerResourceTypeHandler(ResourceType.IDP_SETTINGS, {
+      icon: 'idp',
+      label: 'common.purpose.idp.name',
+      labelSingular: 'common.purpose.idp.name',
+      permissionLabels: {
+        [PermissionIdentifier.IDP_SETTINGS_MANAGE]: <String stringID="rbac.permissionLabels.manage" />
+      }
+    })
+  }
 
-    <RouteWithLayout
-      path={[routes.toIDPAdmin({ ...accountPathProps })]}
-      pageName={PAGE_NAME.IDPAdminPage}
-      sidebarProps={IDPAdminSideNavProps}
-    >
-      <ChildAppMounter<IDPCustomMicroFrontendProps>
-        ChildApp={IDPAdminMicroFrontend}
-        customComponents={{ ConnectorReferenceField, MultiTypeSecretInput }}
-        customHooks={{ useQueryParams, useUpdateQueryParams }}
-        idpServices={{ useGetUserGroupAggregateList }}
-      />
-    </RouteWithLayout>
-  </>
-)
+  return (
+    <>
+      <RouteWithLayout path={routes.toIDPDefaultPath({ ...accountPathProps })} layout={MinimalLayout}>
+        <RedirectToIDPDefaultPath />
+      </RouteWithLayout>
+
+      <RouteWithLayout path={routes.toIDP({ ...accountPathProps })} layout={MinimalLayout}>
+        <ChildAppMounter ChildApp={IDPMicroFrontend} />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        path={[routes.toIDPAdmin({ ...accountPathProps })]}
+        pageName={PAGE_NAME.IDPAdminPage}
+        sidebarProps={IDPAdminSideNavProps}
+      >
+        <ChildAppMounter<IDPCustomMicroFrontendProps>
+          ChildApp={IDPAdminMicroFrontend}
+          customComponents={{ ConnectorReferenceField, MultiTypeSecretInput }}
+          customHooks={{ useQueryParams, useUpdateQueryParams }}
+          idpServices={{ useGetUserGroupAggregateList }}
+        />
+      </RouteWithLayout>
+    </>
+  )
+}
+
+export default IDPRoutes

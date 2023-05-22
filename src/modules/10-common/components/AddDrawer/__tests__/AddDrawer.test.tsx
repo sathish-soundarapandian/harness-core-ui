@@ -108,7 +108,7 @@ describe('AddDrawer Triggers tests', () => {
       }
       fireEvent.click(openButton)
       const searchButton = document.body.querySelector('[class*="ExpandingSearchInput"]')
-      expect(queryByText(document.body, 'BitBucket')).not.toBeNull()
+      expect(queryByText(document.body, 'Bitbucket')).not.toBeNull()
       await waitFor(() => expect(searchButton).not.toBeNull())
       if (!searchButton) {
         throw Error('no search button found')
@@ -119,7 +119,7 @@ describe('AddDrawer Triggers tests', () => {
         throw Error('no search input')
       }
       fireEvent.change(searchButtonInput, { target: { value: 'GitHub' } })
-      await waitFor(() => expect(queryByText(document.body, 'BitBucket')).toBeNull())
+      await waitFor(() => expect(queryByText(document.body, 'Bitbucket')).toBeNull())
       const triggerCards = document.body.querySelectorAll('[class*="stepsRenderer"] [class*="card"]')
 
       expect(triggerCards.length).toEqual(1)
@@ -137,9 +137,9 @@ describe('AddDrawer Triggers tests', () => {
       }
       fireEvent.click(openButton)
       await waitFor(() => expect(document.body.querySelector(`.stepPalette`)).not.toBeNull())
-      const bitBucketCard = queryByText(document.body, 'BitBucket')
+      const bitBucketCard = queryByText(document.body, 'Bitbucket')
       if (!bitBucketCard) {
-        throw Error('no BitBucket card')
+        throw Error('no Bitbucket card')
       }
 
       fireEvent.click(bitBucketCard)

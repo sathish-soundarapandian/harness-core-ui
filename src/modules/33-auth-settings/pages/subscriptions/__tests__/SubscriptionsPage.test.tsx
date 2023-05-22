@@ -135,7 +135,6 @@ const featureFlags = {
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
-  CFNG_ENABLED: true,
   CET_ENABLED: true
 }
 

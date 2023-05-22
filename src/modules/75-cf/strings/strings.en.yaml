@@ -537,6 +537,7 @@ planEnforcement:
     approachingLimit: 'You have used {{ clientMauUsagePercentage }}% of your Monthly Active Users (MAU) subscription limit.'
     upgradeRequired: 'You have exceeded your Monthly Active Users (MAU) subscription limit.'
 onboarding:
+  typeNewFeatureName: Type the name of a new flag
   multiStep:
     createEnv: Create an Environment and SDK key
     validate: Validate

@@ -33,7 +33,7 @@ import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/Abstract
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { LoopingStrategyPanel } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategyPanel'
 import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
-import type { StepElementConfig, StepGroupElementConfigV2 } from 'services/cd-ng'
+import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { PolicyConfig, TemplateStepNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -62,7 +62,7 @@ export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTempla
   deploymentType?: string
 }
 
-type Step = StepElementConfig | StepGroupElementConfigV2
+type Step = StepElementConfig | StepGroupElementConfig
 
 export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: StepFormikFowardRef): React.ReactElement {
   const { step, onChange } = props
@@ -88,7 +88,7 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
   const delegateSelectors =
     ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.spec?.delegateSelectors ||
     (step as StepElementConfig)?.spec?.delegateSelectors ||
-    (step as StepGroupElementConfigV2)?.delegateSelectors
+    (step as StepGroupElementConfig)?.delegateSelectors
 
   const policySets =
     ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.enforce?.policySets ||

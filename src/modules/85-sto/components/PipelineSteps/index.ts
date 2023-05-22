@@ -30,6 +30,8 @@ import { ProwlerStep } from './ProwlerStep/ProwlerStep'
 import { MetasploitStep } from './MetasploitStep/MetasploitStep'
 import { BrakemanStep } from './BrakemanStep/BrakemanStep'
 import { BurpStep } from './BurpStep/BurpStep'
+import { FossaStep } from './FossaStep/FossaStep'
+import { SemgrepStep } from './SemgrepStep/SemgrepStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new AquatrivyStep())
@@ -45,6 +47,8 @@ factory.registerStep(new ZapStep())
 factory.registerStep(new PrismaCloudStep())
 factory.registerStep(new CheckmarxStep())
 factory.registerStep(new MendStep())
+factory.registerStep(new FossaStep())
+factory.registerStep(new SemgrepStep())
 factory.registerStep(new CodeqlStep())
 factory.registerStep(new CustomIngestionStep())
 factory.registerStep(new AWSSecurityHubStep())

@@ -176,7 +176,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   } = useMutateAsGet(useGetLastSuccessfulBuildForDockerWithYaml, {
     body: {
       tag: tagValue,
-      pipelineRuntimeYaml
+      runtimeInputYaml: pipelineRuntimeYaml
     },
     requestOptions: {
       headers: {

@@ -22,6 +22,7 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ImagePathTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { useMutateAsGet } from '@common/hooks'
+import { usePrevious } from '@common/hooks/usePrevious'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -168,6 +169,14 @@ export default function ServerlessArtifactoryRepository(
       setConnectorRepos(map(artifactRepoData.data?.repositories, repo => ({ label: repo, value: repo })))
     }
   }, [artifactRepoData, connectorRef])
+
+  const previousRepoFormat = usePrevious(repoFormat)
+
+  useEffect(() => {
+    if (previousRepoFormat && repoFormat && repoFormat !== previousRepoFormat) {
+      setConnectorRepos([])
+    }
+  }, [repoFormat, previousRepoFormat])
 
   const hasRepositoryData = () => {
     if (

@@ -323,6 +323,7 @@ export const errorStatusList = [
 const TriggerCategoryToLabelMap: Record<Required<TriggerCatalogItem>['category'], StringKeys> = {
   Webhook: 'execution.triggerType.WEBHOOK',
   Artifact: 'pipeline.artifactTriggerConfigPanel.artifact',
+  MultiArtifact: 'pipeline.artifactTriggerConfigPanel.artifact',
   Manifest: 'manifestsText',
   Scheduled: 'triggers.scheduledLabel'
 }
@@ -346,6 +347,11 @@ const TriggerCatalogTypeToLabelMap: Record<TriggerCatalogType, StringKeys> = {
   GithubPackageRegistry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GithubPackageRegistry],
   Nexus2Registry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus2Registry],
   Nexus3Registry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry],
+  Jenkins: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins],
+  AzureArtifacts: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AzureArtifacts],
+  AmazonMachineImage: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonMachineImage],
+  GoogleCloudStorage: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleCloudStorage],
+  Bamboo: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Bamboo],
   HelmChart: manifestTypeLabels.HelmChart,
   Cron: 'triggers.cronLabel'
 }
@@ -367,6 +373,11 @@ const TriggerCatalogTypeToIconMap: Record<TriggerCatalogType, IconName> = {
   CustomArtifact: ArtifactIconByType.CustomArtifact,
   Nexus2Registry: ArtifactIconByType.Nexus2Registry,
   Nexus3Registry: ArtifactIconByType.Nexus3Registry,
+  Jenkins: ArtifactIconByType.Jenkins,
+  AzureArtifacts: ArtifactIconByType.AzureArtifacts,
+  AmazonMachineImage: ArtifactIconByType.AmazonMachineImage,
+  GoogleCloudStorage: ArtifactIconByType.GoogleCloudStorage,
+  Bamboo: ArtifactIconByType.Bamboo,
   HelmChart: manifestTypeIcons.HelmChart,
   Cron: TriggerTypeIcons.SCHEDULE
 }

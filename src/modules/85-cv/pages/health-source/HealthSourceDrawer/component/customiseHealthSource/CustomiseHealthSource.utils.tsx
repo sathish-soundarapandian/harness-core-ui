@@ -58,6 +58,8 @@ export const LoadSourceByType = ({
 
   const isSignalFXEnabled = useFeatureFlag(FeatureFlag.SRM_SPLUNK_SIGNALFX)
 
+  const isLokiEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_GRAFANA_LOKI_LOGS)
+
   const selectedProduct = data?.product?.value || data?.existingMetricDetails?.type
   const productInfo = getSelectedProductInfo(selectedProduct)
   const healthSourceConfig = healthSourcesConfig[productInfo]
@@ -174,6 +176,22 @@ export const LoadSourceByType = ({
     case Connectors.SignalFX:
     case HealthSourceTypes.SplunkSignalFXMetrics: {
       if (!isSignalFXEnabled) {
+        return null
+      }
+      return (
+        <CommonHealthSourceContainer
+          data={data}
+          healthSourceConfig={healthSourceConfig}
+          isTemplate={isTemplate}
+          expressions={expressions}
+          onSubmit={onSubmit}
+        />
+      )
+    }
+
+    case HealthSourceTypes.GrafanaLoki:
+    case HealthSourceTypes.GrafanaLokiLogs: {
+      if (!isLokiEnabled) {
         return null
       }
       return (

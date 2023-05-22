@@ -253,7 +253,7 @@ export const getConnectorIconByType = (type: string): IconName => {
     case Connectors.AZURE_REPO:
       return 'service-azure'
     case Connectors.AZURE_ARTIFACTS:
-      return 'service-azure-artifact-connector'
+      return 'service-azure-artifacts'
     case Connectors.DATADOG:
       return 'service-datadog'
     case Connectors.AZURE_KEY_VAULT:
@@ -288,6 +288,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'tas'
     case Connectors.TERRAFORM_CLOUD:
       return 'terraform-cloud'
+    case 'GrafanaLoki':
+      return 'service-grafana-loki'
     default:
       return 'placeholder'
   }

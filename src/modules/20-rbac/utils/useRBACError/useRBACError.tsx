@@ -72,7 +72,7 @@ const useRBACError = (): RbacErrorReturn => {
 
   const getRBACErrorMessage = useCallback(
     (error: RBACError, allowMultiple?: boolean): React.ReactElement | string => {
-      const err = error?.data
+      const err = error?.data || error
       if (
         err &&
         (err as AccessControlCheckError).code === 'NG_ACCESS_DENIED' &&

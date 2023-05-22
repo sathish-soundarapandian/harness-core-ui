@@ -232,6 +232,7 @@ export const AwsLambdaServiceSpecEditable: React.FC<AwsLambdaServiceSpecEditable
             {!functionDefinitionManifests.length && (
               <AddManifestSteps
                 selectedDeploymentType={selectedDeploymentType}
+                manifestType={ManifestDataType.AwsLambdaFunctionDefinition}
                 manifestFileName={functionDefinitionFileName}
                 suggestedManifestYaml={suggestedFunctionDefinitionYaml}
               />
@@ -276,6 +277,7 @@ export const AwsLambdaServiceSpecEditable: React.FC<AwsLambdaServiceSpecEditable
             {!functionAliasDefinitionManifests.length && (
               <AddManifestSteps
                 selectedDeploymentType={selectedDeploymentType}
+                manifestType={ManifestDataType.AwsLambdaFunctionAliasDefinition}
                 manifestFileName={functionAliasDefinitionFileName}
                 suggestedManifestYaml={suggestedFunctionAliasDefinitionYaml}
               />

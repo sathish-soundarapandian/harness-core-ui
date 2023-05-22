@@ -10,15 +10,18 @@ declare const styles: {
   readonly card: string
   readonly cardBtns: string
   readonly cardSection: string
+  readonly cardStyle: string
   readonly content: string
   readonly crossIcon: string
   readonly executionDetail: string
   readonly hoverCard: string
   readonly modalContent: string
+  readonly pipelineRunSeq: string
   readonly retryHeaderSection: string
   readonly retryHistoryBtn: string
   readonly retryModalHeader: string
   readonly retryPopover: string
+  readonly selected: string
   readonly timeAgo: string
   readonly timerIcon: string
   readonly viewLatest: string

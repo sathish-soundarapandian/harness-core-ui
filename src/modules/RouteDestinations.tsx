@@ -43,6 +43,7 @@ import CODERouteDestinations from '@code/RouteDestinations'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import ETRoutes from '@et/RouteDestinations'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
@@ -55,7 +56,6 @@ export default function RouteDestinations(): React.ReactElement {
     CVNG_ENABLED,
     CING_ENABLED,
     CENG_ENABLED,
-    CFNG_ENABLED,
     CODE_ENABLED,
     IACM_ENABLED,
     SSCA_ENABLED,
@@ -66,9 +66,11 @@ export default function RouteDestinations(): React.ReactElement {
   const { licenseInformation } = useLicenseStore()
 
   const isCVModuleEnabled =
-    licenseInformation[ModuleName.CV]?.status === 'ACTIVE' ||
-    licenseInformation[ModuleName.CD]?.status === 'ACTIVE' ||
+    licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE ||
+    licenseInformation[ModuleName.CD]?.status === LICENSE_STATE_VALUES.ACTIVE ||
     CVNG_ENABLED
+
+  const isFFEnabled = licenseInformation[ModuleName.CF]?.status === LICENSE_STATE_VALUES.ACTIVE
 
   return (
     <Switch>
@@ -92,7 +94,7 @@ export default function RouteDestinations(): React.ReactElement {
       {CDRoutes.props.children}
       {isCVModuleEnabled ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
-      {IDP_ENABLED ? IDPRoutes.props.children : null}
+      {IDP_ENABLED ? IDPRoutes().props.children : null}
       <Route path="/account/:accountId/:module(sto)">
         <STORoutes />
       </Route>
@@ -105,7 +107,7 @@ export default function RouteDestinations(): React.ReactElement {
         </Route>
       ) : null}
       {CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children}
-      {CFNG_ENABLED ? CFRoutes({})?.props.children : null}
+      {isFFEnabled ? CFRoutes({})?.props.children : null}
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}
       {CET_ENABLED ? ETRoutes({})?.props.children : null}
