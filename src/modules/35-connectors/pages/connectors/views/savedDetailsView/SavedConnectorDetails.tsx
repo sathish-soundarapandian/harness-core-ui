@@ -373,12 +373,20 @@ const getBambooSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowI
 }
 
 const getGcpSMSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
-  return [
-    {
+  const returnSchema: Array<ActivityDetailsRowInterface> = []
+  if (connector?.spec?.credentialsRef) {
+    returnSchema.push({
       label: 'connectors.gcpSecretManager.gcpSMSecretFile',
       value: connector?.spec?.credentialsRef
-    }
-  ]
+    })
+  }
+  if (connector?.spec?.assumeCredentialsOnDelegate) {
+    returnSchema.push({
+      label: 'connectionMode',
+      value: DelegateTypes.DELEGATE_IN_CLUSTER
+    })
+  }
+  return returnSchema
 }
 
 const getSpotSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {

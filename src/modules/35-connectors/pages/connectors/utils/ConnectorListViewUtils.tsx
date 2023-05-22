@@ -141,11 +141,18 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
       return getAWSDisplaySummary(connector)
     case Connectors.GCP:
       return getGCPDisplaySummary(connector)
-    case Connectors.GcpSecretManager:
-      return getConnectorDisplaySummaryLabel(
-        'connectors.gcpSecretManager.gcpCredentialsFile',
-        linkAsTextRenderer(connector?.spec?.credentialsRef)
-      )
+    case Connectors.GcpSecretManager: {
+      if (connector?.spec?.credentialsRef) {
+        return getConnectorDisplaySummaryLabel(
+          'connectors.gcpSecretManager.gcpCredentialsFile',
+          linkAsTextRenderer(connector?.spec?.credentialsRef)
+        )
+      } else if (connector?.spec?.assumeCredentialsOnDelegate) {
+        return getConnectorDisplaySummaryLabel('connectionMode', linkAsTextRenderer(DelegateTypes.DELEGATE_IN_CLUSTER))
+      } else {
+        return ''
+      }
+    }
     case Connectors.NEW_RELIC:
     case Connectors.DATADOG:
       return getConnectorDisplaySummaryLabel('UrlLabel', linkAsTextRenderer(connector?.spec?.url))
