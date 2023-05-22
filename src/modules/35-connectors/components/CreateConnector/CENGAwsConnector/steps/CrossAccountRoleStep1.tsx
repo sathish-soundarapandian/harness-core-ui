@@ -336,7 +336,7 @@ const CrossAccountRoleStep1: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
 
 export default CrossAccountRoleStep1
 
-const FeatureCard: React.FC<{
+export const FeatureCard: React.FC<{
   feature: CardData
   isSelected: boolean
   isDefault: boolean
@@ -363,7 +363,7 @@ const FeatureCard: React.FC<{
   )
 }
 
-const FeatureDetails: React.FC<{ feature: CardData }> = ({ feature }) => {
+export const FeatureDetails: React.FC<{ feature: CardData }> = ({ feature }) => {
   const { getString } = useStrings()
 
   return (

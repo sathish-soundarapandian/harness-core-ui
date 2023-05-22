@@ -19,10 +19,12 @@ declare const styles: {
   readonly createNewExportBtn: string
   readonly dataFields: string
   readonly editOpen: string
+  readonly emptyState: string
   readonly existingBeTable: string
   readonly existingReportsWrapper: string
   readonly extension: string
   readonly featureCard: string
+  readonly featureDetailsCtn: string
   readonly features: string
   readonly footer: string
   readonly grid: string

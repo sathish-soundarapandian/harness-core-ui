@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useMemo } from 'react'
 import {
   Button,
   Formik,
@@ -13,8 +13,6 @@ import {
   Layout,
   ModalErrorHandler,
   StepProps,
-  CardSelect,
-  Icon,
   IconName,
   Text,
   Container
@@ -27,6 +25,14 @@ import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useSte
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
+import {
+  FeatureCard,
+  FeatureDetails,
+  Features
+} from '@connectors/components/CreateConnector/CENGAwsConnector/steps/CrossAccountRoleStep1'
+import EmptyState from '@connectors/components/CreateConnector/CENGAwsConnector/images/empty-state.svg'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { CEAzureDTO } from '../Overview/AzureConnectorOverview'
 import css from '../../CreateCeAzureConnector_new.module.scss'
 
@@ -37,81 +43,151 @@ interface CloudFeatures {
 
 interface ICard {
   icon: IconName
-  value: 'VISIBILITY' | 'BILLING' | 'OPTIMIZATION' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR' | 'CLUSTER_ORCHESTRATOR'
+  text: string
+  value: Features
+  heading: string
+  desc: React.ReactNode
   prefix: string
-  title: string
   features: string[]
   footer: React.ReactNode
 }
 
 const useSelectedCards = (featuresEnabled: ICard['value'][]) => {
   const { getString } = useStrings()
-  const FeatureCards = useRef<ICard[]>([
-    {
-      prefix: getString('common.azure'),
-      title: getString('connectors.costVisibility'),
-      value: 'BILLING',
-      icon: 'ce-visibility',
-      features: [
-        getString('connectors.ceAzure.chooseRequirements.billing.feat1'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
-        getString('connectors.ceAzure.chooseRequirements.billing.feat5')
-      ],
-      footer: getString('connectors.ceAzure.chooseRequirements.billing.footer')
-    },
-    {
-      prefix: getString('common.azure'),
-      title: getString('connectors.ceAzure.chooseRequirements.visibility.heading'),
-      value: 'VISIBILITY',
-      icon: 'ce-visibility',
-      features: [
-        getString('connectors.ceAzure.chooseRequirements.visibility.feat1'),
-        getString('connectors.ceAzure.chooseRequirements.visibility.feat2')
-      ],
-      footer: (
-        <>
-          {getString('connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
-          <a
-            href="https://docs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_4_create_service_principal_and_assign_permissions"
-            target="_blank"
-            rel="noreferrer"
-            onClick={e => e.stopPropagation()}
-          >
-            {getString('permissions').toLowerCase()}
-          </a>{' '}
-          {getString('connectors.ceAzure.chooseRequirements.optimization.footer2')}
-        </>
-      )
-    },
-    {
-      prefix: getString('connectors.ceAzure.chooseRequirements.optimization.prefix'),
-      title: getString('common.ce.autostopping'),
-      value: 'OPTIMIZATION',
-      icon: 'nav-settings',
-      features: [
-        getString('connectors.ceAzure.chooseRequirements.optimization.feat1'),
-        getString('connectors.ceAzure.chooseRequirements.optimization.feat2'),
-        getString('connectors.ceAzure.chooseRequirements.optimization.feat3'),
-        getString('connectors.ceAzure.chooseRequirements.optimization.feat4')
-      ],
-      footer: (
-        <>
-          {getString('connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
-          <a
-            href="https://docs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_4_create_service_principal_and_assign_permissions"
-            target="_blank"
-            rel="noreferrer"
-            onClick={e => e.stopPropagation()}
-          >
-            {getString('permissions').toLowerCase()}
-          </a>{' '}
-          {getString('connectors.ceAzure.chooseRequirements.optimization.footer2')}
-        </>
-      )
+  const isGovernanceEnabled = useFeatureFlag(FeatureFlag.CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI)
+
+  const FeatureCards = useMemo(() => {
+    const cards = [
+      {
+        prefix: getString('common.azure'),
+        text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        heading: getString('connectors.costVisibility'),
+        desc: <Text font={{ variation: FontVariation.SMALL_BOLD }}>{getString('connectors.costVisibility')}</Text>,
+        value: Features.BILLING,
+        icon: 'ce-visibility',
+        features: [
+          getString('connectors.ceAzure.chooseRequirements.billing.feat1'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat2'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat3'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat4'),
+          getString('connectors.ceAzure.chooseRequirements.billing.feat5')
+        ],
+        footer: (
+          <>
+            <Text inline font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
+              {getString('common.default')}
+            </Text>{' '}
+            {getString('connectors.ceAzure.chooseRequirements.billing.footer')}{' '}
+            <Text inline font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_600}>
+              {getString('connectors.ceAws.crossAccountRoleStep1.cards.costVisibility.footer3')}
+            </Text>
+          </>
+        )
+      },
+      {
+        prefix: getString('common.azure'),
+        text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        heading: getString('connectors.ceAws.crossAccountRoleStep1.visible.heading'),
+        desc: (
+          <>
+            {getString('common.resourceLabel')}{' '}
+            <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+              {getString('connectors.ceAzure.chooseRequirements.visibility.heading')}
+            </Text>
+          </>
+        ),
+        value: Features.VISIBILITY,
+        icon: 'ce-visibility',
+        features: [
+          getString('connectors.ceAzure.chooseRequirements.visibility.feat1'),
+          getString('connectors.ceAzure.chooseRequirements.visibility.feat2')
+        ],
+        footer: (
+          <>
+            {getString('connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
+            <a
+              href="https://docs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_4_create_service_principal_and_assign_permissions"
+              target="_blank"
+              rel="noreferrer"
+              onClick={e => e.stopPropagation()}
+            >
+              {getString('permissions').toLowerCase()}
+            </a>{' '}
+            {getString('connectors.ceAzure.chooseRequirements.optimization.footer2')}
+          </>
+        )
+      },
+      {
+        prefix: getString('connectors.ceAzure.chooseRequirements.optimization.prefix'),
+        text: getString('connectors.ceAzure.chooseRequirements.optimizationCardDesc'),
+        heading: getString('common.ce.autostopping'),
+        desc: (
+          <>
+            {getString('connectors.ceAws.crossAccountRoleStep1.cards.autoStopping.prefix')}{' '}
+            <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+              {getString('common.ce.autostopping')}
+            </Text>
+          </>
+        ),
+        value: Features.OPTIMIZATION,
+        icon: 'nav-settings',
+        features: [
+          getString('connectors.ceAzure.chooseRequirements.optimization.feat1'),
+          getString('connectors.ceAzure.chooseRequirements.optimization.feat2'),
+          getString('connectors.ceAzure.chooseRequirements.optimization.feat3'),
+          getString('connectors.ceAzure.chooseRequirements.optimization.feat4')
+        ],
+        footer: (
+          <>
+            {getString('connectors.ceAzure.chooseRequirements.optimization.footer1')}{' '}
+            <a
+              href="https://docs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_4_create_service_principal_and_assign_permissions"
+              target="_blank"
+              rel="noreferrer"
+              onClick={e => e.stopPropagation()}
+            >
+              {getString('connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
+            </a>{' '}
+            {getString('connectors.ceAzure.chooseRequirements.optimization.footer2')}
+          </>
+        )
+      }
+    ]
+
+    if (isGovernanceEnabled) {
+      cards.push({
+        icon: 'nav-settings',
+        text: getString('connectors.ceAzure.chooseRequirements.visibilityCardDesc'),
+        value: Features.GOVERNANCE,
+        desc: (
+          <Text inline font={{ variation: FontVariation.SMALL_BOLD }}>
+            {getString('connectors.ceAws.crossAccountRoleStep1.cards.governance.header')}
+          </Text>
+        ),
+        heading: getString('connectors.ceAws.crossAccountRoleStep1.cards.governance.header'),
+        prefix: getString('common.azure'),
+        features: [
+          getString('connectors.ceAws.crossAccountRoleStep1.cards.governance.feat1'),
+          getString('connectors.ceAws.crossAccountRoleStep1.cards.governance.feat2')
+        ],
+        footer: (
+          <>
+            {getString('connectors.ceAws.crossAccountRoleStep1.adding')}{' '}
+            <a
+              href="https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {getString('connectors.ceAws.crossAccountRoleStep1.thesePermissions')}
+            </a>{' '}
+            {getString('connectors.ceAws.crossAccountRoleStep1.iamRole')}
+          </>
+        )
+      })
     }
-  ]).current
+
+    return cards as ICard[]
+  }, [isGovernanceEnabled])
 
   const [selectedCards, setSelectedCards] = useState<ICard[]>(() => {
     const initialSelectedCards = [FeatureCards[0]]
@@ -132,10 +208,12 @@ const ChooseRequirements: React.FC<StepProps<CEAzureDTO>> = props => {
   const { getString } = useStrings()
   const { previousStep, prevStepData, nextStep } = props
   const featuresEnabled = prevStepData?.spec?.featuresEnabled || []
-  const { selectedCards, setSelectedCards, FeatureCards } = useSelectedCards(featuresEnabled)
+  const { selectedCards, setSelectedCards, FeatureCards } = useSelectedCards(featuresEnabled as Features[])
   const [featuresSelectedError, setFeaturesSelectedError] = useState(
     !prevStepData?.hasBilling && selectedCards.length === 1
   )
+
+  const [featureDetails, setFeatureDetails] = useState<ICard>()
 
   useStepLoadTelemetry(CE_AZURE_CONNECTOR_CREATION_EVENTS.LOAD_CHOOSE_REQUIREMENT)
 
@@ -193,14 +271,13 @@ const ChooseRequirements: React.FC<StepProps<CEAzureDTO>> = props => {
       >
         {getString('connectors.ceAzure.chooseRequirements.heading')}
       </Text>
-      <Text color="grey800">{getString('connectors.ceAzure.chooseRequirements.featureDesc')}</Text>
+      <Text font={{ weight: 'semi-bold' }} color={Color.GREY_800}>
+        {getString('connectors.ceAzure.chooseRequirements.featureDesc')}
+      </Text>
+      <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800} padding={{ top: 'small' }}>
+        {getString('connectors.ceAzure.chooseRequirements.info')}
+      </Text>
       <Container>
-        <Layout.Horizontal className={css.infoCard}>
-          <Icon name="info-messaging" size={20} className={css.infoIcon} />
-          <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800}>
-            {getString('connectors.ceAzure.chooseRequirements.info')}
-          </Text>
-        </Layout.Horizontal>
         <Formik<CloudFeatures>
           initialValues={{
             VISIBILITY: false,
@@ -216,15 +293,36 @@ const ChooseRequirements: React.FC<StepProps<CEAzureDTO>> = props => {
                   return
                 }}
               />
-              <CardSelect
-                data={FeatureCards}
-                selected={selectedCards}
-                multi={true}
-                className={css.grid}
-                onChange={handleCardSelection}
-                cornerSelected={true}
-                renderItem={item => <Card {...item} />}
-              />
+              <Layout.Horizontal margin={{ top: 'large' }}>
+                <Container padding={{ top: 'small' }}>
+                  {FeatureCards.map(card => (
+                    <FeatureCard
+                      key={card.value}
+                      feature={card}
+                      handleCardSelection={() => handleCardSelection(card)}
+                      isDefault={Features.BILLING === card.value}
+                      isSelected={selectedCards.some(selectedCard => selectedCard.value === card.value)}
+                      setFeatureDetails={() => setFeatureDetails(card)}
+                    />
+                  ))}
+                </Container>
+                <Layout.Vertical spacing="xlarge" className={css.featureDetailsCtn}>
+                  {featureDetails ? (
+                    <FeatureDetails feature={featureDetails} />
+                  ) : (
+                    <Layout.Vertical spacing="medium" className={css.emptyState}>
+                      <img src={EmptyState} width={110} />
+                      <Text
+                        font={{ variation: FontVariation.TINY, align: 'center' }}
+                        width={100}
+                        color={Color.GREY_600}
+                      >
+                        {getString('connectors.ceAws.crossAccountRoleStep1.hoverOver')}
+                      </Text>
+                    </Layout.Vertical>
+                  )}
+                </Layout.Vertical>
+              </Layout.Horizontal>
               {featuresSelectedError ? (
                 <Text color={Color.RED_600} padding={{ top: 'medium' }}>
                   {getString('connectors.ceAzure.chooseRequirements.atleastOneError')}
@@ -241,48 +339,6 @@ const ChooseRequirements: React.FC<StepProps<CEAzureDTO>> = props => {
         </Formik>
       </Container>
     </Layout.Vertical>
-  )
-}
-
-const Card = (props: ICard) => {
-  const { prefix, icon, title, features, footer } = props
-  return (
-    <Container className={css.featureCard}>
-      <Layout.Vertical spacing="medium" padding={{ left: 'large', right: 'large' }}>
-        <Layout.Horizontal spacing="small">
-          <Icon name={icon} size={32} />
-          <Container>
-            <Text color="grey900" style={{ fontSize: 9, fontWeight: 500 }}>
-              {prefix.toUpperCase()}
-            </Text>
-            <Text color="grey900" style={{ fontSize: 16, fontWeight: 500 }}>
-              {title}
-            </Text>
-          </Container>
-        </Layout.Horizontal>
-        <ul className={css.features}>
-          {features.map((feat, idx) => {
-            return (
-              <li key={idx}>
-                <Text
-                  icon="main-tick"
-                  iconProps={{ color: 'green600', size: 12, padding: { right: 'small' } }}
-                  font="small"
-                  style={{ lineHeight: '20px' }}
-                >
-                  {feat}
-                </Text>
-              </li>
-            )
-          })}
-        </ul>
-      </Layout.Vertical>
-      <Container className={css.footer}>
-        <Text font={{ size: 'small', italic: true }} color="grey400">
-          {footer}
-        </Text>
-      </Container>
-    </Container>
   )
 }
 

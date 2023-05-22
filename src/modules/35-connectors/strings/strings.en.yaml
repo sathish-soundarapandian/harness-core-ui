@@ -848,7 +848,7 @@ ceAzure:
     heading: '{{ $.connectors.ceAws.steps.req }}'
     subHeading: Harness uses Multitenant app to sync billing export data from source storage account to Harness. Create a service principal for this app in your Azure account and assign read permissions on that particular storage account.
     featureDesc: '{{ $.connectors.ceAws.crossAccountRoleStep1.description }}'
-    info: Cost visibility of the resources for which you added the Billing Export in the previous step is enabled by default. Select the others as per your requirements.
+    info: (Selecting features will add the necessary permissions to the Service Principal in the next step. Cost Visibility permissions are required by default)
     visibilityCardDesc: Cost insights, anomaly detection, service insights, creating budgets perspectives and alerts, utilised/wasted resources in clusters.
     optimizationCardDesc: Detection of orphaned resources, recommendations to save costs, scaling/tearing down, turning off in non-work hours, reserving instances.
     atleastOneError: Please select at least one feature other than Visibility
@@ -858,7 +858,7 @@ ceAzure:
       feat3: Cost anomaly detection
       feat4: Budgets and forecasts
       feat5: Email and Slack alerts
-      footer: from Billing export
+      footer: from the Billing Exports created in the previous step.
     visibility:
       heading: Inventory Management
       feat1: VM inventory dashboard
@@ -869,8 +869,8 @@ ceAzure:
       feat3: Granular savings visibility
       feat4: Simple one-time setup
       prefix: AZURE OPTIMIZATION BY
-      footer1: by adding
-      footer2: to SP
+      footer1: '{{ $.connectors.ceAws.crossAccountRoleStep1.adding }}'
+      footer2: to a Service Principal in the next step.
   servicePrincipal:
     heading: '{{ $.connectors.ceAzure.steps.servicePrincipal }}'
     subHeading1: Harness uses a multi-tenant app to sync billing export data from the source storage account to Harness and to perform cost optimization functions.

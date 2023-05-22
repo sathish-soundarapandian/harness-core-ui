@@ -68,6 +68,20 @@
       position: absolute;
       bottom: var(--spacing-medium);
     }
+
+    .featureDetailsCtn {
+      padding: var(--spacing-xxxlarge);
+      border-left: 1px solid var(--grey-300);
+      width: 100%;
+      flex-shrink: unset;
+      min-height: 400px;
+      justify-content: center;
+
+      .emptyState {
+        align-items: center;
+        margin: auto;
+      }
+    }
   }
 
   .header {
@@ -100,25 +114,10 @@
   }
 
   .grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
     column-gap: var(--spacing-small);
     [class*='bp3-card'] {
       box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04), 0px 8px 16px rgba(96, 97, 112, 0.16) !important;
       padding: var(--spacing-large) 0 0 0;
-    }
-    :global {
-      .Card--selected:first-of-type {
-        box-shadow: none !important;
-        background-color: var(--grey-50);
-        opacity: 80%;
-        &:hover {
-          box-shadow: none !important;
-        }
-        .Card--badge {
-          opacity: 50%;
-        }
-      }
     }
   }
 
