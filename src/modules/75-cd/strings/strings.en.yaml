@@ -625,6 +625,8 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  getStartedBtn: Get started with a guided deployment
+  whyHarnessCD: Why Harness CD
   cdWizardEventName: CD Wizard - {{ eventName }}
   creatingApp: Creating Application in progress
   main: main
@@ -680,7 +682,7 @@ getStartedWithCD:
   awsRegionHelperText: replace REGION with your AWS region, for example us-west-1
   azureAKSHelperText: replace myResourceGroup with your AKS resource group
   googleGKEHelperText: replace ZONE with your GCP region, for example us-central1-c
-  onboardingTitle: Start your deployments journey with Harness CD
+  onboardingTitle: Start your journey to a standard deployment process in minutes
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
   gitopsOnboardingAgentStep: Connect to Harness by provisioning hosted Agent
   gitopsOnboardingSelectAgent: Select existing agent
@@ -814,6 +816,20 @@ getStartedWithCD:
   artifactInManifest: No, it is hard-coded in my manifest
   giveSample: Give me a Sample
   artifactReferencedInManifest: Fantastic! If your artifact is already referenced in your manifest you are ready to continue to the next step.
+  tryCICTA: '<b>Developer</b>? Check out Harness <a target="_blank" href="{{ciurl}}">Continuous Integration</a> to build and test your code x4 faster with hosted builds and test intelligence. <a target="_blank" href="{{docurl}}">CI or CD?</a>'
+  standardization: 'Standardization: Create consistent, standard deployment processes across the organization'
+  quality: 'Quality: Reduce the percentage of deployments that cause failures in production'
+  restore: 'Time to restore: Quicker triage of failures in production and time to restore services'
+  productivity: 'Productivity: More team productivity because less time is spent waiting for deployments and fixing issues'
+  frequency: 'Deployment frequency: release small changes more often'
+  velocity: 'Deployment velocity: decrease the amount of time it takes a commit to get into production'
+  cdresources:
+    cdtuts: CD tutorials
+    cdbasics: CD pipeline basics
+    firstcdpipeline: Create your first CD pipeline
+    pipelineModeling: CD pipeline modeling overview
+    svcinfra: Services and environments basics
+    terraformcli: Onboarding with Terraform CLI
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment

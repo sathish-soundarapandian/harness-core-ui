@@ -14,7 +14,7 @@ interface WithFFProviderProps {
   children: JSX.Element
   config: {
     identifier: string
-    experimentKey: string
+    experimentKey: string | string[]
   }
   fallback: JSX.Element
 }

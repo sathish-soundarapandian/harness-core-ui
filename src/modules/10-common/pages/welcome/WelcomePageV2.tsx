@@ -25,7 +25,6 @@ import {
 import { Color } from '@harness/design-system'
 import { StringKeys, useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { Editions } from '@common/constants/SubscriptionTypes'
 import { PurposeActions, Category, PLG_ELEMENTS } from '@common/constants/TrackingConstants'
 import { Experiences } from '@common/constants/Utils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -40,21 +39,15 @@ import {
 } from 'framework/LicenseStore/licenseStoreUtil'
 import { moduleToModuleNameMapping, Module } from 'framework/types/ModuleName'
 import type { StartFreeLicenseQueryParams, ResponseModuleLicenseDTO, ModuleLicenseDTO } from 'services/cd-ng'
-import { useUpdateAccountDefaultExperienceNG, useStartTrialLicense, useStartFreeLicense } from 'services/cd-ng'
+import { useUpdateAccountDefaultExperienceNG, useStartFreeLicense } from 'services/cd-ng'
+import type { PLG_CD_GET_STARTED_VARIANTS } from '@common/components/ConfigureOptions/constants'
 import { modulesInfo, ModuleInfoValue } from './ModulesData'
 import css from './WelcomePage.module.scss'
 
-export default function WelcomePageV2(): JSX.Element {
+export default function WelcomePageV2(props: { getStartedVariant?: string }): JSX.Element {
   const HarnessLogo = HarnessIcons['harness-logo-black']
-  const {
-    CREATE_DEFAULT_PROJECT,
-    AUTO_FREE_MODULE_LICENSE,
-    CVNG_ENABLED,
-    CING_ENABLED,
-    CFNG_ENABLED,
-    CENG_ENABLED,
-    CHAOS_ENABLED
-  } = useFeatureFlags()
+  const { CREATE_DEFAULT_PROJECT, AUTO_FREE_MODULE_LICENSE, CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED } =
+    useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
@@ -63,12 +56,7 @@ export default function WelcomePageV2(): JSX.Element {
   const { mutate: updateDefaultExperience, loading: updatingDefaultExperience } = useUpdateAccountDefaultExperienceNG({
     accountIdentifier: accountId
   })
-  // Chaos module does not have free license for now
-  const { mutate: startChaosTrial, loading: trialLoading } = useStartTrialLicense({
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  })
+
   const { mutate, loading } = useStartFreeLicense({
     queryParams: { accountIdentifier: accountId, moduleType: '' as StartFreeLicenseQueryParams['moduleType'] },
     requestOptions: {
@@ -100,11 +88,11 @@ export default function WelcomePageV2(): JSX.Element {
         ci: CING_ENABLED,
         cf: CFNG_ENABLED,
         ce: CENG_ENABLED,
-        chaos: CHAOS_ENABLED
+        chaos: true
       }
       return Boolean(moduleStatusMap[moduleSelected])
     },
-    [CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED, CHAOS_ENABLED]
+    [CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED]
   )
   const trackLearnMore = (moduleSelected: string): void =>
     trackEvent(PurposeActions.LearnMoreClicked, { category: Category.SIGNUP, module: moduleSelected })
@@ -119,6 +107,7 @@ export default function WelcomePageV2(): JSX.Element {
       case 'ce':
       case 'cv':
       case 'cf':
+      case 'chaos':
         return {
           clickHandle: async () => {
             trackEvent(PurposeActions.ModuleContinue, {
@@ -144,9 +133,11 @@ export default function WelcomePageV2(): JSX.Element {
                     [licenseStateName]: LICENSE_STATE_VALUES.ACTIVE
                   })
                 }
-                const defaultURL = getModuleToDefaultURLMap(accountId, moduleSelected as Module)[
-                  moduleSelected as Module
-                ]
+                const defaultURL = getModuleToDefaultURLMap(
+                  accountId,
+                  moduleSelected as Module,
+                  props?.getStartedVariant as PLG_CD_GET_STARTED_VARIANTS
+                )[moduleSelected as Module]
                 CREATE_DEFAULT_PROJECT
                   ? history.push(defaultURL)
                   : history.push(routes.toModuleHome({ accountId, module: moduleSelected, source: 'purpose' }))
@@ -163,46 +154,13 @@ export default function WelcomePageV2(): JSX.Element {
           },
           disabled: updatingDefaultExperience
         }
-      case 'chaos':
-        return {
-          clickHandle: async () => {
-            trackEvent(PurposeActions.ModuleContinue, { category: Category.SIGNUP, module: moduleSelected })
-            try {
-              const moduleType = 'CHAOS'
-              await updateDefaultExperience({
-                defaultExperience: Experiences.NG
-              })
-              const licenseStateName = getLicenseStateNameByModuleType(moduleSelected as Module)
-              const hasEnterpriseLicense =
-                licenseInformation[upperCase(moduleSelected)]?.edition === Editions.ENTERPRISE
-              if (!hasEnterpriseLicense) {
-                const licenseResponse = await startChaosTrial({ moduleType, edition: Editions.ENTERPRISE })
-
-                updateLicenseStore({
-                  licenseInformation: {
-                    ...licenseInformation,
-                    [moduleToModuleNameMapping[moduleSelected as Module]]: licenseResponse.data as ModuleLicenseDTO
-                  } as { [key: string]: ModuleLicenseDTO },
-                  [licenseStateName]: LICENSE_STATE_VALUES.ACTIVE
-                })
-              }
-              const defaultURL = getModuleToDefaultURLMap(accountId, moduleSelected as Module)[moduleSelected as Module]
-              CREATE_DEFAULT_PROJECT
-                ? history.push(defaultURL)
-                : history.push(routes.toModuleHome({ accountId, module: moduleSelected, source: 'purpose' }))
-            } catch (error) {
-              showError(error.data?.message || getString('somethingWentWrong'))
-            }
-          },
-          disabled: updatingDefaultExperience
-        }
       default:
         return {}
     }
   }
 
   return (
-    <OverlaySpinner show={updatingDefaultExperience || trialLoading || loading}>
+    <OverlaySpinner show={updatingDefaultExperience || loading}>
       <HarnessLogo height={30} style={{ alignSelf: 'start' }} className={css.harnessLogo} />
       <Container padding={{ top: 'xxxlarge' }} flex={{ alignItems: 'start' }} className={cx(css.onboardingContainer)}>
         <Container>

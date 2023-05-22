@@ -6,10 +6,11 @@
  */
 
 import React from 'react'
-
 import { fireEvent, render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import GetStartedWithCD from '../GetStartedWithCD'
+
+jest.mock('@harnessio/ff-react-client-sdk')
 
 jest.mock('nanoid', () => ({
   customAlphabet: () => {

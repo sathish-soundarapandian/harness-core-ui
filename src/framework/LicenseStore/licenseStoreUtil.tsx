@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { PLG_CD_GET_STARTED_VARIANTS } from '@common/components/ConfigureOptions/constants'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
 import type { Module, ModuleName } from 'framework/types/ModuleName'
@@ -51,19 +52,31 @@ export const getLicenseStateNameByModuleType = (moduleName: Module): string =>
 
 const DEFAULT_PROJECT_ID = 'default_project'
 const DEFAULT_ORG = 'default'
-export const getModuleToDefaultURLMap = (accountId: string, module: Module): { [key: string]: string } => ({
+export const getModuleToDefaultURLMap = (
+  accountId: string,
+  module: Module,
+  getStartedVariant?: PLG_CD_GET_STARTED_VARIANTS
+): { [key: string]: string } => ({
   ci: routes.toGetStartedWithCI({
     accountId,
     module,
     projectIdentifier: DEFAULT_PROJECT_ID,
     orgIdentifier: DEFAULT_ORG
   }),
-  cd: routes.toCDOnboardingWizard({
-    accountId,
-    module,
-    projectIdentifier: DEFAULT_PROJECT_ID,
-    orgIdentifier: DEFAULT_ORG
-  }),
+  cd:
+    getStartedVariant === PLG_CD_GET_STARTED_VARIANTS.INFO_HEAVY
+      ? routes.toGetStartedWithCD({
+          accountId,
+          module,
+          projectIdentifier: DEFAULT_PROJECT_ID,
+          orgIdentifier: DEFAULT_ORG
+        })
+      : routes.toCDOnboardingWizard({
+          accountId,
+          module,
+          projectIdentifier: DEFAULT_PROJECT_ID,
+          orgIdentifier: DEFAULT_ORG
+        }),
   cf: routes.toCFOnboarding({
     accountId,
     projectIdentifier: DEFAULT_PROJECT_ID,

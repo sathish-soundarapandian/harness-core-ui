@@ -18,7 +18,6 @@ import type { Module } from '@common/interfaces/RouteInterfaces'
 import { FeatureFlag } from '@common/featureFlags'
 import WithABFFProvider from '@common/components/WithFFProvider/WithFFProvider'
 import { EXPOSURE_EVENT, PLG_EXPERIMENTS } from '@common/components/WithFFProvider/PLGExperiments'
-
 import WelcomePageV2 from './WelcomePageV2'
 import SelectModuleList from './SelectModuleList'
 import ribbon from './images/ribbon.svg'
@@ -42,7 +41,7 @@ enum PAGE_TYPES {
   NEW_PAGE = 'NEW_PAGE'
 }
 
-const WelcomePage: React.FC = () => {
+const WelcomePage: React.FC<{ getStartedVariant?: string }> = props => {
   const HarnessLogo = HarnessIcons['harness-logo-black']
   const { getString } = useStrings()
   const [ribbonImg, setRibbonImg] = useState<string>(ribbon_ci)
@@ -139,6 +138,7 @@ const WelcomePage: React.FC = () => {
         {getString('common.purpose.selectAModule')}
       </Text>
       <SelectModuleList
+        getStartedVariant={props.getStartedVariant}
         onModuleClick={(_module?: Module) => {
           setRibbonImg(ribbonMap[_module?.toString() || 'default'])
         }}
@@ -185,7 +185,10 @@ const WelcomePageWithAB: React.FC = () => {
     <WithABFFProvider
       fallback={<WelcomePage />}
       featureFlagsToken={window.HARNESS_PLG_FF_SDK_KEY}
-      config={{ experimentKey: PLG_EXPERIMENTS.NO_INTENT_TEST, identifier: uuid }}
+      config={{
+        experimentKey: [PLG_EXPERIMENTS.NO_INTENT_TEST, PLG_EXPERIMENTS.CD_GET_STARTED],
+        identifier: uuid
+      }}
     >
       <WelcomePageWithHooks />
     </WithABFFProvider>
@@ -194,6 +197,7 @@ const WelcomePageWithAB: React.FC = () => {
 const WelcomePageWithHooks: React.FC = () => {
   const PAGE_TYPE = useFeatureFlag(FeatureFlag.PLG_NO_INTENT_AB)
   const trackExposure = useFeatureFlag(FeatureFlag.PLG_NO_INTENT_EXPOSURE_ENABLED)
+  const GET_STARTED_VARIANT = useFeatureFlag(FeatureFlag.PLG_CD_GET_STARTED_AB)
   const { trackEvent } = useTelemetry()
   useEffect(() => {
     trackExposure &&
@@ -202,6 +206,10 @@ const WelcomePageWithHooks: React.FC = () => {
         variant: PAGE_TYPE
       })
   }, [])
-  return PAGE_TYPE === PAGE_TYPES.NEW_PAGE ? <WelcomePageV2 /> : <WelcomePage />
+  return PAGE_TYPE === PAGE_TYPES.NEW_PAGE ? (
+    <WelcomePageV2 getStartedVariant={GET_STARTED_VARIANT} />
+  ) : (
+    <WelcomePage getStartedVariant={GET_STARTED_VARIANT} />
+  )
 }
 export default WelcomePageWithAB

@@ -32,6 +32,7 @@ import {
 import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Module, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import type { PLG_CD_GET_STARTED_VARIANTS } from '@common/components/ConfigureOptions/constants'
 import ModuleCard from './ModuleCard'
 import css from './WelcomePage.module.scss'
 
@@ -46,9 +47,10 @@ interface ModuleProps {
 interface SelectModuleListProps {
   onModuleClick: (module?: Module) => void
   moduleList: ModuleProps[]
+  getStartedVariant?: string
 }
 
-const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, moduleList }) => {
+const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, moduleList, getStartedVariant }) => {
   const [selected, setSelected] = useState<Module>('ci')
   const { CREATE_DEFAULT_PROJECT, AUTO_FREE_MODULE_LICENSE } = useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
@@ -117,7 +119,11 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
                     [licenseStateName]: LICENSE_STATE_VALUES.ACTIVE
                   })
                 }
-                const defaultURL = getModuleToDefaultURLMap(accountId, selected as Module)[selected as Module]
+                const defaultURL = getModuleToDefaultURLMap(
+                  accountId,
+                  selected as Module,
+                  getStartedVariant as PLG_CD_GET_STARTED_VARIANTS
+                )[selected as Module]
                 CREATE_DEFAULT_PROJECT
                   ? history.push(defaultURL)
                   : history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
