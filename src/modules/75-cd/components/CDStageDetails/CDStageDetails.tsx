@@ -203,7 +203,6 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
             {gitOpsClusters.length ? (
               <Popover
                 interactionKind={PopoverInteractionKind.HOVER}
-                // className={Classes.DARK}
                 content={
                   <Layout.Vertical spacing="small" padding="medium" style={{ maxWidth: 500 }}>
                     {gitOpsClusters.map((cluster: any, index: number) => {

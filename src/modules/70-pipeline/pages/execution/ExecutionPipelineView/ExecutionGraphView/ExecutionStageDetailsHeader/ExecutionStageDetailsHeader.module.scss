@@ -96,6 +96,7 @@
   overflow-y: auto;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
   p {
     font-size: var(--font-size-xsmall);
