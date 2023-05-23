@@ -11,6 +11,7 @@ import { defaultTo, get } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Layout, Popover, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { String as StrTemplate } from 'framework/strings'
 import type { Application, GitOpsExecutionSummary } from 'services/cd-ng'
@@ -200,29 +201,28 @@ export function CDStageDetails(props: StageDetailProps): React.ReactElement {
         {gitOpsClusters.length ? (
           <div>
             <StrTemplate className={css.title} tagName="div" stringID="common.clusters" />
-            {gitOpsClusters.length ? (
-              <Popover
-                interactionKind={PopoverInteractionKind.HOVER}
-                content={
-                  <Layout.Vertical spacing="small" padding="medium" style={{ maxWidth: 500 }}>
-                    {gitOpsClusters.map((cluster: any, index: number) => {
-                      return (
-                        <div key={index}>
-                          <span>{cluster.name}</span>
-                        </div>
-                      )
-                    })}
-                  </Layout.Vertical>
-                }
-              >
-                <Layout.Horizontal>
-                  <Text>{gitOpsClusters[0].name}...</Text>
-                  <span className={css.primary6} style={{ textDecoration: 'underline dotted' }}>
-                    +{Math.abs(gitOpsClusters.length - 1)}
-                  </span>
-                </Layout.Horizontal>
-              </Popover>
-            ) : null}
+
+            <Popover
+              interactionKind={PopoverInteractionKind.HOVER}
+              content={
+                <Layout.Vertical spacing="small" padding="medium" style={{ maxWidth: 500 }}>
+                  {gitOpsClusters.map((cluster: any, index: number) => {
+                    return (
+                      <div key={index}>
+                        <span>{cluster.name}</span>
+                      </div>
+                    )
+                  })}
+                </Layout.Vertical>
+              }
+            >
+              <Layout.Horizontal>
+                <Text>{gitOpsClusters[0].name}...</Text>
+                <Text color={Color.PRIMARY_6} style={{ textDecoration: 'underline dotted' }}>
+                  +{Math.abs(gitOpsClusters.length - 1)}
+                </Text>
+              </Layout.Horizontal>
+            </Popover>
           </div>
         ) : (
           <div>
