@@ -38,6 +38,13 @@ import {
   DefaultSettingsToggle
 } from './components/ReusableHandlers'
 
+DefaultSettingsFactory.registerCategory('CD', {
+  icon: 'cd',
+  label: 'common.purpose.cd.fullText',
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto'],
+  settingsAndGroupDisplayOrder: [SettingType.EMAIL_TO_NON_HARNESS_USERS]
+})
+
 DefaultSettingsFactory.registerCategory('CORE', {
   icon: 'cog',
   label: 'common.settingCategory.general',
@@ -86,6 +93,12 @@ DefaultSettingsFactory.registerGroupHandler(SettingGroups.PERSPECTIVES_PREFERENC
     SettingType.INCLUDE_GCP_DISCOUNTS,
     SettingType.SHOW_GCP_COST_AS
   ]
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.EMAIL_TO_NON_HARNESS_USERS, {
+  label: 'defaultSettings.emailToNonHarnessUsers',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'CD'
 })
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.SHOW_ANOMALIES, {

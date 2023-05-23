@@ -272,6 +272,7 @@ purpose:
   selectAModule: Select a module below to get started
   changeSelection: Change Selection
   cd:
+    fullText: Continuous Deployment
     introductionText: Introduction to Continuous Deployment
     introductionConcepts: Introduction to Continuous Deployment concepts
     delivery: Delivery

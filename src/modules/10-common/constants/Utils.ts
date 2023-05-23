@@ -97,5 +97,6 @@ export enum SettingType {
   SHOW_AZURE_COST_AS = 'show_azure_cost_as',
   INCLUDE_GCP_DISCOUNTS = 'include_gcp_discounts',
   INCLUDE_GCP_TAXES = 'include_gcp_taxes',
-  SHOW_GCP_COST_AS = 'show_gcp_cost_as'
+  SHOW_GCP_COST_AS = 'show_gcp_cost_as',
+  EMAIL_TO_NON_HARNESS_USERS = 'email_to_non_harness_users'
 }
