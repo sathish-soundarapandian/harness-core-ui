@@ -81,6 +81,7 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
   useEffect(() => {
     if (selectedStages.length && formikProps.values?.stagesToExecute && !loadingInputSetsData && callMerge) {
       refetchInputSetData()
+      setCallMerge(false)
     }
   }, [selectedStages, formikProps.values?.stagesToExecute, callMerge, loadingInputSetsData, refetchInputSetData])
 
