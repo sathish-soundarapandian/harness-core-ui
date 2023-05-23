@@ -209,7 +209,6 @@ token: Token
 artifacts: Artifacts
 manifests: Manifests
 environments: Environments
-monitoredServices: Monitored Services
 servicesWithCount: '{{ $.services }} ({{ count }})'
 buildText: Build
 pipelineStudio: Pipeline Studio

@@ -1,4 +1,4 @@
-import type { MonitoredServiceConfig } from '@monitored-services/interfaces/MonitoredService'
+import type { MonitoredServiceConfig } from '../interfaces/MonitoredService'
 
 export const PROJECT_MONITORED_SERVICE_CONFIG: MonitoredServiceConfig = {
   listing: {

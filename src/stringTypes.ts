@@ -3410,7 +3410,6 @@ export interface StringsMap {
   'gitsync.syncFailed': string
   'gitsync.syncStatus': string
   'gitsync.syncSucessToaster': string
-  'monitoredServices.stronglyAgree': string
   'dashboards.cloneDashboardModal.submitFail': string
   'dashboards.cloneDashboardModal.success': string
   'dashboards.cloneDashboardModal.title': string
@@ -11318,10 +11317,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   modules: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  monitoredServices: string
   /**
    * @deprecated migrate this string to module level file
    */

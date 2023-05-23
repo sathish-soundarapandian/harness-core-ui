@@ -11,7 +11,7 @@ import { Route, useParams, Redirect } from 'react-router-dom'
 import CVHomePage from '@cv/pages/home/CVHomePage'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps, projectPathProps, templatePathProps } from '@common/utils/routeUtils'
+import { accountPathProps, orgPathProps, projectPathProps, templatePathProps } from '@common/utils/routeUtils'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { MinimalLayout } from '@common/layouts'
 
@@ -64,6 +64,9 @@ import { getIsValuePresent } from './utils/licenseBannerUtils'
 import { ThresholdPercentageToShowBanner } from './constants'
 import SLODowntimePage from './pages/slos/SLODowntimePage/SLODowntimePage'
 import CVCreateDowntime from './pages/slos/components/CVCreateDowntime/CVCreateDowntime'
+import { CD_MONITORED_SERVICE_CONFIG, PROJECT_MONITORED_SERVICE_CONFIG } from './constants/MonitoredService.constants'
+import MonitoredServiceContainer from './MonitoredService.container'
+import Configurations from './pages/monitored-service/components/Configurations/Configurations'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -292,6 +295,44 @@ const RedirectToCVCodeErrorsControl = (): React.ReactElement => {
 
 export default (
   <>
+    <RouteWithLayout
+      path={routes.toMonitoredServices({ ...accountPathProps, ...orgPathProps, ...projectPathProps })}
+      exact
+    >
+      <MonitoredServiceContainer config={PROJECT_MONITORED_SERVICE_CONFIG} />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      path={routes.toMonitoredServicesConfigurations({ ...accountPathProps, ...orgPathProps, ...projectPathProps })}
+      exact
+    >
+      <Configurations config={PROJECT_MONITORED_SERVICE_CONFIG} />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      path={routes.toMonitoredServices({
+        ...accountPathProps,
+        ...orgPathProps,
+        ...projectPathProps,
+        module: 'cd'
+      })}
+      exact
+    >
+      <MonitoredServiceContainer config={CD_MONITORED_SERVICE_CONFIG} />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      path={routes.toMonitoredServicesConfigurations({
+        ...accountPathProps,
+        ...orgPathProps,
+        ...projectPathProps,
+        module: 'cd'
+      })}
+      exact
+    >
+      <Configurations config={CD_MONITORED_SERVICE_CONFIG} />
+    </RouteWithLayout>
+
     <Route
       path={[routes.toCV({ ...accountPathProps }), routes.toCVProject({ ...accountPathProps, ...projectPathProps })]}
       exact

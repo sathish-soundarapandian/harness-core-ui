@@ -26,7 +26,6 @@ import gitsync from '@gitsync/strings/strings.en.yaml'
 import dashboards from '@dashboards/strings/strings.en.yaml'
 import projectsOrgs from '@projects-orgs/strings/strings.en.yaml'
 import assessments from '@assessments/strings/strings.en.yaml'
-import monitoredServices from '@monitored-services/strings/strings.en.yaml'
 import code from '@code/strings/strings.en.yaml'
 import pipeline from '@pipeline/strings/strings.en.yaml'
 import freezeWindows from '@freeze-windows/strings/strings.en.yaml'
@@ -60,7 +59,6 @@ export default function languageLoader() {
     auditTrail,
     userProfile,
     gitsync,
-    monitoredServices,
     dashboards,
     projectsOrgs,
     assessments,

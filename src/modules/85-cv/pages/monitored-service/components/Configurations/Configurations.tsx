@@ -37,6 +37,7 @@ import { useStrings } from 'framework/strings'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { SLODetailsPageTabIds } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
 import { isNewTemplate } from '@templates-library/components/TemplateStudio/TemplateStudioUtils'
+import type { MonitoredServiceConfig } from '@cv/interfaces/MonitoredService'
 import Service, { ServiceWithRef } from './components/Service/Service'
 import Dependency from './components/Dependency/Dependency'
 import { getInitFormData } from './components/Service/Service.utils'
@@ -48,6 +49,7 @@ import css from './Configurations.module.scss'
 interface ConfigurationsInterface {
   templateValue?: NGTemplateInfoConfig
   updateTemplate?: (template: MonitoredServiceForm) => void
+  config?: MonitoredServiceConfig
 }
 
 export default function Configurations(
