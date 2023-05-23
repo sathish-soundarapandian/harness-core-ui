@@ -19,6 +19,7 @@ declare const styles: {
   readonly ce: string
   readonly cet: string
   readonly cf: string
+  readonly chaos: string
   readonly ci: string
   readonly cv: string
   readonly expired: string

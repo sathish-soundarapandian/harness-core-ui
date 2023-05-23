@@ -939,7 +939,6 @@ describe('Subscriptions Page', () => {
               {
                 edition: Editions.ENTERPRISE,
                 totalChaosExperimentRuns: 10000,
-                totalChaosInfrastructures: 1000,
                 moduleType: 'CHAOS'
               }
             ],
@@ -968,7 +967,6 @@ describe('Subscriptions Page', () => {
       )
 
       expect(getByText('common.subscriptions.chaos.experiments')).toBeInTheDocument()
-      expect(getByText('common.subscriptions.chaos.infrastructures')).toBeInTheDocument()
     })
 
     test('should render CET details', () => {

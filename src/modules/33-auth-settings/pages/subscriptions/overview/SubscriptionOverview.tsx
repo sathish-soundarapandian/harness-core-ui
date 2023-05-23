@@ -8,7 +8,7 @@
 import React from 'react'
 import { Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { ModuleName } from 'framework/types/ModuleName'
+import type { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO, CDModuleLicenseDTO } from 'services/cd-ng'
 import { useGetCreditsByAccount } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -44,7 +44,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         licenseData={licenseData}
         trialInformation={trialInformation}
       />
-      {enabled && licenseData && module !== ModuleName.CHAOS && (
+      {enabled && licenseData && (
         <SubscriptionUsageCard module={module} licenseData={licenseData} creditsData={creditsData?.data} />
       )}
       <SubscriptionTabPage
@@ -52,7 +52,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         licenseData={licenseData}
         accountId={accountId}
         licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType}
-      ></SubscriptionTabPage>
+      />
       {buildCreditsView && module === 'CI' ? (
         <BuildCreditInfoTable data={creditsData?.data || []} licenseData={(licenseData as ModuleLicenseDTO) || ''} />
       ) : null}

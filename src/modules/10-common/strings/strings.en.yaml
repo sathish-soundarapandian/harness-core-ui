@@ -540,7 +540,7 @@ subscriptions:
   cet:
     agents: '{{ agents }} Agents'
   chaos:
-    experiments: '{{ experiments }} Experiments per month'
+    experiments: '{{ experiments }} Experiment Runs per month'
     infrastructures: '{{ infrastructures }} Chaos Infrastructures'
   expiryCountdown: expires in {{ days }} days
   expired: expired {{ days }} days ago
@@ -583,6 +583,8 @@ subscriptions:
     ccmTooltip: Cloud Spend refers to the total spend (dollars) managed and optimized by Harness Cloud Cost Management.
     cetAgents: Active Agents
     cetAgentToolTip: An agent is an independent unit of software that you install on a host or in a container that tracks for errors continuously and sends the error tracking data to the Harness Platform.
+    chaosExperimentRuns: Experiment Runs
+    chaosExperimentRunsTooltip: Experiment Runs refer to the number of chaos experiment instances which ran on a connected chaos infrastructure.
 current: Current
 banners:
   email:

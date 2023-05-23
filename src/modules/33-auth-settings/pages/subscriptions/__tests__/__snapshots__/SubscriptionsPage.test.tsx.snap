@@ -26,7 +26,7 @@ exports[`Subscriptions Page Subscription Details Card should render CI details: 
       common.plans.title
     </h1>
     <div
-      class="Layout--horizontal StyledProps--main moduleSelectCards StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      class="StyledProps--font StyledProps--main moduleSelectCards"
     >
       <div
         class="bp3-card bp3-elevation-0 Card--card moduleSelectCard"
@@ -1456,7 +1456,7 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
       common.plans.title
     </h1>
     <div
-      class="Layout--horizontal StyledProps--main moduleSelectCards StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      class="StyledProps--font StyledProps--main moduleSelectCards"
     >
       <div
         class="bp3-card bp3-elevation-0 Card--card moduleSelectCard cd Card--selected"
@@ -2908,7 +2908,7 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
       common.plans.title
     </h1>
     <div
-      class="Layout--horizontal StyledProps--main moduleSelectCards StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      class="StyledProps--font StyledProps--main moduleSelectCards"
     >
       <div
         class="bp3-card bp3-elevation-0 Card--card moduleSelectCard cd Card--selected"
@@ -4360,7 +4360,7 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
       common.plans.title
     </h1>
     <div
-      class="Layout--horizontal StyledProps--main moduleSelectCards StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      class="StyledProps--font StyledProps--main moduleSelectCards"
     >
       <div
         class="bp3-card bp3-elevation-0 Card--card moduleSelectCard cd Card--selected"
@@ -5812,7 +5812,7 @@ exports[`Subscriptions Page it renders trial not started information 1`] = `
       common.plans.title
     </h1>
     <div
-      class="Layout--horizontal StyledProps--main moduleSelectCards StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      class="StyledProps--font StyledProps--main moduleSelectCards"
     >
       <div
         class="bp3-card bp3-elevation-0 Card--card moduleSelectCard cd Card--selected"
@@ -7115,7 +7115,7 @@ exports[`Subscriptions Page it should update the license store 1`] = `
       common.plans.title
     </h1>
     <div
-      class="Layout--horizontal StyledProps--main moduleSelectCards StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      class="StyledProps--font StyledProps--main moduleSelectCards"
     >
       <div
         class="bp3-card bp3-elevation-0 Card--card moduleSelectCard cd Card--selected"
@@ -8567,7 +8567,7 @@ exports[`Subscriptions Page it shows the header and a loading spinner while the 
       common.plans.title
     </h1>
     <div
-      class="Layout--horizontal StyledProps--main moduleSelectCards StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      class="StyledProps--font StyledProps--main moduleSelectCards"
     >
       <div
         class="bp3-card bp3-elevation-0 Card--card moduleSelectCard cd Card--selected"
@@ -9045,7 +9045,7 @@ exports[`Subscriptions Page it shows the header and a loading spinner while the 
       common.plans.title
     </h1>
     <div
-      class="Layout--horizontal StyledProps--main moduleSelectCards StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      class="StyledProps--font StyledProps--main moduleSelectCards"
     >
       <div
         class="bp3-card bp3-elevation-0 Card--card moduleSelectCard cd Card--selected"

@@ -175,6 +175,16 @@ module.exports = {
     },
     customGenerator: arg => customGenerator(arg, "getConfig('assessments/api')")
   },
+  chaos: {
+    output: 'src/services/chaos/index.tsx',
+    file: 'src/services/chaos/swagger.json',
+    transformer: 'scripts/swagger-transform.js',
+    customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps } from "../config";`,
+    customProps: {
+      base: `{getConfig("chaos/manager/api/rest")}`
+    },
+    customGenerator: arg => customGenerator(arg, "getConfig('chaos/manager/api/rest')")
+  },
   cf: {
     output: 'src/services/cf/index.tsx',
     url: 'http://127.0.0.1:8085/docs/release/admin-v1.yaml',

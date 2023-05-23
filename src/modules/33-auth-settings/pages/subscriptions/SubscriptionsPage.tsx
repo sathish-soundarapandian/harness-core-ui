@@ -247,12 +247,7 @@ const SubscriptionsPage: React.FC = () => {
         <Heading color={Color.BLACK} padding={{ bottom: 'large' }}>
           {isCommunity ? null : getString('common.plans.title')}
         </Heading>
-        <Layout.Horizontal
-          className={css.moduleSelectCards}
-          flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-        >
-          {isCommunity ? null : getModuleSelectElements()}
-        </Layout.Horizontal>
+        <Container className={css.moduleSelectCards}>{isCommunity ? null : getModuleSelectElements()}</Container>
         {innerContent}
       </Layout.Vertical>
     </>

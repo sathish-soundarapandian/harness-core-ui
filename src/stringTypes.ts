@@ -1148,6 +1148,8 @@ export interface StringsMap {
   'common.subscriptions.usage.cdUsers': string
   'common.subscriptions.usage.cetAgentToolTip': string
   'common.subscriptions.usage.cetAgents': string
+  'common.subscriptions.usage.chaosExperimentRuns': string
+  'common.subscriptions.usage.chaosExperimentRunsTooltip': string
   'common.subscriptions.usage.ciTooltip': string
   'common.subscriptions.usage.ciUsers': string
   'common.subscriptions.usage.cloudSpend': string
