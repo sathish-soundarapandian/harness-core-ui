@@ -31,7 +31,9 @@ import { createStepNodeFromTemplate } from '@pipeline/utils/templateUtils'
 import { useMutateAsGet } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getStepTypesFromCategories } from '@pipeline/hooks/useAddStepTemplate'
 import { getFlattenedStages } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import useChooseProvisioner from './ChooseProvisioner'
 import type { InfraProvisioningData, InfraProvisioningDataUI, InfraProvisioningProps } from './InfraProvisioning'
@@ -84,7 +86,7 @@ export const InfraProvisioningBase = (
     body: {
       stepPalleteModuleInfos: getStepPaletteModuleInfosFromStage(
         selectedStage?.stage?.type,
-        undefined,
+        selectedStage?.stage,
         'Provisioner',
         getFlattenedStages(pipeline).stages
       )
@@ -98,27 +100,15 @@ export const InfraProvisioningBase = (
     }
   }, [initialValues.provisionerEnabled])
 
-  const getStepTypesFromCategories = (stepCategories: StepCategory[]): string[] => {
-    const validStepTypes: string[] = []
-    stepCategories.forEach(category => {
-      if (category.stepCategories?.length) {
-        validStepTypes.push(...getStepTypesFromCategories(category.stepCategories))
-      } else if (category.stepsData?.length) {
-        category.stepsData.forEach(stepData => {
-          if (stepData.type) {
-            validStepTypes.push(stepData.type)
-          }
-        })
-      }
-    })
-    return validStepTypes
-  }
-
   React.useEffect(() => {
     if (stepsData?.data?.stepCategories) {
-      setAllChildTypes(getStepTypesFromCategories(stepsData.data.stepCategories))
+      const types = getStepTypesFromCategories(stepsData.data.stepCategories)
+      if (selectedStage?.stage?.type === StageType.DEPLOY) {
+        types.push(StageType.DEPLOY)
+      }
+      setAllChildTypes(types)
     }
-  }, [stepsData?.data?.stepCategories])
+  }, [stepsData?.data?.stepCategories, selectedStage])
 
   const addTemplate = async (event: ExecutionGraphAddStepEvent) => {
     try {
