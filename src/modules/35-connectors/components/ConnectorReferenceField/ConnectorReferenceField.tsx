@@ -248,6 +248,7 @@ interface GetReferenceFieldMethodProps extends ConnectorReferenceFieldProps {
   openConnectorModal: UseCreateConnectorModalReturn['openConnectorModal']
   type: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
   setPagedConnectorData: (data: ResponsePageConnectorResponse) => void
+  version?: string
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
 }
@@ -447,6 +448,7 @@ export function getReferenceFieldProps({
   openConnectorModal,
   setPagedConnectorData,
   connectorFilterProperties,
+  version,
   isMultiSelect,
   selectedConnectors,
   isRecordDisabled,
@@ -483,7 +485,8 @@ export function getReferenceFieldProps({
             ...additionalParams,
             ...gitFilterParams,
             pageIndex: page || 0,
-            pageSize: 10
+            pageSize: 10,
+            version
           },
           body: merge(
             {

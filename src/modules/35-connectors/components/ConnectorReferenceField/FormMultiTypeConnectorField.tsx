@@ -94,6 +94,7 @@ export interface MultiTypeConnectorFieldProps extends Omit<ConnectorReferenceFie
     isTemplatizedView: true
     templateValue: string | SelectOption | undefined
   }
+  version?: string
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
 }
@@ -131,6 +132,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     templateProps,
     isRecordDisabled,
     renderRecordDisabledWarning,
+    version,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -426,7 +428,8 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     openConnectorModal,
     setPagedConnectorData,
     isRecordDisabled,
-    renderRecordDisabledWarning
+    renderRecordDisabledWarning,
+    version
   })
   const component = (
     <FormGroup {...rest} labelFor={name} helperText={helperText} intent={intent} style={{ marginBottom: 0 }}>
