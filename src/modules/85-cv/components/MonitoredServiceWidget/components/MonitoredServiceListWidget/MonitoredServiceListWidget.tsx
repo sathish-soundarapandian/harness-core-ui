@@ -2,15 +2,15 @@ import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Text } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
-import type { MonitoredServiceConfig } from '@cv/interfaces/MonitoredService'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import type { MonitoredServiceConfig } from '../../MonitoredServiceWidget.interface'
 
-interface MonitoredServiceListProps {
+interface MonitoredServiceListWidgetProps {
   config: MonitoredServiceConfig
 }
 
-export default function MonitoredServiceList(props: MonitoredServiceListProps): JSX.Element {
+export default function MonitoredServiceListWidget(props: MonitoredServiceListWidgetProps): JSX.Element {
   const { config } = props
   const params = useParams<PipelinePathProps>()
   const { selectedProject } = useAppStore()
@@ -23,14 +23,16 @@ export default function MonitoredServiceList(props: MonitoredServiceListProps): 
 
   if (config?.listing?.changeSource) {
     return (
-      <Link to={routes.toMonitoredServicesConfigurations(projectDetailsParams)}>
-        <Text>{'Project level MonitoredServiceList'}</Text>
+      <Link to={routes.toMonitoredServicesConfigurations({ ...projectDetailsParams, identifier: 'CD_prod' })}>
+        <Text>{'Project level MonitoredServiceListWidget'}</Text>
       </Link>
     )
   } else {
     return (
-      <Link to={routes.toMonitoredServicesConfigurations({ ...projectDetailsParams, module: 'cd' })}>
-        <Text>{'Deployments level MonitoredServiceList'}</Text>
+      <Link
+        to={routes.toMonitoredServicesConfigurations({ ...projectDetailsParams, module: 'cd', identifier: 'CD_prod' })}
+      >
+        <Text>{'Deployments level MonitoredServiceListWidget'}</Text>
       </Link>
     )
   }

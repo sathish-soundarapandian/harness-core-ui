@@ -64,9 +64,12 @@ import { getIsValuePresent } from './utils/licenseBannerUtils'
 import { ThresholdPercentageToShowBanner } from './constants'
 import SLODowntimePage from './pages/slos/SLODowntimePage/SLODowntimePage'
 import CVCreateDowntime from './pages/slos/components/CVCreateDowntime/CVCreateDowntime'
-import { CD_MONITORED_SERVICE_CONFIG, PROJECT_MONITORED_SERVICE_CONFIG } from './constants/MonitoredService.constants'
-import MonitoredServiceContainer from './MonitoredService.container'
+import {
+  CD_MONITORED_SERVICE_CONFIG,
+  PROJECT_MONITORED_SERVICE_CONFIG
+} from './components/MonitoredServiceWidget/MonitoredServiceWidget.constants'
 import Configurations from './pages/monitored-service/components/Configurations/Configurations'
+import MonitoredServiceWidgetContainer from './components/MonitoredServiceWidget/MonitoredServiceWidget.container'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -299,11 +302,16 @@ export default (
       path={routes.toMonitoredServices({ ...accountPathProps, ...orgPathProps, ...projectPathProps })}
       exact
     >
-      <MonitoredServiceContainer config={PROJECT_MONITORED_SERVICE_CONFIG} />
+      <MonitoredServiceWidgetContainer config={PROJECT_MONITORED_SERVICE_CONFIG} />
     </RouteWithLayout>
 
     <RouteWithLayout
-      path={routes.toMonitoredServicesConfigurations({ ...accountPathProps, ...orgPathProps, ...projectPathProps })}
+      path={routes.toMonitoredServicesConfigurations({
+        ...accountPathProps,
+        ...orgPathProps,
+        ...projectPathProps,
+        ...editParams
+      })}
       exact
     >
       <Configurations config={PROJECT_MONITORED_SERVICE_CONFIG} />
@@ -318,7 +326,7 @@ export default (
       })}
       exact
     >
-      <MonitoredServiceContainer config={CD_MONITORED_SERVICE_CONFIG} />
+      <MonitoredServiceWidgetContainer config={CD_MONITORED_SERVICE_CONFIG} />
     </RouteWithLayout>
 
     <RouteWithLayout
@@ -326,7 +334,8 @@ export default (
         ...accountPathProps,
         ...orgPathProps,
         ...projectPathProps,
-        module: 'cd'
+        module: 'cd',
+        ...editParams
       })}
       exact
     >
