@@ -56,6 +56,7 @@ interface GitSyncFormProps<T> {
   className?: string
   filePathPrefix?: string
   skipDefaultConnectorSetting?: boolean
+  skipBranch?: boolean
 }
 
 export const gitSyncFormSchema = (
@@ -104,7 +105,8 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
     entityScope = Scope.PROJECT,
     className = '',
     filePathPrefix,
-    skipDefaultConnectorSetting = false
+    skipDefaultConnectorSetting = false,
+    skipBranch = false
   } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
@@ -263,20 +265,22 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
             disabled={isEdit || disableFields.repoName}
             setErrorResponse={setErrorResponse}
           />
-          <RepoBranchSelectV2
-            key={formikProps?.values?.repo}
-            connectorIdentifierRef={formikConnectorRef || preSelectedConnector}
-            repoName={formikProps?.values?.repo}
-            onChange={(selected: SelectOption) => {
-              // This is to handle auto fill after default selection, without it form validation will fail
-              if (formikProps.values.branch !== selected.value) {
-                formikProps.setFieldValue?.('branch', selected.value)
-              }
-            }}
-            selectedValue={defaultTo(formikProps.values.branch, branch)}
-            disabled={isEdit || disableFields.branch}
-            setErrorResponse={setErrorResponse}
-          />
+          {skipBranch ? null : (
+            <RepoBranchSelectV2
+              key={formikProps?.values?.repo}
+              connectorIdentifierRef={formikConnectorRef || preSelectedConnector}
+              repoName={formikProps?.values?.repo}
+              onChange={(selected: SelectOption) => {
+                // This is to handle auto fill after default selection, without it form validation will fail
+                if (formikProps.values.branch !== selected.value) {
+                  formikProps.setFieldValue?.('branch', selected.value)
+                }
+              }}
+              selectedValue={defaultTo(formikProps.values.branch, branch)}
+              disabled={isEdit || disableFields.branch}
+              setErrorResponse={setErrorResponse}
+            />
+          )}
           <FormInput.Text
             name="filePath"
             label={getString('gitsync.gitSyncForm.yamlPathLabel')}

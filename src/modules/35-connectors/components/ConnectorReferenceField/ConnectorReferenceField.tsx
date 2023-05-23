@@ -963,6 +963,10 @@ function getConnectorSelectorSchema(selected: ConnectorSelectedValue, getString:
       return deafultSchema
   }
 }
+
+export const getConnectorValue = (connectorRef: ConnectorSelectedValue | string): string =>
+  typeof connectorRef === 'string' ? connectorRef : connectorRef.value
+
 // This is used to register default connector setting
 export const DefaultSettingConnectorField: React.FC<SettingRendererProps & { type: Array<ConnectorInfoDTO['type']> }> =
   ({ onSettingSelectionChange, identifier, setFieldValue, settingValue, type }) => {

@@ -732,6 +732,10 @@ duration: Duration
 ticketStatus: Current status
 and: '{{ $.common.andCaps }}'
 gitDetails: git details
+editGitMetadata: Edit Git Metadata
+editGitMetadataTitle: Edit Git Metadata for the {{entity}}
+editingGitMetadata: Editing Git Metadata
+editGitMetadataSuccess: Git Metadata is updated successfully.
 runtimeInputs: Runtime Inputs
 approveOrReject: Approve or Reject
 jenkinsBuild: Jenkins Builds

@@ -55,6 +55,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getChildExecutionPipelineViewLink } from '@pipeline/pages/execution-list/ExecutionListTable/ExecutionListCells'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
+import useEditGitMetadata from '@pipeline/components/MigrateResource/useEditGitMetadata'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
@@ -379,6 +380,18 @@ export const MenuCell: CellType = ({ row, column }) => {
     onSuccess: () => column.refetchList?.()
   })
 
+  const { showEditGitMetadataModal: showEditGitMetadataModal } = useEditGitMetadata({
+    resourceType: GitResourceType.PIPELINES,
+    identifier: data.identifier || '',
+    metadata: {
+      connectorRef: data?.connectorRef,
+      repo: data?.gitDetails?.repoName,
+      filePath: data?.gitDetails?.filePath
+    },
+    modalTitle: getString('pipeline.editGitMetadataTitle', { entity: getString('common.pipeline') }),
+    onSuccess: () => column.refetchList?.()
+  })
+
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
       <Popover className={Classes.DARK} position={Position.LEFT}>
@@ -417,7 +430,6 @@ export const MenuCell: CellType = ({ row, column }) => {
               data-testid="moveConfigToRemote"
             />
           ) : null}
-
           <Menu.Item
             icon="trash"
             text={getString('delete')}
@@ -426,6 +438,17 @@ export const MenuCell: CellType = ({ row, column }) => {
               confirmDelete()
             }}
           />
+          {data?.storeType === StoreType.REMOTE ? (
+            <RbacMenuItem
+              icon="edit"
+              text={getString('pipeline.editGitMetadata')}
+              disabled={!canEdit}
+              onClick={() => {
+                showEditGitMetadataModal()
+              }}
+              data-testid="editGitMetadata"
+            />
+          ) : null}
         </Menu>
       </Popover>
     </Layout.Horizontal>

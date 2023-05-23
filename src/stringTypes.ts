@@ -4075,6 +4075,10 @@ export interface StringsMap {
   'pipeline.duplicateImportTemplate': string
   'pipeline.duplicateStepIdentifiers': string
   'pipeline.duration': string
+  'pipeline.editGitMetadata': string
+  'pipeline.editGitMetadataSuccess': string
+  'pipeline.editGitMetadataTitle': string
+  'pipeline.editingGitMetadata': string
   'pipeline.emptyExecutionListMsg': string
   'pipeline.enableVerificationHelpText': string
   'pipeline.enableVerificationOptions': string
