@@ -216,7 +216,7 @@ export function StepCommands(
     }
     const advancedConfValues = advancedConfRef.current?.values as Partial<Values>
 
-    let values = getStepDataFromValues(Object.assign(stepParameterValues, advancedConfValues), step)
+    let values = getStepDataFromValues(Object.assign(stepParameterValues, advancedConfValues), step, isStepGroup)
     if (isStepGroup) {
       values = omit(values, 'spec')
       ;(values as StepGroupWithStageElementConfig).stageType = selectedStage?.stage?.type

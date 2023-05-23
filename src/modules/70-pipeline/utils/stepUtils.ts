@@ -13,7 +13,8 @@ import type {
   StepPalleteModuleInfo,
   StageElementConfig,
   StageElementWrapperConfig,
-  StepElementConfig
+  StepElementConfig,
+  StepGroupElementConfig
 } from 'services/pipeline-ng'
 import type {
   StepOrStepGroupOrTemplateStepData,
@@ -274,7 +275,8 @@ export function getStepPaletteModuleInfosFromStage(
 
 export function getStepDataFromValues(
   item: Partial<Values>,
-  initialValues: StepOrStepGroupOrTemplateStepData
+  initialValues: StepOrStepGroupOrTemplateStepData,
+  isStepGroup = false
 ): StepElementConfig {
   const processNode = produce(initialValues as StepElementConfig, node => {
     if ((item as StepElementConfig).description) {
@@ -296,11 +298,16 @@ export function getStepDataFromValues(
     } else {
       delete node.when
     }
+
+    // for steps delegate selectors are stored at the path 'spec.delegateSelectors'
+    // for step groups it is stored at the path 'delegateSelectors'
     if (!isEmpty(item.delegateSelectors)) {
-      set(node, 'spec.delegateSelectors', item.delegateSelectors)
-    } else if (node.spec?.delegateSelectors) {
-      delete node.spec.delegateSelectors
+      set(node, isStepGroup ? 'delegateSelectors' : 'spec.delegateSelectors', item.delegateSelectors)
+    } else {
+      delete node?.spec?.delegateSelectors
+      delete (node as StepGroupElementConfig)?.delegateSelectors
     }
+
     if (!isEmpty(item.strategy)) {
       node.strategy = item.strategy
     } else if (node.strategy) {
