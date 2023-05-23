@@ -58,7 +58,7 @@ const renderComponent = (): RenderResult => {
 }
 
 describe('TabToolbar', () => {
-  test('it should call the onTabChange by clicking on Edit', () => {
+  test('it should call the onTabChange by clicking on Edit', async () => {
     renderComponent()
 
     await userEvent.click(screen.getByText('edit'))

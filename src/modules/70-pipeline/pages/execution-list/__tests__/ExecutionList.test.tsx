@@ -183,7 +183,7 @@ const renderExecutionPage = (module = 'cd'): RenderResult =>
     </TestWrapper>
   )
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 describe('Execution List', () => {
   beforeAll(() => {

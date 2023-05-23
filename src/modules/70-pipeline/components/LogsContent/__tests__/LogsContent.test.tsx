@@ -229,7 +229,7 @@ describe('<LogsContent /> tests', () => {
   })
 
   describe('Logs test', () => {
-    test('SingleSectionLogs', () => {
+    test('SingleSectionLogs', async () => {
       ;(useLogsContent as jest.Mock).mockImplementation(() => ({
         state: { ...testReducerState, units: ['Section 1'] },
         actions

@@ -94,7 +94,7 @@ jest.mock('services/cv', () => {
 })
 
 describe('SLOCardContent', () => {
-  test('Toggle the SLO and Error budget', () => {
+  test('Toggle the SLO and Error budget', async () => {
     render(
       <TestWrapper {...testWrapperProps}>
         <SLOCardContent serviceLevelObjective={dashboardWidgetsContent} />
@@ -119,7 +119,7 @@ describe('SLOCardContent', () => {
     expect(screen.getAllByText('cv.SLO')[0]).toHaveClass('PillToggle--selected')
   })
 
-  test('it should call setSliderTimeRange when toggle triggered', () => {
+  test('it should call setSliderTimeRange when toggle triggered', async () => {
     const setSliderTimeRange = jest.fn()
     const setChartTimeRange = jest.fn()
 
@@ -152,7 +152,7 @@ describe('SLOCardContent', () => {
     expect(screen.getByText('cv.sloRecalculationInProgress')).toBeInTheDocument()
   })
 
-  test('it should handle resetSlider for type SLO', () => {
+  test('it should handle resetSlider for type SLO', async () => {
     const setSliderTimeRange = jest.fn()
 
     render(
@@ -178,7 +178,7 @@ describe('SLOCardContent', () => {
     expect(setSliderTimeRange).toBeCalledTimes(1)
   })
 
-  test('it should handle resetSlider for type Error Budget', () => {
+  test('it should handle resetSlider for type Error Budget', async () => {
     const sliderTimeRange = { startTime: 1639993400000, endTime: 1639993420000 }
 
     render(
@@ -207,7 +207,7 @@ describe('SLOCardContent', () => {
     expect(screen.queryByText('reset')).not.toBeInTheDocument()
   })
 
-  test('should not render the user hint if showUserHint prop is not passed', () => {
+  test('should not render the user hint if showUserHint prop is not passed', async () => {
     const sliderTimeRange = { startTime: 1639993400000, endTime: 1639993420000 }
 
     render(
@@ -228,7 +228,7 @@ describe('SLOCardContent', () => {
     expect(screen.queryByTestId('SLOCard_UserHint_ErrorBudget')).not.toBeInTheDocument()
   })
 
-  test('should render the user hint if showUserHint prop is passed', () => {
+  test('should render the user hint if showUserHint prop is passed', async () => {
     const sliderTimeRange = { startTime: 1639993400000, endTime: 1639993420000 }
 
     render(

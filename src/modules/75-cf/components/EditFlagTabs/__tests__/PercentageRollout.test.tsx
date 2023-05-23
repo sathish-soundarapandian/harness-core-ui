@@ -115,7 +115,7 @@ describe('PercentageRollout Tests', () => {
     expect(screen.getByDisplayValue(expectedPremiumValue)).toBeInTheDocument()
   })
 
-  test('it should update weighting inputs and weighting bar on edit input change', () => {
+  test('it should update weighting inputs and weighting bar on edit input change', async () => {
     const variations = [
       { identifier: 'Basic', name: 'Basic', value: '20' },
       { identifier: 'Visitor', name: 'Visitor', value: '30' },
@@ -155,7 +155,7 @@ describe('PercentageRollout Tests', () => {
     expect(screen.getByTestId('Premium-bar-percentage')).toHaveStyle(`width: 10%`)
   })
 
-  test('it should show error message if weightings sum is > 100% on edit', () => {
+  test('it should show error message if weightings sum is > 100% on edit', async () => {
     const variations = [
       { identifier: 'Basic', name: 'Basic', value: '20' },
       { identifier: 'Visitor', name: 'Visitor', value: '30' },

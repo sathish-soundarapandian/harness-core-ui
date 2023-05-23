@@ -30,7 +30,7 @@ jest.mock('@governance/PolicyManagementEvaluationModal', () => ({
 jest.mock('uuid')
 
 const renderComponent = (props: Partial<TargetingRulesTabProps> = {}): void => {
-  render(
+  const { container } = render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}

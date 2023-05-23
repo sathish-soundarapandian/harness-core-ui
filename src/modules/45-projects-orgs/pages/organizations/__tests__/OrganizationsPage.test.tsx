@@ -82,7 +82,7 @@ jest.mock('@common/hooks', () => ({
   })
 }))
 
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 const organization = getOrganizationAggregateDTOListMockData.data.data.content[0].organizationResponse.organization
 

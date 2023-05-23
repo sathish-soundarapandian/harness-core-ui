@@ -137,11 +137,11 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
 
     const cancel = await findByTextGlobal(confirmationModal1.parentElement!.parentElement!, 'cancel')
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(cancel)
     })
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(delBtn)
     })
 
@@ -234,7 +234,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
 
     const toggle = container.querySelector('.Toggle--input')!
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(toggle)
     })
 

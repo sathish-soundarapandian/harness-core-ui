@@ -189,7 +189,7 @@ describe('AddTargetToTargetGroupsDialog', () => {
       expect(onChangeMock).not.toHaveBeenCalled()
       expect(hideModalMock).not.toHaveBeenCalled()
 
-      mockTargetGroups.forEach(({ name }) => await userEvent.click(screen.getByText(name)))
+      mockTargetGroups.forEach(async ({ name }) => await userEvent.click(screen.getByText(name)))
       await userEvent.click(screen.getByRole('button', { name: 'cf.targetDetail.addToSegment' }))
 
       await waitFor(() => {

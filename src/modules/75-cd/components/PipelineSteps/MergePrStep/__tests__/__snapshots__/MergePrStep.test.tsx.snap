@@ -241,12 +241,12 @@ exports[`Test MergePrStep should render Merge Params when FF is true: Merge Para
         </div>
         <div
           class="bp3-collapse Accordion--collapse"
-          style="height: 0px;"
+          style="height: auto; overflow-y: visible; transition: none;"
         >
           <div
             aria-hidden="false"
             class="bp3-collapse-body"
-            style="transform: translateY(0);"
+            style="transform: translateY(0); transition: none;"
           >
             <div
               class="Accordion--details"

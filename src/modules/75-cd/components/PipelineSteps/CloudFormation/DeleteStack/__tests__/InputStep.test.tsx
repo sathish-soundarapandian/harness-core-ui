@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, queryByAttribute, act } from '@testing-library/react'
+import { render, queryByAttribute, act, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -117,7 +117,7 @@ describe('Test cloudformation delete stack input set', () => {
       await userEvent.type(timeoutInput!, '10m')
     })
 
-    expect(timeoutInput).toHaveDisplayValue('10m')
+    await waitFor(() => expect(timeoutInput).toHaveDisplayValue('10m'))
     expect(container).toMatchSnapshot()
   })
 

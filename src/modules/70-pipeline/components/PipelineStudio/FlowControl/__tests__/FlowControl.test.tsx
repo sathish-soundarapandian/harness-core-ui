@@ -139,7 +139,7 @@ describe('FlowControl tests', () => {
     expect(editBarrierButtons[0]).toBeTruthy()
     await userEvent.click(editBarrierButtons[0])
     fireEvent.change(await screen.findByRole('textbox')!, { target: { value: 'demoId' } })
-    await waitFor(() => await userEvent.click(screen.getByText('pipeline.barriers.syncBarriers')))
+    await waitFor(async () => await userEvent.click(screen.getByText('pipeline.barriers.syncBarriers')))
     expect(container).toMatchSnapshot()
     const applyChangeButton = await screen.findByText('applyChanges')
     await userEvent.click(applyChangeButton)

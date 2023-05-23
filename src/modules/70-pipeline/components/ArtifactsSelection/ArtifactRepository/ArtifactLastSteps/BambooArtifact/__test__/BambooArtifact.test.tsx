@@ -204,7 +204,7 @@ describe('Bamboo Artifact tests', () => {
     })
   })
 
-  test('onclick of previous button', () => {
+  test('onclick of previous button', async () => {
     const { container } = render(
       <TestWrapper>
         <BambooArtifact

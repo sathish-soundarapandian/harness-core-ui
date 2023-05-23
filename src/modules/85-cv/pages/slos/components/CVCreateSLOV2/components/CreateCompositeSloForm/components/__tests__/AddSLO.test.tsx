@@ -133,7 +133,7 @@ describe('Validate  AddSLO', () => {
     expect(getByText('SLO-4')).toBeInTheDocument()
   })
 
-  test('should render AddSLOs with existing values values', () => {
+  test('should render AddSLOs with existing values values', async () => {
     const { container, getByText } = render(
       <TestWrapper>
         <Formik initialValues={{ serviceLevelObjectivesDetails }} onSubmit={jest.fn()}>
@@ -154,7 +154,7 @@ describe('Validate  AddSLO', () => {
     )
     expect(getByText('cv.CompositeSLO.AddSLO')).toBeInTheDocument()
     const firstWeight = container.querySelector('[name="weightagePercentage"]')
-    act(() => {
+    await act(async () => {
       await userEvent.type(firstWeight!, '1')
     })
     act(() => {

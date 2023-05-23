@@ -97,12 +97,12 @@ describe('Test cloudformation create stack parameters input set', () => {
     }
     const { container, getByPlaceholderText, getByText } = renderComponent(data)
     const input = getByPlaceholderText('pipeline.regionPlaceholder')
-    act(() => {
+    await act(async () => {
       await userEvent.click(input)
     })
 
     const label = getByText('GovCloud (US-West)')
-    act(() => {
+    await act(async () => {
       await userEvent.click(label)
     })
 
@@ -178,11 +178,11 @@ describe('Test cloudformation create stack parameters input set', () => {
     }
     const { container, getByTestId } = renderComponent(data)
     const addLabel = getByTestId('add-header')
-    act(() => {
+    await act(async () => {
       await userEvent.click(addLabel)
     })
     const input = queryByAttribute('name', container, 'test.spec.configuration.parameters[0].store.spec.urls[0]')
-    act(() => {
+    await act(async () => {
       await userEvent.type(input!, 'test')
     })
     expect(input).toHaveValue('test')
@@ -204,7 +204,7 @@ describe('Test cloudformation create stack parameters input set', () => {
     })
 
     const removeLabel = getByTestId('remove-header-0')
-    act(() => {
+    await act(async () => {
       await userEvent.click(removeLabel)
     })
     expect(input).toHaveValue('')

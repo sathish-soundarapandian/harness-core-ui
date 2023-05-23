@@ -100,11 +100,11 @@ describe('Metric thresholds', () => {
       render(<WrapperComponent {...newProps} />)
       expect(screen.queryByTestId(/commonHealthSource_metricThresholds/)).not.toBeInTheDocument()
     })
-    test('should check metric threshold should not render groups, if the metric packs is disabled', () => {
+    test('should check metric threshold should not render groups, if the metric packs is disabled', async () => {
       const { container } = render(<WrapperComponent {...props} />)
       const addMetricThresholdsButton = screen.getByText(/cv.monitoringSources.appD.addThreshold/)
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(addMetricThresholdsButton)
       })
 
@@ -122,7 +122,7 @@ describe('Metric thresholds', () => {
 
       const addMetricThresholdsButton = screen.getByText(/cv.monitoringSources.appD.addThreshold/)
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(addMetricThresholdsButton)
       })
 
@@ -148,7 +148,7 @@ describe('Metric thresholds', () => {
         'cv.monitoringSources.appD.percentageDeviation'
       )
 
-      act(() => {
+      await act(async () => {
         await userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[1])
       })
 

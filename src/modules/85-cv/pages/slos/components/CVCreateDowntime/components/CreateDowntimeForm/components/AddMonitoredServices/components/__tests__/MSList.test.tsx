@@ -37,7 +37,7 @@ describe('MSlist', () => {
       </TestWrapper>
     )
 
-    act(() => {
+    await act(async () => {
       const envFilter = getByPlaceholderText('- all -')
       expect(envFilter).toBeInTheDocument()
       await userEvent.click(envFilter)
@@ -144,18 +144,18 @@ describe('MSlist', () => {
 
     expect(container.querySelectorAll('[type="checkbox"]')[1]).toBeChecked()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelectorAll('[type="checkbox"]')[1])
       await userEvent.click(container.querySelectorAll('[type="checkbox"]')[0])
     })
     expect(container.querySelectorAll('[type="checkbox"]')[0]).toBeChecked()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelectorAll('[type="checkbox"]')[0])
     })
     expect(container.querySelectorAll('[type="checkbox"]')[0]).not.toBeChecked()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelectorAll('[type="checkbox"]')[1])
     })
     await expect(container.querySelectorAll('[type="checkbox"]')[1]).toBeChecked()
@@ -181,7 +181,7 @@ describe('MSlist', () => {
     )
 
     // to apply environment filter
-    act(() => {
+    await act(async () => {
       const envFilter = getByPlaceholderText('- all -')
       expect(envFilter).toBeInTheDocument()
       await userEvent.click(envFilter)

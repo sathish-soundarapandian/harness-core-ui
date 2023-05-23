@@ -127,7 +127,7 @@ describe('InstanceListPanel', () => {
 
     const globalCheckbox = container.querySelector(`input[name="globalInstancesCheckbox"]`)
     expect(globalCheckbox).toBeInTheDocument()
-    expect(globalCheckbox).toBeChecked()
+    await waitFor(() => expect(globalCheckbox).toBeChecked())
   })
 
   test('checking some nodes should make global checkbox indeterminate', async () => {
@@ -146,7 +146,7 @@ describe('InstanceListPanel', () => {
     const globalCheckbox = container.querySelector(`input[name="globalInstancesCheckbox"]`)
     expect(globalCheckbox).toBeInTheDocument()
     expect(globalCheckbox).not.toBeChecked()
-    expect(globalCheckbox).toBePartiallyChecked()
+    await waitFor(() => expect(globalCheckbox).toBePartiallyChecked())
   })
 
   test('checking/unchecking global checkbox should check/uncheck all node checkboxes', async () => {

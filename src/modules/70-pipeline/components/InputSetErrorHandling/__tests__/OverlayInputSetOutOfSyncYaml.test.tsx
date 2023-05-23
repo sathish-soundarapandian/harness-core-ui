@@ -193,6 +193,9 @@ const renderComponent = (): RenderResult => {
 }
 
 describe('Inline Overlay Input Set Error Exp', () => {
+  beforeAll(() => {
+    jest.useFakeTimers({ advanceTimers: true })
+  })
   test('should render input set menu action button', async () => {
     renderComponent()
     jest.runOnlyPendingTimers()

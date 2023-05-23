@@ -170,18 +170,18 @@ describe('<TemplateStudioInternal /> tests', () => {
     )
 
     const toggle = container.querySelector('[data-name="toggle-option-two"]')
-    act(() => {
+    await act(async () => {
       await userEvent.click(toggle!)
     })
     await waitFor(() => expect(toggle?.className).toContain('PillToggle--selected'))
 
     const toggle2 = container.querySelector('[data-name="toggle-option-one"]')
-    act(() => {
+    await act(async () => {
       await userEvent.click(toggle2!)
     })
     await waitFor(() => expect(toggle2?.className).toContain('PillToggle--selected'))
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(toggle2!)
     })
     await waitFor(() => expect(toggle2?.className).not.toEqual('PillToggle--item'))
@@ -231,7 +231,7 @@ describe('<TemplateStudioInternal /> tests', () => {
 })
 
 describe('yaml validation in template studio', () => {
-  test('yaml parsed but error in validation', () => {
+  test('yaml parsed but error in validation', async () => {
     const errorMap = new Map()
     errorMap.set(1, 'err1')
     errorMap.set(2, 'err2')

@@ -89,9 +89,31 @@ describe('Retry History Button tests', () => {
     mocktime = jest.spyOn(Date.prototype, 'toLocaleDateString').mockReturnValue('2023-02-02')
   })
 
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   afterAll(() => {
     mockDate?.mockRestore()
     mocktime?.mockRestore()
+  })
+
+  test('render retry history execution list on loading state', async () => {
+    jest.spyOn(pipelineng, 'useRetryHistory').mockImplementation((): any => {
+      return { data: {}, refetch: jest.fn(), loading: true }
+    })
+    render(
+      <TestWrapper path={TEST_PATH} pathParams={pathParams}>
+        <ExecutionHeader />
+      </TestWrapper>
+    )
+    const retryHistoryButton = await screen.findByRole('button', {
+      name: 'pipeline.retryHistory'
+    })
+    await userEvent.click(retryHistoryButton)
+    const retryHistoryExecutionList = await screen.findByTestId('retryHistoryExecutionList')
+    expect(retryHistoryExecutionList).toMatchSnapshot('RetryHistoryExecutionList Loading')
+    expect(screen.getByText('Loading, please wait...')).toBeInTheDocument()
   })
 
   test('retry history button should be disabled when view pipeline permission is falsy', async () => {
@@ -126,24 +148,6 @@ describe('Retry History Button tests', () => {
     expect(mockHistoryPush).toBeCalledWith(
       '/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/pWoxb6ZARgCrf2fYtZ4k5Q/pipeline'
     )
-  })
-
-  test('render retry history execution list on loading state', async () => {
-    jest.spyOn(pipelineng, 'useRetryHistory').mockImplementation((): any => {
-      return { data: {}, refetch: jest.fn(), loading: true }
-    })
-    render(
-      <TestWrapper path={TEST_PATH} pathParams={pathParams}>
-        <ExecutionHeader />
-      </TestWrapper>
-    )
-    const retryHistoryButton = await screen.findByRole('button', {
-      name: 'pipeline.retryHistory'
-    })
-    await userEvent.click(retryHistoryButton)
-    const retryHistoryExecutionList = await screen.findByTestId('retryHistoryExecutionList')
-    expect(retryHistoryExecutionList).toMatchSnapshot('RetryHistoryExecutionList Loading')
-    expect(screen.getByText('Loading, please wait...')).toBeInTheDocument()
   })
 
   test('on viewLatest click', async () => {
