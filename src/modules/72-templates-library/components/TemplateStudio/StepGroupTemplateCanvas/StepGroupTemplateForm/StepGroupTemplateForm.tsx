@@ -92,7 +92,6 @@ const StepGroupTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX
                 stepsFactory={factory}
                 allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
                 onChange={debounceSubmit}
-                onUpdate={debounceSubmit}
                 isStepGroup={true}
                 ref={advancedConfRef}
                 stepType={StepType.StepGroup}

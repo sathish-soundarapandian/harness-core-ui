@@ -19,6 +19,7 @@ import type { TemplateStepNode, TemplateLinkConfig, EntityGitDetails, PolicyConf
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import type { SaveTemplateButtonProps } from '../SaveTemplateButton/SaveTemplateButton'
 
 export enum AdvancedPanels {
   PreRequisites = 'preRequisites',
@@ -58,6 +59,7 @@ export interface StepCommandsProps {
   gitDetails?: EntityGitDetails
   storeMetadata?: StoreMetadata
   isSaveAsTemplateEnabled?: boolean
+  saveAsTemplateButtonProps?: Partial<SaveTemplateButtonProps>
 }
 
 export enum TabTypes {

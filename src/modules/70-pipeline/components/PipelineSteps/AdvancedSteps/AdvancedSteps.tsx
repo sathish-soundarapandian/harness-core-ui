@@ -55,7 +55,7 @@ export type FormValues = Pick<Values, 'delegateSelectors' | 'when' | 'strategy' 
   policySets?: PolicyConfig['policySets'] | typeof RUNTIME_INPUT_VALUE
 }
 
-export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTemplate' | 'onRemoveTemplate'> {
+export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTemplate' | 'onRemoveTemplate' | 'onUpdate'> {
   stepType?: StepType
   stageType?: StageType
   deploymentType?: string

@@ -56,7 +56,9 @@ function StepGroupWidget(
     </>
   )
 }
-const StepGroupWidgetRef = React.forwardRef(StepGroupWidget)
+
+export const StepGroupWidgetRef = React.forwardRef(StepGroupWidget)
+
 export class StepGroupStep extends PipelineStep<StepGroupElementConfig> {
   renderStep(props: StepProps<StepGroupElementConfig>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, formikRef, isNewStep } = props

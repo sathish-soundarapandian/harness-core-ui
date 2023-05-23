@@ -263,6 +263,9 @@ const processNodeImpl = (
     if (item.template) {
       node.template = item.template
     }
+
+    if (isEmpty(node.spec)) delete node.spec
+
     if ((item as StepElementConfig).spec) {
       node.spec = Object.assign(defaultTo(node.spec, {}), (item as StepElementConfig).spec)
     }
