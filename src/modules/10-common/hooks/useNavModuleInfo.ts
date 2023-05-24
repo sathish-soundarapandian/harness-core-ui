@@ -107,7 +107,6 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     icon: 'ce-main',
     label: 'common.purpose.ce.continuous',
     getHomePageUrl: (accountId: string) => routes.toCE({ accountId }),
-    featureFlagName: FeatureFlag.CENG_ENABLED,
     color: '--ccm-border',
     backgroundColor: '--ccm-background',
     backgroundColorLight: '--ccm-background-light'

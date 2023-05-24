@@ -62,8 +62,7 @@ jest.mock('services/cd-ng', () => ({
 }))
 
 const featureFlags = {
-  CVNG_ENABLED: true,
-  CENG_ENABLED: true
+  CVNG_ENABLED: true
 }
 
 describe('Welcome Page', () => {

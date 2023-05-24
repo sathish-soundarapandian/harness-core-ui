@@ -52,16 +52,8 @@ export const AccountSideNavProps: SidebarContext = {
 }
 
 export default function RouteDestinations(): React.ReactElement {
-  const {
-    CVNG_ENABLED,
-    CENG_ENABLED,
-    CODE_ENABLED,
-    IACM_ENABLED,
-    SSCA_ENABLED,
-    IDP_ENABLED,
-    CET_ENABLED,
-    CDB_MFE_ENABLED
-  } = useFeatureFlags()
+  const { CVNG_ENABLED, CODE_ENABLED, IACM_ENABLED, SSCA_ENABLED, IDP_ENABLED, CET_ENABLED, CDB_MFE_ENABLED } =
+    useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
   const isCVModuleEnabled =
@@ -100,11 +92,9 @@ export default function RouteDestinations(): React.ReactElement {
       <Route path="/account/:accountId/settings">
         <AuthSettingsRoutes />
       </Route>
-      {CENG_ENABLED ? (
-        <Route path="/account/:accountId/:module(ce)">
-          <CERoutes />
-        </Route>
-      ) : null}
+      <Route path="/account/:accountId/:module(ce)">
+        <CERoutes />
+      </Route>
       {CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children}
       {isFFEnabled ? CFRoutes({})?.props.children : null}
       {IACM_ENABLED ? IACMRoutes().props.children : null}

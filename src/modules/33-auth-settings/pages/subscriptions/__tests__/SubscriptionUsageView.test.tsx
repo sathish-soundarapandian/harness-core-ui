@@ -14,8 +14,7 @@ import { licenseData } from './CDUsageInfo.test'
 
 const featureFlags = {
   BUILD_CREDITS_VIEW: true,
-  CVNG_ENABLED: true,
-  CENG_ENABLED: true
+  CVNG_ENABLED: true
 }
 
 describe('Subscriptions graph view undefined module flow  ', () => {

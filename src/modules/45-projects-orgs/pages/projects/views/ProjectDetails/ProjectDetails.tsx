@@ -60,7 +60,7 @@ const ProjectDetails: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const { selectedTimeRange } = useLandingDashboardContext()
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
-  const { CVNG_ENABLED, CENG_ENABLED, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+  const { CVNG_ENABLED, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
   const showProjectOverview = NEW_LEFT_NAVBAR_SETTINGS && !isOnPrem()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const invitePermission = {
@@ -137,7 +137,12 @@ const ProjectDetails: React.FC = () => {
     if (projectData.modules.includes(ModuleName.CI)) infoCards.push(ModuleName.CI)
     if (FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE && projectData.modules.includes(ModuleName.CF))
       infoCards.push(ModuleName.CF)
-    if (CENG_ENABLED && projectData.modules.includes(ModuleName.CE)) infoCards.push(ModuleName.CE)
+    if (
+      licenseInformation['CE']?.status === LICENSE_STATE_VALUES.ACTIVE &&
+      projectData.modules.includes(ModuleName.CE)
+    ) {
+      infoCards.push(ModuleName.CE)
+    }
     if (CVNG_ENABLED && projectData.modules.includes(ModuleName.CV)) infoCards.push(ModuleName.CV)
     if (
       licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE &&

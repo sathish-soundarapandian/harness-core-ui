@@ -13,8 +13,7 @@ import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import SubscriptionGraphView from '../overview/SubscriptionGraphVIew'
 
 const featureFlags = {
-  CVNG_ENABLED: true,
-  CENG_ENABLED: true
+  CVNG_ENABLED: true
 }
 
 describe('Subscriptions graph view undefined module flow  ', () => {

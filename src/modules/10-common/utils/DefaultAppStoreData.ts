@@ -36,8 +36,7 @@ export const defaultAppStoreValues: Omit<AppStoreContextProps, 'updateAppStore'>
     tags: { tag1: '', tag2: 'tag3' }
   },
   featureFlags: {
-    CVNG_ENABLED: true,
-    CENG_ENABLED: true
+    CVNG_ENABLED: true
   },
   currentUserInfo: {
     uuid: 'dummyId',

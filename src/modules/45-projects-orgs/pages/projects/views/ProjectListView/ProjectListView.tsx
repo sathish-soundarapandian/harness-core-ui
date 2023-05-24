@@ -79,7 +79,7 @@ export const RenderColumnOrganization: Renderer<CellProps<ProjectAggregateDTO>> 
 }
 
 const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
-  const { CVNG_ENABLED, CENG_ENABLED, CET_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CET_ENABLED } = useFeatureFlags()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const data = row.original
   const shouldShowModules = data.projectResponse.project.modules?.length
@@ -100,7 +100,7 @@ const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) 
       icons.push(<Icon name={getModuleIcon(ModuleName.CF)} size={20} key={ModuleName.CF} />)
     }
 
-    if (CENG_ENABLED && modules?.includes(ModuleName.CE)) {
+    if (licenseInformation['CE']?.status === LICENSE_STATE_VALUES.ACTIVE && modules?.includes(ModuleName.CE)) {
       icons.push(<Icon name={getModuleIcon(ModuleName.CE)} size={20} key={ModuleName.CE} />)
     }
 

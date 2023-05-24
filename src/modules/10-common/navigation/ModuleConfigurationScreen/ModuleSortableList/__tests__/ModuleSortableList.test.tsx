@@ -91,11 +91,7 @@ describe('Module Sortable List', () => {
     const handleUpdate = jest.fn()
     const onSelect = jest.fn()
     const { queryAllByText } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          CENG_ENABLED: true
-        }}
-      >
+      <TestWrapper>
         <ModuleSortableList
           activeModule={ModuleName.CD}
           handleUpdate={handleUpdate}
@@ -112,11 +108,7 @@ describe('Module Sortable List', () => {
     const handleUpdate = jest.fn()
     const onSelect = jest.fn()
     const { container } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          CENG_ENABLED: true
-        }}
-      >
+      <TestWrapper>
         <ModuleSortableList
           activeModule={ModuleName.CD}
           handleUpdate={handleUpdate}
@@ -139,11 +131,7 @@ describe('Module Sortable List', () => {
     const handleUpdate = jest.fn()
     const onSelect = jest.fn()
     const { container } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          CENG_ENABLED: true
-        }}
-      >
+      <TestWrapper>
         <ModuleSortableList
           activeModule={ModuleName.CD}
           handleUpdate={handleUpdate}
@@ -163,11 +151,7 @@ describe('Module Sortable List', () => {
     const handleUpdate = jest.fn()
     const onSelect = jest.fn()
     const { container } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          CENG_ENABLED: true
-        }}
-      >
+      <TestWrapper>
         <ModuleSortableList
           activeModule={ModuleName.CD}
           handleUpdate={handleUpdate}

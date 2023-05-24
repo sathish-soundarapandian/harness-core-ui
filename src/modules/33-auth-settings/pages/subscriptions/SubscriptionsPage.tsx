@@ -86,7 +86,7 @@ const SubscriptionsPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { moduleCard } = useQueryParams<{ moduleCard?: ModuleName }>()
-  const { CENG_ENABLED, CET_ENABLED } = useFeatureFlags()
+  const { CET_ENABLED } = useFeatureFlags()
   const { FF_LICENSE_STATE, licenseInformation, updateLicenseStore } = useLicenseStore()
   const history = useHistory()
   const isCommunity = useGetCommunity()
@@ -108,7 +108,7 @@ const SubscriptionsPage: React.FC = () => {
           accumulator.push(card)
           break
         case ModuleName.CE:
-          CENG_ENABLED && accumulator.push(card)
+          licenseInformation['CE']?.status === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)
           break
         case ModuleName.CF:
           FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)

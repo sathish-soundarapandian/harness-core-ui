@@ -230,8 +230,7 @@ export const twoFactorAuthSettings = {
 
 export const enabledTwoFactorAuth: Pick<AppStoreContextProps, 'featureFlags' | 'currentUserInfo'> = {
   featureFlags: {
-    CVNG_ENABLED: true,
-    CENG_ENABLED: true
+    CVNG_ENABLED: true
   },
   currentUserInfo: {
     uuid: 'dummyId',
