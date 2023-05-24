@@ -243,6 +243,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
               setOpen(false)
               onChange(record, scope)
             }}
+            showAllTab
             onMultiSelect={records => {
               setOpen(false)
               onMultiSelectChange?.(records)
