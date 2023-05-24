@@ -472,7 +472,7 @@ export function getReferenceFieldProps({
     createNewLabel: getString('newConnector'),
     // recordClassName: css.listItem,
     isNewConnectorLabelVisible: true,
-    fetchRecords: (done, search, page, scope, signal = undefined) => {
+    fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected) => {
       const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier })
       const gitFilterParams =
         gitScope?.repo && gitScope?.branch
@@ -491,7 +491,8 @@ export function getReferenceFieldProps({
             ...gitFilterParams,
             pageIndex: page || 0,
             pageSize: 10,
-            version
+            version,
+            includeAllConnectorsAvailableAtScope: allTabSelected
           },
           body: merge(
             {
