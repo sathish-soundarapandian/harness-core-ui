@@ -978,6 +978,9 @@ artifactsSelection:
   customArtifactScriptFill: Provide a script to dynamically pull the artifact location.
   artifactIdPlaceholder: Enter Artifact ID
   groupId: Group ID
+  organizationLabel: Organization
+  organizationPlaceholder: Enter Organization
+  userPlaceholder: Enter User
   groupIdPlaceholder: Enter Group ID
   groupPlaceholder: Enter Group
   extension: Extension
@@ -1009,6 +1012,7 @@ artifactsSelection:
   artifactDetails: Artifact Details
   orgNamePlaceholder: Enter Organization Name
   versionDetails: Version Details
+  packageSource: Package Source
   versionPlaceholder: Enter Version
   versionRegex: Version Regex
   versionRegexPlaceholder: Enter Version Regex

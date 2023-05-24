@@ -184,6 +184,7 @@ export interface AmazonS3ArtifactProps {
 export interface GithubPackageRegistryInitialValuesType {
   identifier?: string
   versionType?: TagTypes
+  packageSource?: 'org' | 'user'
   spec: {
     connectorRef: string
     packageType: string
@@ -191,6 +192,11 @@ export interface GithubPackageRegistryInitialValuesType {
     packageName: string
     version: string
     versionRegex: string
+    repository?: string
+    user?: string
+    artifactId?: string
+    groupId?: string
+    extension?: string
   }
 }
 

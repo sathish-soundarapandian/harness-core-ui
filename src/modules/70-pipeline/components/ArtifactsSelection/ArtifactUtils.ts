@@ -591,6 +591,7 @@ export const defaultArtifactInitialValues = (
       return {
         identifier: '',
         versionType: TagTypes.Value,
+        packageSource: 'org',
         spec: {
           connectorRef: '',
           packageType: 'container',

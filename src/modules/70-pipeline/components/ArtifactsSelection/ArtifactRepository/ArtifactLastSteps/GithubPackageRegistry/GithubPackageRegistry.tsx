@@ -52,18 +52,24 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
+import { ArtifactIdentifierValidation, ModalViewFor, tagOptions, packageSourceOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const packageTypes: SelectOption[] = [
-  { label: 'npm', value: 'npm' },
-  { label: 'maven', value: 'maven' },
-  { label: 'rubygems', value: 'rubygems' },
-  { label: 'nuget', value: 'nuget' },
-  { label: 'container', value: 'container' }
+export enum PACKAGE_TYPES {
+  CONTAINER = 'container',
+  MAVEN = 'maven',
+  NPM = 'npm',
+  NUGET = 'nuget'
+}
+
+export const packageTypesList: SelectOption[] = [
+  { label: 'Container', value: PACKAGE_TYPES.CONTAINER },
+  { label: 'Maven', value: PACKAGE_TYPES.MAVEN },
+  { label: 'Npm', value: PACKAGE_TYPES.NPM },
+  { label: 'Nuget', value: PACKAGE_TYPES.NUGET }
 ]
 
 function FormComponent({
@@ -192,9 +198,8 @@ function FormComponent({
         <div className={css.imagePathContainer}>
           <div className={cx(stepCss.formGroup, stepCss.xxlg)}>
             <FormInput.Select
-              items={packageTypes}
+              items={packageTypesList}
               name="spec.packageType"
-              disabled
               onChange={value => {
                 formik.setValues({
                   ...formik.values,
@@ -211,43 +216,45 @@ function FormComponent({
             />
           </div>
         </div>
-        <div className={css.imagePathContainer}>
-          <FormInput.MultiTextInput
-            name="spec.org"
-            label={getString('projectsOrgs.orgName')}
-            placeholder={getString('pipeline.artifactsSelection.orgNamePlaceholder')}
-            disabled={isReadonly}
-            isOptional={true}
-            onChange={value => {
-              formik.setValues({
-                ...formik.values,
-                spec: {
-                  ...formik.values?.spec,
-                  org: value,
-                  packageName: formik.values?.spec?.packageName === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : '',
-                  version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
-                }
-              })
-            }}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-          />
-          {getMultiTypeFromValue(formik.values?.spec?.org) === MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
-              style={{ marginTop: 22 }}
-              value={formik.values?.spec?.org || ''}
-              type="String"
-              variableName="org"
-              showRequiredField={false}
-              showDefaultField={false}
-              onChange={value => formik.setFieldValue('spec.org', value)}
-              isReadonly={isReadonly}
-              allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+        {formik.values?.spec?.packageType !== PACKAGE_TYPES.MAVEN && (
+          <div className={css.imagePathContainer}>
+            <FormInput.MultiTextInput
+              name="spec.org"
+              label={getString('projectsOrgs.orgName')}
+              placeholder={getString('pipeline.artifactsSelection.orgNamePlaceholder')}
+              disabled={isReadonly}
+              isOptional={true}
+              onChange={value => {
+                formik.setValues({
+                  ...formik.values,
+                  spec: {
+                    ...formik.values?.spec,
+                    org: value,
+                    packageName: formik.values?.spec?.packageName === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : '',
+                    version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
+                  }
+                })
+              }}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
             />
-          )}
-        </div>
+            {getMultiTypeFromValue(formik.values?.spec?.org) === MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                style={{ marginTop: 22 }}
+                value={formik.values?.spec?.org || ''}
+                type="String"
+                variableName="org"
+                showRequiredField={false}
+                showDefaultField={false}
+                onChange={value => formik.setFieldValue('spec.org', value)}
+                isReadonly={isReadonly}
+                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+              />
+            )}
+          </div>
+        )}
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             selectItems={getPackages()}
@@ -314,6 +321,170 @@ function FormComponent({
             />
           )}
         </div>
+        {formik.values?.spec?.packageType === PACKAGE_TYPES.MAVEN && (
+          <>
+            <div className={css.tagGroup}>
+              <FormInput.RadioGroup
+                label={getString('pipeline.artifactsSelection.packageSource')}
+                name="packageSource"
+                radioGroup={{ inline: true }}
+                items={packageSourceOptions}
+                className={css.radioGroup}
+              />
+            </div>
+            {formik.values?.packageSource === 'org' ? (
+              <div className={css.imagePathContainer}>
+                <>
+                  <FormInput.MultiTextInput
+                    label={getString('pipeline.artifactsSelection.organizationLabel')}
+                    name="spec.org"
+                    placeholder={getString('pipeline.artifactsSelection.organizationPlaceholder')}
+                    multiTextInputProps={{ expressions, allowableTypes }}
+                  />
+                  {getMultiTypeFromValue(formik.values?.spec?.org) === MultiTypeInputType.RUNTIME && (
+                    <div className={css.configureOptions}>
+                      <ConfigureOptions
+                        value={formik.values?.spec?.org || ''}
+                        type="String"
+                        variableName="spec.org"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        onChange={value => {
+                          formik.setFieldValue('spec.org', value)
+                        }}
+                        isReadonly={isReadonly}
+                      />
+                    </div>
+                  )}
+                </>
+              </div>
+            ) : (
+              <div className={css.imagePathContainer}>
+                <>
+                  <FormInput.MultiTextInput
+                    label={getString('common.userLabel')}
+                    name="spec.user"
+                    placeholder={getString('pipeline.artifactsSelection.userPlaceholder')}
+                    multiTextInputProps={{ expressions, allowableTypes }}
+                  />
+                  {getMultiTypeFromValue(formik.values?.spec?.user) === MultiTypeInputType.RUNTIME && (
+                    <div className={css.configureOptions}>
+                      <ConfigureOptions
+                        value={formik.values?.spec?.user || ''}
+                        type="String"
+                        variableName="spec.user"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        onChange={value => {
+                          formik.setFieldValue('spec.user', value)
+                        }}
+                        isReadonly={isReadonly}
+                      />
+                    </div>
+                  )}
+                </>
+              </div>
+            )}
+            <div className={css.imagePathContainer}>
+              <>
+                <FormInput.MultiTextInput
+                  label={getString('repository')}
+                  placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
+                  name="spec.repository"
+                  multiTextInputProps={{ expressions, allowableTypes }}
+                />
+                {getMultiTypeFromValue(formik.values?.spec?.repository) === MultiTypeInputType.RUNTIME && (
+                  <div className={css.configureOptions}>
+                    <ConfigureOptions
+                      value={formik.values?.spec?.repository || ''}
+                      type="String"
+                      variableName="spec.repository"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => {
+                        formik.setFieldValue('spec.repository', value)
+                      }}
+                      isReadonly={isReadonly}
+                    />
+                  </div>
+                )}
+              </>
+            </div>
+            <div className={css.imagePathContainer}>
+              <>
+                <FormInput.MultiTextInput
+                  label={getString('pipeline.artifactsSelection.groupId')}
+                  name="spec.groupId"
+                  placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
+                  multiTextInputProps={{ expressions, allowableTypes }}
+                />
+                {getMultiTypeFromValue(formik.values?.spec?.groupId) === MultiTypeInputType.RUNTIME && (
+                  <div className={css.configureOptions}>
+                    <ConfigureOptions
+                      value={formik.values?.spec?.groupId || ''}
+                      type="String"
+                      variableName="spec.groupId"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => {
+                        formik.setFieldValue('spec.groupId', value)
+                      }}
+                      isReadonly={isReadonly}
+                    />
+                  </div>
+                )}
+              </>
+            </div>
+            <div className={css.imagePathContainer}>
+              <>
+                <FormInput.MultiTextInput
+                  label={getString('pipeline.artifactsSelection.artifactId')}
+                  name="spec.artifactId"
+                  placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
+                  multiTextInputProps={{ expressions, allowableTypes }}
+                />
+                {getMultiTypeFromValue(formik.values?.spec?.artifactId) === MultiTypeInputType.RUNTIME && (
+                  <div className={css.configureOptions}>
+                    <ConfigureOptions
+                      value={formik.values?.spec?.artifactId || ''}
+                      type="String"
+                      variableName="spec.artifactId"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => {
+                        formik.setFieldValue('spec.artifactId', value)
+                      }}
+                      isReadonly={isReadonly}
+                    />
+                  </div>
+                )}
+              </>
+            </div>
+            <div className={css.imagePathContainer}>
+              <FormInput.MultiTextInput
+                label={getString('pipeline.artifactsSelection.extension')}
+                name="spec.extension"
+                placeholder={getString('pipeline.artifactsSelection.extensionPlaceholder')}
+                multiTextInputProps={{ expressions, allowableTypes }}
+              />
+              {getMultiTypeFromValue(formik.values?.spec?.extension) === MultiTypeInputType.RUNTIME && (
+                <div className={css.configureOptions}>
+                  <ConfigureOptions
+                    value={formik.values?.spec?.extension || ''}
+                    type="String"
+                    variableName="spec.extension"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={value => {
+                      formik.setFieldValue('spec.extension', value)
+                    }}
+                    isReadonly={isReadonly}
+                  />
+                </div>
+              )}
+            </div>
+          </>
+        )}
         <div className={css.tagGroup}>
           <FormInput.RadioGroup
             label={getString('pipeline.artifactsSelection.versionDetails')}
@@ -421,6 +592,27 @@ function FormComponent({
   )
 }
 
+const getExtraDataForMavenIfApplicable = (formData: GithubPackageRegistryInitialValuesType) => {
+  const packageSourceData =
+    formData.spec?.packageType === PACKAGE_TYPES.MAVEN && formData.packageSource === 'user'
+      ? {
+          user: defaultTo(formData.spec?.user, '')
+        }
+      : {
+          org: formData.spec.org
+        }
+
+  return formData.spec?.packageType === PACKAGE_TYPES.MAVEN
+    ? {
+        repository: formData.spec?.repository,
+        groupId: formData.spec?.groupId,
+        artifactId: formData.spec?.artifactId,
+        extension: formData.spec?.extension,
+        ...packageSourceData
+      }
+    : packageSourceData
+}
+
 export function GithubPackageRegistry(
   props: StepProps<ConnectorConfigDTO> & GithubPackageRegistryProps
 ): React.ReactElement {
@@ -465,10 +657,10 @@ export function GithubPackageRegistry(
       ...identifierData,
       spec: {
         connectorRef: connectorId,
-        org: formData.spec.org,
         packageName: formData.spec.packageName,
         packageType: formData.spec.packageType,
-        ...versionData
+        ...versionData,
+        ...getExtraDataForMavenIfApplicable(formData)
       }
     })
   }
