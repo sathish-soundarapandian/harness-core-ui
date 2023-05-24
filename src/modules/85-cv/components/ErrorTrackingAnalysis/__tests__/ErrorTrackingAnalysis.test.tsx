@@ -137,7 +137,7 @@ describe('Unit tests for ErrorTrackingAnalysisContainer', () => {
     await waitFor(() => expect(getAllByText('Unknown')).toHaveLength(unknownClusterTypeMockedData.length))
   })
 
-  test('it should not pass field clusterTypes to BE for event type All', () => {
+  test('it should not pass field clusterTypes to BE for event type All', async () => {
     let useGetAllLogsClusterDataQueryParams: cvServices.GetAllErrorTrackingClusterDataQueryParams | undefined
     let useGetAllLogsDataQueryParams: cvServices.GetAllErrorTrackingDataQueryParams | undefined
 

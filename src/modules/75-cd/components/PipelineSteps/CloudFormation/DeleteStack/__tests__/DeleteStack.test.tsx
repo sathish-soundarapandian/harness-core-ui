@@ -184,21 +184,21 @@ describe('Test Cloudformation delete stack', () => {
     const { container } = renderComponent(data)
 
     const stepName = queryByAttribute('name', container, 'name')
-    act(() => {
+    await act(async () => {
       await userEvent.clear(stepName!)
       await userEvent.type(stepName!, 'new name')
     })
     expect(stepName).toHaveDisplayValue('new name')
 
     const timeout = queryByAttribute('name', container, 'timeout')
-    act(() => {
+    await act(async () => {
       await userEvent.clear(timeout!)
       await userEvent.type(timeout!, '20m')
     })
     expect(timeout).toHaveDisplayValue('20m')
 
     const stackName = queryByAttribute('name', container, 'spec.configuration.spec.stackName')
-    act(() => {
+    await act(async () => {
       await userEvent.clear(stackName!)
       await userEvent.type(stackName!, 'new_name')
     })
@@ -279,7 +279,7 @@ describe('Test Cloudformation delete stack', () => {
     const { container, getByText } = renderComponent(data)
 
     const provId = queryByAttribute('name', container, 'spec.configuration.spec.provisionerIdentifier')
-    act(() => {
+    await act(async () => {
       await userEvent.type(provId!, '')
     })
     expect(provId).toHaveDisplayValue('')

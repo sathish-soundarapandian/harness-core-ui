@@ -388,13 +388,13 @@ describe('<FailureStrategyPanel /> tests', () => {
 
     const change = await findAllByTestId('thumbnail-select-change')
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(change[0])
     })
 
     const retry = queryFieldAndStrategy('failureStrategies[0].onFailure.action.type', Strategy.Retry)!
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(retry)
     })
 

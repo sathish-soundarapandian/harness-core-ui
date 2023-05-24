@@ -144,7 +144,6 @@ jest.mock('@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSour
 
 describe('CVCreateSloV2', () => {
   beforeEach(() => {
-    // jest.setTimeout(30000)
     jest.runAllTimers()
   })
 

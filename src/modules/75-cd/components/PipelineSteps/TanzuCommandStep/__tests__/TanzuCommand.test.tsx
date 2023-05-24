@@ -135,7 +135,7 @@ describe('TanzuCommandStep tests', () => {
     expect((getByText('resourcePage.fileStore') as HTMLOptionElement).selected).toBeTruthy()
     fireEvent.click(scriptTypeDropdown!)
 
-    act(() => {
+    await act(async () => {
       await userEvent.selectOptions(scriptTypeDropdown, 'inline')
     })
     expect(container).toMatchSnapshot()

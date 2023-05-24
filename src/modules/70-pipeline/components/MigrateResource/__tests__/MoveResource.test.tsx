@@ -101,7 +101,7 @@ describe('ImportResource - Pipeline', () => {
     const connectorSelector = container.querySelector('button[data-testid="cr-field-connectorRef"]')
     expect(connectorSelector).not.toHaveAttribute('disabled')
     const moveButton = getByText('common.moveToGit')
-    act(() => {
+    await act(async () => {
       await userEvent.click(moveButton)
     })
     await waitFor(() => expect(getByText('validation.sshConnectorRequired')).toBeInTheDocument())
@@ -132,7 +132,7 @@ describe('ImportResource - Pipeline', () => {
     expect(connectorSelector).toHaveAttribute('disabled')
 
     const moveButton = getByText('common.moveToGit')
-    act(() => {
+    await act(async () => {
       await userEvent.click(moveButton)
     })
     await waitFor(() => expect(getByText('pipeline.moveSuccessMessage')).toBeDefined())
@@ -140,7 +140,7 @@ describe('ImportResource - Pipeline', () => {
     expect(onSuccess).toHaveBeenCalledTimes(1)
   })
 
-  test('clicking on cancel button should call onCancelClick prop function', () => {
+  test('clicking on cancel button should call onCancelClick prop function', async () => {
     const { getByText } = render(
       <TestWrapper path={TEST_PIPELINES_PATH} pathParams={TEST_PATH_PARAMS}>
         <MoveResource
@@ -157,7 +157,7 @@ describe('ImportResource - Pipeline', () => {
     expect(onCancelClick).toHaveBeenCalledTimes(1)
   })
 
-  test('when onCancelClick prop is not passed - clicking on cancel button should call onCancelClick prop function', () => {
+  test('when onCancelClick prop is not passed - clicking on cancel button should call onCancelClick prop function', async () => {
     const { getByText } = render(
       <TestWrapper path={TEST_PIPELINES_PATH} pathParams={TEST_PATH_PARAMS}>
         <MoveResource resourceType={ResourceType.PIPELINES} migrationType={MigrationType.INLINE_TO_REMOTE} />
@@ -186,7 +186,7 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const moveButton = getByText('common.moveToGit')
-    act(() => {
+    await act(async () => {
       await userEvent.click(moveButton)
     })
 
@@ -217,7 +217,7 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const moveButton = getByText('common.moveToGit')
-    act(() => {
+    await act(async () => {
       await userEvent.click(moveButton)
     })
     await waitFor(() => expect(getByText('Invalid Request: Error while moving inputSet')).toBeDefined())
@@ -246,7 +246,7 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const moveButton = getByText('common.moveToGit')
-    act(() => {
+    await act(async () => {
       await userEvent.click(moveButton)
     })
     await waitFor(() => expect(getByText('somethingWentWrong')).toBeDefined())
@@ -297,7 +297,7 @@ describe('ImportResource - Pipeline', () => {
     )
 
     const moveButton = getByText('common.moveToGit')
-    act(() => {
+    await act(async () => {
       await userEvent.click(moveButton)
     })
     await waitFor(() =>

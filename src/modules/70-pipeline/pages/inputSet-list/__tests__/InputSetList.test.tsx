@@ -55,7 +55,7 @@ jest.mock('react-monaco-editor', () => ({
 }))
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
-jest.useFakeTimers()
+jest.useFakeTimers({ advanceTimers: true })
 
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
@@ -151,6 +151,9 @@ const renderComponent = (): RenderResult => {
 }
 
 describe('Input Set List tests', () => {
+  beforeEach(() => {
+    jest.runAllTimers()
+  })
   test('render Input Set List view', async () => {
     const { getAllByText, container } = renderComponent()
     jest.runOnlyPendingTimers()

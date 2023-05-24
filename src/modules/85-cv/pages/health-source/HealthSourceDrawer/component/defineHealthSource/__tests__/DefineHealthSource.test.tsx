@@ -128,7 +128,7 @@ describe('DefineHealthSource', () => {
 
     await waitFor(() => expect(getByText('CloudWatch')).not.toBeNull())
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('[data-icon="service-aws"]')!)
     })
 
@@ -148,10 +148,10 @@ describe('DefineHealthSource', () => {
         </SetupSourceTabs>
       </TestWrapper>
     )
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('span[data-icon="service-appdynamics"]')!)
     })
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('button[data-testid="cr-field-connectorRef"]')!)
     })
     await waitFor(() => expect(document.querySelector('.bp3-dialog div[data-tab-id="account"]')).toBeInTheDocument())
@@ -173,10 +173,10 @@ describe('DefineHealthSource', () => {
         </SetupSourceTabs>
       </TestWrapper>
     )
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('span[data-icon="service-appdynamics"]')!)
     })
-    await act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('button[data-testid="cr-field-connectorRef"]')!)
     })
     await waitFor(() => expect(document.querySelector('.bp3-dialog div[data-tab-id="account"]')).toBeInTheDocument())
@@ -218,7 +218,7 @@ describe('DefineHealthSource', () => {
 
     expect(screen.queryByTestId('dataSourceTypeSelector')).not.toBeInTheDocument()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(container.querySelector('span[data-icon="service-prometheus"]')!)
     })
 
@@ -228,7 +228,7 @@ describe('DefineHealthSource', () => {
 
     expect(screen.getByTestId('dataSourceTypeSelector')).toBeInTheDocument()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByText(/next/))
     })
 
@@ -237,7 +237,7 @@ describe('DefineHealthSource', () => {
       expect(screen.getByPlaceholderText(/- cv.healthSource.featurePlaceholder -/)).toBeDisabled()
     })
 
-    await act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByText(/cv.healthSource.awsDataSourceName/))
     })
 
@@ -247,11 +247,11 @@ describe('DefineHealthSource', () => {
       expect(screen.getByText(/cv.healthSource.awsWorkspaceLabel/)).toBeInTheDocument()
     })
 
-    act(() => {
+    await act(async () => {
       await userEvent.type(screen.getByPlaceholderText(/cv.healthSource.namePlaceholder/), 'testName')
     })
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(
         screen.getByPlaceholderText(/- cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder -/)
       )
@@ -261,7 +261,7 @@ describe('DefineHealthSource', () => {
       expect(screen.getByText(/region 1/)).toBeInTheDocument()
     })
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByText(/region 1/))
     })
 
@@ -269,7 +269,7 @@ describe('DefineHealthSource', () => {
       expect(fetchWorkspaceIdMock).toHaveBeenCalledWith(workspaceIdqueryParamsExpected)
     })
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByPlaceholderText(/- cv.healthSource.awsWorkspacePlaceholderText -/))
     })
 
@@ -277,7 +277,7 @@ describe('DefineHealthSource', () => {
       expect(screen.getByText(/Workspace 1/)).toBeInTheDocument()
     })
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByText(/Workspace 1/))
     })
 
@@ -285,7 +285,7 @@ describe('DefineHealthSource', () => {
       expect(screen.getByPlaceholderText(/- cv.healthSource.awsWorkspacePlaceholderText -/)).toHaveValue('Workspace 1')
     })
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByText(/next/))
     })
 

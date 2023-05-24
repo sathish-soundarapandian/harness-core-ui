@@ -187,7 +187,7 @@ describe('MonitoredServiceLogContent', () => {
     })
   })
 
-  test('should handle the Top and Bottom navigation', () => {
+  test('should handle the Top and Bottom navigation', async () => {
     const { container } = render(
       <TestWrapper {...testWrapperProps}>
         <MonitoredServiceLogContent

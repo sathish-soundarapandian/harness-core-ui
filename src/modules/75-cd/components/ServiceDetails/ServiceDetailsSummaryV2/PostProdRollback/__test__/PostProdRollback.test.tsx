@@ -228,7 +228,7 @@ describe('PostProdRollback - ', () => {
 
 describe('PostProdRollback - empty, loading, error states - ', () => {
   configurations()
-  test('should render empty state', () => {
+  test('should render empty state', async () => {
     jest.spyOn(cdng, 'useGetActiveInstanceGroupedByEnvironment').mockImplementation(() => {
       return { data: [], refetch: jest.fn(), loading: false, error: false } as any
     })
@@ -249,7 +249,7 @@ describe('PostProdRollback - empty, loading, error states - ', () => {
 
     matchListOfTextOnDocument(postProdRollbackDrawer!, emptyStateTextMatch)
   })
-  test('should render error state', () => {
+  test('should render error state', async () => {
     jest.spyOn(cdng, 'useGetActiveInstanceGroupedByEnvironment').mockImplementation(() => {
       return {
         data: [],
