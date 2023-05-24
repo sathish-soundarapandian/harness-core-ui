@@ -84,19 +84,21 @@ interface AdditionalParams {
 const getAdditionalParams = ({
   scope,
   projectIdentifier,
-  orgIdentifier
+  orgIdentifier,
+  allTabSelected
 }: {
   scope?: string
   projectIdentifier?: string
   orgIdentifier?: string
+  allTabSelected?: boolean
 }): AdditionalParams => {
   const additionalParams: AdditionalParams = {}
 
-  if (scope === Scope.PROJECT) {
+  if (scope === Scope.PROJECT || allTabSelected) {
     additionalParams.projectIdentifier = projectIdentifier
   }
 
-  if (scope === Scope.PROJECT || scope === Scope.ORG) {
+  if (scope === Scope.PROJECT || scope === Scope.ORG || allTabSelected) {
     additionalParams.orgIdentifier = orgIdentifier
   }
 
@@ -473,7 +475,7 @@ export function getReferenceFieldProps({
     // recordClassName: css.listItem,
     isNewConnectorLabelVisible: true,
     fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected) => {
-      const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier })
+      const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier, allTabSelected })
       const gitFilterParams =
         gitScope?.repo && gitScope?.branch
           ? {
@@ -499,8 +501,9 @@ export function getReferenceFieldProps({
               ...(!category && { types: Array.isArray(type) ? type : [type] }),
               category,
               filterType: 'Connector',
-              projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
-              orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
+              projectIdentifier: scope === Scope.PROJECT || allTabSelected ? [projectIdentifier as string] : undefined,
+              orgIdentifier:
+                scope === Scope.PROJECT || scope === Scope.ORG || allTabSelected ? [orgIdentifier as string] : undefined
             },
             connectorFilterProperties
           ) as ConnectorFilterProperties
