@@ -64,7 +64,7 @@
     "@harness/monaco-yaml": "^1.0.0",
     "@harness/ng-tooltip": "^1.31.115",
     "@harness/telemetry": "^1.0.42",
-    "@harness/uicore": "3.134.0",
+    "@harness/uicore": "3.135.2",
     "@harness/use-modal": "1.1.0",
     "@harnessio/ff-react-client-sdk": "1.3.0",
     "@harnessio/react-audit-service-client": "^0.3.0",
