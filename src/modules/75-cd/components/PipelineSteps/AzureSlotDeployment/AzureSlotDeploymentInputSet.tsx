@@ -43,8 +43,8 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      envId: selectedStage?.stage.spec.environment.environmentRef,
-      infraDefinitionId: selectedStage?.stage.spec.environment.infrastructureDefinitions?.[0]?.identifier
+      envId: selectedStage?.stage?.spec?.environment?.environmentRef,
+      infraDefinitionId: selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier
     }
   })
 
@@ -56,8 +56,11 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
-      orgIdentifier
-    }
+      orgIdentifier,
+      envId: selectedStage?.stage?.spec?.environment?.environmentRef,
+      infraDefinitionId: selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier
+    },
+    webAppName: 'doc-example'
   })
 
   React.useEffect(() => {
@@ -67,6 +70,10 @@ export function AzureSlotDeploymentInputSetRef<T extends AzureSlotDeploymentData
   React.useEffect(() => {
     console.log('props', props)
   }, [props])
+
+  React.useEffect(() => {
+    console.log('slots', slotsLoading)
+  }, [slotsListData])
 
   return (
     <FormikForm>
