@@ -82,7 +82,7 @@ describe('CVCreateDowntime', () => {
 
     expect(container).toMatchSnapshot()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(getByText('next'))
     })
   })
@@ -112,7 +112,7 @@ describe('CVCreateDowntime', () => {
       expect(getAllByText('cv.sloDowntime.validations.categoryValidation')).toHaveLength(2)
     })
 
-    act(() => {
+    await act(async () => {
       fireEvent.change(getByPlaceholderText('common.namePlaceholder')!, { target: { value: 'Weekly downtime' } })
       await userEvent.click(getByText('cv.sloDowntime.scheduledMaintenance'))
     })
@@ -170,7 +170,7 @@ describe('CVCreateDowntime', () => {
 
     expect(getByText('Oops, something went wrong on our end. Please contact Harness Support.')).toBeInTheDocument()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(getByText('Retry'))
     })
   })
@@ -207,7 +207,7 @@ describe('CVCreateDowntime', () => {
     expect(getByText('Weekly downtime')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Deployment')).toBeInTheDocument()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(getByText('next'))
     })
 
@@ -217,7 +217,7 @@ describe('CVCreateDowntime', () => {
     expect(getByText('common.endTime')).toBeInTheDocument()
     expect(getByText('cv.sloDowntime.durationText')).toBeInTheDocument()
 
-    await act(() => {
+    await act(async () => {
       await userEvent.click(getByText('next'))
     })
 
@@ -226,7 +226,7 @@ describe('CVCreateDowntime', () => {
 
     expect(container).toMatchSnapshot()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(getByText('save'))
       waitFor(() => expect(getByText('cv.sloDowntime.downtimeUpdated')).toBeInTheDocument())
     })
@@ -258,7 +258,7 @@ describe('CVCreateDowntime', () => {
     expect(getByText('First downtime')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Deployment')).toBeInTheDocument()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(screen.getByText('save'))
     })
   })
@@ -282,7 +282,7 @@ describe('CVCreateDowntime', () => {
     expect(getByText('Recurring downtime')).toBeInTheDocument()
     expect(screen.getByDisplayValue('ScheduledMaintenance')).toBeInTheDocument()
 
-    await act(() => {
+    await act(async () => {
       await userEvent.click(getByTestId(/nextButton/i))
     })
 

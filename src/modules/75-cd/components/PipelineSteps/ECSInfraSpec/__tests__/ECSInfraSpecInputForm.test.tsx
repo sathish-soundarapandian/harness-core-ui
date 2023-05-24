@@ -106,7 +106,7 @@ describe('ECSInfraSpecInputForm tests', () => {
     // Choose connectorRef
     const connnectorRefInput = getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeTruthy()
-    act(() => {
+    await act(async () => {
       await userEvent.click(connnectorRefInput!)
     })
     const dialogs = document.getElementsByClassName('bp3-dialog')

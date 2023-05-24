@@ -263,7 +263,7 @@ describe('SLOLogContent', () => {
     })
   })
 
-  test('it should handle the custom time range filter for ExecutionLog', () => {
+  test('it should handle the custom time range filter for ExecutionLog', async () => {
     render(
       <TestWrapper {...testWrapperProps}>
         <SLOLogContent
@@ -294,7 +294,7 @@ describe('SLOLogContent', () => {
     expect(screen.queryByText('cv.selectTimeRange')).not.toBeVisible()
   })
 
-  test('it should handle the custom time range filter for ApiCallLog', () => {
+  test('it should handle the custom time range filter for ApiCallLog', async () => {
     render(
       <TestWrapper {...testWrapperProps}>
         <SLOLogContent

@@ -91,7 +91,7 @@ describe('ExecutionLog - with mock actions', () => {
 
     await userEvent.click(screen.getByPlaceholderText('- Select -'))
 
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(screen.getByText('dyna')).toBeInTheDocument()
       await userEvent.click(screen.getByText('dyna'))
     })
@@ -131,7 +131,7 @@ describe('ExecutionLog - with mock actions', () => {
 
     await userEvent.click(screen.getByPlaceholderText('- Select -'))
 
-    await waitFor(() => {
+    await waitFor(async () => {
       expect(screen.getByText('dyna')).toBeInTheDocument()
       await userEvent.click(screen.getByText('dyna'))
     })

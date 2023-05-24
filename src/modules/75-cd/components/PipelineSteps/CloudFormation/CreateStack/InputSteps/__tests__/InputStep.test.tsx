@@ -151,7 +151,7 @@ describe('Test cloudformation create stack template input set', () => {
     const { getByPlaceholderText } = renderComponent(data)
 
     const timeout = getByPlaceholderText('Enter w/d/h/m/s/ms')
-    act(() => {
+    await act(async () => {
       await userEvent.type(timeout, '10m')
     })
     expect(timeout).toHaveDisplayValue('10m')
@@ -217,7 +217,7 @@ describe('Test cloudformation create stack template input set', () => {
 
     const region = await getByPlaceholderText('pipeline.regionPlaceholder')
     await waitFor(() => expect(region).toBeTruthy())
-    act(() => {
+    await act(async () => {
       await userEvent.click(region)
     })
     const selectedRegion = getByText('GovCloud (US-West)')
@@ -281,7 +281,7 @@ describe('Test cloudformation create stack template input set', () => {
     expect(getByTestId('test.spec.configuration.capabilities')).toBeTruthy()
   })
 
-  test('should render with runtime data show tags component', () => {
+  test('should render with runtime data show tags component', async () => {
     const data = {
       type: StepType.CloudFormationCreateStack,
       name: 'testCreate',
@@ -307,10 +307,10 @@ describe('Test cloudformation create stack template input set', () => {
     }
     const { container } = renderComponent(data)
     const tags = queryByAttribute('name', container, 'test.spec.configuration.tags.spec.content')
-    act(() => {
-      await userEvent.type(tags!, `[ { key: 'value' }, { keyTwo: 'value two' } ]`)
+    await act(async () => {
+      await userEvent.type(tags!, `test value`)
     })
-    expect(tags).toHaveDisplayValue(`[ { key: 'value' }, { keyTwo: 'value two' } ]`)
+    expect(tags).toHaveDisplayValue(`test value`)
   })
 
   test('should render with runtime data and make aws statues api request', async () => {

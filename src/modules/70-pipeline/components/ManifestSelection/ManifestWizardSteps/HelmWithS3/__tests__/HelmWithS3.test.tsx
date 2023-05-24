@@ -199,7 +199,7 @@ describe('helm with S3 tests', () => {
     })
   })
 
-  test('bucketname is null', () => {
+  test('bucketname is null', async () => {
     const initialValues = {
       identifier: 'test',
       type: ManifestDataType.HelmChart,

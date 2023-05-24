@@ -125,7 +125,9 @@ describe('Deploy service stage specifications', () => {
     await act(async () => {
       await userEvent.click(propagateFromDropdownDiv)
     })
+
     const propagateFromDropdown = screen.getByPlaceholderText(/pipeline.selectStagePlaceholder/)
+
     await act(async () => {
       await userEvent.selectOptions(propagateFromDropdown, 'st1')
     })

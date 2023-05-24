@@ -118,7 +118,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     expect(container).toMatchSnapshot()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(edit)
     })
 
@@ -161,7 +161,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     expect(container).toMatchSnapshot()
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(delBtn)
     })
 
@@ -172,11 +172,11 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     const cancel = await findByTextGlobal(confirmationModal1.parentElement!.parentElement!, 'cancel')
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(cancel)
     })
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(delBtn)
     })
 
@@ -187,7 +187,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     const apply = await findByTextGlobal(confirmationModal2.parentElement!.parentElement!, 'applyChanges')
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(apply)
     })
 
@@ -215,7 +215,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     const add = await findByTestId('add-new-service')
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(add)
     })
 
@@ -257,13 +257,13 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     const fixedIcon = container.querySelector('.MultiTypeInput--btn')!
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(fixedIcon)
     })
 
     const runtimeMenu = await findByTextGlobal(document.body, 'Runtime input')
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(runtimeMenu)
     })
 
@@ -291,13 +291,13 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     const fixedIcon = container.querySelector('.MultiTypeInput--btn')!
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(fixedIcon)
     })
 
     const expression = await findByTextGlobal(document.body, 'Expression')
 
-    act(() => {
+    await act(async () => {
       await userEvent.click(expression)
     })
 

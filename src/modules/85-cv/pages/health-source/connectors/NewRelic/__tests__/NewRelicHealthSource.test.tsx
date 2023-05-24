@@ -253,7 +253,7 @@ describe('Unit tests for NewRelic health source', () => {
       expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
 
       const modalDeleteBtn = screen.queryAllByText('confirm')[0]
-      act(() => {
+      await act(async () => {
         await userEvent.click(modalDeleteBtn!)
       })
 
