@@ -124,6 +124,7 @@ export const fetchSupportedConnectorsListPayload = {
   },
   queryParams: {
     accountIdentifier: 'dummy',
+    includeAllConnectorsAvailableAtScope: true,
     orgIdentifier: 'default',
     pageIndex: 0,
     pageSize: 10,

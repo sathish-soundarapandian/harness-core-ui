@@ -493,7 +493,7 @@ export function getReferenceFieldProps({
             ...gitFilterParams,
             pageIndex: page || 0,
             pageSize: 10,
-            version,
+            ...(version ? { version } : undefined),
             includeAllConnectorsAvailableAtScope: allTabSelected
           },
           body: merge(
@@ -910,6 +910,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
           ></RbacButton>
         }
         onMultiSelectChange={onMultiSelectChange}
+        showAllTab
       />
     </FormGroup>
   )
