@@ -86,7 +86,7 @@ export default function WelcomePageV2(props: { getStartedVariant?: string }): JS
         cv: CVNG_ENABLED,
         ci: true,
         cf: FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
-        ce: true,
+        ce: licenseInformation['CE']?.status === LICENSE_STATE_VALUES.ACTIVE,
         chaos: true
       }
       return Boolean(moduleStatusMap[moduleSelected])

@@ -50,7 +50,7 @@ const WelcomePage: React.FC<{ getStartedVariant?: string }> = props => {
   useTelemetry({ pageName: PageNames.Purpose })
 
   const { CVNG_ENABLED } = useFeatureFlags()
-  const { FF_LICENSE_STATE } = useLicenseStore()
+  const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
 
   const CDNG_OPTIONS: ModuleProps = {
     enabled: true, // Continous delivery is enabled in CG
@@ -77,7 +77,7 @@ const WelcomePage: React.FC<{ getStartedVariant?: string }> = props => {
   }
 
   const CENG_OPTIONS: ModuleProps = {
-    enabled: true, // Continous efficiency is enabled in CG
+    enabled: licenseInformation['CE']?.status === LICENSE_STATE_VALUES.ACTIVE, // Continous efficiency is enabled in CG
     titleIcon: 'ccm-with-text',
     bodyIcon: 'ccm-sketch',
     module: 'ce',
