@@ -45,6 +45,7 @@ import {
 } from 'services/portal'
 import { usePostFilter, useUpdateFilter, useDeleteFilter, useGetFilterList } from 'services/cd-ng'
 import type { FilterDTO, ResponsePageFilterDTO, Failure, DelegateFilterProperties } from 'services/cd-ng'
+import useCreateDelegateModal from '@delegates/modals/DelegateModal/useCreateDelegateModal'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
 import { useToaster, StringUtils } from '@common/exports'
 import DelegatesEmptyState from '@delegates/images/DelegatesEmptyState.svg'
@@ -99,7 +100,10 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
     [accountId, module, orgIdentifier, projectIdentifier, page]
   )
   const { mutate: fetchDelegates, loading: isFetchingDelegates } = useGetDelegateGroupsNGV2WithFilter({ queryParams })
-  const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal()
+  const { openDelegateModal } = useCreateDelegateModal()
+  const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal({
+    oldDelegateCreation: openDelegateModal
+  })
 
   useEffect(() => {
     setShowDelegateLoader(true)

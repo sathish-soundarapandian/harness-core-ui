@@ -16,6 +16,7 @@ import DelegateCommandLineCreation from '../DelegateCommandLineCreation'
 import css from '@delegates/pages/delegates/DelegatesPage.module.scss'
 export interface useCreateDelegateViaCommandsModalProps {
   onClose?: () => void
+  oldDelegateCreation?: () => void
 }
 
 export interface useCreateDelegateViaCommandsModalReturn {
@@ -43,7 +44,10 @@ const useCreateDelegateViaCommandsModal = (
       <Drawer position={Position.RIGHT} isOpen={true} isCloseButtonShown={false} size={'86%'} onClose={onClose}>
         <Button minimal className={css.almostFullScreenCloseBtn} icon="cross" withoutBoxShadow onClick={onClose} />
 
-        <DelegateCommandLineCreation onDone={onClose} />
+        <DelegateCommandLineCreation
+          onDone={onClose}
+          oldDelegateCreation={useCreateDelegateViaCommandsModalProps?.oldDelegateCreation}
+        />
       </Drawer>
     )
   })

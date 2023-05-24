@@ -14,6 +14,7 @@ import { IOptionProps, Radio } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { DelegateSelectors, useToaster } from '@common/components'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import useCreateDelegateModal from '@delegates/modals/DelegateModal/useCreateDelegateModal'
 import { DelegateGroupDetails, useGetDelegatesUpTheHierarchy, RestResponseDelegateGroupListing } from 'services/portal'
 import {
   DelegateSelectorTable,
@@ -137,7 +138,12 @@ export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
   })
 
   const [data, setData] = useState(apiData)
-  const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal()
+  const { openDelegateModal } = useCreateDelegateModal({
+    onClose: refetch
+  })
+  const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal({
+    oldDelegateCreation: openDelegateModal
+  })
   const { showError } = useToaster()
 
   const getParsedData = (): DelegateGroupDetailsCustom[] => {
