@@ -70,8 +70,6 @@ export default function RouteDestinations(): React.ReactElement {
     licenseInformation[ModuleName.CD]?.status === LICENSE_STATE_VALUES.ACTIVE ||
     CVNG_ENABLED
 
-  const isFFEnabled = licenseInformation[ModuleName.CF]?.status === LICENSE_STATE_VALUES.ACTIVE
-
   return (
     <Switch>
       {commonRoutes.props.children}
@@ -107,7 +105,7 @@ export default function RouteDestinations(): React.ReactElement {
         </Route>
       ) : null}
       {CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children}
-      {isFFEnabled ? CFRoutes({})?.props.children : null}
+      {CFRoutes({})?.props.children}
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}
       {CET_ENABLED ? ETRoutes({})?.props.children : null}
