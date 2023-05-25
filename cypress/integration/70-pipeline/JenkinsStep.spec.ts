@@ -1,4 +1,4 @@
-import { connectorInfo, connectorsListWithoutSort } from '../../support/35-connectors/constants'
+import { connectorInfo, connectorListScopeTab, connectorsListWithoutSort } from '../../support/35-connectors/constants'
 import {
   gitSyncEnabledCall,
   runPipelineTemplateCall,
@@ -42,6 +42,9 @@ describe('Connectors list', () => {
     cy.intercept('GET', connectorInfo, { fixture: 'pipeline/api/jenkinsStep/connectorInfo.json' }).as('connectorInfo')
     cy.intercept('GET', jobDetailsCall, { fixture: 'pipeline/api/jenkinsStep/jobDetails.json' }).as('jobDetailsCall')
     cy.intercept('POST', connectorsListWithoutSort, { fixture: 'pipeline/api/connector/connectorList.json' }).as(
+      'connectorsListCall'
+    )
+    cy.intercept('POST', connectorListScopeTab, { fixture: 'pipeline/api/connector/connectorList.json' }).as(
       'connectorsListCall'
     )
     cy.intercept('GET', jobDetailsCallAfterConnectorChange, { fixture: 'pipeline/api/jenkinsStep/jobDetails.json' }).as(
