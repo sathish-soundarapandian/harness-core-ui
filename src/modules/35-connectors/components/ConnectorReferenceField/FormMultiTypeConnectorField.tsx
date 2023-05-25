@@ -442,6 +442,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
           // Other connectors will need to onboard this and add details in collapsed view.
           // Please update the details in RenderConnectorDetails inside ConnectorReferenceField.
           disableCollapse: !(type === 'Github'),
+          showAllTab: true,
           pagination: {
             itemCount: pagedConnectorData?.data?.totalItems || 0,
             pageSize: pagedConnectorData?.data?.pageSize || 10,

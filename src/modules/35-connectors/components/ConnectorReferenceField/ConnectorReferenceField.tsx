@@ -905,7 +905,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
           ></RbacButton>
         }
         onMultiSelectChange={onMultiSelectChange}
-        showAllTab
+        showAllTab={true}
       />
     </FormGroup>
   )

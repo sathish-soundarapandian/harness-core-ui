@@ -258,6 +258,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
             selectedRecord={selectedRecord}
             isRecordDisabled={isRecordDisabled}
             renderRecordDisabledWarning={renderRecordDisabledWarning}
+            showAllTab={props.showAllTab}
           />
         </div>
       </Dialog>
