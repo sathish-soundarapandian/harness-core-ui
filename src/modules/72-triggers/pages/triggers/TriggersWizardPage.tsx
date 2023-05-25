@@ -451,7 +451,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   }, [loadingGetTrigger, fetchingTemplate, loadingPipeline, loadingResolvedChildPipeline, loadingMergeInputSet])
 
   useDeepCompareEffect(() => {
-    if (shouldRenderWizard && template?.data?.inputSetTemplateYaml !== undefined) {
+    if (template?.data?.inputSetTemplateYaml !== undefined) {
       if (onEditInitialValues?.pipeline && !isMergedPipelineReady) {
         let newOnEditPipeline = merge(
           parse(template?.data?.inputSetTemplateYaml)?.pipeline,
@@ -487,13 +487,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         setCurrentPipeline(newPipeline)
       }
     }
-  }, [
-    template?.data?.inputSetTemplateYaml,
-    onEditInitialValues?.pipeline,
-    resolvedMergedPipeline,
-    fetchingTemplate,
-    loadingGetTrigger
-  ])
+  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline])
 
   useEffect(() => {
     if (triggerResponse?.data?.enabled === false) {

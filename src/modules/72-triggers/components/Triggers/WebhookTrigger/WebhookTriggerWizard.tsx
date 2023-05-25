@@ -575,7 +575,7 @@ export default function WebhookTriggerWizard(
         setCurrentPipeline(newPipeline)
       }
     }
-  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline, fetchingTemplate])
+  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline])
 
   const [enabledStatus, setEnabledStatus] = useState<boolean>(true)
 

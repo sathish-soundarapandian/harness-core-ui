@@ -466,7 +466,7 @@ export default function ScheduledTriggerWizard(
         setCurrentPipeline(newPipeline)
       }
     }
-  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline, fetchingTemplate])
+  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline])
 
   const [enabledStatus, setEnabledStatus] = useState<boolean>(true)
 
