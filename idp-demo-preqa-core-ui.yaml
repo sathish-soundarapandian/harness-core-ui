@@ -1,0 +1,31 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: harness-core-ui
+  description: pipeline build and deploy
+  annotations:
+    jira/project-key: IDP
+#     jira/component: <example-component> # optional, you might skip this value to fetch data for all components
+#     jira/token-type: Bearer # optional, used for Activity stream feed. If you are using Basic auth you can skip this.
+    github.com/project-slug: harness/harness-core-ui
+    harness.io/project-url: https://qa.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default1/projects/harnesscoreuiidp/
+    backstage.io/techdocs-ref: dir:.
+    circleci.com/project-slug: github/facebook/react
+    pagerduty.com/service-id: PS5XKY7
+
+  tags:
+    - react
+    - typescript
+  
+
+  links:
+    - url: https://github.com/harness/harness-core-ui
+      title: Harness-Core-UI-Repo 
+      icon: Github-Repo
+    - url: https://qa.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default1/projects/harnesscoreuiidp/pipelines/harnesscoreuideploymentidp/pipeline-studio/?storeType=INLINE
+      title: Deployment-Pipeline
+      icon: Deployment-Pipeline
+spec:
+  type: service
+  lifecycle: experimental
+  owner: '@harness/ui-council'
