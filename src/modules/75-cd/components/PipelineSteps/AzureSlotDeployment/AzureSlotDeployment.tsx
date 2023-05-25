@@ -114,7 +114,7 @@ export class AzureSlotDeployment extends PipelineStep<AzureSlotDeploymentStepInf
       path,
       customStepProps
     } = props
-
+    console.log('PROPS', props)
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <AzureSlotDeploymentInputSet
@@ -139,6 +139,7 @@ export class AzureSlotDeployment extends PipelineStep<AzureSlotDeploymentStepInf
 
     return (
       <AzureSlotDeploymentStackWithRef
+        {...(customStepProps as AzureSlotDeploymentVariableStepProps)}
         initialValues={this.getInitialValues(initialValues)}
         onUpdate={data => onUpdate?.(this.processFormData(data))}
         onChange={data => onChange?.(this.processFormData(data))}
