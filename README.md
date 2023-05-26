@@ -55,6 +55,20 @@ $ yarn generate-certificate
 
 6. Install/Update/Refresh dependencies
 
+** Note: If you are running on a Mac M1 (ARM64):
+Install chromium via brew:
+
+```brew install chromium --no-quarantine```
+
+After installing Chromium, just add these two lines to ~/.zshrc:
+
+```
+export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+export PUPPETEER_EXECUTABLE_PATH=`which chromium
+````
+
+Now run `yarn`: 
+
 ```shell
 $ yarn
 ```
