@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import type { UseGetReturn } from 'restful-react'
 import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { QueryType } from '@cv/pages/health-source/common/HealthSourceQueryType/HealthSourceQueryType.types'
@@ -15,7 +16,6 @@ import * as cdServices from 'services/cd-ng'
 import QueryMapping from '../QueryMapping'
 import { mocksampledata } from '../../../__tests__/CustomHealthSource.mock'
 import type { QueryMappingInterface } from '../QueryMapping.types'
-import type { UseGetReturn } from 'restful-react'
 import { connectorIdentifierMock } from './QueryMapping.mock'
 
 const SampleComponent: React.FC<Omit<QueryMappingInterface, 'formValue'>> = (
