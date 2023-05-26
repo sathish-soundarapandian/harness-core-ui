@@ -22,7 +22,7 @@ metadata:
     - url: https://github.com/harness/harness-core-ui
       title: Harness-Core-UI-Repo 
       icon: Github-Repo
-    - url: https://stress.harness.io/ng/account/zEaak-FLS425IEO7OLzMUg/home/orgs/default/projects/DocTest/pipelines/DocTest/pipeline-studio/
+    - url: https://stress.harness.io/ng/account/rzjR8UyZTpOAd6SLDfdBuw/cd/orgs/default/projects/sarvagnya/pipelines/Django_Service/pipeline-studio/
       title: Deployment-Pipeline
       icon: Deployment-Pipeline
 spec:
