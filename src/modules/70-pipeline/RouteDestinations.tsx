@@ -159,9 +159,9 @@ RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT_GROUP, {
 /**
  * Register execution step detail views
  */
-// ExecFactory.registerStepDetails(StepType.HarnessApproval, {
-//   component: HarnessApprovalView
-// })
+ExecFactory.registerStepDetails(StepType.HarnessApproval, {
+  component: HarnessApprovalView
+})
 
 ExecFactory.registerConsoleViewStepDetails(StepType.HarnessApproval, {
   component: HarnessApprovalLogsView
