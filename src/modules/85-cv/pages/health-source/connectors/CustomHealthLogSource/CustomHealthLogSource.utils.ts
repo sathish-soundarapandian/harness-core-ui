@@ -18,6 +18,7 @@ import type {
 } from './CustomHealthLogSource.types'
 import { validateMappingInfo } from '../CustomHealthSource/CustomHealthSource.utils'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
+import { getConnectorRef } from '../../common/utils/HealthSource.utils'
 
 export function validateSetupSource(
   data: CustomHealthLogSetupSource,
@@ -118,12 +119,12 @@ export function updateSelectedMetricsMap({
 
 export function transformSetupSourceToHealthSource(
   sources: CustomHealthLogSetupSource[],
-  connectorRef: string,
+  connectorRef: string | { value: string },
   healthSourceName: string,
   healthSourceIdentifier: string
 ): UpdatedHealthSource {
   const spec: CustomHealthSourceLogSpec = {
-    connectorRef,
+    connectorRef: getConnectorRef(connectorRef),
     logDefinitions: []
   }
 

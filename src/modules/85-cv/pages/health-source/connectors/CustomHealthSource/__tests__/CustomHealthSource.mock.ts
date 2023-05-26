@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MapCustomHealthToService } from '../CustomHealthSource.types'
+import type { CustomHealthSourceSetupSource, MapCustomHealthToService } from '../CustomHealthSource.types'
 
 const metricName = 'CustomHealth Metric 101'
 const jsonPath = '$.series.[*].pointlist.[*]'
@@ -969,4 +969,33 @@ export const sourceDataWithValidMetricPopupMock = {
     label: 'Custom Health Metrics',
     value: 'metrics'
   }
+}
+
+const transformHealthSourceMap = new Map()
+transformHealthSourceMap.set('CustomHealth Metric 101', mappedValue)
+
+export const transformHealthSourcePayload: CustomHealthSourceSetupSource = {
+  isEdit: true,
+  connectorRef: 'customhealth',
+  healthSourceIdentifier: 'New_Custom',
+  healthSourceName: 'New Custom',
+  mappedServicesAndEnvs: transformHealthSourceMap,
+  ignoreThresholds: [
+    {
+      criteria: { spec: { greaterThan: 15, lessThan: 122 }, type: 'Absolute' },
+      metricName: 'Prometheus Metric',
+      metricType: 'Custom',
+      spec: { action: 'Ignore' },
+      type: 'IgnoreThreshold'
+    }
+  ],
+  failFastThresholds: [
+    {
+      criteria: { spec: { greaterThan: 1222 }, type: 'Percentage' },
+      metricName: 'Prometheus Metric',
+      metricType: 'Custom',
+      spec: { action: 'FailAfterOccurrence', spec: { count: 12 } },
+      type: 'FailImmediately'
+    }
+  ]
 }
