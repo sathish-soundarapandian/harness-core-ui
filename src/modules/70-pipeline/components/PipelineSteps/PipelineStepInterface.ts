@@ -204,7 +204,8 @@ export enum StepType {
   Sniper = 'Sniper',
   Metasploit = 'Metasploit',
   Brakeman = 'Brakeman',
-  KubernetesAws = 'KubernetesAws'
+  KubernetesAws = 'KubernetesAws',
+  IACMTerraformPlugin = 'IACMTerraformPlugin'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
