@@ -214,6 +214,8 @@ export enum StepType {
   AwsSamService = 'AwsSamService',
   AwsSamInfra = 'AwsSamInfra',
   IACMTerraformPlugin = 'IACMTerraformPlugin'
+  KubernetesAws = 'KubernetesAws',
+  IACMApproval = 'IACMApproval'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { memo, ReactElement } from 'react'
 import { Route } from 'react-router-dom'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
@@ -21,6 +21,9 @@ import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { DelegateRouteDestinations } from '@delegates/RouteDestinations'
+import ExecFactory from '@pipeline/factories/ExecutionFactory'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
@@ -28,7 +31,7 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineStudioV1'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
-import { IACMApp } from './components/IACMApp'
+import { IACMApp, IACMComponentMounter } from './components/IACMApp'
 
 const moduleParams: ModulePathParams = {
   module: ':module(iacm)'
@@ -49,6 +52,14 @@ RbacFactory.registerResourceTypeHandler(ResourceType.IAC_STACK, {
     [PermissionIdentifier.IAC_EDIT_STACK]: <String stringID="rbac.permissionLabels.createEdit" />,
     [PermissionIdentifier.IAC_DELETE_STACK]: <String stringID="rbac.permissionLabels.delete" />
   }
+})
+
+const IACMApproval = (props: StepDetailProps): ReactElement => (
+  <IACMComponentMounter component="RemmoteIACMApproval" childProps={props} />
+)
+
+ExecFactory.registerStepDetails(StepType.HarnessApproval, {
+  component: memo(IACMApproval)
 })
 
 function IACMRoutes(): JSX.Element {
