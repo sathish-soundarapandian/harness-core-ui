@@ -85,6 +85,7 @@ exports[`Validate MapMetricsToServices conponent should render MapMetricsToServi
           </div>
           <div
             class="StyledProps--font StyledProps--main StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+            data-testid="baseURL"
           >
             <div
               class="bp3-form-group bp3-disabled"
@@ -951,6 +952,7 @@ exports[`Validate MapMetricsToServices conponent should render MapMetricsToServi
           </div>
           <div
             class="StyledProps--font StyledProps--main StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+            data-testid="baseURL"
           >
             <div
               class="bp3-form-group bp3-disabled"

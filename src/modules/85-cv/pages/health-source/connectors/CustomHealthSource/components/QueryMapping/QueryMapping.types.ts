@@ -17,7 +17,7 @@ export interface QueryMappingInterface {
   formValue: MapCustomHealthToService
   onFieldChange: (field: string, value: any) => void
   onValueChange?: (value: any) => void
-  connectorIdentifier: string
+  connectorIdentifier: string | { value: string }
   onFetchRecordsSuccess: (data: { [key: string]: { [key: string]: any } }) => void
   isQueryExecuted: boolean
   recordsData: TimeSeriesSampleDTO | undefined
