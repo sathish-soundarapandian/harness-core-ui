@@ -15,8 +15,9 @@ import DelegateCommandLineCreation from '../DelegateCommandLineCreation'
 
 import css from '@delegates/pages/delegates/DelegatesPage.module.scss'
 export interface useCreateDelegateViaCommandsModalProps {
-  onClose?: () => void
   oldDelegateCreation?: () => void
+  onClose?: (delegateName?: string) => void
+  hideDocker?: boolean
 }
 
 export interface useCreateDelegateViaCommandsModalReturn {
@@ -28,12 +29,12 @@ const useCreateDelegateViaCommandsModal = (
   useCreateDelegateViaCommandsModalProps?: useCreateDelegateViaCommandsModalProps
 ): useCreateDelegateViaCommandsModalReturn => {
   const { trackEvent } = useTelemetry()
-  const onClose = () => {
+  const onClose = (delegateName?: string): void => {
     trackEvent(DelegateActions.DelegateCommandLineCreationClosed, {
       category: Category.DELEGATE
     })
     if (useCreateDelegateViaCommandsModalProps?.onClose) {
-      useCreateDelegateViaCommandsModalProps.onClose()
+      useCreateDelegateViaCommandsModalProps.onClose(delegateName)
     }
     if (closeDelegateModalWithCommands) {
       closeDelegateModalWithCommands()
@@ -46,6 +47,7 @@ const useCreateDelegateViaCommandsModal = (
 
         <DelegateCommandLineCreation
           onDone={onClose}
+          hideDocker={useCreateDelegateViaCommandsModalProps?.hideDocker}
           oldDelegateCreation={useCreateDelegateViaCommandsModalProps?.oldDelegateCreation}
         />
       </Drawer>

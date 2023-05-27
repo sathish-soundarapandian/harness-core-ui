@@ -5993,6 +5993,36 @@ export interface StringsMap {
   'cd.getStartedWithCD.failedSourceText': string
   'cd.getStartedWithCD.failedToAuthenticate': string
   'cd.getStartedWithCD.failedToProvisionCluster': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.linux': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.mac': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.title': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.win': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.clonecmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.createenvcmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.createsvccmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.description': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.description2': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.logincmd': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.title': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step3.title': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.stepsIntro': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.stepsIntro2': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.stepsTitle': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.title': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdGitops.subtitle': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdGitops.title': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.description1': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.description2': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.installDelegate': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.subtitle': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.title': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.description': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.title': string
+  'cd.getStartedWithCD.flowbyquestions.howNwhere.title': string
+  'cd.getStartedWithCD.flowbyquestions.what.K8sSteps.artifact': string
+  'cd.getStartedWithCD.flowbyquestions.what.K8sSteps.k8sSvcRep': string
+  'cd.getStartedWithCD.flowbyquestions.what.aboutSvc': string
+  'cd.getStartedWithCD.flowbyquestions.what.title': string
   'cd.getStartedWithCD.frequency': string
   'cd.getStartedWithCD.getStartedBtn': string
   'cd.getStartedWithCD.gitOpsAgent': string

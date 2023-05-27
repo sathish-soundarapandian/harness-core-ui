@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Layout, Text, Button, ButtonVariation } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { TelemetryEvent, useTelemetry } from '@common/hooks/useTelemetry'
 import { useStrings } from 'framework/strings'
@@ -31,6 +31,7 @@ interface CommandBlockProps {
   telemetryProps?: TelemetryProps
   copySnippet?: string
   copyButtonText?: string
+  darkmode?: boolean
 }
 enum DownloadFile {
   DEFAULT_NAME = 'commandBlock',
@@ -45,7 +46,8 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
   downloadFileProps,
   telemetryProps,
   copySnippet,
-  copyButtonText
+  copyButtonText,
+  darkmode
 }) => {
   const { trackEvent } = useTelemetry()
   const downloadFileDefaultName = downloadFileProps?.downloadFileName || DownloadFile.DEFAULT_NAME
@@ -54,7 +56,7 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
   const linkRef = React.useRef<HTMLAnchorElement>(null)
 
   const { getString } = useStrings()
-  const onDownload = () => {
+  const onDownload = (): void => {
     const content = new Blob([commandSnippet as BlobPart], { type: 'data:text/plain;charset=utf-8' })
     if (linkRef?.current) {
       linkRef.current.href = window.URL.createObjectURL(content)
@@ -63,8 +65,15 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
     }
   }
   return (
-    <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }} className={css.commandBlock}>
-      <Text className={cx(!ignoreWhiteSpaces && css.ignoreWhiteSpaces)} font={{ variation: FontVariation.YAML }}>
+    <Layout.Horizontal
+      flex={{ justifyContent: 'space-between', alignItems: 'start' }}
+      className={cx(css.commandBlock, { [css.darkmode]: darkmode })}
+    >
+      <Text
+        color={darkmode ? Color.WHITE : undefined}
+        className={cx(!ignoreWhiteSpaces && css.ignoreWhiteSpaces)}
+        font={{ variation: FontVariation.YAML }}
+      >
         {commandSnippet}
       </Text>
       <Layout.Horizontal flex={{ justifyContent: 'center', alignItems: 'center' }} spacing="medium">
@@ -80,6 +89,7 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
                 )
               }
             }}
+            primaryBtn={darkmode}
           />
         )}
         {allowDownload && (

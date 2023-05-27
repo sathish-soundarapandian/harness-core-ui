@@ -26,6 +26,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { PLG_CD_GET_STARTED_VARIANTS } from '@common/components/ConfigureOptions/constants'
 import cdOnboardingSteps from '../home/images/cd-onboarding-steps.svg'
 import GetStartedWithCDV2 from './GetStartedWithCDv2'
+import CDOnboardingWizardWithCLI from './CDOnboardingWizardWithCLI/CDOnboardingWizardWithCLI'
 import css from './GetStartedWithCD.module.scss'
 
 function GetStartedWithCD(): React.ReactElement {
@@ -107,4 +108,4 @@ const GetStartedWithHooks: React.FC = () => {
   }, [])
   return FLOW_TYPE === PLG_CD_GET_STARTED_VARIANTS.INFO_HEAVY ? <GetStartedWithCDV2 /> : <GetStartedWithCD />
 }
-export default GetStartedWithAB
+export default CDOnboardingWizardWithCLI

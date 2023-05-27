@@ -7,9 +7,13 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly commandBlock: string
-  readonly darkmode: string
-  readonly downloadBtn: string
-  readonly ignoreWhiteSpaces: string
+  readonly bold: string
+  readonly deploymentSteps: string
+  readonly flowcards: string
+  readonly infraCards: string
+  readonly marginBottomLarge: string
+  readonly marginBottomxl: string
+  readonly serviceTypeCards: string
+  readonly whatToDeploySection: string
 }
 export default styles

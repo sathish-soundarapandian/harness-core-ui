@@ -13,7 +13,6 @@ import {
 import { FontVariation, Intent, Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import type { HideModal } from '@harness/use-modal'
 import DelegatesEmptyState from '@delegates/images/DelegatesEmptyState.svg'
 import { useStrings } from 'framework/strings'
 import {
@@ -43,8 +42,9 @@ import KuberntesManifestSizingTable from './components/KuberntesManifestSizingTa
 import css from './DelegateCommandLineCreation.module.scss'
 
 interface DelegateCommandLineCreationProps {
-  onDone: HideModal
   oldDelegateCreation?: () => void
+  onDone: (delegateName?: string) => void
+  hideDocker?: boolean
 }
 interface CommonStatesforAllClicksProps {
   commandTypeLocal: CommandType | undefined
@@ -58,7 +58,11 @@ const installDelegateLink =
 const intsallDelegateLinkTutorial =
   'https://developer.harness.io/docs/platform/Delegates/install-delegates/install-a-delegate'
 
-const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = ({ onDone, oldDelegateCreation }) => {
+const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = ({
+  onDone,
+  oldDelegateCreation,
+  hideDocker
+}) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [delegateType, setDelegateType] = useState<DelegateCommandLineTypes>(DelegateCommandLineTypes.KUBERNETES)
@@ -348,7 +352,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
           {verifyButtonClicked && (
             <VerifyDelegateConnection
               onErrorHandler={onDelegateError}
-              onDone={onDone}
+              onDone={() => onDone(delegateName)}
               name={delegateName}
               delegateType={commonProblemsDelegateType}
             />
@@ -452,26 +456,28 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
                 round
                 intent={delegateType === DelegateCommandLineTypes.KUBERNETES ? 'primary' : 'none'}
               ></Button>
-              <Button
-                intent={delegateType === DelegateCommandLineTypes.DOCKER ? 'primary' : 'none'}
-                onClick={() => {
-                  commonStatesforAllClicks({
-                    commandTypeLocal: CommandType.DOCKER,
-                    delegateNameLocal: DelegateDefaultName.DOCKER,
-                    delegateDefaultNameLocal: DelegateDefaultName.DOCKER,
-                    commonProblemsDelegateTypeLocal: DelegateCommonProblemTypes.DOCKER
-                  })
+              {!hideDocker && (
+                <Button
+                  intent={delegateType === DelegateCommandLineTypes.DOCKER ? 'primary' : 'none'}
+                  onClick={() => {
+                    commonStatesforAllClicks({
+                      commandTypeLocal: CommandType.DOCKER,
+                      delegateNameLocal: DelegateDefaultName.DOCKER,
+                      delegateDefaultNameLocal: DelegateDefaultName.DOCKER,
+                      commonProblemsDelegateTypeLocal: DelegateCommonProblemTypes.DOCKER
+                    })
 
-                  setDelegateType(DelegateCommandLineTypes.DOCKER)
-                  setkubernetesType(undefined)
-                  trackEvent(DelegateActions.DelegateCommandLineDocker, {
-                    category: Category.DELEGATE
-                  })
-                }}
-                icon="docker-step"
-                text={getString('delegate.cardData.docker.name')}
-                round
-              ></Button>
+                    setDelegateType(DelegateCommandLineTypes.DOCKER)
+                    setkubernetesType(undefined)
+                    trackEvent(DelegateActions.DelegateCommandLineDocker, {
+                      category: Category.DELEGATE
+                    })
+                  }}
+                  icon="docker-step"
+                  text={getString('delegate.cardData.docker.name')}
+                  round
+                ></Button>
+              )}
             </Layout.Horizontal>
             {delegateType && (
               <Text

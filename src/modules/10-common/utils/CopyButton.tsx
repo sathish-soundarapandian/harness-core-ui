@@ -6,13 +6,15 @@
  */
 
 import React, { useState } from 'react'
-import { Button, ButtonProps } from '@harness/uicore'
+import { Button, ButtonProps, ButtonVariation } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import copy from 'clipboard-copy'
 import { useStrings } from 'framework/strings'
 
 interface CopyButtonProps extends ButtonProps {
   textToCopy: string
   onCopySuccess?: () => void
+  primaryBtn?: boolean
 }
 
 const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, onCopySuccess, ...rest }) => {
@@ -30,7 +32,9 @@ const CopyButton: React.FC<CopyButtonProps> = ({ textToCopy, onCopySuccess, ...r
 
   return (
     <Button
+      variation={rest.primaryBtn ? ButtonVariation.PRIMARY : undefined}
       minimal
+      iconProps={{ color: rest.primaryBtn ? Color.WHITE : undefined }}
       icon="duplicate"
       onClick={() => {
         copy(textToCopy)

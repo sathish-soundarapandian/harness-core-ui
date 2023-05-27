@@ -630,6 +630,49 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  flowbyquestions:
+    what:
+      title: What do you want to deploy?
+      aboutSvc: Tell us about your service
+      K8sSteps:
+        k8sSvcRep: How is your Kubernetes Service represented?
+        artifact: Your artifact is usually specified in the image tag(s) of these manifests.
+    howNwhere:
+      title: How and where do you want to deploy?
+      K8s:
+        title: Tell us how and where you want to deploy your Kubernetes Manifest
+        description: You will need access to a Kubernetes cluster that will be the deployment target for these manifests. You can deploy to this Kubernetes cluster either via a CD pipeline or via a GitOps workflow. Make the selection below.
+        cdPipeline:
+          title: CD Pipeline
+          subtitle: Connect with a Kubernetes Delegate
+          description1: In the CD Pipeline approach, you will create a Pipeline that will automate the deployment on your behalf and push the new application version into your target Kubernetes cluster.
+          description2: You need to install a Harness Kubernetes Delegate on your Kubernetes cluster as a prerequisite for the CD Pipeline. This delegate will then receive various tasks (such as secrets decryption, connecting to private systems and more) from your CD pipeline and automatically run them on your behalf.
+          installDelegate: Install the Kubernetes delegate
+        cdGitops:
+          title: GitOps Workflow
+          subtitle: Connect with a GitOps agent
+    deplopymentSteps:
+      title: Here are the steps to deploy!
+      stepsTitle: Here are the steps you can run to start deploying with Harness CD in a pipeline
+      stepsIntro: "You have chosen to deploy Kubernetes Manifests using the CD Pipeline approach. Following are the steps you have run to create your CD Pipeline. The steps below use a sample application located at <a target='_blank' href='{{sampleAppURL}}'>{{sampleAppURL}} </a>"
+      stepsIntro2: If you want to deploy your own application, all you have to do is edit the sample application YAMLs provided to point to your application manifests and artifact.
+      steps:
+        step1:
+          title: 1. Download harness-cli for your OS
+          mac: curl -L0 https://github.com/harness/harness-cli/releases/download/v0.2.8/harness-cli-v0.2.8-darwin-amd64.tar.gz
+          linux: lincurl -L0 https://github.com/harness/harness-cli/releases/download/v0.2.8/harness-cli-v0.2.8-darwin-amd64.tar.gz
+          win: wincurl -L0 https://github.com/harness/harness-cli/releases/download/v0.2.8/harness-cli-v0.2.8-darwin-amd64.tar.gz
+        step2:
+          title: "2. Run the steps to deploy the sample guestbook application located at <a target='_blank' href='{{guestBookURL}}'>{{guestBookURL}}</a>."
+          description: You will first create a Harness Service representing this application and a Harness Environment representing the infrastructure where you are deploying (and already identified by the Delegate installed in the previous step).
+          description2: Finally, you will create a pipeline with the deployment strategy of your choice. We recommend Canary deployment strategy since that reduces your probability of change failure rate increases.
+          clonecmd: 'git clone {{exampleAppURL}}'
+          logincmd: harness-cli login
+          createsvccmd: harness-cli create-service -f guestbook/harness-pipeline/service.yaml
+          createenvcmd: harness-cli create-env -f guestbook/harness-pipeline/env.yaml
+        step3:
+          title: 3. Pick deployment strategy
+
   getStartedBtn: Get started with a guided deployment
   whyHarnessCD: Why Harness CD
   cdWizardEventName: CD Wizard - {{ eventName }}
