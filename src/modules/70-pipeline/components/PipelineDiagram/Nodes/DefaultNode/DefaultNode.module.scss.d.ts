@@ -17,6 +17,7 @@ declare const styles: {
   readonly diamondStageLeft: string
   readonly diamondStageRight: string
   readonly diamondStep: string
+  readonly disabled: string
   readonly draggable: string
   readonly fadeIn: string
   readonly failed: string
@@ -50,6 +51,7 @@ declare const styles: {
   readonly stageMarkerRight: string
   readonly stageName: string
   readonly stageRow: string
+  readonly stageSelectedSwitch: string
   readonly stepAddNode: string
   readonly stepGroupAddIcon: string
   readonly stepGroupLeft: string
@@ -60,6 +62,7 @@ declare const styles: {
   readonly stepMarker: string
   readonly stepMarkerLeft: string
   readonly stepMarkerRight: string
+  readonly switch: string
   readonly template: string
   readonly templateIcon: string
   readonly tertiaryIcon: string

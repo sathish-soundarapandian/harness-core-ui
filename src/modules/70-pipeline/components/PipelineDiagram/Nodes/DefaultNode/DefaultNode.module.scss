@@ -115,24 +115,31 @@
         border: solid 2px var(--execution-pipeline-color-red) !important;
       }
     }
+
     &.failed {
       border: solid 2px var(--execution-pipeline-color-red) !important;
     }
+
     &.skipped {
       background: var(--grey-200) !important;
       border: solid 2px var(--grey-300) !important;
     }
+
     &.not-started {
       border: solid 2px var(--execution-pipeline-color-dark-grey);
     }
   }
+
   &:hover .closeNode {
     opacity: 1;
+
     &.readonly {
       opacity: 0 !important;
     }
+
     pointer-events: initial;
   }
+
   &:hover {
     .defaultCard {
       box-shadow: 0px 8px 16px 0px #60617029;
@@ -144,11 +151,13 @@
     bottom: 2px;
     right: 2px;
   }
+
   .templateIcon {
     position: absolute;
     top: 5px;
     left: 5px;
   }
+
   .tertiaryIcon {
     position: absolute;
     top: -10px;
@@ -186,6 +195,7 @@
 
   .iconGroup {
     display: inline;
+
     :global(.bp3-icon) {
       padding: var(--spacing-small);
     }
@@ -209,6 +219,7 @@
     align-items: center;
     z-index: 100;
     cursor: pointer;
+
     &::after {
       content: '';
       position: absolute;
@@ -217,6 +228,7 @@
       top: 0;
       left: 0;
     }
+
     :global {
       span.bp3-icon {
         color: var(--white) !important;
@@ -224,20 +236,25 @@
     }
   }
 }
+
 .addNode {
   visibility: hidden;
+
   &.visible {
     visibility: visible;
   }
+
   &.stepAddNode {
     width: 64px;
     height: 64px;
     margin-top: 48px;
   }
+
   &.stepGroupAddIcon {
     width: 84px !important;
     height: 84px !important;
   }
+
   &.stageAddNode {
     width: 90px;
     height: 40px;
@@ -274,9 +291,11 @@
   &:global(.stepAddIcon) {
     top: 22px; // half the height of node
   }
+
   &.stageAddIcon {
     top: 22px; // half the height of node
   }
+
   &:hover,
   &.show {
     opacity: 1;
@@ -284,15 +303,19 @@
     border-radius: 50%;
     background: var(--primary-7);
   }
+
   &.left {
     left: -40px;
   }
+
   &.stepGroupLeft {
     left: -60px;
+
     &.stepGroupLeftAddLink {
       left: -35px !important;
     }
   }
+
   &.right {
     right: -20px;
   }
@@ -301,27 +324,33 @@
 .showIcon {
   opacity: 1;
 }
+
 .markerStart {
   width: 20px;
   position: absolute;
   left: -14px;
   z-index: 99;
+
   &.stageMarkerLeft {
     left: -10px !important;
     top: 22px !important;
   }
+
   &.stepMarkerLeft {
     left: -10px !important;
     top: 22px !important;
   }
+
   &.stepGroupMarkerLeft {
     left: -10px !important;
     top: 68px !important;
   }
+
   &.diamondStageLeft {
     left: -20px !important;
     top: 22px !important;
   }
+
   &.diamondStep {
     left: -20px !important;
     top: 22px !important;
@@ -337,22 +366,27 @@
   position: absolute;
   right: -14px;
   z-index: 99;
+
   &.stageMarkerRight {
     right: -10px !important;
     top: 22px !important;
   }
+
   &.stepMarkerRight {
     right: -9px !important;
     top: 22px !important;
   }
+
   &.stepGroupMarkerRight {
     right: -9px !important;
     top: 68px !important;
   }
+
   &.diamondStageRight {
     right: -20px !important;
     top: 22px !important;
   }
+
   &.diamondStep {
     right: -20px !important;
     top: 22px !important;
@@ -376,6 +410,7 @@
   top: -5px;
   right: -5px;
 }
+
 .running-node {
   position: relative;
 
@@ -385,6 +420,7 @@
     overflow: hidden;
     height: 100%;
     position: absolute;
+
     &::before {
       content: ' ';
       display: block;
@@ -395,6 +431,7 @@
       will-change: transform;
     }
   }
+
   &.selected :global(.execution-running-animation) {
     &::before {
       background-image: var(--execution-pipeline-selected-running-bg-selected) !important;
@@ -411,9 +448,11 @@
   left: -50%;
   height: 48px;
   overflow: hidden;
+
   &.stageName {
     left: -25%;
   }
+
   p {
     word-break: break-word !important;
   }
@@ -428,19 +467,74 @@
     }
   }
 }
+
 .stepGroupRightAddLink {
   right: -35px !important;
 }
+
 .stageRow {
   cursor: pointer;
   position: relative;
+
   .secondaryIcon {
     position: absolute;
     top: 3px;
     left: 3px;
   }
 }
+
 .render-popover {
   min-width: 140px;
   z-index: 3 !important;
+}
+
+.switch {
+  position: absolute;
+  right: -12px;
+  top: 0;
+
+  :global {
+    .bp3-control-indicator {
+      min-width: 1.25em !important;
+      height: 10px !important;
+
+      &::before {
+        height: 10px !important;
+        width: 10px !important;
+        margin: 0 !important;
+      }
+    }
+
+    .bp3-control.bp3-switch input:checked ~ .bp3-control-indicator::before {
+      left: calc(100% - 0.5em);
+    }
+  }
+}
+
+.stageSelectedSwitch {
+  :global {
+    .bp3-control.bp3-switch input:checked ~ .bp3-control-indicator {
+      background-color: var(--white);
+    }
+
+    .bp3-control.bp3-switch input:checked ~ .bp3-control-indicator::before {
+      left: calc(100% - 0.5em);
+      background-color: var(--diagram-selected) !important;
+    }
+
+    .bp3-control.bp3-switch .bp3-control-indicator::before {
+      background-color: var(--diagram-selected) !important;
+    }
+
+    .bp3-control.bp3-switch .bp3-control-indicator {
+      background-color: var(--white) !important;
+    }
+  }
+}
+
+.disabled {
+  opacity: 0.2;
+  background-color: var(--primary-1);
+  cursor: not-allowed;
+  box-shadow: none;
 }
