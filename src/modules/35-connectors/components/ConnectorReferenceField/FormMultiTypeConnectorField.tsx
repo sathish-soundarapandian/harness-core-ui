@@ -18,12 +18,17 @@ import {
   FormikTooltipContext,
   useToaster,
   ButtonVariation,
-  SelectOption
+  SelectOption,
+  sortByLastModified,
+  sortByCreated,
+  sortByName,
+  SortMethod
 } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
 import { get, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import useCreateConnectorMultiTypeModal from '@connectors/modals/ConnectorModal/useCreateConnectorMultiTypeModal'
@@ -165,6 +170,8 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
   const [multiType, setMultiType] = React.useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
   const [connectorStatusCheckInProgress, setConnectorStatusCheckInProgress] = React.useState(false)
   const [connectorStatus, setConnectorStatus] = React.useState(typeof selected !== 'string' && selected?.live)
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-select-connector`)
 
   const [isConnectorEdited, setIsConnectorEdited] = useState(false)
   const { showError } = useToaster()
@@ -449,6 +456,13 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
             pageCount: pagedConnectorData?.data?.totalPages || -1,
             pageIndex: page || 0,
             gotoPage: pageIndex => setPage(pageIndex)
+          },
+          sortProps: {
+            selectedSortMethod: sortPreference,
+            onSortMethodChange: option => {
+              setSortPreference(option.value as SortMethod)
+            },
+            sortOptions: [...sortByLastModified, ...sortByCreated, ...sortByName]
           },
           isNewConnectorLabelVisible: canUpdate && isNewConnectorLabelVisible,
           selectedRenderer: getSelectedRenderer(selectedValue, !!connectorStatus, connectorStatusCheckInProgress),

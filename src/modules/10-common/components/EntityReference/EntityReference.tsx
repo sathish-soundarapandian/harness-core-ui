@@ -21,7 +21,9 @@ import {
   PageError,
   NoDataCard,
   NoDataCardProps,
-  PaginationProps
+  PaginationProps,
+  SortDropdownProps,
+  SortDropdown
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Classes } from '@blueprintjs/core'
@@ -113,7 +115,8 @@ export interface EntityReferenceProps<T extends ScopedObjectDTO> {
     page: number,
     scope?: Scope,
     signal?: AbortSignal,
-    allTabSelected?: boolean
+    allTabSelected?: boolean,
+    sortMethod?: string
   ) => void
   recordRender: (args: { item: EntityReferenceResponse<T>; selectedScope: Scope; selected?: boolean }) => JSX.Element
   collapsedRecordRender?: (args: {
@@ -141,6 +144,7 @@ export interface EntityReferenceProps<T extends ScopedObjectDTO> {
   selectedRecord?: ScopeAndIdentifier
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
+  sortProps?: SortDropdownProps
 }
 
 export const tabIdToScopeMap: Record<TAB_ID, Scope | undefined> = {
@@ -202,7 +206,8 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
     showAllTab = false,
     selectedRecord: selectedRecordFromProps,
     isRecordDisabled,
-    renderRecordDisabledWarning
+    renderRecordDisabledWarning,
+    sortProps
   } = props
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [selectedTab, setSelectedTab] = useState<TAB_ID>(
@@ -254,7 +259,8 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
           pageNo as number,
           tabIdToScopeMap[selectedTab],
           controllerRef.current?.signal,
-          selectedTab === TAB_ID.ALL
+          selectedTab === TAB_ID.ALL,
+          sortProps?.selectedSortMethod
         )
       } else {
         delayedFetchRecords(() => {
@@ -269,7 +275,8 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
             pageNo as number,
             tabIdToScopeMap[selectedTab],
             controllerRef.current?.signal,
-            selectedTab === TAB_ID.ALL
+            selectedTab === TAB_ID.ALL,
+            sortProps?.selectedSortMethod
           )
         })
       }
@@ -285,7 +292,7 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
       fetchData(true, true)
       inputRef.current = input
     }
-  }, [selectedTab, delayedFetchRecords, searchTerm, input])
+  }, [selectedTab, delayedFetchRecords, searchTerm, input, sortProps?.selectedSortMethod])
 
   useEffect(() => {
     if (firstUpdate.current) {
@@ -312,6 +319,11 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
           />
           {searchInlineComponent}
+          {sortProps && (
+            <Container margin={{ left: 'small' }}>
+              <SortDropdown {...sortProps} />
+            </Container>
+          )}
         </div>
         {loading ? (
           <Container flex={{ align: 'center-center' }} padding="small">
