@@ -67,6 +67,7 @@ import PipelineYamlView from '../PipelineYamlView/PipelineYamlView'
 import { RightBar } from '../RightBar/RightBar'
 import usePipelineErrors from './PipelineErrors/usePipelineErrors'
 import { PipelineCanvasHeader } from './PipelineCanvasHeader'
+import { StageRightDrawer } from '../StageRightDrawer/StageRightDrawer'
 import css from './PipelineCanvas.module.scss'
 
 interface OtherModalProps {
@@ -842,6 +843,7 @@ export function PipelineCanvas({
         </Layout.Vertical>
       </div>
       <RightBar />
+      <StageRightDrawer />
     </PipelineVariablesContextProvider>
   )
 }

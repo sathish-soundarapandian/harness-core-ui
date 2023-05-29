@@ -74,7 +74,7 @@ import {
 } from './PipelineActions'
 import type { AbstractStepFactory } from '../../AbstractSteps/AbstractStepFactory'
 import type { PipelineStagesProps } from '../../PipelineStages/PipelineStages'
-import { PipelineSelectionState, usePipelineQuestParamState } from '../PipelineQueryParamState/usePipelineQueryParam'
+import { PipelineSelectionState, usePipelineQueryParamState } from '../PipelineQueryParamState/usePipelineQueryParam'
 import {
   comparePipelines,
   getStageFromPipeline as _getStageFromPipeline,
@@ -1201,21 +1201,21 @@ export function PipelineProvider({
   }, [])
 
   // stage/step selection
-  const queryParamStateSelection = usePipelineQuestParamState()
+  const queryParamStateSelection = usePipelineQueryParamState()
   const setSelection = (selectedState: PipelineSelectionState): void => {
-    queryParamStateSelection.setPipelineQuestParamState(selectedState)
+    queryParamStateSelection.setPipelineQueryParamState(selectedState)
   }
   /** @deprecated use `setSelection` */
   const setSelectedStageId = (selectedStageId: string | undefined): void => {
-    queryParamStateSelection.setPipelineQuestParamState({ stageId: selectedStageId })
+    queryParamStateSelection.setPipelineQueryParamState({ stageId: selectedStageId })
   }
   /** @deprecated use `setSelection` */
   const setSelectedStepId = (selectedStepId: string | undefined): void => {
-    queryParamStateSelection.setPipelineQuestParamState({ stepId: selectedStepId })
+    queryParamStateSelection.setPipelineQueryParamState({ stepId: selectedStepId })
   }
   /** @deprecated use `setSelection` */
   const setSelectedSectionId = (selectedSectionId: string | undefined): void => {
-    queryParamStateSelection.setPipelineQuestParamState({ sectionId: selectedSectionId })
+    queryParamStateSelection.setPipelineQueryParamState({ sectionId: selectedSectionId })
   }
 
   const updateSelectionState = React.useCallback((data: SelectionState) => {
@@ -1226,10 +1226,16 @@ export function PipelineProvider({
     updateSelectionState({
       selectedStageId: queryParamStateSelection.stageId as string,
       selectedStepId: queryParamStateSelection.stepId as string,
-      selectedSectionId: queryParamStateSelection.sectionId as string
+      selectedSectionId: queryParamStateSelection.sectionId as string,
+      stageDetailsOpen: queryParamStateSelection.stageDetailsOpen === 'true'
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryParamStateSelection.stepId, queryParamStateSelection.stageId, queryParamStateSelection.sectionId])
+  }, [
+    queryParamStateSelection.stepId,
+    queryParamStateSelection.stageId,
+    queryParamStateSelection.sectionId,
+    queryParamStateSelection.stageDetailsOpen
+  ])
 
   React.useEffect(() => {
     if (state.storeMetadata?.storeType === StoreType.REMOTE && isEmpty(state.storeMetadata?.connectorRef)) {

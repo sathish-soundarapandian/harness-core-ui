@@ -12793,6 +12793,10 @@ export interface StringsMap {
   /**
    * @deprecated migrate this string to module level file
    */
+  showPanel: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
   sidecar: string
   /**
    * @deprecated migrate this string to module level file

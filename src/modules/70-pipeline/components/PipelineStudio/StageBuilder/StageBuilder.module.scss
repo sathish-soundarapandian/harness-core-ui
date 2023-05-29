@@ -73,3 +73,20 @@ $dot-space: 10px;
 .graphLink {
   stroke: var(--primary-4);
 }
+
+.showPanelBtn {
+  right: var(--spacing-xlarge);
+  top: var(--spacing-large);
+  padding: var(--spacing-large) var(--spacing-medium) !important;
+  color: var(--grey-700) !important;
+  border: 1px solid var(--grey-100) !important;
+  position: absolute;
+
+  &:not(:hover) {
+    box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
+  }
+
+  :global(svg) {
+    margin-right: 14px;
+  }
+}

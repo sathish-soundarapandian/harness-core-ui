@@ -86,10 +86,12 @@ export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
   [DrawerTypes.ViewTemplateDetails]: 600
 }
 
+/** @deprecated since pipeline studio usability improvements */
 export enum SplitViewTypes {
   Notifications = 'Notifications',
   StageView = 'StageView'
 }
+
 export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
   type: DrawerTypes
   data?: {
@@ -114,6 +116,7 @@ export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
 }
 
 export interface PipelineViewData {
+  /** @deprecated since pipeline studio usability improvements */
   isSplitViewOpen: boolean
   isYamlEditable: boolean
   splitViewData: {
@@ -126,6 +129,7 @@ export interface PipelineViewData {
 
 export interface SelectionState {
   selectedStageId?: string
+  stageDetailsOpen?: boolean
   selectedStepId?: string
   selectedSectionId?: string
 }
@@ -321,7 +325,8 @@ export const initialState: PipelineReducerState = {
   selectionState: {
     selectedStageId: undefined,
     selectedStepId: undefined,
-    selectedSectionId: undefined
+    selectedSectionId: undefined,
+    stageDetailsOpen: undefined
   }
 }
 

@@ -71,7 +71,7 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import type { PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
 import {
   PipelineSelectionState,
-  usePipelineQuestParamState
+  usePipelineQueryParamState
 } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
 import {
   getStageFromPipeline as _getStageFromPipeline,
@@ -1082,21 +1082,21 @@ export function PipelineProviderV1({
   }, [])
 
   // stage/step selection
-  const queryParamStateSelection = usePipelineQuestParamState()
+  const queryParamStateSelection = usePipelineQueryParamState()
   const setSelection = (selectedState: PipelineSelectionState): void => {
-    queryParamStateSelection.setPipelineQuestParamState(selectedState)
+    queryParamStateSelection.setPipelineQueryParamState(selectedState)
   }
   /** @deprecated use `setSelection` */
   const setSelectedStageId = (selectedStageId: string | undefined): void => {
-    queryParamStateSelection.setPipelineQuestParamState({ stageId: selectedStageId })
+    queryParamStateSelection.setPipelineQueryParamState({ stageId: selectedStageId })
   }
   /** @deprecated use `setSelection` */
   const setSelectedStepId = (selectedStepId: string | undefined): void => {
-    queryParamStateSelection.setPipelineQuestParamState({ stepId: selectedStepId })
+    queryParamStateSelection.setPipelineQueryParamState({ stepId: selectedStepId })
   }
   /** @deprecated use `setSelection` */
   const setSelectedSectionId = (selectedSectionId: string | undefined): void => {
-    queryParamStateSelection.setPipelineQuestParamState({ sectionId: selectedSectionId })
+    queryParamStateSelection.setPipelineQueryParamState({ sectionId: selectedSectionId })
   }
 
   const updateSelectionState = React.useCallback((data: SelectionState) => {
@@ -1107,10 +1107,16 @@ export function PipelineProviderV1({
     updateSelectionState({
       selectedStageId: queryParamStateSelection.stageId as string,
       selectedStepId: queryParamStateSelection.stepId as string,
-      selectedSectionId: queryParamStateSelection.sectionId as string
+      selectedSectionId: queryParamStateSelection.sectionId as string,
+      stageDetailsOpen: !!queryParamStateSelection.stageDetailsOpen
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryParamStateSelection.stepId, queryParamStateSelection.stageId, queryParamStateSelection.sectionId])
+  }, [
+    queryParamStateSelection.stepId,
+    queryParamStateSelection.stageId,
+    queryParamStateSelection.sectionId,
+    queryParamStateSelection.stageDetailsOpen
+  ])
 
   const getStageFromPipeline = React.useCallback(
     <T extends StageElementConfig = StageElementConfig>(

@@ -9,14 +9,34 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 
 export interface PipelineSelectionState {
   stageId?: string | null
+  stageDetailsOpen?: boolean | null
   stepId?: string | null
   sectionId?: string | null
   storeType?: string
 }
 
-export function usePipelineQuestParamState() {
-  const { stageId, stepId, sectionId } = useQueryParams<PipelineSelectionState>()
-  const { updateQueryParams } = useUpdateQueryParams<PipelineSelectionState>()
+export interface PipelineSelectionStateQueryParams {
+  stageId?: string | null
+  stageDetailsOpen?: string | null
+  stepId?: string | null
+  sectionId?: string | null
+  storeType?: string
+}
+
+function stateToQueryParams(state: PipelineSelectionState): PipelineSelectionStateQueryParams {
+  const { stageDetailsOpen, ...restQueryState } = state
+
+  const queryParams: PipelineSelectionStateQueryParams = { ...restQueryState }
+  if (stageDetailsOpen === true) {
+    queryParams.stageDetailsOpen = 'true'
+  }
+
+  return queryParams
+}
+
+export function usePipelineQueryParamState() {
+  const { stageId, stepId, sectionId, stageDetailsOpen } = useQueryParams<PipelineSelectionStateQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams<PipelineSelectionStateQueryParams>()
 
   /**
    * Set selected stage/step.
@@ -24,17 +44,25 @@ export function usePipelineQuestParamState() {
    * NOTE: Clearing 'stage' state will clear 'step' state too
    */
   const setPipelineQueryParamState = (state: PipelineSelectionState) => {
-    /*if (isNull(state.stageId)) {
-      state.stepId = null
-    }*/
+    const newState = stateToQueryParams(state)
 
-    // clear stepId when stageId is changed
-    const newState = { ...state }
+    // clear stepId and sectionId when stageId is changed
     if (state.stageId && state.stageId !== stageId) {
-      newState.stepId = null
+      newState.stepId = undefined
     }
 
-    updateQueryParams({ stageId, stepId, sectionId, ...newState }, { skipNulls: true })
+    const mergedState = { stageId, stepId, sectionId, stageDetailsOpen, ...newState }
+    // clear sectionId when stage is not selected
+    if (!mergedState.stageId && mergedState.sectionId) {
+      mergedState.sectionId = undefined
+    }
+    // clear stageDetailsOpen when stage is not selected
+    if (!mergedState.stageId && mergedState.stageDetailsOpen) {
+      mergedState.stageDetailsOpen = undefined
+    }
+
+    updateQueryParams(mergedState, { skipNulls: true })
   }
-  return { stageId, stepId, setPipelineQuestParamState: setPipelineQueryParamState, sectionId }
+
+  return { stageId, stageDetailsOpen, stepId, sectionId, setPipelineQueryParamState }
 }

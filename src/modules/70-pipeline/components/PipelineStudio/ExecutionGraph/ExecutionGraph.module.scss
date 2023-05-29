@@ -33,6 +33,7 @@ $dot-space: 10px;
 .add-step-popover {
   display: inline-block;
   min-width: 180px;
+  z-index: 100 !important;
 
   .add-popover {
     :global(.bp3-button) {

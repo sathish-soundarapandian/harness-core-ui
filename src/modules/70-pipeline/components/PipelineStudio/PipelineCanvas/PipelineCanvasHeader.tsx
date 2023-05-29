@@ -96,17 +96,8 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     openRunPipelineModal
   } = props
   const { getString } = useStrings()
-  const {
-    state,
-    updatePipelineView,
-    isReadonly,
-    view,
-    setView,
-    updatePipeline,
-    fetchPipeline,
-    setSelectedStageId,
-    setSelectedSectionId
-  } = usePipelineContext()
+  const { state, updatePipelineView, isReadonly, view, setView, updatePipeline, fetchPipeline, setSelection } =
+    usePipelineContext()
   const isAsyncValidationEnabled = useFeatureFlag(FeatureFlag.PIE_ASYNC_VALIDATION)
   const { showError, showSuccess, clear } = useToaster()
   const {
@@ -230,8 +221,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
       isSplitViewOpen: false,
       drawerData: { type: DrawerTypes.AddStep }
     })
-    setSelectedStageId(undefined)
-    setSelectedSectionId(undefined)
+    setSelection({ stageId: undefined, sectionId: undefined, stageDetailsOpen: undefined })
     return true
   }
 
