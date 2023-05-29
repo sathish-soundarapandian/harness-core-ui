@@ -23,7 +23,11 @@ import {
   ButtonVariation,
   Container,
   Popover,
-  useToaster
+  useToaster,
+  sortByLastModified,
+  sortByCreated,
+  sortByName,
+  SortMethod
 } from '@harness/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
@@ -73,6 +77,7 @@ import {
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import ConnectorsEmptyState from './connectors-no-data.png'
 import css from './ConnectorReferenceField.module.scss'
 
@@ -474,7 +479,7 @@ export function getReferenceFieldProps({
     createNewLabel: getString('newConnector'),
     // recordClassName: css.listItem,
     isNewConnectorLabelVisible: true,
-    fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected) => {
+    fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected, sortMethod) => {
       const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier, allTabSelected })
       const gitFilterParams =
         gitScope?.repo && gitScope?.branch
@@ -494,7 +499,10 @@ export function getReferenceFieldProps({
             pageIndex: page || 0,
             pageSize: 10,
             ...(version ? { version } : undefined),
-            includeAllConnectorsAvailableAtScope: allTabSelected
+            includeAllConnectorsAvailableAtScope: allTabSelected,
+            // eslint-disable-next-line
+            // @ts-ignore
+            sortOrders: sortMethod
           },
           body: merge(
             {
@@ -612,6 +620,8 @@ export const getConnectorStatusCall = async (
   }
 }
 
+const DEFAULT_SORT_METHOD = SortMethod.Newest
+
 export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = props => {
   const {
     defaultScope,
@@ -689,6 +699,9 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
   const [connectorStatus, setConnectorStatus] = React.useState(typeof selected !== 'string' && selected?.live)
   const scopeFromSelected = typeof selected === 'string' && getScopeFromValue(selected || '')
   const selectedRef = typeof selected === 'string' && getIdentifierFromValue(selected || '')
+  const { preference: sortPreference = DEFAULT_SORT_METHOD, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-select-connector`)
+
   const {
     data: connectorData,
     loading,
@@ -890,6 +903,13 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
           pageCount: pagedConnectorData?.data?.totalPages || -1,
           pageIndex: page || 0,
           gotoPage: pageIndex => setPage(pageIndex)
+        }}
+        sortProps={{
+          selectedSortMethod: sortPreference,
+          onSortMethodChange: option => {
+            setSortPreference(option.value as SortMethod)
+          },
+          sortOptions: [...sortByLastModified, ...sortByCreated, ...sortByName]
         }}
         disableCollapse={!(type === 'Github')}
         createNewBtnComponent={
