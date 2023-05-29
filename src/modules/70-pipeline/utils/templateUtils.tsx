@@ -133,7 +133,7 @@ export const createStepNodeFromTemplate = (
           set(draft, 'template.versionLabel', template.versionLabel)
         }
         if (template.gitDetails?.branch && branch !== template.gitDetails?.branch) {
-          set(draft, 'template.branch', template.gitDetails?.branch)
+          set(draft, 'template.gitBranch', template.gitDetails?.branch)
         }
       })) as unknown as StepElementConfig
 }
