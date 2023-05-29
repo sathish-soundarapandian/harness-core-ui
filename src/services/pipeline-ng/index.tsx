@@ -1097,6 +1097,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'TerraformCloud'
     | 'SignalFX'
     | 'Harness'
+    | 'Rancher'
   )[]
 }
 
@@ -1243,6 +1244,10 @@ export interface DelegateInfo {
   name?: string
   taskId?: string
   taskName?: string
+}
+
+export type DelegateInfra = StepGroupInfra & {
+  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export interface DestinationPipelineConfig {
@@ -3451,6 +3456,11 @@ export interface JsonNode {
   [key: string]: any
 }
 
+export type K8sDirectInfra = StepGroupInfra & {
+  spec: ContainerInfraYamlSpec
+  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
+}
+
 export type KeyValuesCriteriaSpec = CriteriaSpec & {
   conditions: Condition[]
   matchAnyCondition?: boolean
@@ -4409,6 +4419,7 @@ export interface PipelineValidationResponseDTO {
   startTs?: number
   status?: string
   templateValidationResponse?: TemplateValidationResponseDTO
+  validateTemplateReconcileResponseDTO?: ValidateTemplateReconcileResponseDTO
 }
 
 export interface PipelineValidationUUIDResponseBody {
@@ -4748,6 +4759,7 @@ export interface ResourceDTO {
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
     | 'IP_ALLOWLIST_CONFIG'
+    | 'NETWORK_MAP'
 }
 
 export interface ResourceScope {
@@ -6470,6 +6482,8 @@ export interface StepGroupElementConfig {
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
+  sharedPaths?: ParameterFieldListString
+  stepGroupInfra?: StepGroupInfra
   steps?: ExecutionWrapperConfig[]
   strategy?: StrategyConfig
   template?: TemplateLinkConfig
@@ -6478,6 +6492,10 @@ export interface StepGroupElementConfig {
 
 export type StepGroupFailureActionConfig = FailureStrategyActionConfig & {
   type: 'StepGroupRollback'
+}
+
+export interface StepGroupInfra {
+  type?: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export interface StepPalleteFilterWrapper {
@@ -6533,6 +6551,7 @@ export type TagBuildSpec = BuildSpec & {
 export interface TargetExecutionSummary {
   executionStatus?: string
   planExecutionId?: string
+  runSequence?: number
   runtimeInput?: string
   startTs?: number
   targetId?: string
@@ -6586,6 +6605,7 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 }
 
 export interface TemplateLinkConfig {
+  gitBranch?: string
   templateInputs?: JsonNode
   templateRef: string
   templateVariables?: JsonNode
@@ -6861,6 +6881,10 @@ export type ValidatePipelineInputsResponseDTO = ErrorMetadataDTO & {
 export type ValidateTemplateInputsResponseDTO = ErrorMetadataDTO & {
   errorNodeSummary?: ErrorNodeSummary
   validYaml?: boolean
+}
+
+export interface ValidateTemplateReconcileResponseDTO {
+  reconcileNeeded?: boolean
 }
 
 export interface ValidationError {
