@@ -39,6 +39,7 @@ export function TemplatePipelineCanvas(): React.ReactElement {
     setTemplateIcons,
     setTemplateServiceData
   } = usePipelineContext()
+  console.log(gitDetails)
   const canvasRef = React.useRef<HTMLDivElement | null>(null)
   const { errorMap } = useValidationErrors()
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>()

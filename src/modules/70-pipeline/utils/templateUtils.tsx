@@ -88,7 +88,8 @@ export const setTemplateInputs = (
 
 export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig | StepOrStepGroupOrTemplateStepData>(
   data?: T,
-  template?: TemplateSummaryResponse
+  template?: TemplateSummaryResponse,
+  branch?: string
 ): T => {
   return produce({} as T, draft => {
     draft.name = defaultTo(data?.name, '')
@@ -98,6 +99,9 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
       if (template.versionLabel) {
         set(draft, 'template.versionLabel', template.versionLabel)
       }
+      if (template.gitDetails?.branch && branch !== template.gitDetails?.branch) {
+        set(draft, 'template.gitBranch', template.gitDetails?.branch)
+      }
       set(draft, 'template.templateInputs', get(data, 'template.templateInputs'))
     }
   })
@@ -106,11 +110,16 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
 export const getTemplateRefVersionLabelObject = (template: TemplateSummaryResponse): TemplateLinkConfig => {
   return {
     templateRef: defaultTo(getScopeBasedTemplateRef(template), ''),
-    versionLabel: defaultTo(template.versionLabel, '')
+    versionLabel: defaultTo(template.versionLabel, ''),
+    gitBranch: template?.gitDetails?.branch || ''
   }
 }
 
-export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, isCopied = false): StepElementConfig => {
+export const createStepNodeFromTemplate = (
+  template: TemplateSummaryResponse,
+  isCopied = false,
+  branch?: string
+): StepElementConfig => {
   return (isCopied
     ? produce(defaultTo(parse<any>(defaultTo(template?.yaml, ''))?.template.spec, {}) as StepElementConfig, draft => {
         draft.name = defaultTo(template?.name, '')
@@ -122,6 +131,9 @@ export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, is
         set(draft, 'template.templateRef', getScopeBasedTemplateRef(template))
         if (template.versionLabel) {
           set(draft, 'template.versionLabel', template.versionLabel)
+        }
+        if (template.gitDetails?.branch && branch !== template.gitDetails?.branch) {
+          set(draft, 'template.branch', template.gitDetails?.branch)
         }
       })) as unknown as StepElementConfig
 }

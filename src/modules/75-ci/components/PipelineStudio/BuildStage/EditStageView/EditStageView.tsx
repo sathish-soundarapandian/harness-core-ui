@@ -215,7 +215,7 @@ export const EditStageView: React.FC<EditStageView> = ({
       }
 
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template) }, values.identifier, pipelineData)
+        onSubmit?.({ stage: createTemplate(values, template, branch) }, values.identifier, pipelineData)
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

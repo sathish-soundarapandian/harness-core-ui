@@ -61,8 +61,9 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
   const { module, ...params } = useParams<PipelineType<ProjectPathProps>>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier } = useQueryParams<GitQueryParams>()
   const scope = getScopeFromValue(templateLinkConfig.templateRef)
+  const templateGitBranch = defaultTo(templateLinkConfig?.gitBranch, '')
   const { enabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
@@ -76,7 +77,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     queryParams: {
       ...getScopeBasedProjectPathParams(params, scope),
       versionLabel: defaultTo(templateLinkConfig.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch: templateGitBranch })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)

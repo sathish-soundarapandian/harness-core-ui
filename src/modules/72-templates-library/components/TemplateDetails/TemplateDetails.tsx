@@ -119,8 +119,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const [selectedTab, setSelectedTab] = React.useState<TemplateTabs>(TemplateTabs.INPUTS)
   const params = useParams<ProjectPathProps & ModulePathParams>()
   const { accountId, module } = params
-  const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>()
-  const gitPopoverBranch = isStandAlone ? storeMetadata?.branch : selectedBranch
+  const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>(storeMetadata?.branch)
+  const gitPopoverBranch = selectedBranch
 
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
@@ -373,7 +373,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         templateIdentifier: selectedTemplate.identifier,
         versionLabel: selectedTemplate.versionLabel,
         repoIdentifier: selectedTemplate.gitDetails?.repoIdentifier,
-        branch: !isStandAlone ? selectedBranch || selectedTemplate.gitDetails?.branch : storeMetadata?.branch
+        branch: selectedBranch || selectedTemplate.gitDetails?.branch
       })
       if (isStandAlone) {
         window.open(`${windowLocationUrlPartBeforeHash()}#${url}`, '_blank')
@@ -470,7 +470,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                         }}
                         gitDetails={selectedTemplate.gitDetails!}
                         onGitBranchChange={onGitBranchChange}
-                        branchChangeDisabled={isStandAlone}
                         forceFetch
                         btnClassName={css.gitBtn}
                         customIcon={
