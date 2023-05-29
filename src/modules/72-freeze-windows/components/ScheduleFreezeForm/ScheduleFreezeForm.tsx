@@ -26,7 +26,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import { DateTimePicker, DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
 import css from './ScheduleFreezeForm.module.scss'
 
-interface ScheduleFreezeFormProps {
+export interface ScheduleFreezeFormProps {
   freezeWindow?: FreezeWindow
   onSubmit?: (freezeWindow: FreezeWindow) => void
   onChange?: (freezeWindow: FreezeWindow) => void

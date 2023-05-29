@@ -12,6 +12,8 @@ import type { OverviewChartsWithToggleProps } from '@common/components/OverviewC
 import type { SchedulePanelPropsInterface } from '@common/components/SchedulePanel/SchedulePanel'
 import type { NavigationCheckProps } from '@common/components/NavigationCheck/NavigationCheck'
 import type { DurationProps } from '@common/exports'
+import type { FormikUserGroupsInput } from '@rbac/components/UserGroupsInput/UserGroupsInput'
+import type { ScheduleFreezeFormProps } from '@freeze-windows/components/ScheduleFreezeForm/ScheduleFreezeForm'
 
 export interface ChaosCustomMicroFrontendProps {
   customComponents?: {
@@ -20,6 +22,8 @@ export interface ChaosCustomMicroFrontendProps {
     Duration?: React.ComponentType<DurationProps>
     NavigationCheck?: React.ComponentType<NavigationCheckProps>
     SchedulePanel?: React.ComponentType<SchedulePanelPropsInterface>
+    UserGroupsInput?: React.ComponentType<FormikUserGroupsInput>
+    ScheduleFreezeForm?: React.ComponentType<ScheduleFreezeFormProps>
   }
   customFunctions?: {
     validateYAMLWithSchema?: (yamlString: string, schema: Record<string, any>) => Promise<Diagnostic[]>

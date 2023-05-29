@@ -40,7 +40,7 @@ export interface FormikUserGroupsInput extends UserGroupsInputProps {
   scopeCountMap?: Map<Scope, string[]>
 }
 
-const UserGroupsInput: React.FC<FormikUserGroupsInput> = props => {
+export const UserGroupsInput: React.FC<FormikUserGroupsInput> = props => {
   const { getString } = useStrings()
   const {
     formik,
