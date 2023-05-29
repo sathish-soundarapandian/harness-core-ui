@@ -8206,6 +8206,7 @@ export interface StringsMap {
   'ci.dashboard.subHeading': string
   'ci.delegates': string
   'ci.description': string
+  'ci.enableDLC': string
   'ci.executionLabel': string
   'ci.fileStore': string
   'ci.getStartedWithCI.awsBuildLocation': string

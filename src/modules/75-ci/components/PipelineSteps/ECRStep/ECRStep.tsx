@@ -45,7 +45,7 @@ export interface ECRStepSpec {
   // TODO: Right now we do not support Image Pull Policy but will do in the future
   // pull?: MultiTypePullOption
   resources?: Resources
-  runAsUser?: string
+  caching?: boolean
 }
 
 export interface ECRStepData {
