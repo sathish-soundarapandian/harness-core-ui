@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, wait } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { DelegateTypes } from '@delegates/constants'
 import DelegateSelectStep from '../DelegateSelectStep'
@@ -55,7 +55,6 @@ describe('Delgate Select StepWizard', () => {
     )
     const step1ContinueButton = container?.querySelector('#step1ContinueButton')
     fireEvent.click(step1ContinueButton!)
-    await wait()
-    expect(container).toMatchSnapshot()
+    await waitFor(() => expect(container).toMatchSnapshot())
   })
 })

@@ -108,9 +108,7 @@ describe('JiraIssueList', () => {
     // type into issue search field
     expect(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -')).toBeInTheDocument()
     await userEvent.click(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'))
-    await userEvent.type(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'), 'FD-7', {
-      allAtOnce: true
-    })
+    await userEvent.type(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'), 'FD-7')
 
     // select issue from dropdown
     const item = await screen.findByRole('listitem')
@@ -152,9 +150,7 @@ describe('JiraIssueList', () => {
     // type into issue search field
     expect(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -')).toBeInTheDocument()
     await userEvent.click(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'))
-    await userEvent.type(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'), 'FD-7', {
-      allAtOnce: true
-    })
+    await userEvent.type(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'), 'FD-7')
 
     // select issue from dropdown
     await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(1))
@@ -179,9 +175,7 @@ describe('JiraIssueList', () => {
     // type into issue search field
     expect(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -')).toBeInTheDocument()
     await userEvent.click(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'))
-    await userEvent.type(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'), 'FD-NOT-FOUND', {
-      allAtOnce: true
-    })
+    await userEvent.type(screen.getByPlaceholderText('- cf.featureFlags.jira.inputPlaceholder -'), 'FD-NOT-FOUND')
 
     // 'no issue found' message should appear in dropdown
     await waitFor(() => expect(screen.getByText('No Match Found')).toBeInTheDocument())

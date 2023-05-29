@@ -113,7 +113,7 @@ describe('SelectEnvironmentView', () => {
       expect(document.getElementsByTagName('li')[0]).toHaveTextContent('bar')
     })
 
-    await userEvent.type(envInput, 'new env name', { allAtOnce: true })
+    await userEvent.type(envInput, 'new env name')
 
     // click to open Create Environment modal
     await userEvent.click(screen.getByText('plus'))
@@ -191,7 +191,7 @@ describe('SelectEnvironmentView', () => {
 
     expect(createNewEnvTextbox).toBeInTheDocument()
 
-    await userEvent.type(createNewEnvTextbox, 'new env name', { allAtOnce: true })
+    await userEvent.type(createNewEnvTextbox, 'new env name')
     userEvent.click(screen.getByRole('button', { name: 'cf.onboarding.createEnv' }))
 
     // modal should be open
@@ -265,7 +265,7 @@ describe('SelectEnvironmentView', () => {
     })
 
     // type env name
-    await userEvent.type(envInput, 'new env name', { allAtOnce: true })
+    await userEvent.type(envInput, 'new env name')
 
     // click to open Create Environment modal
     await userEvent.click(screen.getByText('plus'))
@@ -330,13 +330,7 @@ describe('SelectEnvironmentView', () => {
       expect(screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' })).toBeVisible()
     })
 
-    await userEvent.type(
-      screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' }),
-      'foo bar server sdk key',
-      {
-        allAtOnce: true
-      }
-    )
+    await userEvent.type(screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' }), 'foo bar server sdk key')
 
     await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
@@ -389,13 +383,7 @@ describe('SelectEnvironmentView', () => {
       expect(screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' })).toBeVisible()
     })
 
-    await userEvent.type(
-      screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' }),
-      'foo bar client sdk key',
-      {
-        allAtOnce: true
-      }
-    )
+    await userEvent.type(screen.getByRole('textbox', { name: 'cf.onboarding.enterKeyName' }), 'foo bar client sdk key')
 
     await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 

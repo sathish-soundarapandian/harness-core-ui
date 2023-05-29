@@ -61,7 +61,7 @@ describe('usePercentageRolloutEqualiser', () => {
 
     for (const input of inputs) {
       expect(input).toHaveValue('')
-      await userEvent.type(input, '10', { allAtOnce: true })
+      await userEvent.type(input, '10')
     }
 
     await waitFor(() => expect(getTotal(inputs)).toBe(30))

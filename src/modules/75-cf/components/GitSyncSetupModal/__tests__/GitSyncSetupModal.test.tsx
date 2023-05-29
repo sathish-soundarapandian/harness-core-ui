@@ -68,7 +68,7 @@ describe('GitSyncSetupModal', () => {
     const saveBtn = screen.getByRole('button', { name: 'save' })
     const filePathField = screen.getByPlaceholderText('gitsync.gitSyncForm.enterYamlPath')
 
-    await userEvent.type(filePathField, './invalidPath.yaml', { allAtOnce: true })
+    await userEvent.type(filePathField, './invalidPath.yaml')
 
     await userEvent.click(saveBtn)
 

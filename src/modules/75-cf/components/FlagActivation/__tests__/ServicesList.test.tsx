@@ -321,7 +321,7 @@ describe('EditServicesModal', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'edit-services' }))
 
-    await userEvent.type(screen.getByRole('searchbox'), 'Support', { allAtOnce: true })
+    await userEvent.type(screen.getByRole('searchbox'), 'Support')
 
     await waitFor(() => expect(screen.getByText(loadingMessage)).toBeInTheDocument())
   })
@@ -356,7 +356,7 @@ describe('EditServicesModal', () => {
     })
 
     // searching amongst the already associated services
-    await userEvent.type(screen.getByRole('searchbox'), 'My Service 1', { allAtOnce: true })
+    await userEvent.type(screen.getByRole('searchbox'), 'My Service 1')
 
     await waitFor(() => {
       expect(screen.queryByRole('checkbox', { name: 'My Service 1' })).toBeInTheDocument()

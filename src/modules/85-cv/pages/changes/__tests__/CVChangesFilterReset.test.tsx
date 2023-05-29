@@ -16,7 +16,7 @@ import { mockedSecondaryEventsResponse } from '@cv/pages/slos/__tests__/CVSLOsLi
 import { filterPayloadWithENV, initialFilterPayload, mockData } from './data-mocks/ChangeEventListMock'
 import { CVChanges } from '../CVChanges'
 
-jest.useFakeTimers('modern')
+jest.useFakeTimers({ advanceTimers: true })
 
 jest.mock('@common/hooks/useFeatureFlag', () => ({
   useFeatureFlag: jest.fn(() => true),
