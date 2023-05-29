@@ -7,15 +7,18 @@
 
 import React, { CSSProperties } from 'react'
 import cx from 'classnames'
-import { debounce, defaultTo } from 'lodash-es'
+import { debounce, defaultTo, set, unset } from 'lodash-es'
 import { Icon, Text, Button, ButtonVariation, IconName, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { Switch } from '@blueprintjs/core'
+import produce from 'immer'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { useStrings } from 'framework/strings'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { FireEventMethod, NodeType } from '../../../types'
@@ -53,6 +56,9 @@ interface PipelineStageNodeProps {
 function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const { getString } = useStrings()
   const allowAdd = defaultTo(props.allowAdd, false)
+  const { getStageFromPipeline, updateStage } = usePipelineContext()
+  const { stage: pipelineStage } = getStageFromPipeline(props?.identifier)
+  const whenCondition = pipelineStage?.stage?.when?.condition
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const onDropEvent = (event: React.DragEvent): void => {
@@ -87,9 +93,14 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const isTemplateNode = props?.data?.isTemplateNode
   return (
     <div
-      className={cx(defaultCss.defaultNode, 'default-node', {
-        draggable: !props.readonly
-      })}
+      className={cx(
+        defaultCss.defaultNode,
+        'default-node',
+        {
+          draggable: !props.readonly
+        },
+        { [defaultCss.disabled]: whenCondition === 'false' }
+      )}
       onMouseOver={() => setAddVisibility(true)}
       onMouseLeave={debounceHideVisibility}
       onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -257,6 +268,26 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               name={CODE_ICON}
             />
           )}
+          {!props?.data?.isInComplete && (
+            <div
+              className={cx(defaultCss.switch, { [defaultCss.stageSelectedSwitch]: isSelectedNode() })}
+              onClick={e => {
+                e.stopPropagation()
+                if (pipelineStage && pipelineStage?.stage) {
+                  const stageData = produce(pipelineStage, draft => {
+                    if (whenCondition === 'false') {
+                      unset(draft, 'stage.when.condition')
+                    } else {
+                      set(draft, 'stage.when.condition', 'false')
+                    }
+                  })
+                  if (stageData.stage) updateStage(stageData.stage)
+                }
+              }}
+            >
+              <Switch aria-label="Global Freeze Toggle" checked={whenCondition !== 'false'} />
+            </div>
+          )}
           <Button
             className={cx(defaultCss.closeNode, { [defaultCss.readonly]: props.readonly })}
             minimal
@@ -328,6 +359,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             <Icon
               size={16}
               name={'looping'}
+              background={Color.PURPLE_300}
               {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
             />
           </Text>

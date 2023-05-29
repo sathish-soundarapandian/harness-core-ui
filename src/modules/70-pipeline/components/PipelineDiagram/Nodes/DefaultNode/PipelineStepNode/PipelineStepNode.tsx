@@ -7,9 +7,11 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { debounce, defaultTo } from 'lodash-es'
+import { cloneDeep, debounce, defaultTo, set, unset } from 'lodash-es'
 import { HarnessIcons, Icon, Text, Button, ButtonVariation, IconName, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { Switch } from '@blueprintjs/core'
+import produce from 'immer'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import stepsfactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -17,6 +19,8 @@ import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/Execu
 import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { useStrings } from 'framework/strings'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { updateStepWithinStage } from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer'
 import SVGMarker from '../../SVGMarker'
 import { BaseReactComponentProps, NodeType } from '../../../types'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
@@ -37,6 +41,20 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   const { getString } = useStrings()
   const allowAdd = defaultTo(props.allowAdd, false)
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
+  const {
+    state: {
+      pipelineView: { isRollbackToggled },
+      pipelineView,
+      selectionState: { selectedStageId }
+    },
+    updateStage,
+    updatePipelineView,
+    getStageFromPipeline
+  } = usePipelineContext()
+
+  const whenCondition = props?.data?.step?.when?.condition
+  const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
+
   const stepType = props.type || props?.data?.step?.stepType || props?.data?.step?.template?.templateInputs?.type || ''
   const stepData = stepsfactory.getStepData(stepType)
   const isStepNonDeletable = stepsfactory.getIsStepNonDeletable(stepType)
@@ -214,6 +232,46 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
               <Icon size={40} {...isSelectedCss()} name={defaultTo(stepIcon, 'cross') as IconName} />
             </>
           )
+        )}
+        {!props?.data?.isInComplete && (
+          <div
+            className={cx(defaultCss.switch, { [defaultCss.stageSelectedSwitch]: isSelectedNode() })}
+            onClick={e => {
+              e.stopPropagation()
+              const originalStepData = cloneDeep(props?.data?.step)
+              if (whenCondition === 'false') {
+                unset(originalStepData, 'when')
+              } else {
+                set(originalStepData, 'when.condition', 'false')
+                set(originalStepData, 'when.stageStatus', 'Success')
+              }
+              const processingNodeIdentifier = props.identifier
+              if (processingNodeIdentifier) {
+                const stageData = produce(selectedStage, draft => {
+                  if (draft?.stage?.spec?.execution) {
+                    updateStepWithinStage(
+                      draft.stage.spec.execution,
+                      processingNodeIdentifier,
+                      originalStepData,
+                      !!isRollbackToggled
+                    )
+                  }
+                })
+                // update view data before updating pipeline because its async
+                updatePipelineView(
+                  produce(pipelineView, draft => {
+                    set(draft, 'drawerData.data.stepConfig.node', originalStepData)
+                  })
+                )
+
+                if (stageData?.stage) {
+                  updateStage(stageData.stage)
+                }
+              }
+            }}
+          >
+            <Switch aria-label="Global Freeze Toggle" checked={whenCondition !== 'false'} />
+          </div>
         )}
         {secondaryIcon && (
           <Icon
