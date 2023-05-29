@@ -45,8 +45,8 @@ describe('CreateTargetModal', () => {
     renderComponent({ onSubmitTargets: onSubmitTargetsMock })
     await openModal()
 
-    await userEvent.type(screen.getByPlaceholderText('cf.targets.enterName'), name, { allAtOnce: true })
-    await userEvent.type(screen.getByPlaceholderText('cf.targets.enterValue'), identifier, { allAtOnce: true })
+    await userEvent.type(screen.getByPlaceholderText('cf.targets.enterName'), name)
+    await userEvent.type(screen.getByPlaceholderText('cf.targets.enterValue'), identifier)
 
     const submitButton = screen.getByRole('button', { name: 'add' })
 
@@ -117,7 +117,7 @@ describe('CreateTargetModal', () => {
     renderComponent()
     await openModal()
 
-    await userEvent.type(screen.getByPlaceholderText('cf.targets.enterName'), 'test', { allAtOnce: true })
+    await userEvent.type(screen.getByPlaceholderText('cf.targets.enterName'), 'test')
     await userEvent.click(screen.getByRole('button', { name: 'cancel' }))
 
     await waitFor(() => expect(screen.queryByText('cf.targets.addTargetsLabel')).not.toBeInTheDocument())
@@ -135,8 +135,8 @@ describe('CreateTargetModal', () => {
     renderComponent({ onSubmitTargets: onSubmitTargetsMock })
     await openModal()
 
-    await userEvent.type(screen.getByPlaceholderText('cf.targets.enterName'), 'test', { allAtOnce: true })
-    await userEvent.type(screen.getByPlaceholderText('cf.targets.enterValue'), 'test', { allAtOnce: true })
+    await userEvent.type(screen.getByPlaceholderText('cf.targets.enterName'), 'test')
+    await userEvent.type(screen.getByPlaceholderText('cf.targets.enterValue'), 'test')
 
     const submitBtn = screen.getByRole('button', { name: 'add' })
     await waitFor(() => expect(submitBtn).toBeEnabled())

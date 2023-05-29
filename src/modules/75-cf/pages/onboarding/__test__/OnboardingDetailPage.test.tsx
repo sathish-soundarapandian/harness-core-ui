@@ -8,7 +8,7 @@
 
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
-import userEvent, { TargetElement } from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PlatformEntryType } from '@cf/components/LanguageSelection/LanguageSelection'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
@@ -82,14 +82,14 @@ describe('OnboardingDetailPage', () => {
 
     renderComponent()
 
-    const selectInput = document.querySelector('input[id="selectOrCreateFlag"]') as TargetElement
+    const selectInput = document.querySelector('input[id="selectOrCreateFlag"]') as HTMLElement
 
     // Should be prevented from next tab until flag selected/created
     expect(screen.getByText('next')).toBeVisible()
     expect(screen.getByText('next').closest('button')).toBeDisabled()
 
     await userEvent.click(selectInput)
-    await userEvent.type(selectInput, flagName, { allAtOnce: true })
+    await userEvent.type(selectInput, flagName)
 
     expect(refetchFlags).toBeCalled()
 
@@ -101,7 +101,7 @@ describe('OnboardingDetailPage', () => {
     })
 
     // Click to create new flag
-    await userEvent.click(document.querySelector('button[class*="createNewItemButton"]') as TargetElement)
+    await userEvent.click(document.querySelector('button[class*="createNewItemButton"]') as HTMLElement)
 
     await waitFor(() => {
       expect(createNewFlag).toBeCalled()

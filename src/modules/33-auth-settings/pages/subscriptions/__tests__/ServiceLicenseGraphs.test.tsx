@@ -70,7 +70,7 @@ describe('Service License Visualisation Graph test cases', () => {
     expect(useMutateAsGet).toBeCalled()
   })
   test('changing dropdown selection using fake timers if current month is january', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers({ advanceTimers: true })
     jest.setSystemTime(new Date('2020-01-19'))
     const { getByText } = render(
       <TestWrapper>
@@ -94,7 +94,7 @@ describe('Service License Visualisation Graph test cases', () => {
   })
   // eslint-disable-next-line jest/no-disabled-tests
   test.skip('changing dropdown selection using fake timers if current month is february', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers({ advanceTimers: true })
     jest.setSystemTime(new Date('2020-10-19'))
     const { getByText } = render(
       <TestWrapper>
@@ -117,7 +117,7 @@ describe('Service License Visualisation Graph test cases', () => {
     expect(useMutateAsGet).toBeCalled()
   })
   test('changing dropdown selection using fake timers if current month is february', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers({ advanceTimers: true })
     jest.setSystemTime(new Date('2020-02-19'))
     const { getByText } = render(
       <TestWrapper>
@@ -140,7 +140,7 @@ describe('Service License Visualisation Graph test cases', () => {
     expect(useMutateAsGet).toBeCalled()
   })
   test('changing dropdown selection using fake timers if current month is february', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers({ advanceTimers: true })
     jest.setSystemTime(new Date('2020-10-19'))
     const { getByText } = render(
       <TestWrapper>
@@ -163,7 +163,7 @@ describe('Service License Visualisation Graph test cases', () => {
     expect(useMutateAsGet).toBeCalled()
   })
   test('changing dropdown selection using fake timers if current month is October', async () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers({ advanceTimers: true })
     jest.setSystemTime(new Date('2020-02-19'))
     const { getByText } = render(
       <TestWrapper>

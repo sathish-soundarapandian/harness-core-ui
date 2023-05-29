@@ -47,14 +47,14 @@ const setDefaultVariations = async (): Promise<void> => {
     const variationOption1Name = document.getElementsByName('variations.0.name')[0]
     const variationOption1Value = document.getElementsByName('variations.0.value')[0]
 
-    await userEvent.type(variationOption1Name, 'variation one', { allAtOnce: true })
-    await userEvent.type(variationOption1Value, 'On', { allAtOnce: true })
+    await userEvent.type(variationOption1Name, 'variation one')
+    await userEvent.type(variationOption1Value, 'On')
 
     const variationOption2Name = document.getElementsByName('variations.1.name')[0]
     const variationOption2Value = document.getElementsByName('variations.1.value')[0]
 
-    await userEvent.type(variationOption2Name, 'variation two', { allAtOnce: true })
-    await userEvent.type(variationOption2Value, 'Off', { allAtOnce: true })
+    await userEvent.type(variationOption2Name, 'variation two')
+    await userEvent.type(variationOption2Value, 'Off')
   })
 }
 
@@ -230,7 +230,7 @@ describe('FlagElemMultivariate', () => {
     const var1NameInput = document.getElementsByName('variations.0.name')[0]
     expect(var1NameInput).toBeInTheDocument()
 
-    await userEvent.type(var1NameInput, '2', { allAtOnce: true })
+    await userEvent.type(var1NameInput, '2')
     var1NameInput.blur()
 
     await waitFor(() => {

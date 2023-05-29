@@ -28,7 +28,7 @@ import {
 } from '../../pages/get-started-with-ci/InfraProvisioningWizard/Constants'
 
 beforeAll(() => {
-  jest.useFakeTimers('modern')
+  jest.useFakeTimers({ advanceTimers: true })
   jest.setSystemTime(new Date(2020, 3, 1))
 })
 

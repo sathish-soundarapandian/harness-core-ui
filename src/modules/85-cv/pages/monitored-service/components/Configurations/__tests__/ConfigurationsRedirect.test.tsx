@@ -16,7 +16,7 @@ import { MonitoredServiceContext } from '@cv/pages/monitored-service/MonitoredSe
 import { ConfigurationsWithRef } from '../Configurations'
 import { editModeData } from '../components/Service/__tests__/Service.mock'
 
-jest.useFakeTimers('modern')
+jest.useFakeTimers({ advanceTimers: true })
 
 jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment', () => ({
   useGetHarnessServices: () => ({

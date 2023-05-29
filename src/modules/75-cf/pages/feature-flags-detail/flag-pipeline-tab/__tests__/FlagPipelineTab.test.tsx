@@ -183,7 +183,7 @@ describe('FlagPipelineTab', () => {
 
       useGetAvailableFeaturePipelinesMock.mockClear()
 
-      await userEvent.type(screen.getByPlaceholderText('Search'), 'pipeline 1', { allAtOnce: true })
+      await userEvent.type(screen.getByPlaceholderText('Search'), 'pipeline 1')
 
       await waitFor(() =>
         expect(useGetAvailableFeaturePipelinesMock).toHaveBeenCalledWith(

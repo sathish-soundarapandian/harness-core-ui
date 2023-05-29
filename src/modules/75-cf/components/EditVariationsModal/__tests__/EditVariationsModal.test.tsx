@@ -70,11 +70,9 @@ describe('EditVariationsModal', () => {
 
     const variation1 = document.getElementsByName('variations.0.name')[0]
     await userEvent.clear(variation1)
-    await userEvent.type(variation1, 'new variation', { allAtOnce: true })
+    await userEvent.type(variation1, 'new variation')
 
-    await userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'test commit message', {
-      allAtOnce: true
-    })
+    await userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'test commit message')
     await userEvent.click(screen.getByText('save'))
 
     await waitFor(() =>

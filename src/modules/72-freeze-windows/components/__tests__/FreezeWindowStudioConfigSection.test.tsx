@@ -7,16 +7,7 @@
  */
 
 import React from 'react'
-import {
-  render,
-  waitForElementToBeRemoved,
-  screen,
-  fireEvent,
-  waitFor,
-  within,
-  getByTestId,
-  act
-} from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, within, getByTestId, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'

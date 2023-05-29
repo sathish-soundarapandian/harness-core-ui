@@ -167,7 +167,7 @@ describe('PricePreview ci credit card', () => {
   })
 
   test('getOtherRenewDate util method ', () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers({ advanceTimers: true })
     jest.setSystemTime(new Date('2023-04-10'))
     const prevData = new Date()
     const returnedDate = getOtherRenewDate(TimeType.MONTHLY, prevData)
@@ -176,7 +176,7 @@ describe('PricePreview ci credit card', () => {
     expect(returnedDateYearly.valueOf() === 'May 10, 2024').toBe(true)
   })
   test('getOtherRenewPrevDate util method ', () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers({ advanceTimers: true })
     jest.setSystemTime(new Date('2023-04-10'))
     const prevData = new Date()
     const returnedDate = getOtherRenewPrevDate(TimeType.MONTHLY, prevData)
@@ -185,7 +185,7 @@ describe('PricePreview ci credit card', () => {
     expect(returnedDateYearly.valueOf() === 'Apr 10, 2023').toBe(true)
   })
   test('getRenewDate util method ', () => {
-    jest.useFakeTimers('modern')
+    jest.useFakeTimers({ advanceTimers: true })
     jest.setSystemTime(new Date('2023-04-10'))
     const returnedDate = getRenewDate(TimeType.MONTHLY)
     expect(returnedDate.valueOf() === 'May 10, 2023').toBe(true)

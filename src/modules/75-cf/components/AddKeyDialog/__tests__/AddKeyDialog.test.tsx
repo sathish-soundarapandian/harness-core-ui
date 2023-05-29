@@ -87,9 +87,7 @@ describe('Test AddKeyDialog', () => {
 
     await openDialog()
 
-    await userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'dummy api key name', {
-      allAtOnce: true
-    })
+    await userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'dummy api key name')
     await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
@@ -117,9 +115,7 @@ describe('Test AddKeyDialog', () => {
 
     await openDialog()
 
-    await userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'new api key name', {
-      allAtOnce: true
-    })
+    await userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'new api key name')
     await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
@@ -141,9 +137,7 @@ describe('Test AddKeyDialog', () => {
 
     await openDialog()
 
-    await userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'dummy api key name', {
-      allAtOnce: true
-    })
+    await userEvent.type(document.querySelector('input[name=name]') as HTMLInputElement, 'dummy api key name')
     await userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
 
     await waitFor(() => {
