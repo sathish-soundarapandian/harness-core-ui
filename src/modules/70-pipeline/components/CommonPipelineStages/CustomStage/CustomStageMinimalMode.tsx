@@ -19,6 +19,8 @@ import type { CustomStageElementConfig, StageElementWrapper } from '@pipeline/ut
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import { createTemplate } from '@pipeline/utils/templateUtils'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks/useQueryParams'
 import type { CustomStageMinimalValues, CustomStageMinimalModeProps } from './types'
 import css from './CustomStage.module.scss'
 
@@ -40,6 +42,8 @@ export function CustomStageMinimalMode(props: CustomStageMinimalModeProps): Reac
     contextType
   } = usePipelineContext()
 
+  const { branch } = useQueryParams<GitQueryParams>()
+
   const handleValidate = (values: CustomStageMinimalValues): Record<string, string | undefined> | undefined => {
     const errors: { name?: string } = {}
     /* istanbul ignore next */
@@ -59,7 +63,7 @@ export function CustomStageMinimalMode(props: CustomStageMinimalModeProps): Reac
     if (data?.stage) {
       /* istanbul ignore next */
       if (template) {
-        onSubmit({ stage: createTemplate(values, template) }, values.identifier)
+        onSubmit({ stage: createTemplate(values, template, branch) }, values.identifier)
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

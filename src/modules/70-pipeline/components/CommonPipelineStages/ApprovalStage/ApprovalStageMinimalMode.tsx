@@ -19,6 +19,8 @@ import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import { createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { useQueryParams } from '@common/hooks/useQueryParams'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { ApprovalStageMinimalModeProps, ApprovalStageMinimalValues } from './types'
 import { ApprovalTypeCards } from './ApprovalTypeCards'
 import css from './ApprovalStageMinimalMode.module.scss'
@@ -40,6 +42,8 @@ export function ApprovalStageMinimalMode(props: ApprovalStageMinimalModeProps): 
     contextType
   } = usePipelineContext()
 
+  const { branch } = useQueryParams<GitQueryParams>()
+
   const handleValidate = (values: ApprovalStageMinimalValues): Record<string, string | undefined> | undefined => {
     const errors: { name?: string } = {}
     if (isDuplicateStageId(values.identifier, pipeline?.stages || [])) {
@@ -54,7 +58,7 @@ export function ApprovalStageMinimalMode(props: ApprovalStageMinimalModeProps): 
   const handleSubmit = (values: ApprovalStageMinimalValues): void => {
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template) }, values.identifier)
+        onSubmit?.({ stage: createTemplate(values, template, branch) }, values.identifier)
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

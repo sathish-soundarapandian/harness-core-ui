@@ -21,6 +21,8 @@ import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBui
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import { createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import type { TemplateSummaryResponse } from 'services/template-ng'
+import { useQueryParams } from '@common/hooks/useQueryParams'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import css from './FeatureAddStageView.module.scss'
 
 export interface FeatureAddEditStageViewProps {
@@ -47,6 +49,8 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
     state: { pipeline },
     contextType
   } = usePipelineContext()
+
+  const { branch } = useQueryParams<GitQueryParams>()
 
   const isTemplate = contextType === PipelineContextType.StageTemplate
 
@@ -86,7 +90,7 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
   const handleSubmit = (values: Values): void => {
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template) }, values.identifier)
+        onSubmit?.({ stage: createTemplate(values, template, branch) }, values.identifier)
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

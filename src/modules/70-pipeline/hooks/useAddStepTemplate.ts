@@ -18,9 +18,9 @@ import { StepCategory, useGetStepsV2 } from 'services/pipeline-ng'
 import { createStepNodeFromTemplate } from '@pipeline/utils/templateUtils'
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { useMutateAsGet } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
@@ -67,6 +67,8 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     getStageFromPipeline,
     updatePipelineView
   } = pipelineContext
+
+  const { branch } = useQueryParams<GitQueryParams>()
 
   const { getTemplate } = useTemplateSelector()
   const { stage: selectedStage } = getStageFromPipeline(selectedStageId)
@@ -121,7 +123,7 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
         storeMetadata
       })
       const stepType = template.templateEntityType === PipelineStepType.StepGroup ? 'stepGroup' : 'step'
-      const newStepData = { [stepType]: createStepNodeFromTemplate(template, isCopied) }
+      const newStepData = { [stepType]: createStepNodeFromTemplate(template, isCopied, branch) }
 
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
       if (pipelineStage && !pipelineStage.stage?.spec) {

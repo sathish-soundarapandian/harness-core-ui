@@ -60,9 +60,10 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   } = usePipelineContext()
   const { stage } = getStageFromPipeline(selectedStageId)
   const queryParams = useParams<ProjectPathProps>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier } = useQueryParams<GitQueryParams>()
   const templateRef = getIdentifierFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
   const templateVersionLabel = getIdentifierFromValue(defaultTo(stage?.stage?.template?.versionLabel, ''))
+  const templateGitBranch = getIdentifierFromValue(defaultTo(stage?.stage?.template?.gitBranch, ''))
   const templateScope = getScopeFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
   const [formValues, setFormValues] = React.useState<StageElementConfig | undefined>(
     defaultTo(stage?.stage, stage?.stage?.template?.templateInputs as StageElementConfig)
@@ -94,7 +95,12 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: templateVersionLabel,
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: queryParams,
+        repoIdentifier,
+        branch: templateGitBranch
+      })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
@@ -117,7 +123,12 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: defaultTo(stage?.stage?.template?.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: queryParams,
+        repoIdentifier,
+        branch: templateGitBranch
+      })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
