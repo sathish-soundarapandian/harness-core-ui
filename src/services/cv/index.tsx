@@ -10,7 +10,8 @@
 import React from 'react'
 import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, UseMutateProps } from 'restful-react'
 
-import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from '../config'
+import type { GetUsingFetchProps, MutateUsingFetchProps } from '../config'
+import { getConfig, getUsingFetch, mutateUsingFetch } from '../config'
 export const SPEC_VERSION = '1.0'
 export interface AbstractAnalysedNode {
   [key: string]: any

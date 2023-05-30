@@ -18,7 +18,7 @@ module.exports = {
     file: 'src/services/portal/swagger.json',
     validation: false,
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customGenerator: arg => customGenerator(arg, "getConfig('api')"),
     customProps: {
       base: `{getConfig("api")}`
@@ -27,7 +27,7 @@ module.exports = {
   'cd-ng': {
     output: 'src/services/cd-ng/index.tsx',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("ng/api")}`
     },
@@ -39,7 +39,7 @@ module.exports = {
   'cd-ng-open-api': {
     output: 'src/services/cd-ng-open-api/index.tsx',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("ng/api")}`
     },
@@ -50,7 +50,7 @@ module.exports = {
     output: 'src/services/pipeline-ng/index.tsx',
     url: 'http://localhost:12001/api/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("pipeline/api")}`
     },
@@ -60,7 +60,7 @@ module.exports = {
     output: 'src/services/template-ng/index.tsx',
     url: 'http://localhost:15001/api/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("template/api")}`
     },
@@ -70,7 +70,7 @@ module.exports = {
     output: 'src/services/audit/index.tsx',
     url: 'http://localhost:9005/api/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("audit/api")}`
     },
@@ -80,7 +80,7 @@ module.exports = {
     output: 'src/services/dashboard-service/index.tsx',
     url: 'http://localhost:7100/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("ng-dashboard/api")}`
     },
@@ -90,7 +90,7 @@ module.exports = {
     output: 'src/services/custom-dashboards/index.tsx',
     url: 'http://localhost:5000/static/swagger.yaml',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps, mutateUsingFetch, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("dashboard/")}`
     },
@@ -100,7 +100,7 @@ module.exports = {
     output: 'src/services/logs/index.tsx',
     file: 'src/services/logs/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("log-service")}`
     },
@@ -110,7 +110,7 @@ module.exports = {
     output: 'src/services/notifications/index.tsx',
     url: 'http://localhost:9005/api/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("notifications/api")}`
     },
@@ -120,7 +120,7 @@ module.exports = {
     output: 'src/services/resourcegroups/index.tsx',
     url: 'http://localhost:9005/api/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("resourcegroup/api")}`
     },
@@ -130,7 +130,7 @@ module.exports = {
     output: 'src/services/rbac/index.tsx',
     url: 'http://localhost:9006/api/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("authz/api")}`
     },
@@ -140,7 +140,7 @@ module.exports = {
     output: 'src/services/ci/index.tsx',
     file: 'src/services/ci/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("ci")}`
     },
@@ -159,7 +159,7 @@ module.exports = {
     output: 'src/services/cv/index.tsx',
     file: 'src/services/cv/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("cv/api")}`
     },
@@ -169,7 +169,7 @@ module.exports = {
     output: 'src/services/assessments/index.tsx',
     file: 'src/services/assessments/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("assessments/api")}`
     },
@@ -179,7 +179,7 @@ module.exports = {
     output: 'src/services/chaos/index.tsx',
     file: 'src/services/chaos/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("chaos/manager/api/rest")}`
     },
@@ -189,7 +189,7 @@ module.exports = {
     output: 'src/services/cf/index.tsx',
     url: 'http://127.0.0.1:8085/docs/release/admin-v1.yaml',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("cf")}`
     },

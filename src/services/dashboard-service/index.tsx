@@ -10,7 +10,8 @@
 import React from 'react'
 import { Get, GetProps, useGet, UseGetProps } from 'restful-react'
 
-import { getConfig, getUsingFetch, GetUsingFetchProps } from '../config'
+import type { GetUsingFetchProps } from '../config'
+import { getConfig, getUsingFetch } from '../config'
 export const SPEC_VERSION = '2.0'
 export interface AccountInfo {
   accountIdentifier?: string
