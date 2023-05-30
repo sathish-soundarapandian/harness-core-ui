@@ -130,7 +130,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     allowableTypes,
     updateStage
   } = usePipelineContext()
-  const { branch } = useQueryParams<GitQueryParams>()
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
   const { variablesPipeline, metadataMap } = usePipelineVariables()
   const domRef = React.useRef<HTMLDivElement | null>(null)
   const scrollRef = customRef || domRef
@@ -238,7 +238,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     /* istanbul ignore else */
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template, branch) }, values.identifier)
+        onSubmit?.({ stage: createTemplate(values, template, branch, repoName) }, values.identifier)
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

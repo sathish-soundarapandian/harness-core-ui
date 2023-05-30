@@ -22,9 +22,9 @@ import { createTemplate } from '@pipeline/utils/templateUtils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
-import css from './PipelineStageMinimalMode.module.scss'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import css from './PipelineStageMinimalMode.module.scss'
 
 interface EditPipelineStageViewProps {
   data?: StageElementWrapper<PipelineStageElementConfig>
@@ -69,7 +69,7 @@ export function EditPipelineStageView({
     isReadonly
   } = usePipelineContext()
 
-  const { branch } = useQueryParams<GitQueryParams>()
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
 
   const initialValues: Values = {
     identifier: get(data, 'stage.identifier', ''),
@@ -106,7 +106,7 @@ export function EditPipelineStageView({
   const handleSubmit = (values: Values): void => {
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template, branch) }, values.identifier)
+        onSubmit?.({ stage: createTemplate(values, template, branch, repoName) }, values.identifier)
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

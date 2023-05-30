@@ -60,10 +60,10 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   } = usePipelineContext()
   const { stage } = getStageFromPipeline(selectedStageId)
   const queryParams = useParams<ProjectPathProps>()
-  const { repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const templateRef = getIdentifierFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
   const templateVersionLabel = getIdentifierFromValue(defaultTo(stage?.stage?.template?.versionLabel, ''))
-  const templateGitBranch = getIdentifierFromValue(defaultTo(stage?.stage?.template?.gitBranch, ''))
+  const templateGitBranch = getIdentifierFromValue(defaultTo(stage?.stage?.template?.gitBranch, '')) || branch
   const templateScope = getScopeFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
   const [formValues, setFormValues] = React.useState<StageElementConfig | undefined>(
     defaultTo(stage?.stage, stage?.stage?.template?.templateInputs as StageElementConfig)

@@ -68,7 +68,7 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     updatePipelineView
   } = pipelineContext
 
-  const { branch } = useQueryParams<GitQueryParams>()
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
 
   const { getTemplate } = useTemplateSelector()
   const { stage: selectedStage } = getStageFromPipeline(selectedStageId)
@@ -123,7 +123,7 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
         storeMetadata
       })
       const stepType = template.templateEntityType === PipelineStepType.StepGroup ? 'stepGroup' : 'step'
-      const newStepData = { [stepType]: createStepNodeFromTemplate(template, isCopied, branch) }
+      const newStepData = { [stepType]: createStepNodeFromTemplate(template, isCopied, branch, repoName) }
 
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
       if (pipelineStage && !pipelineStage.stage?.spec) {

@@ -42,7 +42,7 @@ export function ApprovalStageMinimalMode(props: ApprovalStageMinimalModeProps): 
     contextType
   } = usePipelineContext()
 
-  const { branch } = useQueryParams<GitQueryParams>()
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
 
   const handleValidate = (values: ApprovalStageMinimalValues): Record<string, string | undefined> | undefined => {
     const errors: { name?: string } = {}
@@ -58,7 +58,7 @@ export function ApprovalStageMinimalMode(props: ApprovalStageMinimalModeProps): 
   const handleSubmit = (values: ApprovalStageMinimalValues): void => {
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template, branch) }, values.identifier)
+        onSubmit?.({ stage: createTemplate(values, template, branch, repoName) }, values.identifier)
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

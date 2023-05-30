@@ -105,7 +105,7 @@ export const EditStageView: React.FC<EditStageView> = ({
     orgIdentifier: string
     accountId: string
   }>()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, repoName } = useQueryParams<GitQueryParams>()
 
   const initialValues: Values = {
     identifier: data?.stage?.identifier || '',
@@ -215,7 +215,7 @@ export const EditStageView: React.FC<EditStageView> = ({
       }
 
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template, branch) }, values.identifier, pipelineData)
+        onSubmit?.({ stage: createTemplate(values, template, branch, repoName) }, values.identifier, pipelineData)
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name
