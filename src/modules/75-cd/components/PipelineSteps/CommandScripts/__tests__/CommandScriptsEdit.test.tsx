@@ -244,15 +244,17 @@ describe('test <CommandScriptsEdit />', () => {
     })
 
     test('should render a checkbox for onDelegate field', async () => {
-      const { getByTestId, findByTestId } = renderResult
+      const { getByTestId, container } = renderResult
       const optionalConfiguration = getByTestId('optional-config-summary')
       userEvent.click(optionalConfiguration)
 
-      const delegateCheckbox = await findByTestId('runOnDelegate')
+      const delegateCheckbox = container.querySelector('input[name="spec.onDelegate"]') as HTMLElement
       expect(delegateCheckbox).toBeInTheDocument()
 
       userEvent.click(delegateCheckbox)
-      await waitFor(() => expect(delegateCheckbox).toBeChecked())
+      expect(delegateCheckbox).not.toBeChecked()
+      userEvent.click(delegateCheckbox)
+      expect(delegateCheckbox).toBeChecked()
     })
   })
 
