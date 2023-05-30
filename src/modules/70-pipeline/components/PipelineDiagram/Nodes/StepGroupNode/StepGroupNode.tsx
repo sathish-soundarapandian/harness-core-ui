@@ -9,8 +9,10 @@ import * as React from 'react'
 import cx from 'classnames'
 import { Icon, Layout, Text, Button, ButtonVariation, useToaster } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { debounce, defaultTo, get, isEmpty, isUndefined } from 'lodash-es'
+import { cloneDeep, debounce, defaultTo, get, isEmpty, isUndefined, set, unset } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
+import { Switch } from '@blueprintjs/core'
+import { produce } from 'immer'
 import { isNodeTypeMatrixOrFor, STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import {
@@ -27,6 +29,8 @@ import { useUpdateQueryParams } from '@common/hooks'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { updateStepWithinStage } from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import SVGMarker from '../SVGMarker'
@@ -48,6 +52,19 @@ export function StepGroupNode(props: any): JSX.Element {
   const [executionMetaData, setExecutionMetaData] = React.useState<ExecutionGraph['executionMetadata'] | undefined>(
     undefined
   )
+  const {
+    state: {
+      pipelineView: { isRollbackToggled },
+      pipelineView,
+      selectionState: { selectedStageId: selectedStageIdentifier }
+    },
+    updateStage,
+    updatePipelineView,
+    getStageFromPipeline
+  } = usePipelineContext()
+
+  const whenCondition = props?.data?.stepGroup?.when?.condition
+  const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageIdentifier, ''))
   const { showPrimary } = useToaster()
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const DefaultNode: React.FC<any> | undefined = props?.getDefaultNode()?.component
@@ -259,6 +276,44 @@ export function StepGroupNode(props: any): JSX.Element {
                 </Text>
               </div>
             )}
+            <div
+              className={defaultCss.switch}
+              onClick={e => {
+                e.stopPropagation()
+                const originalStepData = cloneDeep(props?.data?.stepGroup)
+                if (whenCondition === 'false') {
+                  unset(originalStepData, 'when')
+                } else {
+                  set(originalStepData, 'when.condition', 'false')
+                  set(originalStepData, 'when.stageStatus', 'Success')
+                }
+                const processingNodeIdentifier = props.identifier
+                if (processingNodeIdentifier) {
+                  const stageData = produce(selectedStage, draft => {
+                    if (draft?.stage?.spec?.execution) {
+                      updateStepWithinStage(
+                        draft.stage.spec.execution,
+                        processingNodeIdentifier,
+                        originalStepData,
+                        !!isRollbackToggled
+                      )
+                    }
+                  })
+                  // update view data before updating pipeline because its async
+                  updatePipelineView(
+                    produce(pipelineView, draft => {
+                      set(draft, 'drawerData.data.stepConfig.node', originalStepData)
+                    })
+                  )
+
+                  if (stageData?.stage) {
+                    updateStage(stageData.stage)
+                  }
+                }
+              }}
+            >
+              <Switch aria-label="Global Freeze Toggle" checked={whenCondition !== 'false'} />
+            </div>
             {props.data?.conditionalExecutionEnabled && (
               <div className={css.conditional}>
                 <Text
