@@ -60,6 +60,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   const isCD = module === 'cd'
   const isCI = module === 'ci'
   const isCV = module === 'cv'
+  const isCHAOS = module === 'chaos'
   const isSTO = module === 'sto'
   const isCIorCD = isCI || isCD
   const isCIorCDorSTO = isCI || isCD || isSTO
@@ -123,6 +124,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         {module === 'cd' && !isCDGetStartedVisible && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
         )}
+        {/* TODO: Add Network Map FF here*/}
+        {isCHAOS && <SidebarLink label={getString('common.discovery')} to={routes.toDiscovery({ ...params })} />}
         {SRM_ET_EXPERIMENTAL && module === 'cv' && (
           <SidebarLink
             label={getString('common.codeErrorsSettings')}

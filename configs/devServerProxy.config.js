@@ -199,5 +199,11 @@ module.exports = {
   '/ssca/api': {
     pathRewrite: { '^/ssca/api': '/api' },
     target: process.env.SSCA_API_URL || 'https://localhost:8186'
+  },
+  '/servicediscovery': {
+    pathRewrite: { '^/servicediscovery': '' },
+    target: targetLocalHost
+      ? process.env.SERVICE_DISCOVERY_URL || 'http://localhost:8888'
+      : `${baseUrl}/servicediscovery`
   }
 }

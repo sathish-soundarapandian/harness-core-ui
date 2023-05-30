@@ -1,0 +1,99 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.header {
+  padding: var(--spacing-large) var(--spacing-xlarge) !important;
+  background: var(--white) !important;
+  border-bottom: 1px solid var(--grey-300);
+}
+.listBody {
+  --page-header-height: 146px;
+}
+
+// tabs
+
+.setupShell {
+  position: relative;
+
+  $dot-size: 1px;
+  $dot-space: 10px;
+
+  background: var(--pipeline-bg) !important;
+  background-size: $dot-space $dot-space !important;
+  :global(.Resizer.horizontal:not(.disabled)) {
+    height: var(--spacing-xsmall);
+    background: var(--grey-200);
+    cursor: row-resize;
+    z-index: 2;
+  }
+
+  overflow: auto;
+  & > :global(.bp3-tabs > .bp3-tab-list) {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding-right: var(--spacing-medium);
+  }
+
+  :global {
+    .bp3-tabs {
+      height: 100%;
+    }
+    .bp3-tab {
+      margin: 10px 0 10px 0 !important;
+      min-width: 140px;
+      padding: 0 var(--spacing-medium);
+      text-align: center;
+    }
+    .bp3-tab:not([aria-disabled='true']):hover .bp3-icon.bp3-icon-warning-sign svg[data-icon='warning-sign'] path {
+      fill: var(--color-orange) !important;
+    }
+    .bp3-tab-list {
+      background: var(--white);
+      width: 100%;
+      height: 50px;
+      border-bottom: 0;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.13);
+      align-items: center;
+      > [icon='chevron-right'] {
+        margin-right: var(--spacing-small) !important;
+      }
+    }
+    .bp3-tab-panel {
+      width: 100%;
+      height: calc(var(--page-min-height) - 122px);
+      margin-top: 0;
+    }
+    .bp3-tab-indicator-wrapper {
+      top: 16px !important;
+    }
+    .bp3-tab[aria-selected='true'] {
+      color: var(--grey-600);
+      font-weight: 500;
+      span.bp3-icon {
+        margin-right: var(--spacing-small);
+        &:not(.bp3-icon-warning-sign) {
+          path {
+            fill: var(--grey-600);
+          }
+        }
+      }
+    }
+    .bp3-tab[aria-selected='false'] {
+      color: var(--grey-600);
+      font-weight: 400;
+      span.bp3-icon {
+        margin-right: var(--spacing-small);
+        &:not(.bp3-icon-warning-sign) {
+          path {
+            fill: var(--grey-600);
+          }
+        }
+      }
+    }
+  }
+}

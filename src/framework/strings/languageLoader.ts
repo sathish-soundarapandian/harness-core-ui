@@ -31,6 +31,7 @@ import pipeline from '@pipeline/strings/strings.en.yaml'
 import freezeWindows from '@freeze-windows/strings/strings.en.yaml'
 import templatesLibrary from '@templates-library/strings/strings.en.yaml'
 import triggers from '@triggers/strings/strings.en.yaml'
+import discovery from '@discovery/strings/strings.en.yaml'
 import cd from '@cd/strings/strings.en.yaml'
 import ce from '@ce/strings/strings.en.yaml'
 import cf from '@cf/strings/strings.en.yaml'
@@ -67,6 +68,7 @@ export default function languageLoader() {
     freezeWindows,
     templatesLibrary,
     triggers,
+    discovery,
     cd,
     ce,
     cf,

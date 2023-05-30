@@ -18,6 +18,7 @@ import {
   connectorPathProps,
   delegateConfigProps,
   delegatePathProps,
+  discoveryPathProps,
   orgPathProps,
   projectPathProps,
   resourceGroupPathProps,
@@ -76,6 +77,9 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { Duration } from '@common/exports'
 import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
+import DiscoveryPage from '@discovery/pages/home/DiscoveryPage'
+import NetworkMapStudio from '@discovery/pages/network-map-studio/NetworkMapStudio'
+import DiscoveryDetails from '@discovery/pages/discovery-details/DiscoveryDetails'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -347,6 +351,30 @@ export default function ChaosRoutes(): React.ReactElement {
         path={routes.toVariables({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
       >
         <VariablesPage />
+      </RouteWithLayout>
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        exact
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toDiscovery({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
+      >
+        <DiscoveryPage />
+      </RouteWithLayout>
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        exact
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toNetworkMapOverview({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
+      >
+        <NetworkMapStudio />
+      </RouteWithLayout>
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        exact
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toDiscoveryDetails({ ...accountPathProps, ...discoveryPathProps, ...chaosModuleParams })}
+      >
+        <DiscoveryDetails />
       </RouteWithLayout>
       <RouteWithLayout
         licenseRedirectData={licenseRedirectData}

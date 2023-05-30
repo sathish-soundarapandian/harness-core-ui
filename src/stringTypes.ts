@@ -265,6 +265,7 @@ export interface StringsMap {
   'common.disable': string
   'common.disabled': string
   'common.discard': string
+  'common.discovery': string
   'common.download': string
   'common.downloadCSV': string
   'common.downloadYaml': string
@@ -666,6 +667,7 @@ export interface StringsMap {
   'common.nameOnCard': string
   'common.namePlaceholder': string
   'common.namespace': string
+  'common.networkMap': string
   'common.new': string
   'common.newLines': string
   'common.newMonitoredService': string
@@ -5576,6 +5578,27 @@ export interface StringsMap {
   'triggers.validation.repositoryFormat': string
   'triggers.validation.selectedArtifact': string
   'triggers.validation.triggerName': string
+  'discovery.agentName': string
+  'discovery.approxTime': string
+  'discovery.discoverServices': string
+  'discovery.discoveredBy': string
+  'discovery.homepage.learnMore': string
+  'discovery.homepage.newNewtworkMapBtn': string
+  'discovery.homepage.newServiceBtn': string
+  'discovery.homepage.searchDelegate': string
+  'discovery.homepage.searchNeworkMap': string
+  'discovery.homepage.slogan': string
+  'discovery.howToCreateNetworkMap': string
+  'discovery.howToCreateNetworkMapDesc': string
+  'discovery.networkMapDescription': string
+  'discovery.selectAConnector': string
+  'discovery.selectAConnectorDescription': string
+  'discovery.serviceDiscoveyTable': string
+  'discovery.tabs.configureRelations': string
+  'discovery.tabs.selectServices': string
+  'discovery.whatIsNetworkMap': string
+  'discovery.whatIsServiceDiscovery': string
+  'discovery.whatIsServiceDiscoveryDesc': string
   'cd.ElastigroupBGStageSetup.awsLoadBalancer': string
   'cd.ElastigroupBGStageSetup.awsLoadBalancerConfig': string
   'cd.ElastigroupBGStageSetup.configureProductionListener': string

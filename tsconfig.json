@@ -35,6 +35,7 @@
       "@auth-settings/*": ["modules/33-auth-settings/*"],
       "@secrets/*": ["modules/30-secrets/*"],
       "@variables/*": ["modules/31-variables/*"],
+      "@discovery/*": ["modules/73-discovery/*"],
       "@connectors/*": ["modules/35-connectors/*"],
       "@user-profile/*": ["modules/38-user-profile/*"],
       "@audit-trail/*": ["modules/38-audit-trail/*"],

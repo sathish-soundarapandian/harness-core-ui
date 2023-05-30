@@ -24,6 +24,16 @@ module.exports = {
       base: `{getConfig("api")}`
     }
   },
+  'servicediscovery': {
+    output: 'src/services/servicediscovery/index.tsx',
+    url: 'http://localhost:8888/swagger/doc.json',
+    transformer: 'scripts/swagger-transform.js',
+    customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps, mutateUsingFetch, MutateUsingFetchProps } from "../config";`,
+    customProps: {
+      base: `{getConfig("servicediscovery")}`
+    },
+    customGenerator: arg => customGenerator(arg, "getConfig('servicediscovery')"),
+  },
   'cd-ng': {
     output: 'src/services/cd-ng/index.tsx',
     transformer: 'scripts/swagger-transform.js',

@@ -35,7 +35,8 @@ import type {
   TemplateStudioPathProps,
   EnvironmentGroupPathProps,
   VariablesPathProps,
-  AccountRoutePlacement
+  AccountRoutePlacement,
+  DiscoveryPathProps
 } from '@common/interfaces/RouteInterfaces'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 
@@ -92,6 +93,12 @@ export const secretPathProps: SecretsPathProps = {
 }
 export const variablePathProps: VariablesPathProps = {
   variableId: ':variableId'
+}
+
+export const discoveryPathProps: DiscoveryPathProps = {
+  ...projectPathProps,
+  infraId: ':infraId',
+  discoveryId: ':discoveryId'
 }
 
 export const rolePathProps: RolePathProps = {

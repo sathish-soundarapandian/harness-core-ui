@@ -1,0 +1,27 @@
+homepage:
+  slogan: Network Map Slogan.
+  learnMore: Learn more about Network Map
+  newNewtworkMapBtn: New Network Map
+  searchNeworkMap: Search network map
+  newServiceBtn: Discover New Services
+  searchDelegate: Search delegate
+tabs:
+  selectServices: 'Select services'
+  configureRelations: 'Configure relations'
+selectAConnector: Select a Kubernetes Connector of your cluster
+selectAConnectorDescription: A k8s connector will help to discover the services on your clusters. For the first time discovery, it may take up to 5 minutes.
+whatIsNetworkMap: What is a network map?
+networkMapDescription:
+  Harness has got you covered as we cater you with support of the most popular and widely used cloud service
+  providers out there. Select the cloud provider account in which the workloads you want to manage costs are
+  running to continue managing costs. You can always add your multiple cloud services following the same
+  procedure.
+howToCreateNetworkMap: How to create a network Map?
+howToCreateNetworkMapDesc: There are 3 simple steps to create a network map.
+whatIsServiceDiscovery: What is Service Discovery and how it works?
+whatIsServiceDiscoveryDesc: Service Discovery is the automatic detection and monitoring of services running in your Kubernetes clusters, which will help the team gain insights on their applications, infrastructure, and logs. Simply enable Service Discovery on your existing Kubernetes connector to start using this feature!
+discoverServices: Discovering services in your cluster
+approxTime: Approx time
+serviceDiscoveyTable: Service Discovery Table
+discoveredBy: Discovery by
+agentName: Agent Name
