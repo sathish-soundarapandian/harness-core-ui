@@ -2789,6 +2789,7 @@ export interface FailureStrategyActionConfig {
     | 'ManualIntervention'
     | 'ProceedWithDefaultValues'
     | 'MarkAsFailure'
+    | 'RetryStepGroup'
 }
 
 export interface FailureStrategyConfig {
@@ -5929,6 +5930,11 @@ export interface RetryInterruptConfig {
 export interface RetryLatestExecutionResponseDto {
   errorMessage?: string
   latestExecutionId?: string
+}
+
+export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
+  spec: RetryFailureSpecConfig
+  type: 'RetryStepGroup'
 }
 
 export interface RetryStageInfo {

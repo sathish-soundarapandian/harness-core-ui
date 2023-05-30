@@ -23,7 +23,8 @@ export const Strategy: Record<StrategyType, StrategyType> = {
   PipelineRollback: 'PipelineRollback',
   ProceedWithDefaultValues: 'ProceedWithDefaultValues',
   StepGroupRollback: 'StepGroupRollback',
-  MarkAsFailure: 'MarkAsFailure'
+  MarkAsFailure: 'MarkAsFailure',
+  RetryStepGroup: 'RetryStepGroup'
 }
 
 export enum WaitActions {
@@ -59,7 +60,8 @@ export const strategyIconMap: Record<StrategyType, IconName> = {
   PipelineRollback: 'rollback-pipeline',
   ProceedWithDefaultValues: 'main-resume',
   StepGroupRollback: 'repeat',
-  MarkAsFailure: 'mark-as-failure'
+  MarkAsFailure: 'mark-as-failure',
+  RetryStepGroup: 'refresh'
 }
 
 export const waitActionsIconMap: Record<WaitActions, IconName> = {
@@ -78,7 +80,8 @@ export const stringsMap: Record<StrategyType, StringKeys> = {
   PipelineRollback: 'pipeline.failureStrategies.strategiesLabel.PipelineRollback',
   ProceedWithDefaultValues: 'pipeline.failureStrategies.strategiesLabel.ProceedWithDefaultValues',
   StepGroupRollback: 'pipeline.failureStrategies.strategiesLabel.StepGroupRollback',
-  MarkAsFailure: 'pipeline.failureStrategies.strategiesLabel.MarkAsFailure'
+  MarkAsFailure: 'pipeline.failureStrategies.strategiesLabel.MarkAsFailure',
+  RetryStepGroup: 'pipeline.failureStrategies.strategiesLabel.Retry'
 }
 
 export const waitActionsStringMap: Record<WaitActions, StringKeys> = {

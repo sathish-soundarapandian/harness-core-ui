@@ -6064,6 +6064,7 @@ export interface FailureStrategyActionConfig {
     | 'ManualIntervention'
     | 'ProceedWithDefaultValues'
     | 'MarkAsFailure'
+    | 'RetryStepGroup'
 }
 
 export interface FailureStrategyConfig {
@@ -16135,6 +16136,11 @@ export interface RetryFailureSpecConfig {
   onRetryFailure: OnRetryFailureConfig
   retryCount: number
   retryIntervals: string[]
+}
+
+export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
+  spec: RetryFailureSpecConfig
+  type: 'RetryStepGroup'
 }
 
 export interface Role {
@@ -57247,6 +57253,164 @@ export const migrateServiceOverrideScopedPromise = (
     void,
     void
   >('POST', getConfig('ng/api'), `/serviceOverrides/migrateScope`, props, signal)
+
+export interface RevertMigrationServiceOverrideQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type RevertMigrationServiceOverrideProps = Omit<
+  MutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration
+ */
+export const RevertMigrationServiceOverride = (props: RevertMigrationServiceOverrideProps) => (
+  <Mutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/serviceOverrides/revertMigration`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseRevertMigrationServiceOverrideProps = Omit<
+  UseMutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration
+ */
+export const useRevertMigrationServiceOverride = (props: UseRevertMigrationServiceOverrideProps) =>
+  useMutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >('POST', `/serviceOverrides/revertMigration`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Revert ServiceOverride V2 Migration
+ */
+export const revertMigrationServiceOverridePromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >('POST', getConfig('ng/api'), `/serviceOverrides/revertMigration`, props, signal)
+
+export interface RevertMigrationServiceOverrideScopedQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type RevertMigrationServiceOverrideScopedProps = Omit<
+  MutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration at one scope
+ */
+export const RevertMigrationServiceOverrideScoped = (props: RevertMigrationServiceOverrideScopedProps) => (
+  <Mutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/serviceOverrides/revertMigrationScope`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseRevertMigrationServiceOverrideScopedProps = Omit<
+  UseMutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration at one scope
+ */
+export const useRevertMigrationServiceOverrideScoped = (props: UseRevertMigrationServiceOverrideScopedProps) =>
+  useMutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >('POST', `/serviceOverrides/revertMigrationScope`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Revert ServiceOverride V2 Migration at one scope
+ */
+export const revertMigrationServiceOverrideScopedPromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >('POST', getConfig('ng/api'), `/serviceOverrides/revertMigrationScope`, props, signal)
 
 export interface UpsertServiceOverrideV2QueryParams {
   accountIdentifier: string
