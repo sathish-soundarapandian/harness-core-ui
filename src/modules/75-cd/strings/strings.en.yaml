@@ -633,6 +633,7 @@ getStartedWithCD:
   flowbyquestions:
     what:
       title: What do you want to deploy?
+      samplesvc: We will start you with a sample service. You can add your own by editing the yaml later.
       aboutSvc: Tell us about your service
       K8sSteps:
         k8sSvcRep: How is your Kubernetes Service represented?
@@ -665,13 +666,13 @@ getStartedWithCD:
         step2:
           title: "2. Run the steps to deploy the sample guestbook application located at <a target='_blank' href='{{guestBookURL}}'>{{guestBookURL}}</a>."
           description: You will first create a Harness Service representing this application and a Harness Environment representing the infrastructure where you are deploying (and already identified by the Delegate installed in the previous step).
-          description2: Finally, you will create a pipeline with the deployment strategy of your choice. We recommend Canary deployment strategy since that reduces your probability of change failure rate increases.
-          clonecmd: 'git clone {{exampleAppURL}}'
+          clonecmd: 'git clone https://github.com/harness-community/harnesscd-example-apps'
           logincmd: harness-cli login
           createsvccmd: harness-cli create-service -f guestbook/harness-pipeline/service.yaml
           createenvcmd: harness-cli create-env -f guestbook/harness-pipeline/env.yaml
         step3:
           title: 3. Pick deployment strategy
+          description: Finally, you will create a pipeline with the deployment strategy of your choice. We recommend Canary deployment strategy since that reduces your probability of change failure rate increases.
 
   getStartedBtn: Get started with a guided deployment
   whyHarnessCD: Why Harness CD

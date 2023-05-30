@@ -8,21 +8,29 @@
   .bold {
     font-weight: 600 !important;
   }
-  .serviceTypeCards {
-    display: flex;
-    gap: var(--spacing-small);
-    margin-bottom: var(--spacing-xxlarge);
-    &.infraCards {
-      :global(.Card--card) {
-        width: 145px;
-        text-align: center;
-      }
+}
+.serviceTypeCards {
+  display: flex;
+  gap: var(--spacing-small);
+  margin-bottom: var(--spacing-xxlarge);
+  &.infraCards {
+    :global(.Card--card) {
+      width: 145px;
+      text-align: center;
     }
-    &.flowcards {
-      :global(.Card--card) {
-        width: 228px;
-        text-align: center;
-      }
+  }
+  &.flowcards {
+    :global(.Card--card) {
+      width: 228px;
+      text-align: center;
+    }
+  }
+
+  &.deploymentStrategyCards {
+    :global(.Card--card) {
+      width: 255px;
+      height: 190px;
+      text-align: center;
     }
   }
 }
@@ -33,4 +41,16 @@
   .marginBottomxl {
     margin-bottom: var(--spacing-xlarge);
   }
+}
+
+.padLeft {
+  padding-left: var(--spacing-main);
+}
+
+.videoPlayer {
+  width: 415px;
+  height: 340px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }

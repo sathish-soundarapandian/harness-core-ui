@@ -6001,9 +6001,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.createenvcmd': string
   'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.createsvccmd': string
   'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.description': string
-  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.description2': string
   'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.logincmd': string
   'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.title': string
+  'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step3.description': string
   'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step3.title': string
   'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.stepsIntro': string
   'cd.getStartedWithCD.flowbyquestions.deplopymentSteps.stepsIntro2': string
@@ -6022,6 +6022,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowbyquestions.what.K8sSteps.artifact': string
   'cd.getStartedWithCD.flowbyquestions.what.K8sSteps.k8sSvcRep': string
   'cd.getStartedWithCD.flowbyquestions.what.aboutSvc': string
+  'cd.getStartedWithCD.flowbyquestions.what.samplesvc': string
   'cd.getStartedWithCD.flowbyquestions.what.title': string
   'cd.getStartedWithCD.frequency': string
   'cd.getStartedWithCD.getStartedBtn': string
