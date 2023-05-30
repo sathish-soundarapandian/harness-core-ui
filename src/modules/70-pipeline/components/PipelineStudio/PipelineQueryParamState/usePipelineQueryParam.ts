@@ -27,7 +27,9 @@ function stateToQueryParams(state: PipelineSelectionState): PipelineSelectionSta
   const { stageDetailsOpen, ...restQueryState } = state
 
   const queryParams: PipelineSelectionStateQueryParams = { ...restQueryState }
-  if (typeof stageDetailsOpen !== 'undefined') queryParams.stageDetailsOpen = !!stageDetailsOpen ? 'true' : undefined
+  if (typeof stageDetailsOpen !== 'undefined') {
+    queryParams.stageDetailsOpen = !!stageDetailsOpen ? 'true' : null
+  }
 
   return queryParams
 }
@@ -46,17 +48,17 @@ export function usePipelineQueryParamState() {
 
     // clear stepId and sectionId when stageId is changed
     if (state.stageId && state.stageId !== stageId) {
-      newState.stepId = undefined
+      newState.stepId = null
     }
 
     const mergedState = { stageId, stepId, sectionId, stageDetailsOpen, ...newState }
     // clear sectionId when stage is not selected
     if (!mergedState.stageId && mergedState.sectionId) {
-      mergedState.sectionId = undefined
+      mergedState.sectionId = null
     }
     // clear stageDetailsOpen when stage is not selected
     if (!mergedState.stageId && mergedState.stageDetailsOpen) {
-      mergedState.stageDetailsOpen = undefined
+      mergedState.stageDetailsOpen = null
     }
 
     updateQueryParams(mergedState, { skipNulls: true })
