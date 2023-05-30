@@ -65,6 +65,12 @@ export enum TagTypes {
   Value = 'value',
   Regex = 'regex'
 }
+
+export enum PackageSourceTypes {
+  Org = 'org',
+  User = 'user'
+}
+
 export enum RepositoryPortOrServer {
   RepositoryPort = 'repositoryPort',
   RepositoryUrl = 'repositoryUrl'

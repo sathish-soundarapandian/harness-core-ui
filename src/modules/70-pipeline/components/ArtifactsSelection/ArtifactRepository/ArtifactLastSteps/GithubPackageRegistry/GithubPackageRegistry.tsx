@@ -37,7 +37,8 @@ import {
   ArtifactType,
   GithubPackageRegistryProps,
   GithubPackageRegistryInitialValuesType,
-  TagTypes
+  TagTypes,
+  PackageSourceTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import {
@@ -203,7 +204,7 @@ function FormComponent({
               onChange={value => {
                 formik.setValues({
                   ...omit(formik.values, ['packageSource']),
-                  packageSource: value.value !== PACKAGE_TYPES.MAVEN ? undefined : 'org',
+                  packageSource: value.value !== PACKAGE_TYPES.MAVEN ? undefined : PackageSourceTypes.Org,
                   spec: {
                     ...formik.values?.spec,
                     packageType: value.value,
@@ -265,10 +266,17 @@ function FormComponent({
                 radioGroup={{ inline: true }}
                 items={packageSourceOptions}
                 className={css.radioGroup}
+                onChange={e => {
+                  if (e.currentTarget.value === PackageSourceTypes.User) {
+                    formik.setFieldValue('spec.org', '')
+                  } else {
+                    formik.setFieldValue('spec.user', '')
+                  }
+                }}
               />
             </div>
-            {formik.values?.packageSource === 'org' ? (
-              <div className={css.imagePathContainer}>
+            <div className={css.imagePathContainer} key={formik.values?.packageSource}>
+              {formik.values?.packageSource === PackageSourceTypes.Org ? (
                 <>
                   <FormInput.MultiTextInput
                     label={getString('pipeline.artifactsSelection.organizationLabel')}
@@ -292,9 +300,7 @@ function FormComponent({
                     </div>
                   )}
                 </>
-              </div>
-            ) : (
-              <div className={css.imagePathContainer}>
+              ) : (
                 <>
                   <FormInput.MultiTextInput
                     label={getString('common.userLabel')}
@@ -318,8 +324,8 @@ function FormComponent({
                     </div>
                   )}
                 </>
-              </div>
-            )}
+              )}
+            </div>
           </>
         )}
         <div className={css.imagePathContainer}>

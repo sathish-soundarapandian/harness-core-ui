@@ -19,18 +19,19 @@ import type {
 } from 'services/cd-ng'
 import { ENABLED_ARTIFACT_TYPES, ModalViewFor } from './ArtifactHelper'
 import {
+  AmazonMachineImageInitialValuesType,
   ArtifactTagHelperText,
   ArtifactType,
-  GoogleArtifactRegistryInitialValuesType,
+  AzureArtifactsInitialValues,
   CustomArtifactSource,
   GithubPackageRegistryInitialValuesType,
+  GoogleArtifactRegistryInitialValuesType,
   ImagePathTypes,
   JenkinsArtifactType,
   Nexus2InitialValuesType,
+  PackageSourceTypes,
   RepositoryPortOrServer,
-  TagTypes,
-  AmazonMachineImageInitialValuesType,
-  AzureArtifactsInitialValues
+  TagTypes
 } from './ArtifactInterface'
 
 export const shellScriptType: SelectOption[] = [
@@ -409,6 +410,7 @@ const getVersionValues = (
   AmazonMachineImageInitialValuesType => {
   const formikInitialValues = {
     versionType: specValues?.version ? TagTypes.Value : TagTypes.Regex,
+    packageSource: specValues?.user ? PackageSourceTypes.User : PackageSourceTypes.Org,
     spec: {
       ...specValues,
       version: specValues?.version,
