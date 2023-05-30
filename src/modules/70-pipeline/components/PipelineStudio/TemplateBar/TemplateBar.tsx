@@ -61,9 +61,9 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
   const { module, ...params } = useParams<PipelineType<ProjectPathProps>>()
-  const { repoIdentifier } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const scope = getScopeFromValue(templateLinkConfig.templateRef)
-  const templateGitBranch = defaultTo(templateLinkConfig?.gitBranch, '')
+  const templateGitBranch = defaultTo(templateLinkConfig?.gitBranch, branch)
   const { enabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
@@ -84,7 +84,17 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
   })
 
   const selectedTemplate = React.useMemo(
-    () => (data?.data ? { ...data.data, versionLabel: templateLinkConfig.versionLabel } : undefined),
+    () =>
+      data?.data
+        ? {
+            ...data.data,
+            versionLabel: templateLinkConfig.versionLabel,
+            gitDetails: {
+              ...data.data?.gitDetails,
+              branch: templateLinkConfig.gitBranch ? templateLinkConfig.gitBranch : data.data?.gitDetails?.branch
+            }
+          }
+        : undefined,
     [data?.data]
   )
 

@@ -51,6 +51,7 @@ import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import {
+  extractGitBranchUsingTemplateRef,
   getResolvedCustomDeploymentDetailsByRef,
   getTemplateTypesByRef,
   TemplateServiceDataType
@@ -1239,18 +1240,22 @@ export function PipelineProvider({
     const templateRefs = findAllByKey('templateRef', state.pipeline).filter(templateRef =>
       isEmpty(get(state.templateTypes, templateRef))
     )
+    const gitBranch = extractGitBranchUsingTemplateRef(state.pipeline, '')
     getTemplateTypesByRef(
       {
         ...queryParams,
         templateListType: 'Stable',
         repoIdentifier: state.gitDetails.repoIdentifier,
-        branch: state.gitDetails.branch,
+        branch: getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template?.gitBranch
+          ? getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template?.gitBranch
+          : state?.gitDetails?.branch,
         getDefaultFromOtherRepo: true
       },
       templateRefs,
       state.storeMetadata,
       supportingTemplatesGitx,
-      true
+      true,
+      gitBranch
     ).then(({ templateTypes, templateServiceData, templateIcons }) => {
       setTemplateTypes(merge(state.templateTypes, templateTypes))
       setTemplateIcons({ ...merge(state.templateIcons, templateIcons) })

@@ -51,6 +51,30 @@ export interface TemplateServiceDataType {
   [key: string]: ServiceDefinition['type']
 }
 
+export const extractGitBranchUsingTemplateRef = (
+  obj?: PipelineInfoConfig,
+  branch?: string
+): { [key: string]: string } => {
+  let b = branch as string
+  let tempRef = ''
+
+  return obj
+    ? Object.entries(obj).reduce((acc: { [key: string]: string }, [key, value]) => {
+        if (key === 'gitBranch') {
+          b = value as string
+          if (!isEmpty(tempRef)) acc[tempRef] = b
+        } else if (key === 'templateRef') {
+          tempRef = value as string
+          if (!isEmpty(b)) acc[tempRef] = b
+        } else if (typeof value === 'object') {
+          const x = extractGitBranchUsingTemplateRef(value, '')
+          acc = { ...acc, ...x }
+        }
+        return acc
+      }, {})
+    : {}
+}
+
 export const getTemplateNameWithLabel = (template?: TemplateSummaryResponse): string => {
   return `${template?.name} (${defaultTo(template?.versionLabel, 'Stable')})`
 }
@@ -89,7 +113,8 @@ export const setTemplateInputs = (
 export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig | StepOrStepGroupOrTemplateStepData>(
   data?: T,
   template?: TemplateSummaryResponse,
-  branch?: string
+  branch?: string,
+  repoName?: string
 ): T => {
   return produce({} as T, draft => {
     draft.name = defaultTo(data?.name, '')
@@ -99,8 +124,12 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
       if (template.versionLabel) {
         set(draft, 'template.versionLabel', template.versionLabel)
       }
-      if (template.gitDetails?.branch && branch !== template.gitDetails?.branch) {
-        set(draft, 'template.gitBranch', template.gitDetails?.branch)
+      if (template.gitDetails?.branch && template.gitDetails?.repoName) {
+        if (
+          (repoName === template.gitDetails.repoName && branch !== template.gitDetails.branch) ||
+          repoName !== template.gitDetails.repoName
+        )
+          set(draft, 'template.gitBranch', template.gitDetails.branch)
       }
       set(draft, 'template.templateInputs', get(data, 'template.templateInputs'))
     }
@@ -118,7 +147,8 @@ export const getTemplateRefVersionLabelObject = (template: TemplateSummaryRespon
 export const createStepNodeFromTemplate = (
   template: TemplateSummaryResponse,
   isCopied = false,
-  branch?: string
+  branch?: string,
+  repoName?: string
 ): StepElementConfig => {
   return (isCopied
     ? produce(defaultTo(parse<any>(defaultTo(template?.yaml, ''))?.template.spec, {}) as StepElementConfig, draft => {
@@ -132,8 +162,12 @@ export const createStepNodeFromTemplate = (
         if (template.versionLabel) {
           set(draft, 'template.versionLabel', template.versionLabel)
         }
-        if (template.gitDetails?.branch && branch !== template.gitDetails?.branch) {
-          set(draft, 'template.gitBranch', template.gitDetails?.branch)
+        if (template.gitDetails?.branch && template.gitDetails?.repoName) {
+          if (
+            (repoName === template.gitDetails.repoName && branch !== template.gitDetails.branch) ||
+            repoName !== template.gitDetails.repoName
+          )
+            set(draft, 'template.gitBranch', template.gitDetails.branch)
         }
       })) as unknown as StepElementConfig
 }
@@ -184,9 +218,11 @@ const getPromisesForTemplateGet = (
   params: GetTemplateQueryParams,
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
-  loadFromCache?: boolean
+  loadFromCache?: boolean,
+  gitBranch?: any
 ): Promise<ResponseTemplateResponse>[] => {
   const promises: Promise<ResponseTemplateResponse>[] = []
+  console.log(gitBranch)
   templateRefs.forEach(templateRef => {
     const templateIdentifier = getIdentifierFromValue(templateRef)
     const scope = getScopeFromValue(templateRef)
@@ -205,7 +241,7 @@ const getPromisesForTemplateGet = (
               projectIdentifier: defaultTo(params.projectIdentifier, '')
             },
             repoIdentifier: params.repoIdentifier,
-            branch: params.branch
+            branch: gitBranch[templateRef] ?? params.branch
           })
         },
         requestOptions: {
@@ -252,14 +288,15 @@ export const getTemplateTypesByRef = (
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
   supportingTemplatesGitx?: boolean,
-  loadFromCache?: boolean
+  loadFromCache?: boolean,
+  gitBranch?: any
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
   templateIcons: TemplateIcons
 }> => {
   return supportingTemplatesGitx
-    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata, loadFromCache)
+    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata, loadFromCache, gitBranch)
     : getTemplateTypesByRefV1(params as GetTemplateListQueryParams, templateRefs)
 }
 
@@ -313,7 +350,8 @@ export const getTemplateTypesByRefV2 = (
   params: GetTemplateQueryParams,
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
-  loadFromCache?: boolean
+  loadFromCache?: boolean,
+  gitBranch?: any
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
@@ -323,7 +361,8 @@ export const getTemplateTypesByRefV2 = (
     omit(params, 'templateListType'),
     templateRefs,
     storeMetadata,
-    loadFromCache
+    loadFromCache,
+    gitBranch
   )
   return Promise.all(promises)
     .then(responses => {

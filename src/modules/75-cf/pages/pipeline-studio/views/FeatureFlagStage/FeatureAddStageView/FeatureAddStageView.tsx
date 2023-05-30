@@ -50,7 +50,7 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
     contextType
   } = usePipelineContext()
 
-  const { branch } = useQueryParams<GitQueryParams>()
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
 
   const isTemplate = contextType === PipelineContextType.StageTemplate
 
@@ -90,7 +90,7 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
   const handleSubmit = (values: Values): void => {
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template, branch) }, values.identifier)
+        onSubmit?.({ stage: createTemplate(values, template, branch, repoName) }, values.identifier)
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

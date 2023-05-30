@@ -42,7 +42,7 @@ export function CustomStageMinimalMode(props: CustomStageMinimalModeProps): Reac
     contextType
   } = usePipelineContext()
 
-  const { branch } = useQueryParams<GitQueryParams>()
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
 
   const handleValidate = (values: CustomStageMinimalValues): Record<string, string | undefined> | undefined => {
     const errors: { name?: string } = {}
@@ -63,7 +63,7 @@ export function CustomStageMinimalMode(props: CustomStageMinimalModeProps): Reac
     if (data?.stage) {
       /* istanbul ignore next */
       if (template) {
-        onSubmit({ stage: createTemplate(values, template, branch) }, values.identifier)
+        onSubmit({ stage: createTemplate(values, template, branch, repoName) }, values.identifier)
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

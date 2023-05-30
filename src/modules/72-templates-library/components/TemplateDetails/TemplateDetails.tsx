@@ -121,7 +121,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const { accountId, module } = params
   const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>(storeMetadata?.branch)
   const gitPopoverBranch = selectedBranch
-
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
       ?.versionLabel
@@ -470,7 +469,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                         }}
                         gitDetails={selectedTemplate.gitDetails!}
                         onGitBranchChange={onGitBranchChange}
-                        branchChangeDisabled={storeMetadata?.repoName !== template?.gitDetails?.repoName}
+                        // branchChangeDisabled={storeMetadata?.repoName !== template?.gitDetails?.repoName}
                         forceFetch
                         btnClassName={css.gitBtn}
                         customIcon={
