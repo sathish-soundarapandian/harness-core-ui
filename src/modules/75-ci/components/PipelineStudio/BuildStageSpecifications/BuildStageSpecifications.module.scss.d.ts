@@ -13,6 +13,7 @@ declare const styles: {
   readonly configureCodebase: string
   readonly contentCard: string
   readonly contentSection: string
+  readonly contentSectionNew: string
   readonly dialogView: string
   readonly disabled: string
   readonly editVariable: string

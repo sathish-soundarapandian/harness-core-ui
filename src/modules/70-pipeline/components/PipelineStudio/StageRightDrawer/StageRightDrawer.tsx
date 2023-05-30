@@ -30,7 +30,7 @@ export const StageRightDrawer: React.FC = (): JSX.Element => {
   const stageType = selectedStage?.stage?.template ? StageType.Template : selectedStage?.stage?.type
 
   const handleClose = () => {
-    setSelection({ stageDetailsOpen: undefined, sectionId: undefined })
+    setSelection({ stageDetailsOpen: null, sectionId: null })
   }
 
   return (
@@ -45,7 +45,6 @@ export const StageRightDrawer: React.FC = (): JSX.Element => {
       size={STAGE_DRAWER_WIDTH}
       isOpen={stageDetailsOpen}
       position={Position.RIGHT}
-      data-type={'StageDraver'}
       isCloseButtonShown={false}
       // BUG: https://github.com/palantir/blueprint/issues/4519
       // you must pass only a single classname, not even an empty string, hence passing a dummy class
@@ -53,12 +52,14 @@ export const StageRightDrawer: React.FC = (): JSX.Element => {
       portalClassName={css.drawerPortal}
     >
       <Button minimal className={css.closeBtn} icon="cross" withoutBoxShadow onClick={handleClose} />
-      {renderPipelineStage({
-        stageType: stageType,
-        minimal: false,
-        gitDetails,
-        storeMetadata
-      })}
+      <div data-testid="stage-right-drawer">
+        {renderPipelineStage({
+          stageType: stageType,
+          minimal: false,
+          gitDetails,
+          storeMetadata
+        })}
+      </div>
     </Drawer>
   )
 }

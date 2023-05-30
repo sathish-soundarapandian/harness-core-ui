@@ -19,7 +19,7 @@ const NameIconHeader = ({ iconProps, name, className = '' }: NameIconHeaderProps
   return (
     <Layout.Horizontal className={className}>
       {iconProps && <Icon size={24} padding={{ right: 'small' }} {...iconProps} />}
-      <Text color={Color.BLACK} font={{ variation: FontVariation.H4 }}>
+      <Text color={Color.BLACK} font={{ variation: FontVariation.H4 }} lineClamp={1}>
         {name}
       </Text>
     </Layout.Horizontal>

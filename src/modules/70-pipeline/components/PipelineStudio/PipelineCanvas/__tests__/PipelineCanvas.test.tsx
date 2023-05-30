@@ -9,17 +9,17 @@ import React from 'react'
 import { render, act, fireEvent, waitFor, screen } from '@testing-library/react'
 import { set } from 'lodash-es'
 import { putPipelinePromise, createPipelineV2Promise, PipelineInfoConfig } from 'services/pipeline-ng'
-import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import { TestWrapper } from '@common/utils/testUtils'
 import { useMutateAsGet } from '@common/hooks'
-import routes from '@common/RouteDefinitions'
 import * as cdngServices from 'services/cd-ng'
 import { PipelineCanvas, PipelineCanvasProps } from '../PipelineCanvas'
-import { PipelineContext } from '../../PipelineContext/PipelineContext'
+import { PipelineContext, PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../../PipelineContext/PipelineActions'
 import {
   getDummyPipelineCanvasContextValue,
   mockApiDataEmpty,
-  mockPipelineTemplateYaml
+  mockPipelineTemplateYaml,
+  getTestWrapperProps
 } from './PipelineCanvasTestHelper'
 import duplicateStepIdentifierPipeline from './mock/duplicateStepIdentifierPipeline.json'
 const getProps = (): PipelineCanvasProps => ({
@@ -93,20 +93,7 @@ window.IntersectionObserver = mockIntersectionObserver
 /* Mocks end */
 
 describe('Pipeline Canvas - new pipeline', () => {
-  const testWrapperProps: TestWrapperProps = {
-    path: routes.toPipelineStudio({
-      pipelineIdentifier: ':pipelineIdentifier',
-      orgIdentifier: ':orgIdentifier',
-      accountId: ':accountId',
-      projectIdentifier: ':projectIdentifier'
-    }),
-    pathParams: {
-      pipelineIdentifier: DefaultNewPipelineId,
-      orgIdentifier: 'TEST_ORG',
-      accountId: 'TEST_ACCOUNT',
-      projectIdentifier: 'TEST_PROJECT'
-    }
-  }
+  const testWrapperProps = getTestWrapperProps({ pipelineIdentifier: DefaultNewPipelineId })
 
   beforeEach(() => {
     // eslint-disable-next-line
@@ -163,8 +150,7 @@ describe('Pipeline Canvas - new pipeline', () => {
       drawerData: { type: DrawerTypes.AddStep }
     })
     expect(contextValue.setView).toBeCalledWith('YAML')
-    expect(contextValue.setSelectedStageId).toBeCalledWith(undefined)
-    expect(contextValue.setSelectedSectionId).toBeCalledWith(undefined)
+    expect(contextValue.setSelection).toBeCalledWith({ sectionId: null, stageDetailsOpen: null, stageId: null })
 
     // Click on VISUAL again
     act(() => {
@@ -395,20 +381,7 @@ describe('Pipeline Canvas - new pipeline', () => {
 })
 
 describe('Existing pipeline', () => {
-  const testWrapperProps: TestWrapperProps = {
-    path: routes.toPipelineStudio({
-      pipelineIdentifier: ':pipelineIdentifier',
-      orgIdentifier: ':orgIdentifier',
-      accountId: ':accountId',
-      projectIdentifier: ':projectIdentifier'
-    }),
-    pathParams: {
-      pipelineIdentifier: 'TEST_PIPELINE',
-      orgIdentifier: 'TEST_ORG',
-      accountId: 'TEST_ACCOUNT',
-      projectIdentifier: 'TEST_PROJECT'
-    }
-  }
+  const testWrapperProps = getTestWrapperProps({ pipelineIdentifier: 'TEST_PIPELINE' })
 
   beforeEach(() => {
     // eslint-disable-next-line
@@ -479,5 +452,73 @@ describe('Existing pipeline', () => {
     await waitFor(() => {
       expect(contextValue.setView).toBeCalledWith('YAML')
     })
+  })
+})
+
+describe('Pipeline Canvas - Stage details in right drawer (FF: CDS_PIPELINE_STUDIO_UPGRADES)', () => {
+  const testWrapperProps = getTestWrapperProps(
+    { pipelineIdentifier: DefaultNewPipelineId },
+    {
+      defaultFeatureFlagValues: {
+        CDS_PIPELINE_STUDIO_UPGRADES: true
+      }
+    }
+  )
+
+  let sharedContextValue: PipelineContextInterface
+  beforeEach(() => {
+    sharedContextValue = {
+      ...getDummyPipelineCanvasContextValue({
+        isLoading: false,
+        gitDetails: undefined,
+        isReadonly: false,
+        isUpdated: true
+      })
+    }
+  })
+
+  test('shoud NOT render "Show panel" button', async () => {
+    const props = getProps()
+    const contextValue = {
+      ...sharedContextValue,
+      getStageFromPipeline: jest.fn(() => ({ stage: undefined, parent: undefined }))
+    }
+    const { queryByText } = render(
+      <TestWrapper {...testWrapperProps}>
+        <PipelineContext.Provider value={contextValue}>
+          <PipelineCanvas {...props} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(queryByText('showPanel')).toBeNull()
+  })
+
+  test('shoud render Show panel button', async () => {
+    const props = getProps()
+    const { queryByText } = render(
+      <TestWrapper {...testWrapperProps}>
+        <PipelineContext.Provider value={sharedContextValue}>
+          <PipelineCanvas {...props} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(queryByText('showPanel')).toBeInTheDocument()
+  })
+
+  test('shoud call setSelection on Show panel button click', async () => {
+    const props = getProps()
+    const { queryByText } = render(
+      <TestWrapper {...testWrapperProps}>
+        <PipelineContext.Provider value={sharedContextValue}>
+          <PipelineCanvas {...props} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    fireEvent.click(queryByText('showPanel')!)
+
+    expect(sharedContextValue.setSelection).toBeCalledWith({ stageDetailsOpen: true })
   })
 })

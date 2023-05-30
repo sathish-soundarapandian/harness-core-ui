@@ -59,6 +59,7 @@
       top: 12px;
       left: 12px;
       width: 120px !important;
+      transform: translateY(10px);
     }
 
     .bp3-tab-list {
@@ -82,14 +83,22 @@
   }
 
   .accordionTabWrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
     :global {
       .bp3-tabs {
-        height: 0% !important;
+        height: auto !important;
+      }
+      .bp3-tabs-list {
+        box-shadow: none;
+        border-bottom: 2px solid var(--grey-100);
       }
     }
     .accordion_className {
-      margin-block: var(--spacing-xxlarge);
-      margin-inline: var(--spacing-xxxlarge);
+      overflow: auto;
+      padding: var(--spacing-xxxlarge) var(--spacing-xxlarge);
       .title {
         font-weight: 600 !important;
         font-size: 16px !important;

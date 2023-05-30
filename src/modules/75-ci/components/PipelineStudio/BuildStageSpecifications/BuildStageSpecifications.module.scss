@@ -17,6 +17,11 @@
   padding-bottom: 96px;
 }
 
+.contentSectionNew {
+  padding: var(--spacing-medium) !important;
+  background-color: var(--white) !important;
+}
+
 .tabHeading {
   font-size: 16px;
   color: var(--black);

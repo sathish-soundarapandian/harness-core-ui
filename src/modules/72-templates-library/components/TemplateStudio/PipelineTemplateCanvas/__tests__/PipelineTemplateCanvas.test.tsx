@@ -61,9 +61,9 @@ describe('<PipelineTemplateCanvasWrapper/> tests', () => {
       </TestWrapper>
     )
     expect(pipelineContextMock.setSelection).toBeCalledWith({
-      sectionId: undefined,
-      stageId: undefined,
-      stepId: undefined
+      sectionId: null,
+      stageId: null,
+      stepId: null
     })
   })
 })

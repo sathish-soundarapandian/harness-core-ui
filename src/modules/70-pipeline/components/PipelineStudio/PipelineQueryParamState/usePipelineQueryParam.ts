@@ -27,9 +27,7 @@ function stateToQueryParams(state: PipelineSelectionState): PipelineSelectionSta
   const { stageDetailsOpen, ...restQueryState } = state
 
   const queryParams: PipelineSelectionStateQueryParams = { ...restQueryState }
-  if (stageDetailsOpen === true) {
-    queryParams.stageDetailsOpen = 'true'
-  }
+  if (typeof stageDetailsOpen !== 'undefined') queryParams.stageDetailsOpen = !!stageDetailsOpen ? 'true' : undefined
 
   return queryParams
 }

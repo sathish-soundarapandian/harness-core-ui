@@ -7,9 +7,11 @@
 
 import type { IconName } from '@harness/uicore'
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-import type { UseGetMockDataWithMutateAndRefetch } from '@common/utils/testUtils'
+import type { TestWrapperProps, UseGetMockDataWithMutateAndRefetch } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
 import type { ResponseInputSetTemplateResponse } from 'services/pipeline-ng'
 import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext'
+import { DefaultNewPipelineId } from '../../PipelineContext/PipelineActions'
 
 class StepFactory extends AbstractStepFactory {
   protected type = 'test-factory'
@@ -144,6 +146,7 @@ export const getDummyPipelineCanvasContextValue = (params: any): PipelineContext
     setSchemaErrorView: jest.fn(),
     deletePipelineCache: jest.fn(),
     setSelectedSectionId: jest.fn(),
+    setSelection: jest.fn(),
     getStageFromPipeline: jest.fn(() => {
       return { stage: data.state.pipeline.stages[0], parent: undefined }
     })
@@ -205,5 +208,26 @@ export const getGitContext = (pipelineError = false): any => {
     },
     updateGitDetails: jest.fn(),
     updatePipelineStoreMetadata: jest.fn()
+  }
+}
+
+export const getTestWrapperProps = (
+  routeProps: { pipelineIdentifier?: string },
+  props?: Partial<TestWrapperProps>
+): TestWrapperProps => {
+  return {
+    path: routes.toPipelineStudio({
+      pipelineIdentifier: ':pipelineIdentifier',
+      orgIdentifier: ':orgIdentifier',
+      accountId: ':accountId',
+      projectIdentifier: ':projectIdentifier'
+    }),
+    pathParams: {
+      pipelineIdentifier: routeProps.pipelineIdentifier ? routeProps.pipelineIdentifier : DefaultNewPipelineId,
+      orgIdentifier: 'TEST_ORG',
+      accountId: 'TEST_ACCOUNT',
+      projectIdentifier: 'TEST_PROJECT'
+    },
+    ...(props ? props : {})
   }
 }

@@ -100,7 +100,7 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
   }
 
   React.useEffect(() => {
-    setSelection({ stageId: DefaultNewStageId, stepId: undefined, sectionId: undefined })
+    setSelection({ stageId: DefaultNewStageId, stepId: null, sectionId: null })
   }, [])
 
   return (
@@ -138,7 +138,7 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
               if (event.isTemplate) {
                 addTemplate(event)
               } else {
-                setSelection({ stageId: DefaultNewStageId, stepId: 'random', sectionId: undefined })
+                setSelection({ stageId: DefaultNewStageId, stepId: 'random', sectionId: null })
 
                 updatePipelineView({
                   ...pipelineView,
@@ -180,7 +180,7 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
               })
             }}
             onSelectStep={(stepId: string) => {
-              setSelection({ stageId: DefaultNewStageId, stepId, sectionId: undefined })
+              setSelection({ stageId: DefaultNewStageId, stepId, sectionId: null })
             }}
           />
           <RightDrawer />

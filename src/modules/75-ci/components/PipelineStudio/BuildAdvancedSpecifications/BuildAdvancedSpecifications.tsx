@@ -25,19 +25,24 @@ import { DelegateSelectorWithRef } from '@pipeline/components/PipelineStudio/Del
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StepActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import css from './BuildAdvancedSpecifications.module.scss'
+import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 
-export interface AdvancedSpecifications {
-  context?: string
-}
-const BuildAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ children }): JSX.Element => {
+const BuildAdvancedSpecifications = ({
+  children,
+  customRef
+}: React.PropsWithChildren<{ customRef?: React.Ref<HTMLDivElement> }>): JSX.Element => {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
+  const domRef = React.useRef<HTMLDivElement | null>(null)
+  const scrollRef = customRef || domRef
+  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
 
   const {
     state: {
@@ -50,10 +55,12 @@ const BuildAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childre
   const { stage } = getStageFromPipeline(selectedStageId || '')
 
   const formikRef = React.useRef<StepFormikRef | null>(null)
-  const scrollRef = React.useRef<HTMLDivElement | null>(null)
 
   return (
     <div className={cx(css.stageSection, css.editStageGrid)}>
+      {!CDS_PIPELINE_STUDIO_UPGRADES && (
+        <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+      )}
       <div className={css.contentSection} ref={scrollRef}>
         <div className={css.tabHeading}>
           <span data-tooltip-id="delegateSelectorDeployStage">

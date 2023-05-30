@@ -215,7 +215,7 @@ function StageBuilder(): JSX.Element {
     setSelection
   } = usePipelineContext()
   const { module } = useParams<ModulePathParams>()
-  const { CDS_NEW_PIPELINE_STUDIO } = useFeatureFlags()
+  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
 
   // NOTE: we are using ref as setSelection is getting cached somewhere
   const setSelectionRef = React.useRef(setSelection)
@@ -355,7 +355,7 @@ function StageBuilder(): JSX.Element {
   // note: this open split panel when user use direct url
   /** @deprecated since pipeline studio usability improvements */
   React.useEffect(() => {
-    if (!CDS_NEW_PIPELINE_STUDIO) {
+    if (!CDS_PIPELINE_STUDIO_UPGRADES) {
       if (selectedStageId && !isSplitViewOpen) {
         updatePipelineView({
           ...pipelineView,
@@ -570,12 +570,11 @@ function StageBuilder(): JSX.Element {
           }
 
           if (isSplitViewOpen) {
-            debugger
-            setSelectionRef.current({ stageId: undefined, sectionId: undefined, stageDetailsOpen: undefined })
+            setSelectionRef.current({ stageId: null, sectionId: null, stageDetailsOpen: null })
           }
         }}
       >
-        {CDS_NEW_PIPELINE_STUDIO && selectedStage.stage && (
+        {CDS_PIPELINE_STUDIO_UPGRADES && selectedStage.stage && (
           <Button
             round
             text={getString('showPanel')}
@@ -610,7 +609,7 @@ function StageBuilder(): JSX.Element {
   return (
     <Layout.Horizontal className={cx(css.canvasContainer)} padding="medium">
       <div className={css.canvasWrapper}>
-        {CDS_NEW_PIPELINE_STUDIO ? (
+        {CDS_PIPELINE_STUDIO_UPGRADES ? (
           renderStagesCanvas()
         ) : (
           <SplitPane

@@ -28,7 +28,7 @@ const PipelineTemplateCanvas = (_props: unknown, _formikRef: TemplateFormRef): J
 
   React.useEffect(() => {
     if (isDrawerOpened && type === DrawerTypes.TemplateVariables) {
-      setSelection({ stageId: undefined, stepId: undefined, sectionId: undefined })
+      setSelection({ stageId: null, stepId: null, sectionId: null })
     }
   }, [isDrawerOpened])
 

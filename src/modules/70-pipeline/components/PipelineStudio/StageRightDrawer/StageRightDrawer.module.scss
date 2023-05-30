@@ -12,11 +12,9 @@
 }
 
 .drawerPortal {
-  :global {
-    .bp3-overlay {
-      pointer-events: none;
-    }
-    .bp3-drawer {
+  & > div {
+    pointer-events: none;
+    & > div {
       pointer-events: all;
     }
   }

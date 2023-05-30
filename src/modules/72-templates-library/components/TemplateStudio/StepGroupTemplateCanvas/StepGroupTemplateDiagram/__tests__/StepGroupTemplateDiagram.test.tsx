@@ -20,7 +20,7 @@ jest.mock('@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph', (
         <button
           onClick={() => {
             onAddStep(StepGroupEventMock)
-            setSelection({ stageId: 'stage_name', stepId: 'step_id', sectionId: undefined })
+            setSelection({ stageId: 'stage_name', stepId: 'step_id', sectionId: null })
           }}
         >
           Add Step

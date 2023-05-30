@@ -13,6 +13,7 @@ import { cloneDeep, debounce, defaultTo, isEqual, uniqBy } from 'lodash-es'
 import cx from 'classnames'
 import { produce } from 'immer'
 import type { FormikProps } from 'formik'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -46,11 +47,15 @@ export interface Variable {
   value?: string
 }
 
-export default function BuildStageSpecifications({ children }: React.PropsWithChildren<unknown>): JSX.Element {
+export default function BuildStageSpecifications({
+  children,
+  customRef
+}: React.PropsWithChildren<{ customRef?: React.Ref<HTMLDivElement> }>): JSX.Element {
   const { variablesPipeline, metadataMap } = usePipelineVariables()
-
   const { getString } = useStrings()
-
+  const domRef = React.useRef<HTMLDivElement | null>(null)
+  const scrollRef = customRef || domRef
+  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
   const {
     state: {
       selectionState: { selectedStageId }
@@ -62,8 +67,6 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
     allowableTypes,
     isReadonly
   } = usePipelineContext()
-
-  const scrollRef = React.useRef<HTMLDivElement | null>(null)
 
   const { stage } = getStageFromPipeline<BuildStageElementConfig>(selectedStageId || '')
 
@@ -205,8 +208,15 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
 
   return (
     <div className={css.wrapper}>
-      <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={css.contentSection} ref={scrollRef}>
+      {!CDS_PIPELINE_STUDIO_UPGRADES && (
+        <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+      )}
+      <div
+        className={cx(css.contentSection, {
+          [css.contentSectionNew]: CDS_PIPELINE_STUDIO_UPGRADES
+        })}
+        ref={scrollRef}
+      >
         <Formik
           initialValues={getInitialValues()}
           validationSchema={validationSchema}

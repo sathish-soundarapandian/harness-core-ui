@@ -7,7 +7,13 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly accordionClassName: string
+  readonly accordionPanelClassName: string
+  readonly accordionSummaryClassName: string
+  readonly accordionTabWrapper: string
   readonly bp3Button: string
+  readonly executionGraph: string
+  readonly executionPanel: string
   readonly footer: string
   readonly fullHeight: string
   readonly setupShell: string
@@ -15,9 +21,8 @@ declare const styles: {
   readonly spacer: string
   readonly stageDropDown: string
   readonly stageDropDownTab: string
-  readonly stepGroup: string
-  readonly tab: string
   readonly tabExecution: string
   readonly templateNameDialog: string
+  readonly title: string
 }
 export default styles

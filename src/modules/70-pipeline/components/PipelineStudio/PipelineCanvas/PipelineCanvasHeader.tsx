@@ -221,7 +221,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
       isSplitViewOpen: false,
       drawerData: { type: DrawerTypes.AddStep }
     })
-    setSelection({ stageId: undefined, sectionId: undefined, stageDetailsOpen: undefined })
+    setSelection({ stageId: null, sectionId: null, stageDetailsOpen: null })
     return true
   }
 

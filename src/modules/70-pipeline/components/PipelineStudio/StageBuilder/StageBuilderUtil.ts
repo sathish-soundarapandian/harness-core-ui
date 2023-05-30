@@ -360,7 +360,7 @@ export const getLinkEventListeners = (
       const { setSelection } = pipelineContext
 
       if (event.identifier) {
-        setSelection({ stageId: undefined, sectionId: undefined })
+        setSelection({ stageId: null, sectionId: null })
 
         dynamicPopoverHandler?.show(
           `[data-linkid="${event.identifier}"]`,
@@ -445,6 +445,7 @@ export const getNodeEventListerner = (
     state: {
       pipeline,
       pipelineView: { isSplitViewOpen },
+      selectionState: { stageDetailsOpen },
       pipelineView,
       templateTypes,
       gitDetails,
@@ -460,13 +461,14 @@ export const getNodeEventListerner = (
   return {
     // Can not remove this Any because of React Diagram Issue
     [Event.ClickNode]: (event: any) => {
+      const stageDetailsVisible = isSplitViewOpen || stageDetailsOpen
       // const eventTemp = event as DefaultNodeEvent
       event = { ...event, ...event?.data }
       dynamicPopoverHandler?.hide()
       /* istanbul ignore else */ if (event.entityType) {
         const domTarget = document.querySelector(`[data-nodeid="${event.id}"]`) as Element
         if (event.entityType === DiagramType.CreateNew) {
-          setSelectionRef.current({ stageId: undefined, sectionId: undefined })
+          setSelectionRef.current({ stageId: null, sectionId: null })
           dynamicPopoverHandler?.show(
             domTarget,
             {
@@ -485,7 +487,7 @@ export const getNodeEventListerner = (
           setSelectionRef.current({ stageId: event?.identifier })
         } /* istanbul ignore else */ else if (event.entityType !== DiagramType.StartNode) {
           const data = getStageFromPipelineContext(event.identifier).stage
-          if (isSplitViewOpen && data?.stage?.identifier) {
+          if (stageDetailsVisible && data?.stage?.identifier) {
             if (data?.stage?.name === EmptyStageName) {
               // TODO: check if this is unused code
               dynamicPopoverHandler?.show(
@@ -508,11 +510,11 @@ export const getNodeEventListerner = (
                 },
                 { useArrows: false, darkMode: false, fixedPosition: false }
               )
-              setSelectionRef.current({ stageId: undefined, sectionId: undefined })
+              setSelectionRef.current({ stageId: null, sectionId: null })
             } else {
               setSelectionRef.current({ stageId: data?.stage?.identifier, sectionId })
             }
-          } /* istanbul ignore else */ else if (!isSplitViewOpen) {
+          } /* istanbul ignore else */ else if (!stageDetailsVisible) {
             if (stageMap.has(data?.stage?.identifier || '')) {
               setSelectionRef.current({ stageId: data?.stage?.identifier })
             } else {
@@ -557,7 +559,7 @@ export const getNodeEventListerner = (
         isSplitViewOpen: false,
         splitViewData: {}
       })
-      setSelectionRef.current({ stageId: undefined, sectionId: undefined })
+      setSelectionRef.current({ stageId: null, sectionId: null })
 
       if (event.identifier) {
         dynamicPopoverHandler?.show(

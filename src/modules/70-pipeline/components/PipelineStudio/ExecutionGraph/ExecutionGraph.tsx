@@ -7,6 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { cloneDeep, set, isEmpty, get, defaultTo, omit } from 'lodash-es'
+import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -243,6 +244,7 @@ export interface ExecutionGraphProp<T extends StageElementConfig> {
   templateTypes: { [key: string]: string }
   templateIcons?: TemplateIcons
   addLinkedTemplatesLabel?: string
+  className?: string
 }
 
 function ExecutionGraphRef<T extends StageElementConfig>(
@@ -266,7 +268,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     canvasButtonsLayout,
     templateTypes,
     templateIcons,
-    addLinkedTemplatesLabel
+    addLinkedTemplatesLabel,
+    className
   } = props
   const {
     state: { pipelineView },
@@ -838,7 +841,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
 
   return (
     <div
-      className={css.container}
+      className={cx(css.container, className)}
       onClick={e => {
         const div = e.target as HTMLDivElement
         if (div === canvasRef.current?.children[0]) {

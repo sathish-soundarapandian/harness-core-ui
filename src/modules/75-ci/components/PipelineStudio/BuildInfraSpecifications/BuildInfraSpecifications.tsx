@@ -355,8 +355,14 @@ const renderUseFromStageCloud = ({
   )
 }
 
-export default function BuildInfraSpecifications({ children }: React.PropsWithChildren<unknown>): JSX.Element {
+export default function BuildInfraSpecifications({
+  children,
+  customRef
+}: React.PropsWithChildren<{ customRef?: React.Ref<HTMLDivElement> }>): JSX.Element {
   const { getString } = useStrings()
+  const domRef = React.useRef<HTMLDivElement | null>(null)
+  const scrollRef = customRef || domRef
+  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const gitScope = useGitScope()
   const {
@@ -437,8 +443,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       : [])
   ]
   const [showInfraProvisioningCarousel, setShowInfraProvisioningCarousel] = useState<boolean>(false)
-
-  const scrollRef = React.useRef<HTMLDivElement | null>(null)
 
   const { stage } = getStageFromPipeline<BuildStageElementConfig>(selectedStageId || '')
 
@@ -2310,7 +2314,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const renderInfraSection = (): JSX.Element => {
     return (
       <div className={css.wrapper}>
-        <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+        {!CDS_PIPELINE_STUDIO_UPGRADES && (
+          <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+        )}
         <HelpPanel referenceId="ciInfrastructureType" type={HelpPanelType.FLOATING_CONTAINER} />
         <div className={css.contentSection} ref={scrollRef}>
           <Formik
