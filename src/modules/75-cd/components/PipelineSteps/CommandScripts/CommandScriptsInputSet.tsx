@@ -8,9 +8,10 @@
 import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
-import { AllowedTypes, FormikForm, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, FormikForm, getMultiTypeFromValue, MultiTypeInputType, Layout } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
+import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -75,6 +76,17 @@ export function CommandScriptsInputSet(props: CommandScriptsInputSetProps): Reac
         template={inputSetData.template}
         readonly={inputSetData.readonly}
       />
+      {getMultiTypeFromValue(inputSetData.template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME && (
+        <Layout.Horizontal>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{ expressions, allowableTypes: [MultiTypeInputType.FIXED] }}
+            name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}onDelegate`}
+            label={getString('cd.steps.commands.runOnDelegate')}
+            disabled={inputSetData.readonly}
+            style={{ width: '35%' }}
+          />
+        </Layout.Horizontal>
+      )}
     </FormikForm>
   )
 }

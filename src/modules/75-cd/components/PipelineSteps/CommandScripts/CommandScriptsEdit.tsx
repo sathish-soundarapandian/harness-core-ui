@@ -6,11 +6,10 @@
  */
 
 import React from 'react'
-import { defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { Accordion, AllowedTypes, Checkbox, Formik, FormInput, Text } from '@harness/uicore'
+import { Accordion, AllowedTypes, Formik, FormInput, Text, MultiTypeInputType } from '@harness/uicore'
 
 import { Color } from '@harness/design-system'
 
@@ -18,6 +17,8 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
+
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
@@ -142,15 +143,15 @@ function CommandScriptsEditWidget(
                       allowableTypes={allowableTypes}
                       readonly={readonly}
                     />
-                    <div className={stepCss.formGroup}>
-                      <Checkbox
-                        name={'spec.onDelegate'}
+                    <div className={cx(stepCss.formGroup, stepCss.sm)}>
+                      <FormMultiTypeCheckboxField
+                        multiTypeTextbox={{
+                          expressions,
+                          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+                        }}
+                        name="spec.onDelegate"
                         label={getString('cd.steps.commands.runOnDelegate')}
-                        data-testid={`runOnDelegate`}
-                        defaultChecked={defaultTo(formik.values.spec.onDelegate, false)}
-                        onChange={(event: React.FormEvent<HTMLInputElement>) =>
-                          formik.setFieldValue('spec.onDelegate', event.currentTarget.checked)
-                        }
+                        disabled={readonly}
                       />
                     </div>
                   </div>
