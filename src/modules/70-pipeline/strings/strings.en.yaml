@@ -1866,3 +1866,4 @@ enableContainerBasedExecution: Enable container based execution
 artifactViolationDetails: Artifact violation details
 violationDetails: Violation details
 supplier: Supplier
+showPanel: Show panel

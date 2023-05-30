@@ -491,7 +491,7 @@ describe('Pipeline Canvas - Stage details in right drawer (FF: CDS_PIPELINE_STUD
       </TestWrapper>
     )
 
-    expect(queryByText('showPanel')).toBeNull()
+    expect(queryByText('pipeline.showPanel')).toBeNull()
   })
 
   test('shoud render Show panel button', async () => {
@@ -504,7 +504,7 @@ describe('Pipeline Canvas - Stage details in right drawer (FF: CDS_PIPELINE_STUD
       </TestWrapper>
     )
 
-    expect(queryByText('showPanel')).toBeInTheDocument()
+    expect(queryByText('pipeline.showPanel')).toBeInTheDocument()
   })
 
   test('shoud call setSelection on Show panel button click', async () => {
@@ -517,7 +517,7 @@ describe('Pipeline Canvas - Stage details in right drawer (FF: CDS_PIPELINE_STUD
       </TestWrapper>
     )
 
-    fireEvent.click(queryByText('showPanel')!)
+    fireEvent.click(queryByText('pipeline.showPanel')!)
 
     expect(sharedContextValue.setSelection).toBeCalledWith({ stageDetailsOpen: true })
   })

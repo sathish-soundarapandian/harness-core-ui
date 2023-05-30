@@ -4958,6 +4958,7 @@ export interface StringsMap {
   'pipeline.serviceNowImportSetStep.validations.stagingTableRequired': string
   'pipeline.serviceNowUpdateStep.fieldType.applyFromTemplate': string
   'pipeline.serviceNowUpdateStep.fieldType.updateFields': string
+  'pipeline.showPanel': string
   'pipeline.singleStageExecution': string
   'pipeline.skipInstances.title': string
   'pipeline.sslVerify': string
@@ -12790,10 +12791,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   showAll: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  showPanel: string
   /**
    * @deprecated migrate this string to module level file
    */

@@ -109,7 +109,6 @@ runPipelineText: Run
 rollbackLabel: Rollback
 addStage: Add Stage
 rollbackSteps: Rollback Steps
-showPanel: Show panel
 noConnectorFound: No Connector Found
 noUserGroupsFound: No User Groups found
 saveConnectorSuccess: Connector saved

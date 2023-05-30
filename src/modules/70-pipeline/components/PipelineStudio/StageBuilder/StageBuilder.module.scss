@@ -87,6 +87,6 @@ $dot-space: 10px;
   }
 
   :global(svg) {
-    margin-right: 14px;
+    margin-right: var(--spacing-small);
   }
 }

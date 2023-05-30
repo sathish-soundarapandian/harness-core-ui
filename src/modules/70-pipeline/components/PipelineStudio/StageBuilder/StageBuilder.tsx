@@ -577,7 +577,7 @@ function StageBuilder(): JSX.Element {
         {CDS_PIPELINE_STUDIO_UPGRADES && selectedStage.stage && (
           <Button
             round
-            text={getString('showPanel')}
+            text={getString('pipeline.showPanel')}
             icon={'main-chevron-left'}
             className={css.showPanelBtn}
             onClick={e => {
