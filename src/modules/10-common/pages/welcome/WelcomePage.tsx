@@ -18,8 +18,6 @@ import type { Module } from '@common/interfaces/RouteInterfaces'
 import { FeatureFlag } from '@common/featureFlags'
 import WithABFFProvider from '@common/components/WithFFProvider/WithFFProvider'
 import { EXPOSURE_EVENT, PLG_EXPERIMENTS } from '@common/components/WithFFProvider/PLGExperiments'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import WelcomePageV2 from './WelcomePageV2'
 import SelectModuleList from './SelectModuleList'
 import ribbon from './images/ribbon.svg'
@@ -50,7 +48,6 @@ const WelcomePage: React.FC<{ getStartedVariant?: string }> = props => {
   useTelemetry({ pageName: PageNames.Purpose })
 
   const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED } = useFeatureFlags()
-  const { FF_LICENSE_STATE } = useLicenseStore()
 
   const CDNG_OPTIONS: ModuleProps = {
     enabled: true, // Continous delivery is enabled in CG
@@ -85,7 +82,7 @@ const WelcomePage: React.FC<{ getStartedVariant?: string }> = props => {
   }
 
   const CFNG_OPTIONS: ModuleProps = {
-    enabled: FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
+    enabled: true,
     titleIcon: 'ff-with-text',
     bodyIcon: 'ff-sketch',
     module: 'cf',
