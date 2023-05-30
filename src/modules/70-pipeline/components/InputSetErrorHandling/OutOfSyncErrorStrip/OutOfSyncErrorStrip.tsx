@@ -186,7 +186,9 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
 
       connectorRef: connectorRef ?? get(inputSet, 'connectorRef'),
       storeType: storeType ?? get(inputSet, 'storeType'),
-      ...gitParams
+      ...gitParams,
+      pipelineBranch: reconcileBranch,
+      pipelineRepoID: repoIdentifier
     },
     inputSetIdentifier: overlayInputSetIdentifier ?? get(inputSet, 'identifier', ''),
     lazy: true
