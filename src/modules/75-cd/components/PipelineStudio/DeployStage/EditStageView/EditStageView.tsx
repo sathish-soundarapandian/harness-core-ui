@@ -457,7 +457,11 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                     <>
                       {context ? (
                         <div>
-                          <Card className={stageCss.sectionCard}>
+                          <Card
+                            className={cx(stageCss.sectionCard, {
+                              [stageCss.sectionCardNew]: CDS_PIPELINE_STUDIO_UPGRADES
+                            })}
+                          >
                             <NameIdDescriptionTags
                               formikProps={formikProps}
                               identifierProps={{
@@ -516,7 +520,12 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
 
                   {shouldRenderDeploymentType() && !template && (
                     <>
-                      <div className={cx({ [css.deploymentType]: !isEmpty(context) })}>
+                      <div
+                        className={cx({
+                          [css.deploymentType]: !isEmpty(context),
+                          [stageCss.sectionCardNew]: CDS_PIPELINE_STUDIO_UPGRADES
+                        })}
+                      >
                         <SelectDeploymentType
                           viewContext={context}
                           selectedDeploymentType={selectedDeploymentType}
@@ -575,7 +584,12 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                 addDomId={true}
                 summary={<div className={stageCss.tabHeading}>{getString('common.advanced')}</div>}
                 details={
-                  <Card className={stageCss.sectionCard} id="variables">
+                  <Card
+                    className={cx(stageCss.sectionCard, {
+                      [stageCss.sectionCardNew]: CDS_PIPELINE_STUDIO_UPGRADES
+                    })}
+                    id="variables"
+                  >
                     <div
                       className={cx(stageCss.tabSubHeading, 'ng-tooltip-native')}
                       data-tooltip-id="overviewStageVariables"

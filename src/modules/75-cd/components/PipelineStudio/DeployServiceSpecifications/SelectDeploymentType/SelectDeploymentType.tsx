@@ -198,11 +198,16 @@ interface CardListProps {
 
 const CardList = ({ items, isReadonly, selectedValue, onChange }: CardListProps): JSX.Element => {
   const { getString } = useStrings()
+  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onChange(e.target.value as ServiceDeploymentType)
   }
+
   return (
-    <Layout.Horizontal spacing={'medium'} className={stageCss.cardListContainer}>
+    <Layout.Horizontal
+      spacing={'medium'}
+      className={cx(stageCss.cardListContainer, { [stageCss.cardListContainerNew]: CDS_PIPELINE_STUDIO_UPGRADES })}
+    >
       {items
         .filter(item => (isReadonly && item.value === selectedValue) || !isReadonly)
         .map(item => {
@@ -269,8 +274,14 @@ export default function SelectDeploymentType({
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { NG_SVC_ENV_REDESIGN, CDS_TAS_NG, CDS_GOOGLE_CLOUD_FUNCTION, CDS_AWS_NATIVE_LAMBDA, CDP_AWS_SAM } =
-    useFeatureFlags()
+  const {
+    NG_SVC_ENV_REDESIGN,
+    CDS_TAS_NG,
+    CDS_GOOGLE_CLOUD_FUNCTION,
+    CDS_AWS_NATIVE_LAMBDA,
+    CDP_AWS_SAM,
+    CDS_PIPELINE_STUDIO_UPGRADES
+  } = useFeatureFlags()
 
   // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes = React.useMemo(() => {
@@ -438,7 +449,7 @@ export default function SelectDeploymentType({
         formikRef.current = formik as FormikProps<unknown> | null
         if (viewContext) {
           return (
-            <Card className={stageCss.sectionCard}>
+            <Card className={cx(stageCss.sectionCard, { [stageCss.sectionCardNew]: CDS_PIPELINE_STUDIO_UPGRADES })}>
               {renderDeploymentTypeLabel()}
               {renderDeploymentTypes()}
               {renderGitops()}

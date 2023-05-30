@@ -75,6 +75,19 @@
   .cardListContainer {
     margin-top: 0 !important;
   }
+  .cardListContainerNew {
+    flex-wrap: wrap;
+    & > * + * {
+      margin-left: 0px !important;
+    }
+    & > *:not(:last-child) {
+      margin-right: var(--layout-spacing);
+    }
+  }
+}
+
+.section-card-new {
+  width: 100%;
 }
 
 .divider {

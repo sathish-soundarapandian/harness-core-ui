@@ -9,6 +9,7 @@
 declare const styles: {
   readonly accordion: string
   readonly cardListContainer: string
+  readonly cardListContainerNew: string
   readonly contentSection: string
   readonly deployStage: string
   readonly deploymentTypeHeading: string
@@ -19,6 +20,7 @@ declare const styles: {
   readonly paddedSection: string
   readonly paddedSectionNew: string
   readonly sectionCard: string
+  readonly sectionCardNew: string
   readonly stageView: string
   readonly tabHeading: string
   readonly tabSubHeading: string
