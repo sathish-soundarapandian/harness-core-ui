@@ -48,7 +48,8 @@ export function EnvironmentsList({ environments, limit = 2, className }: Environ
                         ...(envScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
                         ...(envScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
                         environmentIdentifier: defaultTo(getIdentifierFromScopedRef(env), ''),
-                        module
+                        module,
+                        accountRoutePlacement: 'settings'
                       })}`}
                     >
                       {env}

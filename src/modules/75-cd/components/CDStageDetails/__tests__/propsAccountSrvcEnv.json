@@ -10,7 +10,7 @@
     "moduleInfo": {
       "cd": {
         "serviceInfo": {
-          "identifier": "Order",
+          "identifier": "account.Order",
           "displayName": "Order",
           "deploymentType": "Kubernetes",
           "artifacts": {
@@ -22,30 +22,9 @@
           }
         },
         "infraExecutionSummary": {
-          "identifier": "Production",
+          "identifier": "account.Production",
           "name": "Production",
           "type": "Production"
-        },
-        "gitOpsAppSummary": {
-          "applications": [
-            { "agentIdentifier": "AGENT_1", "identifier": "ID_1", "name": "NAME_1" },
-            { "agentIdentifier": "AGENT_2", "identifier": "ID_2", "name": "NAME_2" },
-            { "agentIdentifier": "AGENT_3", "identifier": "ID_3", "name": "NAME_3" }
-          ]
-        },
-        "gitopsExecutionSummary": {
-          "environments": [
-            {
-              "name": "account level env",
-              "type": "Production",
-              "identifier": "account.account_level_env"
-            },
-            {
-              "name": "customEnv",
-              "type": "Production",
-              "identifier": "customEnv"
-            }
-          ]
         }
       }
     },
