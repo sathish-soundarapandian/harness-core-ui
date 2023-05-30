@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import { Button, ButtonVariation, Layout } from '@harness/uicore'
@@ -20,27 +20,18 @@ export interface RunPipelineModalV1Params {
   pipelineIdentifier: string
   executionId?: string
   inputSetSelected?: InputSetSelectorProps['value']
-  isDebugMode?: boolean
 }
 
 export interface useRunPipelineModalReturn {
-  openRunPipelineModalV1: () => void
+  openRunPipelineModalV1: (debugMode?: boolean) => void
   closeRunPipelineModalV1: () => void
 }
 
 export const useRunPipelineModalV1 = (
   runPipelineModalParams: RunPipelineModalV1Params & Omit<GitQueryParams, 'repoName'>
 ): useRunPipelineModalReturn => {
-  const {
-    inputSetSelected,
-    pipelineIdentifier,
-    branch,
-    repoIdentifier,
-    connectorRef,
-    storeType,
-    executionId,
-    isDebugMode
-  } = runPipelineModalParams
+  const { inputSetSelected, pipelineIdentifier, branch, repoIdentifier, connectorRef, storeType, executionId } =
+    runPipelineModalParams
   const {
     projectIdentifier,
     orgIdentifier,
@@ -68,6 +59,7 @@ export const useRunPipelineModalV1 = (
     style: { width: 872, height: 'fit-content', overflow: 'auto' },
     isCloseButtonShown: false
   }
+  const [isDebugMode, setIsDebugMode] = useState(false)
 
   const [showRunPipelineModal, hideRunPipelineModal] = useModalHook(
     () => (
@@ -104,12 +96,16 @@ export const useRunPipelineModalV1 = (
     [branch, repoIdentifier, pipelineIdentifier, inputSetSelected, planExecutionId]
   )
 
-  const open = useCallback(() => {
-    showRunPipelineModal()
-  }, [showRunPipelineModal])
+  const open = useCallback(
+    (debugMode?: boolean) => {
+      setIsDebugMode(!!debugMode)
+      showRunPipelineModal()
+    },
+    [showRunPipelineModal]
+  )
 
   return {
-    openRunPipelineModalV1: () => open(),
+    openRunPipelineModalV1: (debugMode?: boolean) => open(debugMode),
     closeRunPipelineModalV1: hideRunPipelineModal
   }
 }

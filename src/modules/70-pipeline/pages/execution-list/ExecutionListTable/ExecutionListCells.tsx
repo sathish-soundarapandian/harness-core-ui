@@ -413,8 +413,7 @@ export const MenuCell: CellType = ({ row, column }) => {
     branch: data.gitDetails?.branch,
     connectorRef: data.connectorRef,
     storeType: data.storeType as StoreType,
-    stagesExecuted: data.stagesExecuted,
-    isDebugMode: hasCI
+    stagesExecuted: data.stagesExecuted
   })
 
   const { CI_YAML_VERSIONING, CI_REMOTE_DEBUG } = useFeatureFlags()
@@ -425,8 +424,7 @@ export const MenuCell: CellType = ({ row, column }) => {
     repoIdentifier: isGitSyncEnabled ? data.gitDetails?.repoIdentifier : data.gitDetails?.repoName,
     branch: data.gitDetails?.branch,
     connectorRef: data.connectorRef,
-    storeType: data.storeType as StoreType,
-    isDebugMode: hasCI
+    storeType: data.storeType as StoreType
   })
   const [canEdit, canExecute] = usePermission(
     {
@@ -469,8 +467,8 @@ export const MenuCell: CellType = ({ row, column }) => {
         onReRunInDebugMode={
           hasCI && CI_REMOTE_DEBUG
             ? isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
-              ? openRunPipelineModalV1
-              : openRunPipelineModal
+              ? () => openRunPipelineModalV1(true)
+              : () => openRunPipelineModal(true)
             : undefined
         }
         source={source}
