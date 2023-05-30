@@ -5,21 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import React from 'react'
 import { Drawer, Position } from '@blueprintjs/core'
 import { Button, ExpandingSearchInput, Heading, PageError, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import React, { ReactElement } from 'react'
+import type { ReactElement } from 'react'
 import { PageSpinner } from '@common/components'
 import { Width } from '@common/constants/Utils'
 import { useUpdateQueryParams } from '@common/hooks'
 import { useExecutionListQueryParams } from '@pipeline/pages/execution-list/utils/executionListUtil'
 import { useStrings } from 'framework/strings'
 import { useEnforcementGetEnforcementResultsById } from 'services/ssca'
-import {
-  ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
-  ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
-  EnforcementViolationsParamsWithDefaults
-} from './utils'
+import type { EnforcementViolationsParamsWithDefaults } from './utils'
+import { ENFORCEMENT_VIOLATIONS_PAGE_INDEX, ENFORCEMENT_VIOLATIONS_PAGE_SIZE } from './utils'
 import { PolicyViolationsTable } from './PolicyViolationsTable'
 import css from './PolicyViolations.module.scss'
 

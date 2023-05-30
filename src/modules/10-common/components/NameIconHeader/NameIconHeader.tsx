@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { Icon, IconProps, Layout, Text } from '@harness/uicore'
+import type { IconProps } from '@harness/uicore'
+import { Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 
 interface NameIconHeaderProps {

@@ -4,7 +4,7 @@
  * @version 0.1.0-beta
  */
 import * as reactQuery from '@tanstack/react-query'
-import { useTicketServiceContext, TicketServiceContext } from './ticketServiceContext'
+import { useTicketServiceContext, type TicketServiceContext } from './ticketServiceContext'
 import type * as Fetcher from './ticketServiceFetcher'
 import { ticketServiceFetch } from './ticketServiceFetcher'
 import type * as Schemas from './ticketServiceSchemas'

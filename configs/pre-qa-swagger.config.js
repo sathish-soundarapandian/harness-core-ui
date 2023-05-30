@@ -15,7 +15,7 @@ module.exports = {
   'cd-ng': {
     output: 'src/services/cd-ng/index.tsx',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("ng/api")}`
     },
@@ -26,7 +26,7 @@ module.exports = {
     output: 'src/services/pipeline-ng/index.tsx',
     url: 'https://stress.harness.io/pipeline/api/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("pipeline/api")}`
     },
@@ -36,7 +36,7 @@ module.exports = {
     output: 'src/services/template-ng/index.tsx',
     url: 'https://stress.harness.io/template/api/swagger.json',
     transformer: 'scripts/swagger-transform.js',
-    customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
+    customImport: `import type { GetUsingFetchProps, MutateUsingFetchProps } from "../config" \n import { getConfig, getUsingFetch, mutateUsingFetch } from "../config"`,
     customProps: {
       base: `{getConfig("template/api")}`
     },

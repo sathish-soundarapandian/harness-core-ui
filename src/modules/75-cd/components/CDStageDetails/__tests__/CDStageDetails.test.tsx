@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, within, screen, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react'
+import { render, within, screen } from '@testing-library/react'
 
 import { get } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'

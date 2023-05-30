@@ -31,5 +31,6 @@ import { $ } from 'zx'
     await $`npx restful-react import --config configs/restful-react.config.js ${service}`
     await $`npx prettier --write ${output}`
     await $`scripts/license/stamp.sh ${output}`
+    await $`node scripts/update-imports.mjs ${output}`
   }
 })()

@@ -9,14 +9,15 @@ import React from 'react'
 import type { ReactElement } from 'react'
 import type { IFormGroupProps } from '@blueprintjs/core'
 import { FormGroup, Intent } from '@blueprintjs/core'
-import type { ExpressionAndRuntimeTypeProps, MultiTypeInputType } from '@harness/uicore'
+import type { ExpressionAndRuntimeTypeProps } from '@harness/uicore'
 import {
   DateInput,
   ExpressionAndRuntimeType,
   FormError,
   getFormFieldLabel,
   getMultiTypeFromValue,
-  MultiTypeInputValue
+  MultiTypeInputValue,
+  MultiTypeInputType
 } from '@harness/uicore'
 import { connect } from 'formik'
 import { get, isEmpty } from 'lodash-es'

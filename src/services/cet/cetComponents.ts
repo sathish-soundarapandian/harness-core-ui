@@ -11,7 +11,7 @@
  * @version 0.1
  */
 import * as reactQuery from '@tanstack/react-query'
-import { useCetContext, CetContext } from './cetContext'
+import { useCetContext, type CetContext } from './cetContext'
 import type * as Fetcher from './cetFetcher'
 import { cetFetch } from './cetFetcher'
 import type * as Schemas from './cetSchemas'

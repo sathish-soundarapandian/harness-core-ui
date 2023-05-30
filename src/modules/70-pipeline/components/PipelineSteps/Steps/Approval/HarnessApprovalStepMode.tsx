@@ -12,7 +12,7 @@ import { isEmpty, compact, isArray, has, defaultTo, set } from 'lodash-es'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { FieldArray } from 'formik'
-import type { AllowedTypes, AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import {
   Accordion,
   Button,

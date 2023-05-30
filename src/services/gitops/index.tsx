@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+//@ts-ignore
 import { UseGetProps, useMutate, UseMutateProps, useGet, GetProps, Get } from 'restful-react'
 
 export interface V1Time {

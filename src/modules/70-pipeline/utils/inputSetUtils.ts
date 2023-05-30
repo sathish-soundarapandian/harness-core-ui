@@ -6,7 +6,8 @@
  */
 
 import { cloneDeep, isNull, isUndefined, omitBy, merge } from 'lodash-es'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetGitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { InputSetSummaryResponse } from 'services/pipeline-ng'
 import { changeEmptyValuesToRunTimeInput } from './stageHelpers'

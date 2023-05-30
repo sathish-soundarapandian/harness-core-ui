@@ -6,10 +6,11 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, queryByAttribute, waitFor, RenderResult } from '@testing-library/react'
+import type { RenderResult } from '@testing-library/react'
+import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { StepFormikRef} from '@pipeline/components/AbstractSteps/Step';
+import type { StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 

@@ -5,7 +5,7 @@
  */
 import * as reactQuery from '@tanstack/react-query'
 import type { ErrorWrapper } from './fetcher'
-import { StoContext, useStoContext } from './stoContext'
+import { type StoContext, useStoContext } from './stoContext'
 import { stoFetch } from './stoFetcher'
 import type * as Schemas from './stoSchemas'
 

@@ -8,7 +8,7 @@
 import SessionToken from 'framework/utils/SessionToken'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { mapKeys } from 'lodash-es'
-import qs, { IStringifyOptions } from 'qs'
+import qs, { type IStringifyOptions } from 'qs'
 
 export const getConfig = (str: string): string => {
   if (window.browserRouterEnabled) {

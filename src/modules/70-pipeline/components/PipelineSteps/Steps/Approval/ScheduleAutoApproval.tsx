@@ -7,19 +7,20 @@
 
 import React from 'react'
 import cx from 'classnames'
+import type { SelectOption } from '@harness/uicore'
 import {
   Checkbox,
   FormInput,
   FormikForm,
   MultiTypeInputType,
-  SelectOption,
   getMultiTypeFromValue,
   Icon,
   Container,
   Text
 } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import type { UseStringsReturn } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'

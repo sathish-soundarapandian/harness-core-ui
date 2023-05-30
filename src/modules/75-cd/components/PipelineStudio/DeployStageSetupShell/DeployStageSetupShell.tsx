@@ -16,7 +16,7 @@ import {
   ButtonVariation,
   RUNTIME_INPUT_VALUE,
   AccordionTabs,
-  IconProps
+  type IconProps
 } from '@harness/uicore'
 import cx from 'classnames'
 import type { IconName } from '@blueprintjs/core';

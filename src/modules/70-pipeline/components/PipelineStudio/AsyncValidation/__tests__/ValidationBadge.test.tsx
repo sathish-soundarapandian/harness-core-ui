@@ -12,7 +12,7 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as pipelineServices from 'services/pipeline-ng'
 import mockImport from 'framework/utils/mockImport'
-import { ValidationBadge, ValidationBadgeProps } from '../ValidationBadge'
+import { ValidationBadge, type ValidationBadgeProps } from '../ValidationBadge'
 import * as pipelineContext from '../../PipelineContext/PipelineContext'
 import {
   successValidationResult,

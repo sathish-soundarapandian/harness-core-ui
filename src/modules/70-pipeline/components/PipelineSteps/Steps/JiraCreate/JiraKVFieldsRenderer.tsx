@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
-import { FieldArray, FormikProps } from 'formik'
-import { AllowedTypes, Button, FormInput, MultiTypeInputType } from '@harness/uicore'
+import type { FormikProps } from 'formik'
+import { FieldArray } from 'formik'
+import type { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
+import { Button, FormInput } from '@harness/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import type {
