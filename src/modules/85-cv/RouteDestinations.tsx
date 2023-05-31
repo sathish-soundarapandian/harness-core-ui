@@ -70,6 +70,7 @@ import {
 } from './components/MonitoredServiceWidget/MonitoredServiceWidget.constants'
 import Configurations from './pages/monitored-service/components/Configurations/Configurations'
 import MonitoredServiceWidgetContainer from './components/MonitoredServiceWidget/MonitoredServiceWidget.container'
+import CommonMonitoredServiceDetails from './components/MonitoredServiceWidget/components/CommonMonitoredServiceDetails/CommonMonitoredServiceDetails'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -314,7 +315,7 @@ export default (
       })}
       exact
     >
-      <Configurations config={PROJECT_MONITORED_SERVICE_CONFIG} />
+      <CommonMonitoredServiceDetails config={PROJECT_MONITORED_SERVICE_CONFIG} />
     </RouteWithLayout>
 
     <RouteWithLayout
@@ -339,7 +340,7 @@ export default (
       })}
       exact
     >
-      <Configurations config={CD_MONITORED_SERVICE_CONFIG} />
+      <CommonMonitoredServiceDetails config={CD_MONITORED_SERVICE_CONFIG} />
     </RouteWithLayout>
 
     <Route
