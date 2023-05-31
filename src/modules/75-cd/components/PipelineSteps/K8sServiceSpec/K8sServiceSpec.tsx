@@ -628,6 +628,32 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
       )
     }
 
+    if (
+      isEmpty(get(data, `${dataPathToField}.groupId`)) &&
+      artifactType === ENABLED_ARTIFACT_TYPES.GithubPackageRegistry &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.groupId`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `${dataPathToField}.groupId`,
+        getString?.('fieldRequired', { field: getString?.('pipeline.artifactsSelection.groupId') })
+      )
+    }
+
+    if (
+      isEmpty(get(data, `${dataPathToField}.artifactId`)) &&
+      artifactType === ENABLED_ARTIFACT_TYPES.GithubPackageRegistry &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.artifactId`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `${dataPathToField}.artifactId`,
+        getString?.('fieldRequired', { field: getString?.('pipeline.artifactsSelection.artifactId') })
+      )
+    }
+
     // Azure Artifact specific fields
     if (
       isEmpty(get(data, `${dataPathToField}.project`)) &&

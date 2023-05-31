@@ -22,13 +22,13 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
             class="artifactForm"
           >
             <div
-              class="imagePathContainer"
+              class="imagePathContainer selectInputContainer"
             >
               <div
                 class="formGroup xxlg"
               >
                 <div
-                  class="bp3-form-group bp3-disabled"
+                  class="bp3-form-group"
                   data-id="spec.packageType-0"
                 >
                   <label
@@ -56,17 +56,16 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
                         class="bp3-popover-target"
                       >
                         <div
-                          class="bp3-input-group bp3-disabled"
+                          class="bp3-input-group"
                         >
                           <input
                             autocomplete="off"
                             class="bp3-input"
-                            disabled=""
                             name="spec.packageType"
                             placeholder="- pipeline.packageTypePlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="container"
+                            value="Container"
                           />
                           <span
                             class="bp3-input-action"
@@ -541,13 +540,13 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
             class="artifactForm"
           >
             <div
-              class="imagePathContainer"
+              class="imagePathContainer selectInputContainer"
             >
               <div
                 class="formGroup xxlg"
               >
                 <div
-                  class="bp3-form-group bp3-disabled"
+                  class="bp3-form-group"
                   data-id="spec.packageType-0"
                 >
                   <label
@@ -575,17 +574,16 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
                         class="bp3-popover-target"
                       >
                         <div
-                          class="bp3-input-group bp3-disabled"
+                          class="bp3-input-group"
                         >
                           <input
                             autocomplete="off"
                             class="bp3-input"
-                            disabled=""
                             name="spec.packageType"
                             placeholder="- pipeline.packageTypePlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="npm"
+                            value="Npm"
                           />
                           <span
                             class="bp3-input-action"
@@ -1028,13 +1026,13 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
             class="artifactForm"
           >
             <div
-              class="imagePathContainer"
+              class="imagePathContainer selectInputContainer"
             >
               <div
                 class="formGroup xxlg"
               >
                 <div
-                  class="bp3-form-group bp3-disabled"
+                  class="bp3-form-group"
                   data-id="spec.packageType-0"
                 >
                   <label
@@ -1062,17 +1060,16 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
                         class="bp3-popover-target"
                       >
                         <div
-                          class="bp3-input-group bp3-disabled"
+                          class="bp3-input-group"
                         >
                           <input
                             autocomplete="off"
                             class="bp3-input"
-                            disabled=""
                             name="spec.packageType"
                             placeholder="- pipeline.packageTypePlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="npm"
+                            value="Npm"
                           />
                           <span
                             class="bp3-input-action"
