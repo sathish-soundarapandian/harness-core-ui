@@ -1237,25 +1237,29 @@ export function PipelineProvider({
       return
     }
 
+    const getBranchForSelectedStage = () => {
+      return getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template?.gitBranch
+        ? getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template?.gitBranch
+        : state?.gitDetails?.branch
+    }
+
     const templateRefs = findAllByKey('templateRef', state.pipeline).filter(templateRef =>
       isEmpty(get(state.templateTypes, templateRef))
     )
-    const gitBranch = extractGitBranchUsingTemplateRef(state.pipeline, '')
+    const gitBranches = extractGitBranchUsingTemplateRef(state.pipeline, '')
     getTemplateTypesByRef(
       {
         ...queryParams,
         templateListType: 'Stable',
         repoIdentifier: state.gitDetails.repoIdentifier,
-        branch: getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template?.gitBranch
-          ? getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template?.gitBranch
-          : state?.gitDetails?.branch,
+        branch: getBranchForSelectedStage(),
         getDefaultFromOtherRepo: true
       },
       templateRefs,
       state.storeMetadata,
       supportingTemplatesGitx,
       true,
-      gitBranch
+      gitBranches
     ).then(({ templateTypes, templateServiceData, templateIcons }) => {
       setTemplateTypes(merge(state.templateTypes, templateTypes))
       setTemplateIcons({ ...merge(state.templateIcons, templateIcons) })
