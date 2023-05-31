@@ -6,14 +6,14 @@
  */
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import type { AuditEventData } from 'services/audit'
 import EventSummary from '../EventSummary'
 
-AuditTrailFactory.registerResourceHandler('PIPELINE_EXECUTION', {
+AuditTrailFactory.registerResourceHandler('PIPELINE', {
   moduleIcon: {
     name: 'cd-main'
   },
@@ -90,12 +90,12 @@ describe('Event summary test', () => {
               },
               labels: {
                 userId: '2VA3XtI_Q-eJpCVV4Q1_gw',
-                username: 'nataraja@harness.io'
+                username: 'dummy.user@harness.io'
               }
             },
-            resource: { identifier: 'dummy', type: 'PIPELINE_EXECUTION' },
+            resource: { identifier: 'dummy', type: 'PIPELINE' },
             module: 'PMS',
-            action: 'END',
+            action: 'STAGE_START',
             auditEventData: {
               accountIdentifier: 'dummyAccount',
               orgIdentifier: 'dummyOrg',
@@ -113,6 +113,12 @@ describe('Event summary test', () => {
         />
       </TestWrapper>
     )
+
+    const yamlDiffCard = await screen.findByRole('row', {
+      name: 'S dummy.user@harness.io auditTrail.actions.stageStart auditTrail.resourceLabel.pipelineExecution dummy'
+    })
+    const stageStartActionLabel = within(yamlDiffCard).getByText('auditTrail.actions.stageStart')
+    expect(stageStartActionLabel).toBeDefined()
 
     const supplementaryText = await screen.findByText('auditTrail.supplementaryDetails')
     expect(supplementaryText).toBeDefined()

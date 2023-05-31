@@ -20,6 +20,8 @@ actions:
   end: End
   pause: Pause
   resume: Resume
+  stageStart: Stage Start
+  stageEnd: Stage End
 resourceLabel:
   pipelineExecution: Pipeline Execution
 emptyStateMessageTitle: No records were found to match your search

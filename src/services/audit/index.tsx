@@ -291,6 +291,7 @@ export interface AccessControlCheckError {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -376,6 +377,12 @@ export interface AccessControlCheckError {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -423,6 +430,8 @@ export interface AuditEventDTO {
     | 'ERROR_BUDGET_RESET'
     | 'START'
     | 'END'
+    | 'STAGE_START'
+    | 'STAGE_END'
     | 'PAUSE'
     | 'RESUME'
     | 'ABORT'
@@ -495,6 +504,8 @@ export interface AuditFilterProperties {
     | 'ERROR_BUDGET_RESET'
     | 'START'
     | 'END'
+    | 'STAGE_START'
+    | 'STAGE_END'
     | 'PAUSE'
     | 'RESUME'
     | 'ABORT'
@@ -558,6 +569,12 @@ export interface AuthenticationInfoDTO {
 
 export type ChaosAuditEventData = AuditEventData & {
   eventModule?: string
+}
+
+export interface CoveoResponseDTO {
+  code?: number
+  message?: string
+  token?: string
 }
 
 export interface DelegateMetaInfo {
@@ -865,6 +882,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -950,6 +968,12 @@ export interface Error {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1241,6 +1265,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -1326,6 +1351,12 @@ export interface Failure {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1565,8 +1596,8 @@ export interface ResourceDTO {
     | 'FEATURE_FLAG'
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
-    | 'PIPELINE_EXECUTION'
     | 'IP_ALLOWLIST_CONFIG'
+    | 'NETWORK_MAP'
 }
 
 export interface ResourceFilter {
@@ -1706,6 +1737,13 @@ export interface ResponseAuditSettingsDTO {
 export interface ResponseBoolean {
   correlationId?: string
   data?: boolean
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCoveoResponseDTO {
+  correlationId?: string
+  data?: CoveoResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2003,6 +2041,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -2088,6 +2127,12 @@ export interface ResponseMessage {
     | 'OPA_POLICY_EVALUATION_ERROR'
     | 'USER_MARKED_FAILURE'
     | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4538,44 +4583,44 @@ export const createZendeskTicketPromise = (
     void
   >('POST', getConfig('audit/api'), `/zendesk`, props, signal)
 
-export type GetZendeskTokenProps = Omit<
-  GetProps<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+export type GetCoveoTokenProps = Omit<
+  GetProps<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
   'path'
 >
 
 /**
- * get short live token for zendesk
+ * get short live token for Coveo
  */
-export const GetZendeskToken = (props: GetZendeskTokenProps) => (
-  <Get<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>
+export const GetCoveoToken = (props: GetCoveoTokenProps) => (
+  <Get<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>
     path={`/zendesk/token`}
     base={getConfig('audit/api')}
     {...props}
   />
 )
 
-export type UseGetZendeskTokenProps = Omit<
-  UseGetProps<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+export type UseGetCoveoTokenProps = Omit<
+  UseGetProps<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
   'path'
 >
 
 /**
- * get short live token for zendesk
+ * get short live token for Coveo
  */
-export const useGetZendeskToken = (props: UseGetZendeskTokenProps) =>
-  useGet<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>(`/zendesk/token`, {
+export const useGetCoveoToken = (props: UseGetCoveoTokenProps) =>
+  useGet<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>(`/zendesk/token`, {
     base: getConfig('audit/api'),
     ...props
   })
 
 /**
- * get short live token for zendesk
+ * get short live token for Coveo
  */
-export const getZendeskTokenPromise = (
-  props: GetUsingFetchProps<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
+export const getCoveoTokenPromise = (
+  props: GetUsingFetchProps<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseZendeskResponseDTO, Failure | AccessControlCheckError | Error, void, void>(
+  getUsingFetch<ResponseCoveoResponseDTO, Failure | AccessControlCheckError | Error, void, void>(
     getConfig('audit/api'),
     `/zendesk/token`,
     props,

@@ -3298,6 +3298,8 @@ export interface StringsMap {
   'auditTrail.actions.restored': string
   'auditTrail.actions.resume': string
   'auditTrail.actions.revoke_token': string
+  'auditTrail.actions.stageEnd': string
+  'auditTrail.actions.stageStart': string
   'auditTrail.actions.unsuccessfullLogin': string
   'auditTrail.actions.upserted': string
   'auditTrail.allEvents': string
