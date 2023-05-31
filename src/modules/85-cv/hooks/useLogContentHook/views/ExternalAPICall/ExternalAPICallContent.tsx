@@ -20,37 +20,16 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { ApiCallLogDTO } from 'services/cv'
+import type { ApiCallLogDTO, ApiCallLogDTOField } from 'services/cv'
 import { CopyText } from '@common/components/CopyText/CopyText'
 import noLogsDataImage from '@cv/assets/genericEmptyState.svg'
 import { getTags } from '@cv/utils/CommonUtils'
 import { formatDate, getStatusColor } from '../../useLogContentHook.utils'
 import type { ExecutionAndAPICallLogProps } from '../../useLogContentHook.types'
-import type { KeyValuePairProps } from './ExternalAPICall.types'
+import { RequestPropertyNames } from './ExternalAPICallContent.constants'
+import KeyValuePair from './components/KeyValuePairDisplay'
+import ExternalAPICallBodyContent from './components/ExternalAPICallBodyContent/ExternalAPICallBodyContent'
 import css from './ExternalAPICall.module.scss'
-
-const KeyValuePair: React.FC<KeyValuePairProps> = ({ keyText, value, isLink }) => {
-  const { getString } = useStrings()
-
-  return (
-    <Layout.Horizontal spacing="small">
-      <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_400}>
-        {keyText}:
-      </Text>
-      {isLink ? (
-        <a href={value} target="_blank" rel="noreferrer">
-          <Text lineClamp={1} font={{ variation: FontVariation.BODY }} color={Color.GREY_900}>
-            {value ?? getString('na')}
-          </Text>
-        </a>
-      ) : (
-        <Text lineClamp={1} font={{ variation: FontVariation.BODY }} color={Color.GREY_900}>
-          {value ?? getString('na')}
-        </Text>
-      )}
-    </Layout.Horizontal>
-  )
-}
 
 const ExternalAPICallContent: React.FC<ExecutionAndAPICallLogProps> = ({
   loading,
@@ -86,6 +65,9 @@ const ExternalAPICallContent: React.FC<ExecutionAndAPICallLogProps> = ({
         {content.map((log: ApiCallLogDTO, index) => {
           const { createdAt, requests, requestTime, responses, responseTime, tags } = log
           const request = requests?.find(_request => _request.name === 'url')
+          const requestMethod = requests?.find(_request => _request.name === RequestPropertyNames.method)
+          const requestHeaders = requests?.find(_request => _request.name === RequestPropertyNames.headers)
+          const requestBody = requests?.find(_request => _request.name === RequestPropertyNames.body)
 
           const status = responses?.find(_response => _response.name === 'Status Code') ?? {}
           const responseBody = responses?.find(_response => _response.name === 'Response Body') ?? {}
@@ -129,6 +111,9 @@ const ExternalAPICallContent: React.FC<ExecutionAndAPICallLogProps> = ({
                   <KeyValuePair keyText="URL" value={request?.value} isLink />
                   <KeyValuePair keyText="Request Timestamp" value={formatDate(requestTime)} />
                   <KeyValuePair keyText="Tags" value={getTags(tags)} />
+                  <KeyValuePair keyText={requestMethod?.name ?? ''} value={requestMethod?.value} />
+                  <KeyValuePair keyText={requestHeaders?.name ?? ''} value={requestHeaders?.value} />
+                  <ExternalAPICallBodyContent data={requestBody as ApiCallLogDTOField} noDataText={TEXT_NO_DATA} />
                 </Container>
                 <Container padding={{ top: 'medium', right: 'large', bottom: 'medium', left: 'large' }}>
                   <Heading level={2} font={{ variation: FontVariation.BODY2 }} color={Color.GREY_900}>

@@ -128,6 +128,54 @@ exports[`ExternalAPICallContent should render ExternalAPICallContent 1`] = `
                     {"dataSourceType":"NEW_RELIC"}
                   </p>
                 </div>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey400"
+                  >
+                    Request Method
+                    :
+                  </p>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey900"
+                    style="--text-line-clamp: 1;"
+                  >
+                    POST
+                  </p>
+                </div>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey400"
+                  >
+                    Request Headers
+                    :
+                  </p>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey900"
+                    style="--text-line-clamp: 1;"
+                  >
+                    [X-SF-TOKEN]
+                  </p>
+                </div>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey400"
+                  >
+                    Request Body
+                    :
+                  </p>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey900"
+                    style="--text-line-clamp: 1;"
+                  >
+                    "data(\\"otelcol_exporter_sent_metric_points\\").mean().publish()"
+                  </p>
+                </div>
               </div>
               <div
                 class="StyledProps--font StyledProps--main StyledProps--padding-top-medium StyledProps--padding-right-large StyledProps--padding-bottom-medium StyledProps--padding-left-large"

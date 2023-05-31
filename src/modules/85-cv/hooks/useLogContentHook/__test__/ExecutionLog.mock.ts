@@ -152,6 +152,21 @@ export const externalAPICallLogsResponse: RestResponsePageCVNGLogDTO = {
             name: 'url',
             value: 'https://qva35651.live.dynatrace.com/api/v2/metrics/query?entitySelector=type',
             type: 'URL'
+          },
+          {
+            name: 'Request Method',
+            value: 'POST',
+            type: 'TEXT'
+          },
+          {
+            name: 'Request Headers',
+            value: '[X-SF-TOKEN]',
+            type: 'TEXT'
+          },
+          {
+            name: 'Request Body',
+            value: '"data(\\"otelcol_exporter_sent_metric_points\\").mean().publish()"',
+            type: 'TEXT'
           }
         ],
         responses: [

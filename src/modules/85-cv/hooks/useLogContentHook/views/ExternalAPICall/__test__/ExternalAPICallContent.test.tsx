@@ -38,6 +38,10 @@ describe('ExternalAPICallContent', () => {
 
     userEvent.click(screen.getByText('cv.fetchingDataFrom https://qva35651.live.dynatrace.com/api/v2/metrics/query'))
 
+    expect(screen.getByText('[X-SF-TOKEN]')).toBeInTheDocument()
+    expect(screen.getByText('POST')).toBeInTheDocument()
+    expect(screen.getByText('"data(\\"otelcol_exporter_sent_metric_points\\").mean().publish()"')).toBeInTheDocument()
+
     await waitFor(() => expect(container).toMatchSnapshot())
   })
 })
