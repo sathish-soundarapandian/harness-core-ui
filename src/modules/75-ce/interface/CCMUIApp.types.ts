@@ -13,6 +13,7 @@ import type { GatewayListFiltersProps } from '@ce/components/COGatewayList/Gatew
 import type FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import type { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import type useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
+import type { SideNavProps } from '@common/navigation/SideNav/SideNav'
 export interface CCMUIAppCustomProps {
   customComponents: {
     OverviewAddCluster: React.ComponentType<OverviewAddClusterProps>
@@ -21,6 +22,7 @@ export interface CCMUIAppCustomProps {
     GatewayListFilters: React.ComponentType<GatewayListFiltersProps>
     FeatureWarningBanner: typeof FeatureWarningBanner
     FeatureWarningTooltip: typeof FeatureWarningTooltip
+    SideNav: React.ComponentType<React.PropsWithChildren<SideNavProps>>
   }
   customHooks: {
     useTestConnectionModal: typeof useTestConnectionModal
