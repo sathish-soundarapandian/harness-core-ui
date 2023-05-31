@@ -52,23 +52,24 @@ export interface TemplateServiceDataType {
 }
 
 export const extractGitBranchUsingTemplateRef = (
-  obj?: PipelineInfoConfig,
+  pipeline?: PipelineInfoConfig,
   branch?: string
 ): { [key: string]: string } => {
-  let b = branch as string
+  let tempBranch = branch as string
   let tempRef = ''
-
-  return obj
-    ? Object.entries(obj).reduce((acc: { [key: string]: string }, [key, value]) => {
+  return pipeline
+    ? Object.entries(pipeline).reduce((acc: { [key: string]: string }, [key, value]) => {
         if (key === 'gitBranch') {
-          b = value as string
-          if (!isEmpty(tempRef)) acc[tempRef] = b
+          tempBranch = value as string
+          if (!isEmpty(tempRef)) acc[tempRef] = tempBranch
         } else if (key === 'templateRef') {
           tempRef = value as string
-          if (!isEmpty(b)) acc[tempRef] = b
+          if (!isEmpty(tempBranch)) {
+            acc[tempRef] = tempBranch
+          }
         } else if (typeof value === 'object') {
-          const x = extractGitBranchUsingTemplateRef(value, '')
-          acc = { ...acc, ...x }
+          const keyValue = extractGitBranchUsingTemplateRef(value, '')
+          acc = { ...acc, ...keyValue }
         }
         return acc
       }, {})
@@ -219,10 +220,9 @@ const getPromisesForTemplateGet = (
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
   loadFromCache?: boolean,
-  gitBranch?: any
+  gitBranches?: { [key: string]: string }
 ): Promise<ResponseTemplateResponse>[] => {
   const promises: Promise<ResponseTemplateResponse>[] = []
-  console.log(gitBranch)
   templateRefs.forEach(templateRef => {
     const templateIdentifier = getIdentifierFromValue(templateRef)
     const scope = getScopeFromValue(templateRef)
@@ -241,7 +241,7 @@ const getPromisesForTemplateGet = (
               projectIdentifier: defaultTo(params.projectIdentifier, '')
             },
             repoIdentifier: params.repoIdentifier,
-            branch: gitBranch[templateRef] ?? params.branch
+            branch: gitBranches?.[templateRef] ?? params.branch
           })
         },
         requestOptions: {
@@ -289,14 +289,14 @@ export const getTemplateTypesByRef = (
   storeMetadata?: StoreMetadata,
   supportingTemplatesGitx?: boolean,
   loadFromCache?: boolean,
-  gitBranch?: any
+  gitBranches?: { [key: string]: string }
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
   templateIcons: TemplateIcons
 }> => {
   return supportingTemplatesGitx
-    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata, loadFromCache, gitBranch)
+    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata, loadFromCache, gitBranches)
     : getTemplateTypesByRefV1(params as GetTemplateListQueryParams, templateRefs)
 }
 
@@ -351,7 +351,7 @@ export const getTemplateTypesByRefV2 = (
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
   loadFromCache?: boolean,
-  gitBranch?: any
+  gitBranches?: { [key: string]: string }
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
@@ -362,7 +362,7 @@ export const getTemplateTypesByRefV2 = (
     templateRefs,
     storeMetadata,
     loadFromCache,
-    gitBranch
+    gitBranches
   )
   return Promise.all(promises)
     .then(responses => {

@@ -146,8 +146,15 @@ export function TemplatePipelineProvider({
         storeMetadata
       })
     )
+
+    const getBranchForSelectedStage = () => {
+      return getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template?.gitBranch
+        ? getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template?.gitBranch
+        : state?.gitDetails?.branch
+    }
+
     const templateRefs = findAllByKey('templateRef', initialValue)
-    const gitBranch = extractGitBranchUsingTemplateRef(initialValue, '')
+    const gitBranches = extractGitBranchUsingTemplateRef(initialValue, '')
     if (templateRefs.length > 0) {
       const { templateTypes, templateServiceData, templateIcons } = await getTemplateTypesByRef(
         {
@@ -156,17 +163,14 @@ export function TemplatePipelineProvider({
           projectIdentifier: queryParams.projectIdentifier,
           templateListType: 'Stable',
           repoIdentifier: gitDetails?.repoIdentifier,
-          branch: getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template
-            ?.gitBranch
-            ? getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template?.gitBranch
-            : state?.gitDetails?.branch,
+          branch: getBranchForSelectedStage(),
           getDefaultFromOtherRepo: true
         },
         templateRefs,
         storeMetadata,
         supportingTemplatesGitx,
         true,
-        gitBranch
+        gitBranches
       )
       dispatch(
         PipelineContextActions.setTemplateTypes({
