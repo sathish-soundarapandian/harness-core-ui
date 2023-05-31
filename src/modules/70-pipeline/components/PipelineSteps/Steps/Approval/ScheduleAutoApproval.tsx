@@ -20,7 +20,6 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeDateTimePickerField } from '@common/components/MultiTypeDateTimePicker/MultiTypeDateTimePicker'
@@ -44,8 +43,7 @@ const showAutoApproveScheduleTimeoutWarning = (getString: UseStringsReturn['getS
 
 export default function ScheduleAutoApproval({
   formik,
-  readonly,
-  allowableTypes
+  readonly
 }: Partial<HarnessApprovalFormContentProps>): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -92,7 +90,7 @@ export default function ScheduleAutoApproval({
           defaultValueToReset={Date.now().toString()}
           multiTypeDateTimePicker={{
             expressions,
-            allowableTypes,
+            allowableTypes: [MultiTypeInputType.FIXED],
             placeholder: getString('pipeline.approvalStep.autoApproveDeadline'),
             dateInputProps: {
               dateProps: {
@@ -101,21 +99,6 @@ export default function ScheduleAutoApproval({
             }
           }}
         />
-        {getMultiTypeFromValue(autoApprovalSpec?.scheduledDeadline?.time) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={autoApprovalSpec?.scheduledDeadline?.time as string}
-            type="String"
-            variableName="spec.autoApproval.scheduledDeadline.time"
-            showRequiredField={false}
-            showDefaultField={false}
-            className={css.scheduledDeadlineConfigBtn}
-            onChange={
-              /* istanbul ignore next */ value =>
-                formik?.setFieldValue('spec.autoApproval.scheduledDeadline.time', value)
-            }
-            isReadonly={readonly}
-          />
-        )}
       </div>
       {getMultiTypeFromValue(formik?.values.timeout) === MultiTypeInputType.RUNTIME &&
         showAutoApproveScheduleTimeoutWarning(getString)}
@@ -124,21 +107,10 @@ export default function ScheduleAutoApproval({
           name="spec.autoApproval.comments"
           label={getString('message')}
           className={css.approvalMessage}
-          multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes }}
+          multiTypeTextArea={{ enableConfigureOptions: false, expressions, allowableTypes: [MultiTypeInputType.FIXED] }}
           placeholder="Please add relevant information for this step"
           disabled={isApprovalStepFieldDisabled(readonly) || !isApproveActionChecked}
         />
-        {getMultiTypeFromValue(autoApprovalSpec?.comments) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={autoApprovalSpec?.comments as string}
-            type="String"
-            variableName="spec.autoApproval.comments"
-            showRequiredField={false}
-            showDefaultField={false}
-            onChange={/* istanbul ignore next */ value => formik?.setFieldValue('spec.autoApproval.comments', value)}
-            isReadonly={readonly}
-          />
-        )}
       </div>
     </FormikForm>
   )

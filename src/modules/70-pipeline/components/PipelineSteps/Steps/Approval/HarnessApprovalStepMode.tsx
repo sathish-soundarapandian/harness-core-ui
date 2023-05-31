@@ -24,10 +24,12 @@ import {
   AllowedTypes,
   useToaster,
   Layout,
-  Text
+  Text,
+  parseStringToTime
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
+import moment from 'moment'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, useStrings } from 'framework/strings'
 import {
@@ -47,6 +49,9 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getBatchUserGroupListPromise } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type {
   ApproverInputsSubmitCallInterface,
@@ -56,7 +61,7 @@ import type {
 } from './types'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import ScheduleAutoApproval from './ScheduleAutoApproval'
-import { ApproveAction, scheduleAutoApprovalValidationSchema } from './helper'
+import { ApproveAction } from './helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './HarnessApproval.module.scss'
 
@@ -74,6 +79,7 @@ function FormContent({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const formikUserGroups = formik.values.spec?.approvers?.userGroups
   const [scopeCountMap, setScopeCountMap] = useState<Map<Scope, string[]>>(new Map<Scope, string[]>())
+  const showAutoApporval = useFeatureFlag(FeatureFlag.CDS_AUTO_APPROVAL)
 
   const userGroupMap = React.useMemo(() => {
     const _userGroupMap = new Map<Scope, string[]>()
@@ -259,27 +265,29 @@ function FormContent({
       <div className={stepCss.noLookDivider} />
 
       <Accordion className={cx(stepCss.accordion, css.accordionStyle)}>
-        <Accordion.Panel
-          id="schedule-autoApproval"
-          summary={
-            <Layout.Horizontal
-              spacing="xsmall"
-              data-tooltip-id="scheduleAutoApproval"
-              margin={{ right: 'small' }}
-              flex={{ alignItems: 'flex-end' }}
-            >
-              <Text font={{ variation: FontVariation.H6 }}>
-                {getString('pipeline.approvalStep.scheduleAutoApprovalOptional')}
-              </Text>
-              <HarnessDocTooltip tooltipId="scheduleAutoApproval" useStandAlone={true} />
-            </Layout.Horizontal>
-          }
-          details={
-            <FormikForm>
-              <ScheduleAutoApproval allowableTypes={allowableTypes} formik={formik} readonly={readonly} />
-            </FormikForm>
-          }
-        />
+        {showAutoApporval ? (
+          <Accordion.Panel
+            id="schedule-autoApproval"
+            summary={
+              <Layout.Horizontal
+                spacing="xsmall"
+                data-tooltip-id="scheduleAutoApproval"
+                margin={{ right: 'small' }}
+                flex={{ alignItems: 'flex-end' }}
+              >
+                <Text font={{ variation: FontVariation.H6 }}>
+                  {getString('pipeline.approvalStep.scheduleAutoApprovalOptional')}
+                </Text>
+                <HarnessDocTooltip tooltipId="scheduleAutoApproval" useStandAlone={true} />
+              </Layout.Horizontal>
+            }
+            details={
+              <FormikForm>
+                <ScheduleAutoApproval allowableTypes={allowableTypes} formik={formik} readonly={readonly} />
+              </FormikForm>
+            }
+          />
+        ) : null}
         <Accordion.Panel
           id="approver-inputs"
           summary={
@@ -444,7 +452,19 @@ function HarnessApprovalStepMode(
             scheduledDeadline: Yup.object().when('action', {
               is: val => val === ApproveAction.Approve,
               then: Yup.object({
-                time: scheduleAutoApprovalValidationSchema(getString)
+                time: Yup.string()
+                  .required(getString('common.validation.fieldIsRequired', { name: 'Time' }))
+                  .test({
+                    test(val: string): boolean | Yup.ValidationError {
+                      const minApprovalTime: number = Date.now() + parseStringToTime('15m')
+                      const formValue = moment(val, DATE_PARSE_FORMAT).valueOf()
+                      if (formValue < minApprovalTime)
+                        return this.createError({
+                          message: getString('pipeline.approvalStep.validation.autoApproveScheduleCurrentTime')
+                        })
+                      return true
+                    }
+                  })
               })
             })
           })

@@ -18,7 +18,6 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
 import { ALLOWED_VALUES_TYPE } from '@common/components/ConfigureOptions/constants'
-import { FormMultiTypeDateTimePickerField } from '@common/components/MultiTypeDateTimePicker/MultiTypeDateTimePicker'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { HarnessApprovalDeploymentModeProps } from './types'
 import css from './HarnessApproval.module.scss'
@@ -119,44 +118,6 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
           className={css.deploymentViewMedium}
           fieldPath="spec.approvers.minimumCount"
           template={template}
-        />
-      ) : null}
-
-      {getMultiTypeFromValue(template?.spec?.autoApproval?.scheduledDeadline?.time) === MultiTypeInputType.RUNTIME ? (
-        <FormMultiTypeDateTimePickerField
-          label={getString('timeLabel')}
-          name={`${prefix}spec.autoApproval.scheduledDeadline.time`}
-          placeholder={getString('pipeline.approvalStep.autoApproveDeadline')}
-          disabled={isApprovalStepFieldDisabled(readonly)}
-          defaultToCurrentTime
-          multiTypeDateTimePicker={{
-            expressions,
-            allowableTypes,
-            placeholder: getString('pipeline.approvalStep.autoApproveDeadline'),
-            dateInputProps: {
-              dateProps: {
-                defaultValue: undefined
-              }
-            }
-          }}
-          className={css.deploymentViewMedium}
-          defaultValueToReset={Date.now().toString()}
-        />
-      ) : null}
-
-      {getMultiTypeFromValue(template?.spec?.autoApproval?.comments) === MultiTypeInputType.RUNTIME ? (
-        <FormMultiTypeTextAreaField
-          className={cx(css.approvalMessage, css.deploymentViewMedium)}
-          label={getString('message')}
-          name={`${prefix}spec.autoApproval.comments`}
-          disabled={isApprovalStepFieldDisabled(readonly)}
-          multiTypeTextArea={{
-            configureOptionsProps: {
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            },
-            expressions,
-            allowableTypes
-          }}
         />
       ) : null}
     </React.Fragment>

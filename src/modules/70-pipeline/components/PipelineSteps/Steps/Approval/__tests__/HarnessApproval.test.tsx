@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 
 import { findPopoverContainer } from '@common/utils/testUtils'
 import { TestStepWidget, factory } from '../../__tests__/StepTestUtil'
@@ -26,8 +27,7 @@ import {
   getYaml,
   getParams,
   userGroupsAggregate,
-  batchUserGroupListMock,
-  getScheduleAutoapprovalRuntimeProps
+  batchUserGroupListMock
 } from './HarnessApprovalTestHelper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -86,6 +86,7 @@ describe('Harness Approval tests', () => {
   })
   beforeEach(() => {
     factory.registerStep(new HarnessApproval())
+    jest.spyOn(FeatureFlag, 'useFeatureFlag').mockReturnValue(true)
   })
 
   test('Basic snapshot - inputset mode', async () => {
@@ -518,63 +519,6 @@ describe('Harness Approval tests', () => {
     })
   })
 
-  test('Test submitting schedule approval - with Runtime values', async () => {
-    const ref = React.createRef<StepFormikRef<unknown>>()
-    const props = getHarnessApprovalEditModePropsWithValues()
-    const { container, getByText, getAllByText } = render(
-      <TestStepWidget
-        initialValues={props.initialValues}
-        type={StepType.HarnessApproval}
-        stepViewType={StepViewType.Edit}
-        ref={ref}
-        onUpdate={props.onUpdate}
-      />
-    )
-
-    scheduleAutoApproveActions(container, getByText)
-
-    // make time and message fields as runtime
-    userEvent.click(
-      container.querySelector(
-        '[data-id="spec.autoApproval.scheduledDeadline.time-1"] [data-icon="fixed-input"]'
-      ) as HTMLElement
-    )
-    const timeFieldRuntime = findPopoverContainer()
-    expect(timeFieldRuntime).toBeTruthy()
-    userEvent.click(getAllByText('Runtime input')[0])
-
-    userEvent.click(
-      container.querySelector('[data-id="spec.autoApproval.comments-2"] [data-icon="fixed-input"]') as HTMLElement
-    )
-    const messageField = findPopoverContainer()
-    expect(messageField).toBeTruthy()
-    userEvent.click(getAllByText('Runtime input')[1])
-
-    await act(() => ref.current?.submitForm()!)
-    expect(props.onUpdate).toBeCalledWith({
-      identifier: 'hhaass',
-      name: 'harness approval step',
-      spec: {
-        approvalMessage: 'Approving pipeline <+pname>',
-        approverInputs: [{ defaultValue: 'somevalue', name: 'somekey' }],
-        approvers: {
-          disallowPipelineExecutor: true,
-          minimumCount: 1,
-          userGroups: ['ug1', 'org.ug2', 'org.ug3', 'ug4', 'account.ug5', 'account.ug6']
-        },
-        autoApproval: {
-          action: 'APPROVE',
-          comments: '<+input>',
-          scheduledDeadline: { time: '<+input>', timeZone: 'UTC' }
-        },
-        includePipelineExecutionHistory: true,
-        isAutoRejectEnabled: false
-      },
-      timeout: '10m',
-      type: 'HarnessApproval'
-    })
-  })
-
   test('Test submitting schedule approval - by unchecking autoApproveCheckbox', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
     const props = getHarnessApprovalEditModePropsWithValues()
@@ -613,22 +557,5 @@ describe('Harness Approval tests', () => {
       timeout: '10m',
       type: 'HarnessApproval'
     })
-  })
-
-  test('Schedule auto approval - runtime mode', async () => {
-    const props = getScheduleAutoapprovalRuntimeProps()
-    const { getByText, queryByText } = render(
-      <TestStepWidget
-        template={props.inputSetData.template}
-        initialValues={props.initialValues}
-        type={StepType.HarnessApproval}
-        stepViewType={StepViewType.InputSet}
-        inputSetData={props.inputSetData}
-      />
-    )
-
-    fireEvent.click(getByText('Submit'))
-    await waitFor(() => queryByText('Errors'))
-    expect(getByText('common.validation.fieldIsRequired')).toBeInTheDocument()
   })
 })
