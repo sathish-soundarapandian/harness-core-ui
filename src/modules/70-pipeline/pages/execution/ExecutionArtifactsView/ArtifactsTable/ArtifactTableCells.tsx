@@ -7,21 +7,11 @@
  */
 
 import { Color, FontVariation } from '@harness/design-system'
-import { Button, ButtonVariation, Icon, Layout, Text } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Icon, Layout, Text } from '@harness/uicore'
 import React from 'react'
-import type {
-  Cell,
-  CellValue,
-  ColumnInstance,
-  Renderer,
-  Row,
-  TableInstance,
-  UseExpandedRowProps,
-  UseTableCellProps
-} from 'react-table'
+import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseTableCellProps } from 'react-table'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { killEvent } from '@common/utils/eventUtils'
 import type { Artifact, ArtifactsColumnActions } from './ArtifactsTable'
 import css from './ArtifactsTable.module.scss'
 
@@ -36,25 +26,6 @@ type CellType = Renderer<CellTypeWithActions<Artifact>>
 
 export interface CellTypeRegister {
   component: React.ComponentType<UseTableCellProps<Artifact>>
-}
-
-export const ToggleAccordionCell: Renderer<{
-  row: UseExpandedRowProps<Artifact> & CellTypeWithActions<Artifact>['row']
-}> = ({ row }) => {
-  const data = row.original
-
-  return data.imageName ? (
-    <Layout.Horizontal onClick={killEvent}>
-      <Button
-        {...row.getToggleRowExpandedProps()}
-        color={Color.GREY_700}
-        icon={row.isExpanded ? 'chevron-down' : 'chevron-right'}
-        variation={ButtonVariation.ICON}
-        iconProps={{ size: 19 }}
-        className={css.toggleAccordion}
-      />
-    </Layout.Horizontal>
-  ) : null
 }
 
 export const ArtifactCell: CellType = ({ row }) => {
@@ -94,14 +65,21 @@ export const PipelineStepCell: CellType = ({ row }) => {
   )
 }
 
-export const ViolationsCell: CellType = ({ row }) => {
+export const ViolationsCell: CellType = ({ row, column }) => {
   const { getString } = useStrings()
   const data = row.original
 
   const totalViolations = defaultTo(data?.allowListViolationCount, 0) + defaultTo(data?.denyListViolationCount, 0)
-  return (
+  return data?.type === 'Sbom' && totalViolations > 0 ? (
+    <Button
+      variation={ButtonVariation.LINK}
+      text={totalViolations}
+      size={ButtonSize.SMALL}
+      onClick={() => column.showEnforcementViolations(data.stepExecutionId)}
+    />
+  ) : (
     <Text font={{ variation: FontVariation.SMALL }} lineClamp={2}>
-      {data?.type === 'Sbom' ? totalViolations : getString('na')}
+      {data?.type === 'Sbom' ? 0 : getString('na')}
     </Text>
   )
 }

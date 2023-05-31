@@ -1886,6 +1886,11 @@
     "@types/qs" "^6.9.7"
     qs "^6.9.4"
 
+"@harnessio/react-ssca-service-client@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-ssca-service-client/-/react-ssca-service-client-0.1.0.tgz#354b4f859f24454e6f6e57a59ad8c81bbb76e079"
+  integrity sha512-IvQ/nGTXPDKrr10qc0UTPjcwCDOCpfeKB6I5wO6iyLWfkmsQTRPMiQSFlr1xaslXREBi12u+pXo0oBlRpJ+1Rg==
+
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.9.5.tgz#2cbaf9a89460da24b5ca6531b8bbfc23e1df50c7"

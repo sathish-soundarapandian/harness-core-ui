@@ -3802,6 +3802,7 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.selectAManifest': string
   'pipeline.artifactTriggerConfigPanel.selectAnArtifact': string
   'pipeline.artifactTriggerConfigPanel.tagArtifactPathBuild': string
+  'pipeline.artifactViolationDetails': string
   'pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepository': string
   'pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder': string
   'pipeline.artifacts.googleCloudSourceRepositories.commitId': string
@@ -5093,6 +5094,7 @@ export interface StringsMap {
   'pipeline.stepDetails': string
   'pipeline.stepLabel': string
   'pipeline.stepNamePlaceholder': string
+  'pipeline.supplier': string
   'pipeline.syncStep.applyOnly': string
   'pipeline.syncStep.applyOutOfSyncOnly': string
   'pipeline.syncStep.autoCreateNamespace': string
@@ -5323,6 +5325,7 @@ export interface StringsMap {
   'pipeline.viewFreeze': string
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
+  'pipeline.violationDetails': string
   'pipeline.vmLabel': string
   'pipeline.waitStep.validation.duration10SecMinimum': string
   'pipeline.warningForInvalidYAMLDiscard': string
