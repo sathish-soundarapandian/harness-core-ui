@@ -93,14 +93,9 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const isTemplateNode = props?.data?.isTemplateNode
   return (
     <div
-      className={cx(
-        defaultCss.defaultNode,
-        'default-node',
-        {
-          draggable: !props.readonly
-        },
-        { [defaultCss.disabled]: whenCondition === 'false' }
-      )}
+      className={cx(defaultCss.defaultNode, 'default-node', {
+        draggable: !props.readonly
+      })}
       onMouseOver={() => setAddVisibility(true)}
       onMouseLeave={debounceHideVisibility}
       onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -166,11 +161,12 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         <div
           draggable={!props.readonly}
           className={cx(defaultCss.defaultCard, {
-            [defaultCss.selected]: isSelectedNode(),
+            [defaultCss.selected]: isSelectedNode() && whenCondition !== 'false',
             [defaultCss.failed]: stageStatus === ExecutionStatusEnum.Failed,
             [defaultCss.runningNode]: stageStatus === ExecutionStatusEnum.Running,
             [defaultCss.skipped]: stageStatus === ExecutionStatusEnum.Skipped,
-            [defaultCss.notStarted]: stageStatus === ExecutionStatusEnum.NotStarted
+            [defaultCss.notStarted]: stageStatus === ExecutionStatusEnum.NotStarted,
+            [defaultCss.disabled]: whenCondition === 'false'
           })}
           style={{
             width: 90,
@@ -235,6 +231,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
                 size={28}
                 name={props.icon as IconName}
                 {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
+                {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
               />
             )
           )}
@@ -243,12 +240,20 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               name={secondaryIcon}
               style={secondaryIconStyle}
               size={13}
-              className={defaultCss.secondaryIcon}
               {...secondaryIconProps}
+              {...(whenCondition === 'false'
+                ? { className: defaultCss.disbaledIcon }
+                : { className: defaultCss.secondaryIcon })}
             />
           )}
           {props?.data?.tertiaryIcon && (
-            <Icon name={props?.data?.tertiaryIcon} size={13} className={defaultCss.tertiaryIcon} />
+            <Icon
+              name={props?.data?.tertiaryIcon}
+              size={13}
+              {...(whenCondition === 'false'
+                ? { className: defaultCss.disbaledIcon }
+                : { className: defaultCss.tertiaryIcon })}
+            />
           )}
           {isTemplateNode && (
             <Icon
@@ -344,7 +349,11 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               isDark: true
             }}
           >
-            <Icon size={26} name={'conditional-skip-new'} />
+            <Icon
+              size={26}
+              name={'conditional-skip-new'}
+              {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+            />
           </Text>
         </div>
       )}
@@ -361,6 +370,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               name={'looping'}
               background={Color.PURPLE_300}
               {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
+              {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
             />
           </Text>
         </div>

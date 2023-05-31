@@ -66,6 +66,22 @@ exports[`<StageTemplateCanvas /> tests should match snapshot in empty state 1`] 
                           />
                         </svg>
                       </span>
+                      <div
+                        class="switch"
+                      >
+                        <label
+                          class="bp3-control bp3-switch"
+                        >
+                          <input
+                            aria-label="Global Freeze Toggle"
+                            checked=""
+                            type="checkbox"
+                          />
+                          <span
+                            class="bp3-control-indicator"
+                          />
+                        </label>
+                      </div>
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main closeNode readonly Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-primary"
                         type="button"

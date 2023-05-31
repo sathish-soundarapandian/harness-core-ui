@@ -18,6 +18,7 @@ declare const styles: {
   readonly diamondStageRight: string
   readonly diamondStep: string
   readonly disabled: string
+  readonly disbaledIcon: string
   readonly draggable: string
   readonly fadeIn: string
   readonly failed: string

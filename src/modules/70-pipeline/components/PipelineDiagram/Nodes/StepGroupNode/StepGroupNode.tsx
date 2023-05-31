@@ -229,7 +229,8 @@ export function StepGroupNode(props: any): JSX.Element {
               [css.stepGroupNormal]: !isNestedStepGroup,
               parentMatrix: isParentMatrix,
               [css.templateStepGroup]: !!props?.data?.isTemplateNode,
-              [css.rollbackGroup]: StageType.PIPELINE_ROLLBACK === props?.type
+              [css.rollbackGroup]: StageType.PIPELINE_ROLLBACK === props?.type,
+              [defaultCss.disabled]: whenCondition === 'false'
             })}
           >
             <div
@@ -272,7 +273,11 @@ export function StepGroupNode(props: any): JSX.Element {
                     isDark: true
                   }}
                 >
-                  <Icon size={26} name={'conditional-skip-new'} />
+                  <Icon
+                    size={26}
+                    name={'conditional-skip-new'}
+                    {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+                  />
                 </Text>
               </div>
             )}
@@ -322,7 +327,11 @@ export function StepGroupNode(props: any): JSX.Element {
                     isDark: true
                   }}
                 >
-                  <Icon size={26} name={'conditional-skip-new'} />
+                  <Icon
+                    size={26}
+                    name={'conditional-skip-new'}
+                    {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+                  />
                 </Text>
               </div>
             )}
