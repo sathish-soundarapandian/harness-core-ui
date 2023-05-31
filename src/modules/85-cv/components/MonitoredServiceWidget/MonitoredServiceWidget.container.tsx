@@ -1,6 +1,6 @@
 import React from 'react'
 import type { MonitoredServiceConfig } from './MonitoredServiceWidget.interface'
-import MonitoredServiceListWidget from './components/MonitoredServiceListWidget/MonitoredServiceListWidget'
+import MonitoredServiceListWidget from './MonitoredServiceListWidget'
 
 export interface MonitoredServiceWidgetContainerProps {
   config: MonitoredServiceConfig

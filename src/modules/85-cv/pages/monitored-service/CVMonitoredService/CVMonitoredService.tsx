@@ -38,12 +38,18 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getCVMonitoringServicesSearchParam, getErrorMessage, getEnvironmentOptions } from '@cv/utils/CommonUtils'
 import ServiceDependencyGraph from '@cv/pages/monitored-service/CVMonitoredService/components/MonitoredServiceGraphView/MonitoredServiceGraphView'
+import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceWidget/MonitoredServiceWidget.interface'
 import { getEnvironmentIdentifier } from './CVMonitoredService.utils'
 import { FilterTypes } from './CVMonitoredService.types'
 import MonitoredServiceList from './components/MonitoredServiceListView/MonitoredServiceList'
 import css from './CVMonitoredService.module.scss'
 
-const MonitoredService: React.FC = () => {
+interface MonitoredServiceProps {
+  config?: MonitoredServiceConfig
+}
+
+const MonitoredService = (props: MonitoredServiceProps) => {
+  const { config } = props
   const { getString } = useStrings()
 
   useDocumentTitle([getString('cv.srmTitle'), getString('cv.monitoredServices.title')])
@@ -134,7 +140,7 @@ const MonitoredService: React.FC = () => {
     })
   }
 
-  const createButton = (hasMonitoredServices: boolean) => {
+  const createButton = (hasMonitoredServices: boolean): JSX.Element => {
     {
       const LayoutOrientation = hasMonitoredServices ? Layout.Horizontal : Layout.Vertical
       return (
@@ -219,14 +225,17 @@ const MonitoredService: React.FC = () => {
               }}
               className={css.filterSelect}
             />
-            <GridListToggle
-              initialSelectedView={selectedView}
-              onViewToggle={setSelectedView}
-              icons={{ left: 'graph' }}
-            />
+            {!config ? (
+              <GridListToggle
+                initialSelectedView={selectedView}
+                onViewToggle={setSelectedView}
+                icons={{ left: 'graph' }}
+              />
+            ) : null}
           </Layout.Horizontal>
         }
       />
+
       {selectedView === Views.LIST ? (
         <MonitoredServiceList
           page={page}
@@ -240,6 +249,7 @@ const MonitoredService: React.FC = () => {
           serviceCountLoading={serviceCountLoading}
           serviceCountErrorMessage={getErrorMessage(serviceCountError)}
           refetchServiceCountData={refetchServiceCountData}
+          config={config}
         />
       ) : (
         <ServiceDependencyGraph

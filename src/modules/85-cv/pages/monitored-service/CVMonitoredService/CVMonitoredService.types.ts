@@ -15,6 +15,7 @@ import type {
 
 import type { PermissionsRequest } from '@rbac/hooks/usePermission'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceWidget/MonitoredServiceWidget.interface'
 
 interface ContextMenuRbacPermissions {
   edit: Omit<PermissionsRequest, 'permissions'> & { permission: PermissionIdentifier }
@@ -61,6 +62,7 @@ export interface MonitoredServiceListProps {
   serviceCountErrorMessage?: string
   refetchServiceCountData: (query?: ServiceCountQueryParamType) => Promise<void>
   search?: string
+  config?: MonitoredServiceConfig
 }
 
 export interface MonitoredServiceListViewProps {
