@@ -157,13 +157,19 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
         return AdvancedPanels.DelegateSelectors
       }
 
-      if (!hiddenPanels.includes(AdvancedPanels.ConditionalExecution)) {
-        return AdvancedPanels.ConditionalExecution
-      }
+      /**
+       * Keeping all the accordians closed except delegate selector by default to tackle the
+       * situation where the Monaco Editor requires an extra mount
+       * https://harness.atlassian.net/browse/CDS-70764
+       */
 
-      if (!hiddenPanels.includes(AdvancedPanels.FailureStrategy)) {
-        return AdvancedPanels.FailureStrategy
-      }
+      // if (!hiddenPanels.includes(AdvancedPanels.ConditionalExecution)) {
+      //   return AdvancedPanels.ConditionalExecution
+      // }
+
+      // if (!hiddenPanels.includes(AdvancedPanels.FailureStrategy)) {
+      //   return AdvancedPanels.FailureStrategy
+      // }
 
       return ''
     },
