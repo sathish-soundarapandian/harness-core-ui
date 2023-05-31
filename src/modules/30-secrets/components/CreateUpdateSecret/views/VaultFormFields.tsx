@@ -205,23 +205,24 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
                   variation={ButtonVariation.SECONDARY}
                 ></Button>
               </Layout.Horizontal>
-              {validPath ? (
-                <Text
-                  font={{ variation: FontVariation.FORM_LABEL }}
-                  icon={'command-artifact-check'}
-                  iconProps={{ intent: 'success', color: Color.GREEN_800, size: 12 }}
-                >
-                  {getString('secrets.secret.validReferencePath')}
-                </Text>
-              ) : (
-                <Text
-                  font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}
-                  icon={'circle-cross'}
-                  iconProps={{ intent: 'danger', size: 12 }}
-                >
-                  {getString('secrets.secret.invalidReferencePath')}
-                </Text>
-              )}
+              {validPath !== undefined &&
+                (validPath ? (
+                  <Text
+                    font={{ variation: FontVariation.FORM_LABEL }}
+                    icon={'command-artifact-check'}
+                    iconProps={{ intent: 'success', color: Color.GREEN_800, size: 12 }}
+                  >
+                    {getString('secrets.secret.validReferencePath')}
+                  </Text>
+                ) : (
+                  <Text
+                    font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}
+                    icon={'circle-cross'}
+                    iconProps={{ intent: 'danger', size: 12 }}
+                  >
+                    {getString('secrets.secret.invalidReferencePath')}
+                  </Text>
+                ))}
             </Layout.Vertical>
           ) : null}
         </>
