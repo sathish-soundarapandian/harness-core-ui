@@ -188,7 +188,8 @@ const SscaEnforcementStepEdit = (
               </Text>
 
               <MultiTypeSecretInput
-                name="spec.verifyAttestation.publicKey"
+                type="SecretFile"
+                name="spec.verifyAttestation.spec.publicKey"
                 label={getString('ssca.publicKey')}
                 expressions={expressions}
                 disabled={readonly}
@@ -208,7 +209,7 @@ const SscaEnforcementStepEdit = (
                 onChange={newValue => {
                   formik?.setFieldValue('spec.policy.store.spec.file', newValue)
                 }}
-                fileUsage={FileUsage.CONFIG}
+                fileUsage={FileUsage.MANIFEST_FILE}
               />
 
               <Accordion>

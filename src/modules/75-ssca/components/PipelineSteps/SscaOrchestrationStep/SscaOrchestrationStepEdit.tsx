@@ -231,6 +231,7 @@ const SscaOrchestrationStepEdit = (
               </Text>
 
               <MultiTypeSecretInput
+                type="SecretFile"
                 name="spec.attestation.spec.privateKey"
                 label={getString('connectors.serviceNow.privateKey')}
                 expressions={expressions}
