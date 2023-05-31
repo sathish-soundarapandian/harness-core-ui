@@ -6,7 +6,7 @@
  */
 
 import { Drawer, Position } from '@blueprintjs/core'
-import { Button, ExpandingSearchInput, Heading, PageError, Text } from '@harness/uicore'
+import { ExpandingSearchInput, Heading, PageError, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import React, { ReactElement } from 'react'
 import { PageSpinner } from '@common/components'
@@ -46,6 +46,7 @@ export function PolicyViolationsDrawer({
 
   return (
     <Drawer
+      isCloseButtonShown
       onClose={() => showEnforcementViolations()}
       usePortal={true}
       autoFocus={true}
@@ -57,13 +58,6 @@ export function PolicyViolationsDrawer({
       isOpen
       position={Position.RIGHT}
     >
-      <Button
-        className={css.drawerCloseButton}
-        minimal
-        icon="cross"
-        withoutBoxShadow
-        onClick={() => showEnforcementViolations()}
-      />
       {loading ? (
         <PageSpinner />
       ) : data ? (

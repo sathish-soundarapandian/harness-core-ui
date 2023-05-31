@@ -9,9 +9,9 @@ import { TableV2 } from '@harness/uicore'
 import React from 'react'
 import type { Column } from 'react-table'
 import type { EnforcementResult, GetEnforcementResultsByIDResponseBody } from 'services/ssca'
+import { useStrings } from 'framework/strings'
 import { PackageSupplierCell, PackageNameCell, VersionCell, ViolationsDetailsCell } from './PolicyViolationsTableCells'
 import css from './PolicyViolations.module.scss'
-import { useStrings } from 'framework/strings'
 
 export interface PolicyViolationsTableProps {
   data: GetEnforcementResultsByIDResponseBody
