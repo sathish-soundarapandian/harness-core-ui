@@ -20,7 +20,10 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { openFileATicket } from '@common/components/ResourceCenter/utils'
 import routes from '@common/RouteDefinitions'
 import { usePage } from '@common/pages/pageContext/PageProvider'
-import { getSubscriptionByPaymentFrequency } from '@auth-settings/components/Subscription/subscriptionUtils'
+import {
+  getSubscriptionByPaymentFrequency,
+  getSubscriptionByPaymentFrequencyPerItem
+} from '@auth-settings/components/Subscription/subscriptionUtils'
 import SubscriptionTable from './SubscriptionTable'
 import NoBills from './images/noBills.svg'
 import BillingAdminsCard from './BillingAdminsCard'
@@ -63,7 +66,7 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
   const { trackPage, identifyUser } = useTelemetry()
   const history = useHistory()
   const [subscriptions, setsubscriptions] = useState<{ [key: string]: SubscriptionDetailDTO[] }>({})
-
+  const [subscriptionsPerItem, setsubscriptionsPerItem] = useState<{ [key: string]: ItemDTO[] }>({})
   const { data, loading } = useListSubscriptions({ queryParams: { accountIdentifier: accountId } })
   useEffect(() => {
     if (pageName) {
@@ -74,6 +77,7 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
   useEffect(() => {
     if (data?.data) {
       setsubscriptions(getSubscriptionByPaymentFrequency(data.data as SubscriptionDetailDTO[]))
+      setsubscriptionsPerItem(getSubscriptionByPaymentFrequencyPerItem(data.data as SubscriptionDetailDTO[]))
     }
   }, [data])
   const activeSubscriptionDetails = React.useMemo(() => {
@@ -105,10 +109,18 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
           </Layout.Horizontal>
 
           {subscriptions[TimeType.YEARLY]?.length > 0 && (
-            <SubscriptionTable frequency={TimeType.YEARLY} data={subscriptions[TimeType.YEARLY]} />
+            <SubscriptionTable
+              frequency={TimeType.YEARLY}
+              data={subscriptions[TimeType.YEARLY]}
+              dataPerModule={subscriptionsPerItem[TimeType.YEARLY]}
+            />
           )}
           {subscriptions[TimeType.MONTHLY]?.length > 0 && (
-            <SubscriptionTable frequency={TimeType.MONTHLY} data={subscriptions[TimeType.MONTHLY]} />
+            <SubscriptionTable
+              frequency={TimeType.MONTHLY}
+              data={subscriptions[TimeType.MONTHLY]}
+              dataPerModule={subscriptionsPerItem[TimeType.MONTHLY]}
+            />
           )}
 
           {!loading && isEmpty(subscriptions[TimeType.YEARLY]) && isEmpty(subscriptions[TimeType.MONTHLY]) && (

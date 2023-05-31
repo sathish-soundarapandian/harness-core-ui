@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import { get, toInteger } from 'lodash-es'
-import type { PriceDTO, SubscriptionDetailDTO } from 'services/cd-ng/index'
+import type { ItemDTO, PriceDTO, SubscriptionDetailDTO } from 'services/cd-ng/index'
 import type {
   Editions,
   ProductPricesProp,
@@ -304,6 +304,25 @@ export const getSubscriptionByPaymentFrequency = (
     }
   })
   return subscriptionByPaymentFrequencyMap
+}
+
+export const getSubscriptionByPaymentFrequencyPerItem = (
+  data: SubscriptionDetailDTO[]
+): { [key: string]: ItemDTO[] } => {
+  const subscriptionByPaymentFrequencyMapPerItem = {
+    [TimeType.YEARLY]: [] as ItemDTO[],
+    [TimeType.MONTHLY]: [] as ItemDTO[]
+  }
+  const items = data[0]?.items
+  items?.forEach(item => {
+    if (get(item, 'price.metaData.billed') === TimeType.YEARLY) {
+      subscriptionByPaymentFrequencyMapPerItem[TimeType.YEARLY].push(item)
+    }
+    if (get(item, 'price.metaData.billed') === TimeType.MONTHLY) {
+      subscriptionByPaymentFrequencyMapPerItem[TimeType.MONTHLY].push(item)
+    }
+  })
+  return subscriptionByPaymentFrequencyMapPerItem
 }
 
 export const toDollars = (num = 0): number => (num === 0 ? 0 : num / 100)

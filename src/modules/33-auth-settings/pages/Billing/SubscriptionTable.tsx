@@ -9,7 +9,7 @@ import React from 'react'
 import cx from 'classnames'
 import { ButtonVariation, Card, Icon, IconName, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, lowerCase } from 'lodash-es'
+import { defaultTo, get, lowerCase } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import moment from 'moment'
 import { getModuleIcon } from '@common/utils/utils'
@@ -31,8 +31,11 @@ import { TimeType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './BillingPage.module.scss'
+import type { lessThan } from '@common/utils/rsql'
+
 interface SubscriptionTableProps {
   data?: SubscriptionDetailDTO[]
+  dataPerModule?: ItemDTO[]
   frequency?: TimeType
 }
 
@@ -61,13 +64,13 @@ const getParsedData = (items?: ItemDTO[]): PriceDetails => {
     }
 
     if (item.price?.metaData?.type?.includes('SUPPORT')) {
-      priceBreakdown.premiumSupport += defaultTo(item.amount, 0) as number
+      priceBreakdown.premiumSupport += defaultTo((item.quantity || 0) * (item.price.unitAmount || 0), 0) as number
     }
   })
   return priceBreakdown
 }
 
-function SubscriptionTable({ data = [], frequency }: SubscriptionTableProps): JSX.Element {
+function SubscriptionTable({ data = [], dataPerModule = [], frequency }: SubscriptionTableProps): JSX.Element {
   const { getString } = useStrings()
 
   const annualTotal = React.useMemo((): number => {
@@ -77,6 +80,18 @@ function SubscriptionTable({ data = [], frequency }: SubscriptionTableProps): JS
     })
     return finalAmount
   }, [data])
+  const subscriptionByModuleMap = {
+    [ModuleName.CF]: [] as ItemDTO[],
+    [ModuleName.CI]: [] as ItemDTO[]
+  }
+  dataPerModule.forEach(data => {
+    if (get(data, 'price.metaData.module') === ModuleName.CF) {
+      subscriptionByModuleMap[ModuleName.CF].push(data)
+    }
+    if (get(data, 'price.metaData.module') === ModuleName.CI) {
+      subscriptionByModuleMap[ModuleName.CI].push(data)
+    }
+  })
 
   return (
     <Card className={css.subscriptionTable}>
@@ -106,23 +121,25 @@ function SubscriptionTable({ data = [], frequency }: SubscriptionTableProps): JS
         </Layout.Vertical>
       </div>
       <TableHeader />
-      {data.map(row => {
-        const items: ItemDTO[] = []
-        row?.latestInvoiceDetail?.items?.forEach(item => {
-          if (!item.description?.includes('Sales Tax') && item.amount !== 0) {
-            items.push(item)
-          }
-        })
+      {subscriptionByModuleMap[ModuleName.CF].length > 0 ? (
+        <TableRow
+          row={subscriptionByModuleMap[ModuleName.CF]}
+          key={ModuleName.CF.toLowerCase()}
+          data={data[0]}
+          module={ModuleName.CF.toLowerCase() as ModuleName}
+          name={ModuleName.CF.toLowerCase() || ''}
+        />
+      ) : null}
 
-        return (
-          <TableRow
-            key={items[0]?.price?.metaData?.module?.toLowerCase()}
-            data={row}
-            module={items[0]?.price?.metaData?.module?.toLowerCase() as ModuleName}
-            name={items[0]?.price?.metaData?.module?.toLowerCase() || ''}
-          />
-        )
-      })}
+      {subscriptionByModuleMap[ModuleName.CI].length > 0 ? (
+        <TableRow
+          row={subscriptionByModuleMap[ModuleName.CI]}
+          key={ModuleName.CI.toLowerCase()}
+          data={data[0]}
+          module={ModuleName.CI.toLowerCase() as ModuleName}
+          name={ModuleName.CI.toLowerCase() || ''}
+        />
+      ) : null}
     </Card>
   )
 }
@@ -145,18 +162,27 @@ interface TableRowProps {
   using?: string
   name: string
   data: SubscriptionDetailDTO
+  row?: ItemDTO[]
 }
-const TableRow = ({ name, using = '-', module = ModuleName.CF, data }: TableRowProps): JSX.Element => {
+
+const calculateModulePrice = (row: ItemDTO[]) => {
+  let totalCost = 0
+  row?.forEach(r => {
+    totalCost += (r.quantity || 0) * toDollars(r.price?.unitAmount || 0)
+  })
+  return totalCost
+}
+const TableRow = ({ name = 'cf', module = ModuleName.CF, data, row }: TableRowProps): JSX.Element => {
   const { getString } = useStrings()
   const history = useHistory()
-
+  const totalPrice = calculateModulePrice(row || [])
   const { accountId } = useParams<AccountPathProps>()
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
     | DynamicPopoverHandlerBinding<{ priceData?: InvoiceDetailDTO; hideDialog?: () => void; moduleName: Module }>
     | undefined
   >()
-
-  const priceDetails = getParsedData(data.latestInvoiceDetail?.items)
+  const items = data?.items?.filter(item => item.price?.metaData?.module?.toLowerCase() === module)
+  const priceDetails = getParsedData(items)
   const renderPopover = ({ priceData }: { priceData?: InvoiceDetailDTO }): JSX.Element => {
     return (
       <PriceBreakdownTooltipFF
@@ -191,7 +217,6 @@ const TableRow = ({ name, using = '-', module = ModuleName.CF, data }: TableRowP
       <Text font={{ variation: FontVariation.BODY }}>
         {module === ModuleName.CF.toLowerCase() ? ffString : ciString}
       </Text>
-      <Text font={{ variation: FontVariation.BODY }}> {`${using}`}</Text>
       <Text font={{ variation: FontVariation.BODY }}>
         <RbacButton
           text={getString('common.plans.manageSubscription')}
@@ -203,13 +228,11 @@ const TableRow = ({ name, using = '-', module = ModuleName.CF, data }: TableRowP
               resourceType: ResourceType.LICENSE
             }
           }}
-          onClick={() => history.push(routes.toSubscriptions({ accountId, moduleCard: 'cf' }))}
+          onClick={() => history.push(routes.toSubscriptions({ accountId, moduleCard: name as Module }))}
         />
       </Text>
       <Layout.Vertical className={css.lastCol}>
-        <Text font={{ variation: FontVariation.BODY, weight: 'bold' }}>{`$${toDollars(
-          data.latestInvoiceDetail?.amountDue
-        )}`}</Text>
+        <Text font={{ variation: FontVariation.BODY, weight: 'bold' }}>{`$${toDollars(totalPrice)}`}</Text>
         <Text
           onClick={showBreakdown}
           className={cx(css.breakdown)}
