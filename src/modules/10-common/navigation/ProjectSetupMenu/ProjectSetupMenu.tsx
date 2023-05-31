@@ -40,7 +40,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     NEW_LEFT_NAVBAR_SETTINGS,
     SRM_DOWNTIME,
     STO_JIRA_INTEGRATION,
-    USE_OLD_GIT_SYNC
+    USE_OLD_GIT_SYNC,
+    PL_DISCOVERY_ENABLE
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
@@ -79,6 +80,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
 
   const showTemplates = isCIorCDorSTO || (!module && NEW_LEFT_NAVBAR_SETTINGS)
   const showFileStore = isCIorCD || !module
+  // Add more modules as they keep on supporting service discovery feature
+  const showDiscovery = isCHAOS && PL_DISCOVERY_ENABLE
 
   return (
     <NavExpandable
@@ -124,8 +127,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         {module === 'cd' && !isCDGetStartedVisible && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
         )}
-        {/* TODO: Add Network Map FF here*/}
-        {isCHAOS && <SidebarLink label={getString('common.discovery')} to={routes.toDiscovery({ ...params })} />}
+        {showDiscovery && <SidebarLink label={getString('common.discovery')} to={routes.toDiscovery({ ...params })} />}
         {SRM_ET_EXPERIMENTAL && module === 'cv' && (
           <SidebarLink
             label={getString('common.codeErrorsSettings')}

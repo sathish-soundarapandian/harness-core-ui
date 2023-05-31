@@ -238,5 +238,11 @@ export enum PermissionIdentifier {
   CODE_REPO_CREATE = 'code_repo_create',
   CODE_REPO_DELETE = 'code_repo_delete',
   CODE_REPO_VIEW = 'code_repo_view',
-  CODE_REPO_PUSH = 'code_repo_push'
+  CODE_REPO_PUSH = 'code_repo_push',
+
+  // Discovery permissions
+  VIEW_NETWORK_MAP = 'servicediscovery_networkmap_view',
+  CREATE_NETWORK_MAP = 'servicediscovery_networkmap_create',
+  EDIT_NETWORK_MAP = 'servicediscovery_networkmap_edit',
+  DELETE_NETWORK_MAP = 'servicediscovery_networkmap_delete'
 }

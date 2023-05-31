@@ -52,7 +52,6 @@ import type { ETCustomMicroFrontendProps } from '@et/ErrorTracking.types'
 import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { formatDatetoLocale, getReadableDateTime, ALL_TIME_ZONES } from '@common/utils/dateUtils'
-import { DiscoveryRouteDestinations } from '@discovery/RouteDestinations'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -532,13 +531,6 @@ const NonMFERoute = (
 
     {
       VariableRouteDestinations({
-        moduleParams: cvModuleParams,
-        sidebarProps: CVSideNavProps
-      })?.props.children
-    }
-
-    {
-      DiscoveryRouteDestinations({
         moduleParams: cvModuleParams,
         sidebarProps: CVSideNavProps
       })?.props.children

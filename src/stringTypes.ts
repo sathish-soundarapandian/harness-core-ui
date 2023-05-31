@@ -667,7 +667,6 @@ export interface StringsMap {
   'common.nameOnCard': string
   'common.namePlaceholder': string
   'common.namespace': string
-  'common.networkMap': string
   'common.new': string
   'common.newLines': string
   'common.newMonitoredService': string
@@ -5584,7 +5583,6 @@ export interface StringsMap {
   'discovery.discoveredBy': string
   'discovery.homepage.discoveryAgentDesc': string
   'discovery.homepage.learnMore': string
-  'discovery.homepage.learnMoreLink': string
   'discovery.homepage.newDiscoveryAgentBtn': string
   'discovery.homepage.newNewtworkMapBtn': string
   'discovery.homepage.newServiceBtn': string
@@ -5594,6 +5592,7 @@ export interface StringsMap {
   'discovery.homepage.slogan': string
   'discovery.howToCreateNetworkMap': string
   'discovery.howToCreateNetworkMapDesc': string
+  'discovery.networkMap': string
   'discovery.networkMapDescription': string
   'discovery.selectAConnector': string
   'discovery.selectAConnectorDescription': string

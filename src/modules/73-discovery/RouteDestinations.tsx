@@ -12,11 +12,17 @@ import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import type { LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
-import { accountPathProps, discoveryPathProps, projectPathProps, variablePathProps } from '@common/utils/routeUtils'
+import { accountPathProps, discoveryPathProps, projectPathProps } from '@common/utils/routeUtils'
 
 import { AccountSideNavProps } from '@common/RouteDestinations'
-import DiscoveryPage from './pages/home/DiscoveryPage'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import RbacFactory from '@rbac/factories/RbacFactory'
+import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { String as LocaleString } from 'framework/strings'
 import DiscoveryDetails from './pages/discovery-details/DiscoveryDetails'
+import DiscoveryPage from './pages/home/DiscoveryPage'
 
 // const platformLabel = 'common.resourceCenter.ticketmenu.platform'
 // Enable when BE adds support for Network Map Audit
@@ -26,20 +32,6 @@ import DiscoveryDetails from './pages/discovery-details/DiscoveryDetails'
 //   },
 //   moduleLabel: platformLabel,
 //   resourceLabel: 'common.networkMap'
-// })
-
-// RbacFactory.registerResourceTypeHandler(ResourceType.NETWORKMAP, {
-//   icon: 'networkMap',
-//   label: 'common.networkMap',
-//   labelSingular: 'netowrkMapLabel',
-//   category: ResourceCategory.SHARED_RESOURCES,
-//   permissionLabels: {
-//     [PermissionIdentifier.VIEW_DISCOVERY]: <String stringID="rbac.permissionLabels.view" />,
-//     [PermissionIdentifier.EDIT_DISCOVERY]: <String stringID="rbac.permissionLabels.createEdit" />,
-//     [PermissionIdentifier.DELETE_DISCOVERY]: <String stringID="rbac.permissionLabels.delete" />,
-//     [PermissionIdentifier.ACCESS_DISCOVERY]: <String stringID="rbac.permissionLabels.access" />
-//   }
-//   // enable when BE adds support
 // })
 
 export default (
@@ -54,13 +46,6 @@ export default (
     >
       <DiscoveryDetails />
     </RouteWithLayout>
-    <RouteWithLayout
-      sidebarProps={AccountSideNavProps}
-      path={routes.toDiscovery({ ...accountPathProps, ...variablePathProps })}
-      exact
-    >
-      {/* TODO */}
-    </RouteWithLayout>
   </>
 )
 
@@ -68,26 +53,49 @@ export const DiscoveryRouteDestinations: React.FC<{
   moduleParams: ModulePathParams
   licenseRedirectData?: LicenseRedirectProps
   sidebarProps?: SidebarContext
-}> = ({ moduleParams, licenseRedirectData, sidebarProps }) => (
-  <>
-    <RouteWithLayout
-      exact
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={sidebarProps}
-      path={routes.toDiscovery({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
-      pageName={PAGE_NAME.DiscoveryPage}
-    >
-      <DiscoveryPage />
-    </RouteWithLayout>
+}> = ({ moduleParams, licenseRedirectData, sidebarProps }) => {
+  const isDiscoveryEnabled = useFeatureFlag(FeatureFlag.PL_DISCOVERY_ENABLE)
 
-    <RouteWithLayout
-      exact
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={sidebarProps}
-      path={routes.toDiscoveryDetails({ ...accountPathProps, ...discoveryPathProps, ...moduleParams })}
-      pageName={PAGE_NAME.NetworkMapOverview}
-    >
-      <DiscoveryDetails />
-    </RouteWithLayout>
-  </>
-)
+  if (isDiscoveryEnabled) {
+    // RBAC registrations
+    RbacFactory.registerResourceCategory(ResourceCategory.DISCOVERY, {
+      icon: 'chaos-service-discovery',
+      label: 'common.discovery'
+    })
+
+    RbacFactory.registerResourceTypeHandler(ResourceType.NETWORK_MAP, {
+      icon: 'chaos-service-discovery',
+      label: 'discovery.networkMap',
+      category: ResourceCategory.DISCOVERY,
+      permissionLabels: {
+        [PermissionIdentifier.VIEW_NETWORK_MAP]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.CREATE_NETWORK_MAP]: <LocaleString stringID="rbac.permissionLabels.create" />,
+        [PermissionIdentifier.EDIT_NETWORK_MAP]: <LocaleString stringID="rbac.permissionLabels.edit" />,
+        [PermissionIdentifier.DELETE_NETWORK_MAP]: <LocaleString stringID="rbac.permissionLabels.delete" />
+      }
+    })
+  }
+
+  return (
+    <>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toDiscovery({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+        pageName={PAGE_NAME.DiscoveryPage}
+      >
+        <DiscoveryPage />
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toDiscoveryDetails({ ...accountPathProps, ...discoveryPathProps, ...moduleParams })}
+        pageName={PAGE_NAME.NetworkMapOverview}
+      >
+        <DiscoveryDetails />
+      </RouteWithLayout>
+    </>
+  )
+}
