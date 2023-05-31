@@ -15,7 +15,7 @@ import css from './StageRightDrawer.module.scss'
 
 const STAGE_DRAWER_WIDTH = 800
 
-export const StageRightDrawer = (): JSX.Element => {
+export function StageRightDrawer(): JSX.Element {
   const {
     state: {
       selectionState: { selectedStageId, stageDetailsOpen },
