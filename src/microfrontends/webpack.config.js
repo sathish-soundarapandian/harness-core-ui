@@ -6,7 +6,7 @@
  */
 
 const path = require('path')
-const tsTransformPaths = require('@zerollup/ts-transform-paths')
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 module.exports = {
   mode: 'production',
   entry: './src/microfrontends/index.ts',
@@ -42,6 +42,14 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
-    plugins: []
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: 'src/microfrontends/tsconfig.json',
+        logLevel: 'info',
+        extensions: ['.ts', '.tsx'],
+        mainFields: ['browser', 'main']
+        // baseUrl: "/foo"
+      })
+    ]
   }
 }
