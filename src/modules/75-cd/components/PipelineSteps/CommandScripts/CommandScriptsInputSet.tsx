@@ -80,7 +80,7 @@ export function CommandScriptsInputSet(props: CommandScriptsInputSetProps): Reac
         <Layout.Horizontal>
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{ expressions, allowableTypes: [MultiTypeInputType.FIXED] }}
-            name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}onDelegate`}
+            name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}spec.onDelegate`}
             label={getString('cd.steps.commands.runOnDelegate')}
             disabled={inputSetData.readonly}
             style={{ width: '35%' }}
