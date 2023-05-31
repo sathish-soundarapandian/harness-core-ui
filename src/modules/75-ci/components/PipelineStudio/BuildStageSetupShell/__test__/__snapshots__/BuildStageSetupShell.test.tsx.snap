@@ -33,7 +33,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
           tabindex="0"
         >
           <span
-            class="tab"
+            class="title"
           >
             <span
               class="bp3-icon StyledProps--main"
@@ -108,7 +108,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
           tabindex="0"
         >
           <span
-            class="tab"
+            class="title"
           >
             <span
               class="bp3-icon StyledProps--main StyledProps--color"
@@ -156,7 +156,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
           aria-disabled="false"
           aria-expanded="false"
           aria-selected="false"
-          class="bp3-tab fullHeight stepGroup"
+          class="bp3-tab fullHeight executionPanel"
           data-tab-id="EXECUTION"
           data-testid="ci.executionLabel"
           id="bp3-tab-title_stageSetupShell_EXECUTION"
@@ -164,7 +164,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
           tabindex="0"
         >
           <span
-            class="tab"
+            class="title"
           >
             <span
               class="bp3-icon StyledProps--main StyledProps--color"
@@ -226,7 +226,7 @@ exports[`BuildStageSetupShell snapshot test initializes ok 1`] = `
           tabindex="0"
         >
           <span
-            class="tab"
+            class="title"
           >
             <span
               class="bp3-icon StyledProps--main"
