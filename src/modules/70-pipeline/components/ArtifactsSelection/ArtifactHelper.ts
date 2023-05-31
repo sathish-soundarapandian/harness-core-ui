@@ -310,17 +310,6 @@ export const tagOptions: IOptionProps[] = [
   }
 ]
 
-export const packageSourceOptions: IOptionProps[] = [
-  {
-    label: 'Organization',
-    value: 'org'
-  },
-  {
-    label: 'User',
-    value: 'user'
-  }
-]
-
 export const scopeOptions: SelectOption[] = [
   {
     label: 'Project',

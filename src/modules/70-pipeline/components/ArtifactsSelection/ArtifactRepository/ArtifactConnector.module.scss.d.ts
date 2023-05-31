@@ -34,6 +34,7 @@ declare const styles: {
   readonly panel: string
   readonly radioGroup: string
   readonly runtimeInput: string
+  readonly selectInputContainer: string
   readonly squareCardContainer: string
   readonly tagGroup: string
   readonly tagInputButton: string

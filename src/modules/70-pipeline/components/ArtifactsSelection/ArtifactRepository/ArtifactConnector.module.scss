@@ -103,6 +103,12 @@
   }
 }
 
+.selectInputContainer {
+  :global(.bp3-menu) {
+    left: -4px !important;
+  }
+}
+
 .expanded {
   width: 600px !important;
 }

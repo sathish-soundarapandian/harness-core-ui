@@ -7,18 +7,18 @@
 
 import React, { useEffect, useMemo } from 'react'
 import {
-  Formik,
-  Layout,
   Button,
-  StepProps,
-  Text,
   ButtonVariation,
-  MultiTypeInputType,
-  SelectOption,
-  getMultiTypeFromValue,
-  FormInput,
+  Formik,
   FormikForm,
-  RUNTIME_INPUT_VALUE
+  FormInput,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
+  SelectOption,
+  StepProps,
+  Text
 } from '@harness/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
@@ -29,16 +29,16 @@ import { Menu } from '@blueprintjs/core'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import {
-  getConnectorIdValue,
   getArtifactFormData,
+  getConnectorIdValue,
   shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
-  GithubPackageRegistryProps,
   GithubPackageRegistryInitialValuesType,
-  TagTypes,
-  PackageSourceTypes
+  GithubPackageRegistryProps,
+  PackageSourceTypes,
+  TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import {
@@ -53,7 +53,7 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
-import { ArtifactIdentifierValidation, ModalViewFor, tagOptions, packageSourceOptions } from '../../../ArtifactHelper'
+import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import css from '../../ArtifactConnector.module.scss'
@@ -66,11 +66,16 @@ export enum PACKAGE_TYPES {
   NUGET = 'nuget'
 }
 
-export const packageTypesList: SelectOption[] = [
+const packageTypesList: SelectOption[] = [
   { label: 'Container', value: PACKAGE_TYPES.CONTAINER },
   { label: 'Maven', value: PACKAGE_TYPES.MAVEN },
   { label: 'Npm', value: PACKAGE_TYPES.NPM },
   { label: 'Nuget', value: PACKAGE_TYPES.NUGET }
+]
+
+const packageSourcesList: SelectOption[] = [
+  { label: 'Organization', value: PackageSourceTypes.Org },
+  { label: 'User', value: PackageSourceTypes.User }
 ]
 
 function FormComponent({
@@ -196,7 +201,7 @@ function FormComponent({
       <div className={css.artifactForm}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
-        <div className={css.imagePathContainer}>
+        <div className={cx(css.imagePathContainer, css.selectInputContainer)}>
           <div className={cx(stepCss.formGroup, stepCss.xxlg)}>
             <FormInput.Select
               items={packageTypesList}
@@ -259,27 +264,29 @@ function FormComponent({
         )}
         {formik.values?.spec?.packageType === PACKAGE_TYPES.MAVEN && (
           <>
-            <div className={css.tagGroup}>
-              <FormInput.RadioGroup
-                label={getString('pipeline.artifactsSelection.packageSource')}
-                name="packageSource"
-                radioGroup={{ inline: true }}
-                items={packageSourceOptions}
-                className={css.radioGroup}
-                onChange={e => {
-                  if (e.currentTarget.value === PackageSourceTypes.User) {
-                    formik.setFieldValue('spec.org', '')
-                  } else {
-                    formik.setFieldValue('spec.user', '')
-                  }
-                }}
-              />
+            <div className={cx(css.imagePathContainer, css.selectInputContainer)}>
+              <div className={cx(stepCss.formGroup, stepCss.xxlg)}>
+                <FormInput.Select
+                  items={packageSourcesList}
+                  name="packageSource"
+                  onChange={value => {
+                    formik.setFieldValue('packageSource', value.value)
+                    if (value.value === PackageSourceTypes.User) {
+                      formik.setFieldValue('spec.org', '')
+                    } else {
+                      formik.setFieldValue('spec.user', '')
+                    }
+                  }}
+                  label={getString('pipeline.artifactsSelection.packageSource')}
+                  placeholder={getString('pipeline.artifactsSelection.packageSourcePlaceholder')}
+                />
+              </div>
             </div>
             <div className={css.imagePathContainer} key={formik.values?.packageSource}>
               {formik.values?.packageSource === PackageSourceTypes.Org ? (
                 <>
                   <FormInput.MultiTextInput
-                    label={getString('pipeline.artifactsSelection.organizationLabel')}
+                    label={getString('orgLabel')}
                     name="spec.org"
                     placeholder={getString('pipeline.artifactsSelection.organizationPlaceholder')}
                     multiTextInputProps={{ expressions, allowableTypes }}
@@ -752,7 +759,7 @@ export function GithubPackageRegistry(
           ...commonSpecSchemaObject,
           org: Yup.string()
             .trim()
-            .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.organizationLabel') }))
+            .required(getString('fieldRequired', { field: getString('orgLabel') }))
         })
       })
   }
