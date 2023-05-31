@@ -30,9 +30,9 @@ import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
+import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import css from './BuildAdvancedSpecifications.module.scss'
-import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 
 const BuildAdvancedSpecifications = ({
   children,

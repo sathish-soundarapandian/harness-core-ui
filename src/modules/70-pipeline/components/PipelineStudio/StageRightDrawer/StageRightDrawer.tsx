@@ -8,14 +8,14 @@
 import React from 'react'
 import { Drawer, Position } from '@blueprintjs/core'
 import { Button } from '@harness/uicore'
-import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { defaultTo } from 'lodash-es'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import css from './StageRightDrawer.module.scss'
 
 const STAGE_DRAWER_WIDTH = 800
 
-export const StageRightDrawer: React.FC = (): JSX.Element => {
+export const StageRightDrawer = (): JSX.Element => {
   const {
     state: {
       selectionState: { selectedStageId, stageDetailsOpen },
