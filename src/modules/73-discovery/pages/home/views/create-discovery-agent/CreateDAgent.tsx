@@ -18,7 +18,7 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import NetworkDiscoveryModal from '@discovery/components/NetworkDiscoveryModal/NetworkDiscoveryModal'
 import List from '@discovery/components/List/List'
-import css from './Overview.module.scss'
+import css from './CreateDAgent.module.scss'
 
 interface FormValues {
   name: string
@@ -27,7 +27,11 @@ interface FormValues {
   connectorRef: string | undefined
 }
 
-const Overview: React.FC = () => {
+export interface DrawerProps {
+  setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
   const {
@@ -152,7 +156,11 @@ const Overview: React.FC = () => {
                     flex={{ justifyContent: 'flex-start' }}
                     spacing={'medium'}
                   >
-                    <Button variation={ButtonVariation.SECONDARY} text={getString('cancel')} onClick={() => void 0} />
+                    <Button
+                      variation={ButtonVariation.SECONDARY}
+                      text={getString('cancel')}
+                      onClick={() => setDrawerOpen(false)}
+                    />
                     <Button
                       type="submit"
                       intent="primary"
@@ -206,4 +214,4 @@ const Overview: React.FC = () => {
   )
 }
 
-export default Overview
+export default CreateDAgent

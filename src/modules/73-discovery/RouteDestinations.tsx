@@ -16,7 +16,6 @@ import { accountPathProps, discoveryPathProps, projectPathProps, variablePathPro
 
 import { AccountSideNavProps } from '@common/RouteDestinations'
 import DiscoveryPage from './pages/home/DiscoveryPage'
-import NetworkMapStudio from './pages/network-map-studio/NetworkMapStudio'
 import DiscoveryDetails from './pages/discovery-details/DiscoveryDetails'
 
 // const platformLabel = 'common.resourceCenter.ticketmenu.platform'
@@ -50,13 +49,6 @@ export default (
     </RouteWithLayout>
     <RouteWithLayout
       sidebarProps={AccountSideNavProps}
-      path={routes.toNetworkMapOverview({ ...accountPathProps })}
-      exact
-    >
-      <NetworkMapStudio />
-    </RouteWithLayout>
-    <RouteWithLayout
-      sidebarProps={AccountSideNavProps}
       path={routes.toDiscoveryDetails({ ...accountPathProps, ...discoveryPathProps })}
       exact
     >
@@ -86,16 +78,6 @@ export const DiscoveryRouteDestinations: React.FC<{
       pageName={PAGE_NAME.DiscoveryPage}
     >
       <DiscoveryPage />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      exact
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={sidebarProps}
-      path={routes.toNetworkMapOverview({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
-      pageName={PAGE_NAME.NetworkMapOverview}
-    >
-      <NetworkMapStudio />
     </RouteWithLayout>
 
     <RouteWithLayout

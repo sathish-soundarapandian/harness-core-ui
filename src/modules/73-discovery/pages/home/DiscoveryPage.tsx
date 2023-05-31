@@ -6,71 +6,26 @@
  */
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ButtonVariation, Container, ExpandingSearchInput, Layout, PillToggle, Text } from '@harness/uicore'
+import { Drawer, Position } from '@blueprintjs/core'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 
 import { useStrings } from 'framework/strings'
-
 import { Page } from '@common/exports'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
-import RbacButton from '@rbac/components/Button/Button'
-import AddDiscoveryAgent from './views/AddDiscoveryAgent'
+import EmptyStateDiscoveryAgent from './views/empty-state/EmptyStateDiscoveryAgent'
+import CreateDAgent from './views/create-discovery-agent/CreateDAgent'
 
 const DiscoveryPage: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
   const discoveryLabel = getString('common.discovery')
-  const [discoveryView, setDiscoveryView] = useState('network-map')
+  const [isOpen, setDrawerOpen] = useState(false)
 
   useDocumentTitle(discoveryLabel)
-
-  const getAddNetworkButton = (): JSX.Element => (
-    <Layout.Horizontal flex={{ justifyContent: 'space-between' }} width={'100%'}>
-      <RbacButton
-        icon="plus"
-        text={getString('discovery.homepage.newNewtworkMapBtn')}
-        variation={ButtonVariation.PRIMARY}
-        onClick={() => void 0}
-      />
-      <Container data-name="monitoredServiceSeachContainer">
-        <ExpandingSearchInput
-          width={250}
-          alwaysExpanded
-          throttle={500}
-          key={''}
-          defaultValue={''}
-          onChange={() => void 0}
-          placeholder={getString('discovery.homepage.searchNeworkMap')}
-        />
-      </Container>
-    </Layout.Horizontal>
-  )
-
-  const getAddDiscoverServiceButton = (): JSX.Element => (
-    <Layout.Horizontal flex={{ justifyContent: 'space-between' }} width={'100%'}>
-      <RbacButton
-        icon="plus"
-        text={getString('discovery.homepage.newServiceBtn')}
-        variation={ButtonVariation.PRIMARY}
-        onClick={() => void 0}
-      />
-      <Container data-name="monitoredServiceSeachContainer">
-        <ExpandingSearchInput
-          width={250}
-          alwaysExpanded
-          throttle={500}
-          key={''}
-          defaultValue={''}
-          onChange={() => void 0}
-          placeholder={getString('discovery.homepage.searchDelegate')}
-        />
-      </Container>
-    </Layout.Horizontal>
-  )
 
   return (
     <>
@@ -101,7 +56,10 @@ const DiscoveryPage: React.FC = () => {
             <Text>{getString('discovery.serviceDiscoveyTable')}</Text>
           )}
         </Container> */}
-        <AddDiscoveryAgent />
+        <Drawer position={Position.RIGHT} isOpen={isOpen} isCloseButtonShown={true} size={'86%'}>
+          <CreateDAgent setDrawerOpen={setDrawerOpen} />
+        </Drawer>
+        <EmptyStateDiscoveryAgent setDrawerOpen={setDrawerOpen} />
       </Page.Body>
     </>
   )

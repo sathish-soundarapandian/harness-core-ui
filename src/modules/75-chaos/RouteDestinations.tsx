@@ -78,7 +78,6 @@ import { RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { Duration } from '@common/exports'
 import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
 import DiscoveryPage from '@discovery/pages/home/DiscoveryPage'
-import NetworkMapStudio from '@discovery/pages/network-map-studio/NetworkMapStudio'
 import DiscoveryDetails from '@discovery/pages/discovery-details/DiscoveryDetails'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
@@ -359,14 +358,6 @@ export default function ChaosRoutes(): React.ReactElement {
         path={routes.toDiscovery({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
       >
         <DiscoveryPage />
-      </RouteWithLayout>
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        exact
-        sidebarProps={ChaosSideNavProps}
-        path={routes.toNetworkMapOverview({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
-      >
-        <NetworkMapStudio />
       </RouteWithLayout>
       <RouteWithLayout
         licenseRedirectData={licenseRedirectData}
