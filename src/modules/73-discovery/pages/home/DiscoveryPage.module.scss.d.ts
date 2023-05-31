@@ -9,7 +9,6 @@
 declare const styles: {
   readonly header: string
   readonly hostingToggle: string
-  readonly listBody: string
   readonly search: string
 }
 export default styles

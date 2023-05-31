@@ -18,8 +18,7 @@ import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
 import RbacButton from '@rbac/components/Button/Button'
-import NetworkMapTable from '@discovery/components/NetworkMapTable/NetworkMapTable'
-import css from './DiscoveryPage.module.scss'
+import AddDiscoveryAgent from './views/AddDiscoveryAgent'
 
 const DiscoveryPage: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
@@ -90,35 +89,19 @@ const DiscoveryPage: React.FC = () => {
             }}
           />
         }
-        toolbar={
-          <PillToggle
-            onChange={(value: string) => setDiscoveryView(value)}
-            options={[
-              {
-                label: 'Network Maps',
-                value: 'network-map'
-              },
-              {
-                label: 'Real-time View',
-                value: 'realtime-view'
-              }
-            ]}
-            selectedView={discoveryView}
-            className={css.hostingToggle}
-          />
-        }
       />
-      <Page.SubHeader>
+      {/* <Page.SubHeader>
         {discoveryView === 'network-map' ? getAddNetworkButton() : getAddDiscoverServiceButton()}
-      </Page.SubHeader>
-      <Page.Body className={css.listBody}>
-        <Container padding={{ top: 'medium', left: 'xlarge', right: 'xlarge' }} height="inherit">
+      </Page.SubHeader> */}
+      <Page.Body>
+        {/* <Container padding={{ top: 'medium', left: 'xlarge', right: 'xlarge' }} height="inherit">
           {discoveryView === 'network-map' ? (
             <NetworkMapTable />
           ) : (
             <Text>{getString('discovery.serviceDiscoveyTable')}</Text>
           )}
-        </Container>
+        </Container> */}
+        <AddDiscoveryAgent />
       </Page.Body>
     </>
   )

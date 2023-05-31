@@ -5,9 +5,15 @@ homepage:
   searchNeworkMap: Search network map
   newServiceBtn: Discover New Services
   searchDelegate: Search delegate
+  newDiscoveryAgentBtn: New Discovery Agent
+  noDiscoveryAgent: You don’t have any Discovery Agent yet
+  learnMoreLink: Learn More
+  discoveryAgentDesc:
+    Network Map is a visual representation of services and dependencies that are automatically discovered in your clusters.
+    It provides an at-a-glance view of how services interact with one another and how they contribute to the overall performance and health of the system.
 tabs:
-  selectServices: 'Select services'
-  configureRelations: 'Configure relations'
+  selectServices: "Select services"
+  configureRelations: "Configure relations"
 selectAConnector: Select a Kubernetes Connector of your cluster
 selectAConnectorDescription: A k8s connector will help to discover the services on your clusters. For the first time discovery, it may take up to 5 minutes.
 whatIsNetworkMap: What is a network map?

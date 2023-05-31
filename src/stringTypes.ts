@@ -5582,9 +5582,13 @@ export interface StringsMap {
   'discovery.approxTime': string
   'discovery.discoverServices': string
   'discovery.discoveredBy': string
+  'discovery.homepage.discoveryAgentDesc': string
   'discovery.homepage.learnMore': string
+  'discovery.homepage.learnMoreLink': string
+  'discovery.homepage.newDiscoveryAgentBtn': string
   'discovery.homepage.newNewtworkMapBtn': string
   'discovery.homepage.newServiceBtn': string
+  'discovery.homepage.noDiscoveryAgent': string
   'discovery.homepage.searchDelegate': string
   'discovery.homepage.searchNeworkMap': string
   'discovery.homepage.slogan': string
