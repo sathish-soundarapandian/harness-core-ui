@@ -17,6 +17,7 @@ import routes from '@common/RouteDefinitions'
 import noServiceAvailableImage from '@cv/assets/noMonitoredServices.svg'
 import { getErrorMessage, getCVMonitoringServicesSearchParam } from '@cv/utils/CommonUtils'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
+import CommonMonitoredServiceListView from '@cv/components/MonitoredServiceWidget/components/CommonMonitoredServiceListView/CommonMonitoredServiceListView'
 import MonitoredServiceListView from './MonitoredServiceListView'
 import { FilterTypes, MonitoredServiceListProps } from '../../CVMonitoredService.types'
 import css from '../../CVMonitoredService.module.scss'
@@ -32,7 +33,8 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
   serviceCountLoading,
   serviceCountErrorMessage,
   refetchServiceCountData,
-  search
+  search,
+  config
 }) => {
   const history = useHistory()
   const { getString } = useStrings()
@@ -190,18 +192,34 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
       }}
       className={css.pageBody}
     >
-      <MonitoredServiceListView
-        serviceCountData={serviceCountData}
-        refetchServiceCountData={refetchServiceCountData}
-        monitoredServiceListData={monitoredServiceListData?.data}
-        selectedFilter={selectedFilter}
-        onFilter={onFilter}
-        onEditService={onEditService}
-        onDeleteService={onDeleteService}
-        setPage={setPage}
-        onToggleService={onToggleService}
-        healthMonitoringFlagLoading={healthMonitoringFlagLoading}
-      />
+      {config ? (
+        <CommonMonitoredServiceListView
+          serviceCountData={serviceCountData}
+          refetchServiceCountData={refetchServiceCountData}
+          monitoredServiceListData={monitoredServiceListData?.data}
+          selectedFilter={selectedFilter}
+          onFilter={onFilter}
+          onEditService={onEditService}
+          onDeleteService={onDeleteService}
+          setPage={setPage}
+          onToggleService={onToggleService}
+          healthMonitoringFlagLoading={healthMonitoringFlagLoading}
+          config={config}
+        />
+      ) : (
+        <MonitoredServiceListView
+          serviceCountData={serviceCountData}
+          refetchServiceCountData={refetchServiceCountData}
+          monitoredServiceListData={monitoredServiceListData?.data}
+          selectedFilter={selectedFilter}
+          onFilter={onFilter}
+          onEditService={onEditService}
+          onDeleteService={onDeleteService}
+          setPage={setPage}
+          onToggleService={onToggleService}
+          healthMonitoringFlagLoading={healthMonitoringFlagLoading}
+        />
+      )}
     </Page.Body>
   )
 }
