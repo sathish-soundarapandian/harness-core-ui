@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   Container,
   Text,
@@ -21,6 +21,11 @@ import { RiskProfile } from './components/RiskProfile/RiskProfile'
 import type { SelectHealthSourceServicesProps } from './SelectHealthSourceServices.types'
 import { getTypeOfInput } from '../../connectors/AppDynamics/AppDHealthSource.utils'
 import css from './SelectHealthSourceServices.module.scss'
+import { useFormikContext } from 'formik'
+import CheckboxWithPrompt from '../CheckboxWithPrompt/CheckboxWithPrompt'
+import type { MapPrometheusQueryToService } from '../../connectors/PrometheusHealthSource/PrometheusHealthSource.constants'
+import { isGivenMetricNameContainsThresholds } from '../MetricThresholds/MetricThresholds.utils'
+import CVPromptCheckbox from '../CVPromptCheckbox/CVPromptCheckbox'
 
 export default function SelectHealthSourceServices({
   values,
@@ -36,9 +41,12 @@ export default function SelectHealthSourceServices({
   customServiceInstanceName,
   fieldNames = {},
   riskProfileResponse,
-  hideServiceInstanceMetricPathTemplate
+  hideServiceInstanceMetricPathTemplate,
+  filterRemovedMetricNameThresholds
 }: SelectHealthSourceServicesProps): JSX.Element {
   const { getString } = useStrings()
+
+  const { values: formValues, setFieldValue } = useFormikContext<MapPrometheusQueryToService>()
 
   const { sli, deploymentVerification, serviceHealth } = fieldNames
 
@@ -75,7 +83,23 @@ export default function SelectHealthSourceServices({
         ) : null}
         {showOnlySLI && <FormInput.CheckBox label={getString('cv.slos.sli')} name={sliFieldName} />}
         {!hideCV ? (
-          <FormInput.CheckBox label={getString('cv.monitoredServices.continuousVerification')} name={cvFieldName} />
+          // <FormInput.CheckBox label={getString('cv.monitoredServices.continuousVerification')} name={cvFieldName} />
+          // <CheckboxWithPrompt
+          //   checkboxName={cvFieldName}
+          //   checkboxLabel={getString('cv.monitoredServices.continuousVerification')}
+          //   checked={formValues[cvFieldName as string] as boolean}
+          //   key={cvFieldName}
+          //   checkBoxKey={cvFieldName}
+          //   contentText={getString('cv.metricThresholds.metricPacksDeletePromptContent')}
+          //   popupTitleText={getString('common.warning')}
+          //   onChange={handleCVChange}
+          //   showPromptOnUnCheck={getShowPromptOnUnCheck()}
+          // />
+          <CVPromptCheckbox
+            checkboxName={cvFieldName}
+            checked={formValues[cvFieldName as string] as boolean}
+            filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
+          />
         ) : null}
         {isTemplate &&
           values.continuousVerification &&

@@ -41,4 +41,5 @@ export type SelectHealthSourceServicesProps = {
   riskProfileCategoryName?: string
   riskProfileResponse?: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
   hideServiceInstanceMetricPathTemplate?: boolean
+  filterRemovedMetricNameThresholds: (metricName: string) => void
 }

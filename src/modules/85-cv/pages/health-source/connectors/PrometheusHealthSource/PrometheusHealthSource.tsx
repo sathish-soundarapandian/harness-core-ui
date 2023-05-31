@@ -332,6 +332,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                           riskProfileResponse={riskProfileResponse}
                           labelNamesResponse={labelNamesResponse}
                           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+                          filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
                         />
                       }
                     />

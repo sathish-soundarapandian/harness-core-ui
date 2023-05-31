@@ -58,3 +58,6 @@ export default function CheckboxWithPrompt(props: CheckboxWithPromptProps): JSX.
 }
 
 // export default React.memo(CheckboxWithPrompt)
+
+const MemoisedCheckBox = React.memo(CheckboxWithPrompt)
+export { MemoisedCheckBox }
