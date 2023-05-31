@@ -1,49 +1,99 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
+ * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { TableV2 } from '@harness/uicore'
-import React from 'react'
-import type { Column } from 'react-table'
-import type { EnforcementResult, GetEnforcementResultsByIDResponseBody } from 'services/ssca'
+import { Drawer, Position } from '@blueprintjs/core'
+import { Button, ExpandingSearchInput, Heading, PageError, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import React, { ReactElement } from 'react'
+import { PageSpinner } from '@common/components'
+import { Width } from '@common/constants/Utils'
+import { useUpdateQueryParams } from '@common/hooks'
+import { useExecutionListQueryParams } from '@pipeline/pages/execution-list/utils/executionListUtil'
 import { useStrings } from 'framework/strings'
-import { PackageSupplierCell, PackageNameCell, VersionCell, ViolationsDetailsCell } from './PolicyViolationsTableCells'
+import { useEnforcementGetEnforcementResultsById } from 'services/ssca'
+import {
+  ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
+  ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
+  EnforcementViolationsParamsWithDefaults
+} from './utils'
+import { PolicyViolationsTable } from './PolicyViolationsTable'
 import css from './PolicyViolations.module.scss'
 
-export interface PolicyViolationsTableProps {
-  data: GetEnforcementResultsByIDResponseBody
+interface PolicyViolationsDrawerProps {
+  enforcementId: string
+  showEnforcementViolations: (enforcementId?: string) => void
 }
 
-export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): React.ReactElement {
+export function PolicyViolationsDrawer({
+  enforcementId,
+  showEnforcementViolations
+}: PolicyViolationsDrawerProps): ReactElement {
   const { getString } = useStrings()
-  const columns: Column<EnforcementResult>[] = React.useMemo(() => {
-    return [
-      {
-        Header: getString('pipeline.artifactsSelection.packageName'),
-        accessor: 'name',
-        Cell: PackageNameCell
-      },
-      {
-        Header: getString('version'),
-        accessor: 'version',
-        Cell: VersionCell
-      },
-      {
-        Header: getString('pipeline.supplier'),
-        accessor: 'supplier',
-        Cell: PackageSupplierCell
-      },
-      {
-        Header: getString('pipeline.violationDetails'),
-        accessor: 'violationDetails',
-        Cell: ViolationsDetailsCell,
-        disableSortBy: true
-      }
-    ]
-  }, [getString])
+  const queryParams = useExecutionListQueryParams()
+  const { updateQueryParams } = useUpdateQueryParams<Partial<EnforcementViolationsParamsWithDefaults>>()
 
-  return <TableV2 className={css.table} columns={columns} data={data.results || []} sortable />
+  const { data, loading, error, refetch } = useEnforcementGetEnforcementResultsById({
+    enforcementId,
+    queryParams: {
+      page: ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
+      pageSize: ENFORCEMENT_VIOLATIONS_PAGE_SIZE
+    }
+  })
+
+  return (
+    <Drawer
+      onClose={() => showEnforcementViolations()}
+      usePortal={true}
+      autoFocus={true}
+      canEscapeKeyClose={true}
+      canOutsideClickClose={true}
+      enforceFocus={false}
+      hasBackdrop={true}
+      size="calc(100vw - 272px)"
+      isOpen
+      position={Position.RIGHT}
+    >
+      <Button
+        className={css.drawerCloseButton}
+        minimal
+        icon="cross"
+        withoutBoxShadow
+        onClick={() => showEnforcementViolations()}
+      />
+      {loading ? (
+        <PageSpinner />
+      ) : data ? (
+        <>
+          <Heading level={2} color={Color.GREY_800} font={{ weight: 'bold' }} padding="large">
+            {getString('pipeline.artifactViolationDetails')}
+          </Heading>
+          <div className={css.subHeader}>
+            <Text color={Color.GREY_900} font={{ weight: 'bold' }}>
+              {`${getString('total')}: ${data?.results?.length}`}
+            </Text>
+            <ExpandingSearchInput
+              defaultValue={queryParams.searchTerm}
+              alwaysExpanded
+              onChange={value => updateQueryParams({ searchTerm: value, page: ENFORCEMENT_VIOLATIONS_PAGE_INDEX })}
+              width={Width.LARGE}
+              autoFocus={false}
+            />
+          </div>
+
+          <PolicyViolationsTable data={data} />
+        </>
+      ) : (
+        <PageError
+          message={error}
+          onClick={() => {
+            refetch()
+          }}
+        />
+      )}
+    </Drawer>
+  )
 }
