@@ -613,6 +613,10 @@ export interface ArtifactTypeSpec {
   [key: string]: any
 }
 
+export interface ArtifactTypeSpecWrapper {
+  spec?: ArtifactTypeSpec
+}
+
 export type ArtifactoryRegistrySpec = ArtifactTypeSpec & {
   artifactDirectory?: string
   artifactPath?: string
@@ -626,7 +630,6 @@ export type ArtifactoryRegistrySpec = ArtifactTypeSpec & {
 }
 
 export interface Attestation {
-  privateKey?: string
   spec?: AttestationSpec
   type?: 'cosign'
 }
@@ -3561,12 +3564,12 @@ export interface MoveConfigResponse {
   pipelineIdentifier?: string
 }
 
-export type MultiArtifactTriggerConfig = NGTriggerSpecV2 & {
+export type MultiRegionArtifactTriggerConfig = NGTriggerSpecV2 & {
   artifactRef?: string
   eventConditions?: TriggerEventDataCondition[]
   jexlCondition?: string
   metaDataConditions?: TriggerEventDataCondition[]
-  sources?: ArtifactTypeSpec[]
+  sources?: ArtifactTypeSpecWrapper[]
   stageIdentifier?: string
   type?:
     | 'Gcr'
@@ -3636,7 +3639,7 @@ export interface NGTriggerDetailsResponse {
     [key: string]: string
   }
   triggerStatus?: TriggerStatus
-  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiArtifact'
+  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
   webhookCurlCommand?: string
   webhookDetails?: WebhookDetails
   webhookUrl?: string
@@ -3688,7 +3691,7 @@ export interface NGTriggerEventHistoryResponse {
   targetIdentifier?: string
   triggerEventStatus?: TriggerEventStatus
   triggerIdentifier?: string
-  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiArtifact'
+  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
 }
 
 export interface NGTriggerResponse {
@@ -3707,14 +3710,14 @@ export interface NGTriggerResponse {
   projectIdentifier?: string
   stagesToExecute?: string[]
   targetIdentifier?: string
-  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiArtifact'
+  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
   yaml?: string
 }
 
 export interface NGTriggerSourceV2 {
   pollInterval?: string
   spec?: NGTriggerSpecV2
-  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiArtifact'
+  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
   webhookId?: string
 }
 
@@ -6731,7 +6734,7 @@ export interface TransitionTo {
 }
 
 export interface TriggerCatalogItem {
-  category: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiArtifact'
+  category: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
   triggerCatalogType: (
     | 'Github'
     | 'Gitlab'
