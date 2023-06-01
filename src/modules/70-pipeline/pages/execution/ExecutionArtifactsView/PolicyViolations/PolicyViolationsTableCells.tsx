@@ -12,6 +12,7 @@ import React from 'react'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseTableCellProps } from 'react-table'
 import type { EnforcementResult } from 'services/ssca'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D>
   row: Row<D>

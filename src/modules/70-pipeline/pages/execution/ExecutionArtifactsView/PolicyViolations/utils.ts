@@ -12,12 +12,3 @@ export type EnforcementViolationsParamsWithDefaults = RequiredPick<TableQueryPar
 export const ENFORCEMENT_VIOLATIONS_PAGE_SIZE = 20
 export const ENFORCEMENT_VIOLATIONS_PAGE_INDEX = 0
 export const ENFORCEMENT_VIOLATIONS_DEFAULT_SORT: SortMethod = SortMethod.Newest
-
-export const useEnforcementViolationsQueryParamOptions = () => {
-  return useQueryParamsOptions({
-    page: ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
-    size: ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
-    sort: ENFORCEMENT_VIOLATIONS_DEFAULT_SORT,
-    searchTerm: ''
-  })
-}
