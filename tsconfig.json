@@ -38,7 +38,6 @@
       "@connectors/*": ["modules/35-connectors/*"],
       "@user-profile/*": ["modules/38-user-profile/*"],
       "@audit-trail/*": ["modules/38-audit-trail/*"],
-      "@monitored-services/*": ["modules/73-monitored-services/*"],
       "@projects-orgs/*": ["modules/45-projects-orgs/*"],
       "@delegates/*": ["modules/30-delegates/*"],
       "@dashboards/*": ["modules/45-dashboards/*"],
