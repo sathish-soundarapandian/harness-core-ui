@@ -67,17 +67,13 @@ import { getIsValuePresent } from './utils/licenseBannerUtils'
 import { ThresholdPercentageToShowBanner } from './constants'
 import SLODowntimePage from './pages/slos/SLODowntimePage/SLODowntimePage'
 import CVCreateDowntime from './pages/slos/components/CVCreateDowntime/CVCreateDowntime'
-<<<<<<< HEAD
 import {
   CD_MONITORED_SERVICE_CONFIG,
   PROJECT_MONITORED_SERVICE_CONFIG
 } from './components/MonitoredServiceWidget/MonitoredServiceWidget.constants'
-import Configurations from './pages/monitored-service/components/Configurations/Configurations'
 import MonitoredServiceWidgetContainer from './components/MonitoredServiceWidget/MonitoredServiceWidget.container'
 import CommonMonitoredServiceDetails from './components/MonitoredServiceWidget/components/CommonMonitoredServiceDetails/CommonMonitoredServiceDetails'
-=======
 import type { SRMCustomMicroFrontendProps } from './interface/SRMCustomMicroFrontendProps.types'
->>>>>>> ba583d61974eaf09a337d4501f91df79c40bf87e
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
