@@ -630,6 +630,8 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  title: Get started with comprehensive deployments
+  description: Set up a Harness CD pipeline or a GitOps app to automate deployment of your service to your infrastructure
   flowbyquestions:
     what:
       title: What do you want to deploy?
@@ -655,7 +657,7 @@ getStartedWithCD:
     deplopymentSteps:
       title: Here are the steps to deploy!
       stepsTitle: Here are the steps you can run to start deploying with Harness CD in a pipeline
-      stepsIntro: "You have chosen to deploy Kubernetes Manifests using the CD Pipeline approach. Following are the steps you have run to create your CD Pipeline. The steps below use a sample application located at <a target='_blank' href='{{sampleAppURL}}'>{{sampleAppURL}} </a>"
+      stepsIntro: 'You have chosen to deploy Kubernetes Manifests using the CD Pipeline approach. Following are the steps you have run to create your CD Pipeline. The steps below use a sample application located at <a target="_blank" href="{{sampleAppURL}}"">{{sampleAppURL}} </a>'
       stepsIntro2: If you want to deploy your own application, all you have to do is edit the sample application YAMLs provided to point to your application manifests and artifact.
       steps:
         step1:
@@ -664,7 +666,7 @@ getStartedWithCD:
           linux: lincurl -L0 https://github.com/harness/harness-cli/releases/download/v0.2.8/harness-cli-v0.2.8-darwin-amd64.tar.gz
           win: wincurl -L0 https://github.com/harness/harness-cli/releases/download/v0.2.8/harness-cli-v0.2.8-darwin-amd64.tar.gz
         step2:
-          title: "2. Run the steps to deploy the sample guestbook application located at <a target='_blank' href='{{guestBookURL}}'>{{guestBookURL}}</a>."
+          title: '2. Run the steps to deploy the sample guestbook application located at <a target="_blank" href="{{guestBookURL}}">{{guestBookURL}}</a>.'
           description: You will first create a Harness Service representing this application and a Harness Environment representing the infrastructure where you are deploying (and already identified by the Delegate installed in the previous step).
           clonecmd: 'git clone https://github.com/harness-community/harnesscd-example-apps'
           logincmd: harness-cli login

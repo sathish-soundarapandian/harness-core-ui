@@ -7,7 +7,10 @@ export interface EntityType {
   id: string
   label: string
   icon?: IconName
+}
+export interface DeploymentStrategyTypes extends EntityType {
   subtitle?: string
+  steps?: { title: string; description: string }[]
 }
 export interface EntityMap {
   [key: string]: EntityType
@@ -29,10 +32,32 @@ export const INFRA_TYPES: { [key: string]: EntityMap } = {
     OpenShiftTemplate: { id: 'OpenShiftTemplate ', label: 'OpenShift Template', icon: 'openshift' }
   }
 }
-export const DEPLOYMENT_STRATEGY_TYPES: EntityMap = {
-  Canary: { id: 'Canary', label: 'Canary', icon: 'canary-icon' },
-  BlueGreen: { id: 'BlueGreen', label: 'Blue Green', icon: 'blue-green' },
-  Rolling: { id: 'Rolling', label: 'Rolling Update', icon: 'rolling-update' }
+export const DEPLOYMENT_STRATEGY_TYPES: {
+  [key: string]: DeploymentStrategyTypes
+} = {
+  Canary: {
+    id: 'Canary',
+    label: 'Canary',
+    icon: 'canary-icon',
+    subtitle: 'Gradually release updates to minimize risks',
+    steps: [
+      { title: 'Canary deployment', description: 'Add canary pods until they guarantee you their safety' },
+      { title: 'Canary delete', description: 'Update 50% new instances in phase 2 and verify it.' },
+      { title: 'Rolling Update', description: 'Update all new instances in phase 3 and verify it.' }
+    ]
+  },
+  BlueGreen: {
+    id: 'BlueGreen',
+    label: 'Blue Green',
+    icon: 'blue-green',
+    subtitle: 'Seamlessly switch between identical environments'
+  },
+  Rolling: {
+    id: 'Rolling',
+    label: 'Rolling Update',
+    icon: 'rolling-update',
+    subtitle: 'Continuously roll out updates without downtime'
+  }
 }
 export const DEPLOYMENT_FLOW_TYPES: { [key: string]: DeploymentFlowType } = {
   CDPipeline: {

@@ -10,6 +10,8 @@ declare const styles: {
   readonly bold: string
   readonly deploymentSteps: string
   readonly deploymentStrategyCards: string
+  readonly deploymentStrategyStep: string
+  readonly deploymentStrategySteps: string
   readonly flowcards: string
   readonly infraCards: string
   readonly marginBottomLarge: string
@@ -17,6 +19,5 @@ declare const styles: {
   readonly padLeft: string
   readonly serviceTypeCards: string
   readonly videoPlayer: string
-  readonly whatToDeploySection: string
 }
 export default styles

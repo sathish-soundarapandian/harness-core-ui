@@ -22,7 +22,8 @@ export const StepTitle = ({
   isCurrent,
   stepStatus,
   onClick,
-  isOptional
+  isOptional,
+  hideTitle
 }: StepTitleInterface): JSX.Element => {
   const { getString } = useStrings()
   const isErrorOrSuccess = stepStatus !== StepStatus.INCONCLUSIVE
@@ -55,9 +56,11 @@ export const StepTitle = ({
             className={cx(css.iconNoBorder, !isErrorOrSuccess && css.defaultState)}
           />
         )}
-        <Text font={{ variation: FontVariation.H5 }} color={labelColor}>
-          {step.title} {isOptional && getString('titleOptional')}
-        </Text>
+        {!hideTitle && (
+          <Text font={{ variation: FontVariation.H5 }} color={labelColor}>
+            {step.title} {isOptional && getString('titleOptional')}
+          </Text>
+        )}
       </Layout.Horizontal>
     </Layout.Vertical>
   )

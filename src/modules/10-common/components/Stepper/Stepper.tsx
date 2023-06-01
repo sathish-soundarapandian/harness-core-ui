@@ -13,7 +13,7 @@ import Step from './components/Step/Step'
 export const StepperContext = React.createContext<StepperProps>({ id: '', stepList: [] })
 
 export const Stepper = (props: React.PropsWithChildren<StepperProps>): React.ReactElement => {
-  const { stepList, isStepValid, onStepChange, runValidationOnMount } = props
+  const { stepList, isStepValid, onStepChange, runValidationOnMount, hideTitleWhenActive } = props
   const [selectedStepId, setSelectedStepId] = useState(() => stepList[0]?.id)
   return (
     <StepperContext.Provider value={{ ...props }}>
@@ -31,6 +31,7 @@ export const Stepper = (props: React.PropsWithChildren<StepperProps>): React.Rea
               onStepChange={onStepChange}
               runValidationOnMount={runValidationOnMount}
               isOptional={step.isOptional}
+              hideTitleWhenActive={hideTitleWhenActive}
             />
           )
         })}

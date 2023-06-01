@@ -5982,6 +5982,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.delegateWorksInfo': string
   'cd.getStartedWithCD.deployToGitops': string
   'cd.getStartedWithCD.deploymentType': string
+  'cd.getStartedWithCD.description': string
   'cd.getStartedWithCD.destinationDetails': string
   'cd.getStartedWithCD.directK8s': string
   'cd.getStartedWithCD.disconnected': string
@@ -6136,6 +6137,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.targetRevision': string
   'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.testesSuccessfully': string
+  'cd.getStartedWithCD.title': string
   'cd.getStartedWithCD.tryAnotherCreds': string
   'cd.getStartedWithCD.tryCICTA': string
   'cd.getStartedWithCD.useOwnManifest': string

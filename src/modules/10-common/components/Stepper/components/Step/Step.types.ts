@@ -18,6 +18,7 @@ export interface StepPropsInterface {
   runValidationOnMount?: boolean
   isOptional?: boolean
   setSelectedStepId: (id: string) => void
+  hideTitleWhenActive?: boolean
 }
 export type StepStatusType = keyof typeof StepStatus
 

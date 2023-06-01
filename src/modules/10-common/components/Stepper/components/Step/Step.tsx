@@ -27,7 +27,8 @@ const Step = ({
   onStepChange,
   setSelectedStepId,
   runValidationOnMount,
-  isOptional
+  isOptional,
+  hideTitleWhenActive
 }: StepPropsInterface): JSX.Element => {
   const { getString } = useStrings()
   const selectedStepIndex = stepList.map(item => item.id).indexOf(selectedStepId || '')
@@ -83,7 +84,9 @@ const Step = ({
         stepStatus={stepTitleStatus}
         onClick={onTitleClick}
         isOptional={isOptional}
+        hideTitle={isCurrentStep ? hideTitleWhenActive : false}
       />
+
       {step.subTitle && (
         <Container className={cx(css.alignContainerRight, css.borderLeft, css.stepSubtitle)}>
           <Text font={{ variation: FontVariation.FORM_LABEL }}>{step.subTitle}</Text>
@@ -125,7 +128,12 @@ const Step = ({
                 <Card data-testid={`panel_${id}`} className={css.card}>
                   {panel}
                 </Card>
-                <StepNavButtons index={index} onContinue={onContinue} isLastStep={isLastStep} />
+                <StepNavButtons
+                  index={index}
+                  onContinue={onContinue}
+                  isLastStep={isLastStep}
+                  nextButtonTitle={step.nextButtonTitle}
+                />
               </>
             )}
           </Container>

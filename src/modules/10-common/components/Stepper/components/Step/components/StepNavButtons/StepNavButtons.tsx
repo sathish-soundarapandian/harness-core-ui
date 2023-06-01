@@ -10,7 +10,12 @@ import { Layout, Button, ButtonVariation } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { StepNavButtonsInterface } from './StepNavButtons.types'
 
-export const StepNavButtons = ({ index, isLastStep, onContinue }: StepNavButtonsInterface): JSX.Element => {
+export const StepNavButtons = ({
+  index,
+  isLastStep,
+  onContinue,
+  nextButtonTitle
+}: StepNavButtonsInterface): JSX.Element => {
   const { getString } = useStrings()
   return (
     <Layout.Horizontal spacing="small" padding={{ top: 'xlarge' }}>
@@ -28,7 +33,7 @@ export const StepNavButtons = ({ index, isLastStep, onContinue }: StepNavButtons
         <Button
           data-testid="nextButton"
           variation={ButtonVariation.PRIMARY}
-          text={getString('next')}
+          text={nextButtonTitle ? nextButtonTitle : getString('next')}
           onClick={() => onContinue(index + 1)}
           rightIcon={'chevron-right'}
         />

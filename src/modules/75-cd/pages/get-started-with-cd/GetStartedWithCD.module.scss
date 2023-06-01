@@ -12,9 +12,19 @@
     margin: 100px 0px var(--spacing-small) 0px !important;
     padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-xxlarge) var(--spacing-11) !important;
   }
+  &.cdwizardcli {
+    margin: 60px 0px var(--spacing-small) 0px !important;
+    padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-xxlarge) var(--spacing-13) !important;
+  }
   padding: 0 var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-xxlarge) var(--spacing-11) !important;
   .buttonRow {
     margin-top: var(--spacing-large) !important;
+    align-items: center;
+  }
+  .descriptionLeftpad {
+    padding-left: var(--spacing-11);
+  }
+  .alignicon {
     align-items: center;
   }
 }

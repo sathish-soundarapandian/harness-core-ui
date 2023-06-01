@@ -9,4 +9,5 @@ export interface StepNavButtonsInterface {
   index: number
   isLastStep: boolean
   onContinue: (index: number, skipValidation?: boolean) => void
+  nextButtonTitle?: string
 }

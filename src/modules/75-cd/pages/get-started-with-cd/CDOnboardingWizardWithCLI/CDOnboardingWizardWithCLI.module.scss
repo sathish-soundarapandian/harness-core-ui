@@ -4,11 +4,6 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-.whatToDeploySection {
-  .bold {
-    font-weight: 600 !important;
-  }
-}
 .serviceTypeCards {
   display: flex;
   gap: var(--spacing-small);
@@ -27,6 +22,7 @@
   }
 
   &.deploymentStrategyCards {
+    gap: var(--spacing-xxlarge);
     :global(.Card--card) {
       width: 255px;
       height: 190px;
@@ -51,6 +47,16 @@
   width: 415px;
   height: 340px;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+}
+
+.deploymentStrategySteps {
+  display: flex;
+  justify-content: space-between;
+  .deploymentStrategyStep {
+    background: var(--grey-100) !important;
+    padding: var(--spacing-xxlarge) !important;
+  }
+}
+.bold {
+  font-weight: 600 !important;
 }

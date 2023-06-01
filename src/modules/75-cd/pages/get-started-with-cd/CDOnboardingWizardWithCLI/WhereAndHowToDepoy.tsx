@@ -53,7 +53,7 @@ function WhereAndHowToDepoy(): JSX.Element {
     openDelegateModalWithCommands()
   }
   return (
-    <Layout.Vertical className={css.whatToDeploySection}>
+    <Layout.Vertical>
       <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'medium' }} margin={{ bottom: 'large' }}>
         {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.title')}
       </Text>

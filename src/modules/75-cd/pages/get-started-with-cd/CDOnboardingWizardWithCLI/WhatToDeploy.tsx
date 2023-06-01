@@ -29,7 +29,7 @@ function WhatToDeploy(): JSX.Element {
     })
   }, [state.svcType])
   return (
-    <Layout.Vertical className={css.whatToDeploySection}>
+    <Layout.Vertical>
       <Text color={Color.BLACK} font={{ size: 'medium' }} margin={{ bottom: 'xlarge' }}>
         {getString('cd.getStartedWithCD.flowbyquestions.what.samplesvc')}
       </Text>
