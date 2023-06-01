@@ -166,7 +166,7 @@ exports[`ExternalAPICallContent should render ExternalAPICallContent 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey400"
                   >
-                    Request Body
+                    requestBodyLabel
                     :
                   </p>
                   <p
