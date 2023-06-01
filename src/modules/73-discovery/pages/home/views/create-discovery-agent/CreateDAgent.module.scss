@@ -7,7 +7,6 @@
 
 .overviewContainer {
   min-height: calc(100% - 118px);
-  height: calc(100vh - 170px);
   width: 60%;
   :global {
     .OverlaySpinner--overlaySpinner {
@@ -26,14 +25,6 @@
         margin: 0 !important;
       }
     }
-  }
-
-  .bottomNav {
-    position: absolute;
-    bottom: 0;
-    width: 95%;
-    background-color: var(--white) !important;
-    padding: 10px var(--spacing-large);
   }
 }
 
@@ -57,15 +48,20 @@
   justify-content: space-between;
 
   .connectorContainer {
-    height: 100px;
+    height: 100%;
     border-radius: 4px;
     width: 600px !important;
     box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
     margin-bottom: var(--spacing-medium) !important;
 
-    :global(.bp3-input) {
-      &:disabled {
-        background-color: var(--grey-100);
+    :global {
+      .bp3-input {
+        &:disabled {
+          background-color: var(--grey-100);
+        }
+      }
+      .bp3-input-group {
+        width: 400px !important;
       }
     }
   }
@@ -82,14 +78,4 @@
   color: var(--red-600) !important;
   margin-left: var(--spacing-xsmall) !important;
   word-break: break-word !important;
-}
-
-.nameDescriptionFieldContainer {
-  border-radius: 4px;
-  width: 600px !important;
-  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
-
-  .nameDescriptionField {
-    width: 395px !important;
-  }
 }

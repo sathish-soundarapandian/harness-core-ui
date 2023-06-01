@@ -5579,6 +5579,9 @@ export interface StringsMap {
   'triggers.validation.triggerName': string
   'discovery.agentName': string
   'discovery.approxTime': string
+  'discovery.createDiscoveryAgent': string
+  'discovery.createNewDiscoveryAgent': string
+  'discovery.dAgentName': string
   'discovery.discoverServices': string
   'discovery.discoveredBy': string
   'discovery.homepage.discoveryAgentDesc': string
@@ -5599,6 +5602,7 @@ export interface StringsMap {
   'discovery.serviceDiscoveyTable': string
   'discovery.tabs.configureRelations': string
   'discovery.tabs.selectServices': string
+  'discovery.testConnector': string
   'discovery.whatIsNetworkMap': string
   'discovery.whatIsServiceDiscovery': string
   'discovery.whatIsServiceDiscoveryDesc': string

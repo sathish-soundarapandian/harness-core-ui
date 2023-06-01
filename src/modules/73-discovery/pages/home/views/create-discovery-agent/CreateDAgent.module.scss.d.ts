@@ -7,7 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly bottomNav: string
   readonly connectorContainer: string
   readonly details: string
   readonly dialog: string
@@ -16,8 +15,6 @@ declare const styles: {
   readonly gap2: string
   readonly gap4: string
   readonly image: string
-  readonly nameDescriptionField: string
-  readonly nameDescriptionFieldContainer: string
   readonly overviewContainer: string
 }
 export default styles
