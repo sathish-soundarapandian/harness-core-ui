@@ -385,6 +385,9 @@ export const getArtifactFormData = (
     case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
       values = getRepoValuesForNexus2(specValues)
       break
+    case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
+      values = getValuesForArtifactory(specValues)
+      break
     default:
       values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
   }
@@ -455,6 +458,19 @@ const getRepoValuesForNexus2 = (specValues: Nexus2InitialValuesType): Nexus2Init
     formikInitialValues.tag = { label: specValues?.tag, value: specValues?.tag } as any
   }
   return formikInitialValues
+}
+
+const getValuesForArtifactory = (specValues: ImagePathTypes): ImagePathTypes => {
+  const artifactPathValues = {
+    ...specValues,
+    tagType: specValues?.tagRegex ? TagTypes.Regex : TagTypes.Value,
+    tag: specValues?.tag,
+    tagRegex: specValues?.tagRegex
+  }
+  if (specValues?.tag && getMultiTypeFromValue(specValues?.tag) === MultiTypeInputType.FIXED) {
+    artifactPathValues.tag = { label: specValues?.tag, value: specValues?.tag }
+  }
+  return artifactPathValues
 }
 
 export const isFieldFixedAndNonEmpty = (field: string): boolean => {
