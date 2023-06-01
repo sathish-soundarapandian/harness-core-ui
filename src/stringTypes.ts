@@ -1086,6 +1086,7 @@ export interface StringsMap {
   'common.smtp.labelSubject': string
   'common.smtp.labelTo': string
   'common.smtp.modalSubHeading': string
+  'common.smtp.noSMTPConfig': string
   'common.smtp.port': string
   'common.smtp.portPositive': string
   'common.smtp.portRequired': string

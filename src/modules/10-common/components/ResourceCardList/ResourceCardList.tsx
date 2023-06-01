@@ -45,11 +45,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const hideGitopsOnPrem = !gitopsOnPremEnabled && isOnPrem()
 
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
-  const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
-  const refetchSmtpData = (): void => {
-    refetch()
-  }
-  const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
+  const { loading, data } = useGetSmtpConfig({ queryParams: { accountId } })
   const showGitOpsCard = useMemo(
     () => history?.location?.pathname.includes('resources') && !hideGitopsOnPrem,
     [history?.location?.pathname]
@@ -62,11 +58,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       colorClass: css.smtp,
       onClick: () => {
         if (!loading) {
-          if (!data?.data) {
-            openCreateSmtpModal(data?.data)
-          } else {
-            history.push(routes.toAccountSMTP({ accountId }))
-          }
+          history.push(routes.toAccountSMTP({ accountId }))
         }
       },
       subLabel: (

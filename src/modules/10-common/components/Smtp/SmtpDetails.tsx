@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import {
   Checkbox,
@@ -31,7 +31,6 @@ import { ActivityDetailsRowInterface, RenderDetailsTable } from '../RenderDetail
 import css from './useCreateSmtpModal.module.scss'
 const SmtpDetails: React.FC = () => {
   const { getString } = useStrings()
-  const history = useHistory()
   const { accountId } = useParams<OrgPathProps>()
   const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
   const { loading: deleteProcessing, mutate: deleteSmtp } = useDeleteSmtpConfig({
@@ -43,6 +42,12 @@ const SmtpDetails: React.FC = () => {
   }
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchData })
 
+  useEffect(() => {
+    if (loading && !data) {
+      openCreateSmtpModal()
+    }
+  }, [data])
+
   const handleEdit = (): void => {
     openCreateSmtpModal(data?.data)
   }
@@ -53,7 +58,7 @@ const SmtpDetails: React.FC = () => {
       })
         .then(val => {
           if (val.status === 'SUCCESS') {
-            history.push(routes.toAccountResources({ accountId }))
+            refetch()
           } else {
             setErrorOnPage(getErrorInfoFromErrorObject(val))
           }
@@ -105,6 +110,21 @@ const SmtpDetails: React.FC = () => {
       <Page.Body
         loading={loading || deleteProcessing}
         error={errorOnPage}
+        noData={{
+          when: () => !data?.data,
+          message: getString('common.smtp.noSMTPConfig'),
+          button: (
+            <Button
+              intent="primary"
+              icon={'small-plus'}
+              size={ButtonSize.LARGE}
+              text={getString('common.setup')}
+              onClick={() => {
+                openCreateSmtpModal()
+              }}
+            />
+          )
+        }}
         loadingMessage={deleteProcessing ? getString('common.smtp.deleteInProgress') : undefined}
       >
         <Card className={css.smtpDetailsCardContainer}>

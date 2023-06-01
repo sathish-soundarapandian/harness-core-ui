@@ -947,6 +947,7 @@ smtp:
   validationSubject: Subject is required
   validationBody: Body is required
   deleteInProgress: Deleting SMTP Configuration
+  noSMTPConfig: No SMTP Configuration available
   savingSMTP: Saving SMTP Configuration
   updatingSMTP: Updating SMTP Configuration
 invalid: INVALID

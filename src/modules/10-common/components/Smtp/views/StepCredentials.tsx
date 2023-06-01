@@ -73,8 +73,15 @@ const StepCredentials: React.FC<StepProps<NgSmtpDTO> & SmtpSharedObj & CreateSmt
   return (
     <Formik<Details>
       onSubmit={values => {
-        if (prevStepData) {
-          save({ ...prevStepData, value: { ...prevStepData?.value, ...values } })
+        if (prevStepData && nextStep) {
+          const uuid = detailsData?.uuid || prevStepData?.uuid
+          console.log({ prevStepData }, detailsData?.uuid, prevStepData?.uuid)
+          nextStep({
+            ...prevStepData,
+            ...(isEdit && { uuid }),
+            delegateSelectors: prevStepData.value.delegateSelectors,
+            value: { ...prevStepData?.value, ...values }
+          } as any)
         }
       }}
       formName="smtpStepCredentialsForm"
