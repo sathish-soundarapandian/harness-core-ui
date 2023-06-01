@@ -24,14 +24,14 @@ export default function ExternalAPICallBodyContent({
   const isDataIsText = data.type === 'TEXT'
 
   if (isDataIsText || !isValidJson(data.value)) {
-    return <KeyValuePair keyText={data?.name ?? ''} value={data.value as string} />
+    return <KeyValuePair keyText={getString('requestBodyLabel')} value={data.value as string} />
   }
 
   return (
     <>
       <Container flex={{ alignItems: 'flex-start' }}>
         <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_400}>
-          {getString('cv.responseBody')}:
+          {getString('requestBodyLabel')}:
         </Text>
         <CopyText
           iconAlwaysVisible
