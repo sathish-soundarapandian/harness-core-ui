@@ -164,8 +164,13 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       }
     }
   }
-  const { auditServiceClientRef, idpServiceClientRef, pipelineServiceClientRef, ngManagerServiceClientRef } =
-    useOpenApiClients(globalResponseHandler, accountId)
+  const {
+    auditServiceClientRef,
+    idpServiceClientRef,
+    pipelineServiceClientRef,
+    ngManagerServiceClientRef,
+    sscaServiceClientRef
+  } = useOpenApiClients(globalResponseHandler, accountId)
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -241,6 +246,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     idpServiceClientRef.current?.updateHeaders(headers)
     pipelineServiceClientRef.current?.updateHeaders(headers)
     ngManagerServiceClientRef.current?.updateHeaders(headers)
+    sscaServiceClientRef.current?.updateHeaders(headers)
   }
 
   return (

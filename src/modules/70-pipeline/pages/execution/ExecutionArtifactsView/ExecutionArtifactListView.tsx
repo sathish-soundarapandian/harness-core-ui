@@ -5,15 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import React from 'react'
+import { Container, Text } from '@harness/uicore'
+import React, { useState } from 'react'
 import { String, useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import { Artifact, ArtifactsTable } from './ArtifactsTable/ArtifactsTable'
-import artifactsEmptyState from './images/artifacts_empty_state.svg'
+import { PolicyViolationsDrawer } from './PolicyViolations/PolicyViolationsDrawer'
 import { StageSelector } from './StageSelector'
+import artifactsEmptyState from './images/artifacts_empty_state.svg'
 import css from './ExecutionArtifactsView.module.scss'
+
+export interface PolicyViolationsProps {
+  enforcementId: string
+  showEnforcementViolations: (enforcementId?: string) => void
+}
 
 export interface ExecutionArtifactListViewProps {
   artifacts: Artifact[]
@@ -26,6 +32,8 @@ export function ExecutionArtifactListView({
 }: ExecutionArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
 
+  const [enforcementId, showEnforcementViolations] = useState<string | undefined>()
+
   return (
     <div>
       <div className={css.subSection}>
@@ -33,7 +41,15 @@ export function ExecutionArtifactListView({
         <StageSelector layoutNodeMap={pipelineExecutionSummary?.layoutNodeMap} />
       </div>
       {artifacts.length ? (
-        <ArtifactsTable artifacts={artifacts} />
+        <>
+          <ArtifactsTable artifacts={artifacts} showEnforcementViolations={showEnforcementViolations} />
+          {enforcementId && (
+            <PolicyViolationsDrawer
+              enforcementId={enforcementId}
+              showEnforcementViolations={showEnforcementViolations}
+            />
+          )}
+        </>
       ) : (
         <Container className={css.emptyArtifacts}>
           <img src={artifactsEmptyState} />

@@ -60,110 +60,81 @@ export interface ArtifactResult {
   }
 }
 
-/**
- * A sbom process request on sscs
- */
 export interface CreateArtifactRequestBody {
   /**
-   * Harness account ID
+   * name of the artifact
    */
-  accountIdentifier: string
+  name: string
+  /**
+   * tag of the artifact
+   */
+  tag: string
+  /**
+   * type of the artifact
+   */
+  type: string
+  /**
+   * Url of the artifact
+   */
+  url: string
+}
+
+export interface CreateArtifactResponseBody {
+  artifactId: string
+}
+
+/**
+ * An enforcement result for a matched rule
+ */
+export interface EnforcementResult {
+  'X-Page-Number'?: number
+  'X-Page-Size'?: number
+  'X-Total-Elements'?: number
+  accountId: string
+  artifactId: string
+  enforcementId: string
+  imageName?: string
+  license: string
+  name: string
+  orchestrationId?: string
+  orgIdentifier?: string
+  packageManager: string
+  projectIdentifier?: string
+  purl: string
+  supplier: string
+  tag?: string
+  version: string
+  violationDetails: string
+  violationType: string
+}
+
+export interface EnforcesbomRequestBody {
   artifact?: {
-    /**
-     * id of the artifact
-     */
-    id?: string
-    /**
-     * name of the artifact
-     */
-    name: string
     /**
      * tag of the artifact
      */
-    tag?: string
-    /**
-     * type of the artifact
-     */
-    type: string
+    tag: string
     /**
      * url of the artifact
      */
     url: string
   }
-  attestation?: {
-    /**
-     * is the sbom attested or not
-     */
-    isAttested?: boolean
-    /**
-     * url of the attested file
-     */
-    url?: string
-  }
-  metadata?: {
-    /**
-     * BuildURL
-     */
-    buildUrl?: string
-    /**
-     * stage name where sbom is generated
-     */
-    format?: string
-    /**
-     * name of the package
-     */
-    pipelineExecutionId?: string
-    /**
-     * name of the package
-     */
-    pipelineIdentifier?: string
-    /**
-     * name of the package
-     */
-    sequenceId?: string
-    /**
-     * name of the Stage
-     */
-    stageIdentifier?: string
-    /**
-     * StepExecutionId
-     */
-    stepExecutionId?: string
-    /**
-     * id of the step
-     */
-    stepIdentifier?: string
-    /**
-     * name of the package
-     */
-    tool?: string
-  }
   /**
-   * Harness organization ID
+   * enforcementId
    */
-  orgIdentifier: string
-  /**
-   * Harness project ID
-   */
-  projectIdentifier: string
-  sbom?: {
-    /**
-     * serialised sbom data
-     */
-    data?: string
-    /**
-     * name of the sbom
-     */
-    name?: string
-    /**
-     * URL of the sbom
-     */
-    url?: string
-  }
+  enforcementId?: string
+  policyFileId?: string
 }
 
-export interface CreateArtifactResponseBody {
-  artifactId: string
+export interface EnforcesbomResponseBody {
+  /**
+   * ID of the enforcement of the SBOM
+   */
+  EnforcementId: string
+  /**
+   * Status of the enforcement
+   */
+  Status: string
 }
 
 export interface Error {
@@ -209,8 +180,44 @@ export interface FindanyRequestBody {
   packageIdentifiers: PackageIdentifier[]
 }
 
-export interface GetArtifactsByIDResponseBody {
+export interface GetArtifactsByIDOKResponseBody {
   artifacts?: ArtifactResult[]
+}
+
+export interface GetEnforcementResultSummaryByIDResponseBody {
+  allowListViolationCount: number
+  artifact: {
+    /**
+     * id of the artifact
+     */
+    id?: string
+    /**
+     * name of the artifact
+     */
+    name: string
+    /**
+     * tag of the artifact
+     */
+    tag?: string
+    /**
+     * type of the artifact
+     */
+    type: string
+    /**
+     * url of the artifact
+     */
+    url: string
+  }
+  denyListViolationCount: number
+  enforcementId: string
+  status: string
+}
+
+export interface GetEnforcementResultsByIDResponseBody {
+  /**
+   * enforcment results for a given enforcement Id
+   */
+  results?: EnforcementResult[]
 }
 
 export interface GetUniqueArtifactResponseBody {
@@ -403,7 +410,7 @@ export interface ProcesssbomRequestBody {
     /**
      * name of the sbom
      */
-    name?: string
+    name: string
     /**
      * URL of the sbom
      */
@@ -427,6 +434,13 @@ export interface ServiceVersion {
    * Version number
    */
   version: string
+}
+
+export interface TokenResponse {
+  /**
+   * Issued cross-service JWT
+   */
+  token: string
 }
 
 export interface DevLoginQueryParams {
@@ -453,7 +467,7 @@ export const DevLogin = (props: DevLoginProps) => (
   <Mutate<string, void, DevLoginQueryParams, LoginRequestBody, void>
     verb="POST"
     path={`/api/login`}
-    base={getConfig('ssca/api/v1')}
+    base={getConfig('ssca')}
     {...props}
   />
 )
@@ -465,12 +479,27 @@ export type UseDevLoginProps = Omit<
 
 export const useDevLogin = (props: UseDevLoginProps) =>
   useMutate<string, void, DevLoginQueryParams, LoginRequestBody, void>('POST', `/api/login`, {
-    base: getConfig('ssca/api/v1'),
+    base: getConfig('ssca'),
     ...props
   })
 
+export interface ArtifactCreateArtifactQueryParams {
+  /**
+   * Harness account ID
+   */
+  accountIdentifier: string
+  /**
+   * Harness organization ID
+   */
+  orgIdentifier: string
+  /**
+   * Harness project ID
+   */
+  projectIdentifier: string
+}
+
 export type ArtifactCreateArtifactProps = Omit<
-  MutateProps<CreateArtifactResponseBody, void, void, CreateArtifactRequestBody, void>,
+  MutateProps<CreateArtifactResponseBody, void, ArtifactCreateArtifactQueryParams, CreateArtifactRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -478,16 +507,16 @@ export type ArtifactCreateArtifactProps = Omit<
  * create an artifact in the artifact db
  */
 export const ArtifactCreateArtifact = (props: ArtifactCreateArtifactProps) => (
-  <Mutate<CreateArtifactResponseBody, void, void, CreateArtifactRequestBody, void>
+  <Mutate<CreateArtifactResponseBody, void, ArtifactCreateArtifactQueryParams, CreateArtifactRequestBody, void>
     verb="POST"
     path={`/api/v1/artifacts`}
-    base={getConfig('ssca/api/v1')}
+    base={getConfig('ssca')}
     {...props}
   />
 )
 
 export type UseArtifactCreateArtifactProps = Omit<
-  UseMutateProps<CreateArtifactResponseBody, void, void, CreateArtifactRequestBody, void>,
+  UseMutateProps<CreateArtifactResponseBody, void, ArtifactCreateArtifactQueryParams, CreateArtifactRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -495,10 +524,11 @@ export type UseArtifactCreateArtifactProps = Omit<
  * create an artifact in the artifact db
  */
 export const useArtifactCreateArtifact = (props: UseArtifactCreateArtifactProps) =>
-  useMutate<CreateArtifactResponseBody, void, void, CreateArtifactRequestBody, void>('POST', `/api/v1/artifacts`, {
-    base: getConfig('ssca/api/v1'),
-    ...props
-  })
+  useMutate<CreateArtifactResponseBody, void, ArtifactCreateArtifactQueryParams, CreateArtifactRequestBody, void>(
+    'POST',
+    `/api/v1/artifacts`,
+    { base: getConfig('ssca'), ...props }
+  )
 
 export interface ArtifactGetArtifactSBOMPathParams {
   /**
@@ -517,7 +547,7 @@ export type ArtifactGetArtifactSBOMProps = Omit<GetProps<void, void, void, Artif
 export const ArtifactGetArtifactSBOM = ({ artifactId, filename, ...props }: ArtifactGetArtifactSBOMProps) => (
   <Get<void, void, void, ArtifactGetArtifactSBOMPathParams>
     path={`/api/v1/artifacts/artifactId/${artifactId}/sbom/${filename}`}
-    base={getConfig('ssca/api/v1')}
+    base={getConfig('ssca')}
     {...props}
   />
 )
@@ -535,7 +565,54 @@ export const useArtifactGetArtifactSBOM = ({ artifactId, filename, ...props }: U
   useGet<void, void, void, ArtifactGetArtifactSBOMPathParams>(
     (paramsInPath: ArtifactGetArtifactSBOMPathParams) =>
       `/api/v1/artifacts/artifactId/${paramsInPath.artifactId}/sbom/${paramsInPath.filename}`,
-    { base: getConfig('ssca/api/v1'), pathParams: { artifactId, filename }, ...props }
+    { base: getConfig('ssca'), pathParams: { artifactId, filename }, ...props }
+  )
+
+export interface ArtifactGetArtifactFromExecutionIdPathParams {
+  stepExeuctionId: string
+}
+
+export type ArtifactGetArtifactFromExecutionIdProps = Omit<
+  GetProps<GetUniqueArtifactResponseBody, void, void, ArtifactGetArtifactFromExecutionIdPathParams>,
+  'path'
+> &
+  ArtifactGetArtifactFromExecutionIdPathParams
+
+/**
+ * getArtifactFromExecutionId artifact
+ *
+ * get the artifact by passing the step execution id and the artifact id
+ */
+export const ArtifactGetArtifactFromExecutionId = ({
+  stepExeuctionId,
+  ...props
+}: ArtifactGetArtifactFromExecutionIdProps) => (
+  <Get<GetUniqueArtifactResponseBody, void, void, ArtifactGetArtifactFromExecutionIdPathParams>
+    path={`/api/v1/artifacts/stepExecutions/${stepExeuctionId}`}
+    base={getConfig('ssca')}
+    {...props}
+  />
+)
+
+export type UseArtifactGetArtifactFromExecutionIdProps = Omit<
+  UseGetProps<GetUniqueArtifactResponseBody, void, void, ArtifactGetArtifactFromExecutionIdPathParams>,
+  'path'
+> &
+  ArtifactGetArtifactFromExecutionIdPathParams
+
+/**
+ * getArtifactFromExecutionId artifact
+ *
+ * get the artifact by passing the step execution id and the artifact id
+ */
+export const useArtifactGetArtifactFromExecutionId = ({
+  stepExeuctionId,
+  ...props
+}: UseArtifactGetArtifactFromExecutionIdProps) =>
+  useGet<GetUniqueArtifactResponseBody, void, void, ArtifactGetArtifactFromExecutionIdPathParams>(
+    (paramsInPath: ArtifactGetArtifactFromExecutionIdPathParams) =>
+      `/api/v1/artifacts/stepExecutions/${paramsInPath.stepExeuctionId}`,
+    { base: getConfig('ssca'), pathParams: { stepExeuctionId }, ...props }
   )
 
 export interface ArtifactGetArtifactsByIdPathParams {
@@ -546,7 +623,7 @@ export interface ArtifactGetArtifactsByIdPathParams {
 }
 
 export type ArtifactGetArtifactsByIdProps = Omit<
-  GetProps<GetArtifactsByIDResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>,
+  GetProps<GetArtifactsByIDOKResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>,
   'path'
 > &
   ArtifactGetArtifactsByIdPathParams
@@ -555,15 +632,15 @@ export type ArtifactGetArtifactsByIdProps = Omit<
  * get artifacts by passing an artifact id
  */
 export const ArtifactGetArtifactsById = ({ artifactId, ...props }: ArtifactGetArtifactsByIdProps) => (
-  <Get<GetArtifactsByIDResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>
+  <Get<GetArtifactsByIDOKResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>
     path={`/api/v1/artifacts/${artifactId}`}
-    base={getConfig('ssca/api/v1')}
+    base={getConfig('ssca')}
     {...props}
   />
 )
 
 export type UseArtifactGetArtifactsByIdProps = Omit<
-  UseGetProps<GetArtifactsByIDResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>,
+  UseGetProps<GetArtifactsByIDOKResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>,
   'path'
 > &
   ArtifactGetArtifactsByIdPathParams
@@ -572,9 +649,9 @@ export type UseArtifactGetArtifactsByIdProps = Omit<
  * get artifacts by passing an artifact id
  */
 export const useArtifactGetArtifactsById = ({ artifactId, ...props }: UseArtifactGetArtifactsByIdProps) =>
-  useGet<GetArtifactsByIDResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>(
+  useGet<GetArtifactsByIDOKResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>(
     (paramsInPath: ArtifactGetArtifactsByIdPathParams) => `/api/v1/artifacts/${paramsInPath.artifactId}`,
-    { base: getConfig('ssca/api/v1'), pathParams: { artifactId }, ...props }
+    { base: getConfig('ssca'), pathParams: { artifactId }, ...props }
   )
 
 export interface ArtifactGetSBOMFromExecutionIdPathParams {
@@ -602,7 +679,7 @@ export const ArtifactGetSBOMFromExecutionId = ({
 }: ArtifactGetSBOMFromExecutionIdProps) => (
   <Get<void, void, void, ArtifactGetSBOMFromExecutionIdPathParams>
     path={`/api/v1/artifacts/${artifactId}/stepExecutions/${stepExeuctionId}/sbom/${filename}`}
-    base={getConfig('ssca/api/v1')}
+    base={getConfig('ssca')}
     {...props}
   />
 )
@@ -627,7 +704,7 @@ export const useArtifactGetSBOMFromExecutionId = ({
   useGet<void, void, void, ArtifactGetSBOMFromExecutionIdPathParams>(
     (paramsInPath: ArtifactGetSBOMFromExecutionIdPathParams) =>
       `/api/v1/artifacts/${paramsInPath.artifactId}/stepExecutions/${paramsInPath.stepExeuctionId}/sbom/${paramsInPath.filename}`,
-    { base: getConfig('ssca/api/v1'), pathParams: { artifactId, stepExeuctionId, filename }, ...props }
+    { base: getConfig('ssca'), pathParams: { artifactId, stepExeuctionId, filename }, ...props }
   )
 
 export interface ArtifactGetUniqueArtifactPathParams {
@@ -653,7 +730,7 @@ export const ArtifactGetUniqueArtifact = ({
 }: ArtifactGetUniqueArtifactProps) => (
   <Get<GetUniqueArtifactResponseBody, void, void, ArtifactGetUniqueArtifactPathParams>
     path={`/api/v1/artifacts/${stepExecutionId}/${stageId}/${stepId}`}
-    base={getConfig('ssca/api/v1')}
+    base={getConfig('ssca')}
     {...props}
   />
 )
@@ -676,7 +753,187 @@ export const useArtifactGetUniqueArtifact = ({
   useGet<GetUniqueArtifactResponseBody, void, void, ArtifactGetUniqueArtifactPathParams>(
     (paramsInPath: ArtifactGetUniqueArtifactPathParams) =>
       `/api/v1/artifacts/${paramsInPath.stepExecutionId}/${paramsInPath.stageId}/${paramsInPath.stepId}`,
-    { base: getConfig('ssca/api/v1'), pathParams: { stepExecutionId, stageId, stepId }, ...props }
+    { base: getConfig('ssca'), pathParams: { stepExecutionId, stageId, stepId }, ...props }
+  )
+
+export interface SbomprocessorEnforcesbomQueryParams {
+  /**
+   * Harness account ID
+   */
+  accountIdentifier: string
+  /**
+   * Harness organization ID
+   */
+  orgIdentifier: string
+  /**
+   * Harness project ID
+   */
+  projectIdentifier: string
+}
+
+export type SbomprocessorEnforcesbomProps = Omit<
+  MutateProps<EnforcesbomResponseBody, void, SbomprocessorEnforcesbomQueryParams, EnforcesbomRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * enforce an sbom
+ */
+export const SbomprocessorEnforcesbom = (props: SbomprocessorEnforcesbomProps) => (
+  <Mutate<EnforcesbomResponseBody, void, SbomprocessorEnforcesbomQueryParams, EnforcesbomRequestBody, void>
+    verb="POST"
+    path={`/api/v1/sbom/enforcement`}
+    base={getConfig('ssca')}
+    {...props}
+  />
+)
+
+export type UseSbomprocessorEnforcesbomProps = Omit<
+  UseMutateProps<EnforcesbomResponseBody, void, SbomprocessorEnforcesbomQueryParams, EnforcesbomRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * enforce an sbom
+ */
+export const useSbomprocessorEnforcesbom = (props: UseSbomprocessorEnforcesbomProps) =>
+  useMutate<EnforcesbomResponseBody, void, SbomprocessorEnforcesbomQueryParams, EnforcesbomRequestBody, void>(
+    'POST',
+    `/api/v1/sbom/enforcement`,
+    { base: getConfig('ssca'), ...props }
+  )
+
+export interface EnforcementGetEnforcementResultsByIdQueryParams {
+  /**
+   * Page number to fetch (starting from 0)
+   */
+  page?: number
+  /**
+   * Number of results per page
+   */
+  pageSize?: number
+}
+
+export interface EnforcementGetEnforcementResultsByIdPathParams {
+  /**
+   * ID of the enforcement to fetch
+   */
+  enforcementId: string
+}
+
+export type EnforcementGetEnforcementResultsByIdProps = Omit<
+  GetProps<
+    GetEnforcementResultsByIDResponseBody,
+    void,
+    EnforcementGetEnforcementResultsByIdQueryParams,
+    EnforcementGetEnforcementResultsByIdPathParams
+  >,
+  'path'
+> &
+  EnforcementGetEnforcementResultsByIdPathParams
+
+/**
+ * get enforcement by passing an enforcement id
+ */
+export const EnforcementGetEnforcementResultsById = ({
+  enforcementId,
+  ...props
+}: EnforcementGetEnforcementResultsByIdProps) => (
+  <Get<
+    GetEnforcementResultsByIDResponseBody,
+    void,
+    EnforcementGetEnforcementResultsByIdQueryParams,
+    EnforcementGetEnforcementResultsByIdPathParams
+  >
+    path={`/api/v1/sbom/enforcement/${enforcementId}/`}
+    base={getConfig('ssca')}
+    {...props}
+  />
+)
+
+export type UseEnforcementGetEnforcementResultsByIdProps = Omit<
+  UseGetProps<
+    GetEnforcementResultsByIDResponseBody,
+    void,
+    EnforcementGetEnforcementResultsByIdQueryParams,
+    EnforcementGetEnforcementResultsByIdPathParams
+  >,
+  'path'
+> &
+  EnforcementGetEnforcementResultsByIdPathParams
+
+/**
+ * get enforcement by passing an enforcement id
+ */
+export const useEnforcementGetEnforcementResultsById = ({
+  enforcementId,
+  ...props
+}: UseEnforcementGetEnforcementResultsByIdProps) =>
+  useGet<
+    GetEnforcementResultsByIDResponseBody,
+    void,
+    EnforcementGetEnforcementResultsByIdQueryParams,
+    EnforcementGetEnforcementResultsByIdPathParams
+  >(
+    (paramsInPath: EnforcementGetEnforcementResultsByIdPathParams) =>
+      `/api/v1/sbom/enforcement/${paramsInPath.enforcementId}/`,
+    { base: getConfig('ssca'), pathParams: { enforcementId }, ...props }
+  )
+
+export interface EnforcementGetEnforcementResultSummaryByIdPathParams {
+  /**
+   * ID of the enforcement to fetch
+   */
+  enforcementId: string
+}
+
+export type EnforcementGetEnforcementResultSummaryByIdProps = Omit<
+  GetProps<
+    GetEnforcementResultSummaryByIDResponseBody,
+    void,
+    void,
+    EnforcementGetEnforcementResultSummaryByIdPathParams
+  >,
+  'path'
+> &
+  EnforcementGetEnforcementResultSummaryByIdPathParams
+
+/**
+ * get enforcement by passing an enforcement id
+ */
+export const EnforcementGetEnforcementResultSummaryById = ({
+  enforcementId,
+  ...props
+}: EnforcementGetEnforcementResultSummaryByIdProps) => (
+  <Get<GetEnforcementResultSummaryByIDResponseBody, void, void, EnforcementGetEnforcementResultSummaryByIdPathParams>
+    path={`/api/v1/sbom/enforcement/${enforcementId}/summary`}
+    base={getConfig('ssca')}
+    {...props}
+  />
+)
+
+export type UseEnforcementGetEnforcementResultSummaryByIdProps = Omit<
+  UseGetProps<
+    GetEnforcementResultSummaryByIDResponseBody,
+    void,
+    void,
+    EnforcementGetEnforcementResultSummaryByIdPathParams
+  >,
+  'path'
+> &
+  EnforcementGetEnforcementResultSummaryByIdPathParams
+
+/**
+ * get enforcement by passing an enforcement id
+ */
+export const useEnforcementGetEnforcementResultSummaryById = ({
+  enforcementId,
+  ...props
+}: UseEnforcementGetEnforcementResultSummaryByIdProps) =>
+  useGet<GetEnforcementResultSummaryByIDResponseBody, void, void, EnforcementGetEnforcementResultSummaryByIdPathParams>(
+    (paramsInPath: EnforcementGetEnforcementResultSummaryByIdPathParams) =>
+      `/api/v1/sbom/enforcement/${paramsInPath.enforcementId}/summary`,
+    { base: getConfig('ssca'), pathParams: { enforcementId }, ...props }
   )
 
 export interface SbomprocessorProcesssbomQueryParams {
@@ -705,8 +962,8 @@ export type SbomprocessorProcesssbomProps = Omit<
 export const SbomprocessorProcesssbom = (props: SbomprocessorProcesssbomProps) => (
   <Mutate<ProcesssbomResponseBody, void, SbomprocessorProcesssbomQueryParams, ProcesssbomRequestBody, void>
     verb="POST"
-    path={`/api/v1/sbomprocessor`}
-    base={getConfig('ssca/api/v1')}
+    path={`/api/v1/sbom/process`}
+    base={getConfig('ssca')}
     {...props}
   />
 )
@@ -722,8 +979,8 @@ export type UseSbomprocessorProcesssbomProps = Omit<
 export const useSbomprocessorProcesssbom = (props: UseSbomprocessorProcesssbomProps) =>
   useMutate<ProcesssbomResponseBody, void, SbomprocessorProcesssbomQueryParams, ProcesssbomRequestBody, void>(
     'POST',
-    `/api/v1/sbomprocessor`,
-    { base: getConfig('ssca/api/v1'), ...props }
+    `/api/v1/sbom/process`,
+    { base: getConfig('ssca'), ...props }
   )
 
 export interface SearchFindanyQueryParams {
@@ -753,7 +1010,7 @@ export const SearchFindany = (props: SearchFindanyProps) => (
   <Mutate<FindResponseBody, void, SearchFindanyQueryParams, FindanyRequestBody, void>
     verb="POST"
     path={`/api/v1/search/findany`}
-    base={getConfig('ssca/api/v1')}
+    base={getConfig('ssca')}
     {...props}
   />
 )
@@ -770,7 +1027,7 @@ export const useSearchFindany = (props: UseSearchFindanyProps) =>
   useMutate<FindResponseBody, void, SearchFindanyQueryParams, FindanyRequestBody, void>(
     'POST',
     `/api/v1/search/findany`,
-    { base: getConfig('ssca/api/v1'), ...props }
+    { base: getConfig('ssca'), ...props }
   )
 
 export interface SearchFindQueryParams {
@@ -807,7 +1064,7 @@ export type SearchFindProps = Omit<
 export const SearchFind = ({ packagename, ...props }: SearchFindProps) => (
   <Get<FindResponseBody, void, SearchFindQueryParams, SearchFindPathParams>
     path={`/api/v1/search/${packagename}`}
-    base={getConfig('ssca/api/v1')}
+    base={getConfig('ssca')}
     {...props}
   />
 )
@@ -824,7 +1081,7 @@ export type UseSearchFindProps = Omit<
 export const useSearchFind = ({ packagename, ...props }: UseSearchFindProps) =>
   useGet<FindResponseBody, void, SearchFindQueryParams, SearchFindPathParams>(
     (paramsInPath: SearchFindPathParams) => `/api/v1/search/${paramsInPath.packagename}`,
-    { base: getConfig('ssca/api/v1'), pathParams: { packagename }, ...props }
+    { base: getConfig('ssca'), pathParams: { packagename }, ...props }
   )
 
 export type SystemHealthProps = Omit<GetProps<void, void, void, void>, 'path'>
@@ -833,7 +1090,7 @@ export type SystemHealthProps = Omit<GetProps<void, void, void, void>, 'path'>
  * Check service health
  */
 export const SystemHealth = (props: SystemHealthProps) => (
-  <Get<void, void, void, void> path={`/api/v1/system/health`} base={getConfig('ssca/api/v1')} {...props} />
+  <Get<void, void, void, void> path={`/api/v1/system/health`} base={getConfig('ssca')} {...props} />
 )
 
 export type UseSystemHealthProps = Omit<UseGetProps<void, void, void, void>, 'path'>
@@ -842,7 +1099,7 @@ export type UseSystemHealthProps = Omit<UseGetProps<void, void, void, void>, 'pa
  * Check service health
  */
 export const useSystemHealth = (props: UseSystemHealthProps) =>
-  useGet<void, void, void, void>(`/api/v1/system/health`, { base: getConfig('ssca/api/v1'), ...props })
+  useGet<void, void, void, void>(`/api/v1/system/health`, { base: getConfig('ssca'), ...props })
 
 export type SystemVersionProps = Omit<GetProps<ServiceVersion, void, void, void>, 'path'>
 
@@ -850,7 +1107,7 @@ export type SystemVersionProps = Omit<GetProps<ServiceVersion, void, void, void>
  * Check service version
  */
 export const SystemVersion = (props: SystemVersionProps) => (
-  <Get<ServiceVersion, void, void, void> path={`/api/v1/system/version`} base={getConfig('ssca/api/v1')} {...props} />
+  <Get<ServiceVersion, void, void, void> path={`/api/v1/system/version`} base={getConfig('ssca')} {...props} />
 )
 
 export type UseSystemVersionProps = Omit<UseGetProps<ServiceVersion, void, void, void>, 'path'>
@@ -859,4 +1116,49 @@ export type UseSystemVersionProps = Omit<UseGetProps<ServiceVersion, void, void,
  * Check service version
  */
 export const useSystemVersion = (props: UseSystemVersionProps) =>
-  useGet<ServiceVersion, void, void, void>(`/api/v1/system/version`, { base: getConfig('ssca/api/v1'), ...props })
+  useGet<ServiceVersion, void, void, void>(`/api/v1/system/version`, { base: getConfig('ssca'), ...props })
+
+export interface TokenIssueTokenQueryParams {
+  /**
+   * Harness account ID
+   */
+  accountIdentifier: string
+  /**
+   * Harness organization ID
+   */
+  orgIdentifier: string
+  /**
+   * Harness project ID
+   */
+  projectIdentifier: string
+}
+
+export type TokenIssueTokenProps = Omit<
+  GetProps<TokenResponse, TokenResponse, TokenIssueTokenQueryParams, void>,
+  'path'
+>
+
+/**
+ * Issue a cross-service token
+ */
+export const TokenIssueToken = (props: TokenIssueTokenProps) => (
+  <Get<TokenResponse, TokenResponse, TokenIssueTokenQueryParams, void>
+    path={`/api/v1/token`}
+    base={getConfig('ssca')}
+    {...props}
+  />
+)
+
+export type UseTokenIssueTokenProps = Omit<
+  UseGetProps<TokenResponse, TokenResponse, TokenIssueTokenQueryParams, void>,
+  'path'
+>
+
+/**
+ * Issue a cross-service token
+ */
+export const useTokenIssueToken = (props: UseTokenIssueTokenProps) =>
+  useGet<TokenResponse, TokenResponse, TokenIssueTokenQueryParams, void>(`/api/v1/token`, {
+    base: getConfig('ssca'),
+    ...props
+  })

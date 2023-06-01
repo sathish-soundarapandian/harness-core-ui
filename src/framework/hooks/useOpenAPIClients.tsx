@@ -10,6 +10,7 @@ import { HarnessReactAPIClient as AuditServiceClient } from '@harnessio/react-au
 import { IDPServiceAPIClient } from '@harnessio/react-idp-service-client'
 import { PipelineServiceAPIClient } from '@harnessio/react-pipeline-service-client'
 import { NGManagerServiceAPIClient } from '@harnessio/react-ng-manager-client'
+import { SSCAServiceAPIClient } from '@harnessio/react-ssca-service-client'
 
 import SessionToken from 'framework/utils/SessionToken'
 
@@ -18,6 +19,7 @@ type UseOpenApiClientsReturn = {
   idpServiceClientRef: React.MutableRefObject<IDPServiceAPIClient>
   pipelineServiceClientRef: React.MutableRefObject<PipelineServiceAPIClient>
   ngManagerServiceClientRef: React.MutableRefObject<NGManagerServiceAPIClient>
+  sscaServiceClientRef: React.MutableRefObject<SSCAServiceAPIClient>
 }
 
 export const getOpenAPIClientInitiator = (
@@ -47,11 +49,18 @@ const useOpenApiClients = (
   const pipelineServiceClientRef = useRef<PipelineServiceAPIClient>(
     new PipelineServiceAPIClient(openAPIClientInitiator)
   )
+  const sscaServiceClientRef = useRef<SSCAServiceAPIClient>(new SSCAServiceAPIClient(openAPIClientInitiator))
   const ngManagerServiceClientRef = useRef<NGManagerServiceAPIClient>(
     new NGManagerServiceAPIClient(openAPIClientInitiator)
   )
 
-  return { auditServiceClientRef, idpServiceClientRef, pipelineServiceClientRef, ngManagerServiceClientRef }
+  return {
+    auditServiceClientRef,
+    idpServiceClientRef,
+    pipelineServiceClientRef,
+    ngManagerServiceClientRef,
+    sscaServiceClientRef
+  }
 }
 
 export default useOpenApiClients

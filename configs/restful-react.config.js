@@ -255,7 +255,7 @@ module.exports = {
     transformer: 'scripts/swagger-transform.js',
     customImport: `import { getConfig } from "../config";`,
     customProps: {
-      base: `{getConfig("ssca/api/v1")}`
+      base: `{getConfig("ssca")}`
     }
   }
 }

@@ -9,20 +9,8 @@ import { TableV2 } from '@harness/uicore'
 import React from 'react'
 import type { Column } from 'react-table'
 import { useStrings } from 'framework/strings'
-import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import type { ExecutionNode } from 'services/pipeline-ng'
-import { useQueryParams } from '@common/hooks'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
-import { ArtifactExpandedView } from './ArtifactExpandedView'
-import {
-  ArtifactCell,
-  PipelineStepCell,
-  SbomCell,
-  ToggleAccordionCell,
-  TypeCell,
-  ViolationsCell
-} from './ArtifactTableCells'
+import { ArtifactCell, PipelineStepCell, SbomCell, TypeCell, ViolationsCell } from './ArtifactTableCells'
 import css from './ArtifactsTable.module.scss'
 
 export type ArtifactType = 'File' | 'Image' | 'Sbom'
@@ -44,26 +32,18 @@ export interface Artifact {
 }
 
 export interface ArtifactsColumnActions {
-  onSbomDownload: (sbomId: string) => void
+  showEnforcementViolations: (stepExecutionId?: string) => void
 }
 
-export interface ArtifactsTableProps {
+export interface ArtifactsTableProps extends ArtifactsColumnActions {
   artifacts: Artifact[]
 }
 
-export function ArtifactsTable({ artifacts }: ArtifactsTableProps): React.ReactElement {
+export function ArtifactsTable({ artifacts, showEnforcementViolations }: ArtifactsTableProps): React.ReactElement {
   const { getString } = useStrings()
-  const { size, page } = useQueryParams<{ size: number; page: number }>()
-  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
 
   const columns: Column<Artifact>[] = React.useMemo(() => {
     return [
-      {
-        Header: '',
-        accessor: 'tag',
-        Cell: ToggleAccordionCell,
-        disableSortBy: true
-      },
       {
         Header: 'Artifact', //TODO: move this to common and update all instances
         accessor: 'url',
@@ -82,7 +62,8 @@ export function ArtifactsTable({ artifacts }: ArtifactsTableProps): React.ReactE
       {
         Header: getString('common.violations'),
         accessor: 'allowListViolationCount',
-        Cell: ViolationsCell
+        Cell: ViolationsCell,
+        showEnforcementViolations
       },
       {
         Header: getString('common.sbom'),
@@ -90,26 +71,7 @@ export function ArtifactsTable({ artifacts }: ArtifactsTableProps): React.ReactE
         Cell: SbomCell
       }
     ]
-  }, [getString])
+  }, [getString, showEnforcementViolations])
 
-  const renderRowSubComponent = React.useCallback(({ row }) => <ArtifactExpandedView row={row} />, [])
-
-  const paginationProps = useDefaultPaginationProps({
-    itemCount: artifacts.length || 0,
-    pageSize: size || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : 10),
-    pageCount: Math.ceil(artifacts.length / 10),
-    pageIndex: page || 0
-  })
-
-  return (
-    <TableV2
-      className={css.table}
-      columns={columns}
-      data={artifacts}
-      pagination={paginationProps}
-      sortable
-      renderRowSubComponent={renderRowSubComponent}
-      autoResetExpanded={false}
-    />
-  )
+  return <TableV2 className={css.table} columns={columns} data={artifacts} sortable />
 }
