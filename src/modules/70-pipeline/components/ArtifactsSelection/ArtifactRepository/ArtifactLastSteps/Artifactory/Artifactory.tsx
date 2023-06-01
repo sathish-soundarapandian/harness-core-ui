@@ -365,7 +365,7 @@ function Artifactory({
       selectedArtifact as ArtifactType,
       isIdentifierAllowed,
       selectedDeploymentType as ServiceDefinition['type'],
-      isGenericArtifactory
+      shouldChooseGenericAsDefault || isGenericArtifactory
     ) as ImagePathTypes
     if (
       getMultiTypeFromValue(artifactFormDataValues.artifactPath) === MultiTypeInputType.FIXED &&

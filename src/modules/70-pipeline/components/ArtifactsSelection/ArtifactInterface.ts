@@ -78,6 +78,7 @@ export interface ImagePathTypes {
   imagePath?: string
   digest?: any
   artifactPath?: SelectOption | string
+  artifactPathFilter?: string
   tag: any
   tagRegex: any
   tagType: TagTypes

@@ -256,6 +256,7 @@ export const getFinalArtifactFormObj = (
   if (isIdentifierAllowed) {
     merge(artifactObj, { identifier: formData?.identifier })
   }
+
   return artifactObj
 }
 
@@ -461,6 +462,19 @@ const getRepoValuesForNexus2 = (specValues: Nexus2InitialValuesType): Nexus2Init
 }
 
 const getValuesForArtifactory = (specValues: ImagePathTypes): ImagePathTypes => {
+  if (!specValues?.tag && !specValues?.tagRegex) {
+    const artifactPathValues = {
+      ...specValues,
+      tagType: specValues?.artifactPath ? TagTypes.Value : TagTypes.Regex,
+      artifactPath: specValues?.artifactPath,
+      tag: specValues?.artifactPath,
+      tagRegex: specValues?.artifactPathFilter
+    }
+    if (specValues?.artifactPath && getMultiTypeFromValue(specValues?.artifactPath) === MultiTypeInputType.FIXED) {
+      artifactPathValues.tag = { label: specValues?.artifactPath as string, value: specValues?.artifactPath as string }
+    }
+    return artifactPathValues
+  }
   const artifactPathValues = {
     ...specValues,
     tagType: specValues?.tagRegex ? TagTypes.Regex : TagTypes.Value,

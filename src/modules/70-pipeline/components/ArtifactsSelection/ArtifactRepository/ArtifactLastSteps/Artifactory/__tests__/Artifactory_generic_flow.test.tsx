@@ -117,7 +117,7 @@ describe('artifactory submit flow', () => {
         spec: {
           connectorRef: '',
           artifactDirectory: 'test-directory',
-          artifactPath: 'test',
+          artifactPath: 'test-tag',
           repository: 'iistest',
 
           repositoryFormat: 'generic',

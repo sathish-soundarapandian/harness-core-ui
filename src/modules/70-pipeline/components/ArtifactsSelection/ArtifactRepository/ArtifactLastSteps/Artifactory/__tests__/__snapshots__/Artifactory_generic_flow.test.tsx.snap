@@ -376,7 +376,7 @@ exports[`artifactory submit flow render form when repoformat is generic and has 
                                 placeholder="Search..."
                                 style="padding-right: 0px;"
                                 type="text"
-                                value="test"
+                                value="test-tag"
                               />
                               <span
                                 class="bp3-input-action"
