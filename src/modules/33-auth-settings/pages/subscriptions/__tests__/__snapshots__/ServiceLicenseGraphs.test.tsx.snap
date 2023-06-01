@@ -112,7 +112,7 @@ exports[`Service License Visualisation Graph test cases for api data still loadi
                   placeholder="- Select -"
                   style="padding-right: 0px;"
                   type="text"
-                  value="May 2023"
+                  value="June 2023"
                 />
                 <span
                   class="bp3-input-action"
@@ -336,7 +336,7 @@ exports[`Service License Visualisation Graph test cases it renders the subscript
                   placeholder="- Select -"
                   style="padding-right: 0px;"
                   type="text"
-                  value="May 2023"
+                  value="June 2023"
                 />
                 <span
                   class="bp3-input-action"
