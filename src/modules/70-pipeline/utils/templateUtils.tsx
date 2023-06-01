@@ -154,8 +154,7 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
 export const getTemplateRefVersionLabelObject = (template: TemplateSummaryResponse): TemplateLinkConfig => {
   return {
     templateRef: defaultTo(getScopeBasedTemplateRef(template), ''),
-    versionLabel: defaultTo(template.versionLabel, ''),
-    gitBranch: template?.gitDetails?.branch || ''
+    versionLabel: defaultTo(template.versionLabel, '')
   }
 }
 

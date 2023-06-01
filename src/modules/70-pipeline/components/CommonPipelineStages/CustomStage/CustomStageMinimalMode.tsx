@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { noop } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
 import { Button, Container, FormikForm, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Formik } from 'formik'
@@ -38,11 +38,13 @@ export function CustomStageMinimalMode(props: CustomStageMinimalModeProps): Reac
   const { onChange, onSubmit = noop, data, template } = props
 
   const {
-    state: { pipeline },
+    state: { pipeline, gitDetails },
     contextType
   } = usePipelineContext()
 
   const { branch, repoName } = useQueryParams<GitQueryParams>()
+  const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
+  const parentTemplateRepo = defaultTo(gitDetails?.repoName, repoName)
 
   const handleValidate = (values: CustomStageMinimalValues): Record<string, string | undefined> | undefined => {
     const errors: { name?: string } = {}
@@ -63,7 +65,10 @@ export function CustomStageMinimalMode(props: CustomStageMinimalModeProps): Reac
     if (data?.stage) {
       /* istanbul ignore next */
       if (template) {
-        onSubmit({ stage: createTemplate(values, template, branch, repoName) }, values.identifier)
+        onSubmit(
+          { stage: createTemplate(values, template, parentTemplateBranch, parentTemplateRepo) },
+          values.identifier
+        )
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

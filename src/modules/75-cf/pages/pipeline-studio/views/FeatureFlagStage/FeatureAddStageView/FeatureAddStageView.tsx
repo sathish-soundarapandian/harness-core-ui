@@ -10,6 +10,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Text, Container, Formik, FormikForm, Button } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikConfig, FormikErrors } from 'formik'
+import { defaultTo } from 'lodash-es'
 import type { FeatureFlagStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import {
   PipelineContextType,
@@ -20,6 +21,8 @@ import { NameIdDescription } from '@common/components/NameIdDescriptionTags/Name
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import { TemplateDetailsResponseWrapper, createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
+import { useQueryParams } from '@common/hooks/useQueryParams'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import css from './FeatureAddStageView.module.scss'
 
 export interface FeatureAddEditStageViewProps {
@@ -46,6 +49,10 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
     state: { pipeline, gitDetails },
     contextType
   } = usePipelineContext()
+
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
+  const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
+  const parentTemplateRepo = defaultTo(gitDetails?.repoName, repoName)
 
   const isTemplate = contextType === PipelineContextType.StageTemplate
 
@@ -86,7 +93,7 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
     if (data?.stage) {
       if (template) {
         onSubmit?.(
-          { stage: createTemplate(values, template, gitDetails?.branch, gitDetails?.repoName) },
+          { stage: createTemplate(values, template, parentTemplateBranch, parentTemplateRepo) },
           values.identifier
         )
       } else {
