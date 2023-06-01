@@ -190,7 +190,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="flex-grow: 1; width: 300px;"
+                style="flex-grow: 1;"
               >
                 <label
                   class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
