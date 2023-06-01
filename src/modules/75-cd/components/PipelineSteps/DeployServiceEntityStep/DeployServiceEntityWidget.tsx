@@ -99,7 +99,7 @@ const DIALOG_PROPS: Omit<ModalDialogProps, 'isOpen'> = {
 }
 
 function getInitialValues(data: DeployServiceEntityData): FormState {
-  const parallelValue = get(data, 'services.metadata.parallel', false)
+  const parallelValue = get(data, 'services.metadata.parallel', true)
 
   if (data.service && data.service.serviceRef) {
     return {
