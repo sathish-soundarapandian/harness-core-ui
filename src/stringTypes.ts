@@ -9544,6 +9544,8 @@ export interface StringsMap {
   'iacm.navTitle': string
   'iacm.permissions.iacmWorkspace': string
   'iacm.permissions.iacmWorkspaces': string
+  'iacm.pipelineSteps.description': string
+  'iacm.pipelineSteps.required': string
   'iacm.pulumi': string
   'iacm.stageDescription': string
   'iacm.stageTitle': string

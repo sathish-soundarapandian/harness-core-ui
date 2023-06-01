@@ -209,7 +209,8 @@ export enum StepType {
   Fossa = 'Fossa',
   Semgrep = 'Semgrep',
   KubernetesAws = 'KubernetesAws',
-  AwsSam = 'AWS_SAM'
+  AwsSam = 'AWS_SAM',
+  IACMTerraformPlugin = 'IACMTerraformPlugin'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

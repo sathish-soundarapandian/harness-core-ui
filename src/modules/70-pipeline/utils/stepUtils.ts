@@ -258,6 +258,13 @@ export function getStepPaletteModuleInfosFromStage(
       )
       return stepPalleteInfo
     }
+    case StageType.IACM:
+      return [
+        {
+          module: 'iacm',
+          shouldShowCommonSteps: false
+        }
+      ]
     default:
       return [
         {
