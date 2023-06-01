@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { capitalize } from 'lodash-es'
+import { capitalize, clone } from 'lodash-es'
 import { Container, Text, Card, Layout, Icon, PageError, PageSpinner, IconName } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
@@ -14,6 +14,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useGetCommunity } from '@common/utils/utils'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps, SubscriptionQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -58,7 +59,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
       .concat(capitalize(module.licenseType))
       .concat(')')
   }
-
+  const isCommunity = useGetCommunity()
   return (
     <Card className={css.subscribedModules}>
       <Container padding={'large'}>
@@ -80,15 +81,17 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
         border={{ top: true, color: Color.GREY_250 }}
         padding={{ top: 'large', bottom: 'large', left: 'large' }}
       >
-        <Link
-          to={routes.toSubscriptions({
-            accountId,
-            moduleCard: module.moduleType as SubscriptionQueryParams['moduleCard']
-          })}
-          className={css.manageBtn}
-        >
-          {getString('common.manage')}
-        </Link>
+        {!isCommunity ? (
+          <Link
+            to={routes.toSubscriptions({
+              accountId,
+              moduleCard: module.moduleType as SubscriptionQueryParams['moduleCard']
+            })}
+            className={css.manageBtn}
+          >
+            {getString('common.manage')}
+          </Link>
+        ) : null}
       </Container>
     </Card>
   )
@@ -97,8 +100,9 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ module }) => {
 const SubscribedModules: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CENG_ENABLED } = useFeatureFlags()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
+  const { shouldVisible: shouldCIBeVisible } = useNavModuleInfo(ModuleName.CI)
   function isModuleEnabled(moduleLicense: ModuleLicenseDTO): boolean | undefined {
     const moduleType = moduleLicense['moduleType']
     const moduleTypeName = moduleType === ModuleName.SRM ? ModuleName.CV : moduleType
@@ -112,10 +116,10 @@ const SubscribedModules: React.FC = () => {
         return CENG_ENABLED
       }
       case ModuleName.CI: {
-        return CING_ENABLED
+        return shouldCIBeVisible
       }
       case ModuleName.CF: {
-        return CFNG_ENABLED
+        return licenseStatus === LICENSE_STATE_VALUES.ACTIVE
       }
       case ModuleName.CV: {
         return CVNG_ENABLED
@@ -161,9 +165,11 @@ const SubscribedModules: React.FC = () => {
     [key: string]: ModuleLicenseDTO[]
   } = accountLicenses?.data?.allModuleLicenses || {}
 
+  const clonedModules = clone(modules)
+  delete clonedModules.CV
   const subscribedModules =
-    Object.values(modules).length > 0 ? (
-      Object.values(modules).map(moduleLicenses => {
+    Object.values(clonedModules).length > 0 ? (
+      Object.values(clonedModules).map(moduleLicenses => {
         if (moduleLicenses?.length > 0) {
           const latestModuleLicense = moduleLicenses[moduleLicenses.length - 1]
           if (isModuleEnabled(latestModuleLicense)) {

@@ -74,6 +74,7 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   componentName?: string
   isMultiSelect?: boolean
   isOnlyFixedtype?: boolean
+  showAllTab?: boolean
   selectedReferences?: string[] | Item[]
   onMultiSelectChange?: (records: ScopeAndIdentifier[]) => void
   isRecordDisabled?: (item: any) => boolean
@@ -257,6 +258,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
             selectedRecord={selectedRecord}
             isRecordDisabled={isRecordDisabled}
             renderRecordDisabledWarning={renderRecordDisabledWarning}
+            showAllTab={props.showAllTab}
           />
         </div>
       </Dialog>

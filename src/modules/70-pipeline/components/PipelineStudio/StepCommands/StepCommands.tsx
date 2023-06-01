@@ -26,7 +26,7 @@ import type { TemplateStepNode } from 'services/pipeline-ng'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { getStepDataFromValues } from '@pipeline/utils/stepUtils'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import { StepCommandsProps, StepCommandsViews, Values } from './StepCommandTypes'
+import { StepCommandsProps, StepCommandsViews, StepGroupWithStageElementConfig, Values } from './StepCommandTypes'
 import css from './StepCommands.module.scss'
 
 export type StepFormikRef<T = unknown> = {
@@ -75,6 +75,7 @@ export function StepCommands(
     allowableTypes,
     gitDetails,
     storeMetadata,
+    saveAsTemplateButtonProps,
     isSaveAsTemplateEnabled = true
   } = props
   const { getString } = useStrings()
@@ -82,7 +83,7 @@ export function StepCommands(
   const stepRef = React.useRef<FormikProps<unknown> | null>(null)
   const referenceId = stepsFactory.getStepReferenceId(((step as StepElementConfig).type as StepType) || '')
   const advancedConfRef = React.useRef<FormikProps<unknown> | null>(null)
-  const isTemplateStep = !!(step as TemplateStepNode)?.template
+  const isTemplateStep = !!(step as TemplateStepNode).template
   const { module } = useParams<ModulePathParams>()
 
   async function handleTabChange(newTab: StepCommandTabs, prevTab: StepCommandTabs): Promise<void> {
@@ -115,7 +116,12 @@ export function StepCommands(
       ? StepType.Template
       : ((step as StepElementConfig).type as StepType)
 
-  const getValues = (): Partial<Values> => {
+  const getValues = (
+    latestValues: {
+      stepValues?: Partial<Values>
+      advancedValues?: Partial<Values>
+    } = {}
+  ): Partial<Values> => {
     const stepObj =
       isStepGroup && !isTemplateStep
         ? (stepsFactory.getStep(StepType.StepGroup) as PipelineStep<any>)
@@ -123,9 +129,12 @@ export function StepCommands(
         ? (stepsFactory.getStep(StepType.Template) as PipelineStep<any>)
         : (stepsFactory.getStep((step as StepElementConfig).type) as PipelineStep<any>)
 
+    const { stepValues, advancedValues } = latestValues
     const values = {
-      ...(stepRef.current ? stepObj.processFormData(stepRef.current.values) : {}),
-      ...(isTemplateStep ? {} : (advancedConfRef.current?.values as Partial<Values>))
+      ...(stepRef.current
+        ? defaultTo(stepValues, stepObj?.processFormData(stepRef.current.values) ?? stepRef.current.values)
+        : {}),
+      ...(!isTemplateStep ? defaultTo(advancedValues, advancedConfRef.current?.values as Partial<Values>) : {})
     }
 
     return values
@@ -177,7 +186,7 @@ export function StepCommands(
     }
   }))
 
-  const getValuesForTemplate = async (): Promise<StepElementConfig> => {
+  const getValuesForTemplate = async (): Promise<StepElementConfig | StepGroupWithStageElementConfig> => {
     const stepObj = stepsFactory.getStep(
       isStepGroup ? StepType.StepGroup : (step as StepElementConfig).type
     ) as PipelineStep<any>
@@ -202,18 +211,18 @@ export function StepCommands(
       }
     }
 
-    let stepParameterValues = {
-      ...(stepRef.current && stepObj.processFormData(stepRef.current.values))
-    }
-    if (isStepGroup) {
-      stepParameterValues = {
-        ...omit(stepParameterValues, 'spec'),
-        stageType: selectedStage?.stage?.type
-      }
+    const stepParameterValues = {
+      ...(stepRef.current && (stepObj.processFormData?.(stepRef.current.values) ?? stepRef.current.values))
     }
     const advancedConfValues = advancedConfRef.current?.values as Partial<Values>
 
-    return getStepDataFromValues(Object.assign(stepParameterValues, advancedConfValues), step)
+    let values = getStepDataFromValues(Object.assign(stepParameterValues, advancedConfValues), step, isStepGroup)
+    if (isStepGroup) {
+      values = omit(values, 'spec')
+      ;(values as StepGroupWithStageElementConfig).stageType = selectedStage?.stage?.type
+      return values
+    }
+    return values
   }
 
   const saveButtonProps = (() => {
@@ -237,11 +246,11 @@ export function StepCommands(
         initialValues={step}
         readonly={isReadonly}
         isNewStep={isNewStep}
-        onChange={() => {
-          onChange?.(getValues())
+        onChange={values => {
+          onChange?.(getValues({ stepValues: values }))
         }}
-        onUpdate={() => {
-          onUpdate?.(getValues())
+        onUpdate={values => {
+          onUpdate?.(getValues({ stepValues: values }))
         }}
         type={stepType}
         stepViewType={stepViewType}
@@ -290,11 +299,8 @@ export function StepCommands(
                     isReadonly={isReadonly}
                     stepsFactory={stepsFactory}
                     allowableTypes={allowableTypes}
-                    onChange={() => {
-                      onChange?.(getValues())
-                    }}
-                    onUpdate={() => {
-                      onUpdate?.(getValues())
+                    onChange={values => {
+                      onChange?.(getValues({ advancedValues: values }))
                     }}
                     hiddenPanels={hiddenPanels}
                     isStepGroup={isStepGroup}
@@ -320,6 +326,7 @@ export function StepCommands(
                       type={saveButtonProps.type as SaveButtonType}
                       gitDetails={gitDetails}
                       storeMetadata={storeMetadata}
+                      {...saveAsTemplateButtonProps}
                     />
                   </>
                 )}

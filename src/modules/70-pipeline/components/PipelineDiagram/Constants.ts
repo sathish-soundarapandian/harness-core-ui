@@ -38,7 +38,7 @@ export const Event = {
 
 export type EventType = ValueOf<typeof Event>
 
-export const DiagramType: { [key: string]: string } = {
+export const DiagramType = {
   Default: 'default',
   EmptyNode: 'empty-node',
   CreateNew: 'create-new',
@@ -49,20 +49,20 @@ export const DiagramType: { [key: string]: string } = {
   IconNode: 'icon-node',
   Link: 'link',
   MatrixNode: 'MATRIX'
-}
+} as const
 
 export enum StepsType {
   Normal = 'Normal',
   Rollback = 'Rollback'
 }
 
-export const PortName: { [key: string]: string } = {
+export const PortName = {
   In: 'In',
   Out: 'Out'
-}
+} as const
 
-export const DiagramDrag: { [key: string]: string } = {
+export const DiagramDrag = {
   NodeDrag: 'diagram-node-drag',
   AllowDropOnLink: 'allow-drop-on-link',
   AllowDropOnNode: 'allow-drop-on-node'
-}
+} as const

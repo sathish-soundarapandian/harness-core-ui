@@ -40,7 +40,7 @@ import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import featureFactory, { RenderMessageReturn } from 'framework/featureStore/FeaturesFactory'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { BannerType } from '@common/layouts/Constants'
-import { ErrorTracking } from '@et/ErrorTrackingApp'
+import { ErrorTracking } from '@cet/ErrorTrackingApp'
 import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -48,7 +48,10 @@ import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestina
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import NotificationMethods from '@pipeline/components/Notifications/Steps/NotificationMethods'
 import Overview from '@pipeline/components/Notifications/Steps/Overview'
-import type { ETCustomMicroFrontendProps } from '@et/ErrorTracking.types'
+import type { ETCustomMicroFrontendProps } from '@cet/ErrorTracking.types'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
+import { formatDatetoLocale, getReadableDateTime, ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -64,6 +67,7 @@ import { getIsValuePresent } from './utils/licenseBannerUtils'
 import { ThresholdPercentageToShowBanner } from './constants'
 import SLODowntimePage from './pages/slos/SLODowntimePage/SLODowntimePage'
 import CVCreateDowntime from './pages/slos/components/CVCreateDowntime/CVCreateDowntime'
+<<<<<<< HEAD
 import {
   CD_MONITORED_SERVICE_CONFIG,
   PROJECT_MONITORED_SERVICE_CONFIG
@@ -71,6 +75,9 @@ import {
 import Configurations from './pages/monitored-service/components/Configurations/Configurations'
 import MonitoredServiceWidgetContainer from './components/MonitoredServiceWidget/MonitoredServiceWidget.container'
 import CommonMonitoredServiceDetails from './components/MonitoredServiceWidget/components/CommonMonitoredServiceDetails/CommonMonitoredServiceDetails'
+=======
+import type { SRMCustomMicroFrontendProps } from './interface/SRMCustomMicroFrontendProps.types'
+>>>>>>> ba583d61974eaf09a337d4501f91df79c40bf87e
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -271,6 +278,9 @@ RbacFactory.registerResourceTypeHandler(ResourceType.DOWNTIME, {
   }
 })
 
+// eslint-disable-next-line import/no-unresolved
+const SrmMicroFrontendPath = React.lazy(() => import('srmui/MicroFrontendApp'))
+
 const CVSideNavProps: SidebarContext = {
   navComponent: SideNav,
   subtitle: 'Service',
@@ -297,7 +307,7 @@ const RedirectToCVCodeErrorsControl = (): React.ReactElement => {
   }
 }
 
-export default (
+export const SRMRoutes = (
   <>
     <RouteWithLayout
       path={routes.toMonitoredServices({ ...accountPathProps, ...orgPathProps, ...projectPathProps })}
@@ -449,14 +459,6 @@ export default (
       ]}
     >
       <CVCreateDowntime />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <CVSLOsListingPage />
     </RouteWithLayout>
 
     <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routes.toAccountCVSLOs({ ...accountPathProps })}>
@@ -623,3 +625,36 @@ export default (
     }
   </>
 )
+
+export const SRMMFERoutes: React.FC = () => {
+  const { SRM_MICRO_FRONTEND: enableMicroFrontend } = useFeatureFlags()
+  const mfePaths = enableMicroFrontend
+    ? [routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]
+    : []
+
+  return (
+    <>
+      {enableMicroFrontend ? (
+        <RouteWithLayout exact path={[...mfePaths]} sidebarProps={CVSideNavProps}>
+          <ChildAppMounter<SRMCustomMicroFrontendProps>
+            ChildApp={SrmMicroFrontendPath}
+            customHooks={{ useQueryParams, useFeatureFlag, useFeatureFlags, useDeepCompareEffect }}
+            customFunctions={{
+              formatDatetoLocale,
+              getReadableDateTime
+            }}
+            customConstants={{ ALL_TIME_ZONES }}
+          />
+        </RouteWithLayout>
+      ) : (
+        <RouteWithLayout
+          exact
+          sidebarProps={CVSideNavProps}
+          path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+        >
+          <CVSLOsListingPage />
+        </RouteWithLayout>
+      )}
+    </>
+  )
+}

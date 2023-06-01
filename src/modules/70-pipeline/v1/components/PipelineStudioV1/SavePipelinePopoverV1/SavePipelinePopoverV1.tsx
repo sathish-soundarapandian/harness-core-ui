@@ -99,7 +99,7 @@ function SavePipelinePopoverV1(
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const isYaml = view === SelectedView.YAML
-  const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.PIPELINE })
+  const { openTemplateReconcileErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.PIPELINE })
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
 
@@ -260,7 +260,7 @@ function SavePipelinePopoverV1(
         if (isGitSyncEnabled || currStoreMetadata?.storeType === StoreType.REMOTE) {
           throw response
         } else if (!isEmpty((response as any)?.metadata?.errorNodeSummary)) {
-          openTemplateErrorsModal({
+          openTemplateReconcileErrorsModal({
             error: (response as any)?.metadata?.errorNodeSummary,
             originalYaml: yamlStringify(
               sanitize(
@@ -301,7 +301,7 @@ function SavePipelinePopoverV1(
         latestPipeline =
           payload?.pipeline || (parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as PipelineInfoConfig)
       } /* istanbul ignore next */ catch (err) {
-        showError(err.message || err, undefined, 'pipeline.save.gitinfo.error')
+        showError(getRBACErrorMessage(err) || err, undefined, 'pipeline.save.gitinfo.error')
       }
     }
 
@@ -386,7 +386,7 @@ function SavePipelinePopoverV1(
       try {
         latestPipeline = parse<PipelineInfoConfig>(yamlHandler.getLatestYaml())
       } /* istanbul ignore next */ catch (err) {
-        showError(err.message || err, undefined, 'pipeline.save.pipeline.error')
+        showError(getRBACErrorMessage(err) || err, undefined, 'pipeline.save.pipeline.error')
       }
     }
 

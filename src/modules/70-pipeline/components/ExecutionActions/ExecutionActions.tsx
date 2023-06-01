@@ -11,16 +11,22 @@ import {
   Popover,
   ButtonProps,
   useConfirmationDialog,
-  getErrorInfoFromErrorObject,
   Layout,
   ButtonSize,
-  ButtonVariation
+  ButtonVariation,
+  Text,
+  Container
 } from '@harness/uicore'
 import { Classes, Intent, Menu, MenuItem, Position } from '@blueprintjs/core'
 import { Link } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 
-import { HandleInterruptQueryParams, useHandleInterrupt, useHandleStageInterrupt } from 'services/pipeline-ng'
+import {
+  HandleInterruptQueryParams,
+  HandleStageInterruptQueryParams,
+  useHandleInterrupt,
+  useHandleStageInterrupt
+} from 'services/pipeline-ng'
 import routes from '@common/RouteDefinitions'
 import { useToaster } from '@common/exports'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
@@ -43,6 +49,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import { PipelineExecutionActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
 import { useOpenRetryPipelineModal } from './useOpenRetryPipelineModal'
@@ -85,10 +92,22 @@ export interface ExecutionActionsProps {
   hideRetryOption?: boolean
 }
 
+function MarkAsFailedConfirmationContent(): JSX.Element {
+  const { getString } = useStrings()
+  return (
+    <Container>
+      <Text margin={{ bottom: 'xsmall' }}>
+        {getString('pipeline.execution.dialogMessages.markAsFailedConfirmation')}
+      </Text>
+      <Text>{getString('pipeline.execution.dialogMessages.markAsFailedWarningText')}</Text>
+    </Container>
+  )
+}
+
 export function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
   return {
     canAbort: isExecutionActive(executionStatus) && canExecute,
-    canRollback: isExecutionActive(executionStatus) && canExecute,
+    canMarkAsFailed: isExecutionActive(executionStatus) && canExecute,
     canPause:
       isExecutionActive(executionStatus) &&
       !isExecutionPaused(executionStatus) &&
@@ -198,7 +217,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { isCompareMode } = useExecutionCompareContext()
   const { trackEvent } = useTelemetry()
-
+  const { getRBACErrorMessage } = useRBACError()
   const { openDialog: openAbortDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
     contentText: getString('pipeline.execution.dialogMessages.abortExecution'),
@@ -215,7 +234,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
 
   const { openDialog: openMarkAsFailedDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
-    contentText: getString('pipeline.execution.dialogMessages.markAsFailedConfirmation'),
+    contentText: MarkAsFailedConfirmationContent(),
     titleText: getString('pipeline.execution.dialogMessages.markAsFailedTitle'),
     confirmButtonText: getString('confirm'),
     intent: Intent.WARNING,
@@ -229,7 +248,10 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
 
   const { CI_YAML_VERSIONING, PIE_DEPRECATE_PAUSE_INTERRUPT_NG } = useFeatureFlags()
 
-  const { canAbort, canPause, canRerun, canResume, canRollback } = getValidExecutionActions(canExecute, executionStatus)
+  const { canAbort, canPause, canRerun, canResume, canMarkAsFailed } = getValidExecutionActions(
+    canExecute,
+    executionStatus
+  )
   const { abortText, pauseText, rerunText, resumeText, UserMarkedFailure } = getActionTexts(stageId)
 
   const interruptMethod = stageId ? stageInterrupt : interrupt
@@ -252,7 +274,9 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     ? routes.toPipelineStudioV1(commonRouteProps)
     : routes.toPipelineStudio(commonRouteProps)
 
-  async function executeAction(interruptType: HandleInterruptQueryParams['interruptType']): Promise<void> {
+  async function executeAction(
+    interruptType: HandleInterruptQueryParams['interruptType'] | HandleStageInterruptQueryParams['interruptType']
+  ): Promise<void> {
     clear()
     try {
       const successMessage = getSuccessMessage(getString, interruptType, stageId, stageName)
@@ -266,7 +290,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
       })
       showSuccess(successMessage)
     } catch (e) {
-      const errorMessage = getErrorInfoFromErrorObject(e)
+      const errorMessage = getRBACErrorMessage(e)
       showError(errorMessage)
     }
   }
@@ -360,10 +384,11 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
             />
           )}
 
-          {stageId && canRollback && (
+          {stageId && canMarkAsFailed && (
             <Button
               size={ButtonSize.SMALL}
-              icon="main-rollback"
+              icon="mark-as-failed"
+              iconProps={{ size: 15 }}
               tooltip={getString(UserMarkedFailure)}
               onClick={openMarkAsFailedDialog}
               {...commonButtonProps}

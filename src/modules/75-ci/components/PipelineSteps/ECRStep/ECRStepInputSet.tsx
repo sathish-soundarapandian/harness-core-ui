@@ -43,6 +43,9 @@ export const ECRStepInputSetBasic: React.FC<ECRStepProps> = ({
           }),
           ...(getMultiTypeFromValue(template?.spec?.account) === MultiTypeInputType.RUNTIME && {
             'spec.account': {}
+          }),
+          ...(getMultiTypeFromValue(template?.spec?.caching) === MultiTypeInputType.RUNTIME && {
+            'spec.caching': {}
           })
         }}
         path={path || ''}

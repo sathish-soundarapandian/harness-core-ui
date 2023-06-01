@@ -51,7 +51,7 @@ const samlSettings = {
   ngAuthSettings: [
     {
       origin: 'harness.onelogin.com',
-      logoutUrl: null,
+      logoutUrl: 'http://testurl.com',
       groupMembershipAttr: 'One Login Group',
       displayName: 'One Login',
       authorizationEnabled: true,
@@ -100,7 +100,7 @@ describe('SAML Provider', () => {
     expect(queryByText(dialog!, 'overview')).not.toBeNull()
     expect(queryByText(dialog!, 'authSettings.selectProvider')).not.toBeNull()
     expect(queryByText(dialog!, 'authSettings.identityProviderLabel')).not.toBeNull()
-    expect(queryByText(dialog!, 'authSettings.additionalFunctions')).not.toBeNull()
+    expect(queryByText(dialog!, 'common.advancedSettings')).not.toBeNull()
 
     setFieldValue({ container: dialog!, type: InputTypes.TEXTFIELD, fieldId: 'displayName', value: 'Display name' })
 
@@ -131,78 +131,117 @@ describe('SAML Provider', () => {
     })
 
     expect(queryByText(document.body, 'common.validation.fileIsRequired')).toBeTruthy()
+  })
+
+  test('Delete SAML Provider', async () => {
+    const { getByTestId } = render(
+      <TestWrapper
+        path={routes.toAuthenticationSettings({ ...accountPathProps })}
+        pathParams={{ accountId: 'testAcc' }}
+      >
+        <SAMLProviderV2
+          authSettings={samlSettings}
+          refetchAuthSettings={refetchAuthSettings}
+          permissionRequest={permissionRequest}
+          canEdit
+          setUpdating={setUpdating}
+        />
+      </TestWrapper>
+    )
+
+    const popoverButton = getByTestId('provider-button')
+    fireEvent.click(popoverButton!)
+
+    const popover = findPopoverContainer()
+
+    const deleteSAMLProvider = getByText(popover!, 'delete')
+    act(() => {
+      fireEvent.click(deleteSAMLProvider)
+    })
+
+    await waitFor(() => getByText(document.body, 'authSettings.deleteSamlProvider'))
+    const form = findDialogContainer()
+    expect(form).toBeTruthy()
+
+    const confirmBtn = queryByText(form!, 'confirm')
+    await act(async () => {
+      fireEvent.click(confirmBtn!)
+    })
+
+    expect(queryByText(document.body, 'authSettings.samlProviderDeleted')).toBeTruthy()
+  })
+
+  test('Edit SAML Provider', async () => {
+    const { getByTestId } = render(
+      <TestWrapper
+        path={routes.toAuthenticationSettings({ ...accountPathProps })}
+        pathParams={{ accountId: 'testAcc' }}
+      >
+        <SAMLProviderV2
+          authSettings={samlSettings}
+          refetchAuthSettings={refetchAuthSettings}
+          permissionRequest={permissionRequest}
+          canEdit
+          setUpdating={setUpdating}
+        />
+      </TestWrapper>
+    )
+
+    const popoverButton = getByTestId('provider-button')
+    fireEvent.click(popoverButton!)
+
+    const popover = findPopoverContainer()
+
+    const editSamlProvider = getByText(popover!, 'edit')
+    act(() => {
+      fireEvent.click(editSamlProvider)
+    })
+
+    const dialog = findDialogContainer()
+    expect(document.querySelector('input[value="One Login"]')).not.toBeNull()
+
+    const continueButton = queryByText(dialog!, 'continue')
+    await act(async () => {
+      fireEvent.click(continueButton!)
+    })
+
+    expect(document.querySelector('input[value="http://testurl.com"]')).not.toBeNull()
+  })
+
+  test('Cancel SAML provider modal', async () => {
+    render(
+      <TestWrapper
+        path={routes.toAuthenticationSettings({ ...accountPathProps })}
+        pathParams={{ accountId: 'testAcc' }}
+      >
+        <SAMLProviderV2
+          authSettings={authSettings}
+          refetchAuthSettings={refetchAuthSettings}
+          permissionRequest={permissionRequest}
+          canEdit
+          setUpdating={setUpdating}
+        />
+      </TestWrapper>
+    )
+
+    const addSAMLProvider = queryByText(document.body, 'authSettings.plusSAMLProvider')
+    expect(addSAMLProvider).toBeTruthy()
+    act(() => {
+      fireEvent.click(addSAMLProvider!)
+    })
+
+    const form = findDialogContainer()
+    expect(form).toBeTruthy()
+
+    const cancelButton = queryByText(form!, 'cross')
+    expect(cancelButton).toBeTruthy()
+    await act(async () => {
+      fireEvent.click(cancelButton!)
+    })
+
+    const removedForm = findDialogContainer()
+    expect(removedForm).toBeFalsy()
   }),
-    test('Delete SAML Provider', async () => {
-      const { getByTestId } = render(
-        <TestWrapper
-          path={routes.toAuthenticationSettings({ ...accountPathProps })}
-          pathParams={{ accountId: 'testAcc' }}
-        >
-          <SAMLProviderV2
-            authSettings={samlSettings}
-            refetchAuthSettings={refetchAuthSettings}
-            permissionRequest={permissionRequest}
-            canEdit
-            setUpdating={setUpdating}
-          />
-        </TestWrapper>
-      )
-
-      const popoverButton = getByTestId('provider-button')
-      fireEvent.click(popoverButton!)
-
-      const popover = findPopoverContainer()
-
-      const deleteSAMLProvider = getByText(popover!, 'delete')
-      act(() => {
-        fireEvent.click(deleteSAMLProvider)
-      })
-
-      await waitFor(() => getByText(document.body, 'authSettings.deleteSamlProvider'))
-      const form = findDialogContainer()
-      expect(form).toBeTruthy()
-
-      const confirmBtn = queryByText(form!, 'confirm')
-      await act(async () => {
-        fireEvent.click(confirmBtn!)
-      })
-
-      expect(queryByText(document.body, 'authSettings.samlProviderDeleted')).toBeTruthy()
-    }),
-    test('Cancel SAML provider modal', async () => {
-      render(
-        <TestWrapper
-          path={routes.toAuthenticationSettings({ ...accountPathProps })}
-          pathParams={{ accountId: 'testAcc' }}
-        >
-          <SAMLProviderV2
-            authSettings={authSettings}
-            refetchAuthSettings={refetchAuthSettings}
-            permissionRequest={permissionRequest}
-            canEdit
-            setUpdating={setUpdating}
-          />
-        </TestWrapper>
-      )
-
-      const addSAMLProvider = queryByText(document.body, 'authSettings.plusSAMLProvider')
-      expect(addSAMLProvider).toBeTruthy()
-      act(() => {
-        fireEvent.click(addSAMLProvider!)
-      })
-
-      const form = findDialogContainer()
-      expect(form).toBeTruthy()
-
-      const cancelButton = queryByText(form!, 'cross')
-      expect(cancelButton).toBeTruthy()
-      await act(async () => {
-        fireEvent.click(cancelButton!)
-      })
-
-      const removedForm = findDialogContainer()
-      expect(removedForm).toBeFalsy()
-    }),
     test('Enable SAML provider', async () => {
       const { container } = render(
         <TestWrapper
@@ -237,15 +276,25 @@ describe('SAML Provider', () => {
 
       expect(queryByText(document.body, 'authSettings.samlLoginEnabled')).toBeTruthy()
     }),
-    test('Cancel enabling SAML provider', async () => {
+    test('toggle single saml provider ', async () => {
+      const refetchSettings = jest.fn()
       const { container } = render(
         <TestWrapper
           path={routes.toAuthenticationSettings({ ...accountPathProps })}
           pathParams={{ accountId: 'testAcc' }}
         >
           <SAMLProviderV2
-            authSettings={disabledSamlSettings}
-            refetchAuthSettings={refetchAuthSettings}
+            authSettings={{
+              ...authSettings,
+              ngAuthSettings: [
+                ...authSettings.ngAuthSettings,
+                {
+                  allowedProviders: ['GITHUB', 'AZURE', 'LINKEDIN', 'BITBUCKET', 'GOOGLE'],
+                  settingsType: AuthenticationMechanisms.SAML
+                }
+              ]
+            }}
+            refetchAuthSettings={refetchSettings}
             permissionRequest={permissionRequest}
             canEdit
             setUpdating={setUpdating}
@@ -253,25 +302,50 @@ describe('SAML Provider', () => {
         </TestWrapper>
       )
 
-      const radioButton = queryByText(container, 'authSettings.loginViaSAML')
-      expect(radioButton).toBeTruthy()
-      act(() => {
-        fireEvent.click(radioButton!)
+      const chevron = container.querySelector('[data-icon="main-chevron-down"]') as HTMLInputElement
+      fireEvent.click(chevron!)
+      const switchIndicator = container.querySelector('[class*="bp3-switch"]') as HTMLInputElement
+      await act(() => {
+        fireEvent.click(switchIndicator)
       })
 
-      await waitFor(() => queryByText(document.body, 'authSettings.enableSamlProvider'))
-      const form = findDialogContainer()
-      expect(form).toBeTruthy()
-
-      const cancelButton = queryByText(form!, 'cancel')
-      expect(cancelButton).toBeTruthy()
-      await act(async () => {
-        fireEvent.click(cancelButton!)
-      })
-
-      const removedForm = findDialogContainer()
-      expect(removedForm).toBeFalsy()
+      expect(refetchSettings).toBeCalled()
     })
+  test('Cancel enabling SAML provider', async () => {
+    const { container } = render(
+      <TestWrapper
+        path={routes.toAuthenticationSettings({ ...accountPathProps })}
+        pathParams={{ accountId: 'testAcc' }}
+      >
+        <SAMLProviderV2
+          authSettings={disabledSamlSettings}
+          refetchAuthSettings={refetchAuthSettings}
+          permissionRequest={permissionRequest}
+          canEdit
+          setUpdating={setUpdating}
+        />
+      </TestWrapper>
+    )
+
+    const radioButton = queryByText(container, 'authSettings.loginViaSAML')
+    expect(radioButton).toBeTruthy()
+    act(() => {
+      fireEvent.click(radioButton!)
+    })
+
+    await waitFor(() => queryByText(document.body, 'authSettings.enableSamlProvider'))
+    const form = findDialogContainer()
+    expect(form).toBeTruthy()
+
+    const cancelButton = queryByText(form!, 'cancel')
+    expect(cancelButton).toBeTruthy()
+    await act(async () => {
+      fireEvent.click(cancelButton!)
+    })
+
+    const removedForm = findDialogContainer()
+    expect(removedForm).toBeFalsy()
+  })
 })
 
 describe('getSamlEndpoint cases', () => {

@@ -25,7 +25,8 @@ import {
   DynatraceProductNames,
   ElkProduct,
   AWSDataSourceType,
-  DataSourceTypeFieldNames
+  DataSourceTypeFieldNames,
+  SplunkObservabilityDisplayName
 } from './DefineHealthSource.constant'
 import type {
   ConnectorDisableFunctionProps,
@@ -135,6 +136,10 @@ export const getConnectorTypeName = (name: HealthSourceTypes): string => {
     case HealthSourceTypes.SplunkSignalFXMetrics:
       connectorTypeName = Connectors.SignalFX
       break
+    case HealthSourceTypes.GrafanaLoki:
+    case HealthSourceTypes.GrafanaLokiLogs:
+      connectorTypeName = HealthSourceTypes.GrafanaLoki
+      break
     default:
       connectorTypeName = name
   }
@@ -149,6 +154,8 @@ export const getConnectorPlaceholderText = (sourceType?: string, dataSourceType?
 
   if (sourceType === Connectors.AWS || dataSourceType === AWSDataSourceType) {
     return Connectors.AWS.toUpperCase()
+  } else if (sourceType === Connectors.SignalFX) {
+    return SplunkObservabilityDisplayName
   } else {
     return sourceType
   }
@@ -280,11 +287,20 @@ export const getFeatureOption = (
         }
       ]
 
-    case HealthSourceTypes.SignalFX: {
+    case Connectors.SignalFX: {
       return [
         {
           label: HealthSourceProducts[HealthSourceTypes.SignalFX].label,
           value: HealthSourceProducts[HealthSourceTypes.SignalFX].value
+        }
+      ]
+    }
+
+    case HealthSourceTypes.GrafanaLoki: {
+      return [
+        {
+          label: HealthSourceProducts[HealthSourceTypes.GrafanaLoki].label,
+          value: HealthSourceProducts[HealthSourceTypes.GrafanaLoki].value
         }
       ]
     }
@@ -315,6 +331,8 @@ export function getProductBasedOnType(
       return getFeatureOption(HealthSourceTypes.Elk, getString)[0]
     case HealthSourceTypes.SplunkSignalFXMetrics:
       return getFeatureOption(Connectors.SignalFX, getString)[0]
+    case HealthSourceTypes.GrafanaLokiLogs:
+      return getFeatureOption(HealthSourceTypes.GrafanaLoki, getString)[0]
     default:
       return { ...currProduct } as SelectOption
   }

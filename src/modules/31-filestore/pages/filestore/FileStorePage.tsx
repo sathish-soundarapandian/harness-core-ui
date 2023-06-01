@@ -66,6 +66,8 @@ import { getFileUsageNameByType, sortNodesByType } from '@filestore/utils/FileSt
 import { useUnsavedConfirmation } from '@filestore/common/useUnsavedConfirmation/useUnsavedConfirmation'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, CDActions } from '@common/constants/TrackingConstants'
 import css from './FileStorePage.module.scss'
 
 const fileUsageOptions: SelectOption[] = [
@@ -133,7 +135,7 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
   } = useContext(FileStoreContext)
   const { accountIdentifier: accountId, orgIdentifier, projectIdentifier } = queryParams
   const history = useHistory()
-
+  const { trackEvent } = useTelemetry()
   const [splitPaneSize, setSplitPaneSize] = React.useState(400)
   const setSplitPaneSizeDeb = React.useRef(debounce(setSplitPaneSize, 400))
   const handleStageResize = (size: number): void => {
@@ -396,6 +398,9 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
       setAppliedFilter(updatedFilter)
     }
     await refetchFilterList()
+    trackEvent(CDActions.ApplyAdvancedFilter, {
+      category: Category.FILESTORE
+    })
     setIsRefreshingFilters(false)
   }
 
@@ -446,6 +451,9 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
         searchTerm
       }
       refetchFileStoreList(updatedQueryParams, selectedFilter?.filterProperties)
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.FILESTORE
+      })
     } else {
       reset()
     }
@@ -464,6 +472,9 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
         refetchFileStoreList(queryParams, filterFromFormData)
         setAppliedFilter({ ...unsavedFilter, filterProperties: filterFromFormData })
         hideFilterDrawer()
+        trackEvent(CDActions.ApplyAdvancedFilter, {
+          category: Category.FILESTORE
+        })
       }
     }
 

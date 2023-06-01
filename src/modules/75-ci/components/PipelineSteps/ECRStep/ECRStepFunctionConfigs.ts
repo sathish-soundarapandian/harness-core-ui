@@ -38,6 +38,10 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.List
   },
   {
+    name: 'spec.caching',
+    type: TransformValuesTypes.Boolean
+  },
+  {
     name: 'spec.baseImageConnectorRefs',
     type: TransformValuesTypes.List
   },
@@ -136,6 +140,11 @@ export const editViewValidateFieldsConfig = [
     isRequired: true
   },
   {
+    name: 'spec.caching',
+    type: ValidationFieldTypes.Boolean,
+    label: 'ci.enableCaching'
+  },
+  {
     name: 'spec.baseImageConnectorRefs',
     type: ValidationFieldTypes.List,
     label: 'ci.baseConnectorImage'
@@ -208,6 +217,11 @@ export function getInputSetViewValidateFieldsConfig(
       type: ValidationFieldTypes.List,
       label: 'tagsLabel',
       isRequired
+    },
+    {
+      name: 'spec.caching',
+      type: ValidationFieldTypes.Boolean,
+      label: 'ci.enableCaching'
     },
     {
       name: 'spec.baseImageConnectorRefs',

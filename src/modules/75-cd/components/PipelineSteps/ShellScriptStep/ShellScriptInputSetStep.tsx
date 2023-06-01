@@ -37,7 +37,13 @@ import {
   isFixedInput
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/MultiSelectVariableAllowedValues/MultiSelectVariableAllowedValues'
 import { getAllowedValuesFromTemplate, shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
-import { scriptInputType, scriptOutputType, ShellScriptData, ShellScriptFormData } from './shellScriptTypes'
+import {
+  scriptInputType,
+  scriptOutputType,
+  ShellScriptData,
+  ShellScriptFormData,
+  ShellScriptStepVariable
+} from './shellScriptTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScript.module.scss'
 
@@ -154,6 +160,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             <FieldArray
               name="spec.environmentVariables"
               render={() => {
+                const formikEnvironmentVariablesPath = `${prefix}spec.environmentVariables`
+                const formikEnvironmentVariables = defaultTo(get(formik?.values, formikEnvironmentVariablesPath), [])
                 return (
                   <div className={css.panel}>
                     <div className={css.environmentVarHeader}>
@@ -161,7 +169,14 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                       <span className={css.label}>{getString('typeLabel')}</span>
                       <span className={css.label}>{getString('valueLabel')}</span>
                     </div>
-                    {template.spec.environmentVariables?.map((type, i: number) => {
+                    {template.spec.environmentVariables?.map((environmentVariable, i: number) => {
+                      // find Index from values, not from template variables
+                      // because the order of the variables might not be the same
+                      const formikEnvironmentVariableIndex = formikEnvironmentVariables.findIndex(
+                        (formikEnvironmentVariable: ShellScriptStepVariable) =>
+                          environmentVariable.name === formikEnvironmentVariable.name
+                      )
+                      const formikEnvironmentVariablePath = `${formikEnvironmentVariablesPath}[${formikEnvironmentVariableIndex}]`
                       const variableInfo = getMultiSelectProps(
                         template,
                         initialValues,
@@ -174,24 +189,25 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                           `spec.environmentVariables[${i}].value`,
                           template
                         ) &&
-                        isFixedInput(formik, `${prefix}spec.environmentVariables[${i}].value`)
+                        isFixedInput(formik, `${formikEnvironmentVariablePath}.value`)
+
                       return (
-                        <div className={css.environmentVarHeader} key={type.value}>
+                        <div className={css.environmentVarHeader} key={environmentVariable.value}>
                           <FormInput.Text
-                            name={`${prefix}spec.environmentVariables[${i}].name`}
+                            name={`${formikEnvironmentVariablePath}.name`}
                             placeholder={getString('name')}
                             disabled={true}
                           />
 
                           <FormInput.Select
                             items={scriptInputType}
-                            name={`${prefix}spec.environmentVariables[${i}].type`}
+                            name={`${formikEnvironmentVariablePath}.type`}
                             placeholder={getString('typeLabel')}
                             disabled={true}
                           />
                           {allowMultiSelectAllowedValues ? (
                             <MultiSelectVariableAllowedValues
-                              name={`${prefix}spec.environmentVariables[${i}].value`}
+                              name={`${formikEnvironmentVariablePath}.value`}
                               allowableTypes={allowableTypes}
                               disabled={readonly}
                               selectOption={variableInfo.selectOption}
@@ -200,13 +216,13 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                                   getMultiTypeFromValue(val) === MultiTypeInputType.FIXED
                                     ? concatValuesWithQuotes(val as MultiSelectOption[])
                                     : val
-                                formik.setFieldValue(`${prefix}spec.environmentVariables[${i}].value`, finalValue)
+                                formik.setFieldValue(`${formikEnvironmentVariablePath}.value`, finalValue)
                               }}
                               label=""
                             />
                           ) : (
                             <TextFieldInputSetView
-                              name={`${prefix}spec.environmentVariables[${i}].value`}
+                              name={`${formikEnvironmentVariablePath}.value`}
                               multiTextInputProps={{
                                 allowableTypes,
                                 expressions,
@@ -246,6 +262,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             <FieldArray
               name="spec.outputVariables"
               render={() => {
+                const formikOutputVariablesPath = `${prefix}spec.outputVariables`
+                const formikOutputVariables = defaultTo(get(formik?.values, formikOutputVariablesPath), [])
                 return (
                   <div className={css.panel}>
                     <div className={css.outputVarHeader}>
@@ -255,31 +273,38 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                         {getString('cd.steps.shellScriptOutputVariablesLabel', { scriptType: shellScriptType })}
                       </span>
                     </div>
-                    {template.spec.outputVariables?.map((output, i: number) => {
+                    {template.spec.outputVariables?.map((outputVariable, i: number) => {
+                      // find Index from values, not from template variables
+                      // because the order of the variables might not be the same
+                      const formikOutputVariableIndex = formikOutputVariables.findIndex(
+                        (formikOutputVariable: ShellScriptStepVariable) =>
+                          outputVariable.name === formikOutputVariable.name
+                      )
+                      const formikOutputVariablePath = `${formikOutputVariablesPath}[${formikOutputVariableIndex}]`
                       const variableInfo = getMultiSelectProps(template, initialValues, `spec.outputVariables[${i}]`)
                       const allowMultiSelectAllowedValues =
                         multiSelectSupportForAllowedValues &&
                         variableInfo.variableType === 'String' &&
                         shouldRenderRunTimeInputViewWithAllowedValues(`spec.outputVariables[${i}].value`, template) &&
-                        isFixedInput(formik, `${prefix}spec.outputVariables[${i}].value`)
+                        isFixedInput(formik, `${formikOutputVariablePath}.value`)
                       return (
-                        <div className={css.outputVarHeader} key={output.name}>
+                        <div className={css.outputVarHeader} key={outputVariable.name}>
                           <FormInput.Text
-                            name={`${prefix}spec.outputVariables[${i}].name`}
+                            name={`${formikOutputVariablePath}.name`}
                             placeholder={getString('name')}
                             disabled={true}
                           />
 
                           <FormInput.Select
                             items={scriptOutputType}
-                            name={`${prefix}spec.outputVariables[${i}].type`}
+                            name={`${formikOutputVariablePath}.type`}
                             placeholder={getString('typeLabel')}
                             disabled={true}
                           />
 
                           {allowMultiSelectAllowedValues ? (
                             <MultiSelectVariableAllowedValues
-                              name={`${prefix}spec.outputVariables[${i}].value`}
+                              name={`${formikOutputVariablePath}.value`}
                               allowableTypes={allowableTypes}
                               disabled={readonly}
                               selectOption={variableInfo.selectOption}
@@ -288,13 +313,13 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
                                   getMultiTypeFromValue(val) === MultiTypeInputType.FIXED
                                     ? concatValuesWithQuotes(val as MultiSelectOption[])
                                     : val
-                                formik.setFieldValue(`${prefix}spec.outputVariables[${i}].value`, finalValue)
+                                formik.setFieldValue(`${formikOutputVariablePath}.value`, finalValue)
                               }}
                               label=""
                             />
                           ) : (
                             <TextFieldInputSetView
-                              name={`${prefix}spec.outputVariables[${i}].value`}
+                              name={`${formikOutputVariablePath}.value`}
                               multiTextInputProps={{
                                 allowableTypes,
                                 expressions,

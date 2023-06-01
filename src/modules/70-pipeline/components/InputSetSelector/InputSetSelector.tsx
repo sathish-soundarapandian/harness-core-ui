@@ -49,6 +49,7 @@ export interface InputSetSelectorProps {
   onReconcile?: (identifier: string) => void
   reRunInputSetYaml?: string
   childPipelineProps?: ChildPipelineStageProps
+  isSimplifiedYAML?: boolean
 }
 
 export function InputSetSelector({
@@ -68,7 +69,8 @@ export function InputSetSelector({
   isRetryPipelineForm,
   onReconcile,
   reRunInputSetYaml,
-  childPipelineProps
+  childPipelineProps,
+  isSimplifiedYAML
 }: InputSetSelectorProps): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
@@ -305,7 +307,7 @@ export function InputSetSelector({
                     disabled={!selectedInputSets?.length}
                     onClick={() => {
                       onChange?.(selectedInputSets)
-                      if (reRunInputSetYaml) setOpenInputSetsList(false)
+                      if (reRunInputSetYaml || isSimplifiedYAML) setOpenInputSetsList(false)
                     }}
                   />
                 </>

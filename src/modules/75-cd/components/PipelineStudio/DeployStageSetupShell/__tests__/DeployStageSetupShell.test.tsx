@@ -10,6 +10,7 @@ import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import { Formik } from '@harness/uicore'
 
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import {
@@ -22,7 +23,8 @@ import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { DeployServiceStep } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
 import { GenericServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpec'
 import { DeployEnvironmentStep } from '@cd/components/PipelineSteps/DeployEnvStep/DeployEnvStep'
-import { envs, services } from './mocks'
+import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { cdStage, envs, services } from './mocks'
 import overridePipelineContext from './overrideSetPipeline.json'
 import DeployStageSetupShell from '../DeployStageSetupShell'
 
@@ -308,5 +310,56 @@ describe('DeployStageSetupShell tests', () => {
     })
 
     expect(await waitFor(() => context.updatePipelineView)).toBeCalled()
+  })
+
+  test('Pipeline studio upgrade - accordionTab component Should handleChange be called when button next is clicked', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      CDS_PIPELINE_STUDIO_UPGRADES: true
+    })
+    const Tabs = [
+      DeployTabs.OVERVIEW,
+      DeployTabs.SERVICE,
+      DeployTabs.INFRASTRUCTURE,
+      DeployTabs.EXECUTION,
+      DeployTabs.ADVANCED
+    ]
+    const errorContextProvider = {
+      state: {} as any,
+      checkErrorsForTab: jest.fn().mockResolvedValue(Promise.resolve()),
+      subscribeForm: () => undefined,
+      unSubscribeForm: () => undefined,
+      submitFormsForTab: jest.fn()
+    }
+    const { container, getByTestId } = render(
+      <TestWrapper>
+        <Formik initialValues={{}} onSubmit={noop} formName="test">
+          <PipelineContext.Provider value={{ ...context, getStageFromPipeline: jest.fn().mockReturnValue(cdStage) }}>
+            <StageErrorContext.Provider value={errorContextProvider}>
+              <DeployStageSetupShell />
+            </StageErrorContext.Provider>
+          </PipelineContext.Provider>
+        </Formik>
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('.accordionTabWrapper')).toBeDefined()
+    Tabs.forEach(tab => {
+      expect(container.querySelector(`[class*="bp3-tab-list"] [data-tab-id="${tab}"]`)).toBeDefined()
+    })
+
+    // Assert Service Tab Details visible
+    expect(container.querySelector('[data-testid="SERVICE-details"]')).toBeTruthy()
+
+    const button = (await waitFor(() => container.querySelector('[icon="chevron-right"]'))) as HTMLElement
+
+    // Move to infrastructure tab
+    await act(async () => {
+      fireEvent.click(button!)
+    })
+    const panelElement = getByTestId('INFRASTRUCTURE-panel')
+    const isOpen = panelElement.getAttribute('data-open')
+
+    // Assert that the infrastructure tab and accordion is open
+    expect(isOpen).toBe('true')
   })
 })

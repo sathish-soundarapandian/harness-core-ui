@@ -17,7 +17,6 @@ import {
   MultiTypeInputType,
   Text,
   ButtonVariation,
-  getErrorInfoFromErrorObject,
   AllowedTypes,
   FormikForm,
   SelectOption
@@ -225,7 +224,7 @@ function HelmWithGcs({
 
   return (
     <Layout.Vertical spacing="xxlarge" padding="small" className={css.manifestStore}>
-      {error && showError(getErrorInfoFromErrorObject(error as any))}
+      {error && showError(getRBACErrorMessage(error as any))}
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
         {stepName}
       </Text>

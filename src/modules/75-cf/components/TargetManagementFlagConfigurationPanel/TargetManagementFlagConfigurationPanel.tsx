@@ -209,6 +209,7 @@ const TargetManagementFlagConfigurationPanel: FC<TargetManagementFlagConfigurati
                 pageIndex={pageNumber < pageCount ? pageNumber : pageCount - 1}
                 gotoPage={setPageNumber}
                 showPagination
+                hidePageNumbers={pageCount > 1000}
               />
             </div>
           )}

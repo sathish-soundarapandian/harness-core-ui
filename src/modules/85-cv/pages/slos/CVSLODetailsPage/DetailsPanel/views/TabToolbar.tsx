@@ -23,8 +23,7 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useErrorBudgetRestHook } from '@cv/hooks/useErrorBudgetRestHook/useErrorBudgetRestHook'
 import { useLogContentHook } from '@cv/hooks/useLogContentHook/useLogContentHook'
 import { LogTypes } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
-import { EvaluationType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
-import { PeriodTypeEnum } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.constants'
+import { EvaluationType, PeriodTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { SLODetailsPageTabIds } from '../../CVSLODetailsPage.types'
 import type { TabToolbarProps } from '../DetailsPanel.types'
 import css from '../DetailsPanel.module.scss'
@@ -152,7 +151,7 @@ const TabToolbar: React.FC<TabToolbarProps> = ({
           }
         }}
       />
-      {sloDashboardWidget.sloTargetType === PeriodTypeEnum.CALENDAR && (
+      {sloDashboardWidget.sloTargetType === PeriodTypes.CALENDAR && (
         <RbacButton
           icon="reset"
           withoutCurrentColor

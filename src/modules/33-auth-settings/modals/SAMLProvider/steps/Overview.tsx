@@ -53,9 +53,9 @@ const Overview: React.FC<OverviewProps> = props => {
                   label={getString('name')}
                 />
                 <FormInput.Text
-                  placeholder={getString('common.friendlyNamePlaceholder')}
+                  placeholder={getString('common.displayNamePlaceHolder')}
                   name="friendlySamlName"
-                  label={getString('common.friendlyName')}
+                  label={getString('common.displayName')}
                   isOptional
                   tooltipProps={{ dataTooltipId: 'friendlySamlName' }}
                 />

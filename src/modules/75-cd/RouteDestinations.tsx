@@ -636,7 +636,43 @@ export default (
       exact
       licenseRedirectData={licenseRedirectData}
       sidebarProps={CDSideNavProps}
-      path={[routes.toServiceOverrides({ ...projectPathProps, ...moduleParams })]}
+      path={routes.toServiceOverrides({ ...projectPathProps, ...moduleParams })}
+      pageName={PAGE_NAME.ServiceOverrides}
+    >
+      <ServiceOverrides />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={[routes.toServiceOverrides({ ...projectPathProps })]}
+      pageName={PAGE_NAME.ServiceOverrides}
+    >
+      <ServiceOverrides />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={AccountSideNavProps}
+      path={routes.toServiceOverrides({ ...orgPathProps })}
+      pageName={PAGE_NAME.ServiceOverrides}
+    >
+      <ServiceOverrides />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={AccountSideNavProps}
+      path={routes.toServiceOverrides({ ...accountPathProps, accountRoutePlacement: 'settings' })}
+      pageName={PAGE_NAME.ServiceOverrides}
+    >
+      <ServiceOverrides />
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={MainDashboardSideNavProps}
+      path={routes.toServiceOverrides({ ...accountPathProps, accountRoutePlacement: 'dashboard' })}
       pageName={PAGE_NAME.ServiceOverrides}
     >
       <ServiceOverrides />

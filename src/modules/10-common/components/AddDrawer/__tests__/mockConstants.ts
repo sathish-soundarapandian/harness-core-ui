@@ -56,7 +56,7 @@ const triggerDrawerMap = {
           iconName: 'service-gotlab' as IconName
         },
         {
-          itemLabel: 'BitBucket',
+          itemLabel: 'Bitbucket',
           value: 'BITBUCKET',
           iconName: 'bitbucket' as IconName
         }

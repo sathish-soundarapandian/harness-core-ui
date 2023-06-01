@@ -8,11 +8,11 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import { Dialog, Intent } from '@blueprintjs/core'
 import { useParams, useLocation, useHistory } from 'react-router-dom'
-import { get, pickBy, isEmpty } from 'lodash-es'
+import { get, pickBy, isEmpty, defaultTo } from 'lodash-es'
 import { Text, Icon, PageError, PageSpinner, Layout, Container, Heading } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { CIExecutionImages, getDeprecatedConfigPromise, ResponseCIExecutionImages } from 'services/ci'
-import type { GovernanceMetadata, GraphLayoutNode, ExecutionNode } from 'services/pipeline-ng'
+import { GovernanceMetadata, GraphLayoutNode, ExecutionNode, useRetryHistory } from 'services/pipeline-ng'
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import { getPipelineStagesMap, processForCIData } from '@pipeline/utils/executionUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -90,6 +90,24 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     shouldShowGovernanceEvaluations: !!location?.state?.shouldShowGovernanceEvaluations,
     governanceMetadata: location?.state?.governanceMetadata
   })
+
+  const { data: retryHistoryResponse } = useRetryHistory({
+    planExecutionId: executionIdentifier,
+    queryParams: {
+      pipelineIdentifier: pipelineIdentifier,
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    }
+  })
+
+  const retriedHistoryInfo = React.useMemo(() => {
+    const retriedStages = defaultTo(retryHistoryResponse?.data?.retryStagesMetadata?.retryStagesIdentifier, [])
+    const retriedExecutionUuids = retryHistoryResponse?.data?.executionInfos
+      ?.map(val => val.uuid)
+      .filter(uuid => uuid !== undefined) as string[]
+    return { retriedStages, retriedExecutionUuids }
+  }, [retryHistoryResponse?.data])
 
   const { data: pipeline, isLoading: loadingPipeline } = useGetPipelineSummaryQuery(
     {
@@ -323,7 +341,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         setIsPipelineInvalid,
         addNewNodeToMap(id, node) {
           setAllNodeMap(nodeMap => ({ ...nodeMap, [id]: node }))
-        }
+        },
+        retriedHistoryInfo
       }}
     >
       <ExecutionPipelineVariables

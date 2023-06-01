@@ -207,6 +207,15 @@ export function StageForm({
         }
       })
     )
+
+    dispatchEvent(
+      new CustomEvent('UPDATE_INPUT_SET_TEMPLATE', {
+        detail: {
+          path: isEmpty(path) ? templatePath : `${path}.${templatePath}`,
+          data: updatedData
+        }
+      })
+    )
   }
 
   return (

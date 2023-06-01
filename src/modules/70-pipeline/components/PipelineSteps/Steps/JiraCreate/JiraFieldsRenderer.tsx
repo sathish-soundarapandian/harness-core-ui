@@ -26,6 +26,7 @@ import { FormMultiTypeTextAreaField } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import type { JiraUpdateData } from '@pipeline/components/PipelineSteps/Steps/JiraUpdate/types'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { setAllowedValuesOptions } from '../JiraApproval/helper'
 import { processMultiSelectTypeInputRuntimeValues } from './helper'
@@ -44,7 +45,7 @@ export interface JiraFieldsRendererProps {
   fieldPrefix?: string
   formik?: any
   deploymentMode?: boolean
-  template?: JiraCreateData
+  template?: JiraCreateData | JiraUpdateData
 }
 
 interface MappedComponentInterface {

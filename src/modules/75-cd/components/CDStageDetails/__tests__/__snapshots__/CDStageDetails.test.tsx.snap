@@ -26,10 +26,11 @@ exports[`<CDStageDetails /> tests snapshot test 1`] = `
               >
                 <div
                   class="serviceName"
+                  data-testid="serviceLink"
                   tabindex="0"
                 >
                   <a
-                    href="/account/undefined/services/Order"
+                    href="/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/services/Order"
                   >
                     <p
                       class="StyledProps--font Text--lineclamp StyledProps--main stageItemDetails"
@@ -52,9 +53,10 @@ exports[`<CDStageDetails /> tests snapshot test 1`] = `
         </div>
         <ul
           class="values"
+          data-testid="environmentLink"
         >
           <a
-            href="/account/undefined/environments/Production/details"
+            href="/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/environments/Production/details?sectionId=INFRASTRUCTURE"
           >
             <li>
               <p
@@ -88,7 +90,7 @@ exports[`<CDStageDetails /> tests test gitops apps 1`] = `
       class="gitOpsAppsLi"
     >
       <a
-        href="/account/undefined/undefined/orgs/undefined/projects/undefined/gitops/applications/ID_1?agentId=AGENT_1"
+        href="/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/gitops/applications/ID_1?agentId=AGENT_1"
       >
         <p
           class="StyledProps--font StyledProps--main"

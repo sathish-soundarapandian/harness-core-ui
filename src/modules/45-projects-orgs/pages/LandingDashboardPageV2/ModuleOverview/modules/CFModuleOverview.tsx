@@ -15,6 +15,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetUserFlagOverview } from 'services/cf'
 import { useStrings } from 'framework/strings'
 import { numberFormatter } from '@common/utils/utils'
+import routes from '@common/RouteDefinitions'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
@@ -60,6 +61,9 @@ const getConfig = (data: SeriesOptionsType[], isExpanded: boolean, total: string
     series: data,
     credits: {
       enabled: false
+    },
+    tooltip: {
+      enabled: false
     }
   }
 }
@@ -100,7 +104,12 @@ const CFModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
             'common.moduleDetails.ff.expanded.list.two',
             'common.moduleDetails.ff.expanded.list.three'
           ]}
-          footer={<DefaultFooter learnMoreLink="https://docs.harness.io/category/vjolt35atg-feature-flags" />}
+          footer={
+            <DefaultFooter
+              learnMoreLink="https://docs.harness.io/category/vjolt35atg-feature-flags"
+              getStartedLink={routes.toCF({ accountId })}
+            />
+          }
         />
       )
     }
@@ -130,7 +139,10 @@ const CFModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
   const disabled = total - enabled
 
   return (
-    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'center' }} height="100%">
+    <Layout.Horizontal
+      flex={{ alignItems: 'center', justifyContent: isExpanded ? 'center' : 'flex-start' }}
+      height="100%"
+    >
       <Container width={isExpanded ? '200px' : '65px'} margin={{ top: 'small', bottom: 'small', right: 'small' }}>
         <HighchartsReact
           highcharts={Highcharts}
@@ -167,7 +179,7 @@ const CFModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmp
           <CountRow count={disabled} />
         </Layout.Vertical>
       ) : (
-        <Layout.Vertical flex={{ justifyContent: 'center' }}>
+        <Layout.Vertical flex={{ justifyContent: 'center', alignItems: 'flex-start' }}>
           <Text inline style={{ fontSize: '8px' }}>
             <Text inline font={{ variation: FontVariation.H4 }} data-testid="collapsedEnabledCount">
               {numberFormatter(enabled)}

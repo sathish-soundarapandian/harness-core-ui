@@ -132,6 +132,7 @@ usersPage:
   resendInviteSuccess: Invitation has been resent to the user '{{name}}'
   invitationError: Could not Invite this user
   deleteConfirmation: Are you sure you want to delete the User '{{name}}'?
+  deleteExternallyManagedUserConfirmation: "The user '{{name}}' is managed via an external identity provider. It is strongly advised to delete this user via the respective identity provider."
   resetTwoFactorAuthConfirmation: "Are you sure you want to reset two factor authentication secret for \n the User '{{name}}' ?"
   deleteLastAdminProjectConfirmation: User '{{name}}' is the last admin in this project. If you delete this user, only account or organization admins will be able to manage this project. Are you sure you want to continue?
   deleteLastAdminOrgConfirmation: User '{{name}}' is the last admin in this organization. If you delete this user, only account admins will be able to manage this organization. Are you sure you want to continue?
@@ -336,3 +337,4 @@ notifications:
   labelPagerDuty: PagerDuty Integration Key
   labelMSTeam: Microsoft Teams Webhook URL(s)
   validationPDKey: PagerDuty Key is required
+deleteAnyway: Delete Anyway

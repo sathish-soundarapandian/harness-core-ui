@@ -16,7 +16,7 @@ import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
-import { PeriodTypeEnum } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.constants'
+import { PeriodTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import type { KeyValuePairProps, ServiceDetailsProps } from '../DetailsPanel.types'
 import { getEvaluationTitleAndValue } from '../DetailsPanel.utils'
 import css from '../DetailsPanel.module.scss'
@@ -94,7 +94,7 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
         <KeyValuePair
           label={getString('cv.slos.sloTargetAndBudget.periodType')}
           value={getString(
-            sloDashboardWidget.sloTargetType === PeriodTypeEnum.ROLLING
+            sloDashboardWidget.sloTargetType === PeriodTypes.ROLLING
               ? 'cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'
               : 'cv.slos.sloTargetAndBudget.periodTypeOptions.calendar'
           )}

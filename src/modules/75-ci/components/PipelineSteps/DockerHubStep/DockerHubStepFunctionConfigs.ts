@@ -30,6 +30,10 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.List
   },
   {
+    name: 'spec.caching',
+    type: TransformValuesTypes.Boolean
+  },
+  {
     name: 'spec.dockerfile',
     type: TransformValuesTypes.Text
   },
@@ -112,6 +116,11 @@ export const editViewValidateFieldsConfig = [
     isRequired: true
   },
   {
+    name: 'spec.caching',
+    type: ValidationFieldTypes.Boolean,
+    label: 'ci.enableCaching'
+  },
+  {
     name: 'spec.labels',
     type: ValidationFieldTypes.Map
   },
@@ -167,6 +176,11 @@ export function getInputSetViewValidateFieldsConfig(
       type: ValidationFieldTypes.List,
       label: 'tagsLabel',
       isRequired
+    },
+    {
+      name: 'spec.caching',
+      type: ValidationFieldTypes.Boolean,
+      label: 'ci.enableCaching'
     },
     {
       name: 'spec.labels',

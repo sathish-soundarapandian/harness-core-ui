@@ -63,6 +63,5 @@ recurrenceConfig:
   doesNotRepeat: Does not repeat
   recurrence: Recurrence
   endTime: 'End Time'
-  Timezone: Timezone
   nMonthsValidationLessThan: 'Monthly value should be less than 12 months'
   nMonthsValidationMoreThan: 'Monthly value should be more than 1 month'

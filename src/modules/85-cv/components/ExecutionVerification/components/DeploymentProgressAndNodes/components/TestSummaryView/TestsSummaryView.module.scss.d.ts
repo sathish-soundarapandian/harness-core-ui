@@ -7,9 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly baselineStatusMessage: string
   readonly baselineTest: string
+  readonly dialog: string
   readonly mainLabel: string
-  readonly separator: string
+  readonly redirectLink: string
+  readonly subTitle: string
   readonly testsSummaryView: string
 }
 export default styles

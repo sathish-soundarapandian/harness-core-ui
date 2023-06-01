@@ -20,6 +20,9 @@ export const HARNESS_DOCS_LINK = 'https://docs.harness.io/'
 export const HARNESS_API_DOCS_LINK = 'https://apidocs.harness.io/'
 export const HARNESS_TUTORIALS = 'https://developer.harness.io/tutorials/get-started'
 export const SITE_STATUS_LINK = 'https://status.harness.io/'
+export const HARNESS_JFROG =
+  'https://developer.harness.io/docs/continuous-integration/use-ci/build-and-upload-artifacts/upload-artifacts-to-jfrog'
+export const HARNESS_SUPPORT_PAGE = 'https://www.harness.io/support-search'
 
 export const timestamp = moment.now()
 export const HARNESS_SUPPORT_LINK =

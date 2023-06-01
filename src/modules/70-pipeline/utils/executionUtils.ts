@@ -511,6 +511,14 @@ export function getIconStylesFromCollection(stageType?: string): React.CSSProper
   return {}
 }
 
+const getParentNodeId = (adjacencyMap: ExecutionGraph['nodeAdjacencyListMap'], nodeData: ExecutionNode) => {
+  return (
+    Object.entries(adjacencyMap || {}).find(([_, val]) => {
+      return (val?.children?.indexOf(nodeData.uuid!) ?? -1) >= 0
+    })?.[0] || ''
+  )
+}
+
 const addDependencyToArray = (service: ServiceDependency, arr: ExecutionPipelineNode<ExecutionNode>[]): void => {
   const stepItem: ExecutionPipelineItem<ExecutionNode> = {
     identifier: service.identifier as string,
@@ -640,10 +648,7 @@ const processNodeData = (
       })
     } else {
       if (nodeStrategyType === LITE_ENGINE_TASK) {
-        const parentNodeId =
-          Object.entries(nodeAdjacencyListMap || {}).find(([_, val]) => {
-            return (val?.children?.indexOf(nodeData.uuid!) ?? -1) >= 0
-          })?.[0] || ''
+        const parentNodeId = getParentNodeId(nodeAdjacencyListMap, nodeData)
         processLiteEngineTask(nodeData, rootNodes, nodeMap?.[parentNodeId])
       } else {
         items.push({
@@ -883,10 +888,7 @@ const addServiceDependenciesFromLiteTaskEngine = (
 ): void => {
   const liteEngineTask = Object.values(nodeMap).find(item => item.stepType === LITE_ENGINE_TASK)
   if (liteEngineTask) {
-    const parentNodeId =
-      Object.entries(adjacencyMap || {}).find(([_, val]) => {
-        return (val?.children?.indexOf(liteEngineTask.uuid!) ?? -1) >= 0
-      })?.[0] || ''
+    const parentNodeId = getParentNodeId(adjacencyMap, liteEngineTask)
     const parentNode: ExecutionNode | undefined = nodeMap[parentNodeId]
 
     // NOTE: liteEngineTask contains information about dependency services
@@ -1252,10 +1254,12 @@ export const processExecutionDataForGraph = (
 
 const updateBackgroundStepNodeStatuses = ({
   runningStageId,
-  nodeMap
+  nodeMap,
+  adjacencyMap
 }: {
   runningStageId?: string | null
   nodeMap: { [key: string]: ExecutionNode }
+  adjacencyMap?: { [key: string]: ExecutionNodeAdjacencyList }
 }): {
   [key: string]: ExecutionNode
 } => {
@@ -1266,13 +1270,33 @@ const updateBackgroundStepNodeStatuses = ({
     nodeMapValues.find(node => node.setupId === runningStageId)?.stepParameters?.specConfig?.stepIdentifiers || []
   // Overwrite status for stepType Background in running stage
   nodeMapValues.forEach(node => {
+    const parentNodeId = getParentNodeId(adjacencyMap, node)
+    const parentNode: ExecutionNode | undefined = nodeMap[parentNodeId]
+    const childNodeId = adjacencyMap?.[node.uuid!]?.children?.[0]
+    const childNode: ExecutionNode | undefined = childNodeId ? nodeMap[childNodeId] : undefined
     if (
       node?.uuid &&
       node.identifier &&
-      runningStageStepIdentifiers.includes(node.identifier) &&
-      node.stepType === StepType.Background
+      node.stepType === StepType.Background &&
+      ((parentNode &&
+        parentNode.stepType === StepNodeType.STRATEGY &&
+        runningStageStepIdentifiers.includes(parentNode?.identifier ?? '')) ||
+        runningStageStepIdentifiers.includes(node.identifier))
     ) {
+      // Overwrite status temporarily for a standalone Background step or a child Background step in a strategy node in running stage
+      // this helps keep the stream open for logs instead of blob requests for logs wrt Background step
       newNodeMap[node.uuid].status = ExecutionStatusEnum.Running
+    } else if (
+      node?.uuid &&
+      node?.identifier &&
+      node?.stepType === StepNodeType.STRATEGY &&
+      childNode?.stepType === StepType.Background &&
+      runningStageStepIdentifiers.includes(node.identifier)
+    ) {
+      // Overwrite status and stepType temporarily for strategy on a Background step in running stage
+      // this helps keep the stream open for logs instead of blob requests for logs wrt Background step
+      newNodeMap[node.uuid].status = ExecutionStatusEnum.Running
+      newNodeMap[node.uuid].stepType = StepType.Background
     }
   })
   return newNodeMap
@@ -1339,7 +1363,7 @@ export const processForCIData = ({
       data.data.pipelineExecutionSummary.status as ExecutionStatus
     )
 
-    newNodeMap = updateBackgroundStepNodeStatuses({ runningStageId, nodeMap })
+    newNodeMap = updateBackgroundStepNodeStatuses({ runningStageId, nodeMap, adjacencyMap })
   }
 
   // NOTE: Remove Duration for Background stepType similar to Service Dependency

@@ -6,7 +6,7 @@
  */
 
 import React, { CSSProperties, useMemo } from 'react'
-import { AllowedTypes, FormInput, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import { AllowedTypes, FormInput, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import type { UseStringsReturn } from 'framework/strings'
 import { useStrings } from 'framework/strings'
@@ -27,11 +27,17 @@ interface BaseFieldProps {
   allowableTypes: AllowedTypes
 }
 
-export function getDefaultBaselineOptions(getString: UseStringsReturn['getString']): SelectOption[] {
-  return [
-    { label: getString('cv.lastSuccessfulRun'), value: 'LAST' }
-    // { label: i18n.baselineDefaultLabel.pinBaseline, value: 'PIN' }
-  ]
+export function getDefaultBaselineOptions(
+  getString: UseStringsReturn['getString'],
+  addPinned?: boolean
+): SelectOption[] {
+  const options = [{ label: getString('cv.lastSuccessfulRun'), value: 'LAST' }]
+
+  if (addPinned) {
+    options.push({ label: getString('cv.pinned'), value: 'PINNED' })
+  }
+
+  return options
 }
 
 export function getVerificationSensitivityOptions(getString: UseStringsReturn['getString']): SelectOption[] {
@@ -174,28 +180,40 @@ export function Baseline(props: BaseFieldProps): JSX.Element {
 export function BaselineSelect(props: BaseFieldProps): JSX.Element {
   const { getString } = useStrings()
 
+  const SRM_ENABLE_BASELINE_BASED_VERIFICATION = useFeatureFlag(FeatureFlag.SRM_ENABLE_BASELINE_BASED_VERIFICATION)
+
   const { zIndex, label, name, expressions, formik, isSimpleDropdown, allowableTypes } = props
-  const style: CSSProperties = useMemo(() => ({ zIndex: zIndex ?? 5 }), [zIndex]) as CSSProperties
+  const style: CSSProperties = useMemo(() => ({ zIndex: zIndex ?? 5, marginBottom: 0 }), [zIndex]) as CSSProperties
   if (!isSimpleDropdown) {
     return (
-      <FormInput.MultiTypeInput
-        name={name ? name : 'baseline'}
-        style={style}
-        label={label ? label : getString('connectors.cdng.baseline')}
-        selectItems={getDefaultBaselineOptions(getString)}
-        multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
-      />
+      <Layout.Vertical>
+        <FormInput.MultiTypeInput
+          name={name ?? 'baseline'}
+          style={style}
+          label={label ?? getString('connectors.cdng.baseline')}
+          selectItems={getDefaultBaselineOptions(getString, SRM_ENABLE_BASELINE_BASED_VERIFICATION)}
+          multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+        />
+        <Text margin={{ bottom: 'medium' }} icon="info-messaging">
+          {getString('cv.verifyStep.baselineInputInfo')}
+        </Text>
+      </Layout.Vertical>
     )
   } else {
     return (
-      <FormInput.Select
-        name={name ? name : 'baseline'}
-        style={style}
-        label={label ? label : getString('connectors.cdng.baseline')}
-        items={getDefaultBaselineOptions(getString)}
-        value={(formik?.values as ContinousVerificationData).spec?.spec?.baseline as SelectOption}
-        disabled={true}
-      />
+      <Layout.Vertical>
+        <FormInput.Select
+          name={name ?? 'baseline'}
+          style={style}
+          label={label ?? getString('connectors.cdng.baseline')}
+          items={getDefaultBaselineOptions(getString, SRM_ENABLE_BASELINE_BASED_VERIFICATION)}
+          value={(formik?.values as ContinousVerificationData).spec?.spec?.baseline as SelectOption}
+          disabled={true}
+        />
+        <Text margin={{ bottom: 'medium' }} icon="info-messaging">
+          {getString('cv.verifyStep.baselineInputInfo')}
+        </Text>
+      </Layout.Vertical>
     )
   }
 }

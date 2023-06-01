@@ -140,7 +140,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
       >
         <div>
           {props.data.isInComplete && (
-            <Icon className={css.inComplete} size={12} name={'warning-sign'} color="orange500" />
+            <Icon className={css.incomplete} size={12} name={'warning-sign'} color="orange500" />
           )}
           {!props.readonly && (
             <Button

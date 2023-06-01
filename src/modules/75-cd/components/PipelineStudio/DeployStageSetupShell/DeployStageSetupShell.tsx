@@ -7,7 +7,17 @@
 
 import React, { useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { Layout, Tabs, Tab, Button, Icon, ButtonVariation, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import {
+  Layout,
+  Tabs,
+  Tab,
+  Button,
+  Icon,
+  ButtonVariation,
+  RUNTIME_INPUT_VALUE,
+  AccordionTabs,
+  IconProps
+} from '@harness/uicore'
 import cx from 'classnames'
 import { Expander, IconName } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty, set, debounce } from 'lodash-es'
@@ -53,12 +63,15 @@ import {
   StageType,
   GoogleCloudFunctionsEnvType
 } from '@pipeline/utils/stageHelpers'
+import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import { getCDStageValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import {
   isContextTypeNotStageTemplate,
   isContextTypeTemplateType
 } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { stageIconMap } from '@pipeline/pages/execution-list/ExecutionListTable/ExecutionStage'
+import NameIconHeader from '@common/components/NameIconHeader/NameIconHeader'
 import DeployInfraSpecifications from '../DeployInfraSpecifications/DeployInfraSpecifications'
 import DeployServiceSpecifications from '../DeployServiceSpecifications/DeployServiceSpecifications'
 import DeployStageSpecifications from '../DeployStageSpecifications/DeployStageSpecifications'
@@ -74,11 +87,19 @@ const TabsOrder = [
   DeployTabs.EXECUTION,
   DeployTabs.ADVANCED
 ]
+interface TabListType {
+  id: DeployTabs
+  title: React.ReactNode
+  panel: JSX.Element
+  dataTestId: string
+  className?: string
+}
+
 const iconNames = { tick: 'tick' as IconName }
 
 export default function DeployStageSetupShell(): JSX.Element {
   const { getString } = useStrings()
-  const { NG_SVC_ENV_REDESIGN = false } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN = false, CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
   const layoutRef = React.useRef<HTMLDivElement>(null)
   const pipelineContext = usePipelineContext()
   const {
@@ -110,11 +131,16 @@ export default function DeployStageSetupShell(): JSX.Element {
     selectedStepId ? DeployTabs.EXECUTION : DeployTabs.SERVICE
   )
   const { stage: selectedStage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
+
+  const stageIconProps = stageIconMap[selectedStage?.stage?.type as StageType]
   const { checkErrorsForTab } = React.useContext(StageErrorContext)
   const gitOpsEnabled = selectedStage?.stage?.spec?.gitOpsEnabled
   const isNewService = isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
   const isNewEnvDef = isNewEnvInfraDef(NG_SVC_ENV_REDESIGN, selectedStage?.stage as DeploymentStageElementConfig)
-
+  const scrollRef = React.useRef<HTMLDivElement | null>(null)
+  const getChildRef = (tabId: DeployTabs): React.RefObject<HTMLDivElement> | null => {
+    return CDS_PIPELINE_STUDIO_UPGRADES && selectedTabId === tabId ? scrollRef : null
+  }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
     debounce(
@@ -209,14 +235,18 @@ export default function DeployStageSetupShell(): JSX.Element {
     if (isNewEnvDef && nextTab === DeployTabs.INFRASTRUCTURE) {
       nextTab = DeployTabs.ENVIRONMENT
     }
-
-    if (!!checkTabSwitch && nextTabIdx < currentTabIdx) {
+    const setClickedTabId = (): void => {
       setSelectedTabId(nextTab)
       setSelectedSectionId(nextTab)
+    }
+    // Same tab clicked, do nothing
+    if (!!checkTabSwitch && nextTabIdx === currentTabIdx) return
+
+    if (!!checkTabSwitch && nextTabIdx < currentTabIdx) {
+      setClickedTabId()
     } else {
       checkErrorsForTab(selectedTabId).then(_ => {
-        setSelectedTabId(nextTab)
-        setSelectedSectionId(nextTab)
+        setClickedTabId()
       })
     }
   }
@@ -230,7 +260,7 @@ export default function DeployStageSetupShell(): JSX.Element {
     ? (get(selectedStage, 'stage.spec.service') || get(selectedStage, 'stage.spec.services')) && serviceDefinitionType()
     : selectedDeploymentType
 
-  const shouldSelectBasicStrategyType = () => {
+  const shouldSelectBasicStrategyType = (): boolean => {
     if (
       selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda ||
       selectedDeploymentType === ServiceDeploymentType.GoogleCloudFunctions
@@ -479,178 +509,249 @@ export default function DeployStageSetupShell(): JSX.Element {
     </Layout.Horizontal>
   )
 
-  return (
-    <section ref={layoutRef} key={selectedStageId} className={cx(css.setupShell)}>
-      <Tabs
-        id="stageSetupShell"
-        onChange={(nextTab: DeployTabs) => handleTabChange(nextTab, true)}
-        selectedTabId={selectedTabId}
-        data-tabId={selectedTabId}
-      >
-        <Tab
-          id={DeployTabs.OVERVIEW}
-          panel={<DeployStageSpecifications>{navBtns}</DeployStageSpecifications>}
-          title={
-            <span className={css.title} data-completed={!incompleteTabs[DeployTabs.OVERVIEW]}>
-              <Icon name={incompleteTabs[DeployTabs.OVERVIEW] ? 'cd-main' : iconNames.tick} size={16} />
-              {getString('overview')}
-            </span>
-          }
-          data-testid="overview"
-        />
-
-        <Tab
-          id={DeployTabs.SERVICE}
-          title={
-            <span className={css.title} data-completed={!incompleteTabs[DeployTabs.SERVICE]}>
-              <Icon name={incompleteTabs[DeployTabs.SERVICE] ? 'services' : iconNames.tick} size={16} />
-              {getString('service')}
-            </span>
-          }
-          panel={
-            isNewService ? (
-              <DeployServiceEntitySpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
-                {navBtns}
-              </DeployServiceEntitySpecifications>
-            ) : (
-              <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
-                {navBtns}
-              </DeployServiceSpecifications>
-            )
-          }
-          data-testid="service"
-        />
-        {isNewEnvDef && (
-          <Tab
-            id={DeployTabs.ENVIRONMENT}
-            title={
-              <span className={css.title} data-completed={!incompleteTabs[DeployTabs.ENVIRONMENT]}>
-                <Icon name={incompleteTabs[DeployTabs.ENVIRONMENT] ? 'infrastructure' : iconNames.tick} size={16} />
-                {getString('environment')}
-              </span>
-            }
-            panel={<DeployEnvSpecifications>{navBtns}</DeployEnvSpecifications>}
-            data-testid="environment"
-          />
-        )}
-        {(!NG_SVC_ENV_REDESIGN || (NG_SVC_ENV_REDESIGN && !isEmpty(selectedStage?.stage?.spec?.infrastructure))) && (
-          <Tab
-            id={DeployTabs.INFRASTRUCTURE}
-            title={
-              <span className={css.title} data-completed={!incompleteTabs[DeployTabs.INFRASTRUCTURE]}>
-                <Icon name={incompleteTabs[DeployTabs.INFRASTRUCTURE] ? 'infrastructure' : iconNames.tick} size={16} />
-                {getString('infrastructureText')}
-              </span>
-            }
-            panel={<DeployInfraSpecifications>{navBtns}</DeployInfraSpecifications>}
-            data-testid="infrastructure"
-          />
-        )}
-        <Tab
-          id={DeployTabs.EXECUTION}
-          title={
-            <span className={css.title} data-completed={!incompleteTabs[DeployTabs.EXECUTION]}>
-              <Icon name={incompleteTabs[DeployTabs.EXECUTION] ? 'execution' : iconNames.tick} size={16} />
-              {getString('executionText')}
-            </span>
-          }
-          className={cx(css.fullHeight, css.stepGroup)}
-          panel={
-            <ExecutionGraph
-              allowAddGroup={true}
-              hasRollback={true}
-              isReadonly={isReadonly}
-              hasDependencies={false}
-              addLinkedTemplatesLabel={addLinkedTemplatesLabel}
-              originalStage={originalStage}
-              ref={executionRef}
-              templateTypes={templateTypes}
-              templateIcons={templateIcons}
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              stage={selectedStage!}
-              updateStage={stageData => {
-                if (stageData.stage) updateStage(stageData.stage)
-              }}
-              onAddStep={(event: ExecutionGraphAddStepEvent) => {
-                if (event.isTemplate) {
-                  addTemplate(event)
-                } else {
-                  updatePipelineView({
-                    ...pipelineView,
-                    isDrawerOpened: true,
-                    drawerData: {
-                      type: DrawerTypes.AddStep,
-                      data: {
-                        paletteData: {
-                          entity: event.entity,
-                          stepsMap: event.stepsMap,
-                          onUpdate: executionRef.current?.stepGroupUpdated,
-                          // isAddStepOverride: true,
-                          isRollback: event.isRollback,
-                          isParallelNodeClicked: event.isParallel,
-                          hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
-                        }
-                      }
-                    }
-                  })
-                }
-              }}
-              onEditStep={(event: ExecutionGraphEditStepEvent) => {
-                updatePipelineView({
-                  ...pipelineView,
-                  isDrawerOpened: true,
-                  drawerData: {
-                    type: DrawerTypes.StepConfig,
-                    data: {
-                      stepConfig: {
-                        node: event.node as any,
-                        stepsMap: event.stepsMap,
-                        onUpdate: executionRef.current?.stepGroupUpdated,
-                        isStepGroup: event.isStepGroup,
-                        isUnderStepGroup: event.isUnderStepGroup,
-                        addOrEdit: event.addOrEdit,
-                        hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
-                      }
+  const tabList = [
+    {
+      id: DeployTabs.OVERVIEW,
+      title: (
+        <span className={css.title} data-completed={!incompleteTabs[DeployTabs.OVERVIEW]}>
+          <Icon name={incompleteTabs[DeployTabs.OVERVIEW] ? 'cd-main' : iconNames.tick} size={16} />
+          {getString('overview')}
+        </span>
+      ),
+      panel: (
+        <DeployStageSpecifications customRef={getChildRef(DeployTabs.OVERVIEW)}>{navBtns}</DeployStageSpecifications>
+      ),
+      dataTestId: 'overview'
+    },
+    {
+      id: DeployTabs.SERVICE,
+      title: (
+        <span className={css.title} data-completed={!incompleteTabs[DeployTabs.SERVICE]}>
+          <Icon name={incompleteTabs[DeployTabs.SERVICE] ? 'services' : iconNames.tick} size={16} />
+          {getString('service')}
+        </span>
+      ),
+      panel: isNewService ? (
+        <DeployServiceEntitySpecifications
+          setDefaultServiceSchema={setDefaultServiceSchema}
+          customRef={getChildRef(DeployTabs.SERVICE)}
+        >
+          {navBtns}
+        </DeployServiceEntitySpecifications>
+      ) : (
+        <DeployServiceSpecifications
+          setDefaultServiceSchema={setDefaultServiceSchema}
+          customRef={getChildRef(DeployTabs.SERVICE)}
+        >
+          {navBtns}
+        </DeployServiceSpecifications>
+      ),
+      dataTestId: 'service'
+    },
+    isNewEnvDef && {
+      id: DeployTabs.ENVIRONMENT,
+      title: (
+        <span className={css.title} data-completed={!incompleteTabs[DeployTabs.ENVIRONMENT]}>
+          <Icon name={incompleteTabs[DeployTabs.ENVIRONMENT] ? 'infrastructure' : iconNames.tick} size={16} />
+          {getString('environment')}
+        </span>
+      ),
+      panel: (
+        <DeployEnvSpecifications customRef={getChildRef(DeployTabs.ENVIRONMENT)}>{navBtns}</DeployEnvSpecifications>
+      ),
+      dataTestId: 'environment'
+    },
+    (!NG_SVC_ENV_REDESIGN || (NG_SVC_ENV_REDESIGN && !isEmpty(selectedStage?.stage?.spec?.infrastructure))) && {
+      id: DeployTabs.INFRASTRUCTURE,
+      title: (
+        <span className={css.title} data-completed={!incompleteTabs[DeployTabs.INFRASTRUCTURE]}>
+          <Icon name={incompleteTabs[DeployTabs.INFRASTRUCTURE] ? 'infrastructure' : iconNames.tick} size={16} />
+          {getString('infrastructureText')}
+        </span>
+      ),
+      panel: (
+        <DeployInfraSpecifications customRef={getChildRef(DeployTabs.INFRASTRUCTURE)}>
+          {navBtns}
+        </DeployInfraSpecifications>
+      ),
+      dataTestId: 'infrastructure'
+    },
+    {
+      id: DeployTabs.EXECUTION,
+      title: (
+        <span className={css.title} data-completed={!incompleteTabs[DeployTabs.EXECUTION]}>
+          <Icon name={incompleteTabs[DeployTabs.EXECUTION] ? 'execution' : iconNames.tick} size={16} />
+          {getString('executionText')}
+        </span>
+      ),
+      panel: (
+        <ExecutionGraph
+          allowAddGroup={true}
+          hasRollback={true}
+          isReadonly={isReadonly}
+          hasDependencies={false}
+          addLinkedTemplatesLabel={addLinkedTemplatesLabel}
+          originalStage={originalStage}
+          ref={executionRef}
+          templateTypes={templateTypes}
+          templateIcons={templateIcons}
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          stage={selectedStage!}
+          updateStage={stageData => {
+            if (stageData.stage) updateStage(stageData.stage)
+          }}
+          onAddStep={(event: ExecutionGraphAddStepEvent) => {
+            if (event.isTemplate) {
+              addTemplate(event)
+            } else {
+              updatePipelineView({
+                ...pipelineView,
+                isDrawerOpened: true,
+                drawerData: {
+                  type: DrawerTypes.AddStep,
+                  data: {
+                    paletteData: {
+                      entity: event.entity,
+                      stepsMap: event.stepsMap,
+                      onUpdate: executionRef.current?.stepGroupUpdated,
+                      // isAddStepOverride: true,
+                      isRollback: event.isRollback,
+                      isParallelNodeClicked: event.isParallel,
+                      hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
                     }
                   }
-                })
-              }}
-              onSelectStep={(stepId: string) => {
-                setSelectedStepId(stepId)
-              }}
-              selectedStepId={selectedStepId}
-            />
-          }
-          data-testid="execution"
+                }
+              })
+            }
+          }}
+          onEditStep={(event: ExecutionGraphEditStepEvent) => {
+            updatePipelineView({
+              ...pipelineView,
+              isDrawerOpened: true,
+              drawerData: {
+                type: DrawerTypes.StepConfig,
+                data: {
+                  stepConfig: {
+                    node: event.node as any,
+                    stepsMap: event.stepsMap,
+                    onUpdate: executionRef.current?.stepGroupUpdated,
+                    isStepGroup: event.isStepGroup,
+                    isUnderStepGroup: event.isUnderStepGroup,
+                    addOrEdit: event.addOrEdit,
+                    hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
+                  }
+                }
+              }
+            })
+          }}
+          onSelectStep={(stepId: string) => {
+            setSelectedStepId(stepId)
+          }}
+          selectedStepId={selectedStepId}
         />
-        <Tab
-          id={DeployTabs.ADVANCED}
-          title={
-            <span className={css.title} data-completed={!incompleteTabs[DeployTabs.ADVANCED]}>
-              <Icon name={incompleteTabs[DeployTabs.ADVANCED] ? 'advanced' : iconNames.tick} size={16} />
-              Advanced
-            </span>
-          }
-          className={css.fullHeight}
-          panel={<DeployAdvancedSpecifications>{navBtns}</DeployAdvancedSpecifications>}
-          data-testid="advanced"
-        />
-        {isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
-          <>
-            <Expander />
-            <SaveTemplateButton
-              data={selectedStage.stage}
-              type={'Stage'}
-              gitDetails={gitDetails}
-              storeMetadata={storeMetadata}
-              buttonProps={{
-                margin: { right: 'medium' },
-                disabled: !!selectedStage.stage.spec?.serviceConfig?.useFromStage
-              }}
+      ),
+      dataTestId: 'execution',
+      className: cx(css.fullHeight, css.stepGroup)
+    },
+    {
+      id: DeployTabs.ADVANCED,
+      title: (
+        <span className={css.title} data-completed={!incompleteTabs[DeployTabs.ADVANCED]}>
+          <Icon name={incompleteTabs[DeployTabs.ADVANCED] ? 'advanced' : iconNames.tick} size={16} />
+          {getString('advancedTitle')}
+        </span>
+      ),
+      panel: (
+        <DeployAdvancedSpecifications customRef={getChildRef(DeployTabs.ADVANCED)}>
+          {navBtns}
+        </DeployAdvancedSpecifications>
+      ),
+      dataTestId: 'advanced',
+      className: css.fullHeight
+    }
+  ].filter(Boolean) as TabListType[]
+
+  const stageHeaderName = React.useMemo((): string => {
+    const stageName = get(selectedStage?.stage, 'name', '')
+    return `${getString('common.stage')}: ${stageName}`
+  }, [getString, selectedStage?.stage])
+
+  return (
+    <section ref={layoutRef} key={selectedStageId} className={cx(css.setupShell)}>
+      {/* Common Error strip for stage setup shell in NEW_PIPELINE_STUDIO */}
+      {CDS_PIPELINE_STUDIO_UPGRADES ? (
+        <div className={css.accordionTabWrapper}>
+          <Layout.Horizontal padding={{ top: 'xlarge', right: 'xxlarge', bottom: 'large', left: 'xxlarge' }}>
+            {/* Icon and Title Header*/}
+            <NameIconHeader iconProps={stageIconProps as IconProps} name={stageHeaderName} />
+            {isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
+              <>
+                <Expander />
+                <SaveTemplateButton
+                  data={selectedStage.stage}
+                  type={'Stage'}
+                  gitDetails={gitDetails}
+                  storeMetadata={storeMetadata}
+                  buttonProps={{
+                    disabled: !!selectedStage.stage.spec?.serviceConfig?.useFromStage
+                  }}
+                />
+              </>
+            )}
+          </Layout.Horizontal>
+
+          <AccordionTabs
+            tabList={tabList}
+            tabsProps={{
+              id: 'stageSetupShell',
+              onChange: (nextTab: DeployTabs) => handleTabChange(nextTab, true),
+              selectedTabId: selectedTabId
+            }}
+            accordionProps={{
+              onChange: (nextTab: DeployTabs) => handleTabChange(nextTab, true),
+              controlledActiveId: selectedTabId,
+              className: css.accordionClassName,
+              panelClassName: css.accordionPanelClassName,
+              summaryClassName: css.accordionSummaryClassName
+            }}
+          >
+            <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+          </AccordionTabs>
+        </div>
+      ) : (
+        <Tabs
+          id="stageSetupShell"
+          onChange={(nextTab: DeployTabs) => handleTabChange(nextTab, true)}
+          selectedTabId={selectedTabId}
+          data-tabId={selectedTabId}
+        >
+          {tabList.map(({ id, panel, title, className, dataTestId }) => (
+            <Tab
+              key={id}
+              id={id}
+              panel={panel}
+              title={title}
+              data-testid={dataTestId}
+              {...(className && { className })}
             />
-          </>
-        )}
-      </Tabs>
+          ))}
+          {isContextTypeNotStageTemplate(contextType) && selectedStage?.stage && (
+            <>
+              <Expander />
+              <SaveTemplateButton
+                data={selectedStage.stage}
+                type={'Stage'}
+                gitDetails={gitDetails}
+                storeMetadata={storeMetadata}
+                buttonProps={{
+                  margin: { right: 'medium' },
+                  disabled: !!selectedStage.stage.spec?.serviceConfig?.useFromStage
+                }}
+              />
+            </>
+          )}
+        </Tabs>
+      )}
     </section>
   )
 }

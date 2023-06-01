@@ -33,7 +33,8 @@ export const deploymentIconMap: Record<string, IconName> = {
   [ServiceDeploymentType.Elastigroup]: 'elastigroup',
   [ServiceDeploymentType.Asg]: 'aws-asg',
   [ServiceDeploymentType.GoogleCloudFunctions]: 'service-google-functions',
-  [ServiceDeploymentType.AwsLambda]: 'service-aws-native-lambda'
+  [ServiceDeploymentType.AwsLambda]: 'service-aws-native-lambda',
+  [ServiceDeploymentType.AwsSam]: 'service-aws-sam'
 }
 
 export interface DeploymentTypeItem {
@@ -47,22 +48,15 @@ export interface DeploymentTypeItem {
 
 export interface GetNgSupportedDeploymentTypesProps {
   NG_SVC_ENV_REDESIGN?: boolean
-  SPOT_ELASTIGROUP_NG?: boolean
   CDS_TAS_NG?: boolean
   CDS_ASG_NG?: boolean
   CDS_GOOGLE_CLOUD_FUNCTION?: boolean
   CDS_AWS_NATIVE_LAMBDA?: boolean
+  CDP_AWS_SAM?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const {
-    NG_SVC_ENV_REDESIGN,
-    SPOT_ELASTIGROUP_NG,
-    CDS_TAS_NG,
-    CDS_ASG_NG,
-    CDS_GOOGLE_CLOUD_FUNCTION,
-    CDS_AWS_NATIVE_LAMBDA
-  } = props
+  const { NG_SVC_ENV_REDESIGN, CDS_TAS_NG, CDS_GOOGLE_CLOUD_FUNCTION, CDS_AWS_NATIVE_LAMBDA, CDP_AWS_SAM } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -89,6 +83,16 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.winrm',
       icon: deploymentIconMap[ServiceDeploymentType.WinRm],
       value: ServiceDeploymentType.WinRm
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.asg',
+      icon: deploymentIconMap[ServiceDeploymentType.Asg],
+      value: ServiceDeploymentType.Asg
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.spotElastigroup',
+      icon: deploymentIconMap[ServiceDeploymentType.Elastigroup],
+      value: ServiceDeploymentType.Elastigroup
     }
   ]
 
@@ -97,6 +101,14 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.awsLambda',
       icon: deploymentIconMap[ServiceDeploymentType.AwsLambda],
       value: ServiceDeploymentType.AwsLambda
+    })
+  }
+
+  if (NG_SVC_ENV_REDESIGN && CDP_AWS_SAM) {
+    baseTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.awsSAM',
+      icon: deploymentIconMap[ServiceDeploymentType.AwsSam],
+      value: ServiceDeploymentType.AwsSam
     })
   }
 
@@ -122,25 +134,11 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       value: ServiceDeploymentType.AzureWebApp
     })
   }
-  if (SPOT_ELASTIGROUP_NG) {
-    baseTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.spotElastigroup',
-      icon: deploymentIconMap[ServiceDeploymentType.Elastigroup],
-      value: ServiceDeploymentType.Elastigroup
-    })
-  }
   if (CDS_TAS_NG) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.tas',
       icon: deploymentIconMap[ServiceDeploymentType.TAS],
       value: ServiceDeploymentType.TAS
-    })
-  }
-  if (CDS_ASG_NG) {
-    baseTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.asg',
-      icon: deploymentIconMap[ServiceDeploymentType.Asg],
-      value: ServiceDeploymentType.Asg
     })
   }
 
@@ -149,7 +147,6 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
 
 export interface GetCgSupportedDeploymentTypesProps {
   NG_SVC_ENV_REDESIGN?: boolean
-  SPOT_ELASTIGROUP_NG?: boolean
 }
 
 export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTypesProps): DeploymentTypeItem[] {

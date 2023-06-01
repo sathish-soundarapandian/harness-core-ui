@@ -38,6 +38,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
+import useEditGitMetadata from '@pipeline/components/MigrateResource/useEditGitMetadata'
 import useDeleteConfirmationDialog from '../utils/DeleteConfirmDialog'
 import { Badge } from '../utils/Badge/Badge'
 import { INPUT_SETS_PAGE_SIZE } from './Util'
@@ -159,6 +160,19 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
     onSuccess: () => (column as CustomColumn<InputSetLocal>).refetchInputSet?.()
   })
 
+  const { showEditGitMetadataModal: showEditGitMetadataModal } = useEditGitMetadata({
+    resourceType: GitResourceType.INPUT_SETS,
+    identifier: data.identifier || '',
+    metadata: {
+      connectorRef: data?.connectorRef,
+      repo: data?.gitDetails?.repoName,
+      filePath: data?.gitDetails?.filePath
+    },
+    extraQueryParams: { pipelineIdentifier: data.pipelineIdentifier },
+    modalTitle: getString('pipeline.editGitMetadataTitle', { entity: getString('inputSets.inputSetLabel') }),
+    onSuccess: () => (column as CustomColumn<InputSetLocal>).refetchInputSet?.()
+  })
+
   const { confirmDelete } = useDeleteConfirmationDialog(
     data,
     data.inputSetType === 'OVERLAY_INPUT_SET' ? 'overlayInputSet' : 'inputSet',
@@ -230,6 +244,16 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
             refetchInputSets={(column as any)?.refetchInputSet}
             closeReconcileMenu={() => setMenuOpen(false)}
           />
+          {data?.storeType === StoreType.REMOTE ? (
+            <Menu.Item
+              icon="edit"
+              text={getString('pipeline.editGitMetadata')}
+              onClick={() => {
+                showEditGitMetadataModal()
+              }}
+              data-testid="editGitMetadata"
+            />
+          ) : null}
         </Menu>
       </Popover>
     </Layout.Horizontal>

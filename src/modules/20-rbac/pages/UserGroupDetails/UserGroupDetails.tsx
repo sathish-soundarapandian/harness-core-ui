@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout, Button, Card, Container, ButtonVariation, PageError, Icon } from '@harness/uicore'
+import { Text, Layout, Button, Card, Container, ButtonVariation, ButtonSize, PageError, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
@@ -253,8 +253,9 @@ const UserGroupDetails: React.FC = () => {
               >
                 <ManagePrincipalButton
                   data-testid={'addRole-UserGroup'}
-                  text={getString('common.plusNumber', { number: getString('common.role') })}
-                  variation={ButtonVariation.LINK}
+                  text={`${getString('common.manage')} ${getString('roles')}`}
+                  variation={ButtonVariation.SECONDARY}
+                  size={ButtonSize.SMALL}
                   onClick={event => {
                     event.stopPropagation()
                     openRoleAssignmentModal(PrincipalType.USER_GROUP, userGroup, data?.data?.roleAssignmentsMetadataDTO)

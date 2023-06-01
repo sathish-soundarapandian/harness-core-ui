@@ -131,6 +131,10 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
         url = paths.toIDP(params)
         label = getString('common.purpose.idp.name')
         break
+      case ModuleName.CET:
+        url = paths.toCET(params)
+        label = getString('common.purpose.cet.continuous')
+        break
     }
 
     if (projectIdentifier) {

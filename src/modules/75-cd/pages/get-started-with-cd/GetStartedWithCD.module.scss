@@ -6,11 +6,13 @@
  */
 
 .topPage {
-  width: 90% !important;
-  position: relative;
-  margin: 100px 0px var(--spacing-small) 0px !important;
-  padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-xxlarge) var(--spacing-11) !important;
-
+  &.oldGetStarted {
+    width: 90% !important;
+    position: relative;
+    margin: 100px 0px var(--spacing-small) 0px !important;
+    padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-xxlarge) var(--spacing-11) !important;
+  }
+  padding: 0 var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-xxlarge) var(--spacing-11) !important;
   .buttonRow {
     margin-top: var(--spacing-large) !important;
     align-items: center;
@@ -163,4 +165,55 @@
 
 .error {
   color: var(--error);
+}
+.onboardingcards {
+  .cardWidth {
+    width: 510px !important;
+    padding: var(--spacing-xxlarge);
+  }
+  gap: var(--spacing-xxlarge);
+  .cardShadow {
+    box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  }
+  .cardGap {
+    gap: var(--spacing-xlarge);
+  }
+  .bodyText {
+    line-height: 18px !important;
+    align-items: start;
+    :global(.bp3-icon) {
+      margin-top: -18px;
+    }
+    margin-bottom: var(--spacing-medium);
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.videoCard {
+  .videoframe {
+    cursor: pointer;
+    iframe {
+      width: 100%;
+      height: 250px;
+    }
+    margin-bottom: var(--spacing-xlarge);
+  }
+}
+.cdresourcelist {
+  margin-bottom: unset;
+  list-style: none;
+  padding-left: var(--spacing-small);
+  li::before {
+    content: '\2022';
+    color: var(--primary-7);
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+  }
+  p:last-child {
+    margin-bottom: 0 !important;
+  }
 }

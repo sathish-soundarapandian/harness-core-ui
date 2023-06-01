@@ -118,7 +118,8 @@ export const Connectors: ConnectorType = {
   TAS: 'Tas',
   TERRAFORM_CLOUD: 'TerraformCloud',
   Bamboo: 'Bamboo',
-  SignalFX: 'SignalFX'
+  SignalFX: 'SignalFX',
+  Harness: 'Harness'
 }
 
 export const ConnectorLabels: Record<ConnectorInfoDTO['type'], string> = {

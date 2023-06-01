@@ -48,6 +48,7 @@ interface StepGroupGraphProps {
   setVisibilityOfAdd: React.Dispatch<React.SetStateAction<boolean>>
   isParentMatrix?: boolean
   type?: string
+  baseFqn?: string
 }
 
 const getCalculatedStyles = (
@@ -136,11 +137,10 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   const { updateDimensions, childrenDimensions } = useNodeDimensionContext()
   const { errorMap } = useValidationErrors()
   const {
-    state: { templateTypes, templateIcons },
-    getStagePathFromPipeline
+    state: { templateTypes, templateIcons }
   } = usePipelineContext()
 
-  const stagePath = getStagePathFromPipeline(props?.identifier || '', 'pipeline.stages')
+  const baseFQN = `${props?.baseFqn}.steps`
   useLayoutEffect(() => {
     if (stageGroupTypes.includes(props?.type as StageType)) setState(props.data as PipelineGraphState[])
     else if (props?.data?.length) {
@@ -151,12 +151,12 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
           templateIcons,
           serviceDependencies: undefined,
           errorMap: errorMap,
-          parentPath: `${stagePath}.stage.spec.execution.steps.stepGroup.steps`, //index after step missing - getStepPathFromPipeline??
+          parentPath: baseFQN,
           isNestedGroup: true
         })
       )
     }
-  }, [treeRectangle, props.data, templateTypes, templateIcons])
+  }, [treeRectangle, props.data, templateTypes, templateIcons, baseFQN])
 
   useLayoutEffect(() => {
     if (state?.length) {

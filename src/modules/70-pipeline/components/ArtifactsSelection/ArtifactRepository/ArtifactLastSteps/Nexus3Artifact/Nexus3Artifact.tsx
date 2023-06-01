@@ -130,9 +130,6 @@ export function Nexus3Artifact({
       })
     }
   ])
-
-  // const [repoValue, setRepoValue] = useState('')
-  const { AZURE_WEB_APP_NG_NEXUS_PACKAGE } = useFeatureFlags()
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
@@ -589,12 +586,7 @@ export function Nexus3Artifact({
                 <FormInput.Select
                   name="repositoryFormat"
                   label={getString('common.repositoryFormat')}
-                  items={getAllowedRepoOptions(
-                    selectedDeploymentType,
-                    AZURE_WEB_APP_NG_NEXUS_PACKAGE,
-                    hideHeaderAndNavBtns,
-                    selectedArtifact
-                  )}
+                  items={getAllowedRepoOptions(selectedDeploymentType, hideHeaderAndNavBtns, selectedArtifact)}
                   onChange={value => {
                     if (value.value === RepositoryFormatTypes.Maven) {
                       const optionalValues: { extension?: string; classifier?: string } = {}

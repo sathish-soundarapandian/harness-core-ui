@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   AllowedTypes,
   getMultiTypeFromValue,
@@ -15,7 +15,7 @@ import {
   SelectOption,
   useToaster
 } from '@harness/uicore'
-import { defaultTo, get, isEmpty, isNil, merge } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isNil, merge, set } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -32,6 +32,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import type { DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
 import { useGetServicesData } from './useGetServicesData'
@@ -73,6 +74,7 @@ export function DeployServiceEntityInputStep({
   const servicesValue: ServiceYamlV2[] = get(initialValues, `services.values`, [])
   const serviceTemplate = inputSetData?.template?.service?.serviceRef
   const servicesTemplate = inputSetData?.template?.services?.values
+  const deployParallelTemplate = inputSetData?.template?.services?.metadata?.parallel
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   // This is required only for single service
@@ -154,6 +156,18 @@ export function DeployServiceEntityInputStep({
       }
     }
   }, [servicesList])
+
+  useEffect(() => {
+    const clonedFormikValue = cloneDeep(formik.values) as any
+    if (getMultiTypeFromValue(deployParallelTemplate) === MultiTypeInputType.RUNTIME)
+      set(
+        clonedFormikValue,
+        `${localPathPrefix}metadata.parallel`,
+        get(formik, `values.${localPathPrefix}metadata.parallel`) || false
+      )
+
+    formik.setValues({ ...clonedFormikValue })
+  }, [])
 
   useDeepCompareEffect(() => {
     // This is specific handling for service as expression in templatized views
@@ -281,7 +295,7 @@ export function DeployServiceEntityInputStep({
 
   return (
     <>
-      <Layout.Horizontal style={{ alignItems: 'flex-end' }}>
+      <Layout.Horizontal style={{ flexDirection: 'column' }}>
         <div className={css.inputFieldLayout}>
           {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
             CDS_OrgAccountLevelServiceEnvEnvGroup ? (
@@ -323,44 +337,61 @@ export function DeployServiceEntityInputStep({
           ) : null}
         </div>
         {isMultiSvcTemplate ? (
-          CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-            <MultiTypeServiceField
-              {...commonProps}
-              deploymentType={deploymentType as ServiceDeploymentType}
-              gitOpsEnabled={gitOpsEnabled}
-              deploymentMetadata={deploymentMetadata}
-              placeholder={getString('services')}
-              isMultiSelect={true}
-              onMultiSelectChange={handleServicesChange}
-              // This is required to update values when the type has changed
-              onChange={item => handleServicesChange(item as SelectOption[])}
-              width={300}
-              isNewConnectorLabelVisible={false}
-              multiTypeProps={{
-                expressions,
-                allowableTypes: allowableTypesWithoutExpressionExecution
-              }}
-              multitypeInputValue={
-                typeof servicesValue === 'string' ? getMultiTypeFromValue(servicesValue) : MultiTypeInputType.FIXED
-              }
-            />
-          ) : (
-            <FormMultiTypeMultiSelectDropDown
-              {...commonProps}
-              dropdownProps={{
-                items: selectOptions,
-                placeholder: getString('services'),
-                disabled: loading || inputSetData?.readonly
-              }}
-              onChange={handleServicesChange}
-              multiTypeProps={{
-                width: 300,
-                height: 32,
-                expressions,
-                allowableTypes: allowableTypesWithoutExpressionExecution
-              }}
-            />
-          )
+          <>
+            {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+              <MultiTypeServiceField
+                {...commonProps}
+                deploymentType={deploymentType as ServiceDeploymentType}
+                gitOpsEnabled={gitOpsEnabled}
+                deploymentMetadata={deploymentMetadata}
+                placeholder={getString('services')}
+                isMultiSelect={true}
+                onMultiSelectChange={handleServicesChange}
+                // This is required to update values when the type has changed
+                onChange={item => handleServicesChange(item as SelectOption[])}
+                width={300}
+                isNewConnectorLabelVisible={false}
+                multiTypeProps={{
+                  expressions,
+                  allowableTypes: allowableTypesWithoutExpressionExecution
+                }}
+                multitypeInputValue={
+                  typeof servicesValue === 'string' ? getMultiTypeFromValue(servicesValue) : MultiTypeInputType.FIXED
+                }
+              />
+            ) : (
+              <FormMultiTypeMultiSelectDropDown
+                {...commonProps}
+                dropdownProps={{
+                  items: selectOptions,
+                  placeholder: getString('services'),
+                  disabled: loading || inputSetData?.readonly
+                }}
+                onChange={handleServicesChange}
+                multiTypeProps={{
+                  width: 300,
+                  height: 32,
+                  expressions,
+                  allowableTypes: allowableTypesWithoutExpressionExecution
+                }}
+              />
+            )}
+            <div className={css.inputFieldLayout}>
+              {getMultiTypeFromValue(deployParallelTemplate) === MultiTypeInputType.RUNTIME ? (
+                <FormMultiTypeCheckboxField
+                  label={getString('cd.pipelineSteps.serviceTab.multiServicesParallelDeployLabel')}
+                  name={`${localPathPrefix}metadata.parallel`}
+                  disabled={inputSetData?.readonly}
+                  checkboxStyle={{ flexGrow: 'unset' }}
+                  multiTypeTextbox={{
+                    expressions,
+                    allowableTypes: allowableTypesWithoutExpressionExecution,
+                    width: 300
+                  }}
+                />
+              ) : null}
+            </div>
+          </>
         ) : null}
         {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}
       </Layout.Horizontal>

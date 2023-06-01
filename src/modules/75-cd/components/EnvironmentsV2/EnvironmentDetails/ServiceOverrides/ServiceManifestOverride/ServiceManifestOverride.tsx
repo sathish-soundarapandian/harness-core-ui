@@ -138,7 +138,7 @@ function ServiceManifestOverride({
   >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const { CDS_TAS_NG, CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
+  const { CDS_TAS_NG } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < manifestOverrides.length)
@@ -276,7 +276,7 @@ function ServiceManifestOverride({
   }, [getInitialValues, selectedConnector])
 
   const shouldPassPrevStepData = (): boolean => {
-    return isManifestEditMode && !!selectedConnector && !!CDS_SERVICE_CONFIG_LAST_STEP
+    return isManifestEditMode && !!selectedConnector
   }
 
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {

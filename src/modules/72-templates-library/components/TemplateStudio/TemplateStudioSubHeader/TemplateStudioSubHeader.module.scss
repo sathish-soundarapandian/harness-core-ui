@@ -29,6 +29,8 @@
   .tagRender {
     & > :global(.bp3-button-text) {
       color: var(--orange-600) !important;
+      text-decoration: underline;
+      text-decoration-color: var(--orange-600);
       font-size: var(--font-size-small) !important;
     }
 

@@ -104,12 +104,10 @@ describe('main nav tests', () => {
     expect(queryByText('featureFlagsText')).not.toBeNull()
   })
 
-  test('when ng dashbpard is enabled', () => {
+  test('when ng dashboard is enabled', () => {
     const { queryByText } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
-          CFNG_ENABLED: true,
           NG_DASHBOARDS: true
         }}
       >
@@ -124,8 +122,6 @@ describe('main nav tests', () => {
     const { container } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
-          CFNG_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
       >
@@ -153,8 +149,6 @@ describe('main nav tests', () => {
     const { queryByText } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
-          CFNG_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
         defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } } }}
@@ -169,7 +163,7 @@ describe('main nav tests', () => {
   })
 
   test('test when one of the feature flag of selected modules turns off', () => {
-    const selectedModules = [ModuleName.CD, ModuleName.CI, ModuleName.CF]
+    const selectedModules = [ModuleName.CD, ModuleName.CF]
     const orderedModules = DEFAULT_MODULES_ORDER
     ;(usePreferenceStore as jest.Mock).mockImplementation(() => {
       return {
@@ -185,8 +179,6 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
-          CFNG_ENABLED: false,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
         defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } } }}
@@ -197,7 +189,7 @@ describe('main nav tests', () => {
 
     expect(setModuleConfigPreference).toBeCalledWith({
       orderedModules,
-      selectedModules: [ModuleName.CD, ModuleName.CI]
+      selectedModules: [ModuleName.CD, ModuleName.CF]
     })
   })
 
@@ -216,8 +208,6 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
-          CFNG_ENABLED: false,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
       >
@@ -249,8 +239,6 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
-          CFNG_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
         defaultLicenseStoreValues={{

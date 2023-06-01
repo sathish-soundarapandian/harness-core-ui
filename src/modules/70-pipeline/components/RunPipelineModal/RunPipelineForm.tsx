@@ -246,6 +246,8 @@ function RunPipelineFormBasic({
     [pipelineResponse?.data?.yamlPipeline]
   )
 
+  const getPipelineBranch = (): string | undefined => branch || pipelineResponse?.data?.gitDetails?.branch
+
   useEffect(() => {
     setResolvedPipeline(
       yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline
@@ -297,7 +299,7 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module || '',
       repoIdentifier,
-      branch,
+      branch: getPipelineBranch(),
       notifyOnlyUser: notifyOnlyMe,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
@@ -451,7 +453,7 @@ function RunPipelineFormBasic({
 
   useEffect(() => {
     if (inputSetsError) {
-      showError(getRBACErrorMessage(inputSetsError))
+      showError(getRBACErrorMessage(inputSetsError, true))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputSetsError])
@@ -575,7 +577,7 @@ function RunPipelineFormBasic({
               }),
               search:
                 supportingGitSimplification && storeType === StoreType.REMOTE
-                  ? `connectorRef=${connectorRef}&repoName=${repoIdentifier}&branch=${branch}&storeType=${storeType}`
+                  ? `connectorRef=${connectorRef}&repoName=${repoIdentifier}&branch=${getPipelineBranch()}&storeType=${storeType}`
                   : undefined,
               state: {
                 shouldShowGovernanceEvaluations:
@@ -587,7 +589,7 @@ function RunPipelineFormBasic({
           }
         }
       } catch (error: any) {
-        showWarning(defaultTo(getRBACErrorMessage(error), getString('runPipelineForm.runPipelineFailed')))
+        showWarning(defaultTo(getRBACErrorMessage(error, true), getString('runPipelineForm.runPipelineFailed')))
       }
 
       return valuesPipeline as PipelineInfoConfig
@@ -972,7 +974,7 @@ function RunPipelineFormBasic({
                           orgIdentifier={orgIdentifier}
                           connectorRef={connectorRef}
                           repoIdentifier={repoIdentifier || pipelineResponse?.data?.gitDetails?.repoName}
-                          branch={branch || pipelineResponse?.data?.gitDetails?.branch}
+                          branch={getPipelineBranch()}
                           storeType={storeType}
                           isGitSyncEnabled={isGitSyncEnabled}
                           supportingGitSimplification={supportingGitSimplification}

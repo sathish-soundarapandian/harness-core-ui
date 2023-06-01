@@ -57,6 +57,10 @@ export const HEALTHSOURCE_LIST = [
   {
     name: HealthSourceTypes.SignalFX,
     icon: getConnectorIconByType(Connectors.SignalFX)
+  },
+  {
+    name: HealthSourceTypes.GrafanaLoki,
+    icon: getConnectorIconByType(HealthSourceTypes.GrafanaLoki)
   }
 ]
 
@@ -73,9 +77,16 @@ export const SplunkProduct = {
   SPLUNK_METRICS: 'Splunk Metric'
 }
 
+export const SplunkObservabilityDisplayName = 'Splunk Observability'
+
 export const SignalFX = {
-  SIGNALFX_METRICS_DISPLAY_NAME: 'SignalFX Metrics',
+  SIGNALFX_METRICS_DISPLAY_NAME: 'Splunk Observability [SignalFX] Metrics',
   SIGNALFX_METRICS: 'SplunkSignalFXMetrics'
+}
+
+export const GrafanaLoki = {
+  GRAFANA_LOKI_DISPLAY_NAME: 'Grafana Loki Logs',
+  GRAFANA_LOKI_LOGS: 'GrafanaLokiLogs'
 }
 
 export const ElkProduct = {

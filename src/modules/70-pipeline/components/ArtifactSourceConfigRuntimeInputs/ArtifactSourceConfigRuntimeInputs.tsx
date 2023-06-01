@@ -27,10 +27,11 @@ interface Props {
   path?: string
   readonly?: boolean
   className?: string
+  allValues?: ArtifactSourceConfigDetails
 }
 
 export function ArtifactSourceConfigRuntimeInputs(props: Props) {
-  const { template, allowableTypes, path, readonly } = props
+  const { template, allowableTypes, path, readonly, allValues } = props
   const artifactSourceType = template?.type as ArtifactType
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
   const artifactSource = artifactSourceType && artifactSourceBaseFactory.getArtifactSource(artifactSourceType)
@@ -74,7 +75,7 @@ export function ArtifactSourceConfigRuntimeInputs(props: Props) {
                 accountId,
                 pipelineIdentifier: '',
                 isSidecar: false,
-                artifact: template,
+                artifact: allValues,
                 readonly: !!readonly,
                 allowableTypes: allowableTypes,
                 initialValues: { artifacts: { primary: template } },

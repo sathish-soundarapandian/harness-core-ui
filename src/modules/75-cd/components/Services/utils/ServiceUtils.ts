@@ -59,7 +59,8 @@ export const setNameIDDescription = (draftData: PipelineInfoConfig, updatedData:
 }
 
 export const SERVICES_DEFAULT_PAGE_SIZE = 10
-export type ServicesQueryParams = CommonPaginationQueryParams & { sort?: [SortFields, Sort] }
+export const SERVICES_DEFAULT_PAGE_INDEX = 1
+export type ServicesQueryParams = CommonPaginationQueryParams & { searchTerm?: string; sort?: [SortFields, Sort] }
 export type ServicesQueryParamsWithDefaults = RequiredPick<ServicesQueryParams, 'page' | 'size' | 'sort'>
 
 export const useServicesQueryParamOptions = (): UseQueryParamsOptions<ServicesQueryParamsWithDefaults> => {
@@ -68,6 +69,7 @@ export const useServicesQueryParamOptions = (): UseQueryParamsOptions<ServicesQu
   return useQueryParamsOptions({
     page: 0,
     size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : SERVICES_DEFAULT_PAGE_SIZE,
+    searchTerm: '',
     sort: [SortFields.LastModifiedAt, Sort.DESC]
   })
 }

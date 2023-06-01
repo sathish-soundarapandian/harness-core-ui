@@ -23,6 +23,7 @@ export interface ExtendedMonacoEditorProps extends MonacoEditorProps {
   name?: string
   setLineCount?: (line: number) => void
   'data-testid'?: string
+  alwaysShowDarkTheme?: boolean
 }
 
 const MonacoEditor = (props: ExtendedMonacoEditorProps, ref: ReactMonacoEditorRef) => {
@@ -64,7 +65,7 @@ const MonacoEditor = (props: ExtendedMonacoEditorProps, ref: ReactMonacoEditorRe
     suppressHotJarRecording([...document.querySelectorAll('.react-monaco-editor-container')])
   }
 
-  const theme = props.options?.readOnly ? 'disable-theme' : 'vs'
+  const theme = props.alwaysShowDarkTheme ? 'vs-dark' : props.options?.readOnly ? 'disable-theme' : 'vs'
   return (
     <ReactMonacoEditor
       {...props}

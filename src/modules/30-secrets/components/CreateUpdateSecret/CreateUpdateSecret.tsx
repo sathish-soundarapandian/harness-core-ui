@@ -123,7 +123,6 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   useEffect(() => {
     if (getSecretError) {
       modalErrorHandler?.showDanger(getSecretError.message)
-      refetch?.()
     }
   }, [getSecretError])
 
@@ -612,8 +611,12 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                 typeOfSelectedSecretManager === 'AwsSecretManager' ||
                 typeOfSelectedSecretManager === 'GcpSecretManager' ? (
                   <VaultFormFields
+                    orgIdentifier={selectedSecretManager?.orgIdentifier}
+                    projIdentifier={selectedSecretManager?.projectIdentifier}
+                    accountId={accountIdentifier}
                     secretManagerType={typeOfSelectedSecretManager}
                     formik={formikProps}
+                    createSecretTextData={createSecretTextData}
                     type={type}
                     editing={editing}
                     readonly={readOnlySecretManager}

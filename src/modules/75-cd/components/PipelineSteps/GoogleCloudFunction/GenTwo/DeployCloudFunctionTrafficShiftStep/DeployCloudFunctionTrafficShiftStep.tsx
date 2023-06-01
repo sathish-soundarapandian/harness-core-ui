@@ -7,8 +7,8 @@
 
 import React from 'react'
 import type { FormikErrors } from 'formik'
-import { get, isEmpty, set } from 'lodash-es'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import { isEmpty } from 'lodash-es'
+import type { IconName } from '@harness/uicore'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
@@ -107,26 +107,12 @@ export class DeployCloudFunctionTrafficShiftStep extends PipelineStep<CloudFunct
     getString,
     viewType
   }: ValidateInputSetProps<CloudFunctionTrafficShiftExecutionStepInitialValues>): FormikErrors<CloudFunctionTrafficShiftExecutionStepInitialValues> {
-    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-
     const errors = validateGenericFields({
       data,
       template,
       getString,
       viewType
     }) as FormikErrors<CloudFunctionTrafficShiftExecutionStepInitialValues>
-
-    if (
-      isEmpty(get(data, `spec.trafficPercent`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `spec.trafficPercent`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(
-        errors,
-        `spec.trafficPercent`,
-        getString?.('fieldRequired', { field: getString('cd.steps.googleCloudFunctionCommon.trafficPercent') })
-      )
-    }
 
     if (isEmpty(errors.spec)) {
       delete errors.spec

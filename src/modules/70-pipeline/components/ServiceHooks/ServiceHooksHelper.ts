@@ -54,7 +54,7 @@ export const ServiceHooksToConnectorLabelMap: Record<ConfigStoreWithoutConnector
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
   Gitlab: 'common.repo_provider.gitlabLabel',
-  Bitbucket: 'pipeline.manifestType.bitBucketLabel'
+  Bitbucket: 'common.repo_provider.bitbucketLabel'
 }
 
 export const ServiceHooksToConnectorMap: Record<ServiceHookStoreType | string, ConnectorInfoDTO['type']> = {

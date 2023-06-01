@@ -143,41 +143,34 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
     }
   }, [branchesWithStatusData, branch])
 
+  const routeParams = {
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    module,
+    repoIdentifier,
+    branch,
+    connectorRef,
+    repoName,
+    storeType
+  }
+
   const goToEditWizard = ({ triggerIdentifier, triggerType }: GoToEditWizardInterface): void => {
     history.push(
       routes.toTriggersWizardPage({
-        accountId,
-        orgIdentifier,
-        projectIdentifier,
-        pipelineIdentifier,
+        ...routeParams,
         triggerIdentifier,
-        triggerType,
-        module,
-        repoIdentifier,
-        branch,
-        connectorRef,
-        repoName,
-        storeType
+        triggerType
       })
     )
   }
   const goToDetails = ({ triggerIdentifier }: GoToEditWizardInterface): void => {
     /* istanbul ignore next */
-    history.push(
-      routes.toTriggersDetailPage({
-        accountId,
-        orgIdentifier,
-        projectIdentifier,
-        pipelineIdentifier,
-        triggerIdentifier,
-        module,
-        repoIdentifier,
-        branch,
-        connectorRef,
-        repoName,
-        storeType
-      })
-    )
+    history.push(routes.toTriggersDetailPage({ ...routeParams, triggerIdentifier }))
+  }
+  const goToActivityHistory = ({ triggerIdentifier }: GoToEditWizardInterface): void => {
+    history.push(routes.toTriggersActivityHistoryPage({ ...routeParams, triggerIdentifier }))
   }
 
   const [openDrawer, hideDrawer] = useModalHook(() => {
@@ -277,6 +270,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           goToDetails={goToDetails}
           isPipelineInvalid={isPipelineInvalid}
           gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+          goToActivityHistory={goToActivityHistory}
         />
       </Page.Body>
     </>

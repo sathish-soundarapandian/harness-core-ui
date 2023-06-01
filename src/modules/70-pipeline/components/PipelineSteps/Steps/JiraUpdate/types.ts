@@ -7,11 +7,23 @@
 
 import type { FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
-import type { AllowedTypes, SelectOption } from '@harness/uicore'
+import type { AllowedTypes, SelectOption, MultiSelectOption } from '@harness/uicore'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { Failure, ResponseListJiraStatusNG, StepElementConfig, UseGetJiraStatusesProps } from 'services/cd-ng'
+import type {
+  Failure,
+  ResponseJiraIssueUpdateMetadataNG,
+  ResponseListJiraStatusNG,
+  StepElementConfig,
+  UseGetJiraIssueUpdateMetadataProps,
+  UseGetJiraStatusesProps
+} from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
-import type { JiraCreateFieldType, JiraFieldNGWithValue } from '../JiraCreate/types'
+import type { JiraFieldNGWithValue } from '../JiraCreate/types'
+
+export interface JiraUpdateFieldType {
+  name: string
+  value: string | number | SelectOption | MultiSelectOption[]
+}
 
 export interface JiraUpdateData extends StepElementConfig {
   spec: {
@@ -21,7 +33,7 @@ export interface JiraUpdateData extends StepElementConfig {
       status: string | SelectOption
       transitionName: string
     }
-    fields: JiraCreateFieldType[]
+    fields: JiraUpdateFieldType[]
     selectedOptionalFields?: JiraFieldNGWithValue[]
     delegateSelectors?: string[]
   }
@@ -52,6 +64,10 @@ export interface JiraUpdateFormContentInterface {
   statusFetchError?: GetDataError<Failure | Error> | null
   isNewStep?: boolean
   readonly?: boolean
+  issueUpdateMetadataResponse?: ResponseJiraIssueUpdateMetadataNG | null
+  refetchIssueUpdateMetadata: (props: UseGetJiraIssueUpdateMetadataProps) => Promise<void>
+  issueUpdateMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueUpdateMetadataLoading?: boolean
 }
 
 export interface JiraUpdateDeploymentModeProps {
@@ -69,4 +85,8 @@ export interface JiraUpdateDeploymentModeFormContentInterface extends JiraUpdate
   statusResponse: ResponseListJiraStatusNG | null
   statusFetchError?: GetDataError<Failure | Error> | null
   isNewStep?: boolean
+  refetchIssueUpdateMetadata: (props: UseGetJiraIssueUpdateMetadataProps) => Promise<void>
+  issueUpdateMetadataLoading: boolean
+  issueUpdateMetadataFetchError?: GetDataError<Failure | Error> | null
+  issueUpdateMetadataResponse: ResponseJiraIssueUpdateMetadataNG | null
 }

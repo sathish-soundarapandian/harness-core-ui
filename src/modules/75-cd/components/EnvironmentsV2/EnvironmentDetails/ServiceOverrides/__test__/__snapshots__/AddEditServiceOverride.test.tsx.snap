@@ -105,7 +105,7 @@ exports[`Add Edit Service Override Test add new service override 1`] = `
         <p
           class="StyledProps--font StyledProps--main"
         >
-          cd.overrideType
+          common.serviceOverrides.overrideType
         </p>
         <div
           class="bp3-tabs Tabs--main Tabs--horizontal"

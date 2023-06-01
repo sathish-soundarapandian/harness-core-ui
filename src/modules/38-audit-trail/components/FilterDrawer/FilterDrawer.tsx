@@ -16,6 +16,8 @@ import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterC
 import { StringUtils } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
+import { CDActions, Category } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import AuditTrailFilterForm from './AuditTrailFilterForm'
 import { getFilterPropertiesFromForm, getFormValuesFromFilterProperties } from '../../utils/RequestUtil'
 
@@ -54,7 +56,7 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   const [isRefreshingFilters, setIsRefreshingFilters] = useState<boolean>(false)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
-
+  const { trackEvent } = useTelemetry()
   const onFiltersApply = (formData: AuditTrailFormType): void => {
     const filterFromFormData = getFilterPropertiesFromForm(formData, accountId)
     applyFilter?.({
@@ -109,6 +111,9 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
       }
       await saveOrUpdateHandler(isUpdate, payload)
     }
+    trackEvent(CDActions.ApplyAdvancedFilter, {
+      category: Category.AUDIT_TRAIL
+    })
     setIsRefreshingFilters(false)
     await refetchFilters()
   }

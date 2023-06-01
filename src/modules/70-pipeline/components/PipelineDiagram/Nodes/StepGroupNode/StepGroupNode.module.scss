@@ -159,7 +159,11 @@
     left: 5px;
     color: var(--white) !important;
   }
-
+  .incomplete {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+  }
   &.stepGroupParent {
     top: -74px;
     .horizontalBar {

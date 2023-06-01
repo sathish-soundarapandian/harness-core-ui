@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as pipelineServices from 'services/pipeline-ng'
 import mockImport from 'framework/utils/mockImport'
-import { ValidationBadge } from '../ValidationBadge'
+import { ValidationBadge, ValidationBadgeProps } from '../ValidationBadge'
 import * as pipelineContext from '../../PipelineContext/PipelineContext'
 import {
   successValidationResult,
@@ -26,10 +26,10 @@ mockImport('@governance/PolicyManagementEvaluationView', {
   PolicyManagementEvaluationView: () => <p>Evaluation View</p>
 })
 
-const renderValidationBadge = (): RenderResult => {
+const renderValidationBadge = (props?: ValidationBadgeProps): RenderResult => {
   return render(
     <TestWrapper>
-      <ValidationBadge />
+      <ValidationBadge onReconcile={() => undefined} {...props} />
     </TestWrapper>
   )
 }
@@ -262,5 +262,22 @@ describe('ValidationBadge', () => {
     })
 
     await waitFor(() => expect(refetch).toHaveBeenCalledTimes(1))
+  })
+
+  test('should call onReconcile prop if pipline needs to be reconciled', async () => {
+    jest.spyOn(pipelineServices, 'useGetPipelineValidateResult').mockReturnValue({
+      data: successValidationResult,
+      loading: false,
+      error: null,
+      absolutePath: '',
+      cancel: jest.fn(),
+      refetch: jest.fn(),
+      response: null
+    })
+
+    const onReconcile = jest.fn()
+    renderValidationBadge({ onReconcile })
+
+    await waitFor(() => expect(onReconcile).toBeCalled())
   })
 })

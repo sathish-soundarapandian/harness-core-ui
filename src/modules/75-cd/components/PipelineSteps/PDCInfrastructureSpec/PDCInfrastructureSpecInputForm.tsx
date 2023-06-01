@@ -28,7 +28,7 @@ import MultiTypeSecretInput, {
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
-import { MultiTypeMap } from '@common/components/MultiTypeMap/MultiTypeMap'
+import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { HostScope, parseAttributes, parseHosts, PdcInfraTemplate } from './PDCInfrastructureInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PDCInfrastructureSpec.module.scss'
@@ -212,7 +212,6 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
         {getMultiTypeFromValue(template?.hostAttributes) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
             <MultiTypeMap
-              formik={formik}
               name={`${path}.hostAttributes`}
               enableConfigureOptions={false}
               valueMultiTextInputProps={{

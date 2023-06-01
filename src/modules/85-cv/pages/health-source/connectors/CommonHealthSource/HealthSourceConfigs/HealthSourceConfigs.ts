@@ -82,6 +82,44 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       enabled: false
     }
   },
+  [HealthSourceTypes.GrafanaLokiLogs]: {
+    addQuery: {
+      label: 'Query',
+      enableDefaultGroupName: true
+    },
+    customMetrics: {
+      enabled: true,
+      fieldMappings: [
+        {
+          type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
+          label: 'Service Instance Identifier',
+          identifier: 'serviceInstanceField',
+          isTemplateSupportEnabled: true
+        }
+      ],
+      logsTable: {
+        enabled: true,
+        selectOnlyLastKey: true
+      },
+      queryAndRecords: {
+        enabled: true,
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics'
+      },
+      assign: {
+        enabled: false,
+        defaultServiceInstance: ''
+      }
+    },
+    sideNav: {
+      shouldBeAbleToDeleteLastMetric: false
+    },
+    metricPacks: {
+      enabled: false
+    },
+    metricThresholds: {
+      enabled: false
+    }
+  },
   [HealthSourceTypes.ElasticSearch_Logs]: {
     addQuery: {
       label: 'Query',

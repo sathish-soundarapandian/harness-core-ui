@@ -89,6 +89,8 @@ declare interface Window {
   MonacoEnvironment: any
   YT?: any
   onYouTubeIframeAPIReady?: () => void
+  getIP?: (ipJson: { ip: string }) => void
+  currentIP?: string | undefined
 }
 
 declare interface WindowEventMap {
@@ -198,6 +200,10 @@ declare module 'ciui/MicroFrontendApp' {
 }
 
 declare module 'tiui/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+declare module 'srmui/MicroFrontendApp' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

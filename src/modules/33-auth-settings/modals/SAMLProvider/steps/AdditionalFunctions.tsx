@@ -135,7 +135,7 @@ const AdditionalFunctions: React.FC<StepProps<FormValues> & { onSubmit: () => vo
           <FormikForm className={css.form}>
             <Layout.Vertical>
               <Text margin={{ bottom: 'large' }} font={{ variation: FontVariation.H3 }}>
-                {getString('authSettings.additionalFunctions')}
+                {getString('common.advancedSettings')}
               </Text>
               <Layout.Vertical
                 className={css.flex}

@@ -73,7 +73,7 @@ import MultiTypeSecretInput, {
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { MultiTypeMap } from '@common/components/MultiTypeMap/MultiTypeMap'
+import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import type { MapUIType } from '@common/components/Map/Map'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
@@ -700,7 +700,6 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                         </div>
                         <div className={css.panel}>
                           <MultiTypeMap
-                            formik={formik}
                             name="hostAttributes"
                             enableConfigureOptions={false}
                             valueMultiTextInputProps={{

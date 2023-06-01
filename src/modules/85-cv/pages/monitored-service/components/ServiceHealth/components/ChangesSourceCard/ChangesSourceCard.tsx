@@ -53,7 +53,7 @@ export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.
         }
       })
     }
-  }, [monitoredServiceIdentifier, monitoredServiceIdentifiers])
+  }, [monitoredServiceIdentifier, monitoredServiceIdentifiers, startTime, endTime])
 
   const changeSummaryList = useMemo(
     () => calculateChangePercentage(getString, data?.resource),

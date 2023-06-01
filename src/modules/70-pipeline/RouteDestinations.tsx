@@ -82,6 +82,7 @@ import { ExecutionListPage } from './pages/execution-list-page/ExecutionListPage
 import EnvironmentResourceRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentResourceRenderer'
 import EnvironmentAttributeRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentAttributeRenderer'
 import { BuildCommits } from './pages/execution/ExecutionLandingPage/Commits/BuildCommits'
+import { getPipelineExecutionEventAdditionalDetails } from './utils/auditTrailUtils'
 /**
  * Register RBAC resources
  */
@@ -230,19 +231,38 @@ AuditTrailFactory.registerResourceHandler('PIPELINE', {
   },
   moduleLabel: cdLabel,
   resourceLabel: 'common.pipeline',
-  resourceUrl: (pipeline: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+  resourceUrl: (
+    pipeline: ResourceDTO,
+    resourceScope: ResourceScope,
+    module?: Module,
+    auditEventData?: AuditEventData
+  ) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
-    if (pipeline.identifier && orgIdentifier && projectIdentifier) {
+    const pipelineIdentifier = pipeline.identifier
+    const { planExecutionId } = defaultTo(auditEventData, {}) as any
+
+    if (pipelineIdentifier && orgIdentifier && projectIdentifier) {
+      if (planExecutionId)
+        return routes.toExecutionPipelineView({
+          module,
+          orgIdentifier,
+          projectIdentifier,
+          accountId: accountIdentifier,
+          pipelineIdentifier: pipelineIdentifier,
+          source: 'executions',
+          executionIdentifier: planExecutionId
+        })
       return routes.toPipelineStudio({
         module,
         orgIdentifier,
         projectIdentifier,
         accountId: accountIdentifier,
-        pipelineIdentifier: pipeline.identifier
+        pipelineIdentifier: pipelineIdentifier
       })
     }
     return undefined
-  }
+  },
+  additionalDetails: getPipelineExecutionEventAdditionalDetails
 })
 
 AuditTrailFactory.registerResourceHandler('INPUT_SET', {
@@ -365,35 +385,6 @@ AuditTrailFactory.registerResourceHandler('TRIGGER', {
         triggerIdentifier: trigger.identifier,
         triggerType: trigger.labels.triggerType,
         pipelineIdentifier: trigger.labels.pipelineIdentifier
-      })
-    }
-    return undefined
-  }
-})
-
-AuditTrailFactory.registerResourceHandler('PIPELINE_EXECUTION', {
-  moduleIcon: {
-    name: 'cd-main'
-  },
-  moduleLabel: cdLabel,
-  resourceLabel: 'auditTrail.resourceLabel.pipelineExecution',
-  resourceUrl: (
-    _resource: ResourceDTO,
-    resourceScope: ResourceScope,
-    module?: Module,
-    auditEventData?: AuditEventData
-  ) => {
-    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
-    const { pipelineIdentifier, planExecutionId } = defaultTo(auditEventData, {}) as any
-    if (pipelineIdentifier && orgIdentifier && projectIdentifier && planExecutionId) {
-      return routes.toExecutionPipelineView({
-        module,
-        orgIdentifier,
-        projectIdentifier,
-        accountId: accountIdentifier,
-        pipelineIdentifier: pipelineIdentifier,
-        source: 'executions',
-        executionIdentifier: planExecutionId
       })
     }
     return undefined

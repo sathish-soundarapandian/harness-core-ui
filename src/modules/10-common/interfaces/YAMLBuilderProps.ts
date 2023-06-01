@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { CompletionItemKind } from 'vscode-languageserver-types'
+import type { CompletionItem } from 'vscode-languageserver-types'
 import type { GetYamlSchemaQueryParams } from 'services/cd-ng'
 import type { PluginMetadataResponse } from 'services/ci'
 import type { Status } from '@common/utils/Constants'
@@ -62,11 +62,7 @@ export interface YamlBuilderProps {
   setPluginOpnStatus?: (status: Status) => void
 }
 
-export interface CompletionItemInterface {
-  label: string
-  kind: CompletionItemKind
-  insertText: string
-}
+export type CompletionItemInterface = CompletionItem
 
 interface SchemaInterace {
   fileMatch: string[]

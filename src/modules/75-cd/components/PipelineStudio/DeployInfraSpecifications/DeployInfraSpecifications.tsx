@@ -7,21 +7,23 @@
 
 import React from 'react'
 import cx from 'classnames'
-
 import { Container } from '@harness/uicore'
-
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 
 import DeployInfraDefinition from './DeployInfraDefinition/DeployInfraDefinition'
 
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
-export default function DeployInfraSpecifications(props: React.PropsWithChildren<unknown>): JSX.Element {
-  const scrollRef = React.useRef<HTMLDivElement | null>(null)
+export default function DeployInfraSpecifications(
+  props: React.PropsWithChildren<{ customRef?: React.Ref<HTMLDivElement> }>
+): JSX.Element {
+  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
+  const domRef = React.useRef<HTMLDivElement | null>(null)
+  const scrollRef = props?.customRef || domRef
   const { submitFormsForTab } = React.useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
   React.useEffect(() => {
@@ -32,8 +34,15 @@ export default function DeployInfraSpecifications(props: React.PropsWithChildren
 
   return (
     <div className={stageCss.deployStage} key="1">
-      <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
+      {!CDS_PIPELINE_STUDIO_UPGRADES && (
+        <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+      )}
+      <div
+        className={cx(stageCss.contentSection, stageCss.paddedSection, {
+          [stageCss.paddedSectionNew]: CDS_PIPELINE_STUDIO_UPGRADES
+        })}
+        ref={scrollRef}
+      >
         <DeployInfraDefinition />
         <Container margin={{ top: 'xxlarge' }}>{props.children}</Container>
       </div>

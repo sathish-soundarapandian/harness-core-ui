@@ -142,7 +142,7 @@ describe('Org Page List', () => {
       const form = findDialogContainer()
       expect(form).toBeTruthy()
 
-      const chckBox = queryByText(form as HTMLElement, 'projectsOrgs.yesIamSure')
+      const chckBox = queryByText(form as HTMLElement, 'authSettings.yesIamSure')
       act(() => {
         fireEvent.click(chckBox!)
       })

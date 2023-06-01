@@ -43,12 +43,12 @@ import type { PipelineContextInterface } from '@pipeline/components/PipelineStud
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { getPipelineStages } from '@pipeline/components/PipelineStudio/PipelineStagesUtils'
 import type { PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
 import { ActionReturnType, TemplateContextActions } from './TemplateActions'
 import { isNewTemplate } from '../TemplateStudioUtils'
@@ -870,8 +870,7 @@ export const TemplateProvider: React.FC<{
 }> = ({ queryParams, module, templateIdentifier, versionLabel, templateType, children }) => {
   const { repoIdentifier, branch } = queryParams
   const { supportingTemplatesGitx } = useAppStore()
-  const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const { getString } = useStrings()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -1002,10 +1001,10 @@ export const TemplateProvider: React.FC<{
       args,
       getString,
       module,
-      isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
+      isCIEnabled: licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE,
       isCDEnabled: shouldVisible,
-      isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
-      isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
+      isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
+      isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,
       isApprovalStageEnabled: true
     })
 

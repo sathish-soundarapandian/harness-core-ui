@@ -90,7 +90,7 @@ export class GoogleCloudFunctionInfraSpec extends PipelineStep<GoogleCloudFuncti
     }
     if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.connectorRef', ''))
-      if (obj?.type === ServiceDeploymentType.ECS) {
+      if (obj?.type === ServiceDeploymentType.GoogleCloudFunctions) {
         return getConnectorListV2Promise({
           queryParams: {
             accountIdentifier: accountId,

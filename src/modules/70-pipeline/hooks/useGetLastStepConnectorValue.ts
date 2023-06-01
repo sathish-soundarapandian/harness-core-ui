@@ -13,7 +13,6 @@ import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { ConnectorResponse, useGetConnector } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -31,8 +30,6 @@ export function useGetLastStepConnectorValue(props: LastStepConnectorValueProps)
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const [selectedConnector, setSelectedConnector] = React.useState<string | ConnectorSelectedValue>(initialConnectorRef)
-
-  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
 
   useEffect(() => {
     setSelectedConnector(initialConnectorRef)
@@ -78,16 +75,12 @@ export function useGetLastStepConnectorValue(props: LastStepConnectorValueProps)
   })
 
   React.useEffect(() => {
-    if (
-      getMultiTypeFromValue(initialConnectorRef) === MultiTypeInputType.FIXED &&
-      isEditMode &&
-      CDS_SERVICE_CONFIG_LAST_STEP
-    ) {
+    if (getMultiTypeFromValue(initialConnectorRef) === MultiTypeInputType.FIXED && isEditMode) {
       if (typeof initialConnectorRef === 'string' && initialConnectorRef?.length > 0) {
         refetchConnector()
       }
     }
-  }, [initialConnectorRef, isEditMode, refetchConnector, CDS_SERVICE_CONFIG_LAST_STEP])
+  }, [initialConnectorRef, isEditMode, refetchConnector])
 
   React.useEffect(() => {
     if (

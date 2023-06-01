@@ -474,11 +474,6 @@ exports[`SubscriptionUtils SubscriptionDetailsCardInfo CHAOS enterprise expired 
       >
         common.subscriptions.chaos.experiments
       </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
-      >
-        common.subscriptions.chaos.infrastructures
-      </p>
     </div>
     <p
       class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"

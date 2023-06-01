@@ -384,7 +384,7 @@ exports[`AddDrawer Triggers tests Renders/snapshots Initial Render - Trigger Lis
                     </section>
                     <section
                       class="step"
-                      data-cy="Webhook_BitBucket"
+                      data-cy="Webhook_Bitbucket"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"
@@ -450,7 +450,7 @@ exports[`AddDrawer Triggers tests Renders/snapshots Initial Render - Trigger Lis
                       <section
                         class="stepName"
                       >
-                        BitBucket
+                        Bitbucket
                       </section>
                     </section>
                   </section>

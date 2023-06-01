@@ -23,6 +23,7 @@ import { useGetExecutionDetailV2 } from 'services/pipeline-ng'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { PipelineResponse as PipelineDetailsMockResponse } from '@pipeline/pages/pipeline-details/__tests__/PipelineDetailsMocks'
+import { mockRetryHistory } from '@pipeline/components/RetryPipeline/RetryHistory/__tests__/mocks'
 import ExecutionLandingPage, { POLL_INTERVAL } from '../ExecutionLandingPage'
 import reportSummaryMock from './report-summary-mock.json'
 import {
@@ -61,6 +62,7 @@ jest.mock('services/pipeline-ng', () => ({
     mutate: jest.fn()
   })),
   useGetInputsetYaml: jest.fn(() => ({ data: null })),
+  useRetryHistory: jest.fn(() => mockRetryHistory),
   useDebugPipelineExecuteWithInputSetYaml: jest.fn(() => ({
     loading: false,
     refetch: jest.fn(),

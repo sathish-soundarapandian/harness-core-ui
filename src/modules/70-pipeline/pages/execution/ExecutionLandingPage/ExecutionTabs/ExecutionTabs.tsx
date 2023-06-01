@@ -69,7 +69,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const { updateQueryParams } = useUpdateQueryParams<ExecutionQueryParams>()
   const { licenseInformation } = useLicenseStore()
   const isSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
-  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
+  const isErrorTrackingEnabled = licenseInformation['CET']?.status === 'ACTIVE'
   const isIACMEnabled = useFeatureFlag(FeatureFlag.IACM_ENABLED)
   const isSSCAEnabled = useFeatureFlag(FeatureFlag.SSCA_ENABLED)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
@@ -286,7 +286,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
           className={css.tabLink}
           activeClassName={css.activeLink}
         >
-          <Icon name="error-tracking" size={16} />
+          <Icon name="cet" size={16} />
           <span>{getString('common.purpose.errorTracking.title')}</span>
         </NavLink>
       )

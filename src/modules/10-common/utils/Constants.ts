@@ -28,3 +28,5 @@ export enum Environment {
   UAT = 'uat',
   APP = 'app'
 }
+
+export const YAML_FILE_EXTENSIONS = ['.yaml', '.yml']

@@ -130,7 +130,7 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
   React.useEffect(() => {
     if (!loadingSetting) {
       if (enforceGitXSettingError) {
-        showError(enforceGitXSettingError.message)
+        showError(getRBACErrorMessage(enforceGitXSettingError))
       }
     }
   }, [enforceGitXSettingError, showError, loadingSetting])

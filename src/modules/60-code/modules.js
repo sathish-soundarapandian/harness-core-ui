@@ -12,6 +12,7 @@ module.exports = [
   'code/FileEdit',
   'code/Commits',
   'code/Branches',
+  'code/Tags',
   'code/PullRequests',
   'code/Compare',
   'code/PullRequest',

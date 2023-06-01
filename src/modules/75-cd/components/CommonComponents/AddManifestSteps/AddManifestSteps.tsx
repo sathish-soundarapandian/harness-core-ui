@@ -19,16 +19,18 @@ import {
   getManifestsFirstStepTooltipId,
   getManifestsSecondStepTooltipId
 } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import css from './AddManifestSteps.module.scss'
 
 interface AddManifestStepsProps {
   selectedDeploymentType: ServiceDefinition['type']
+  manifestType: ManifestTypes
   manifestFileName: string
   suggestedManifestYaml: string
 }
 
 export const AddManifestSteps: React.FC<AddManifestStepsProps> = (props: AddManifestStepsProps): JSX.Element => {
-  const { selectedDeploymentType, manifestFileName, suggestedManifestYaml } = props
+  const { selectedDeploymentType, manifestType, manifestFileName, suggestedManifestYaml } = props
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
 
@@ -60,11 +62,11 @@ export const AddManifestSteps: React.FC<AddManifestStepsProps> = (props: AddMani
           <div className={css.manifestStepNumberContainer}>1</div>
           <div
             className={css.manifestStepTitle}
-            data-tooltip-id={getManifestsFirstStepTooltipId(selectedDeploymentType)}
+            data-tooltip-id={getManifestsFirstStepTooltipId(selectedDeploymentType, manifestType)}
           >
             {getString('cd.pipelineSteps.serviceTab.manifest.manifestFirstStepTitle')}
             <HarnessDocTooltip
-              tooltipId={getManifestsFirstStepTooltipId(selectedDeploymentType)}
+              tooltipId={getManifestsFirstStepTooltipId(selectedDeploymentType, manifestType)}
               useStandAlone={true}
             />
           </div>
@@ -97,11 +99,11 @@ export const AddManifestSteps: React.FC<AddManifestStepsProps> = (props: AddMani
           <div className={css.manifestStepNumberContainer}>2</div>
           <div
             className={css.manifestStepTitle}
-            data-tooltip-id={getManifestsSecondStepTooltipId(selectedDeploymentType)}
+            data-tooltip-id={getManifestsSecondStepTooltipId(selectedDeploymentType, manifestType)}
           >
             {getString('cd.pipelineSteps.serviceTab.manifest.manifestSecondStepTitle')}
             <HarnessDocTooltip
-              tooltipId={getManifestsSecondStepTooltipId(selectedDeploymentType)}
+              tooltipId={getManifestsSecondStepTooltipId(selectedDeploymentType, manifestType)}
               useStandAlone={true}
             />
           </div>

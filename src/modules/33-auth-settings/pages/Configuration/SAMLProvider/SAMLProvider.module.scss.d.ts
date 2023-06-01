@@ -9,6 +9,7 @@
 declare const styles: {
   readonly card: string
   readonly cardWithRadioBtn: string
+  readonly displayNamePlaceholder: string
   readonly leftMarginAuto: string
 }
 export default styles

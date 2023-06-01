@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout, Avatar, Card, ButtonVariation, PageError } from '@harness/uicore'
+import { Text, Layout, Avatar, Card, ButtonVariation, ButtonSize, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
@@ -142,8 +142,9 @@ const ServiceAccountDetails: React.FC = () => {
             >
               <RbacButton
                 data-testid={'addRole-ServiceAccount'}
-                text={getString('common.plusNumber', { number: getString('common.role') })}
-                variation={ButtonVariation.LINK}
+                text={`${getString('common.manage')} ${getString('roles')}`}
+                variation={ButtonVariation.SECONDARY}
+                size={ButtonSize.SMALL}
                 onClick={event => {
                   event.stopPropagation()
                   openRoleAssignmentModal(

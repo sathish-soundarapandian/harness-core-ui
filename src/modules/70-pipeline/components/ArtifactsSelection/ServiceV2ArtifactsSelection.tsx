@@ -53,7 +53,6 @@ import type {
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useGetLastStepConnectorValue } from '@pipeline/hooks/useGetLastStepConnectorValue'
 // eslint-disable-next-line no-restricted-imports
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
@@ -82,9 +81,7 @@ import {
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES,
   getInitialSelectedArtifactValue,
-  isAllowedAzureArtifactDeploymentTypes,
   isAllowedBambooArtifactDeploymentTypes,
-  isAllowedCustomArtifactDeploymentTypes,
   isSidecarAllowed,
   ModalViewFor,
   showArtifactStoreStepDirectly
@@ -108,7 +105,7 @@ const checkDuplicateStep = (
           ? (artifactData as ArtifactSource).identifier
           : (artifactData as SidecarArtifactWrapper)?.sidecar?.identifier
 
-      return artifactIdentifier === values.name && index !== artifactIndex
+      return artifactIdentifier === values.identifier && index !== artifactIndex
     })
 
     if (isDuplicate) {
@@ -166,39 +163,10 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const {
-    CUSTOM_ARTIFACT_NG,
-    AZURE_ARTIFACTS_NG,
-    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS,
-    CDS_SERVICE_CONFIG_LAST_STEP,
-    BAMBOO_ARTIFACT_NG
-  } = useFeatureFlags()
+  const { BAMBOO_ARTIFACT_NG } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
-    if (
-      CUSTOM_ARTIFACT_NG &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.CustomArtifact) &&
-      isAllowedCustomArtifactDeploymentTypes(deploymentType)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
-    }
-    if (
-      isAllowedAzureArtifactDeploymentTypes(deploymentType) &&
-      AZURE_ARTIFACTS_NG &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
-    }
-    if (
-      [ServiceDeploymentType.AzureWebApp, ServiceDeploymentType.TAS].includes(
-        deploymentType as ServiceDeploymentType
-      ) &&
-      AZURE_WEBAPP_NG_JENKINS_ARTIFACTS &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Jenkins)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Jenkins)
-    }
     if (
       BAMBOO_ARTIFACT_NG &&
       isAllowedBambooArtifactDeploymentTypes(deploymentType) &&
@@ -530,7 +498,6 @@ export default function ServiceV2ArtifactsSelection({
       // update the node
       const artifactSourceConfigValues = formikRef.current?.getValues() as ArtifactSource | SidecarArtifact
       const updatedArtifactSourceConfigValues = produce(artifactSourceConfigValues, draft => {
-        set(draft, 'identifier', artifactSourceConfigValues.name)
         set(
           draft,
           'template',
@@ -698,10 +665,10 @@ export default function ServiceV2ArtifactsSelection({
   // This function decides which step to show first when artifact wizard is opened
   const getArtifactWizardInitialStepNumber = (): number => {
     // In edit mode, show 2nd or 3rd step depending on how many steps are there in total
-    if (isArtifactEditMode && showConnectorStep(selectedArtifact as ArtifactType) && CDS_SERVICE_CONFIG_LAST_STEP) {
+    if (isArtifactEditMode && showConnectorStep(selectedArtifact as ArtifactType)) {
       return 3
     }
-    if (isArtifactEditMode && !showConnectorStep(selectedArtifact as ArtifactType) && CDS_SERVICE_CONFIG_LAST_STEP) {
+    if (isArtifactEditMode && !showConnectorStep(selectedArtifact as ArtifactType)) {
       return 2
     }
     // For create mode, if we need to show 2nd step directly

@@ -7,7 +7,6 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import type {
   PipelinePathProps,
   ProjectPathProps,
@@ -16,7 +15,6 @@ import type {
   PipelineStudioQueryParams
 } from '@common/interfaces/RouteInterfaces'
 
-import { String } from 'framework/strings'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { PipelineCanvas } from '../PipelineCanvas/PipelineCanvas'
@@ -65,52 +63,6 @@ export class PipelineStudioInternal extends React.Component<PipelineStudioProps,
   render(): JSX.Element {
     const { error } = this.state
     const {
-      deletePipelineCache,
-      state: { gitDetails }
-    } = this.context
-    if (error) {
-      return (
-        <Layout.Vertical spacing="medium" padding="large">
-          <Text>
-            <String stringID="errorTitle" />
-          </Text>
-          <Text>
-            <String stringID="errorSubtitle" />
-          </Text>
-          <Layout.Horizontal style={{ alignItems: 'baseline' }}>
-            <Text>
-              <String stringID="please" />
-            </Text>
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              onClick={() => {
-                return deletePipelineCache(gitDetails).then(() => {
-                  window.location.reload()
-                })
-              }}
-              minimal
-            >
-              <String stringID="clickHere" />
-            </Button>
-            <Text>
-              <String stringID="errorHelp" />
-            </Text>
-          </Layout.Horizontal>
-          {__DEV__ && (
-            <React.Fragment>
-              <Text font="small">Error Message</Text>
-              <Container>
-                <details>
-                  <summary>Stacktrace</summary>
-                  <pre>{error.stack}</pre>
-                </details>
-              </Container>
-            </React.Fragment>
-          )}
-        </Layout.Vertical>
-      )
-    }
-    const {
       className = '',
       routePipelineStudio,
       routePipelineDetail,
@@ -123,12 +75,12 @@ export class PipelineStudioInternal extends React.Component<PipelineStudioProps,
         <GitSyncStoreProvider>
           <div className={cx(css.container, className)}>
             <PipelineCanvas
-              // diagram={diagram}
               toPipelineStudio={routePipelineStudio}
               toPipelineDetail={routePipelineDetail}
               toPipelineList={routePipelineList}
               toPipelineProject={routePipelineProject}
               getOtherModal={getOtherModal}
+              error={error}
             />
           </div>
         </GitSyncStoreProvider>

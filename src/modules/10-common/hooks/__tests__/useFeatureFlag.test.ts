@@ -12,11 +12,11 @@ import { TestWrapper } from '@common/utils/testUtils'
 
 describe('useFeatureFlag', () => {
   test('it should return true when the flag is truth', async () => {
-    const { result } = renderHook(() => useFeatureFlag(FeatureFlag.CFNG_ENABLED), {
+    const { result } = renderHook(() => useFeatureFlag(FeatureFlag.CUSTOM_DASHBOARD_V2), {
       wrapper: TestWrapper,
       initialProps: {
         defaultFeatureFlagValues: {
-          CFNG_ENABLED: true
+          CUSTOM_DASHBOARD_V2: true
         }
       }
     })
@@ -25,11 +25,11 @@ describe('useFeatureFlag', () => {
   })
 
   test('it should return false when the flag is false', async () => {
-    const { result } = renderHook(() => useFeatureFlag(FeatureFlag.CFNG_ENABLED), {
+    const { result } = renderHook(() => useFeatureFlag(FeatureFlag.CUSTOM_DASHBOARD_V2), {
       wrapper: TestWrapper,
       initialProps: {
         defaultFeatureFlagValues: {
-          CFNG_ENABLED: false
+          CUSTOM_DASHBOARD_V2: false
         }
       }
     })
@@ -41,7 +41,7 @@ describe('useFeatureFlag', () => {
 describe('useFeatureFlags', () => {
   test('it should return the flags', async () => {
     const flags: Partial<Record<FeatureFlag, boolean>> = {
-      CFNG_ENABLED: true,
+      CUSTOM_DASHBOARD_V2: true,
       ACCOUNT_BASIC_ROLE: false
     }
 

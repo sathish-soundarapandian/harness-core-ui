@@ -259,7 +259,8 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
       envName: defaultTo(tableData[0].envName, ''),
       clusterIdentifier: tableData[0].clusterId,
       infraIdentifier: tableData[0].infrastructureId,
-      infraName: tableData[0].infrastructureName
+      infraName: tableData[0].infrastructureName,
+      isEnvView: false
     })
     setSelectedRow(`${tableData[0].artifact}-${0}`)
   }
@@ -306,7 +307,8 @@ export default function ServiceDetailsArtifactTable(props: ServiceDetailsArtifac
           envName: defaultTo(row.envName, ''),
           clusterIdentifier: row.clusterId,
           infraIdentifier: row.infrastructureId,
-          infraName: row.infrastructureName
+          infraName: row.infrastructureName,
+          isEnvView: false
         })
         setSelectedRow(`${row.artifact}-${idx}`)
       }}

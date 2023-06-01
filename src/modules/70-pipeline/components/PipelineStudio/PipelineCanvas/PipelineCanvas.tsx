@@ -59,6 +59,7 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import type { Pipeline } from '@pipeline/utils/types'
 import { SettingType } from '@common/constants/Utils'
 import { useGetSettingValue } from 'services/cd-ng'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
@@ -109,13 +110,15 @@ export interface PipelineCanvasProps {
     onSubmit: (values: PipelineInfoConfig, storeMetadata?: StoreMetadata, gitDetails?: EntityGitDetails) => void,
     onClose: () => void
   ) => React.ReactElement<OtherModalProps>
+  error?: Error
 }
 
 export function PipelineCanvas({
   // diagram,
   toPipelineList,
   toPipelineStudio,
-  getOtherModal
+  getOtherModal,
+  error
 }: PipelineCanvasProps): React.ReactElement {
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -167,12 +170,18 @@ export function PipelineCanvas({
     templateError,
     yamlSchemaErrorWrapper
   } = state
-
+  const { showError, clear } = useToaster()
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } = useParams<
     PipelineType<PipelinePathProps> & GitQueryParams
   >()
   const history = useHistory()
+
+  React.useEffect(() => {
+    if (error) {
+      setView(SelectedView.YAML)
+    }
+  }, [error, setView])
 
   // For remote pipeline queryParam will always as branch as selected branch except coming from list view
   // While opeining studio from list view, selected branch can be any branch as in pipeline response
@@ -191,7 +200,11 @@ export function PipelineCanvas({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [branch, gitDetails?.branch, module, originalPipeline?.identifier, projectIdentifier])
 
-  const { showError, clear } = useToaster()
+  React.useEffect(() => {
+    if (error) {
+      showError(getString('pipeline.loadingErrorMsg'))
+    }
+  }, [error, showError])
 
   useDocumentTitle([parse(pipeline?.name || getString('pipelines'))])
   const [discardBEUpdateDialog, setDiscardBEUpdate] = React.useState(false)
@@ -199,6 +212,7 @@ export function PipelineCanvas({
     cancelButtonText: getString('cancel'),
     contentText: getString('pipelines-studio.pipelineUpdatedError'),
     titleText: getString('pipelines-studio.pipelineUpdated'),
+    className: css.beErrorModal,
     confirmButtonText: getString('update'),
     intent: Intent.WARNING,
     onCloseDialog: isConfirmed => {
@@ -218,7 +232,7 @@ export function PipelineCanvas({
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
   const [useTemplate, setUseTemplate] = React.useState<boolean>(false)
   const [modalMode, setModalMode] = React.useState<'edit' | 'create'>('create')
-
+  const { getRBACErrorMessage } = useRBACError()
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
 
   React.useEffect(() => {
@@ -288,7 +302,7 @@ export function PipelineCanvas({
 
   React.useEffect(() => {
     if (!loadingSetting && enforceGitXSettingError) {
-      showError(enforceGitXSettingError.message)
+      showError(getRBACErrorMessage(enforceGitXSettingError))
     }
   }, [enforceGitXSettingError, showError, loadingSetting])
 

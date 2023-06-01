@@ -47,7 +47,7 @@ export const ConnectorLabelMap: Record<ConnectorTypes, StringKeys> = {
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',
-  Bitbucket: 'pipeline.manifestType.bitBucketLabel',
+  Bitbucket: 'common.repo_provider.bitbucketLabel',
   Artifactory: 'connectors.artifactory.artifactoryLabel',
   Harness: 'harness',
   S3: 'pipeline.artifactsSelection.amazonS3Title'

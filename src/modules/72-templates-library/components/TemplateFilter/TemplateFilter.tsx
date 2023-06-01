@@ -39,6 +39,8 @@ import {
   useTemplateListFilterFieldToLabelMapping
 } from '@pipeline/pages/utils/Filters/filters'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_PIPELINE_LIST_TABLE_SORT } from '@pipeline/utils/constants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, CDActions } from '@common/constants/TrackingConstants'
 import { TemplateFilterFields } from './TemplateFilterFields'
 import type { TemplateListPageQueryParams, ProcessedTemplateListPageQueryParams } from './types'
 
@@ -62,6 +64,7 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
   const { getString } = useStrings()
   const filterRef = useRef<FilterRef<FilterDTO> | null>(null)
   const { showError } = useToaster()
+  const { trackEvent } = useTelemetry()
   const { updateQueryParams, replaceQueryParams } =
     useUpdateQueryParams<Partial<ProcessedTemplateListPageQueryParams>>()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
@@ -138,6 +141,10 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
       filters: undefined,
       page: DEFAULT_PAGE_INDEX
     })
+    option?.value &&
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.TEMPLATES
+      })
   }
 
   const handleFilterClick = (filterIdentifier: string) => {
@@ -167,7 +174,9 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
             templateEntityTypes: inputFormData.templateEntityTypes ? [inputFormData.templateEntityTypes] : null
           } || {}
       })
-
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.TEMPLATES
+      })
       hideFilterDrawer()
     } else {
       showError(getString('filters.invalidCriteria'), undefined, 'pipeline.invalid.criteria.error')
@@ -200,6 +209,9 @@ export function TemplateListFilter({ onFilterListUpdate }: TemplateListFilterPro
       const updatedFilter = await saveOrUpdateHandler(isUpdate, requestBodyPayload as any)
       updateQueryParams({ filters: updatedFilter?.filterProperties || {} })
       refetchFilterList()
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.TEMPLATES
+      })
     }
   }
 

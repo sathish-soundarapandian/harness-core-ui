@@ -33,36 +33,43 @@ body {
   --cd-foreground: #30841f;
   --cd-border: #5fb34e;
   --cd-background: #f6fff2;
+  --cd-background-light: #fbfffb;
 
   // Continuous Integration
   --ci-foreground: #0672b6;
   --ci-border: #2bb1f2;
   --ci-background: #e2f5ff;
+  --ci-background-light: #fbfdff;
 
   // Cloud Cost Management
   --ccm-foreground: #24807f;
   --ccm-border: #01c9cc;
   --ccm-background: #ecffff;
+  --ccm-background-light: #faffff;
 
   // Feature Flag Management
   --ff-foreground: #c05809;
   --ff-border: #ee8625;
   --ff-background: #fcf4e3;
+  --ff-background-light: #fffefa;
 
   // Service Reliability Management
   --srm-foreground: #6938c0;
   --srm-border: #ae82fc;
   --srm-background: #f6f1ff;
+  --srm-background-light: #ae82fc;
 
   // Security Test Orchestration
   --sto-foreground: #1947ec;
   --sto-border: #4791ff;
   --sto-background: #ebefff;
+  --sto-background-light: #fafbff;
 
   // Chaos Engineering
   --chaos-foreground: #9a0041;
   --chaos-border: #ff006a;
   --chaos-background: #fff1f7;
+  --chaos-background-light: #fff9fc;
 
   // Infrastructure as Code
   --iacm-foreground: var(--magenta-800);

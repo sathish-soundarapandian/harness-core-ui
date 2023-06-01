@@ -573,6 +573,19 @@ export type BambooUserNamePasswordDTO = BambooAuthCredentialsDTO & {
   usernameRef?: string
 }
 
+export interface Baseline {
+  baseline?: boolean
+}
+
+export interface BaselineOverview {
+  applicableForBaseline?: boolean
+  baseline?: boolean
+  baselineExpired?: boolean
+  baselineExpiryTimestamp?: number
+  baselineVerificationJobInstanceId?: string
+  planExecutionId?: string
+}
+
 export interface BillingExportSpec {
   containerName: string
   directoryName: string
@@ -901,7 +914,7 @@ export interface ClusteredLog {
   verificationTaskId?: string
 }
 
-export interface CompositeServiceLevelObjectiveSpec {
+export type CompositeServiceLevelObjectiveSpec = ServiceLevelObjectiveSpec & {
   evaluationType?: 'Window' | 'Request'
   serviceLevelObjectivesDetails: ServiceLevelObjectiveDetailsDTO[]
   sloFormulaType?: 'WeightedAverage' | 'LeastPerformance'
@@ -970,6 +983,7 @@ export interface ConnectorInfoDTO {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
 }
 
 export interface ControlClusterSummary {
@@ -1167,6 +1181,7 @@ export interface DataCollectionRequest {
     | 'SUMOLOGIC_METRIC_SAMPLE_DATA'
     | 'SUMOLOGIC_LOG_SAMPLE_DATA'
     | 'SIGNALFX_METRIC_SAMPLE_DATA'
+    | 'GRAFANA_LOKI_LOG_SAMPLE_DATA'
 }
 
 export interface DataCollectionTaskDTO {
@@ -2611,7 +2626,19 @@ export type GitlabUsernameToken = GitlabHttpCredentialsSpecDTO & {
   usernameRef?: string
 }
 
-export type HarnessCDChangeSourceSpec = ChangeSourceSpec & { [key: string]: any }
+export interface HarnessApiAccess {
+  spec?: HarnessApiAccessSpecDTO
+  type: 'Token' | 'Jwt_Token'
+}
+
+export interface HarnessApiAccessSpecDTO {
+  [key: string]: any
+}
+
+export interface HarnessAuthentication {
+  spec: HarnessHttpCredentials
+  type: 'Http' | 'Ssh'
+}
 
 export type HarnessCDCurrentGenChangeSourceSpec = ChangeSourceSpec & {
   harnessApplicationId: string
@@ -2646,6 +2673,37 @@ export type HarnessCDEventMetadata = ChangeEventMetadata & {
   stageStepId?: string
   status?: string
   verifyStepSummaries?: VerifyStepSummary[]
+}
+
+export type HarnessConnector = ConnectorConfigDTO & {
+  apiAccess?: HarnessApiAccess
+  authentication: HarnessAuthentication
+  executeOnDelegate?: boolean
+  type: 'Account' | 'Repo' | 'Project'
+  url: string
+  validationRepo?: string
+}
+
+export interface HarnessHttpCredentials {
+  spec: HarnessHttpCredentialsSpecDTO
+  type: 'UsernameToken'
+}
+
+export interface HarnessHttpCredentialsSpecDTO {
+  [key: string]: any
+}
+
+export type HarnessJWTTokenSpec = HarnessApiAccessSpecDTO & {
+  tokenRef: string
+}
+
+export type HarnessTokenSpec = HarnessApiAccessSpecDTO & {
+  tokenRef: string
+}
+
+export type HarnessUsernameToken = HarnessHttpCredentialsSpecDTO & {
+  tokenRef: string
+  username?: string
 }
 
 export interface HealthMonitoringFlagResponse {
@@ -2690,6 +2748,7 @@ export interface HealthSource {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
   version?: 'v2'
 }
 
@@ -2717,6 +2776,7 @@ export interface HealthSourceDTO {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
@@ -2750,6 +2810,7 @@ export interface HealthSourceParamValuesRequest {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
 }
 
 export interface HealthSourceParamValuesResponse {
@@ -2786,6 +2847,7 @@ export interface HealthSourceRecordsRequest {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
   providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -2807,6 +2869,7 @@ export interface HealthSourceRecordsRequest {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   query: string
   startTime: number
 }
@@ -2833,6 +2896,7 @@ export interface HealthSourceRecordsResponse {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   rawRecords?: { [key: string]: any }[]
 }
 
@@ -2872,6 +2936,7 @@ export interface HealthSourceV2 {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
 }
 
 export interface HistoricalTrend {
@@ -3485,6 +3550,7 @@ export interface MetricPack {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   identifier?: string
   lastUpdatedAt?: number
   metrics?: MetricDefinition[]
@@ -3517,6 +3583,7 @@ export interface MetricPackDTO {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   identifier?: string
   metrics?: MetricDefinitionDTO[]
   orgIdentifier?: string
@@ -4388,6 +4455,7 @@ export interface QueryRecordsRequest {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
   providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -4409,6 +4477,7 @@ export interface QueryRecordsRequest {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   query: string
   startTime: number
 }
@@ -5927,7 +5996,7 @@ export interface SLIOnboardingGraphs {
 }
 
 export interface SLOConsumptionBreakdown {
-  contributedErrorBudgetBurned: number
+  contributedErrorBudgetBurned?: number
   environmentIdentifier?: string
   errorBudgetBurned: number
   monitoredServiceIdentifier?: string
@@ -6626,6 +6695,7 @@ export interface TimeSeriesMetricDataDTO {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   deeplinkURL?: string
   environmentIdentifier?: string
   groupName?: string
@@ -6652,6 +6722,7 @@ export interface TimeSeriesMetricDataDTO {
     | 'SumologicMetrics'
     | 'SumologicLogs'
     | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
   monitoredServiceIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -6758,6 +6829,7 @@ export interface TimeSeriesThreshold {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
   metricGroupName?: string
@@ -6804,6 +6876,7 @@ export interface TimeSeriesThresholdDTO {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   metricGroupName?: string
   metricName?: string
   metricPackIdentifier?: string
@@ -6868,6 +6941,7 @@ export interface TransactionMetricInfo {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
   nodeRiskCountDTO?: NodeRiskCountDTO
   nodes?: HostData[]
   transactionMetric?: TransactionMetric
@@ -6948,6 +7022,7 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
 
 export interface VerificationOverview {
   appliedDeploymentAnalysisType?: 'CANARY' | 'NO_ANALYSIS' | 'ROLLING' | 'TEST'
+  baselineOverview?: BaselineOverview
   controlNodes?: AnalysedNodeOverview
   errorClusters?: ClusterAnalysisOverview
   logClusters?: ClusterAnalysisOverview
@@ -6971,6 +7046,7 @@ export interface VerificationSpec {
   analysedEnvIdentifier?: string
   analysedServiceIdentifier?: string
   analysisType?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
+  baselineType?: 'LAST' | 'PINNED'
   durationInMinutes?: number
   isFailOnNoAnalysis?: boolean
   monitoredServiceIdentifier?: string
@@ -9843,6 +9919,90 @@ export const getMetricsAnalysisForVerifyStepExecutionIdPromise = (
     signal
   )
 
+export interface UpdateBaseline1PathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type UpdateBaseline1Props = Omit<
+  MutateProps<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams>,
+  'path' | 'verb'
+> &
+  UpdateBaseline1PathParams
+
+/**
+ * use the verification as a baseline
+ */
+export const UpdateBaseline1 = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UpdateBaseline1Props) => (
+  <Mutate<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams>
+    verb="POST"
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/baseline`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateBaseline1Props = Omit<
+  UseMutateProps<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams>,
+  'path' | 'verb'
+> &
+  UpdateBaseline1PathParams
+
+/**
+ * use the verification as a baseline
+ */
+export const useUpdateBaseline1 = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseUpdateBaseline1Props) =>
+  useMutate<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams>(
+    'POST',
+    (paramsInPath: UpdateBaseline1PathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/baseline`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * use the verification as a baseline
+ */
+export const updateBaseline1Promise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: MutateUsingFetchProps<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    verifyStepExecutionId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<Baseline, unknown, void, Baseline, UpdateBaseline1PathParams>(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/baseline`,
+    props,
+    signal
+  )
+
 export interface GetHealthSourcesForVerifyStepExecutionIdPathParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -12585,6 +12745,7 @@ export interface GetMetricPacksQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type GetMetricPacksProps = Omit<
@@ -12656,6 +12817,7 @@ export interface SaveMetricPacksQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type SaveMetricPacksProps = Omit<
@@ -14634,8 +14796,6 @@ export interface GetNewRelicApplicationsQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   connectorIdentifier: string
-  pageSize: number
-  offset: number
   filter?: string
   tracingId: string
 }
@@ -15285,6 +15445,7 @@ export interface GetLabelNamesQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type GetLabelNamesProps = Omit<
@@ -15361,6 +15522,7 @@ export interface GetLabeValuesQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type GetLabeValuesProps = Omit<
@@ -15437,6 +15599,7 @@ export interface GetMetricNamesQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type GetMetricNamesProps = Omit<
@@ -15513,6 +15676,7 @@ export interface GetSampleDataQueryParams {
     | 'SUMOLOGIC_METRICS'
     | 'SUMOLOGIC_LOG'
     | 'SPLUNK_SIGNALFX_METRICS'
+    | 'GRAFANA_LOKI_LOGS'
 }
 
 export type GetSampleDataProps = Omit<

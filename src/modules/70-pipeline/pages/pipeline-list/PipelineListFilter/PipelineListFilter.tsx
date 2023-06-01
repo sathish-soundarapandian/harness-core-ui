@@ -38,6 +38,8 @@ import {
 } from '@pipeline/pages/utils/Filters/filters'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDActions, Category } from '@common/constants/TrackingConstants'
 import { ExecutionListFilterForm } from '../../execution-list/ExecutionListFilterForm/ExecutionListFilterForm'
 import type {
   PipelineListPagePathParams,
@@ -56,6 +58,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
   const { getString } = useStrings()
   const filterRef = useRef<FilterRef<FilterDTO> | null>(null)
   const { showError } = useToaster()
+  const { trackEvent } = useTelemetry()
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<PipelineListPageQueryParams>>()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<PipelineListPagePathParams>()
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
@@ -178,6 +181,10 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
       filters: undefined,
       page: DEFAULT_PAGE_INDEX
     })
+    option?.value &&
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.PIPELINE
+      })
   }
 
   const handleFilterClick = (filterIdentifier: string) => {
@@ -195,6 +202,9 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
       const filterFromFormData = getValidFilterArguments({ ...inputFormData })
       updateQueryParams({ page: undefined, filterIdentifier: undefined, filters: filterFromFormData || {} })
       hideFilterDrawer()
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.PIPELINE
+      })
     } else {
       showError(getString('filters.invalidCriteria'), undefined, 'pipeline.invalid.criteria.error')
     }
@@ -215,6 +225,9 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
       const updatedFilter = await saveOrUpdateHandler(isUpdate, requestBodyPayload)
       updateQueryParams({ filters: updatedFilter?.filterProperties || {} })
       refetchFilterList()
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.PIPELINE
+      })
     }
   }
 

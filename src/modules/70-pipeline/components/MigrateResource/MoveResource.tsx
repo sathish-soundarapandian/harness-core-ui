@@ -39,6 +39,7 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { yamlPathRegex } from '@common/utils/StringUtils'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import {
   ExtraQueryParams,
   getDisableFields,
@@ -82,7 +83,7 @@ export default function MoveResource({
   const { showError, clear, showSuccess } = useToaster()
   const { getString } = useStrings()
   const formikRef = useRef<FormikProps<ModifiedInitialValuesType>>(null)
-
+  const { getRBACErrorMessage } = useRBACError()
   const getReourceTypeText = useCallback((): string => {
     if (resourceType === ResourceType.PIPELINES) {
       return getString('common.pipeline')
@@ -110,7 +111,7 @@ export default function MoveResource({
       onFailure?.()
     } else {
       clear()
-      showError(err.message ?? getString('somethingWentWrong'))
+      showError(getRBACErrorMessage(err as RBACError) || getString('somethingWentWrong'))
       onFailure?.()
     }
   }

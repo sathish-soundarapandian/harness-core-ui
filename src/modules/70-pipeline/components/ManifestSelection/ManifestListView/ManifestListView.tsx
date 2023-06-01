@@ -31,7 +31,6 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ManifestActions } from '@common/constants/TrackingConstants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
@@ -178,7 +177,6 @@ function ManifestListView({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < listOfManifests.length)
@@ -331,7 +329,7 @@ function ManifestListView({
   }
 
   const shouldPassPrevStepData = (): boolean => {
-    return isManifestEditMode && !!selectedConnector && !!CDS_SERVICE_CONFIG_LAST_STEP
+    return isManifestEditMode && !!selectedConnector
   }
 
   const lastSteps = React.useMemo((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
@@ -495,9 +493,7 @@ function ManifestListView({
         manifestDetailStep = (
           <CustomRemoteManifest
             {...lastStepProps()}
-            {...((isManifestEditMode && CDS_SERVICE_CONFIG_LAST_STEP
-              ? prevStepProps()
-              : {}) as CustomRemoteManifestManifestLastStepPrevStepData)}
+            {...((isManifestEditMode ? prevStepProps() : {}) as CustomRemoteManifestManifestLastStepPrevStepData)}
           />
         )
         break
@@ -530,7 +526,7 @@ function ManifestListView({
 
     arr.push(manifestDetailStep)
     return arr
-  }, [manifestStore, selectedManifest, lastStepProps, prevStepProps, isManifestEditMode, CDS_SERVICE_CONFIG_LAST_STEP])
+  }, [manifestStore, selectedManifest, lastStepProps, prevStepProps, isManifestEditMode])
 
   const connectorDetailStepProps = {
     type: ManifestToConnectorMap[manifestStore],

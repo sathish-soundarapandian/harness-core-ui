@@ -13,8 +13,13 @@ declare const styles: {
   readonly agentThirdSection: string
   readonly arrow: string
   readonly blueDot: string
+  readonly bodyText: string
   readonly btn: string
   readonly buttonRow: string
+  readonly cardGap: string
+  readonly cardShadow: string
+  readonly cardWidth: string
+  readonly cdresourcelist: string
   readonly centerAlign: string
   readonly closeWizard: string
   readonly containerItemCss: string
@@ -26,6 +31,8 @@ declare const styles: {
   readonly linkText: string
   readonly listContainerCss: string
   readonly listItemCss: string
+  readonly oldGetStarted: string
+  readonly onboardingcards: string
   readonly paddingXSmall: string
   readonly progressItem: string
   readonly provisioningInfo: string
@@ -34,5 +41,7 @@ declare const styles: {
   readonly samplePipeline: string
   readonly separator: string
   readonly topPage: string
+  readonly videoCard: string
+  readonly videoframe: string
 }
 export default styles

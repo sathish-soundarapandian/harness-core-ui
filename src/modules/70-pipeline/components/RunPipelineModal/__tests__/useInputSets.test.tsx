@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook, act } from '@testing-library/react-hooks/dom'
 import { waitFor } from '@testing-library/react'
 import { useGetTemplateFromPipeline, useGetMergeInputSetFromPipelineTemplateWithListInput } from 'services/pipeline-ng'
 
@@ -459,5 +459,45 @@ describe('<useInputSets /> tests', () => {
         })
       )
     })
+  })
+
+  test('should listen to the custom event UPDATE_INPUT_SET_TEMPLATE and update internal template', async () => {
+    ;(useGetTemplateFromPipeline as jest.Mock).mockImplementation(() => ({
+      mutate: jest.fn().mockResolvedValue({
+        data: {
+          inputSetTemplateYaml: runtimeInputsYaml
+        }
+      })
+    }))
+    const { result } = renderHook(useInputSets, { initialProps: getInitialProps() })
+    const parsed = parse(runtimeInputsYaml)
+
+    await waitFor(() =>
+      expect(result.current.inputSetYamlResponse?.data?.inputSetTemplateYaml).toEqual(runtimeInputsYaml)
+    )
+    expect(result.current.inputSetTemplate).toEqual(parsed)
+
+    const testStep = {
+      name: 'shelltest',
+      identifier: 'shelltest',
+      timeout: '<+input>'
+    }
+
+    act(() => {
+      dispatchEvent(
+        new CustomEvent('UPDATE_INPUT_SET_TEMPLATE', {
+          detail: {
+            path: 'stages[1].stage.spec.execution.steps[1]',
+            data: testStep
+          }
+        })
+      )
+    })
+
+    await waitFor(() =>
+      expect(result.current?.inputSetTemplate?.pipeline?.stages?.[1].stage?.spec?.execution?.steps?.[1]).toEqual(
+        testStep
+      )
+    )
   })
 })

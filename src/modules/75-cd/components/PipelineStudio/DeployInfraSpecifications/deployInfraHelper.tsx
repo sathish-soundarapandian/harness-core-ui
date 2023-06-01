@@ -262,6 +262,14 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.AwsSam: {
+      const { connectorRef, region } = infrastructure?.spec || {}
+      return {
+        connectorRef,
+        region,
+        allowSimultaneousDeployments
+      }
+    }
     default: {
       return {}
     }
@@ -398,6 +406,19 @@ export const getInfraGroups = (
     }
   ]
 
+  const awsSamInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('common.aws'),
+          icon: 'service-aws',
+          value: InfraDeploymentType.AwsSam
+        }
+      ]
+    }
+  ]
+
   const kuberntesInfraGroups: InfrastructureGroup[] = [
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
@@ -419,6 +440,8 @@ export const getInfraGroups = (
   switch (true) {
     case deploymentType === ServiceDeploymentType.AwsLambda:
       return awsLambdaInfraGroups
+    case deploymentType === ServiceDeploymentType.AwsSam:
+      return awsSamInfraGroups
     case isServerlessDeploymentType(deploymentType):
       return serverlessInfraGroups
     case isAzureWebAppDeploymentType(deploymentType):

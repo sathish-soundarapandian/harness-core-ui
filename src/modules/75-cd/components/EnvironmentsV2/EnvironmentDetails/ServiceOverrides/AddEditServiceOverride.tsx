@@ -400,7 +400,7 @@ export default function AddEditServiceOverride({
                 )}
                 {!isEmpty(formikProps.values?.serviceRef) && (
                   <>
-                    <Text>{getString('cd.overrideType')}</Text>
+                    <Text>{getString('common.serviceOverrides.overrideType')}</Text>
                     <Tabs id="serviceOverrideTab" selectedTabId={selectedTab} onChange={handleTabChange}>
                       <Tab
                         id={ServiceOverrideTab.VARIABLE}

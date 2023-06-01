@@ -130,8 +130,6 @@ export default function NewRelicHealthSource({
       connectorIdentifier,
       orgIdentifier,
       projectIdentifier,
-      offset: 0,
-      pageSize: 10000,
       filter: '',
       tracingId: guid
     }

@@ -32,6 +32,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
+import { numberFormatter } from '@common/utils/utils'
 import IconGrid from '../IconGrid/IconGrid'
 import {
   calculateTotalChangePercentage,
@@ -123,6 +124,10 @@ const RenderServiceChanges: Renderer<CellProps<MonitoredServiceListItemDTO>> = (
     font: { variation: FontVariation.H6 },
     color: Color.BLACK
   }
+  const totalPercentage = numberFormatter(Math.abs(percentage), {
+    truncate: false
+  })
+  const percentageText = Math.abs(percentage) > 100 ? `100+ %` : `${totalPercentage}%`
 
   return (
     <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
@@ -137,7 +142,7 @@ const RenderServiceChanges: Renderer<CellProps<MonitoredServiceListItemDTO>> = (
         font={{ variation: FontVariation.TINY_SEMI }}
         iconProps={{ size: 10, color: color }}
       >
-        {`${percentage}%`}
+        {percentageText}
       </Text>
     </Layout.Horizontal>
   )
@@ -356,7 +361,7 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
               },
               {
                 Header: getString('name'),
-                width: '13.5%',
+                width: '13%',
                 Cell: RenderServiceName
               },
               {
@@ -366,7 +371,7 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
               },
               {
                 Header: getString('cv.monitoredServices.table.changes'),
-                width: '22%',
+                width: '22.5%',
                 Cell: RenderServiceChanges
               },
               {

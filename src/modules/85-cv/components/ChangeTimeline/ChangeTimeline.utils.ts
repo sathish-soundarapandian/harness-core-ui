@@ -25,6 +25,7 @@ import {
   isChangesInTheRange
 } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.utils'
 import { TimePeriodEnum } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.constants'
+import { nearestMinutes } from '@cv/utils/CommonUtils'
 import { ChangeSourceTypes } from './ChangeTimeline.constants'
 import type { TimelineData } from './components/TimelineRow/TimelineRow.types'
 import type { ChangesInfoCardData } from './ChangeTimeline.types'
@@ -177,11 +178,6 @@ const filterChangeSourceType = (
   startTime: number,
   endTime: number
 ): TimeRangeDetail[] => changeSource?.filter((item: TimeRangeDetail) => isChangesInTheRange(item, startTime, endTime))
-
-export const nearestMinutes = (interval: number, someMoment: moment.Moment) => {
-  const roundedMinutes = Math.ceil(someMoment.clone().minute() / interval) * interval
-  return someMoment.clone().minute(roundedMinutes).second(0)
-}
 
 export const getStartAndEndTime = (duration: string) => {
   const now = moment()

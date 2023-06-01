@@ -76,7 +76,8 @@ export enum ServiceDeploymentType {
   SshWinRmAzure = 'SshWinRmAzure',
   Asg = 'Asg',
   GoogleCloudFunctions = 'GoogleCloudFunctions',
-  AwsLambda = 'AwsLambda'
+  AwsLambda = 'AwsLambda',
+  AwsSam = 'AWS_SAM'
 }
 
 export enum RepositoryFormatTypes {
@@ -369,7 +370,11 @@ export const isServerlessDeploymentType = (deploymentType: string): boolean => {
 }
 
 export const isOnlyOneManifestAllowedForDeploymentType = (deploymentType: ServiceDefinition['type']) => {
-  return isServerlessDeploymentType(deploymentType) || deploymentType === ServiceDeploymentType.AwsLambda
+  return (
+    isServerlessDeploymentType(deploymentType) ||
+    deploymentType === ServiceDeploymentType.AwsLambda ||
+    deploymentType === ServiceDeploymentType.AwsSam
+  )
 }
 
 export const isSSHWinRMDeploymentType = (deploymentType: string): boolean => {
@@ -706,7 +711,8 @@ export const infraDefinitionTypeMapping: { [key: string]: string } = {
   TAS: StepType.TasInfra,
   Asg: StepType.AsgInfraSpec,
   GoogleCloudFunctions: StepType.GoogleCloudFunctionsInfra,
-  AwsLambda: StepType.AwsLambdaInfra
+  AwsLambda: StepType.AwsLambdaInfra,
+  AWS_SAM: StepType.AwsSamInfra
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -733,6 +739,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.GoogleCloudFunctionsService
     case ServiceDeploymentType.AwsLambda:
       return StepType.AwsLambdaService
+    case ServiceDeploymentType.AwsSam:
+      return StepType.AwsSamService
     default:
       return StepType.K8sServiceSpec
   }
@@ -770,7 +778,6 @@ export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefin
 
 export const getAllowedRepoOptions = (
   deploymentType: string,
-  azureFlag?: boolean,
   isTemplateContext?: boolean,
   selectedArtifact?: ArtifactType | null
 ): SelectOption[] => {
@@ -784,7 +791,7 @@ export const getAllowedRepoOptions = (
     isSSHWinRMDeploymentType(deploymentType) ||
     isTASDeploymentType(deploymentType) ||
     isCustomDeploymentType(deploymentType) ||
-    (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
+    isAzureWebAppDeploymentType(deploymentType)
     ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
     : k8sRepositoryFormatTypes
 }

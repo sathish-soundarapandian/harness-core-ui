@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { StageType } from '@pipeline/utils/stageHelpers'
+
 export const envs = {
   status: 'SUCCESS',
   data: [
@@ -174,4 +176,50 @@ export const services = {
   },
   metaData: null,
   correlationId: '8b5d64aa-93f4-4858-984a-e0d5840f8e36'
+}
+
+export const cdStage = {
+  stage: {
+    stage: {
+      name: 'Stage 3',
+      identifier: 's3',
+      type: StageType.DEPLOY,
+      description: '',
+      spec: {
+        serviceConfig: { serviceDefinition: { type: 'Kubernetes' }, serviceRef: 'service_3' },
+        environment: {
+          environmentRef: 'dev_1683637555699',
+          deployToAll: false,
+          infrastructureDefinitions: [
+            {
+              identifier: 'devcluster_1683637555699'
+            }
+          ]
+        },
+        execution: {
+          steps: [
+            {
+              identifier: 'shell_ID',
+              type: 'ShellScript',
+              name: 'Echo Welcome Message',
+              spec: {
+                shell: 'Bash',
+                onDelegate: true,
+                source: {
+                  type: 'Inline',
+                  spec: {
+                    script: 'echo "Welcome to Harness CD"'
+                  }
+                },
+                environmentVariables: [],
+                outputVariables: [],
+                executionTarget: {}
+              }
+            }
+          ]
+        }
+      },
+      failureStrategies: {}
+    }
+  }
 }

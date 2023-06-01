@@ -6,10 +6,19 @@
  */
 
 import React from 'react'
-import { Container, Text } from '@harness/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 import moment from 'moment'
-import type { FontProps } from '@harness/design-system'
+import { Link, useParams } from 'react-router-dom'
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
+import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import routes from '@common/RouteDefinitions'
+import type { VerificationOverview } from 'services/cv'
+import BaselineStatusMessage from './components/BaselineStatusMessage'
+import { defaultDateFormat } from '../../DeploymentProgressAndNodes.constants'
+import { canShowRedirectLink, getTagName } from './TestsSummaryView.utils'
 import styles from './TestsSummaryView.module.scss'
 
 export interface TestsSummaryViewProps {
@@ -17,43 +26,88 @@ export interface TestsSummaryViewProps {
   baselineTestDate: number
   currentTestName: string
   currentTestDate: number
+  isConsoleView?: boolean
+  data: VerificationOverview | null
+  activityId?: string
 }
-
-const defaultDateFormat = 'MMM D, YYYY h:mm A'
-
-const primaryFontProps: FontProps = { size: 'normal' }
-const secondaryFontProps: FontProps = { weight: 'bold', size: 'small' }
 
 export default function TestsSummaryView({
   baselineTestName,
   baselineTestDate,
   currentTestName,
-  currentTestDate
-}: TestsSummaryViewProps) {
+  currentTestDate,
+  isConsoleView,
+  data,
+  activityId
+}: TestsSummaryViewProps): JSX.Element {
   const { getString } = useStrings()
+
+  const { accountId, orgIdentifier, projectIdentifier, pipelineIdentifier } = useParams<PipelinePathProps>()
+
+  const { baselineOverview } = data || {}
+
+  const isBaselineEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_BASELINE_BASED_VERIFICATION)
+
+  const handleRedirect = (): string => {
+    return routes.toExecutionPipelineView({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      accountId,
+      module: 'cd',
+      executionIdentifier: baselineOverview?.planExecutionId || '',
+      source: 'executions'
+    })
+  }
+
+  const showRedirectLink = canShowRedirectLink({
+    isBaselineEnabled,
+    baselineVerificationJobInstanceId: data?.baselineOverview?.baselineVerificationJobInstanceId,
+    activityId
+  })
+
   return (
-    <Container className={styles.testsSummaryView}>
-      <Container className={styles.baselineTest}>
-        <Text font={primaryFontProps} className={styles.mainLabel}>
-          {getString('pipeline.verification.baselineTest')}
-        </Text>
-        <Text font={secondaryFontProps}>{baselineTestName || 'none'}</Text>
-        <Text font={secondaryFontProps}>
-          {getString('pipeline.verification.testsRan')}:
-          {(baselineTestDate && moment(baselineTestDate).format(defaultDateFormat)) || 'none'}
-        </Text>
+    <Layout.Vertical>
+      {isBaselineEnabled && <BaselineStatusMessage data={data} />}
+      <Container margin={{ top: 'medium' }} className={cx({ [styles.testsSummaryView]: !isConsoleView })}>
+        <Container className={styles.baselineTest}>
+          {showRedirectLink && (
+            <Link target="_blank" to={handleRedirect()}>
+              <Text
+                className={cx(styles.mainLabel, styles.redirectLink)}
+                rightIcon="share"
+                rightIconProps={{ size: 12, margin: { bottom: 'xsmall' } }}
+              >
+                {getString('pipeline.verification.baselineTest')}
+              </Text>
+            </Link>
+          )}
+
+          {!showRedirectLink && (
+            <Text className={cx(styles.mainLabel)}>{getString('pipeline.verification.baselineTest')}</Text>
+          )}
+
+          <Text className={styles.subTitle}>{getString('connectors.cdng.artifactTag')}</Text>
+          <Text data-testid="baselineTestName" lineClamp={1} margin={{ bottom: 'small' }}>
+            {getTagName(baselineTestName)}
+          </Text>
+
+          <Text className={styles.subTitle}>{getString('pipeline.verification.testsRan')}:</Text>
+          <Text>{(baselineTestDate && moment(baselineTestDate).format(defaultDateFormat)) || '-'}</Text>
+        </Container>
+
+        <Container>
+          <Text className={styles.mainLabel}>{getString('pipeline.verification.currentTest')}</Text>
+
+          <Text className={styles.subTitle}>{getString('connectors.cdng.artifactTag')}</Text>
+          <Text data-testid="currentTestName" lineClamp={1} margin={{ bottom: 'small' }}>
+            {getTagName(currentTestName)}
+          </Text>
+
+          <Text className={styles.subTitle}>{getString('pipeline.verification.testsRan')}:</Text>
+          <Text>{(currentTestDate && moment(currentTestDate).format(defaultDateFormat)) || '-'}</Text>
+        </Container>
       </Container>
-      <Container className={styles.separator} />
-      <Container>
-        <Text font={primaryFontProps} className={styles.mainLabel}>
-          {getString('pipeline.verification.currentTest')}
-        </Text>
-        <Text font={secondaryFontProps}>{currentTestName || 'none'}</Text>
-        <Text font={secondaryFontProps}>
-          {getString('pipeline.verification.testsRan')}:{' '}
-          {(currentTestDate && moment(currentTestDate).format(defaultDateFormat)) || 'none'}
-        </Text>
-      </Container>
-    </Container>
+    </Layout.Vertical>
   )
 }

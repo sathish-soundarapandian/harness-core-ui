@@ -39,7 +39,7 @@ export default function ExecutionErrorTrackingView(): React.ReactElement | null 
   return (
     <Container width="100%" height="100%">
       <ChildAppMounter
-        // props type is @et/ErrorTrackingApp/EventListProps (can't be imported here)
+        // props type is @cet/ErrorTrackingApp/EventListProps (can't be imported here)
         ChildApp={ErrorTrackingApp}
         orgId={params.orgIdentifier}
         accountId={params.accountId}

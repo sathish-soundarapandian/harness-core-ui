@@ -92,7 +92,7 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
       <Menu.Item
         text={
           <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
+            <Text className="menuItemColor">{item.label}</Text>
           </Layout.Horizontal>
         }
         disabled={fetchingTags}

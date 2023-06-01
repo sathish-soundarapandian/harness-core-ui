@@ -31,7 +31,6 @@ import { isEmpty, merge } from 'lodash-es'
 import {
   Failure,
   ConnectorInfoDTO,
-  getConnectorListPromise,
   ConnectorConfigDTO,
   GetConnectorListQueryParams,
   ConnectorResponse,
@@ -85,19 +84,21 @@ interface AdditionalParams {
 const getAdditionalParams = ({
   scope,
   projectIdentifier,
-  orgIdentifier
+  orgIdentifier,
+  allTabSelected
 }: {
   scope?: string
   projectIdentifier?: string
   orgIdentifier?: string
+  allTabSelected?: boolean
 }): AdditionalParams => {
   const additionalParams: AdditionalParams = {}
 
-  if (scope === Scope.PROJECT) {
+  if (scope === Scope.PROJECT || allTabSelected) {
     additionalParams.projectIdentifier = projectIdentifier
   }
 
-  if (scope === Scope.PROJECT || scope === Scope.ORG) {
+  if (scope === Scope.PROJECT || scope === Scope.ORG || allTabSelected) {
     additionalParams.orgIdentifier = orgIdentifier
   }
 
@@ -454,8 +455,8 @@ export function getReferenceFieldProps({
   openConnectorModal,
   setPagedConnectorData,
   connectorFilterProperties,
-  isMultiSelect,
   version,
+  isMultiSelect,
   selectedConnectors,
   isRecordDisabled,
   renderRecordDisabledWarning
@@ -473,8 +474,8 @@ export function getReferenceFieldProps({
     createNewLabel: getString('newConnector'),
     // recordClassName: css.listItem,
     isNewConnectorLabelVisible: true,
-    fetchRecords: (done, search, page, scope, signal = undefined) => {
-      const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier })
+    fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected) => {
+      const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier, allTabSelected })
       const gitFilterParams =
         gitScope?.repo && gitScope?.branch
           ? {
@@ -483,50 +484,32 @@ export function getReferenceFieldProps({
               getDefaultFromOtherRepo: gitScope.getDefaultFromOtherRepo ?? true
             }
           : {}
-      const request =
-        Array.isArray(type) || !isEmpty(connectorFilterProperties)
-          ? getConnectorListV2Promise(
-              {
-                queryParams: {
-                  accountIdentifier,
-                  searchTerm: search || '',
-                  ...additionalParams,
-                  ...gitFilterParams,
-                  pageIndex: page || 0,
-                  pageSize: 10
-                },
-                body: merge(
-                  {
-                    ...(!category && { types: type }),
-                    category,
-                    filterType: 'Connector',
-                    projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
-                    orgIdentifier:
-                      scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
-                  },
-                  connectorFilterProperties
-                ) as ConnectorFilterProperties
-              },
-              signal
-            )
-          : getConnectorListPromise(
-              {
-                queryParams: {
-                  accountIdentifier,
-                  // If we also pass "type" along with "category", "category" will be ignored
-                  ...(!category && { type }),
-                  ...gitFilterParams,
-                  category,
-                  searchTerm: search,
-                  pageIndex: page,
-                  pageSize: 10,
-                  projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-                  orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined,
-                  ...(version && { version })
-                }
-              },
-              signal
-            )
+      const request = getConnectorListV2Promise(
+        {
+          queryParams: {
+            accountIdentifier,
+            searchTerm: search || '',
+            ...additionalParams,
+            ...gitFilterParams,
+            pageIndex: page || 0,
+            pageSize: 10,
+            ...(version ? { version } : undefined),
+            includeAllConnectorsAvailableAtScope: allTabSelected
+          },
+          body: merge(
+            {
+              ...(!category && { types: Array.isArray(type) ? type : [type] }),
+              category,
+              filterType: 'Connector',
+              projectIdentifier: scope === Scope.PROJECT || allTabSelected ? [projectIdentifier as string] : undefined,
+              orgIdentifier:
+                scope === Scope.PROJECT || scope === Scope.ORG || allTabSelected ? [orgIdentifier as string] : undefined
+            },
+            connectorFilterProperties
+          ) as ConnectorFilterProperties
+        },
+        signal
+      )
 
       return request
         .then(responseData => {
@@ -853,6 +836,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
   const tooltipContext = React.useContext(FormikTooltipContext)
   const dataTooltipId =
     props.tooltipProps?.dataTooltipId || (tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : '')
+
   const getReferenceFieldPropsValues = getReferenceFieldProps({
     defaultScope,
     gitScope,
@@ -875,6 +859,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     isRecordDisabled,
     renderRecordDisabledWarning
   })
+
   return (
     <FormGroup
       {...rest}
@@ -925,6 +910,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
           ></RbacButton>
         }
         onMultiSelectChange={onMultiSelectChange}
+        showAllTab={true}
       />
     </FormGroup>
   )
@@ -963,6 +949,10 @@ function getConnectorSelectorSchema(selected: ConnectorSelectedValue, getString:
       return deafultSchema
   }
 }
+
+export const getConnectorValue = (connectorRef: ConnectorSelectedValue | string): string =>
+  typeof connectorRef === 'string' ? connectorRef : connectorRef.value
+
 // This is used to register default connector setting
 export const DefaultSettingConnectorField: React.FC<SettingRendererProps & { type: Array<ConnectorInfoDTO['type']> }> =
   ({ onSettingSelectionChange, identifier, setFieldValue, settingValue, type }) => {

@@ -15,6 +15,7 @@ import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMo
 import { TestWrapper } from '@common/utils/testUtils'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { ConnectorResponse } from '@pipeline/components/InputSetForm/__tests__/InputSetMocks'
+import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 
 import { PipelineStudioInternal } from '../PipelineStudioInternal/PipelineStudioInternal'
 import { PipelineContext } from '../PipelineContext/PipelineContext'
@@ -34,7 +35,9 @@ jest.mock('services/pipeline-ng', () => ({
     mutate: jest.fn(() => Promise.resolve({ data: { yaml: '' } })),
     loading: false,
     cancel: jest.fn()
-  }))
+  })),
+  useGetSchemaYaml: jest.fn(() => ({})),
+  useGetStepYamlSchema: jest.fn(() => ({ data: null }))
 }))
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
@@ -48,6 +51,12 @@ jest.mock('services/cd-ng', () => ({
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
+  }),
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: gitConfigs, refetch: jest.fn() }
+  }),
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
   })
 }))
 
@@ -58,6 +67,10 @@ jest.mock('services/cd-ng-rq', () => ({
   useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   })
+}))
+
+jest.mock('services/pipeline-rq', () => ({
+  useValidateTemplateInputsQuery: jest.fn(() => ({ data: null }))
 }))
 
 jest.mock('resize-observer-polyfill', () => {
@@ -117,20 +130,16 @@ function PipelineStudioTestWrapper({
 }
 
 describe('PipelineStudio tests', () => {
-  test('should render error experience when there is error in js code', () => {
-    const { getByText: getElementByText } = render(
-      <PipelineStudioTestWrapper
-        modifiedPipelineContextMock={pipelineContextMock}
-        pipelineIdentifier={'test_pipeline'}
-      />
+  test('should render pipelinestudio correctly', async () => {
+    const { getByText } = render(
+      <AppErrorBoundary>
+        <PipelineStudioTestWrapper
+          modifiedPipelineContextMock={pipelineContextMock}
+          pipelineIdentifier={'test_pipeline'}
+        />
+      </AppErrorBoundary>
     )
-    const errorTitle = getElementByText('errorTitle')
-    expect(errorTitle).toBeInTheDocument()
 
-    const errorSubtitle = getElementByText('errorSubtitle')
-    expect(errorSubtitle).toBeInTheDocument()
-
-    const clickHereBtn = getElementByText('clickHere')
-    expect(clickHereBtn).toBeInTheDocument()
+    expect(getByText('pipeline.advancedOptions')).toBeInTheDocument()
   })
 })

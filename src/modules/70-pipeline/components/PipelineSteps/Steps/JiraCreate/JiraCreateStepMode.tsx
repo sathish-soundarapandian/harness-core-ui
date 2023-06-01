@@ -11,25 +11,21 @@ import { useParams } from 'react-router-dom'
 import { Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik'
 import {
   Accordion,
-  AllowedTypes,
-  Button,
   FormError,
   Formik,
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
-  MultiSelectOption,
   MultiTypeInputType,
   PageSpinner,
-  SelectOption,
   Text
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { String, useStrings } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   FormMultiTypeDurationField,
@@ -49,12 +45,11 @@ import type {
   PipelinePathProps,
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
-import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { JiraKVFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/JiraKVFieldsRenderer'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { isFieldFixed } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { getGenuineValue, setIssueTypeOptions } from '../JiraApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -69,7 +64,9 @@ import type {
 import {
   addSelectedOptionalFields,
   getInitialValueForSelectedField,
+  getIsCurrentFieldASelectedOptionalField,
   getKVFieldsToBeAddedInForm,
+  getProcessedValueForNonKVField,
   isRuntimeOrExpressionType,
   processFormData,
   resetForm
@@ -245,7 +242,11 @@ function FormContent({
         const field = issueTypeData?.fields[fieldKey]
         if (field) {
           const savedValueForThisField = getInitialValueForSelectedField(formik.values.spec.fields, field)
-          if (savedValueForThisField && !field.required) {
+          const isCurrentFieldASelectedOptionalField = getIsCurrentFieldASelectedOptionalField(
+            formik.values.spec.fields,
+            field
+          )
+          if (isCurrentFieldASelectedOptionalField) {
             formikOptionalFields.push({ ...field, value: savedValueForThisField })
           } else if (field.required) {
             formikRequiredFields.push({
@@ -266,12 +267,7 @@ function FormContent({
       nonKVFields.forEach(field =>
         toBeUpdatedNonKVFields.push({
           name: field.name,
-          value:
-            field?.schema?.type === 'option' && isFieldFixed(field.value as string)
-              ? field?.schema?.array
-                ? (field.value as MultiSelectOption[])?.map(i => i?.value)?.toString()
-                : (field.value as SelectOption)?.value?.toString()
-              : field?.value?.toString()
+          value: getProcessedValueForNonKVField(field)
         })
       )
 
@@ -628,66 +624,13 @@ function FormContent({
                   />
 
                   {!isEmpty(formik.values.spec.fields) ? (
-                    <FieldArray
-                      name="spec.fields"
-                      render={({ remove }) => {
-                        const idxArray: number[] = []
-                        const handleRemove = (kVIndex: number, currIndex: number): void => {
-                          const _fields = formik.values.spec.fields?.filter((_unused, idx: number) => idx !== currIndex)
-                          remove(kVIndex)
-                          formik.setFieldValue('spec.fields', _fields)
-                        }
-
-                        /* Filtering only key value fields from required and optional fields */
-                        const kVFields = formik.values.spec.fields?.filter((field, idx) => {
-                          const isKVField =
-                            !formik.values.spec.selectedRequiredFields?.some(
-                              reqfield => reqfield?.name === field?.name
-                            ) &&
-                            !formik.values.spec.selectedOptionalFields?.some(optfield => optfield?.name === field?.name)
-                          if (isKVField) idxArray.push(idx)
-                          return isKVField
-                        })
-
-                        return (
-                          <div>
-                            {kVFields && kVFields?.length > 0 && (
-                              <div className={css.headerRow}>
-                                <String className={css.label} stringID="keyLabel" />
-                                <String className={css.label} stringID="valueLabel" />
-                              </div>
-                            )}
-                            {kVFields?.map((_unused: JiraCreateFieldType, i: number) => (
-                              <div className={css.headerRow} key={i}>
-                                <FormInput.Text
-                                  name={`spec.fields[${idxArray[i]}].name`}
-                                  disabled={isApprovalStepFieldDisabled(readonly)}
-                                  placeholder={getString('pipeline.keyPlaceholder')}
-                                />
-                                <FormInput.MultiTextInput
-                                  name={`spec.fields[${idxArray[i]}].value`}
-                                  label=""
-                                  placeholder={getString('common.valuePlaceholder')}
-                                  disabled={isApprovalStepFieldDisabled(readonly)}
-                                  multiTextInputProps={{
-                                    allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                      item => !isMultiTypeRuntime(item)
-                                    ) as AllowedTypes,
-                                    expressions
-                                  }}
-                                />
-                                <Button
-                                  minimal
-                                  icon="main-trash"
-                                  disabled={isApprovalStepFieldDisabled(readonly)}
-                                  data-testid={`remove-fieldList-${i}`}
-                                  onClick={() => handleRemove(i, idxArray[i])}
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        )
-                      }}
+                    <JiraKVFieldsRenderer<JiraCreateData>
+                      formik={formik}
+                      allowableTypes={allowableTypes}
+                      selectedAllFields={formik.values.spec.fields}
+                      selectedOptionalFields={formik.values.spec.selectedOptionalFields}
+                      selectedRequiredFields={formik.values.spec.selectedRequiredFields}
+                      readonly={readonly}
                     />
                   ) : null}
                 </>

@@ -272,6 +272,7 @@ purpose:
   selectAModule: Select a module below to get started
   changeSelection: Change Selection
   cd:
+    fullText: Continuous Deployment
     introductionText: Introduction to Continuous Deployment
     introductionConcepts: Introduction to Continuous Deployment concepts
     delivery: Delivery
@@ -357,7 +358,7 @@ letsGetYouStarted: Let’s get you started
 accessKey: Access Key
 secretKey: Secret Key
 repo_provider:
-  bitbucketLabel: BitBucket
+  bitbucketLabel: Bitbucket
   customLabel: Custom
   githubLabel: GitHub
   gitlabLabel: GitLab
@@ -539,8 +540,9 @@ subscriptions:
     developers: '{{ developers }} Developers'
   cet:
     agents: '{{ agents }} Agents'
+    whatIsActiveAgent: What is an Active Agent?
   chaos:
-    experiments: '{{ experiments }} Experiments per month'
+    experiments: '{{ experiments }} Experiment Runs per month'
     infrastructures: '{{ infrastructures }} Chaos Infrastructures'
   expiryCountdown: expires in {{ days }} days
   expired: expired {{ days }} days ago
@@ -583,6 +585,8 @@ subscriptions:
     ccmTooltip: Cloud Spend refers to the total spend (dollars) managed and optimized by Harness Cloud Cost Management.
     cetAgents: Active Agents
     cetAgentToolTip: An agent is an independent unit of software that you install on a host or in a container that tracks for errors continuously and sends the error tracking data to the Harness Platform.
+    chaosExperimentRuns: Experiment Runs
+    chaosExperimentRunsTooltip: Experiment Runs refer to the number of chaos experiment instances which ran on a connected chaos infrastructure.
 current: Current
 banners:
   email:
@@ -696,7 +700,6 @@ account:
     description: to add and manage your subscriptions
 valuePlaceholder: Enter Value(s)
 namePlaceholder: Enter Name
-friendlyNamePlaceholder: Enter Friendly Name
 descriptionPlaceholder: Enter Description
 seconds: Seconds
 move: Move
@@ -1081,10 +1084,10 @@ oAuth:
   accessTokenAlredyAdded: Access token for selected git provider is already added.
   accessTokenCreateSuccess: Access token added successfully.
   connectToGitProviderLabel: Connect to a Git Provider
-  connectToGitProviderPlaceholder: Select a git Provider
+  connectToGitProviderPlaceholder: Select a Git Provider
   fetchingUserAccessTokens: Fetching user access tokens
-  usingUserAccessTokens: Using "{{user}}" credential to make changes to Git.
-  setUpUserAccessTokenMessage: Set up an access token in user profile to use your credentials to connect to {{type}}.
+  usingUserAccessTokens: Using "{{user}}'s" credentials to make changes to Git.
+  setUpUserAccessTokenMessage: Connect to {{type}} to authorize Harness to use your credentials.
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
 moveEntitytoGit: Move {{resourceType}} To Git
@@ -1498,11 +1501,27 @@ entitlement: ENTITLEMENT
 noCreditInfoData: No Credit Information Found
 readOnlyConnectorWarning: Read-only Vault connector is not allowed for Terraform/Terragrunt Plan steps.
 enabledFlags: ENABLED FLAGS
+enterPlaceholder: Enter {{name}}
+annotations: Annotations
+hostNames: Host Names
 expiresOn: Expires on
-friendlyName: Friendly Name
 serviceOverrides:
   labelText: Service Overrides
   globalEnvironment: Global Environment
   environmentServiceSpecific: Service Specific
   globalInfra: Infrastructure Specific
   infrastructureServiceSpecific: Service & Infrastructure Specific
+  newOverride: New Override
+  overrideType: Override Type
+  overrideInfo: Override Info
+  noOverrides:
+    globalEnvironment: You have no global Environment Overrides
+    environmentServiceSpecific: You have no Environment Service specific Overrides
+    globalInfrastructure: You have no global Infrastructure Overrides
+    infrastructureServiceSpecific: You have no Infrastructure Service specific Overrides
+cloudSpends: Cloud Spends
+variableType: Variable Type
+displayName: Display Name
+displayNamePlaceHolder: Enter Display Name
+advancedSettings: Advanced Settings
+timezone: Timezone

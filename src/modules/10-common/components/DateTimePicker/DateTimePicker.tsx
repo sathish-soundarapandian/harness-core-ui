@@ -72,6 +72,7 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
           onChange?.(value)
         }}
         name={name}
+        placeholder={restProps.placeholder}
         contentEditable={false}
         timePrecision="minute"
         dateProps={{

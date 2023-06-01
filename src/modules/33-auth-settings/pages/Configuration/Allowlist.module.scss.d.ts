@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly breakWord: string
   readonly center: string
   readonly noDataCard: string
   readonly paddingTable: string

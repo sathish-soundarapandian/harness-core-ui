@@ -33,6 +33,14 @@ export type AuditFilterProperties = FilterProperties & {
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
     | 'ERROR_BUDGET_RESET'
+    | 'START'
+    | 'END'
+    | 'STAGE_START'
+    | 'STAGE_END'
+    | 'PAUSE'
+    | 'RESUME'
+    | 'ABORT'
+    | 'TIMEOUT'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -45,12 +53,14 @@ export type AuditFilterProperties = FilterProperties & {
     | 'STO'
     | 'CHAOS'
     | 'SRM'
+    | 'IACM'
+    | 'CET'
     | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'IACM'
+    | 'IDP'
   )[]
   principals?: Principal[]
   resources?: ResourceDTO[]
@@ -70,7 +80,22 @@ export interface CcmConnectorFilter {
   awsAccountIds?: string[]
   azureSubscriptionId?: string
   azureTenantId?: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
+  featuresDisabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
+  featuresEnabled?: (
+    | 'BILLING'
+    | 'OPTIMIZATION'
+    | 'VISIBILITY'
+    | 'GOVERNANCE'
+    | 'COMMITMENT_ORCHESTRATOR'
+    | 'CLUSTER_ORCHESTRATOR'
+  )[]
   gcpProjectId?: string
   k8sConnectorRef?: string[]
 }
@@ -138,7 +163,10 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'Bamboo'
     | 'TerraformCloud'
+    | 'SignalFX'
+    | 'Harness'
   )[]
 }
 
@@ -333,11 +361,31 @@ export interface EntityDetail {
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
     | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
+    | 'BambooBuild'
+    | 'CdSscaOrchestration'
+    | 'RouteMapping'
+    | 'AWSSecurityHub'
+    | 'CustomIngest'
+    | 'BackstageEnvironmentVariable'
+    | 'Fossa'
+    | 'CodeQL'
+    | 'Gitleaks'
+    | 'DeployCloudFunctionGenOne'
+    | 'RollbackCloudFunctionGenOne'
+    | 'K8sBlueGreenStageScaleDown'
+    | 'AwsSamBuild'
+    | 'Semgrep'
 }
 
 export interface EntityDetailProtoDTO {
@@ -350,6 +398,8 @@ export interface EntityGitDetails {
   filePath?: string
   fileUrl?: string
   objectId?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   repoIdentifier?: string
   repoName?: string
   repoUrl?: string
@@ -676,6 +726,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -703,6 +754,7 @@ export interface Error {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -753,6 +805,19 @@ export interface Error {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1040,6 +1105,7 @@ export interface ErrorMetadata {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -1067,6 +1133,7 @@ export interface ErrorMetadata {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1117,6 +1184,19 @@ export interface ErrorMetadata {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   errorMessage?: string
 }
 
@@ -1410,6 +1490,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -1437,6 +1518,7 @@ export interface Failure {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -1487,6 +1569,19 @@ export interface Failure {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1642,14 +1737,11 @@ export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
 export interface Page {
   content?: { [key: string]: any }[]
   empty?: boolean
-  first?: boolean
-  last?: boolean
-  number?: number
-  numberOfElements?: number
-  pageable?: Pageable
-  size?: number
-  sort?: Sort
-  totalElements?: number
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
   totalPages?: number
 }
 
@@ -1659,6 +1751,7 @@ export interface PageEntitySetupUsageDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1669,6 +1762,7 @@ export interface PageFilterDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -1747,7 +1841,6 @@ export interface ResourceDTO {
     | 'RESOURCE_GROUP'
     | 'USER'
     | 'ROLE'
-    | 'ROLE_ASSIGNMENT'
     | 'PIPELINE'
     | 'TRIGGER'
     | 'TEMPLATE'
@@ -1791,6 +1884,9 @@ export interface ResourceDTO {
     | 'CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT'
     | 'TARGET_GROUP'
     | 'FEATURE_FLAG'
+    | 'NG_ACCOUNT_DETAILS'
+    | 'BUDGET_GROUP'
+    | 'IP_ALLOWLIST_CONFIG'
 }
 
 export interface ResourceScopeDTO {
@@ -2116,6 +2212,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_SERVICE_DRIVER_EXCEPTION'
     | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
@@ -2143,6 +2240,7 @@ export interface ResponseMessage {
     | 'BUCKET_SERVER_ERROR'
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
+    | 'TEMPLATE_ALREADY_EXISTS_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
     | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
@@ -2193,6 +2291,19 @@ export interface ResponseMessage {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
+    | 'SCM_FORBIDDEN'
+    | 'AWS_EKS_ERROR'
+    | 'OPA_POLICY_EVALUATION_ERROR'
+    | 'USER_MARKED_FAILURE'
+    | 'SSH_RETRY'
+    | 'HTTP_CLIENT_ERROR_RESPONSE'
+    | 'HTTP_INTERNAL_SERVER_ERROR'
+    | 'HTTP_BAD_GATEWAY'
+    | 'HTTP_SERVICE_UNAVAILABLE'
+    | 'HTTP_GATEWAY_TIMEOUT'
+    | 'HTTP_SERVER_ERROR_RESPONSE'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2207,6 +2318,7 @@ export interface ResponseMessage {
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
     | 'DELEGATE_RESTART'
+    | 'USER_MARKED_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -2303,6 +2415,13 @@ export interface ResponseTemplateRetainVariablesResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseTemplateUpdateGitDetailsResponse {
+  correlationId?: string
+  data?: TemplateUpdateGitDetailsResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseTemplateWithInputsResponse {
   correlationId?: string
   data?: TemplateWithInputsResponse
@@ -2395,6 +2514,7 @@ export type StringNGVariable = NGVariable & {
 export interface TemplateApplyRequest {
   checkForAccess?: boolean
   getMergedYamlWithTemplateField?: boolean
+  getOnlyFileContent?: boolean
   originalEntityYaml: string
 }
 
@@ -2619,6 +2739,16 @@ export interface TemplateSummaryResponse {
   yaml?: string
 }
 
+export interface TemplateUpdateGitDetailsRequest {
+  connectorRef?: string
+  filepath?: string
+  repoName?: string
+}
+
+export interface TemplateUpdateGitDetailsResponse {
+  status?: boolean
+}
+
 export interface TemplateWithInputsResponse {
   templateInputs?: string
   templateResponseDTO?: TemplateResponse
@@ -2635,6 +2765,11 @@ export interface Throwable {
   message?: string
   stackTrace?: StackTraceElement[]
   suppressed?: Throwable[]
+}
+
+export type TriggerReference = EntityReference & {
+  isDefault?: boolean
+  pipelineIdentifier?: string
 }
 
 export type ValidateTemplateInputsResponseDTO = ErrorMetadataDTO & {
@@ -3493,6 +3628,7 @@ export interface GetYamlWithTemplateRefsResolvedQueryParams {
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
   repoName?: string
+  AppendInputSetValidator?: boolean
 }
 
 export type GetYamlWithTemplateRefsResolvedProps = Omit<
@@ -4519,6 +4655,107 @@ export const getTemplateAlongWithInputSetYamlPromise = (
     GetTemplateAlongWithInputSetYamlPathParams
   >(getConfig('template/api'), `/templates/templateWithInputs/${templateIdentifier}`, props, signal)
 
+export interface UpdateGitDetailsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface UpdateGitDetailsPathParams {
+  templateIdentifier: string
+  versionLabel: string
+}
+
+export type UpdateGitDetailsProps = Omit<
+  MutateProps<
+    ResponseTemplateUpdateGitDetailsResponse,
+    Failure | Error,
+    UpdateGitDetailsQueryParams,
+    TemplateUpdateGitDetailsRequest,
+    UpdateGitDetailsPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateGitDetailsPathParams
+
+/**
+ * Update git metadata details for a remote template
+ */
+export const UpdateGitDetails = ({ templateIdentifier, versionLabel, ...props }: UpdateGitDetailsProps) => (
+  <Mutate<
+    ResponseTemplateUpdateGitDetailsResponse,
+    Failure | Error,
+    UpdateGitDetailsQueryParams,
+    TemplateUpdateGitDetailsRequest,
+    UpdateGitDetailsPathParams
+  >
+    verb="POST"
+    path={`/templates/update/git-metadata/${templateIdentifier}/${versionLabel}`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateGitDetailsProps = Omit<
+  UseMutateProps<
+    ResponseTemplateUpdateGitDetailsResponse,
+    Failure | Error,
+    UpdateGitDetailsQueryParams,
+    TemplateUpdateGitDetailsRequest,
+    UpdateGitDetailsPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateGitDetailsPathParams
+
+/**
+ * Update git metadata details for a remote template
+ */
+export const useUpdateGitDetails = ({ templateIdentifier, versionLabel, ...props }: UseUpdateGitDetailsProps) =>
+  useMutate<
+    ResponseTemplateUpdateGitDetailsResponse,
+    Failure | Error,
+    UpdateGitDetailsQueryParams,
+    TemplateUpdateGitDetailsRequest,
+    UpdateGitDetailsPathParams
+  >(
+    'POST',
+    (paramsInPath: UpdateGitDetailsPathParams) =>
+      `/templates/update/git-metadata/${paramsInPath.templateIdentifier}/${paramsInPath.versionLabel}`,
+    { base: getConfig('template/api'), pathParams: { templateIdentifier, versionLabel }, ...props }
+  )
+
+/**
+ * Update git metadata details for a remote template
+ */
+export const updateGitDetailsPromise = (
+  {
+    templateIdentifier,
+    versionLabel,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseTemplateUpdateGitDetailsResponse,
+    Failure | Error,
+    UpdateGitDetailsQueryParams,
+    TemplateUpdateGitDetailsRequest,
+    UpdateGitDetailsPathParams
+  > & { templateIdentifier: string; versionLabel: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseTemplateUpdateGitDetailsResponse,
+    Failure | Error,
+    UpdateGitDetailsQueryParams,
+    TemplateUpdateGitDetailsRequest,
+    UpdateGitDetailsPathParams
+  >(
+    'POST',
+    getConfig('template/api'),
+    `/templates/update/git-metadata/${templateIdentifier}/${versionLabel}`,
+    props,
+    signal
+  )
+
 export interface UpdateExistingTemplateVersionQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -4841,6 +5078,7 @@ export interface GetYamlWithTemplateRefsResolvedV2QueryParams {
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
   repoName?: string
+  AppendInputSetValidator?: boolean
 }
 
 export type GetYamlWithTemplateRefsResolvedV2Props = Omit<

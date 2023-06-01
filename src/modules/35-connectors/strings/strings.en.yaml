@@ -37,7 +37,7 @@ customConnectorDetails: Custom Health Connector Details
 prometheusLabel: Prometheus
 dynatraceLabel: Dynatrace
 appdLabel: AppDynamics
-signalFXLabel: SignalFX
+signalFXLabel: Splunk Observability [SignalFX]
 newRelicLabel: New Relic
 splunkLabel: Splunk
 customLabel: Custom Health
@@ -449,7 +449,6 @@ cdng:
   trafficsplit: Traffic Split (OPTIONAL)
   continousVerificationStep: Verify Step Details
   failOnNoAnalysis: Fail On No Analysis
-  displayName: Display Name
   createCVJob: Please create a verification job
   loadingJobs: Loading verification jobs…
   noJobsConfigured: No verification jobs are configured.

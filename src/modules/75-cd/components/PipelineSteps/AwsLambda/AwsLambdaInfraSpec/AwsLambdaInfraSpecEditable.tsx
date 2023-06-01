@@ -84,7 +84,7 @@ export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProp
   return (
     <Layout.Vertical spacing="medium">
       <Formik<AwsLambdaInfrastructure>
-        formName={'ECSInfraSpecEditable'}
+        formName={'AwsLambdaInfraSpecEditable'}
         initialValues={initialValues}
         validate={value => {
           const data: Partial<AwsLambdaInfrastructure> = {

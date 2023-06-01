@@ -84,21 +84,17 @@ const FeatureFlagsListing: React.FC<FeatureFlagsListingProps> = ({
           </Text>
         </Layout.Horizontal>
         {!hasCustomRules && (
-          <Container style={{ display: 'flex', alignItems: 'center' }}>
+          <Layout.Horizontal spacing="xsmall">
             <VariationWithIcon
               variation={defaultVariation}
               index={data.variations.indexOf(defaultVariation)}
-              textStyle={{
-                fontSize: '12px',
-                lineHeight: '24px',
-                color: '#9293AB',
-                paddingLeft: 'var(--spacing-xsmall)'
-              }}
+              fontSize="small"
+              color={Color.GREY_400}
               textElement={getString(isOn ? 'cf.featureFlags.defaultServedOn' : 'cf.featureFlags.defaultServedOff', {
                 defaultVariation: defaultVariation.name || defaultVariation.value
               })}
             />
-          </Container>
+          </Layout.Horizontal>
         )}
       </Layout.Vertical>
     )

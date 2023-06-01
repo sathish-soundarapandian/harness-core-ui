@@ -26,7 +26,6 @@ import {
   mockBuildList,
   mockManifestConnector,
   secretMockdata,
-  connectorListJSON,
   PipelineMock,
   TemplateMock,
   mockProps
@@ -66,7 +65,6 @@ export const ConnectorResponse: UseGetReturnData<ResponseConnectorResponse> = {
 }
 jest.mock('services/cd-ng', () => ({
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
-  getConnectorListPromise: () => Promise.resolve(connectorListJSON),
   getConnectorListV2Promise: () => Promise.resolve(mockManifestConnector),
   getBuildDetailsForDockerPromise: () => Promise.resolve(mockBuildList),
   getBuildDetailsForGcrPromise: () => Promise.resolve(mockBuildList),

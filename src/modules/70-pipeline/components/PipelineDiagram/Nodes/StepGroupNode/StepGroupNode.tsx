@@ -30,7 +30,7 @@ import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
 import StepGroupGraph from '../StepGroupGraph/StepGroupGraph'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import SVGMarker from '../SVGMarker'
-import { getPositionOfAddIcon } from '../utils'
+import { getBaseFqnWithoutEntityIdentifier, getPositionOfAddIcon } from '../utils'
 import { useNodeDimensionContext } from '../NodeDimensionStore'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
@@ -123,6 +123,7 @@ export function StepGroupNode(props: any): JSX.Element {
 
   const nodeType = Object.keys(props?.data?.stepGroup?.strategy || {})[0]
   const showExecutionMetaDataForChainedPipeline = props?.type === StageType.PIPELINE && !!executionMetaData
+  const baseFqn = getBaseFqnWithoutEntityIdentifier(props?.data?.fqnPath)
 
   React.useEffect(() => {
     // collapse stepGroup template
@@ -253,6 +254,9 @@ export function StepGroupNode(props: any): JSX.Element {
               className={cx('stepGroupNode', css.horizontalBar)}
               data-collapsedNode={isNodeCollapsed}
             ></div>
+            {props?.data?.isInComplete && (
+              <Icon className={css.incomplete} size={12} name={'warning-sign'} color="orange500" />
+            )}
             {props.data?.skipCondition && (
               <div className={css.conditional}>
                 <Text
@@ -384,6 +388,7 @@ export function StepGroupNode(props: any): JSX.Element {
                 hideLinks={props?.identifier === STATIC_SERVICE_GROUP_NAME}
                 setVisibilityOfAdd={setVisibilityOfAdd}
                 type={props?.type}
+                baseFqn={baseFqn}
               />
             </div>
             {!props.readonly && props?.identifier !== STATIC_SERVICE_GROUP_NAME && (

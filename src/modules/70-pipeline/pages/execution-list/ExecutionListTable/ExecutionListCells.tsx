@@ -22,6 +22,7 @@ import type {
   UseExpandedRowProps,
   UseTableCellProps
 } from 'react-table'
+import type { IconName } from '@harness/icons'
 import { Duration, TimeAgoPopover } from '@common/components'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
@@ -301,8 +302,12 @@ export const ExecutionCell: CellType = ({ row }) => {
   )
 
   const triggerType = data.executionTriggerInfo?.triggerType
-
   const isAutoTrigger = AUTO_TRIGGERS.includes(triggerType)
+
+  const isExecutionPostRollback = get(data, 'executionMode') === 'POST_EXECUTION_ROLLBACK'
+  const triggerTypeLabel = isExecutionPostRollback
+    ? getString('rollbackLabel')
+    : getString(mapTriggerTypeToStringID(get(data, 'executionTriggerInfo.triggerType')))
 
   return (
     <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }} className={css.execution}>
@@ -363,7 +368,7 @@ export const ExecutionCell: CellType = ({ row }) => {
             </>
           ) : (
             <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
-              {name || email} | {getString(mapTriggerTypeToStringID(get(data, 'executionTriggerInfo.triggerType')))}
+              {name || email} | {triggerTypeLabel}
             </Text>
           )}
         </Layout.Horizontal>
@@ -408,8 +413,7 @@ export const MenuCell: CellType = ({ row, column }) => {
     branch: data.gitDetails?.branch,
     connectorRef: data.connectorRef,
     storeType: data.storeType as StoreType,
-    stagesExecuted: data.stagesExecuted,
-    isDebugMode: hasCI
+    stagesExecuted: data.stagesExecuted
   })
 
   const { CI_YAML_VERSIONING, CI_REMOTE_DEBUG } = useFeatureFlags()
@@ -420,8 +424,7 @@ export const MenuCell: CellType = ({ row, column }) => {
     repoIdentifier: isGitSyncEnabled ? data.gitDetails?.repoIdentifier : data.gitDetails?.repoName,
     branch: data.gitDetails?.branch,
     connectorRef: data.connectorRef,
-    storeType: data.storeType as StoreType,
-    isDebugMode: hasCI
+    storeType: data.storeType as StoreType
   })
   const [canEdit, canExecute] = usePermission(
     {
@@ -464,8 +467,8 @@ export const MenuCell: CellType = ({ row, column }) => {
         onReRunInDebugMode={
           hasCI && CI_REMOTE_DEBUG
             ? isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
-              ? openRunPipelineModalV1
-              : openRunPipelineModal
+              ? () => openRunPipelineModalV1(true)
+              : () => openRunPipelineModal(true)
             : undefined
         }
         source={source}
@@ -485,13 +488,19 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
   const queryParams = useQueryParams<GitQueryParams>()
   const triggerType = get(data, 'executionTriggerInfo.triggerType', 'MANUAL')
+  const isExecutionPostRollback = get(data, 'executionMode') === 'POST_EXECUTION_ROLLBACK'
   const { sourceEventId, sourceEventLink } = get(data, 'executionTriggerInfo.triggeredBy.extraInfo', {})
-  const { iconName, getText } = mapTriggerTypeToIconAndExecutionText(triggerType, getString) ?? {}
+  let { iconName, getText } = mapTriggerTypeToIconAndExecutionText(triggerType, getString) ?? {}
   const { hasparentpipeline = false, identifier: pipelineIdentifier } = get(
     data,
     'parentStageInfo',
     {} as PipelineStageInfo
   )
+
+  if (isExecutionPostRollback) {
+    iconName = 'rollback-service' as IconName
+    getText = () => getString('pipeline.rollbackExecution')
+  }
 
   const toChildExecutionPipelineView = getChildExecutionPipelineViewLink<PipelineExecutionSummary>(
     data,

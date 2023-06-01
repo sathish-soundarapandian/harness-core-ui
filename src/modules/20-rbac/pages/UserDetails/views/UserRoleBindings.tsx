@@ -164,21 +164,21 @@ const UserRoleBindings: React.FC<UserRoleBindingsProps> = ({ user, scopeFilters,
         Header: getString('common.assignedAt'),
         id: 'assignedAt',
         accessor: row => row.scope?.accountName,
-        width: '30%',
+        width: '28%',
         Cell: RenderColumnAssignedAt
       },
       {
         Header: getString('common.assignedThrough'),
         id: 'assignedThrough',
         accessor: row => row.role?.createdAt,
-        width: '24%',
+        width: '22%',
         Cell: RenderColumnAssignedThrough
       },
       {
         Header: (
           <ManagePrincipalButton
             data-testid={'addRole-UserGroup'}
-            text={getString('common.plusNumber', { number: getString('common.role') })}
+            text={`${getString('common.manage')} ${getString('roles')}`}
             variation={ButtonVariation.SECONDARY}
             size={ButtonSize.SMALL}
             onClick={
@@ -193,7 +193,7 @@ const UserRoleBindings: React.FC<UserRoleBindingsProps> = ({ user, scopeFilters,
         ),
         id: 'addRole',
         accessor: row => row.role?.harnessManaged,
-        width: '6%',
+        width: '10%',
         Cell: <></>
       }
     ],

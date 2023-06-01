@@ -37,7 +37,8 @@ import {
   CustomDeploymentInfrastructure,
   ElastigroupInfrastructure,
   TanzuApplicationServiceInfrastructure,
-  AsgInfrastructure
+  AsgInfrastructure,
+  ServiceDefinition
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -105,20 +106,12 @@ import {
 } from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
 
-export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
+export const deploymentTypeInfraTypeMap: Record<ServiceDefinition['type'], InfraDeploymentType> = {
   Kubernetes: InfraDeploymentType.KubernetesDirect,
   NativeHelm: InfraDeploymentType.KubernetesDirect,
-  amazonEcs: InfraDeploymentType.KubernetesDirect,
-  amazonAmi: InfraDeploymentType.KubernetesDirect,
-  awsCodeDeploy: InfraDeploymentType.KubernetesDirect,
   WinRm: InfraDeploymentType.KubernetesDirect,
-  awsLambda: InfraDeploymentType.KubernetesDirect,
   Ssh: InfraDeploymentType.KubernetesDirect,
   ServerlessAwsLambda: InfraDeploymentType.ServerlessAwsLambda,
-  ServerlessAzureFunctions: InfraDeploymentType.ServerlessAzureFunctions,
-  ServerlessGoogleFunctions: InfraDeploymentType.ServerlessGoogleFunctions,
-  AmazonSAM: InfraDeploymentType.AmazonSAM,
-  AzureFunctions: InfraDeploymentType.AzureFunctions,
   AzureWebApp: InfraDeploymentType.AzureWebApp,
   ECS: InfraDeploymentType.ECS,
   Asg: InfraDeploymentType.Asg,
@@ -126,7 +119,8 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   Elastigroup: InfraDeploymentType.Elastigroup,
   TAS: InfraDeploymentType.TAS,
   GoogleCloudFunctions: InfraDeploymentType.GoogleCloudFunctions,
-  AwsLambda: InfraDeploymentType.AwsLambda
+  AwsLambda: InfraDeploymentType.AwsLambda,
+  AWS_SAM: InfraDeploymentType.AwsSam
 }
 
 type InfraTypes =
@@ -850,6 +844,29 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.AwsLambda
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.AwsSam: {
+        return (
+          <StepWidget<AwsLambdaInfraSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as AwsLambdaInfraSpec}
+            type={StepType.AwsSamInfra}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  region: value.region,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.AwsSam
               )
             }
           />

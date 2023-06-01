@@ -26,7 +26,7 @@ import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import { TriggerBreadcrumbs } from '@triggers/pages/trigger-details/TriggerDetails'
 import { getEnabledStatusTriggerValues, getTriggerIcon } from '../utils/TriggersListUtils'
-import { clearNullUndefined, ResponseStatus } from '../utils/TriggersWizardPageUtils'
+import { clearNullUndefined, ResponseStatus, TriggerTypes } from '../utils/TriggersWizardPageUtils'
 import css from './TriggerLandingPage.module.scss'
 
 const loadingHeaderHeight = 43
@@ -136,6 +136,8 @@ const TriggerLandingPage: React.FC = ({ children }) => {
     storeType
   }
 
+  const triggerType = triggerResponse?.data?.type
+
   const triggerLinks = [
     {
       label: getString('details'),
@@ -143,7 +145,8 @@ const TriggerLandingPage: React.FC = ({ children }) => {
     },
     {
       label: getString('activityHistoryLabel'),
-      to: routes.toTriggersActivityHistoryPage(routeParams)
+      to: routes.toTriggersActivityHistoryPage(routeParams),
+      disabled: triggerType !== TriggerTypes.SCHEDULE && triggerType !== TriggerTypes.WEBHOOK
     }
   ]
 

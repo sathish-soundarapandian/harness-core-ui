@@ -41,10 +41,12 @@ import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 export interface DeployServiceEntitySpecificationsProps {
   setDefaultServiceSchema: () => Promise<void>
   children: React.ReactNode
+  customRef?: React.Ref<HTMLDivElement>
 }
 
 export default function DeployServiceEntitySpecifications({
   setDefaultServiceSchema,
+  customRef,
   children
 }: DeployServiceEntitySpecificationsProps): JSX.Element {
   const {
@@ -62,7 +64,8 @@ export default function DeployServiceEntitySpecifications({
     setSelection,
     updateStage
   } = usePipelineContext()
-  const scrollRef = React.useRef<HTMLDivElement | null>(null)
+  const domRef = React.useRef<HTMLDivElement | null>(null)
+  const scrollRef = customRef || domRef
   const { getString } = useStrings()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
@@ -192,7 +195,7 @@ export default function DeployServiceEntitySpecifications({
     }
   }, [stageIndex])
 
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
 
   const getDeployServiceWidgetInitValues = useCallback((): DeployServiceEntityData => {
     if (setupModeType === setupMode.DIFFERENT) {
@@ -254,8 +257,14 @@ export default function DeployServiceEntitySpecifications({
 
   return (
     <div className={stageCss.deployStage} ref={scrollRef}>
-      <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={cx(stageCss.contentSection, stageCss.paddedSection)}>
+      {!CDS_PIPELINE_STUDIO_UPGRADES && (
+        <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+      )}
+      <div
+        className={cx(stageCss.contentSection, stageCss.paddedSection, {
+          [stageCss.paddedSectionNew]: CDS_PIPELINE_STUDIO_UPGRADES
+        })}
+      >
         {!!previousStageList?.length && (
           <Container margin={{ bottom: 'xlarge', left: 'xlarge' }}>
             <PropagateFromServiceV2

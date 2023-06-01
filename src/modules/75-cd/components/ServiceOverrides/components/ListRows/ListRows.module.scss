@@ -1,0 +1,21 @@
+.list-row-card {
+  width: 100%;
+  border-radius: 0px !important;
+  border-left: 4px solid var(--primary-3) !important;
+}
+
+.top-margin {
+  margin-top: var(--spacing-medium);
+}
+
+.top-border-radius {
+  border-radius: 2px 2px 0 0 !important;
+}
+
+.bottom-border-radius {
+  border-radius: 0 0 2px 2px !important;
+}
+
+.rounded-card {
+  border-radius: 2px !important;
+}

@@ -32,6 +32,7 @@ export interface ExecutionContextParams {
   refetch?: (() => Promise<void>) | undefined
   addNewNodeToMap(id: string, node: ExecutionNode): void
   setIsPipelineInvalid?: (flag: boolean) => void
+  retriedHistoryInfo?: { retriedStages?: string[]; retriedExecutionUuids?: string[] }
 }
 
 export const ExecutionContext = createContext<ExecutionContextParams>({
@@ -54,7 +55,8 @@ export const ExecutionContext = createContext<ExecutionContextParams>({
   setLogsToken: () => void 0,
   refetch: undefined,
   addNewNodeToMap: () => void 0,
-  setIsPipelineInvalid: () => void 0
+  setIsPipelineInvalid: () => void 0,
+  retriedHistoryInfo: { retriedStages: [], retriedExecutionUuids: [] }
 })
 
 export default ExecutionContext

@@ -56,7 +56,7 @@ export default function SscaOrchestrationStepInputSet(props: SscaOrchestrationSt
       {isValueRuntimeInput(get(template, 'spec.attestation.privateKey', '')) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <MultiTypeSecretInput
-            type="SSHKey"
+            type="SecretFile"
             expressions={expressions}
             name={`${prefix}spec.attestation.privateKey`}
             label={getString('connectors.serviceNow.privateKey')}

@@ -18,8 +18,7 @@ import {
   useToaster,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
-  shouldShowError,
-  getErrorInfoFromErrorObject
+  shouldShowError
 } from '@harness/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -59,6 +58,7 @@ import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
@@ -127,14 +127,15 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
   const { isYamlEditable } = pipelineView
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
-
+  const { getRBACErrorMessage } = useRBACError()
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
   const pipelineCachedCopyRef = React.useRef<EntityCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
   const {
     data: reconcileErrorData,
     refetch: reconcilePipeline,
-    error: reconcileError
+    error: reconcileError,
+    isFetching: isFetchingReconcileData
   } = useValidateTemplateInputsQuery(
     {
       queryParams: {
@@ -147,7 +148,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     },
     {
       enabled: false,
-      staleTime: 5_000,
       onSuccess(data) {
         if (data?.data?.validYaml === false && data?.data.errorNodeSummary) {
           // This is handled by <PipelineOutOfSyncErrorStrip/>
@@ -163,7 +163,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
 
   React.useEffect(() => {
     if (reconcileError && shouldShowError(reconcileError)) {
-      showError(getErrorInfoFromErrorObject(reconcileError))
+      showError(getRBACErrorMessage(reconcileError as RBACError))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reconcileError])
@@ -197,7 +197,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
       } catch (e) {
         clear()
         setYamlError(true)
-        showError(defaultTo(e.message, getString('invalidYamlText')))
+        showError(defaultTo(getRBACErrorMessage(e), getString('invalidYamlText')))
         return false
       }
     }
@@ -266,7 +266,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     runTooltip = getString('pipeline.cannotRunUnsavedPipeline')
   }
 
-  function handleReconcileClick(): void {
+  function handleReconcile(): void {
     reconcilePipeline()
     showSuccess(getString('pipeline.outOfSyncErrorStrip.reconcileStarted'))
     setShouldShowOutOfSyncError(true)
@@ -323,7 +323,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
             icon="refresh"
             text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
             disabled={isCommunity}
-            onClick={handleReconcileClick}
+            onClick={handleReconcile}
             permission={{
               resourceScope: {
                 accountIdentifier: accountId,
@@ -428,7 +428,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
               <div className={css.savePublishContainer}>
                 {isUpdated && !isReadonly && (
                   <Button
-                    variation={ButtonVariation.TERTIARY}
+                    variation={ButtonVariation.LINK}
                     padding={'small'}
                     className={css.unsavedChanges}
                     onClick={openDiffModal}
@@ -436,7 +436,9 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     {getString('unsavedChanges')}
                   </Button>
                 )}
-                {isAsyncValidationEnabled && !isNewPipeline && <ValidationBadge className={css.validationContainer} />}
+                {isAsyncValidationEnabled && !isNewPipeline && (
+                  <ValidationBadge className={css.validationContainer} onReconcile={handleReconcile} />
+                )}
                 <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
                 {renderDiscardUnsavedChangeButton()}
                 <RbacButton
@@ -472,7 +474,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
           )}
         </div>
       )}
-      {shouldShowOutOfSyncError ? (
+      {shouldShowOutOfSyncError && !isFetchingReconcileData ? (
         <PipelineOutOfSyncErrorStrip
           updateRootEntity={updateEntity}
           errorData={reconcileErrorData}

@@ -36,7 +36,8 @@ module.exports = ({
   enableTIUI,
   enableIACM,
   enableSSCA,
-  enableIDP
+  enableIDP,
+  enableSRMUI
 }) => {
   const remotes = {}
 
@@ -78,6 +79,10 @@ module.exports = ({
 
   if (enableCIUI) {
     remotes.ciui = "ciui@[window.getApiBaseUrl('ciui/remoteEntry.js')]"
+  }
+
+  if (enableSRMUI) {
+    remotes.srmui = "srmui@[window.getApiBaseUrl('srmui/remoteEntry.js')]"
   }
 
   if (enableTIUI) {

@@ -58,7 +58,7 @@ jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', ()
 }))
 
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: () => Promise.resolve(connectorListJSON),
+  getConnectorListV2Promise: () => Promise.resolve(connectorListJSON),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({
     loading: false,
     data: connectorListJSON,
@@ -278,7 +278,7 @@ describe('Deploy service stage specifications', () => {
     expect(getElementByText(portalDiv, 'pipeline.manifestType.gitConnectorLabel')).toBeDefined()
     expect(getElementByText(portalDiv, 'common.repo_provider.githubLabel')).toBeDefined()
     expect(getElementByText(portalDiv, 'common.repo_provider.gitlabLabel')).toBeDefined()
-    expect(getElementByText(portalDiv, 'pipeline.manifestType.bitBucketLabel')).toBeDefined()
+    expect(getElementByText(portalDiv, 'common.repo_provider.bitbucketLabel')).toBeDefined()
   })
 
   test('when deploymentType is ECS, ECS related UI should appear', async () => {

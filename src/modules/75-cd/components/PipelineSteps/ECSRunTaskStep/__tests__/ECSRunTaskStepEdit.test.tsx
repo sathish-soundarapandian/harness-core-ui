@@ -35,7 +35,7 @@ const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: { data: connectorsData.data.content[1] }, refetch: fetchConnectors, loading: false }
@@ -488,7 +488,7 @@ describe('ECSRunTaskStepEdit tests', () => {
     userEvent.click(Bitbucket!)
     const connnectorRefInput = await findByTestId(portal, /connectorRef/)
     expect(connnectorRefInput).toBeInTheDocument()
-    const createNewConnectorBtn = getElementByText(portal, 'newLabel pipeline.manifestType.bitBucketLabel connector')
+    const createNewConnectorBtn = getElementByText(portal, 'newLabel common.repo_provider.bitbucketLabel connector')
     expect(createNewConnectorBtn).toBeInTheDocument()
     userEvent.click(createNewConnectorBtn!)
 
@@ -497,7 +497,7 @@ describe('ECSRunTaskStepEdit tests', () => {
     expect(overviewTitle).toHaveLength(2)
     const nameInput = queryByNameAttribute('name', portal)
     act(() => {
-      fireEvent.change(nameInput!, { target: { value: 'Test BitBucket Connector' } })
+      fireEvent.change(nameInput!, { target: { value: 'Test Bitbucket Connector' } })
     })
     const firstStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
     await waitFor(() => expect(firstStepContinueButton).not.toBeDisabled())

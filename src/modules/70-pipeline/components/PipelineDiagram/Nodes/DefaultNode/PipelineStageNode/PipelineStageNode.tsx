@@ -214,7 +214,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         >
           <div className="execution-running-animation" />
           {props?.data?.isInComplete && (
-            <Icon className={defaultCss.inComplete} size={12} name={'warning-sign'} color="orange500" />
+            <Icon className={defaultCss.incomplete} size={12} name={'warning-sign'} color="orange500" />
           )}
           {props.iconUrl ? (
             <ImagePreview src={props.iconUrl} size={28} fallbackIcon={props.icon as IconName} />

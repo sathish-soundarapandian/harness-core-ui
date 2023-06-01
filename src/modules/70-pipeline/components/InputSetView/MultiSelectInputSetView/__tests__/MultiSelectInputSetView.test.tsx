@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { findByText, fireEvent, queryByText, render, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType } from '@harness/uicore'
 
@@ -16,7 +16,7 @@ import { MultiSelectInputSetView } from '../MultiSelectInputSetView'
 describe('MultiSelectInputSetView tests', () => {
   test('when field has allowed values configured, a MultiSelectTypeInput with allowed values should be rendered', async () => {
     const onChange = jest.fn()
-    const { container } = render(
+    const { baseElement } = render(
       <TestWrapper>
         <MultiSelectInputSetView
           name={`spec.artifacts.primary.spec.artifactDirectory`}
@@ -41,27 +41,33 @@ describe('MultiSelectInputSetView tests', () => {
       </TestWrapper>
     )
 
-    const portalDivs = document.getElementsByClassName('bp3-portal')
-    expect(portalDivs.length).toBe(0)
-    const dropdownMultiSelectInput = queryByNameAttribute('spec.artifacts.primary.spec.artifactDirectory', container)
-    fireEvent.keyDown(dropdownMultiSelectInput!, { key: 'Enter', code: 13 })
-    await waitFor(() => expect(portalDivs.length).toBe(1))
-    const dropdownPortalDiv = portalDivs[0]
-    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const abcOption = await findByText(selectListMenu as HTMLElement, 'abc')
+    const input = await waitFor(() => {
+      const _input = queryByNameAttribute('spec.artifacts.primary.spec.artifactDirectory', baseElement)
+      expect(_input).toBeInTheDocument()
+      return _input
+    })
+
+    userEvent.click(input!)
+
+    const abcOption = await screen.findByText('abc')
     expect(abcOption).toBeInTheDocument()
-    const defOption = await findByText(selectListMenu as HTMLElement, 'def')
+    const defOption = screen.getByText('def')
     expect(defOption).toBeInTheDocument()
-    const ghiOption = await findByText(selectListMenu as HTMLElement, 'ghi')
+    const ghiOption = screen.getByText('ghi')
     expect(ghiOption).toBeInTheDocument()
-    expect(queryByText(selectListMenu as HTMLElement, 'Option 1')).toBeNull()
+
+    expect(screen.queryByText('Option 1')).toBeNull()
+
     userEvent.click(abcOption)
-    expect(onChange).toHaveBeenCalledWith([{ label: 'abc', value: 'abc' }], 'MULTI_SELECT_OPTION', 'FIXED')
+
+    await waitFor(() =>
+      expect(onChange).toHaveBeenCalledWith([{ label: 'abc', value: 'abc' }], 'MULTI_SELECT_OPTION', 'FIXED')
+    )
   })
 
   test('when field does not have allowed values configured, MultiSelectTypeInput should be rendered with provided options', async () => {
     const onChange = jest.fn()
-    const { container } = render(
+    const { baseElement } = render(
       <TestWrapper>
         <MultiSelectInputSetView
           name={`spec.artifacts.primary.spec.artifactDirectory`}
@@ -92,19 +98,23 @@ describe('MultiSelectInputSetView tests', () => {
         />
       </TestWrapper>
     )
+    const input = await waitFor(() => {
+      const _input = queryByNameAttribute('spec.artifacts.primary.spec.artifactDirectory', baseElement)
+      expect(_input).toBeInTheDocument()
+      return _input
+    })
 
-    const portalDivs = document.getElementsByClassName('bp3-portal')
-    expect(portalDivs.length).toBe(0)
-    const dropdownMultiSelectInput = queryByNameAttribute('spec.artifacts.primary.spec.artifactDirectory', container)
-    fireEvent.keyDown(dropdownMultiSelectInput!, { key: 'Enter', code: 13 })
-    await waitFor(() => expect(portalDivs.length).toBe(1))
-    const dropdownPortalDiv = portalDivs[0]
-    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const option1 = await findByText(selectListMenu as HTMLElement, 'Option 1')
+    userEvent.click(input!)
+
+    const option1 = await screen.findByText('Option 1')
     expect(option1).toBeInTheDocument()
-    const option2 = await findByText(selectListMenu as HTMLElement, 'Option 2')
+    const option2 = screen.getByText('Option 2')
     expect(option2).toBeInTheDocument()
+
     userEvent.click(option1)
-    expect(onChange).toHaveBeenCalledWith([{ label: 'Option 1', value: 'Option_1' }], 'MULTI_SELECT_OPTION', 'FIXED')
+
+    await waitFor(() =>
+      expect(onChange).toHaveBeenCalledWith([{ label: 'Option 1', value: 'Option_1' }], 'MULTI_SELECT_OPTION', 'FIXED')
+    )
   })
 })

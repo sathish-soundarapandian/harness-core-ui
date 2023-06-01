@@ -47,7 +47,7 @@ const fetchConnector = jest.fn().mockReturnValue(connectorData)
 const fetchConnectorList = (): Promise<unknown> => Promise.resolve(connectorsData)
 
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectorList })),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorData, refetch: fetchConnector, loading: false }
@@ -104,23 +104,13 @@ const testAwsLambdaManifestLastStep = async (portal: HTMLElement): Promise<void>
   userEvent.click(submitButton)
 }
 
-const testUpdateAwsLambdaFunctionDefinitionManifest = async (CDS_SERVICE_CONFIG_LAST_STEP: boolean): Promise<void> => {
+const testUpdateAwsLambdaFunctionDefinitionManifest = async (): Promise<void> => {
   const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
   const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
 
-  if (CDS_SERVICE_CONFIG_LAST_STEP) {
-    // Check if second step IS NOT displayed
-    const Git = queryByValueAttribute('Git')
-    await waitFor(() => expect(Git).toBeNull()) // Because upon editing manifest, directly third step will be shown
-  } else {
-    // Check if Git tile is checked and click Continue
-    const Git = queryByValueAttribute('Git')
-    await waitFor(() => expect(Git).not.toBeNull())
-    expect(Git).toBeChecked()
-    const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
-    await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-    userEvent.click(secondStepContinueButton)
-  }
+  // Check if second step IS NOT displayed
+  const Git = queryByValueAttribute('Git')
+  await waitFor(() => expect(Git).toBeNull()) // Because upon editing manifest, directly third step will be shown
 
   // Change fields in the last step and submit manifest
   await testAwsLambdaManifestLastStep(portal)
@@ -241,7 +231,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
     expect(screen.getByText('AwsLambdaFunctionAliasDefinition_Manifest')).toBeInTheDocument()
   })
 
-  test('update AwsLambdaFunctionDefinition manifest when CDS_SERVICE_CONFIG_LAST_STEP is OFF', async () => {
+  test('update AwsLambdaFunctionDefinition manifest', async () => {
     const updateStage = jest.fn()
     pipelineContextAwsLambdaManifests.updateStage = updateStage
 
@@ -272,49 +262,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
     expect(functionDefinitionManifestEditButton).toBeInTheDocument()
     userEvent.click(functionDefinitionManifestEditButton)
 
-    await testUpdateAwsLambdaFunctionDefinitionManifest(false)
-
-    await waitFor(() => {
-      expect(updateStage).toHaveBeenCalledWith(updateStageArgFunctionDefinitionUpdate)
-    })
-  })
-
-  test('update AwsLambdaFunctionDefinition manifest when CDS_SERVICE_CONFIG_LAST_STEP is ON', async () => {
-    const updateStage = jest.fn()
-    pipelineContextAwsLambdaManifests.updateStage = updateStage
-
-    const { container } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-        defaultFeatureFlagValues={{ CDS_SERVICE_CONFIG_LAST_STEP: true }}
-      >
-        <PipelineContext.Provider value={pipelineContextAwsLambdaManifests}>
-          <AwsLambdaServiceSpecEditable
-            initialValues={{
-              isReadonlyServiceMode: false
-            }}
-            readonly={false}
-          />
-        </PipelineContext.Provider>
-      </TestWrapper>
-    )
-
-    // Click Edit button for Function Definition manifest
-    const functionDefinitionHeaderContainer = screen.getByTestId('function-definition-header-container')
-    expect(
-      within(functionDefinitionHeaderContainer).getByText('pipeline.manifestTypeLabels.AwsLambdaFunctionDefinition')
-    ).toBeInTheDocument()
-
-    // continue with updating manifest
-    expect(screen.getByText('AwsLambdaFunctionDefinition_Manifest')).toBeInTheDocument()
-    const editButtons = container.querySelectorAll('[data-icon="Edit"]')
-    expect(editButtons).toHaveLength(2)
-    const functionDefinitionManifestEditButton = editButtons[0]
-    expect(functionDefinitionManifestEditButton).toBeInTheDocument()
-    userEvent.click(functionDefinitionManifestEditButton)
-
-    await testUpdateAwsLambdaFunctionDefinitionManifest(true)
+    await testUpdateAwsLambdaFunctionDefinitionManifest()
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgFunctionDefinitionUpdate)
@@ -392,11 +340,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
     pipelineContextAwsLambdaManifests.updateStage = updateStage
 
     const { container } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-        defaultFeatureFlagValues={{ CDS_SERVICE_CONFIG_LAST_STEP: true }}
-      >
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextAwsLambdaManifests}>
           <AwsLambdaServiceSpecEditable
             initialValues={{
@@ -422,7 +366,7 @@ describe('AwsLambdaServiceSpecEditable tests', () => {
     expect(functionDefinitionManifestEditButton).toBeInTheDocument()
     userEvent.click(functionDefinitionManifestEditButton)
 
-    await testUpdateAwsLambdaFunctionDefinitionManifest(true)
+    await testUpdateAwsLambdaFunctionDefinitionManifest()
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgForPropagatedStageWithAwsLambdaFunctionDefinitionManifest)

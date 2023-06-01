@@ -213,7 +213,7 @@ describe('Unit tests for ServiceHealth', () => {
     const endXPercentage = 0.35275080906148865
 
     expect(calculateStartAndEndTimes(startXPercentage, endXPercentage, mockedTimestamps)).toEqual([
-      1630863277338, 1630887233649
+      1630863300338, 1630887300649
     ])
   })
 

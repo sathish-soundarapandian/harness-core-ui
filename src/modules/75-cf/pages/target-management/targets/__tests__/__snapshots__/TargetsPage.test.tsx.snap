@@ -96,41 +96,22 @@ exports[`TargetsPage TargetsPage should render data correctly 1`] = `
           cf.shared.targetManagement: cf.shared.targets
         </h2>
       </div>
-      <ul
-        class="wrapper"
-        data-testid="CFSectionToggle"
+      <div
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main TabNavigation--container"
       >
-        <li
-          class="item"
+        <a
+          class="TabNavigation--tags"
+          href="/account/dummy/cf/orgs/dummy/projects/dummy/target-management/targets"
         >
-          <a
-            class="link"
-            href="/account/dummy/cf/orgs/dummy/projects/dummy/target-management/targets?activeEnvironment=undefined"
-          >
-            <span
-              class="align"
-              data-tooltip-id="ff_targets_heading"
-            >
-              cf.shared.targets
-            </span>
-          </a>
-        </li>
-        <li
-          class="item"
+          cf.shared.targets
+        </a>
+        <a
+          class="TabNavigation--tags"
+          href="/account/dummy/cf/orgs/dummy/projects/dummy/target-management/target-groups"
         >
-          <a
-            class="link"
-            href="/account/dummy/cf/orgs/dummy/projects/dummy/target-management/target-groups?activeEnvironment=undefined"
-          >
-            <span
-              class="align"
-              data-tooltip-id="ff_segments_heading"
-            >
-              cf.shared.segments
-            </span>
-          </a>
-        </li>
-      </ul>
+          cf.shared.segments
+        </a>
+      </div>
       <div
         data-testid="CFTargetManagementHeaderSpacer"
         style="width: 325px;"

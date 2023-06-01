@@ -42,9 +42,7 @@ describe('ModuleList', () => {
       <TestWrapper
         defaultAppStoreValues={{
           featureFlags: {
-            CING_ENABLED: true,
-            CVNG_ENABLED: true,
-            CFNG_ENABLED: true
+            CVNG_ENABLED: true
           }
         }}
       >
@@ -66,9 +64,7 @@ describe('ModuleList', () => {
       <TestWrapper
         defaultAppStoreValues={{
           featureFlags: {
-            CING_ENABLED: true,
-            CVNG_ENABLED: true,
-            CFNG_ENABLED: true
+            CVNG_ENABLED: true
           }
         }}
       >
@@ -87,9 +83,7 @@ describe('ModuleList', () => {
       <TestWrapper
         defaultAppStoreValues={{
           featureFlags: {
-            CING_ENABLED: true,
-            CVNG_ENABLED: true,
-            CFNG_ENABLED: true
+            CVNG_ENABLED: true
           }
         }}
       >

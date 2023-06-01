@@ -51,7 +51,7 @@ import {
 } from './CVSLOsListingPage.types'
 import { getMonitoredServicesOptions } from './common/SLI/SLI.utils'
 import { getUserJourneyOptions } from './components/CVCreateSLOV2/CVCreateSLOV2.utils'
-import { EvaluationType } from './components/CVCreateSLOV2/CVCreateSLOV2.types'
+import { EvaluationType, PeriodTypes } from './components/CVCreateSLOV2/CVCreateSLOV2.types'
 
 export const getUserJourneys = (userJourneyResponse?: UserJourneyResponse[]): UserJourneyDTO[] => {
   return userJourneyResponse?.map(response => response.userJourney) ?? []
@@ -301,12 +301,12 @@ export const getPeriodTypeOptionsForFilter = (getString: UseStringsReturn['getSt
   return [
     getAllOption(getString),
     {
-      label: 'Rolling',
-      value: 'Rolling'
+      label: getString('cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'),
+      value: PeriodTypes.ROLLING
     },
     {
-      label: 'Calender',
-      value: 'Calender'
+      label: getString('cv.slos.sloTargetAndBudget.periodTypeOptions.calendar'),
+      value: PeriodTypes.CALENDAR
     }
   ]
 }

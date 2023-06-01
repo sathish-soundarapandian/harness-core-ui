@@ -11,7 +11,9 @@ exports[`<ExecutionStepDetails /> tests renders normal step 1`] = `
       <div
         class="title"
       >
-        common.stepName
+        <span>
+          common.stepName
+        </span>
       </div>
       <div
         class="actions"
@@ -419,7 +421,9 @@ exports[`<ExecutionStepDetails /> tests retried steps does not fetches data for 
         class="title"
         data-name="Already_Present_Data"
       >
-        common.stepName
+        <span>
+          common.stepName
+        </span>
       </div>
       <div
         class="actions"
@@ -866,7 +870,9 @@ exports[`<ExecutionStepDetails /> tests retried steps fetches data for retry ste
         class="title"
         data-name="Retried Step 1"
       >
-        common.stepName
+        <span>
+          common.stepName
+        </span>
       </div>
       <div
         class="actions"
@@ -1312,7 +1318,9 @@ exports[`<ExecutionStepDetails /> tests retried steps shows loader while loading
       <div
         class="title"
       >
-        common.stepName
+        <span>
+          common.stepName
+        </span>
       </div>
       <div
         class="actions"
@@ -1562,7 +1570,9 @@ exports[`<ExecutionStepDetails /> tests retried steps shows step selection 1`] =
       <div
         class="title"
       >
-        common.stepName
+        <span>
+          common.stepName
+        </span>
       </div>
       <div
         class="actions"

@@ -131,7 +131,11 @@ import { RouteMappingStep } from './RouteMappingStep/RouteMappingStep'
 import { K8sAwsInfrastructureSpec } from './K8sAwsInfrastructureSpec/K8sAwsInfrastructureSpec'
 import { DeployCloudFunctionStepGenOne } from './GoogleCloudFunction/GenOne/DeployCloudFunctionStepGenOne'
 import { DeployCloudFunctionRollbackStepGenOne } from './GoogleCloudFunction/GenOne/DeployCloudFunctionRollbackStepGenOne'
-import { K8sBlueGreenStageScaleDownStep } from './K8sBlueGreenStageScaleDownStep/K8sBlueGreenStageScaleDownStep'
+import { AwsSamDeployStep } from './AwsSam/AwsSamDeployStep/AwsSamDeployStep'
+import { AwsSamBuildStep } from './AwsSam/AwsSamBuildStep/AwsSamBuildStep'
+import { K8sBlueGreenStageScaleDown } from './K8sBlueGreenStageScaleDown/K8sBlueGreenStageScaleDown'
+import { AwsSamServiceSpec } from './AwsSam/AwsSamServiceSpec/AwsSamServiceSpec'
+import { AwsSamInfraSpec } from './AwsSam/AwsSamInfraSpec/AwsSamInfraSpec'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -146,7 +150,7 @@ factory.registerStep(new K8sCanaryDeleteStep())
 factory.registerStep(new K8sApplyStep())
 factory.registerStep(new K8sDeleteStep())
 factory.registerStep(new K8sDryRunStep())
-factory.registerStep(new K8sBlueGreenStageScaleDownStep())
+factory.registerStep(new K8sBlueGreenStageScaleDown())
 factory.registerStep(new ShellScriptStep())
 factory.registerStep(new ContainerStep())
 factory.registerStep(new KubernetesInfraSpec())
@@ -258,3 +262,7 @@ factory.registerStep(new AwsLambdaDeployStep())
 factory.registerStep(new AwsLambdaRollbackStep())
 factory.registerStep(new TerraformCloudRun())
 factory.registerStep(new TerraformCloudRollback())
+factory.registerStep(new AwsSamDeployStep())
+factory.registerStep(new AwsSamBuildStep())
+factory.registerStep(new AwsSamServiceSpec())
+factory.registerStep(new AwsSamInfraSpec())

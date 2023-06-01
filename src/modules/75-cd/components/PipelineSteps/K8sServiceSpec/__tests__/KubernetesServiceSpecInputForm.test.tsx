@@ -38,7 +38,7 @@ jest.mock('@common/utils/YamlUtils', () => ({}))
 const fetchImages = jest.fn().mockReturnValue(imagesListData)
 jest.mock('services/cd-ng', () => ({
   useGetConnectorListV2: () => jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
-  getConnectorListPromise: () => Promise.resolve(mockConnectorsListResponse),
+  getConnectorListV2Promise: () => Promise.resolve(mockConnectorsListResponse),
   useGetConnector: jest.fn(() => mockConnectorResponse),
   useCreateConnector: () => jest.fn().mockResolvedValue(mockCreateConnectorResponse),
   useUpdateConnector: () => jest.fn().mockResolvedValue(mockUpdateConnectorResponse),

@@ -37,7 +37,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import {
   ArtifactConnectorStepDataToLastStep,
   useArtifactSelectionLastSteps
@@ -68,9 +67,7 @@ import {
   ArtifactTitleIdByType,
   allowedArtifactTypes,
   ModalViewFor,
-  isAllowedCustomArtifactDeploymentTypes,
   isSidecarAllowed,
-  isAllowedAzureArtifactDeploymentTypes,
   showArtifactStoreStepDirectly,
   isAllowedBambooArtifactDeploymentTypes,
   getInitialSelectedArtifactValue
@@ -109,39 +106,10 @@ export default function ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const {
-    CUSTOM_ARTIFACT_NG,
-    AZURE_ARTIFACTS_NG,
-    AZURE_WEBAPP_NG_JENKINS_ARTIFACTS,
-    CDS_SERVICE_CONFIG_LAST_STEP,
-    BAMBOO_ARTIFACT_NG
-  } = useFeatureFlags()
+  const { BAMBOO_ARTIFACT_NG } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
-    if (
-      CUSTOM_ARTIFACT_NG &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.CustomArtifact) &&
-      isAllowedCustomArtifactDeploymentTypes(deploymentType)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
-    }
-    if (
-      isAllowedAzureArtifactDeploymentTypes(deploymentType) &&
-      AZURE_ARTIFACTS_NG &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
-    }
-    if (
-      [ServiceDeploymentType.AzureWebApp, ServiceDeploymentType.TAS].includes(
-        deploymentType as ServiceDeploymentType
-      ) &&
-      AZURE_WEBAPP_NG_JENKINS_ARTIFACTS &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Jenkins)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Jenkins)
-    }
     if (
       BAMBOO_ARTIFACT_NG &&
       isAllowedBambooArtifactDeploymentTypes(deploymentType) &&
@@ -571,10 +539,10 @@ export default function ArtifactsSelection({
   // This function decides which step to show first when artifact wizard is opened
   const getArtifactWizardInitialStepNumber = (): number => {
     // In edit mode, show 2nd or 3rd step depending on how many steps are there in total
-    if (isArtifactEditMode && showConnectorStep(selectedArtifact as ArtifactType) && CDS_SERVICE_CONFIG_LAST_STEP) {
+    if (isArtifactEditMode && showConnectorStep(selectedArtifact as ArtifactType)) {
       return 3
     }
-    if (isArtifactEditMode && !showConnectorStep(selectedArtifact as ArtifactType) && CDS_SERVICE_CONFIG_LAST_STEP) {
+    if (isArtifactEditMode && !showConnectorStep(selectedArtifact as ArtifactType)) {
       return 2
     }
     // For create mode, if we need to show 2nd step directly

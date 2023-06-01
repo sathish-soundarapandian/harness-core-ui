@@ -126,7 +126,7 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
   >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
-  const { CDS_SERVICE_CONFIG_LAST_STEP, CDS_GIT_CONFIG_FILES } = useFeatureFlags()
+  const { CDS_GIT_CONFIG_FILES } = useFeatureFlags()
 
   const allowedOverrideStoreTypes = React.useMemo((): ConfigFileType[] => {
     if (serviceType) {
@@ -230,10 +230,10 @@ function ServiceConfigFileOverride(props: ServiceConfigFileOverrideProps): React
 
   const shouldPassPrevStepData = useCallback((): boolean => {
     if (initialValues.store === ConfigFilesMap.Harness) {
-      return isEditMode && !!CDS_SERVICE_CONFIG_LAST_STEP
+      return isEditMode
     }
-    return isEditMode && !!selectedConnector && !!CDS_SERVICE_CONFIG_LAST_STEP
-  }, [selectedConnector, isEditMode, initialValues?.store, CDS_SERVICE_CONFIG_LAST_STEP])
+    return isEditMode && !!selectedConnector
+  }, [selectedConnector, isEditMode, initialValues?.store])
 
   const commonProps = {
     name: getString('credentials'),

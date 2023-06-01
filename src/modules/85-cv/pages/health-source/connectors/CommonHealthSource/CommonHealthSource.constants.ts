@@ -1,4 +1,15 @@
-import { ElkProduct, SignalFX } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import {
+  ElkProduct,
+  GrafanaLoki,
+  SignalFX
+} from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 import { HealthSourceTypes } from '../../types'
 import type { CommonCustomMetricFormikInterface, HealthSourceProductsType } from './CommonHealthSource.types'
 
@@ -18,6 +29,10 @@ export const HealthSourceProducts: HealthSourceProductsType = {
   [HealthSourceTypes.SignalFX]: {
     label: SignalFX.SIGNALFX_METRICS_DISPLAY_NAME,
     value: HealthSourceTypes.SplunkSignalFXMetrics
+  },
+  [HealthSourceTypes.GrafanaLoki]: {
+    label: GrafanaLoki.GRAFANA_LOKI_DISPLAY_NAME,
+    value: GrafanaLoki.GRAFANA_LOKI_LOGS
   }
 }
 

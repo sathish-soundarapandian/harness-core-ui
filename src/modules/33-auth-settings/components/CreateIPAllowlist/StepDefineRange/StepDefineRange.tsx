@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, pick } from 'lodash-es'
+import { defaultTo, pick, get } from 'lodash-es'
 import * as Yup from 'yup'
 
 import type { StepProps } from '@harness/uicore'
@@ -14,6 +14,7 @@ import { FontVariation } from '@harness/design-system'
 import {
   Checkbox,
   Text,
+  FormError,
   FormInput,
   Formik,
   FormikForm,
@@ -134,7 +135,11 @@ const StepDefineRange: React.FC<StepDefineRangeProps> = props => {
         validationSchema={Yup.object().shape({
           ipAddress: Yup.string()
             .required(getString('authSettings.ipAddress.required'))
-            .matches(regexIPAllowlist, getString('authSettings.ipAddress.invalid'))
+            .matches(regexIPAllowlist, getString('authSettings.ipAddress.invalid')),
+          allowSourceTypeUI: Yup.boolean().when('allowSourceTypeAPI', {
+            is: false,
+            then: Yup.boolean().equals([true], getString('authSettings.ipAddress.invalidApplicableFor'))
+          })
         })}
       >
         {formikProps => {
@@ -162,6 +167,9 @@ const StepDefineRange: React.FC<StepDefineRangeProps> = props => {
                       }}
                     />
                   </Layout.Horizontal>
+                  {formikProps.errors.allowSourceTypeUI && (
+                    <FormError name={'allowSourceTypeUI'} errorMessage={get(formikProps.errors, 'allowSourceTypeUI')} />
+                  )}
                 </Container>
               </Layout.Vertical>
               <Layout.Horizontal spacing="medium">

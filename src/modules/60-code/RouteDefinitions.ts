@@ -16,6 +16,7 @@ export interface CODEProps {
   resourcePath?: string
   commitRef?: string
   branch?: string
+  tag?: string
   diffRefs?: string // comparing diff refs, i.e: main...v1.0.1
   pullRequestId?: string
   pullRequestSection?: string // commits | diffs | checks ...
@@ -64,6 +65,10 @@ export default {
   toCODEBranches: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/branches`
+  },
+  toCODETags: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/tags`
   },
   toCODEPullRequests: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')

@@ -306,11 +306,11 @@ test('isFixedNonEmptyValue', () => {
 })
 
 test('getAllowedRepoOptions', () => {
-  expect(getAllowedRepoOptions(ServiceDeploymentType.WinRm, true, true, 'Acr')).toHaveLength(4)
+  expect(getAllowedRepoOptions(ServiceDeploymentType.WinRm, true, 'Acr')).toHaveLength(4)
 
-  expect(getAllowedRepoOptions(ServiceDeploymentType.AzureWebApp, true, true, 'Acr')).toHaveLength(4)
+  expect(getAllowedRepoOptions(ServiceDeploymentType.AzureWebApp, true, 'Acr')).toHaveLength(4)
 
-  expect(getAllowedRepoOptions(ServiceDeploymentType.Kubernetes, true, true, 'Nexus3Registry')).toHaveLength(5)
+  expect(getAllowedRepoOptions(ServiceDeploymentType.Kubernetes, true, 'Nexus3Registry')).toHaveLength(5)
 })
 
 test('isAzureWebAppOrSshWinrmGenericDeploymentType', () => {

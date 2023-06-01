@@ -277,14 +277,20 @@ const SAMLProviderV2: React.FC<Props> = ({
                   <Text color={Color.GREY_800} font={{ weight: 'bold' }} width="30%">
                     {samlSetting.displayName}
                   </Text>
-                  <Text inline width="30%">
-                    <Text inline color={Color.GREY_300} font={FontVariation.SMALL}>
-                      {`${getString('common.friendlyName')}: `}
-                      <Text color={Color.BLACK} font={FontVariation.SMALL} inline>
-                        {samlSetting.friendlySamlName}
-                      </Text>
+                  <Layout.Horizontal width="30%" padding={{ right: 'large' }}>
+                    <Text
+                      className={css.displayNamePlaceholder}
+                      inline
+                      color={Color.GREY_300}
+                      font={FontVariation.SMALL}
+                      margin={{ right: 'small' }}
+                    >
+                      {getString('common.displayName')}
                     </Text>
-                  </Text>
+                    <Text color={Color.BLACK} font={FontVariation.SMALL} inline lineClamp={1}>
+                      {samlSetting.friendlySamlName}
+                    </Text>
+                  </Layout.Horizontal>
                   <Layout.Horizontal width="30%" flex={{ justifyContent: 'flex-start' }}>
                     <Text font={FontVariation.SMALL} inline margin={{ right: 'small' }}>
                       {`${getString('typeLabel')}: `}

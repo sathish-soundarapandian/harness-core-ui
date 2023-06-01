@@ -44,7 +44,8 @@ export enum InfraDeploymentType {
   Elastigroup = 'Elastigroup',
   TAS = 'TAS',
   GoogleCloudFunctions = 'GoogleCloudFunctions',
-  AwsLambda = 'AwsLambda'
+  AwsLambda = 'AwsLambda',
+  AwsSam = 'AWS_SAM'
 }
 
 export const deploymentTypeToInfraTypeMap = {
@@ -150,7 +151,7 @@ export function getInfraDeploymentTypeSchema(
 export const getInfrastructureDefinitionValidationSchema = (
   deploymentType: GetExecutionStrategyYamlQueryParams['serviceDefinitionType'],
   getString: UseStringsReturn['getString']
-) => {
+): Yup.ObjectSchema => {
   switch (deploymentType) {
     case ServiceDeploymentType.ServerlessAwsLambda:
       return getValidationSchemaWithRegion(getString)
@@ -249,7 +250,7 @@ export function getCDStageValidationSchema(
   })
 }
 
-export function getECSInfraValidationSchema(getString: UseStringsReturn['getString']) {
+export function getECSInfraValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
     region: Yup.lazy((): Yup.Schema<unknown> => {
@@ -263,7 +264,7 @@ export function getECSInfraValidationSchema(getString: UseStringsReturn['getStri
   })
 }
 
-export function getAsgInfraValidationSchema(getString: UseStringsReturn['getString']) {
+export function getAsgInfraValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
     region: Yup.lazy((): Yup.Schema<unknown> => {
@@ -272,7 +273,9 @@ export function getAsgInfraValidationSchema(getString: UseStringsReturn['getStri
   })
 }
 
-export function getGoogleCloudFunctionInfraValidationSchema(getString: UseStringsReturn['getString']) {
+export function getGoogleCloudFunctionInfraValidationSchema(
+  getString: UseStringsReturn['getString']
+): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
     project: Yup.string().required(getString('common.validation.fieldIsRequired', { name: getString('projectLabel') })),
@@ -280,7 +283,14 @@ export function getGoogleCloudFunctionInfraValidationSchema(getString: UseString
   })
 }
 
-export function getAwsLambdaInfraValidationSchema(getString: UseStringsReturn['getString']) {
+export function getAwsLambdaInfraValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+  return Yup.object().shape({
+    connectorRef: getConnectorSchema(getString),
+    region: Yup.string().required(getString('validation.regionRequired'))
+  })
+}
+
+export function getAwsSamInfraValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
     connectorRef: getConnectorSchema(getString),
     region: Yup.string().required(getString('validation.regionRequired'))
@@ -299,7 +309,7 @@ export const isMultiArtifactSourceEnabled = (
   )
 }
 
-export const shouldFetchFieldData = (fieldList: string[]) => {
+export const shouldFetchFieldData = (fieldList: string[]): boolean => {
   const emptyOrRuntimeFields = fieldList.filter((currField: string) => {
     return (
       isEmpty(currField) ||

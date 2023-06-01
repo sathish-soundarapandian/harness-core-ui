@@ -76,7 +76,7 @@ export function OverviewExecutionListEmpty({
     >
       {!loading && (
         <Layout.Horizontal className={cx({ [css.imageNoPipeline]: !hasNoPipelines })}>
-          <Layout.Vertical width="40%">
+          <Layout.Vertical width="50%">
             <Text
               className={css.noPipelineText}
               margin={{ top: 'medium', bottom: 'small' }}

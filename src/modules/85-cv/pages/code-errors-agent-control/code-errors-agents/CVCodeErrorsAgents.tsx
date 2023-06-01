@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { AgentListProps, ErrorTracking } from '@et/ErrorTrackingApp'
+import { AgentListProps, ErrorTracking } from '@cet/ErrorTrackingApp'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { useStrings } from 'framework/strings'
 

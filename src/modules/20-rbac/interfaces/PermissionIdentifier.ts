@@ -26,18 +26,25 @@ export enum PermissionIdentifier {
   EDIT_PIPELINE = 'core_pipeline_edit',
   DELETE_PIPELINE = 'core_pipeline_delete',
   EXECUTE_PIPELINE = 'core_pipeline_execute',
+
+  // service permissions
   VIEW_SERVICE = 'core_service_view',
   EDIT_SERVICE = 'core_service_edit',
   DELETE_SERVICE = 'core_service_delete',
   RUNTIMEACCESS_SERVICE = 'core_service_access',
+
+  // environment permissions
   VIEW_ENVIRONMENT = 'core_environment_view',
   EDIT_ENVIRONMENT = 'core_environment_edit',
   DELETE_ENVIRONMENT = 'core_environment_delete',
   RUNTIMEACCESS_ENVIRONMENT = 'core_environment_access',
+
+  // environment group permissions
   VIEW_ENVIRONMENT_GROUP = 'core_environmentgroup_view',
   EDIT_ENVIRONMENT_GROUP = 'core_environmentgroup_edit',
   DELETE_ENVIRONMENT_GROUP = 'core_environmentgroup_delete',
   RUNTIMEACCESS_ENVIRONMENT_GROUP = 'core_environmentgroup_access',
+
   VIEW_USERGROUP = 'core_usergroup_view',
   MANAGE_USERGROUP = 'core_usergroup_manage',
   VIEW_USER = 'core_user_view',

@@ -20,7 +20,8 @@ import { act } from 'react-dom/test-utils'
 import {
   useGetIpAllowlistConfigsQuery,
   useUpdateIpAllowlistConfigMutation,
-  useDeleteIpAllowlistConfigMutation
+  useDeleteIpAllowlistConfigMutation,
+  validateIpAddressAllowlistedOrNot
 } from '@harnessio/react-ng-manager-client'
 import type {
   IpAllowlistConfigListResponseResponse,
@@ -31,10 +32,21 @@ import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { VIEWS } from '@auth-settings/pages/Configuration/Configuration'
+import { mockResponseValidateIpAddressCustomBlockSuccess } from '@auth-settings/__test__/mock'
+import { fetchCurrentIp } from '@auth-settings/services/ipAddressService'
 import Allowlist from '../Allowlist'
 import { mockIpAllowlistConfigResponse } from './mock'
 
 jest.mock('@harnessio/react-ng-manager-client')
+const validateIpAddressAllowlistedOrNotMock = validateIpAddressAllowlistedOrNot as jest.MockedFunction<any>
+validateIpAddressAllowlistedOrNotMock.mockImplementation(() => {
+  return Promise.resolve({ content: mockResponseValidateIpAddressCustomBlockSuccess })
+})
+jest.mock('@auth-settings/services/ipAddressService')
+const fetchCurrentIpMock = fetchCurrentIp as jest.MockedFunction<any>
+fetchCurrentIpMock.mockImplementation(() => {
+  return Promise.resolve('192.168.1.1')
+})
 
 type MockWithDataReturn = {
   mockGetIpAllowlistPromise: jest.Mock
@@ -152,7 +164,15 @@ describe('Allowlist List View', () => {
   test('Toggle enabled/disabled', async () => {
     const toggleEnabledOrDisabled = await findAllByTestId('toggleEnabled')
     await userEvent.click(toggleEnabledOrDisabled[0]!) // Clicking on disabled
+    await waitFor(() => getByTextFromRTL(document.body, 'authSettings.yesIamSure'))
+    const dialogContainer = findDialogContainer()
+    expect(dialogContainer).toBeTruthy()
+    const iAmSureCheckbox = queryByText(dialogContainer as HTMLElement, 'authSettings.yesIamSure')
+    await userEvent.click(iAmSureCheckbox!)
+    const enableButton = queryByText(dialogContainer as HTMLElement, 'enable')
+    await userEvent.click(enableButton!)
     expect(mockUpdateIpAllowlistPromise).toHaveBeenCalledTimes(1)
+
     await userEvent.click(toggleEnabledOrDisabled[1]!) // Clicking on enabled
     expect(mockUpdateIpAllowlistPromise).toHaveBeenCalledTimes(2)
   })

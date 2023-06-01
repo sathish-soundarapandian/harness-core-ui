@@ -314,7 +314,13 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                               type={StepType.CustomVariable}
                               stepViewType={StepViewType.StageVariable}
                               onUpdate={({ variables }: CustomVariablesData) => {
-                                handleStepWidgetUpdate({ ...stage?.stage, variables } as StageElementConfig)
+                                if (!variables.length) {
+                                  const clonedStage = stage?.stage
+                                  delete clonedStage?.variables
+                                  handleStepWidgetUpdate({ ...clonedStage } as StageElementConfig)
+                                } else {
+                                  handleStepWidgetUpdate({ ...stage?.stage, variables } as StageElementConfig)
+                                }
                               }}
                               customStepProps={{
                                 formName: 'addEditStageCustomVariableForm',

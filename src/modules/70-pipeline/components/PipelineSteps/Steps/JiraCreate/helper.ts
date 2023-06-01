@@ -9,6 +9,7 @@ import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOpt
 import type { FormikProps } from 'formik'
 import { find, isEmpty, isUndefined } from 'lodash-es'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { isFieldFixed } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { JiraFieldNG, JiraUserData } from 'services/cd-ng'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import type { JiraCreateData, JiraCreateFieldType, JiraFieldNGWithValue } from './types'
@@ -59,6 +60,13 @@ export const processFieldsForSubmit = (values: JiraCreateData): JiraCreateFieldT
     }
   })
   return toReturn
+}
+
+export const getIsCurrentFieldASelectedOptionalField = (
+  selectedFields: JiraCreateFieldType[],
+  field: JiraFieldNG
+): boolean => {
+  return !isEmpty(selectedFields?.find(selectedField => selectedField.name === field.name)) && !field.required
 }
 
 export const getInitialValueForSelectedField = (
@@ -248,4 +256,12 @@ export const addSelectedOptionalFields = (
     return selectedField1.name > selectedField2.name ? 1 : -1
   })
   formik.setFieldValue('spec.selectedOptionalFields', selectedFieldsToBeAddedInForm)
+}
+
+export const getProcessedValueForNonKVField = (field: JiraFieldNGWithValue) => {
+  return field?.schema?.type === 'option' && isFieldFixed(field.value as string)
+    ? field?.schema?.array
+      ? (field.value as MultiSelectOption[])?.map(i => i?.value)?.toString()
+      : (field.value as SelectOption)?.value?.toString()
+    : field?.value?.toString()
 }

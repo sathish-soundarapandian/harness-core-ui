@@ -1582,7 +1582,7 @@ export const plansData = {
           title: 'Integrations',
           detailedFeature: [
             {
-              title: 'SCM support (GitHub, BitBucket, GitLab, CodeCommit, generic)',
+              title: 'SCM support (GitHub, Bitbucket, GitLab, CodeCommit, generic)',
               link: null,
               communityValue: 'Yes',
               communityText: null,
@@ -5026,7 +5026,7 @@ export const plansData = {
           title: 'Integrations',
           detailedFeature: [
             {
-              title: 'SCM support (GitHub, BitBucket, GitLab, CodeCommit, generic)',
+              title: 'SCM support (GitHub, Bitbucket, GitLab, CodeCommit, generic)',
               link: null,
               communityValue: null,
               communityText: null,

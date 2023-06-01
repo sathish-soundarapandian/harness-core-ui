@@ -14,7 +14,7 @@ interface WithFFProviderProps {
   children: JSX.Element
   config: {
     identifier: string
-    experimentKey: string
+    experimentKey: string | string[]
   }
   fallback: JSX.Element
 }
@@ -23,7 +23,7 @@ function WithFFProvider({ featureFlagsToken, children, config, fallback }: WithF
   const onError = (): void => {
     setHasError(true)
   }
-  return hasError ? (
+  return hasError || !featureFlagsToken ? (
     fallback
   ) : featureFlagsToken ? (
     <FFContextProvider

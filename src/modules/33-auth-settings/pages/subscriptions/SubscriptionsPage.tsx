@@ -30,6 +30,7 @@ import {
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetCommunity } from '@common/utils/utils'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import SubscriptionTab from './SubscriptionTab'
 import css from './SubscriptionsPage.module.scss'
 
@@ -65,7 +66,7 @@ const MODULE_SELECT_CARDS: ModuleSelectCard[] = [
   },
   {
     icon: 'srm-with-dark-text',
-    module: ModuleName.CV
+    module: ModuleName.SRM
   },
   {
     icon: 'sto-with-dark-text',
@@ -85,8 +86,8 @@ const SubscriptionsPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { moduleCard } = useQueryParams<{ moduleCard?: ModuleName }>()
-  const { CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CET_ENABLED } = useFeatureFlags()
-  const { licenseInformation, updateLicenseStore } = useLicenseStore()
+  const { CENG_ENABLED, CET_ENABLED } = useFeatureFlags()
+  const { FF_LICENSE_STATE, licenseInformation, updateLicenseStore } = useLicenseStore()
   const history = useHistory()
   const isCommunity = useGetCommunity()
   useEffect(() => {
@@ -100,23 +101,23 @@ const SubscriptionsPage: React.FC = () => {
         case ModuleName.CD:
           accumulator.push(card)
           break
-        case ModuleName.CV:
+        case ModuleName.SRM:
           accumulator.push(card)
           break
         case ModuleName.CI:
-          CING_ENABLED && accumulator.push(card)
+          accumulator.push(card)
           break
         case ModuleName.CE:
           CENG_ENABLED && accumulator.push(card)
           break
         case ModuleName.CF:
-          CFNG_ENABLED && accumulator.push(card)
+          FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)
           break
         case ModuleName.STO:
-          licenseInformation['STO']?.status === 'ACTIVE' && accumulator.push(card)
+          licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)
           break
         case ModuleName.CHAOS:
-          licenseInformation['CHAOS']?.status === 'ACTIVE' && accumulator.push(card)
+          licenseInformation['CHAOS']?.status === LICENSE_STATE_VALUES.ACTIVE && accumulator.push(card)
           break
         case ModuleName.CET:
           CET_ENABLED && accumulator.push(card)
@@ -246,12 +247,7 @@ const SubscriptionsPage: React.FC = () => {
         <Heading color={Color.BLACK} padding={{ bottom: 'large' }}>
           {isCommunity ? null : getString('common.plans.title')}
         </Heading>
-        <Layout.Horizontal
-          className={css.moduleSelectCards}
-          flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-        >
-          {isCommunity ? null : getModuleSelectElements()}
-        </Layout.Horizontal>
+        <Container className={css.moduleSelectCards}>{isCommunity ? null : getModuleSelectElements()}</Container>
         {innerContent}
       </Layout.Vertical>
     </>

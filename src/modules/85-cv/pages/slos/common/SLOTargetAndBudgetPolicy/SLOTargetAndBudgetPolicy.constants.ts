@@ -5,10 +5,5 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export enum PeriodTypeEnum {
-  ROLLING = 'Rolling',
-  CALENDAR = 'Calender'
-}
-
 export const dateFormatSLOTarget = 'YYYY-MM-DD'
 export const flexStart = 'flex-start'

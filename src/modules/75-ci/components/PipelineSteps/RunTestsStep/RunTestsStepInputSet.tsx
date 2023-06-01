@@ -349,6 +349,54 @@ export const RunTestsStepInputSetBasic: React.FC<RunTestsStepProps> = props => {
           />
         </Container>
       )}
+      {getMultiTypeFromValue(template?.spec?.testRoot) === MultiTypeInputType.RUNTIME && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <MultiTypeTextField
+            className={css.removeBpLabelMargin}
+            name={`${prefix}spec.testRoot`}
+            label={
+              <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+                <Text className={css.inpLabel} color={Color.GREY_600} font={{ size: 'small', weight: 'semi-bold' }}>
+                  {getString('ci.runTestsStep.testRoot')}
+                </Text>
+                &nbsp;
+                {getOptionalSubLabel(getString, 'testRoot')}
+              </Layout.Horizontal>
+            }
+            multiTextInputProps={{
+              multiTextInputProps: {
+                expressions,
+                allowableTypes
+              },
+              disabled: readonly
+            }}
+          />
+        </Container>
+      )}
+      {getMultiTypeFromValue(template?.spec?.testGlobs) === MultiTypeInputType.RUNTIME && (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <MultiTypeTextField
+            className={css.removeBpLabelMargin}
+            name={`${prefix}spec.testGlobs`}
+            label={
+              <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+                <Text className={css.inpLabel} color={Color.GREY_600} font={{ size: 'small', weight: 'semi-bold' }}>
+                  {getString('ci.runTestsStep.testGlobs')}
+                </Text>
+                &nbsp;
+                {getOptionalSubLabel(getString, 'testGlobs')}
+              </Layout.Horizontal>
+            }
+            multiTextInputProps={{
+              multiTextInputProps: {
+                expressions,
+                allowableTypes
+              },
+              disabled: readonly
+            }}
+          />
+        </Container>
+      )}
       {getMultiTypeFromValue(template?.spec?.testAnnotations) === MultiTypeInputType.RUNTIME && (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           <MultiTypeTextField

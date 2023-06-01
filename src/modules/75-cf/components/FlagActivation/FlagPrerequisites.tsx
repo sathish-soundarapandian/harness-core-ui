@@ -124,7 +124,9 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
           .catch(err => {
             showError(get(err, 'data.message', err?.message), undefined, 'cf.patch.prereq.error')
           })
-          .finally(patch.feature.reset)
+          .finally(() => {
+            patch.feature.reset()
+          })
       })
     } else {
       setEditingPrerequisites(true)

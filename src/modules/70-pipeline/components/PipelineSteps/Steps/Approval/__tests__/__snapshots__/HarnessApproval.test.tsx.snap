@@ -1539,21 +1539,67 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
           class="noLookDivider"
         />
         <div
-          class="Accordion--accordion accordion"
+          class="Accordion--accordion accordion accordionStyle"
         >
           <div
             class="Accordion--panel"
             data-open="false"
-            data-testid="optional-config-panel"
+            data-testid="schedule-autoApproval-panel"
           >
             <div
               class="Accordion--summary"
-              data-testid="optional-config-summary"
+              data-testid="schedule-autoApproval-summary"
             >
               <div
-                class="Accordion--label"
+                class=""
               >
-                common.optionalConfig
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-right-small StyledProps--flex StyledProps--flex-alignItems-flex-end"
+                  data-tooltip-id="scheduleAutoApproval"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                  >
+                    pipeline.approvalStep.scheduleAutoApprovalOptional
+                  </p>
+                </div>
+              </div>
+              <div
+                class="Accordion--chevron"
+              />
+            </div>
+            <div
+              class="bp3-collapse Accordion--collapse"
+            >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(-undefinedpx);"
+              />
+            </div>
+          </div>
+          <div
+            class="Accordion--panel"
+            data-open="false"
+            data-testid="approver-inputs-panel"
+          >
+            <div
+              class="Accordion--summary"
+              data-testid="approver-inputs-summary"
+            >
+              <div
+                class=""
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-right-small StyledProps--flex StyledProps--flex-alignItems-flex-end"
+                  data-tooltip-id="approverInputs"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                  >
+                    pipeline.approvalStep.approverInputsOptional
+                  </p>
+                </div>
               </div>
               <div
                 class="Accordion--chevron"
@@ -2212,21 +2258,67 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
           class="noLookDivider"
         />
         <div
-          class="Accordion--accordion accordion"
+          class="Accordion--accordion accordion accordionStyle"
         >
           <div
             class="Accordion--panel"
             data-open="false"
-            data-testid="optional-config-panel"
+            data-testid="schedule-autoApproval-panel"
           >
             <div
               class="Accordion--summary"
-              data-testid="optional-config-summary"
+              data-testid="schedule-autoApproval-summary"
             >
               <div
-                class="Accordion--label"
+                class=""
               >
-                common.optionalConfig
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-right-small StyledProps--flex StyledProps--flex-alignItems-flex-end"
+                  data-tooltip-id="scheduleAutoApproval"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                  >
+                    pipeline.approvalStep.scheduleAutoApprovalOptional
+                  </p>
+                </div>
+              </div>
+              <div
+                class="Accordion--chevron"
+              />
+            </div>
+            <div
+              class="bp3-collapse Accordion--collapse"
+            >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(-undefinedpx);"
+              />
+            </div>
+          </div>
+          <div
+            class="Accordion--panel"
+            data-open="false"
+            data-testid="approver-inputs-panel"
+          >
+            <div
+              class="Accordion--summary"
+              data-testid="approver-inputs-summary"
+            >
+              <div
+                class=""
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-right-small StyledProps--flex StyledProps--flex-alignItems-flex-end"
+                  data-tooltip-id="approverInputs"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                  >
+                    pipeline.approvalStep.approverInputsOptional
+                  </p>
+                </div>
               </div>
               <div
                 class="Accordion--chevron"
@@ -2868,21 +2960,67 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
           class="noLookDivider"
         />
         <div
-          class="Accordion--accordion accordion"
+          class="Accordion--accordion accordion accordionStyle"
         >
           <div
             class="Accordion--panel"
             data-open="false"
-            data-testid="optional-config-panel"
+            data-testid="schedule-autoApproval-panel"
           >
             <div
               class="Accordion--summary"
-              data-testid="optional-config-summary"
+              data-testid="schedule-autoApproval-summary"
             >
               <div
-                class="Accordion--label"
+                class=""
               >
-                common.optionalConfig
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-right-small StyledProps--flex StyledProps--flex-alignItems-flex-end"
+                  data-tooltip-id="scheduleAutoApproval"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                  >
+                    pipeline.approvalStep.scheduleAutoApprovalOptional
+                  </p>
+                </div>
+              </div>
+              <div
+                class="Accordion--chevron"
+              />
+            </div>
+            <div
+              class="bp3-collapse Accordion--collapse"
+            >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(-undefinedpx);"
+              />
+            </div>
+          </div>
+          <div
+            class="Accordion--panel"
+            data-open="false"
+            data-testid="approver-inputs-panel"
+          >
+            <div
+              class="Accordion--summary"
+              data-testid="approver-inputs-summary"
+            >
+              <div
+                class=""
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-right-small StyledProps--flex StyledProps--flex-alignItems-flex-end"
+                  data-tooltip-id="approverInputs"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                  >
+                    pipeline.approvalStep.approverInputsOptional
+                  </p>
+                </div>
               </div>
               <div
                 class="Accordion--chevron"
@@ -3533,21 +3671,67 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
           class="noLookDivider"
         />
         <div
-          class="Accordion--accordion accordion"
+          class="Accordion--accordion accordion accordionStyle"
         >
           <div
             class="Accordion--panel"
             data-open="false"
-            data-testid="optional-config-panel"
+            data-testid="schedule-autoApproval-panel"
           >
             <div
               class="Accordion--summary"
-              data-testid="optional-config-summary"
+              data-testid="schedule-autoApproval-summary"
             >
               <div
-                class="Accordion--label"
+                class=""
               >
-                common.optionalConfig
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-right-small StyledProps--flex StyledProps--flex-alignItems-flex-end"
+                  data-tooltip-id="scheduleAutoApproval"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                  >
+                    pipeline.approvalStep.scheduleAutoApprovalOptional
+                  </p>
+                </div>
+              </div>
+              <div
+                class="Accordion--chevron"
+              />
+            </div>
+            <div
+              class="bp3-collapse Accordion--collapse"
+            >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(-undefinedpx);"
+              />
+            </div>
+          </div>
+          <div
+            class="Accordion--panel"
+            data-open="false"
+            data-testid="approver-inputs-panel"
+          >
+            <div
+              class="Accordion--summary"
+              data-testid="approver-inputs-summary"
+            >
+              <div
+                class=""
+              >
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-right-small StyledProps--flex StyledProps--flex-alignItems-flex-end"
+                  data-tooltip-id="approverInputs"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                  >
+                    pipeline.approvalStep.approverInputsOptional
+                  </p>
+                </div>
               </div>
               <div
                 class="Accordion--chevron"

@@ -42,6 +42,9 @@ const RemoteCommits = lazy(() => import('code/Commits'))
 const RemoteBranches = lazy(() => import('code/Branches'))
 
 // eslint-disable-next-line import/no-unresolved
+const RemoteTags = lazy(() => import('code/Tags'))
+
+// eslint-disable-next-line import/no-unresolved
 const RemoteWebhooks = lazy(() => import('code/Webhooks'))
 
 // eslint-disable-next-line import/no-unresolved
@@ -161,6 +164,10 @@ export const Commits: React.FC<RemoteViewProps> = props => (
 
 export const Branches: React.FC<RemoteViewProps> = props => (
   <CODERemoteComponentMounter component={<RemoteBranches {...props} />} />
+)
+
+export const Tags: React.FC<RemoteViewProps> = props => (
+  <CODERemoteComponentMounter component={<RemoteTags {...props} />} />
 )
 
 export const PullRequests: React.FC<RemoteViewProps> = props => (

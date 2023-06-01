@@ -11,6 +11,8 @@ import { minBy } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { RiskData } from 'services/cv'
 import { TWENTY_FOUR_HOURS } from '@cv/pages/slos/CVSLODetailsPage/DetailsPanel/DetailsPanel.constants'
+
+import { nearestMinutes } from '@cv/utils/CommonUtils'
 import {
   DAYS,
   daysTimeFormat,
@@ -132,8 +134,10 @@ export function calculateStartAndEndTimes(
 ): [number, number] | undefined {
   if (!timestamps?.length) return
   const startTime = Math.floor(startXPercentage * (timestamps[timestamps.length - 1] - timestamps[0]) + timestamps[0])
+  const nearest5MinutesStartTime = nearestMinutes(5, moment(startTime)).valueOf()
   const endTime = Math.floor(endXPercentage * (timestamps[timestamps.length - 1] - timestamps[0]) + timestamps[0])
-  return [startTime, endTime]
+  const nearest5MinutesEndTime = nearestMinutes(5, moment(endTime)).valueOf()
+  return [nearest5MinutesStartTime, nearest5MinutesEndTime]
 }
 
 export function calculateLowestHealthScoreBar(

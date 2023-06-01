@@ -105,7 +105,7 @@ describe('CVSLOsListingPage', () => {
     cy.contains('p', 'All').click({ force: true })
 
     cy.findAllByTestId('sloTargetAndBudget-filter').click()
-    cy.contains('p', 'Calender').click({ force: true })
+    cy.contains('p', 'Calendar').click({ force: true })
     cy.contains('h2', 'You don’t have any SLO created yet').should('be.visible')
     cy.findAllByTestId('sloTargetAndBudget-filter').click()
     cy.contains('p', 'Rolling').click({ force: true })

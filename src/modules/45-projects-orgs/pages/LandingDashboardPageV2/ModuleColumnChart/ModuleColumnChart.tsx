@@ -14,6 +14,7 @@ interface ModuleColumnChartProps {
   isExpanded?: boolean
   timeRangeLabel?: string
   timeRange?: number[]
+  yAxisLabel?: string
 }
 
 interface DeltaProps {
@@ -95,7 +96,7 @@ export const Delta: React.FC<DeltaProps> = ({ countChangeInfo }) => {
 }
 
 const ModuleColumnChart: React.FC<ModuleColumnChartProps> = props => {
-  const { count, countChangeInfo, data, isExpanded, timeRangeLabel } = props
+  const { count, countChangeInfo, data, isExpanded, timeRangeLabel, yAxisLabel } = props
 
   return (
     <>
@@ -144,7 +145,10 @@ const ModuleColumnChart: React.FC<ModuleColumnChartProps> = props => {
             yAxis: {
               visible: isExpanded,
               startOnTick: false,
-              endOnTick: false
+              endOnTick: false,
+              title: {
+                text: yAxisLabel
+              }
             },
             legend: { enabled: isExpanded },
             tooltip: {

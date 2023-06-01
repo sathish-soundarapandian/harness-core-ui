@@ -11,7 +11,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import { Button, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
-import type { ModuleName } from 'framework/types/ModuleName'
+import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
@@ -34,13 +34,17 @@ const SubscriptionDetailsCardFooter = ({
 }: SubscriptionDetailsCardFooterProps): ReactElement => {
   const { getString } = useStrings()
   const history = useHistory()
+  let moduleCloned = module
+  if (module.toLowerCase() === 'srm') {
+    moduleCloned = ModuleName.CV
+  }
   const { accountId } = useParams<AccountPathProps>()
   const FREE_PLAN_ENABLED = !isOnPrem()
   function handleSubscribeClick(): void {
     history.push(
       routes.toModuleTrialHome({
         accountId,
-        module: module.toLowerCase() as Module
+        module: moduleCloned.toLowerCase() as Module
       })
     )
   }

@@ -50,6 +50,13 @@ DefaultSettingsFactory.registerCategory('CONNECTORS', {
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
 })
 
+DefaultSettingsFactory.registerCategory('CD', {
+  icon: 'cd',
+  label: 'common.purpose.cd.fullText',
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto'],
+  settingsAndGroupDisplayOrder: [SettingType.EMAIL_TO_NON_HARNESS_USERS]
+})
+
 DefaultSettingsFactory.registerCategory('GIT_EXPERIENCE', {
   icon: 'git-experience-setting',
   iconProps: { color: Color.GREY_900, size: 16 },
@@ -86,6 +93,12 @@ DefaultSettingsFactory.registerGroupHandler(SettingGroups.PERSPECTIVES_PREFERENC
     SettingType.INCLUDE_GCP_DISCOUNTS,
     SettingType.SHOW_GCP_COST_AS
   ]
+})
+
+DefaultSettingsFactory.registerSettingHandler(SettingType.EMAIL_TO_NON_HARNESS_USERS, {
+  label: 'defaultSettings.emailToNonHarnessUsers',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'CD'
 })
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.SHOW_ANOMALIES, {

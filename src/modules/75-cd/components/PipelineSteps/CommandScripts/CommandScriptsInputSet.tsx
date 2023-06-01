@@ -15,6 +15,7 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import { InputOutputVariablesInputSet } from '../Common/InputOutputVariablesInputSet/InputOutputVariablesInputSet'
 import type { CommandScriptsData, CommandScriptsFormData } from './CommandScriptsTypes'
 import { CommandListInputSet } from './CommandListInputSet'
@@ -36,7 +37,6 @@ export function CommandScriptsInputSet(props: CommandScriptsInputSetProps): Reac
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-
   return (
     <FormikForm data-testid="command-scripts-input-set-form">
       {getMultiTypeFromValue(inputSetData.template?.timeout) === MultiTypeInputType.RUNTIME && (
@@ -55,6 +55,15 @@ export function CommandScriptsInputSet(props: CommandScriptsInputSetProps): Reac
           fieldPath={'timeout'}
           template={inputSetData?.template}
           className={cx(stepCss.formGroup, stepCss.sm)}
+        />
+      )}
+      {getMultiTypeFromValue(inputSetData.template?.spec?.onDelegate) === MultiTypeInputType.RUNTIME && (
+        <FormMultiTypeCheckboxField
+          name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}spec.onDelegate`}
+          label={getString('cd.steps.commands.runOnDelegate')}
+          disabled={inputSetData.readonly}
+          checkboxStyle={{ flexGrow: 'unset' }}
+          multiTypeTextbox={{ expressions, allowableTypes, width: 300 }}
         />
       )}
 

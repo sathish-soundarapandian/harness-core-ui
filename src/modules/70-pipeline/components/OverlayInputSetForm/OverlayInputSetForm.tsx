@@ -30,7 +30,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   OverlayInputSetResponse,
   useGetPipeline,
-  Failure,
   useGetInputSetsListForPipeline,
   useGetOverlayInputSetForPipeline,
   useCreateOverlayInputSetForPipeline,
@@ -633,7 +632,7 @@ export function OverlayInputSetForm({
     // Toaster is not required for RemoteFetchFailed
     clear()
     showError(
-      defaultTo((hasAnyApiError.data as Failure)?.message, getString('commonError')),
+      defaultTo(getRBACErrorMessage(hasAnyApiError), getString('commonError')),
       undefined,
       'pipeline.common.error'
     )

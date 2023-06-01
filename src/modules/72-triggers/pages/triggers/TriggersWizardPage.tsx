@@ -23,6 +23,7 @@ import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
 import { isEmpty, isUndefined, merge, defaultTo, noop, get, omitBy, omit } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
+import { getPipelineInputs, InputsResponseBody } from '@harnessio/react-pipeline-service-client'
 import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import { connectorUrlType } from '@connectors/constants'
@@ -166,6 +167,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   } = useQueryParams<TriggerGitQueryParams>()
   const history = useHistory()
   const { getString } = useStrings()
+  const [pipelineInputs, setPipelineInputs] = useState<InputsResponseBody>({})
   const { data: template, loading: fetchingTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
       accountIdentifier: accountId,
@@ -311,6 +313,25 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     }
   })
 
+  useEffect(() => {
+    if (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)) {
+      getPipelineInputs({
+        org: orgIdentifier,
+        project: projectIdentifier,
+        pipeline: pipelineIdentifier,
+        queryParams: {
+          repo_name: repoIdentifier,
+          branch_name: branch,
+          connector_ref: pipelineConnectorRef
+        }
+      })
+        .then(response => {
+          setPipelineInputs(response.content)
+        })
+        .catch((err: Error) => setErrorToasterMessage(err.message))
+    }
+  }, [CI_YAML_VERSIONING])
+
   const { isGithubWebhookAuthenticationEnabled } = useIsGithubWebhookAuthenticationEnabled()
 
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
@@ -430,7 +451,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   }, [loadingGetTrigger, fetchingTemplate, loadingPipeline, loadingResolvedChildPipeline, loadingMergeInputSet])
 
   useDeepCompareEffect(() => {
-    if (shouldRenderWizard && template?.data?.inputSetTemplateYaml !== undefined) {
+    if (template?.data?.inputSetTemplateYaml !== undefined) {
       if (onEditInitialValues?.pipeline && !isMergedPipelineReady) {
         let newOnEditPipeline = merge(
           parse(template?.data?.inputSetTemplateYaml)?.pipeline,
@@ -466,13 +487,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         setCurrentPipeline(newPipeline)
       }
     }
-  }, [
-    template?.data?.inputSetTemplateYaml,
-    onEditInitialValues?.pipeline,
-    resolvedMergedPipeline,
-    fetchingTemplate,
-    loadingGetTrigger
-  ])
+  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline])
 
   useEffect(() => {
     if (triggerResponse?.data?.enabled === false) {
@@ -1407,7 +1422,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         } else if (status === ResponseStatus.SUCCESS) {
           showSuccess(
             getString('triggers.toast.successfulCreate', {
-              name: data?.name
+              name: data?.name,
+              enabled: data?.enabled ? getString('triggers.enabled') : getString('triggers.disabled')
             })
           )
           history.push(
@@ -1914,6 +1930,18 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         }
       }
     }
+    if (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)) {
+      // inputSetRefs is required if Input Set is required to run pipeline
+      if (!isEmpty(pipelineInputs.inputs) || !isEmpty(pipelineInputs.options?.clone)) {
+        if (!formikProps?.values?.inputSetSelected?.length) {
+          _inputSetRefsError = getString('triggers.inputSetV1Required')
+        }
+
+        if (parsedTriggerYaml?.trigger?.inputSetRefs?.length || formikProps?.values?.inputSetRefs?.length) {
+          _inputSetRefsError = ''
+        }
+      }
+    }
 
     const { values, setErrors, setSubmitting } = formikProps
     let latestPipelineFromYamlView
@@ -1939,6 +1967,9 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined
+    const V1TriggerError = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
+      ? omitBy({ inputSetRefs: _inputSetRefsError }, value => !value)
+      : undefined
     // https://github.com/formium/formik/issues/1392
     const errors: any = await {
       ...runPipelineFormErrors
@@ -1948,6 +1979,10 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       setErrors(gitXErrors)
       setFormErrors(gitXErrors)
       return gitXErrors
+    } else if (V1TriggerError && Object.keys(V1TriggerError).length) {
+      setErrors(V1TriggerError)
+      setFormErrors(V1TriggerError)
+      return V1TriggerError
     } else if (!isEmpty(runPipelineFormErrors)) {
       setErrors(runPipelineFormErrors)
       return runPipelineFormErrors
@@ -2117,6 +2152,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       >
         <TriggerOverviewPanel />
         <SchedulePanel isFixedUTCTime={isFixedUTCTimeSchedulePanel} />
+
         {isSimplifiedYAML ? (
           <WebhookPipelineInputPanelV1 gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
         ) : (

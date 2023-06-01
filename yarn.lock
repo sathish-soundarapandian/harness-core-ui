@@ -1749,15 +1749,15 @@
     "@contentful/rich-text-react-renderer" "^15.12.0"
     contentful "^9.1.20"
 
-"@harness/icons@1.141.0":
-  version "1.141.0"
-  resolved "https://npm.pkg.github.com/download/@harness/icons/1.141.0/60f335cf0dbe6cc42098d2b96e5c921bdb109bfb#60f335cf0dbe6cc42098d2b96e5c921bdb109bfb"
-  integrity sha512-N05iGVPW/OtMsbOfpV2q2vAhRwt3n5M9V7Ni6V+vEpEjiufGR+dJ+z3Y69tH282L3GZaIauCjm8a+SIy/YeGOw==
+"@harness/icons@1.146.0":
+  version "1.146.0"
+  resolved "https://npm.pkg.github.com/download/@harness/icons/1.146.0/dc1af7c71e2e7a0863dc50a6a6581452d7771085#dc1af7c71e2e7a0863dc50a6a6581452d7771085"
+  integrity sha512-tYq/pK/C4gMdo2vBxbGFio+MFPhMd4zPc9fzwdKJG0qaYlumMbVZayT/nFQXtBSJ297n7+Ay9eNLcAfCePfw1g==
 
-"@harness/jarvis@0.16.0":
-  version "0.16.0"
-  resolved "https://npm.pkg.github.com/download/@harness/jarvis/0.16.0/c7e3798237e08bade2c62465c40cd354a61ad390c321ca583603617f1a453691#f3c86b042adae53f6f5e302163f709fca164f495"
-  integrity sha512-jlmpGfemYaAQlYjO2cwxKBQuVuOrSKmP0d388tC7ou1kdgPn5d/SxSC8p5fGOwnaZSqoG/lnhlJtmDb+h9z6yg==
+"@harness/jarvis@0.17.1":
+  version "0.17.1"
+  resolved "https://npm.pkg.github.com/download/@harness/jarvis/0.17.1/cc3e1b0b7f394f0c858cd15a38f3ed6a1b7c5188#cc3e1b0b7f394f0c858cd15a38f3ed6a1b7c5188"
+  integrity sha512-U6klRXbP1C+E5MwwSy9oND6+YDnjy3+DmIpvtXwvNFzVjuhzuD7TRI4r1pEq+0R8yw+J0I1q/TANLjpZBwKAcQ==
   dependencies:
     ajv "^6.12.5"
     better-ajv-errors "^0.6.7"
@@ -1794,10 +1794,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.42/60bc34c133bb40f0e0aa08f80620a1b23f3f089070e8550767e9d3fce8ca6e25#4d3f71026a03c898992d902f13a6c6d9cb0edac6"
   integrity sha512-pwjPYnQ8du1UswlX7A/apewGVDmbmaKKWTQSXtSHhKf9ekZ8WCwVvFcrM8ZIq/QbTn7Z8BXFYtMJdSG25oNtOg==
 
-"@harness/uicore@3.132.0":
-  version "3.132.0"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.132.0/548f23c7db9144ddb6742f6486222d2e50ce1ea9#548f23c7db9144ddb6742f6486222d2e50ce1ea9"
-  integrity sha512-YRyzqcAAKbzptulDZojSNTC4yBDtvB+iKDeSa2pgLZTRVrtTv2Mnmsu+Eyy1QNu7WH8ybi2rk2MI9rvC3mK7Rw==
+"@harness/uicore@3.136.0":
+  version "3.136.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.136.0/67f9c055094ad3b4b49a7843a0829dc06f3299f7#67f9c055094ad3b4b49a7843a0829dc06f3299f7"
+  integrity sha512-IJ7sRYApObqGwQHWJ+lOa+/nMMLjZY3f5Q9A/BoR7xXkKVNyiks2hlsKY+7eY5lJkYYy2OcRKZkDSZ7t7pQeqg==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"
@@ -1868,10 +1868,10 @@
     "@types/qs" "^6.9.7"
     qs "^6.9.4"
 
-"@harnessio/react-ng-manager-client@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@harnessio/react-ng-manager-client/-/react-ng-manager-client-1.2.2.tgz#7a56a811077af7bb376971a5b507909046f28859"
-  integrity sha512-iUcLx6D8NEBMY4SeWQV7twi/mBdoPU1bYfRtM+dynpyTYei1MtRswCCLvSTN/yV95fNd71tWSt0kgLIoKZX+UQ==
+"@harnessio/react-ng-manager-client@^1.2.3":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-ng-manager-client/-/react-ng-manager-client-1.3.0.tgz#358bd9de9f46ac35fd0271128b273e5228a30f96"
+  integrity sha512-QGf9422iXtXSgXqu42W6D1iWluUhP1LlBR4iWOXjQkFT8dR3oDy35WRTevKxTtGYciAo5rBWC2skLYQbkbN5PQ==
   dependencies:
     "@tanstack/react-query" "4.20.4"
     "@types/qs" "^6.9.7"
@@ -1885,6 +1885,11 @@
     "@tanstack/react-query" "4.20.4"
     "@types/qs" "^6.9.7"
     qs "^6.9.4"
+
+"@harnessio/react-ssca-service-client@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-ssca-service-client/-/react-ssca-service-client-0.1.0.tgz#354b4f859f24454e6f6e57a59ad8c81bbb76e079"
+  integrity sha512-IvQ/nGTXPDKrr10qc0UTPjcwCDOCpfeKB6I5wO6iyLWfkmsQTRPMiQSFlr1xaslXREBi12u+pXo0oBlRpJ+1Rg==
 
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
@@ -10639,7 +10644,7 @@ isobject@^4.0.0:
 isomorphic-fetch@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/isomorphic-fetch/-/isomorphic-fetch-3.0.0.tgz#0267b005049046d2421207215d45d6a262b8b8b4"
-  integrity "sha1-AmewBQSQRtJCEgchXUXWomK4uLQ= sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA=="
+  integrity sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA==
   dependencies:
     node-fetch "^2.6.1"
     whatwg-fetch "^3.4.1"
@@ -10825,6 +10830,14 @@ jest-environment-node@^26.6.0:
     "@types/node" "*"
     jest-mock "^26.6.0"
     jest-util "^26.6.0"
+
+jest-fetch-mock@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/jest-fetch-mock/-/jest-fetch-mock-3.0.3.tgz#31749c456ae27b8919d69824f1c2bd85fe0a1f3b"
+  integrity sha512-Ux1nWprtLrdrH4XwE7O7InRY6psIi3GOsqNESJgMJ+M5cv4A8Lh7SN9d2V2kKRZ8ebAfcd1LNyZguAOb6JiDqw==
+  dependencies:
+    cross-fetch "^3.0.4"
+    promise-polyfill "^8.1.3"
 
 jest-get-type@^26.3.0:
   version "26.3.0"
@@ -14000,6 +14013,11 @@ promise-inflight@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
+
+promise-polyfill@^8.1.3:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-8.3.0.tgz#9284810268138d103807b11f4e23d5e945a4db63"
+  integrity sha512-H5oELycFml5yto/atYqmjyigJoAo3+OXwolYiH7OfQuYlAqhxNvTfiNMbV9hsC6Yp83yE5r2KTVmtrG6R9i6Pg==
 
 promise.allsettled@^1.0.0:
   version "1.0.2"

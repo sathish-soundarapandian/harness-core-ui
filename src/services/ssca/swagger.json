@@ -51,7 +51,7 @@
           "content": {
             "application/json": {
               "schema": { "$ref": "#/components/schemas/LoginRequestBody" },
-              "example": { "password": "Sit est." }
+              "example": { "password": "Ea delectus rerum." }
             }
           }
         },
@@ -60,8 +60,8 @@
             "description": "OK response.",
             "content": {
               "application/json": {
-                "schema": { "type": "string", "example": "Dignissimos et ab corporis natus." },
-                "example": "Omnis voluptate sit ut qui delectus."
+                "schema": { "type": "string", "example": "Veniam sed explicabo quis." },
+                "example": "Laboriosam nesciunt dolorem fugit neque ut qui."
               }
             }
           },
@@ -97,38 +97,55 @@
         "tags": ["artifact"],
         "description": "create an artifact in the artifact db",
         "operationId": "artifact#createArtifact",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "description": "Harness account ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": { "type": "string", "description": "Harness account ID", "example": "eBqAoNchMLKigC_qZ5EdC" },
+            "example": "eBqAoNchMLKigC_qZ5EdC"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "description": "Harness organization ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Harness organization ID",
+              "default": "",
+              "example": "test-org"
+            },
+            "example": "test-org"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "description": "Harness project ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Harness project ID",
+              "default": "",
+              "example": "test-project"
+            },
+            "example": "test-project"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": { "$ref": "#/components/schemas/CreateArtifactRequestBody" },
               "example": {
-                "accountIdentifier": "eBqAoNchMLKigC_qZ5EdC",
-                "artifact": {
-                  "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
-                  "name": "harness/image",
-                  "tag": "latest",
-                  "type": "repo/image",
-                  "url": "https://console.cloud.google.com/gcr/images/imageName"
-                },
-                "attestation": {
-                  "isAttested": false,
-                  "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
-                },
-                "metadata": {
-                  "buildUrl": "log4Jj",
-                  "format": "log4Jj",
-                  "pipelineExecutionId": "log4Jj",
-                  "pipelineIdentifier": "log4Jj",
-                  "sequenceId": "log4Jj",
-                  "stageIdentifier": "log4Jj",
-                  "stepExecutionId": "Sunt voluptatem voluptas voluptatem facere nihil.",
-                  "stepIdentifier": "log4Jj",
-                  "tool": "log4Jj"
-                },
-                "orgIdentifier": "test-org",
-                "projectIdentifier": "test-project",
-                "sbom": { "data": "RXJyb3IgZGljdGEu", "name": "SBOM_Name", "url": "https://console.google.com/storage" }
+                "name": "Non non.",
+                "tag": "Perferendis quis.",
+                "type": "Pariatur inventore cupiditate tempora.",
+                "url": "Eius quasi."
               }
             }
           }
@@ -139,7 +156,7 @@
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/CreateArtifactResponseBody" },
-                "example": { "artifactId": "Enim rerum magni rerum molestiae illo praesentium." }
+                "example": { "artifactId": "Quisquam voluptatem nobis temporibus ullam." }
               }
             }
           },
@@ -167,7 +184,8 @@
             "description": "BadGateway: Bad Gateway response.",
             "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           }
-        }
+        },
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
       }
     },
     "/api/v1/artifacts/artifactId/{artifactId}/sbom/{filename}": {
@@ -192,8 +210,8 @@
             "name": "filename",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "example": "Ipsam sunt illum dolore repudiandae fugit." },
-            "example": "Ipsa dolores."
+            "schema": { "type": "string", "example": "Natus voluptatem laboriosam." },
+            "example": "Qui fugiat suscipit architecto veritatis facere."
           }
         ],
         "responses": {
@@ -202,13 +220,13 @@
             "headers": {
               "Content-Length": {
                 "required": true,
-                "schema": { "type": "integer", "example": 2292267092897603485, "format": "int64" },
-                "example": 4086286692912934160
+                "schema": { "type": "integer", "example": 2416345181659951199, "format": "int64" },
+                "example": 4626335941442027473
               },
               "Content-Type": {
                 "required": true,
-                "schema": { "type": "string", "example": "Ratione id officia sed." },
-                "example": "Quod qui."
+                "schema": { "type": "string", "example": "Quasi libero unde veniam omnis." },
+                "example": "Delectus aut commodi quia."
               }
             }
           },
@@ -236,194 +254,23 @@
             "description": "BadGateway: Bad Gateway response.",
             "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           }
-        }
+        },
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
       }
     },
-    "/api/v1/artifacts/{artifactId}": {
+    "/api/v1/artifacts/stepExecutions/{stepExeuctionId}": {
       "get": {
         "tags": ["artifact"],
-        "description": "get artifacts by passing an artifact id",
-        "operationId": "artifact#getArtifactsById",
+        "summary": "getArtifactFromExecutionId artifact",
+        "description": "get the artifact by passing the step execution id and the artifact id",
+        "operationId": "artifact#getArtifactFromExecutionId",
         "parameters": [
-          {
-            "name": "artifactId",
-            "in": "path",
-            "description": "ID of the artifact to fetch",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "description": "ID of the artifact to fetch",
-              "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
-            },
-            "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK response.",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/GetArtifactsByIDResponseBody" },
-                "example": {
-                  "artifacts": [
-                    {
-                      "artifact": {
-                        "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
-                        "name": "harness/image",
-                        "tag": "latest",
-                        "type": "repo/image",
-                        "url": "https://console.cloud.google.com/gcr/images/imageName"
-                      },
-                      "attestation": {
-                        "isAttested": false,
-                        "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
-                      },
-                      "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
-                    },
-                    {
-                      "artifact": {
-                        "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
-                        "name": "harness/image",
-                        "tag": "latest",
-                        "type": "repo/image",
-                        "url": "https://console.cloud.google.com/gcr/images/imageName"
-                      },
-                      "attestation": {
-                        "isAttested": false,
-                        "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
-                      },
-                      "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "BadRequest: Bad Request response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          },
-          "401": {
-            "description": "Unauthorized: Unauthorized response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          },
-          "403": {
-            "description": "Forbidden: Forbidden response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          },
-          "404": {
-            "description": "NotFound: Not Found response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          },
-          "500": {
-            "description": "InternalServer: Internal Server Error response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          },
-          "502": {
-            "description": "BadGateway: Bad Gateway response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          }
-        }
-      }
-    },
-    "/api/v1/artifacts/{artifactId}/stepExecutions/{stepExeuctionId}/sbom/{filename}": {
-      "get": {
-        "tags": ["artifact"],
-        "summary": "getSBOMFromExecutionId artifact",
-        "description": "get the SBOM by passing the step execution id and the artifact id",
-        "operationId": "artifact#getSBOMFromExecutionId",
-        "parameters": [
-          {
-            "name": "artifactId",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string", "example": "Ut doloremque et." },
-            "example": "Aspernatur ab ab."
-          },
           {
             "name": "stepExeuctionId",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "example": "Minus autem molestias voluptatibus eos et." },
-            "example": "Fugit consequuntur dolores nisi harum."
-          },
-          {
-            "name": "filename",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string", "example": "Laborum assumenda maiores voluptatem enim laborum magni." },
-            "example": "Quasi fugit recusandae id."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK response.",
-            "headers": {
-              "Content-Length": {
-                "required": true,
-                "schema": { "type": "integer", "example": 5779643335059079431, "format": "int64" },
-                "example": 1806106501918562548
-              },
-              "Content-Type": {
-                "required": true,
-                "schema": { "type": "string", "example": "Nobis voluptatem in eaque est dolor." },
-                "example": "Eaque enim sunt."
-              }
-            }
-          },
-          "400": {
-            "description": "BadRequest: Bad Request response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          },
-          "401": {
-            "description": "Unauthorized: Unauthorized response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          },
-          "403": {
-            "description": "Forbidden: Forbidden response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          },
-          "404": {
-            "description": "NotFound: Not Found response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          },
-          "500": {
-            "description": "InternalServer: Internal Server Error response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          },
-          "502": {
-            "description": "BadGateway: Bad Gateway response.",
-            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
-          }
-        }
-      }
-    },
-    "/api/v1/artifacts/{stepExecutionId}/{stageId}/{stepId}": {
-      "get": {
-        "tags": ["artifact"],
-        "description": "get a unique by passing an artifact id and other exeuction details",
-        "operationId": "artifact#getUniqueArtifact",
-        "parameters": [
-          {
-            "name": "stepExecutionId",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string", "example": "Eligendi nihil vero error aut." },
-            "example": "Facilis soluta cupiditate."
-          },
-          {
-            "name": "stageId",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string", "example": "Et molestias sunt eum." },
-            "example": "Provident autem ut expedita."
-          },
-          {
-            "name": "stepId",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string", "example": "Qui distinctio." },
-            "example": "Delectus aut itaque facere minima."
+            "schema": { "type": "string", "example": "Qui eius libero quaerat optio." },
+            "example": "Qui voluptas suscipit."
           }
         ],
         "responses": {
@@ -473,10 +320,639 @@
             "description": "BadGateway: Bad Gateway response.",
             "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           }
-        }
+        },
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
       }
     },
-    "/api/v1/sbomprocessor": {
+    "/api/v1/artifacts/{artifactId}": {
+      "get": {
+        "tags": ["artifact"],
+        "description": "get artifacts by passing an artifact id",
+        "operationId": "artifact#getArtifactsById",
+        "parameters": [
+          {
+            "name": "artifactId",
+            "in": "path",
+            "description": "ID of the artifact to fetch",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID of the artifact to fetch",
+              "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+            },
+            "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetArtifactsByIDOKResponseBody" },
+                "example": {
+                  "artifacts": [
+                    {
+                      "artifact": {
+                        "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                        "name": "harness/image",
+                        "tag": "latest",
+                        "type": "repo/image",
+                        "url": "https://console.cloud.google.com/gcr/images/imageName"
+                      },
+                      "attestation": {
+                        "isAttested": false,
+                        "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                      },
+                      "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+                    },
+                    {
+                      "artifact": {
+                        "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                        "name": "harness/image",
+                        "tag": "latest",
+                        "type": "repo/image",
+                        "url": "https://console.cloud.google.com/gcr/images/imageName"
+                      },
+                      "attestation": {
+                        "isAttested": false,
+                        "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                      },
+                      "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+                    },
+                    {
+                      "artifact": {
+                        "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                        "name": "harness/image",
+                        "tag": "latest",
+                        "type": "repo/image",
+                        "url": "https://console.cloud.google.com/gcr/images/imageName"
+                      },
+                      "attestation": {
+                        "isAttested": false,
+                        "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                      },
+                      "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": {
+              "application/vnd.goa.error": {
+                "schema": { "$ref": "#/components/schemas/GetArtifactsByIDOKResponseBody" }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        },
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
+      }
+    },
+    "/api/v1/artifacts/{artifactId}/stepExecutions/{stepExeuctionId}/sbom/{filename}": {
+      "get": {
+        "tags": ["artifact"],
+        "summary": "getSBOMFromExecutionId artifact",
+        "description": "get the SBOM by passing the step execution id and the artifact id",
+        "operationId": "artifact#getSBOMFromExecutionId",
+        "parameters": [
+          {
+            "name": "artifactId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Blanditiis quasi." },
+            "example": "Eligendi non est voluptas enim iusto sint."
+          },
+          {
+            "name": "stepExeuctionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Autem voluptas non autem eligendi." },
+            "example": "Dolores similique soluta est qui et nihil."
+          },
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Est cupiditate modi ut beatae sint incidunt." },
+            "example": "Eum similique."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "headers": {
+              "Content-Length": {
+                "required": true,
+                "schema": { "type": "integer", "example": 1655436010531254988, "format": "int64" },
+                "example": 4175718494738032012
+              },
+              "Content-Type": {
+                "required": true,
+                "schema": { "type": "string", "example": "Et repellendus unde aut a qui." },
+                "example": "Consequatur voluptas."
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        },
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
+      }
+    },
+    "/api/v1/artifacts/{stepExecutionId}/{stageId}/{stepId}": {
+      "get": {
+        "tags": ["artifact"],
+        "description": "get a unique by passing an artifact id and other exeuction details",
+        "operationId": "artifact#getUniqueArtifact",
+        "parameters": [
+          {
+            "name": "stepExecutionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Ratione consectetur ut cupiditate a cum." },
+            "example": "Quo dolorem porro ipsa."
+          },
+          {
+            "name": "stageId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Officiis quo." },
+            "example": "Laborum recusandae."
+          },
+          {
+            "name": "stepId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "Sed quod numquam illum dolorem non quasi." },
+            "example": "Non asperiores et est ut qui."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetUniqueArtifactResponseBody" },
+                "example": {
+                  "Artifact": {
+                    "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                    "name": "harness/image",
+                    "tag": "latest",
+                    "type": "repo/image",
+                    "url": "https://console.cloud.google.com/gcr/images/imageName"
+                  },
+                  "Attestation": {
+                    "isAttested": false,
+                    "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                  },
+                  "Sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        },
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
+      }
+    },
+    "/api/v1/sbom/enforcement": {
+      "post": {
+        "tags": ["sbomprocessor"],
+        "description": "enforce an sbom",
+        "operationId": "sbomprocessor#enforcesbom",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "description": "Harness account ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": { "type": "string", "description": "Harness account ID", "example": "eBqAoNchMLKigC_qZ5EdC" },
+            "example": "eBqAoNchMLKigC_qZ5EdC"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "description": "Harness organization ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Harness organization ID",
+              "default": "",
+              "example": "test-org"
+            },
+            "example": "test-org"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "description": "Harness project ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Harness project ID",
+              "default": "",
+              "example": "test-project"
+            },
+            "example": "test-project"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/EnforcesbomRequestBody" },
+              "example": {
+                "artifact": { "tag": "latest", "url": "https://console.cloud.google.com/gcr/images/imageName" },
+                "enforcementId": "Ipsa cupiditate.",
+                "policyFileId": "Ut sed natus."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/EnforcesbomResponseBody" },
+                "example": {
+                  "EnforcementId": "Facilis ut voluptatem veritatis molestiae.",
+                  "Status": "Consequatur earum alias distinctio."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        },
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
+      }
+    },
+    "/api/v1/sbom/enforcement/{enforcementId}/": {
+      "get": {
+        "tags": ["enforcement"],
+        "description": "get enforcement by passing an enforcement id",
+        "operationId": "enforcement#getEnforcementResultsById",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to fetch (starting from 0)",
+            "allowEmptyValue": true,
+            "schema": {
+              "type": "integer",
+              "description": "Page number to fetch (starting from 0)",
+              "default": 0,
+              "example": 4,
+              "minimum": 0
+            },
+            "example": 4
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Number of results per page",
+            "allowEmptyValue": true,
+            "schema": {
+              "type": "integer",
+              "description": "Number of results per page",
+              "default": 30,
+              "example": 50,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "example": 50
+          },
+          {
+            "name": "enforcementId",
+            "in": "path",
+            "description": "ID of the enforcement to fetch",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID of the enforcement to fetch",
+              "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+            },
+            "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "headers": {
+              "X-Page-Number": {
+                "description": "Page number (starting from 0)",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "description": "Page number (starting from 0)",
+                  "example": 4,
+                  "format": "int64"
+                },
+                "example": 4
+              },
+              "X-Page-Size": {
+                "description": "Requested page size",
+                "required": true,
+                "schema": { "type": "integer", "description": "Requested page size", "example": 20, "format": "int64" },
+                "example": 20
+              },
+              "X-Total-Elements": {
+                "description": "Total results available",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "description": "Total results available",
+                  "example": 230,
+                  "format": "int64"
+                },
+                "example": 230
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetEnforcementResultsByIDResponseBody" },
+                "example": {
+                  "results": [
+                    {
+                      "X-Page-Number": 4455264459284945669,
+                      "X-Page-Size": 5444989672659418041,
+                      "X-Total-Elements": 2159132255301284028,
+                      "accountId": "Nam molestiae aut nihil.",
+                      "artifactId": "Sunt officiis molestias et quas.",
+                      "enforcementId": "Ut unde est non et.",
+                      "imageName": "Possimus aliquid.",
+                      "license": "Voluptatum esse dicta quis adipisci aliquid.",
+                      "name": "A ea consequatur aut architecto aut.",
+                      "orchestrationId": "Debitis quis sit accusamus sed illum cupiditate.",
+                      "orgIdentifier": "Voluptates eaque sint.",
+                      "packageManager": "Et blanditiis laudantium.",
+                      "projectIdentifier": "Non ratione quis expedita quae.",
+                      "purl": "Eius dolores aliquid dolorem.",
+                      "supplier": "Consequuntur sit dolore voluptatem.",
+                      "tag": "Culpa provident est rerum sequi impedit.",
+                      "version": "Id enim quo excepturi.",
+                      "violationDetails": "Dolor suscipit nisi dolorum.",
+                      "violationType": "Quia aut ab."
+                    },
+                    {
+                      "X-Page-Number": 4455264459284945669,
+                      "X-Page-Size": 5444989672659418041,
+                      "X-Total-Elements": 2159132255301284028,
+                      "accountId": "Nam molestiae aut nihil.",
+                      "artifactId": "Sunt officiis molestias et quas.",
+                      "enforcementId": "Ut unde est non et.",
+                      "imageName": "Possimus aliquid.",
+                      "license": "Voluptatum esse dicta quis adipisci aliquid.",
+                      "name": "A ea consequatur aut architecto aut.",
+                      "orchestrationId": "Debitis quis sit accusamus sed illum cupiditate.",
+                      "orgIdentifier": "Voluptates eaque sint.",
+                      "packageManager": "Et blanditiis laudantium.",
+                      "projectIdentifier": "Non ratione quis expedita quae.",
+                      "purl": "Eius dolores aliquid dolorem.",
+                      "supplier": "Consequuntur sit dolore voluptatem.",
+                      "tag": "Culpa provident est rerum sequi impedit.",
+                      "version": "Id enim quo excepturi.",
+                      "violationDetails": "Dolor suscipit nisi dolorum.",
+                      "violationType": "Quia aut ab."
+                    },
+                    {
+                      "X-Page-Number": 4455264459284945669,
+                      "X-Page-Size": 5444989672659418041,
+                      "X-Total-Elements": 2159132255301284028,
+                      "accountId": "Nam molestiae aut nihil.",
+                      "artifactId": "Sunt officiis molestias et quas.",
+                      "enforcementId": "Ut unde est non et.",
+                      "imageName": "Possimus aliquid.",
+                      "license": "Voluptatum esse dicta quis adipisci aliquid.",
+                      "name": "A ea consequatur aut architecto aut.",
+                      "orchestrationId": "Debitis quis sit accusamus sed illum cupiditate.",
+                      "orgIdentifier": "Voluptates eaque sint.",
+                      "packageManager": "Et blanditiis laudantium.",
+                      "projectIdentifier": "Non ratione quis expedita quae.",
+                      "purl": "Eius dolores aliquid dolorem.",
+                      "supplier": "Consequuntur sit dolore voluptatem.",
+                      "tag": "Culpa provident est rerum sequi impedit.",
+                      "version": "Id enim quo excepturi.",
+                      "violationDetails": "Dolor suscipit nisi dolorum.",
+                      "violationType": "Quia aut ab."
+                    },
+                    {
+                      "X-Page-Number": 4455264459284945669,
+                      "X-Page-Size": 5444989672659418041,
+                      "X-Total-Elements": 2159132255301284028,
+                      "accountId": "Nam molestiae aut nihil.",
+                      "artifactId": "Sunt officiis molestias et quas.",
+                      "enforcementId": "Ut unde est non et.",
+                      "imageName": "Possimus aliquid.",
+                      "license": "Voluptatum esse dicta quis adipisci aliquid.",
+                      "name": "A ea consequatur aut architecto aut.",
+                      "orchestrationId": "Debitis quis sit accusamus sed illum cupiditate.",
+                      "orgIdentifier": "Voluptates eaque sint.",
+                      "packageManager": "Et blanditiis laudantium.",
+                      "projectIdentifier": "Non ratione quis expedita quae.",
+                      "purl": "Eius dolores aliquid dolorem.",
+                      "supplier": "Consequuntur sit dolore voluptatem.",
+                      "tag": "Culpa provident est rerum sequi impedit.",
+                      "version": "Id enim quo excepturi.",
+                      "violationDetails": "Dolor suscipit nisi dolorum.",
+                      "violationType": "Quia aut ab."
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        },
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
+      }
+    },
+    "/api/v1/sbom/enforcement/{enforcementId}/summary": {
+      "get": {
+        "tags": ["enforcement"],
+        "description": "get enforcement by passing an enforcement id",
+        "operationId": "enforcement#getEnforcementResultSummaryById",
+        "parameters": [
+          {
+            "name": "enforcementId",
+            "in": "path",
+            "description": "ID of the enforcement to fetch",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "ID of the enforcement to fetch",
+              "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+            },
+            "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetEnforcementResultSummaryByIDResponseBody" },
+                "example": {
+                  "allowListViolationCount": 2352380669026654394,
+                  "artifact": {
+                    "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                    "name": "harness/image",
+                    "tag": "latest",
+                    "type": "repo/image",
+                    "url": "https://console.cloud.google.com/gcr/images/imageName"
+                  },
+                  "denyListViolationCount": 1049477891797204286,
+                  "enforcementId": "Et aperiam non dicta odio.",
+                  "status": "Doloribus aliquid id corrupti."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BadRequest: Bad Request response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "401": {
+            "description": "Unauthorized: Unauthorized response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "403": {
+            "description": "Forbidden: Forbidden response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "404": {
+            "description": "NotFound: Not Found response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "500": {
+            "description": "InternalServer: Internal Server Error response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          },
+          "502": {
+            "description": "BadGateway: Bad Gateway response.",
+            "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
+          }
+        },
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
+      }
+    },
+    "/api/v1/sbom/process": {
       "post": {
         "tags": ["sbomprocessor"],
         "description": "process \u0026 inject sbom",
@@ -544,15 +1020,11 @@
                   "pipelineIdentifier": "log4Jj",
                   "sequenceId": "log4Jj",
                   "stageIdentifier": "log4Jj",
-                  "stepExecutionId": "Earum in aut commodi est aut.",
+                  "stepExecutionId": "Sit animi dignissimos.",
                   "stepIdentifier": "log4Jj",
                   "tool": "log4Jj"
                 },
-                "sbom": {
-                  "data": "RG9sb3JlbXF1ZSBzZXF1aSBldCBzaXQgaGljIGV1bS4=",
-                  "name": "SBOM_Name",
-                  "url": "https://console.google.com/storage"
-                }
+                "sbom": { "data": "VXQgcXVpYSBldC4=", "name": "SBOM_Name", "url": "https://console.google.com/storage" }
               }
             }
           }
@@ -563,7 +1035,7 @@
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/ProcesssbomResponseBody" },
-                "example": { "ArtifactId": "Quas qui possimus deleniti." }
+                "example": { "ArtifactId": "Magni eum incidunt." }
               }
             }
           },
@@ -591,7 +1063,8 @@
             "description": "BadGateway: Bad Gateway response.",
             "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           }
-        }
+        },
+        "security": [{ "jwt_header_Authorization": ["core_project_view"] }]
       }
     },
     "/api/v1/search/findany": {
@@ -646,12 +1119,7 @@
               "example": {
                 "ExecutionIdentifier": "test-org",
                 "PipelineIdentifier": "test-org",
-                "packageIdentifiers": [
-                  { "name": "log4Jj" },
-                  { "name": "log4Jj" },
-                  { "name": "log4Jj" },
-                  { "name": "log4Jj" }
-                ]
+                "packageIdentifiers": [{ "name": "log4Jj" }, { "name": "log4Jj" }]
               }
             }
           }
@@ -664,30 +1132,6 @@
                 "schema": { "$ref": "#/components/schemas/FindResponseBody" },
                 "example": {
                   "packageReferences": [
-                    {
-                      "AccountName": "log4Jj",
-                      "ArtifactName": "log4Jj",
-                      "BuildURL": "log4Jj",
-                      "Originator": "log4Jj",
-                      "PipelineIdentifier": "log4Jj",
-                      "SBOMURL": "log4Jj",
-                      "SequenceId": "log4Jj",
-                      "StageName": "log4Jj",
-                      "VersionInfo": "log4Jj",
-                      "name": "log4Jj"
-                    },
-                    {
-                      "AccountName": "log4Jj",
-                      "ArtifactName": "log4Jj",
-                      "BuildURL": "log4Jj",
-                      "Originator": "log4Jj",
-                      "PipelineIdentifier": "log4Jj",
-                      "SBOMURL": "log4Jj",
-                      "SequenceId": "log4Jj",
-                      "StageName": "log4Jj",
-                      "VersionInfo": "log4Jj",
-                      "name": "log4Jj"
-                    },
                     {
                       "AccountName": "log4Jj",
                       "ArtifactName": "log4Jj",
@@ -844,18 +1288,6 @@
                       "StageName": "log4Jj",
                       "VersionInfo": "log4Jj",
                       "name": "log4Jj"
-                    },
-                    {
-                      "AccountName": "log4Jj",
-                      "ArtifactName": "log4Jj",
-                      "BuildURL": "log4Jj",
-                      "Originator": "log4Jj",
-                      "PipelineIdentifier": "log4Jj",
-                      "SBOMURL": "log4Jj",
-                      "SequenceId": "log4Jj",
-                      "StageName": "log4Jj",
-                      "VersionInfo": "log4Jj",
-                      "name": "log4Jj"
                     }
                   ]
                 }
@@ -932,6 +1364,77 @@
             "content": { "application/vnd.goa.error": { "schema": { "$ref": "#/components/schemas/Error" } } }
           }
         }
+      }
+    },
+    "/api/v1/token": {
+      "get": {
+        "tags": ["token"],
+        "description": "Issue a cross-service token",
+        "operationId": "token#IssueToken",
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "description": "Harness account ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": { "type": "string", "description": "Harness account ID", "example": "eBqAoNchMLKigC_qZ5EdC" },
+            "example": "eBqAoNchMLKigC_qZ5EdC"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "description": "Harness organization ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Harness organization ID",
+              "default": "",
+              "example": "test-org"
+            },
+            "example": "test-org"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "description": "Harness project ID",
+            "allowEmptyValue": true,
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Harness project ID",
+              "default": "",
+              "example": "test-project"
+            },
+            "example": "test-project"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TokenResponse" },
+                "example": {
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized response.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TokenResponse" },
+                "example": {
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "Authorization_header_Authorization": [] }]
       }
     }
   },
@@ -1038,37 +1541,101 @@
       "CreateArtifactRequestBody": {
         "type": "object",
         "properties": {
-          "accountIdentifier": {
+          "name": { "type": "string", "description": "name of the artifact", "example": "Sunt libero." },
+          "tag": { "type": "string", "description": "tag of the artifact", "example": "Alias odit dolores." },
+          "type": { "type": "string", "description": "type of the artifact", "example": "Delectus rerum aut." },
+          "url": {
             "type": "string",
-            "description": "Harness account ID",
-            "example": "eBqAoNchMLKigC_qZ5EdC"
-          },
+            "description": "Url of the artifact",
+            "example": "In expedita vel ut deleniti odio."
+          }
+        },
+        "example": {
+          "name": "Rerum dolore ab voluptatibus maiores distinctio.",
+          "tag": "Quia eius distinctio.",
+          "type": "Eum temporibus et quas reprehenderit occaecati sit.",
+          "url": "Odit mollitia."
+        },
+        "required": ["type", "name", "tag", "url"]
+      },
+      "CreateArtifactResponseBody": {
+        "type": "object",
+        "properties": {
+          "artifactId": { "type": "string", "example": "Expedita sint consectetur iusto quas nesciunt." }
+        },
+        "example": { "artifactId": "Et et fugiat sed est." },
+        "required": ["artifactId"]
+      },
+      "EnforcementResult": {
+        "type": "object",
+        "properties": {
+          "X-Page-Number": { "type": "integer", "example": 8117399083745191757, "format": "int64" },
+          "X-Page-Size": { "type": "integer", "example": 3710173863350148935, "format": "int64" },
+          "X-Total-Elements": { "type": "integer", "example": 308794110482796765, "format": "int64" },
+          "accountId": { "type": "string", "example": "Ducimus quas deserunt magnam mollitia." },
+          "artifactId": { "type": "string", "example": "Placeat accusamus praesentium quae rerum laudantium animi." },
+          "enforcementId": { "type": "string", "example": "Quis omnis harum." },
+          "imageName": { "type": "string", "example": "Enim debitis molestiae." },
+          "license": { "type": "string", "example": "Aspernatur qui necessitatibus quo et." },
+          "name": { "type": "string", "example": "Nostrum natus." },
+          "orchestrationId": { "type": "string", "example": "Modi quas ducimus qui dignissimos atque velit." },
+          "orgIdentifier": { "type": "string", "example": "Quis dolore sed nulla porro quibusdam." },
+          "packageManager": { "type": "string", "example": "Ut et quibusdam et impedit." },
+          "projectIdentifier": { "type": "string", "example": "Nisi quisquam molestiae." },
+          "purl": { "type": "string", "example": "Consequatur fugiat at accusantium." },
+          "supplier": { "type": "string", "example": "Perspiciatis consectetur quasi unde." },
+          "tag": { "type": "string", "example": "Incidunt tempora excepturi maxime aut hic." },
+          "version": { "type": "string", "example": "Itaque sunt dolores." },
+          "violationDetails": { "type": "string", "example": "Minima veritatis et adipisci et error eius." },
+          "violationType": { "type": "string", "example": "Sit dignissimos illo quas suscipit nihil commodi." }
+        },
+        "description": "An enforcement result for a matched rule",
+        "example": {
+          "X-Page-Number": 9116631697622022775,
+          "X-Page-Size": 1244478005191513145,
+          "X-Total-Elements": 6740073654921225614,
+          "accountId": "Laborum cupiditate dicta quia corrupti optio.",
+          "artifactId": "Eos et.",
+          "enforcementId": "Ab ut dolores ullam repellendus quia.",
+          "imageName": "Assumenda aliquam eaque provident voluptas itaque.",
+          "license": "Odit officiis hic nemo.",
+          "name": "Eos voluptatem dolores doloribus iure corrupti.",
+          "orchestrationId": "Quia sed.",
+          "orgIdentifier": "Molestiae quia laborum omnis.",
+          "packageManager": "Voluptatum non est.",
+          "projectIdentifier": "Saepe nobis rem quas alias.",
+          "purl": "Dolorem laboriosam autem voluptas.",
+          "supplier": "Et ullam totam ut.",
+          "tag": "Voluptate nesciunt totam fugiat quia voluptate illum.",
+          "version": "Libero culpa.",
+          "violationDetails": "Recusandae modi ut beatae.",
+          "violationType": "Quidem voluptas ea veritatis."
+        },
+        "required": [
+          "enforcementId",
+          "artifactId",
+          "accountId",
+          "violationType",
+          "violationDetails",
+          "name",
+          "version",
+          "supplier",
+          "packageManager",
+          "purl",
+          "license"
+        ]
+      },
+      "EnforcesbomRequestBody": {
+        "type": "object",
+        "properties": {
           "artifact": {
             "type": "object",
             "properties": {
-              "id": {
-                "type": "string",
-                "description": "id of the artifact",
-                "default": "",
-                "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
-              },
-              "name": {
-                "type": "string",
-                "description": "name of the artifact",
-                "default": "",
-                "example": "harness/image"
-              },
               "tag": {
                 "type": "string",
                 "description": "tag of the artifact",
                 "default": "latest",
                 "example": "latest"
-              },
-              "type": {
-                "type": "string",
-                "description": "type of the artifact",
-                "default": "",
-                "example": "repo/image"
               },
               "url": {
                 "type": "string",
@@ -1077,186 +1644,47 @@
                 "example": "https://console.cloud.google.com/gcr/images/imageName"
               }
             },
-            "example": {
-              "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
-              "name": "harness/image",
-              "tag": "latest",
-              "type": "repo/image",
-              "url": "https://console.cloud.google.com/gcr/images/imageName"
-            },
-            "required": ["type", "name", "url"]
+            "example": { "tag": "latest", "url": "https://console.cloud.google.com/gcr/images/imageName" },
+            "required": ["tag", "url"]
           },
-          "attestation": {
-            "type": "object",
-            "properties": {
-              "isAttested": {
-                "type": "boolean",
-                "description": "is the sbom attested or not",
-                "default": false,
-                "example": false
-              },
-              "url": {
-                "type": "string",
-                "description": "url of the attested file",
-                "default": "",
-                "example": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
-              }
-            },
-            "example": {
-              "isAttested": false,
-              "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
-            }
-          },
-          "metadata": {
-            "type": "object",
-            "properties": {
-              "buildUrl": { "type": "string", "description": "BuildURL", "default": "", "example": "log4Jj" },
-              "format": {
-                "type": "string",
-                "description": "stage name where sbom is generated",
-                "default": "",
-                "example": "log4Jj",
-                "minLength": 3
-              },
-              "pipelineExecutionId": {
-                "type": "string",
-                "description": "name of the package",
-                "default": "",
-                "example": "log4Jj",
-                "minLength": 3
-              },
-              "pipelineIdentifier": {
-                "type": "string",
-                "description": "name of the package",
-                "default": "",
-                "example": "log4Jj",
-                "minLength": 3
-              },
-              "sequenceId": {
-                "type": "string",
-                "description": "name of the package",
-                "default": "",
-                "example": "log4Jj"
-              },
-              "stageIdentifier": {
-                "type": "string",
-                "description": "name of the Stage",
-                "default": "",
-                "example": "log4Jj"
-              },
-              "stepExecutionId": {
-                "type": "string",
-                "description": "StepExecutionId",
-                "default": "",
-                "example": "Qui laudantium incidunt nemo id."
-              },
-              "stepIdentifier": {
-                "type": "string",
-                "description": "id of the step",
-                "default": "",
-                "example": "log4Jj"
-              },
-              "tool": {
-                "type": "string",
-                "description": "name of the package",
-                "default": "",
-                "example": "log4Jj",
-                "minLength": 3
-              }
-            },
-            "example": {
-              "buildUrl": "log4Jj",
-              "format": "log4Jj",
-              "pipelineExecutionId": "log4Jj",
-              "pipelineIdentifier": "log4Jj",
-              "sequenceId": "log4Jj",
-              "stageIdentifier": "log4Jj",
-              "stepExecutionId": "Sit corrupti fuga et voluptatem.",
-              "stepIdentifier": "log4Jj",
-              "tool": "log4Jj"
-            }
-          },
-          "orgIdentifier": {
+          "enforcementId": {
             "type": "string",
-            "description": "Harness organization ID",
+            "description": "enforcementId",
             "default": "",
-            "example": "test-org"
+            "example": "Delectus eum rerum."
           },
-          "projectIdentifier": {
-            "type": "string",
-            "description": "Harness project ID",
-            "default": "",
-            "example": "test-project"
-          },
-          "sbom": {
-            "type": "object",
-            "properties": {
-              "data": {
-                "type": "string",
-                "description": "serialised sbom data",
-                "example": "UXVpc3F1YW0gcXVpZGVtIHV0Lg==",
-                "format": "binary"
-              },
-              "name": { "type": "string", "description": "name of the sbom", "default": "", "example": "SBOM_Name" },
-              "url": {
-                "type": "string",
-                "description": "URL of the sbom",
-                "default": "",
-                "example": "https://console.google.com/storage"
-              }
-            },
-            "example": {
-              "data": "Tm9iaXMgbnVtcXVhbS4=",
-              "name": "SBOM_Name",
-              "url": "https://console.google.com/storage"
-            }
-          }
+          "policyFileId": { "type": "string", "default": "", "example": "Consectetur dolor aut in." }
         },
-        "description": "A sbom process request on sscs",
         "example": {
-          "accountIdentifier": "eBqAoNchMLKigC_qZ5EdC",
-          "artifact": {
-            "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
-            "name": "harness/image",
-            "tag": "latest",
-            "type": "repo/image",
-            "url": "https://console.cloud.google.com/gcr/images/imageName"
+          "artifact": { "tag": "latest", "url": "https://console.cloud.google.com/gcr/images/imageName" },
+          "enforcementId": "Eum iste animi eligendi a cumque.",
+          "policyFileId": "Odit officiis non."
+        }
+      },
+      "EnforcesbomResponseBody": {
+        "type": "object",
+        "properties": {
+          "EnforcementId": {
+            "type": "string",
+            "description": "ID of the enforcement of the SBOM",
+            "example": "Cumque quae voluptas."
           },
-          "attestation": {
-            "isAttested": false,
-            "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
-          },
-          "metadata": {
-            "buildUrl": "log4Jj",
-            "format": "log4Jj",
-            "pipelineExecutionId": "log4Jj",
-            "pipelineIdentifier": "log4Jj",
-            "sequenceId": "log4Jj",
-            "stageIdentifier": "log4Jj",
-            "stepExecutionId": "Repellat et distinctio porro suscipit.",
-            "stepIdentifier": "log4Jj",
-            "tool": "log4Jj"
-          },
-          "orgIdentifier": "test-org",
-          "projectIdentifier": "test-project",
-          "sbom": {
-            "data": "U2ludCB2b2x1cHRhdGVzIHZvbHVwdGF0ZW0gZG9sb3JlcyBzaW50IGxpYmVybyBxdWFlcmF0Lg==",
-            "name": "SBOM_Name",
-            "url": "https://console.google.com/storage"
+          "Status": {
+            "type": "string",
+            "description": "Status of the enforcement",
+            "example": "Provident distinctio ea molestias nobis."
           }
         },
-        "required": ["accountIdentifier", "orgIdentifier", "projectIdentifier"]
-      },
-      "CreateArtifactResponseBody": {
-        "type": "object",
-        "properties": { "artifactId": { "type": "string", "example": "Incidunt minima nihil." } },
-        "example": { "artifactId": "Excepturi pariatur commodi." },
-        "required": ["artifactId"]
+        "example": {
+          "EnforcementId": "Molestiae tenetur impedit.",
+          "Status": "Ullam voluptatem nostrum quia voluptas."
+        },
+        "required": ["EnforcementId", "Status"]
       },
       "Error": {
         "type": "object",
         "properties": {
-          "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": false },
+          "fault": { "type": "boolean", "description": "Is the error a server-side fault?", "example": true },
           "id": {
             "type": "string",
             "description": "ID is a unique identifier for this particular occurrence of the problem.",
@@ -1272,8 +1700,8 @@
             "description": "Name is the name of this class of errors.",
             "example": "bad_request"
           },
-          "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": false },
-          "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": true }
+          "temporary": { "type": "boolean", "description": "Is the error temporary?", "example": true },
+          "timeout": { "type": "boolean", "description": "Is the error a timeout?", "example": false }
         },
         "example": { "id": "3F1FKVRR", "message": "Value of ID must be an integer", "name": "bad_request" },
         "required": ["name", "id", "message", "temporary", "timeout", "fault"]
@@ -1285,6 +1713,30 @@
             "type": "array",
             "items": { "$ref": "#/components/schemas/PackageReference" },
             "example": [
+              {
+                "AccountName": "log4Jj",
+                "ArtifactName": "log4Jj",
+                "BuildURL": "log4Jj",
+                "Originator": "log4Jj",
+                "PipelineIdentifier": "log4Jj",
+                "SBOMURL": "log4Jj",
+                "SequenceId": "log4Jj",
+                "StageName": "log4Jj",
+                "VersionInfo": "log4Jj",
+                "name": "log4Jj"
+              },
+              {
+                "AccountName": "log4Jj",
+                "ArtifactName": "log4Jj",
+                "BuildURL": "log4Jj",
+                "Originator": "log4Jj",
+                "PipelineIdentifier": "log4Jj",
+                "SBOMURL": "log4Jj",
+                "SequenceId": "log4Jj",
+                "StageName": "log4Jj",
+                "VersionInfo": "log4Jj",
+                "name": "log4Jj"
+              },
               {
                 "AccountName": "log4Jj",
                 "ArtifactName": "log4Jj",
@@ -1337,18 +1789,6 @@
               "StageName": "log4Jj",
               "VersionInfo": "log4Jj",
               "name": "log4Jj"
-            },
-            {
-              "AccountName": "log4Jj",
-              "ArtifactName": "log4Jj",
-              "BuildURL": "log4Jj",
-              "Originator": "log4Jj",
-              "PipelineIdentifier": "log4Jj",
-              "SBOMURL": "log4Jj",
-              "SequenceId": "log4Jj",
-              "StageName": "log4Jj",
-              "VersionInfo": "log4Jj",
-              "name": "log4Jj"
             }
           ]
         },
@@ -1378,17 +1818,45 @@
         "example": {
           "ExecutionIdentifier": "test-org",
           "PipelineIdentifier": "test-org",
-          "packageIdentifiers": [{ "name": "log4Jj" }, { "name": "log4Jj" }, { "name": "log4Jj" }]
+          "packageIdentifiers": [{ "name": "log4Jj" }, { "name": "log4Jj" }]
         },
         "required": ["packageIdentifiers"]
       },
-      "GetArtifactsByIDResponseBody": {
+      "GetArtifactsByIDOKResponseBody": {
         "type": "object",
         "properties": {
           "artifacts": {
             "type": "array",
             "items": { "$ref": "#/components/schemas/ArtifactResult" },
             "example": [
+              {
+                "artifact": {
+                  "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                  "name": "harness/image",
+                  "tag": "latest",
+                  "type": "repo/image",
+                  "url": "https://console.cloud.google.com/gcr/images/imageName"
+                },
+                "attestation": {
+                  "isAttested": false,
+                  "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                },
+                "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+              },
+              {
+                "artifact": {
+                  "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+                  "name": "harness/image",
+                  "tag": "latest",
+                  "type": "repo/image",
+                  "url": "https://console.cloud.google.com/gcr/images/imageName"
+                },
+                "attestation": {
+                  "isAttested": false,
+                  "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
+                },
+                "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+              },
               {
                 "artifact": {
                   "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
@@ -1449,6 +1917,193 @@
                 "url": "https://storage.googleapis.com/sbom_store_public/kmpySmUISimoRrJL6NL73w/default/SSCS_CI_Plugin_Demo/CKO_SSCA_Pipeline/Build/39/q940CvjoQj-GEInJQfWiwg/sbom"
               },
               "sbom": { "name": "SBOM_Name", "url": "\u003c\u003csbom_location\u003e\u003e" }
+            }
+          ]
+        }
+      },
+      "GetEnforcementResultSummaryByIDResponseBody": {
+        "type": "object",
+        "properties": {
+          "allowListViolationCount": { "type": "integer", "example": 4562096288357759503, "format": "int64" },
+          "artifact": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "id of the artifact",
+                "default": "",
+                "example": "089855ea-f90e-4bea-a5c9-b5ddf85d3180"
+              },
+              "name": {
+                "type": "string",
+                "description": "name of the artifact",
+                "default": "",
+                "example": "harness/image"
+              },
+              "tag": {
+                "type": "string",
+                "description": "tag of the artifact",
+                "default": "latest",
+                "example": "latest"
+              },
+              "type": {
+                "type": "string",
+                "description": "type of the artifact",
+                "default": "",
+                "example": "repo/image"
+              },
+              "url": {
+                "type": "string",
+                "description": "url of the artifact",
+                "default": "",
+                "example": "https://console.cloud.google.com/gcr/images/imageName"
+              }
+            },
+            "example": {
+              "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+              "name": "harness/image",
+              "tag": "latest",
+              "type": "repo/image",
+              "url": "https://console.cloud.google.com/gcr/images/imageName"
+            },
+            "required": ["type", "name", "url"]
+          },
+          "denyListViolationCount": { "type": "integer", "example": 9187622268305166823, "format": "int64" },
+          "enforcementId": { "type": "string", "example": "Est et et." },
+          "status": { "type": "string", "example": "Fuga amet suscipit id magni omnis." }
+        },
+        "example": {
+          "allowListViolationCount": 8984509418568931022,
+          "artifact": {
+            "id": "089855ea-f90e-4bea-a5c9-b5ddf85d3180",
+            "name": "harness/image",
+            "tag": "latest",
+            "type": "repo/image",
+            "url": "https://console.cloud.google.com/gcr/images/imageName"
+          },
+          "denyListViolationCount": 5973053376321299742,
+          "enforcementId": "Aut consequatur iusto qui.",
+          "status": "Qui quia perspiciatis error quod."
+        },
+        "required": ["artifact", "enforcementId", "allowListViolationCount", "denyListViolationCount", "status"]
+      },
+      "GetEnforcementResultsByIDResponseBody": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/EnforcementResult" },
+            "description": "enforcment results for a given enforcement Id",
+            "example": [
+              {
+                "X-Page-Number": 4455264459284945669,
+                "X-Page-Size": 5444989672659418041,
+                "X-Total-Elements": 2159132255301284028,
+                "accountId": "Nam molestiae aut nihil.",
+                "artifactId": "Sunt officiis molestias et quas.",
+                "enforcementId": "Ut unde est non et.",
+                "imageName": "Possimus aliquid.",
+                "license": "Voluptatum esse dicta quis adipisci aliquid.",
+                "name": "A ea consequatur aut architecto aut.",
+                "orchestrationId": "Debitis quis sit accusamus sed illum cupiditate.",
+                "orgIdentifier": "Voluptates eaque sint.",
+                "packageManager": "Et blanditiis laudantium.",
+                "projectIdentifier": "Non ratione quis expedita quae.",
+                "purl": "Eius dolores aliquid dolorem.",
+                "supplier": "Consequuntur sit dolore voluptatem.",
+                "tag": "Culpa provident est rerum sequi impedit.",
+                "version": "Id enim quo excepturi.",
+                "violationDetails": "Dolor suscipit nisi dolorum.",
+                "violationType": "Quia aut ab."
+              },
+              {
+                "X-Page-Number": 4455264459284945669,
+                "X-Page-Size": 5444989672659418041,
+                "X-Total-Elements": 2159132255301284028,
+                "accountId": "Nam molestiae aut nihil.",
+                "artifactId": "Sunt officiis molestias et quas.",
+                "enforcementId": "Ut unde est non et.",
+                "imageName": "Possimus aliquid.",
+                "license": "Voluptatum esse dicta quis adipisci aliquid.",
+                "name": "A ea consequatur aut architecto aut.",
+                "orchestrationId": "Debitis quis sit accusamus sed illum cupiditate.",
+                "orgIdentifier": "Voluptates eaque sint.",
+                "packageManager": "Et blanditiis laudantium.",
+                "projectIdentifier": "Non ratione quis expedita quae.",
+                "purl": "Eius dolores aliquid dolorem.",
+                "supplier": "Consequuntur sit dolore voluptatem.",
+                "tag": "Culpa provident est rerum sequi impedit.",
+                "version": "Id enim quo excepturi.",
+                "violationDetails": "Dolor suscipit nisi dolorum.",
+                "violationType": "Quia aut ab."
+              },
+              {
+                "X-Page-Number": 4455264459284945669,
+                "X-Page-Size": 5444989672659418041,
+                "X-Total-Elements": 2159132255301284028,
+                "accountId": "Nam molestiae aut nihil.",
+                "artifactId": "Sunt officiis molestias et quas.",
+                "enforcementId": "Ut unde est non et.",
+                "imageName": "Possimus aliquid.",
+                "license": "Voluptatum esse dicta quis adipisci aliquid.",
+                "name": "A ea consequatur aut architecto aut.",
+                "orchestrationId": "Debitis quis sit accusamus sed illum cupiditate.",
+                "orgIdentifier": "Voluptates eaque sint.",
+                "packageManager": "Et blanditiis laudantium.",
+                "projectIdentifier": "Non ratione quis expedita quae.",
+                "purl": "Eius dolores aliquid dolorem.",
+                "supplier": "Consequuntur sit dolore voluptatem.",
+                "tag": "Culpa provident est rerum sequi impedit.",
+                "version": "Id enim quo excepturi.",
+                "violationDetails": "Dolor suscipit nisi dolorum.",
+                "violationType": "Quia aut ab."
+              }
+            ]
+          }
+        },
+        "example": {
+          "results": [
+            {
+              "X-Page-Number": 4455264459284945669,
+              "X-Page-Size": 5444989672659418041,
+              "X-Total-Elements": 2159132255301284028,
+              "accountId": "Nam molestiae aut nihil.",
+              "artifactId": "Sunt officiis molestias et quas.",
+              "enforcementId": "Ut unde est non et.",
+              "imageName": "Possimus aliquid.",
+              "license": "Voluptatum esse dicta quis adipisci aliquid.",
+              "name": "A ea consequatur aut architecto aut.",
+              "orchestrationId": "Debitis quis sit accusamus sed illum cupiditate.",
+              "orgIdentifier": "Voluptates eaque sint.",
+              "packageManager": "Et blanditiis laudantium.",
+              "projectIdentifier": "Non ratione quis expedita quae.",
+              "purl": "Eius dolores aliquid dolorem.",
+              "supplier": "Consequuntur sit dolore voluptatem.",
+              "tag": "Culpa provident est rerum sequi impedit.",
+              "version": "Id enim quo excepturi.",
+              "violationDetails": "Dolor suscipit nisi dolorum.",
+              "violationType": "Quia aut ab."
+            },
+            {
+              "X-Page-Number": 4455264459284945669,
+              "X-Page-Size": 5444989672659418041,
+              "X-Total-Elements": 2159132255301284028,
+              "accountId": "Nam molestiae aut nihil.",
+              "artifactId": "Sunt officiis molestias et quas.",
+              "enforcementId": "Ut unde est non et.",
+              "imageName": "Possimus aliquid.",
+              "license": "Voluptatum esse dicta quis adipisci aliquid.",
+              "name": "A ea consequatur aut architecto aut.",
+              "orchestrationId": "Debitis quis sit accusamus sed illum cupiditate.",
+              "orgIdentifier": "Voluptates eaque sint.",
+              "packageManager": "Et blanditiis laudantium.",
+              "projectIdentifier": "Non ratione quis expedita quae.",
+              "purl": "Eius dolores aliquid dolorem.",
+              "supplier": "Consequuntur sit dolore voluptatem.",
+              "tag": "Culpa provident est rerum sequi impedit.",
+              "version": "Id enim quo excepturi.",
+              "violationDetails": "Dolor suscipit nisi dolorum.",
+              "violationType": "Quia aut ab."
             }
           ]
         }
@@ -1553,13 +2208,9 @@
       "LoginRequestBody": {
         "type": "object",
         "properties": {
-          "password": {
-            "type": "string",
-            "description": "Password",
-            "example": "Omnis quia iure laudantium in quasi dolorum."
-          }
+          "password": { "type": "string", "description": "Password", "example": "Unde repellat eos suscipit." }
         },
-        "example": { "password": "Dolore accusantium commodi." },
+        "example": { "password": "Molestiae rerum molestiae qui et quisquam quam." },
         "required": ["password"]
       },
       "PackageIdentifier": {
@@ -1769,7 +2420,7 @@
                 "type": "string",
                 "description": "StepExecutionId",
                 "default": "",
-                "example": "Et numquam nam dolores."
+                "example": "Debitis nihil consectetur aut aperiam enim sint."
               },
               "stepIdentifier": {
                 "type": "string",
@@ -1792,7 +2443,7 @@
               "pipelineIdentifier": "log4Jj",
               "sequenceId": "log4Jj",
               "stageIdentifier": "log4Jj",
-              "stepExecutionId": "Et nisi ab ipsa mollitia earum.",
+              "stepExecutionId": "Eos cumque recusandae.",
               "stepIdentifier": "log4Jj",
               "tool": "log4Jj"
             }
@@ -1803,7 +2454,7 @@
               "data": {
                 "type": "string",
                 "description": "serialised sbom data",
-                "example": "RXN0IGlwc2Eu",
+                "example": "SW1wZWRpdCBjb3JydXB0aSBpZCBjb21tb2RpIHZvbHVwdGF0ZW0gaXBzYSBmdWdpdC4=",
                 "format": "binary"
               },
               "name": { "type": "string", "description": "name of the sbom", "default": "", "example": "SBOM_Name" },
@@ -1815,10 +2466,11 @@
               }
             },
             "example": {
-              "data": "UXVpYnVzZGFtIHByYWVzZW50aXVtIHBsYWNlYXQgdm9sdXB0YXRpYnVzLg==",
+              "data": "VXQgZXN0IHV0IGxhYm9yaW9zYW0gZmFjaWxpcyBlc3NlIGFsaXF1YW0u",
               "name": "SBOM_Name",
               "url": "https://console.google.com/storage"
-            }
+            },
+            "required": ["name"]
           }
         },
         "description": "A sbom process request on sscs",
@@ -1841,12 +2493,12 @@
             "pipelineIdentifier": "log4Jj",
             "sequenceId": "log4Jj",
             "stageIdentifier": "log4Jj",
-            "stepExecutionId": "Non praesentium.",
+            "stepExecutionId": "Et ex blanditiis adipisci at.",
             "stepIdentifier": "log4Jj",
             "tool": "log4Jj"
           },
           "sbom": {
-            "data": "UXVpIG9kaW8gaXVyZSB2ZXJvIHF1b3MgdmVyby4=",
+            "data": "RXJyb3IgYWQgZG9sb3JlcyBldW0gcmVpY2llbmRpcyByZXByZWhlbmRlcml0Lg==",
             "name": "SBOM_Name",
             "url": "https://console.google.com/storage"
           }
@@ -1858,10 +2510,10 @@
           "ArtifactId": {
             "type": "string",
             "description": "ID of the artifact",
-            "example": "Amet repudiandae explicabo ipsam fugit et."
+            "example": "Necessitatibus exercitationem."
           }
         },
-        "example": { "ArtifactId": "Quidem doloribus ducimus." },
+        "example": { "ArtifactId": "Dolore assumenda molestiae nihil nesciunt." },
         "required": ["ArtifactId"]
       },
       "ServiceVersion": {
@@ -1876,15 +2528,34 @@
         },
         "example": { "commit": "96381692bf3a2bd7904769c6886e832435768b57", "version": "v0.123.0" },
         "required": ["version", "commit"]
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Issued cross-service JWT",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          }
+        },
+        "example": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        },
+        "required": ["token"]
       }
     },
-    "securitySchemes": { "jwt_header_Authorization": { "type": "http", "scheme": "bearer" } }
+    "securitySchemes": {
+      "Authorization_header_Authorization": { "type": "apiKey", "name": "Authorization", "in": "header" },
+      "jwt_header_Authorization": { "type": "http", "scheme": "bearer" }
+    }
   },
   "tags": [
     { "name": "dev", "description": "Development endpoints" },
+    { "name": "enforcement", "description": "enforce a given sbom" },
     { "name": "artifact", "description": "generate the artifacts for a given SBOM" },
     { "name": "sbomprocessor", "description": "process the raw sbom \u0026 injest it" },
     { "name": "search", "description": "search across the sbom generated from artifacts" },
-    { "name": "system", "description": "System version and health" }
+    { "name": "system", "description": "System version and health" },
+    { "name": "token", "description": "Internal endpoints for cross-service authentication" }
   ]
 }

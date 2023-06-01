@@ -22,7 +22,7 @@
       "@default-settings/*": ["modules/23-default-settings/*"],
       "@governance/*": ["modules/25-governance/*"],
       "@code/*": ["modules/60-code/*"],
-      "@et/*": ["modules/75-et/*"],
+      "@cet/*": ["modules/75-cet/*"],
       "@auth-settings/*": ["modules/33-auth-settings/*"],
       "@secrets/*": ["modules/30-secrets/*"],
       "@variables/*": ["modules/31-variables/*"],

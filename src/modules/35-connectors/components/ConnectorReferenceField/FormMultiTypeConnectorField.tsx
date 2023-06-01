@@ -130,9 +130,9 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     mini,
     isDrawerMode = false,
     templateProps,
-    version,
     isRecordDisabled,
     renderRecordDisabledWarning,
+    version,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -424,12 +424,12 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         types: Array.isArray(type) ? type : [type]
       }
     }),
-    version,
     getString,
     openConnectorModal,
     setPagedConnectorData,
     isRecordDisabled,
-    renderRecordDisabledWarning
+    renderRecordDisabledWarning,
+    version
   })
   const component = (
     <FormGroup {...rest} labelFor={name} helperText={helperText} intent={intent} style={{ marginBottom: 0 }}>
@@ -442,6 +442,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
           // Other connectors will need to onboard this and add details in collapsed view.
           // Please update the details in RenderConnectorDetails inside ConnectorReferenceField.
           disableCollapse: !(type === 'Github'),
+          showAllTab: true,
           pagination: {
             itemCount: pagedConnectorData?.data?.totalItems || 0,
             pageSize: pagedConnectorData?.data?.pageSize || 10,

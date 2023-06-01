@@ -38,7 +38,7 @@ interface ArtifactSourceTemplateViewProps {
 
 export function ArtifactSourceTemplateView(props: ArtifactSourceTemplateViewProps) {
   const { artifactSourceTemplateData, templateActionBtns } = props
-  const { name, template } = artifactSourceTemplateData
+  const { identifier, template } = artifactSourceTemplateData
 
   return (
     <section className={cx(css.rowItem, css.artifactSourceTemplateContainer, css.artifactRow)} key={'Dockerhub'}>
@@ -46,9 +46,9 @@ export function ArtifactSourceTemplateView(props: ArtifactSourceTemplateViewProp
         className={css.templateEditWrapper}
         flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
       >
-        {name && (
+        {identifier && (
           <Text padding={{ left: 'small' }} width={200} className={css.type} color={Color.BLACK} lineClamp={1}>
-            {name}
+            {identifier}
           </Text>
         )}
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }} style={{ flexGrow: 1 }}>

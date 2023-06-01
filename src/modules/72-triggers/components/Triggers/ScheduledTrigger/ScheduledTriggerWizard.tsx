@@ -466,7 +466,7 @@ export default function ScheduledTriggerWizard(
         setCurrentPipeline(newPipeline)
       }
     }
-  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline, fetchingTemplate])
+  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline])
 
   const [enabledStatus, setEnabledStatus] = useState<boolean>(true)
 
@@ -920,7 +920,8 @@ export default function ScheduledTriggerWizard(
         } else if (status === ResponseStatus.SUCCESS) {
           showSuccess(
             getString('triggers.toast.successfulCreate', {
-              name: data?.name
+              name: data?.name,
+              enabled: data?.enabled ? getString('triggers.enabled') : getString('triggers.disabled')
             })
           )
           returnToTriggersPage()

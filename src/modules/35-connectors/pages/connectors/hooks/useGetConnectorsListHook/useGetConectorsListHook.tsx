@@ -30,7 +30,6 @@ export const useGetConnectorsListHook = (
   catalogueMockData?: UseGetMockData<ResponseConnectorCatalogueResponse>
 ): UseGetConnectorsListHookReturn => {
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
-  const isSpotElastigroupEnabled = useFeatureFlag(FeatureFlag.SPOT_ELASTIGROUP_NG)
   const isTasEnabled = useFeatureFlag(FeatureFlag.CDS_TAS_NG)
   const isTerraformCloudEnabled = useFeatureFlag(FeatureFlag.CDS_TERRAFORM_CLOUD)
 
@@ -151,8 +150,6 @@ export const useGetConnectorsListHook = (
         switch (connector) {
           case Connectors.ERROR_TRACKING:
             return isErrorTrackingEnabled
-          case Connectors.SPOT:
-            return isSpotElastigroupEnabled
           case Connectors.TAS:
             return isTasEnabled
           case Connectors.TERRAFORM_CLOUD:

@@ -18,6 +18,7 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { TrialType } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
@@ -74,7 +75,7 @@ export default function PipelineStudioV1(): React.ReactElement {
     )
   }
   const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, IACM_ENABLED } = useFeatureFlags()
+  const { IACM_ENABLED } = useFeatureFlags()
 
   const { getString } = useStrings()
   return (
@@ -96,7 +97,7 @@ export default function PipelineStudioV1(): React.ReactElement {
           args,
           getString,
           module,
-          isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
+          isCIEnabled: licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE,
           isIACMEnabled: IACM_ENABLED,
           isApprovalStageEnabled: true,
           isPipelineChainingEnabled: true

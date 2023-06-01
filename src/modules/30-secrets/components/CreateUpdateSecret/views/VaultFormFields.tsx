@@ -5,23 +5,60 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent } from 'react'
-import { FormInput, SelectOption, useToaster, Popover, Text, DateInput, Label } from '@harness/uicore'
+import React, { FormEvent, useState } from 'react'
+import {
+  FormInput,
+  SelectOption,
+  useToaster,
+  Popover,
+  Text,
+  Layout,
+  Button,
+  ButtonVariation,
+  getErrorInfoFromErrorObject,
+  DateInput,
+  Label
+} from '@harness/uicore'
+import { pick, omit } from 'lodash-es'
+import { FontVariation, Color } from '@harness/design-system'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import type { FormikContextType } from 'formik'
-import { ConnectorInfoDTO, SecretDTOV2, useGetGcpRegions } from 'services/cd-ng'
+import { validateSecretRef } from '@harnessio/react-ng-manager-client'
+
+import cx from 'classnames'
+import { ConnectorInfoDTO, SecretDTOV2, SecretRequestWrapper, useGetGcpRegions } from 'services/cd-ng'
 
 import { useStrings } from 'framework/strings'
+import type { SecretFormData } from '../CreateUpdateSecret'
 import css from '../CreateUpdateSecret.module.scss'
 interface VaultFormFieldsProps {
   type: SecretDTOV2['type']
   readonly?: boolean
   editing: boolean
   secretManagerType: ConnectorInfoDTO['type']
+  orgIdentifier?: string
+  projIdentifier?: string
+  accountId: string
+  createSecretTextData: (data: SecretFormData, editFlag?: boolean) => SecretRequestWrapper
 }
 
 interface FormikContextProps<T> {
   formik: FormikContextType<T>
+}
+
+const getReferenceTestData = (data: any) => {
+  return {
+    secret: {
+      ...omit(data.secret, ['type']),
+      spec: {
+        ...pick(data.secret.spec, ['value']),
+        ...(data.secret.spec.additionalMetadata && { additonal_metadata: data.secret.spec.additionalMetadata }),
+        type: data.secret.type,
+        secret_manager_identifier: data.secret.spec.secretManagerIdentifier,
+        value_type: data.secret.spec.valueType
+      }
+    }
+  }
 }
 
 const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> = ({
@@ -29,12 +66,17 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
   type,
   editing,
   readonly,
-  secretManagerType
+  secretManagerType,
+  orgIdentifier,
+  projIdentifier,
+  accountId,
+  createSecretTextData
 }) => {
   const { getString } = useStrings()
   const [regions, setRegions] = React.useState<SelectOption[]>([])
   const { showError } = useToaster()
-
+  const [validPath, setValidPath] = useState<boolean>()
+  const [testSecretRefInProgress, setTestSecretRefInProgress] = useState<boolean>(false)
   const { data: regionData, error, refetch } = useGetGcpRegions({ lazy: true })
   if (error) {
     showError(error.message)
@@ -55,10 +97,50 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
     }
   }, [secretManagerType])
 
+  const testSecretRef = async () => {
+    setTestSecretRefInProgress(true)
+    try {
+      const data = await validateSecretRef({
+        pathParams: { org: orgIdentifier, project: projIdentifier, account: accountId },
+
+        body: { ...getReferenceTestData(createSecretTextData(formik?.values, editing)) }
+      })
+
+      if (data.content?.success) {
+        setValidPath(true)
+      } else {
+        setValidPath(false)
+      }
+    } catch (e) {
+      setValidPath(false)
+      showError(getErrorInfoFromErrorObject(e))
+    } finally {
+      setTestSecretRefInProgress(false)
+    }
+  }
   const showExpiresOn =
     ((type === 'SecretText' && formik.values['valueType'] === 'Inline') || type === 'SecretFile') &&
     secretManagerType === 'AzureKeyVault'
-
+  const getvaluesForDisabledTest = () => {
+    const version = formik?.values['version']?.trim()
+    const ref = formik?.values['reference']?.trim()
+    const name = formik?.values['name']?.trim()
+    return { version, ref, name }
+  }
+  const getTestDisabledMessage = () => {
+    const { version, ref, name } = getvaluesForDisabledTest()
+    if (secretManagerType === 'GcpSecretManager' && (!version || !ref || !name)) {
+      return getString('secrets.secret.secretNameReferenceAndVersionRequired')
+    } else if (!ref || !name) {
+      return getString('secrets.secret.referenceRequired')
+    } else {
+      return undefined
+    }
+  }
+  const isTestBtnDisabled = () => {
+    const { version, ref, name } = getvaluesForDisabledTest()
+    return !ref || !name || (secretManagerType === 'GcpSecretManager' && !version)
+  }
   return (
     <>
       {type === 'SecretText' ? (
@@ -94,12 +176,54 @@ const VaultFormFields: React.FC<VaultFormFieldsProps & FormikContextProps<any>> 
               }}
             />
           ) : null}
-          {formik.values['valueType'] === 'Reference' ? (
-            <FormInput.Text
-              name="reference"
-              label={getString('secrets.secret.referenceSecret')}
-              placeholder={getString('secrets.secret.placeholderSecretReference')}
-            />
+          {formik?.values['valueType'] === 'Reference' ? (
+            <Layout.Vertical spacing={'none'} className={css.refernceSecretLayout}>
+              <Layout.Horizontal
+                flex={{ alignItems: 'flex-end', justifyContent: 'space-between' }}
+                margin={{ bottom: 'small' }}
+              >
+                <FormInput.Text
+                  className={css.referenceSecret}
+                  name="reference"
+                  disabled={testSecretRefInProgress}
+                  intent={validPath === false ? 'danger' : 'none'}
+                  onChange={() => {
+                    setValidPath(undefined)
+                  }}
+                  label={getString('secrets.secret.referenceSecret')}
+                  placeholder={getString('secrets.secret.placeholderSecretReference')}
+                />
+                <Button
+                  className={cx({ [css.testBtn]: !isTestBtnDisabled() })}
+                  tooltipProps={{
+                    className: cx({ [css.testBtn]: isTestBtnDisabled() })
+                  }}
+                  tooltip={getTestDisabledMessage()}
+                  disabled={isTestBtnDisabled()}
+                  text={getString('test')}
+                  onClick={testSecretRef}
+                  variation={ButtonVariation.SECONDARY}
+                ></Button>
+              </Layout.Horizontal>
+              {validPath !== undefined &&
+                (validPath ? (
+                  <Text
+                    font={{ variation: FontVariation.FORM_LABEL }}
+                    icon={'command-artifact-check'}
+                    iconProps={{ intent: 'success', color: Color.GREEN_800, size: 12 }}
+                  >
+                    {getString('secrets.secret.validReferencePath')}
+                  </Text>
+                ) : (
+                  <Text
+                    font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}
+                    icon={'circle-cross'}
+                    iconProps={{ intent: 'danger', size: 12 }}
+                  >
+                    {getString('secrets.secret.invalidReferencePath')}
+                  </Text>
+                ))}
+            </Layout.Vertical>
           ) : null}
         </>
       ) : null}

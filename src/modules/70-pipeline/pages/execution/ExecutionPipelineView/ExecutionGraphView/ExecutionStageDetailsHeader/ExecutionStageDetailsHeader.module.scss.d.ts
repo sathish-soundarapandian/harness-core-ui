@@ -15,7 +15,6 @@ declare const styles: {
   readonly main: string
   readonly moreInfo: string
   readonly stageDetails: string
-  readonly stageName: string
   readonly stageTop: string
   readonly timeDisplay: string
   readonly timeLabel: string

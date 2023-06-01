@@ -686,7 +686,7 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
     errors
   }: ValidateInputSetFieldArgs): void {
     this.validateArtifactInputSetFields({
-      artifactType: data.artifacts?.primary?.type,
+      artifactType: data?.artifacts?.primary?.type,
       data,
       dataPathToField: 'artifacts.primary.spec',
       template,

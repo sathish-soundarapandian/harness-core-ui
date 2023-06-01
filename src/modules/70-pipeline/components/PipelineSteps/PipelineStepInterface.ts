@@ -43,7 +43,7 @@ export enum StepType {
   KubernetesDirect = 'KubernetesDirect',
   K8sServiceSpec = 'K8sServiceSpec',
   K8sRollingDeploy = 'K8sRollingDeploy',
-  K8sBlueGreenStageScaleDownStep = 'K8sBlueGreenStageScaleDownStep',
+  K8sBlueGreenStageScaleDown = 'K8sBlueGreenStageScaleDown',
   CustomVariable = 'CustomVariable',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessGCP = 'ServerlessGCP',
@@ -206,7 +206,14 @@ export enum StepType {
   Sniper = 'Sniper',
   Metasploit = 'Metasploit',
   Brakeman = 'Brakeman',
-  KubernetesAws = 'KubernetesAws'
+  AwsSamDeploy = 'AwsSamDeploy',
+  AwsSamBuild = 'AwsSamBuild',
+  Fossa = 'Fossa',
+  Semgrep = 'Semgrep',
+  KubernetesAws = 'KubernetesAws',
+  AwsSamService = 'AwsSamService',
+  AwsSamInfra = 'AwsSamInfra',
+  IACMTerraformPlugin = 'IACMTerraformPlugin'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

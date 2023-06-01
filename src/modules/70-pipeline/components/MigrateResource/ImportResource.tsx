@@ -33,6 +33,7 @@ import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandl
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import type { ExtraQueryParams, InitialValuesType, ModifiedInitialValuesType } from './MigrateUtils'
 import css from './MigrateResource.module.scss'
 
@@ -68,7 +69,7 @@ export default function ImportResource({
   const { getString } = useStrings()
   const formikRef = useRef<FormikProps<ModifiedInitialValuesType>>(null)
   const [isForceImport, setIsForceImport] = useState<boolean>()
-
+  const { getRBACErrorMessage } = useRBACError()
   const getReourceTypeText = (): string => {
     if (resourceType === ResourceType.PIPELINES) {
       return getString('common.pipeline')
@@ -109,7 +110,7 @@ export default function ImportResource({
       onFailure?.()
     } else {
       clear()
-      showError((response as any).message ?? getString('somethingWentWrong'))
+      showError(getRBACErrorMessage(response as any) || getString('somethingWentWrong'))
       onFailure?.()
     }
   }
@@ -121,7 +122,7 @@ export default function ImportResource({
       onFailure?.()
     } else {
       setIsLoading(false)
-      showError(err.message ?? getString('somethingWentWrong'))
+      showError(getRBACErrorMessage(err as RBACError) || getString('somethingWentWrong'))
       onFailure?.()
     }
   }

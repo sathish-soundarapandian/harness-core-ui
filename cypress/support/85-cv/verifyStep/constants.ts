@@ -35,6 +35,7 @@ export const serviceEnvironmentTest1Call = `/cv/api/monitored-service/service-en
 export const serviceEnvironmentTest2Call = `/cv/api/monitored-service/service-environment?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&environmentIdentifier=prod&serviceIdentifier=testService2`
 export const serviceEnvironmentTest3Call = `/cv/api/monitored-service/service-environment?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&environmentIdentifier=${ENV}&serviceIdentifier=testService3`
 export const overviewCall = `/cv/api/account/${accountId}/orgs/default/projects/${project}/verifications/GZNwefkdR2aBhc7owmJ1-w/overview?routingId=${accountId}`
+export const updateBaselineCall = `/cv/api/account/${accountId}/orgs/default/projects/${project}/verifications/GZNwefkdR2aBhc7owmJ1-w/baseline?routingId=${accountId}`
 
 // Jira calls
 export const jiraProjectsCall = `/ticket-service/api/metadata/projects?*`
@@ -2339,6 +2340,67 @@ export const overviewCallResponse = {
   metricsAnalysis: { healthy: 0, warning: 0, unhealthy: 0, noAnalysis: 336 },
   logClusters: { knownClustersCount: 0, unknownClustersCount: 0, unexpectedFrequencyClustersCount: 0 },
   errorClusters: { knownClustersCount: 0, unknownClustersCount: 0, unexpectedFrequencyClustersCount: 0 }
+}
+
+export const overviewCallResponseWithBaseline = {
+  baselineVerificationJobInstaceId: 'WL22sR0mSIyvdN0K_7JMhw',
+  spec: {
+    analysedServiceIdentifier: 'mock_server_fancy_graphs',
+    analysedEnvIdentifier: 'prod',
+    monitoredServiceType: 'DEFAULT',
+    monitoredServiceIdentifier: 'mock_server_fancy_graphs_prod',
+    analysisType: 'TEST',
+    sensitivity: 'HIGH',
+    durationInMinutes: 10,
+    isFailOnNoAnalysis: false
+  },
+  baselineOverview: {
+    applicableForBaseline: true,
+    baseline: false,
+    baselineExpired: false,
+    baselineVerificationJobInstanceId: 'WL22sR0mSIyvdN0K_7JMhw',
+    baselineExpiryTimestamp: 1676545440000
+  },
+  appliedDeploymentAnalysisType: 'TEST',
+  verificationStatus: 'VERIFICATION_PASSED',
+  verificationProgressPercentage: 100,
+  verificationStartTimestamp: 1683600225550,
+  testNodes: {
+    nodeType: 'CURRENT_TEST',
+    nodes: [
+      {
+        type: 'LOAD_TEST_NODE',
+        deploymentTag: 'null',
+        testStartTimestamp: 1683600240000
+      }
+    ]
+  },
+  controlNodes: {
+    nodeType: 'BASELINE_TEST',
+    nodes: [
+      {
+        type: 'LOAD_TEST_NODE',
+        deploymentTag: 'null',
+        testStartTimestamp: 1683599400000
+      }
+    ]
+  },
+  metricsAnalysis: {
+    healthy: 3,
+    warning: 0,
+    unhealthy: 0,
+    noAnalysis: 0
+  },
+  logClusters: {
+    knownClustersCount: 0,
+    unknownClustersCount: 0,
+    unexpectedFrequencyClustersCount: 0
+  },
+  errorClusters: {
+    knownClustersCount: 0,
+    unknownClustersCount: 0,
+    unexpectedFrequencyClustersCount: 0
+  }
 }
 
 export const feedbackHistoryResponse = {

@@ -17,6 +17,7 @@ declare const styles: {
   readonly cursor: string
   readonly firstnode: string
   readonly horizontalBar: string
+  readonly incomplete: string
   readonly marginBottom: string
   readonly markerEnd: string
   readonly markerStart: string

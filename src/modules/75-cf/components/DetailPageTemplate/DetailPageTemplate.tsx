@@ -55,10 +55,15 @@ export const DetailPageTemplate: React.FC<DetailPageTemplateProps> = ({
         title={
           <>
             <Layout.Horizontal spacing="small">
-              <Heading level={3} font={{ variation: FontVariation.H4 }}>
+              <Heading className={css.headerText} level={3} font={{ variation: FontVariation.H4 }}>
                 {title}
               </Heading>
-              {identifier && <IdentifierText identifier={identifier} allowCopy />}
+
+              {identifier && (
+                <Container className={css.idText}>
+                  <IdentifierText identifier={identifier} allowCopy />
+                </Container>
+              )}
             </Layout.Horizontal>
             {subTitle && (
               <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_400} padding={{ top: 'xsmall' }}>

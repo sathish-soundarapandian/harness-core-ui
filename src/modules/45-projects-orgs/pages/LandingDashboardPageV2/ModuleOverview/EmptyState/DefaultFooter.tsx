@@ -8,6 +8,7 @@
 import { Button, ButtonVariation, Icon, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { Color } from '@harness/design-system'
+import { useHistory } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 
 interface DefaultFooterProps {
@@ -18,10 +19,22 @@ interface DefaultFooterProps {
 const DefaultFooter: React.FC<DefaultFooterProps> = props => {
   const { learnMoreLink } = props
   const { getString } = useStrings()
+  const history = useHistory()
 
   return (
     <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ bottom: 'small' }}>
-      <Button variation={ButtonVariation.PRIMARY}>{getString('getStarted')}</Button>
+      <Button
+        variation={ButtonVariation.PRIMARY}
+        onClick={e => {
+          e.stopPropagation()
+          e.preventDefault()
+          if (props?.getStartedLink) {
+            history.push(props?.getStartedLink)
+          }
+        }}
+      >
+        {getString('getStarted')}
+      </Button>
       <Layout.Horizontal flex inline color={Color.PRIMARY_7} onClick={e => e.stopPropagation()}>
         <a rel="noreferrer" target="_blank" href={learnMoreLink}>
           <Text inline color={Color.PRIMARY_7} margin={{ right: 'xsmall' }}>

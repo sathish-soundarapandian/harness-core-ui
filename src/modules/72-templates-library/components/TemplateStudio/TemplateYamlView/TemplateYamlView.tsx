@@ -139,11 +139,16 @@ const TemplateYamlView: React.FC = () => {
             existingYaml={!valid ? templateYaml : undefined}
             bind={setYamlHandler}
             schema={templateSchema?.data}
-            onExpressionTrigger={() => {
-              return Promise.resolve(
-                expressionRef.current.map(item => ({ label: item, insertText: `${item}>`, kind: 1 }))
+            onExpressionTrigger={() =>
+              Promise.resolve(
+                expressionRef.current.map(item => ({
+                  label: item,
+                  insertText: `${item}>`,
+                  kind: 1,
+                  detail: `<+${item}}>`
+                }))
               )
-            }}
+            }
             yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
             height={'calc(100vh - 200px)'}
             width="calc(100vw - 400px)"

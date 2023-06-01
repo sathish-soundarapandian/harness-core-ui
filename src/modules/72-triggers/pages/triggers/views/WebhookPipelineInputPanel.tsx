@@ -15,7 +15,8 @@ import {
   Text,
   NestedAccordionProvider,
   HarnessDocTooltip,
-  PageSpinner
+  PageSpinner,
+  Icon
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { merge, cloneDeep, isEmpty, defaultTo, get, debounce, remove } from 'lodash-es'
@@ -48,16 +49,14 @@ import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineV
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
-  ciCodebaseBuildIssueComment,
-  getTriggerInputSetsBranchQueryParameter
-} from '@triggers/components/Triggers/utils'
-import {
   filterArtifactIndex,
   getFilteredStage,
   TriggerTypes,
+  getTriggerInputSetsBranchQueryParameter,
   getErrorMessage,
   TriggerGitEventTypes,
-  TriggerGitEvent
+  TriggerGitEvent,
+  ciCodebaseBuildIssueComment
 } from '../utils/TriggersWizardPageUtils'
 import css from './WebhookPipelineInputPanel.module.scss'
 
@@ -517,8 +516,15 @@ function WebhookPipelineInputPanelForm({
   const {
     state: { storeMetadata }
   } = usePipelineContext()
+
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
+      <Layout.Horizontal className={css.infoBar}>
+        <Icon name="info-message" size={14} color={Color.GREEN_500} />
+
+        <Text color={Color.WHITE}>{getString('triggers.toast.payloadInfoBar')}</Text>
+      </Layout.Horizontal>
+
       {loading && !isPipelineBranchNameInFocus() ? (
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />

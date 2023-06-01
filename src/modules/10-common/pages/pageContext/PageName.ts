@@ -48,7 +48,8 @@ export enum PAGE_NAME {
   EnhancedInputSetForm = 'EnhancedInputSetForm',
   InputSetFormV1 = 'InputSetFormV1',
   TriggersPage = 'TriggersPage',
-  TriggersDetailPage = 'TriggersDetailPage',
+  TriggerDetailPage = 'TriggerDetailPage',
+  TriggerActivityHistoryPage = 'TriggerActivityHistoryPage',
   TriggersWizardPage = 'TriggersWizardPage',
   ExecutionPipelineView = 'ExecutionPipelineView',
   ExecutionPolicyEvaluationsView = 'ExecutionPolicyEvaluationsView',
@@ -144,11 +145,12 @@ export enum PAGE_NAME {
   CODEFileEdit = 'CODEFileEdit',
   CODECommits = 'CODECommits',
   CODEBranches = 'CODEBranches',
+  CODETags = 'CODETags',
   ExecutionList = 'ExecutionList',
   CFConfigurePath = 'CFConfigurePath',
   SSCAHomePage = 'SSCAHomePage',
   SSCAOverviewPage = 'SSCAOverviewPage',
   IDPAdminPage = 'IDPAdminPage',
-  ETHomePage = 'ETHomePage',
-  ETTrialPage = 'ETTrialPage'
+  CETHomePage = 'CETHomePage',
+  CETTrialPage = 'CETTrialPage'
 }

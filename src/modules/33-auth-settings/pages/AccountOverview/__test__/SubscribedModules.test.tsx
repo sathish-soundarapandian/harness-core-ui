@@ -46,11 +46,8 @@ describe('SubscribedModules', () => {
         }
       }
     })
-    const featureFlags = {
-      CING_ENABLED: true
-    }
     const { container, queryByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper defaultAppStoreValues={{}}>
         <SubscribedModules />
       </TestWrapper>
     )
@@ -88,11 +85,8 @@ describe('SubscribedModules', () => {
         }
       }
     })
-    const featureFlags = {
-      CING_ENABLED: false
-    }
     const { container, queryByText } = render(
-      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+      <TestWrapper defaultAppStoreValues={{}}>
         <SubscribedModules />
       </TestWrapper>
     )

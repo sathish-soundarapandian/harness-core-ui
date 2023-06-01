@@ -16,6 +16,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getMonitoredServiceIdentifiers } from '@cv/utils/CommonUtils'
 import ChangesSourceCard from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesSourceCard/ChangesSourceCard'
 import ChangesTable from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable'
+import { SLO_WIDGETS } from '@cv/components/ChangeTimeline/components/TimelineRow/TimelineRow.constants'
 import ServiceDetails from './views/ServiceDetails'
 import type { DetailsPanelProps } from './DetailsPanel.types'
 import SLOCardContent from '../../SLOCard/SLOCardContent'
@@ -105,7 +106,10 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   }, [identifier, downtimeEndTime, downtimeStartTime, sloDashboardWidget])
 
   const bannerData = useMemo(
-    () => sloWidgetsData?.data?.filter(instance => (instance?.startTime || 0) > downtimeEndTime / 1000),
+    () =>
+      sloWidgetsData?.data?.filter(
+        instance => (instance?.startTime || 0) > downtimeEndTime / 1000 && instance?.type === SLO_WIDGETS.DOWNTIME
+      ),
     [sloWidgetsData, downtimeEndTime]
   )
 

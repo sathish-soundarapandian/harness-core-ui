@@ -24,7 +24,6 @@ import { usePrevious } from '@common/hooks/usePrevious'
 import type { GitQueryParams, ProjectPathProps, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { usePermission } from '@rbac/hooks/usePermission'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type {
@@ -76,32 +75,8 @@ interface ArtifactSourceConnectorProps {
   selectedArtifactType: ArtifactType
 }
 
-type Params = {
-  CUSTOM_ARTIFACT_NG?: boolean
-  AZURE_ARTIFACTS_NG?: boolean
-  AZURE_WEBAPP_NG_JENKINS_ARTIFACTS?: boolean
-}
-
-const getEnabledArtifactTypesList = ({
-  CUSTOM_ARTIFACT_NG,
-  AZURE_ARTIFACTS_NG,
-  AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
-}: Params) => {
-  return Object.values(ENABLED_ARTIFACT_TYPES).filter((artifactType: ArtifactType) => {
-    if (artifactType === ENABLED_ARTIFACT_TYPES.CustomArtifact) {
-      return !!CUSTOM_ARTIFACT_NG
-    }
-
-    if (artifactType === ENABLED_ARTIFACT_TYPES.AzureArtifacts) {
-      return !!AZURE_ARTIFACTS_NG
-    }
-
-    if (artifactType === ENABLED_ARTIFACT_TYPES.Jenkins) {
-      return !!AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
-    }
-
-    return true
-  })
+const getEnabledArtifactTypesList = () => {
+  return Object.values(ENABLED_ARTIFACT_TYPES)
 }
 
 function ArtifactSourceConnector(props: ArtifactSourceConnectorProps) {
@@ -199,7 +174,6 @@ export function ArtifactSourceSpecifications(props: {
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
 
   const [selectedArtifactType, setSelectedArtifactType] = React.useState<ArtifactType>(formValues?.artifactType)
-  const { CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS } = useFeatureFlags()
 
   const artifactConnectorType = ArtifactToConnectorMap[selectedArtifactType]
 
@@ -218,15 +192,7 @@ export function ArtifactSourceSpecifications(props: {
     }
   }, [template?.spec?.spec?.connectorRef, oldConnectorRef, artifactDetailsFormKey, selectedArtifactType])
 
-  const enabledArtifactTypesList = useMemo(
-    () =>
-      getEnabledArtifactTypesList({
-        CUSTOM_ARTIFACT_NG,
-        AZURE_ARTIFACTS_NG,
-        AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
-      }),
-    [CUSTOM_ARTIFACT_NG, AZURE_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS]
-  )
+  const enabledArtifactTypesList = getEnabledArtifactTypesList()
 
   const handleArtifactTypeSelection = (artifactType: ArtifactType) => {
     if (artifactType !== selectedArtifactType) {
@@ -239,15 +205,11 @@ export function ArtifactSourceSpecifications(props: {
     }
   }
 
-  const supportedArtifactTypes = useMemo(
-    () =>
-      enabledArtifactTypesList.map(artifact => ({
-        label: getString(ArtifactTitleIdByType[artifact]),
-        icon: ArtifactIconByType[artifact] as IconName,
-        value: artifact
-      })),
-    [enabledArtifactTypesList]
-  )
+  const supportedArtifactTypes = enabledArtifactTypesList.map(artifact => ({
+    label: getString(ArtifactTitleIdByType[artifact]),
+    icon: ArtifactIconByType[artifact] as IconName,
+    value: artifact
+  }))
 
   const artifactConnectorSectionTitle = useMemo(
     () =>

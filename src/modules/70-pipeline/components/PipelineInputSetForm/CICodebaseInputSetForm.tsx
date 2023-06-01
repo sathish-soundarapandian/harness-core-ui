@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { debounce, get, isEmpty, isUndefined, set, omit } from 'lodash-es'
+import produce from 'immer'
 import {
   FormInput,
   MultiTypeInputType,
@@ -605,14 +606,18 @@ function CICodebaseInputSetFormInternal({
   }, [pipelineHasCodebaseSection, codeBaseType])
 
   const handleTypeChange = (newType: CodebaseTypes): void => {
-    formik?.setFieldValue(`${formattedPath}properties.ci.codebase.build`, '')
-    formik?.setFieldValue(codeBaseTypePath, newType)
-    if (!isInputTouched && triggerIdentifier && isNotScheduledTrigger) {
-      formik?.setFieldValue(buildSpecPath, { [BuildCodebaseType[newType]]: DefaultBuildValues[newType] })
-    } else {
-      formik?.setFieldValue(buildSpecPath, { [BuildCodebaseType[newType]]: savedValues.current[newType] })
-    }
+    const newValues = produce(formik?.values, (draft: any) => {
+      set(draft, `${formattedPath}properties.ci.codebase.build`, '')
+      set(draft, codeBaseTypePath, newType)
+      if (!isInputTouched && triggerIdentifier && isNotScheduledTrigger) {
+        set(draft, buildSpecPath, { [BuildCodebaseType[newType]]: DefaultBuildValues[newType] })
+      } else {
+        set(draft, buildSpecPath, { [BuildCodebaseType[newType]]: savedValues.current[newType] })
+      }
+    })
+    formik?.setValues(newValues)
   }
+
   const renderCodeBaseTypeInput = (type: CodebaseTypes): JSX.Element => {
     const shouldDisableBranchTextInput = type === CodebaseTypes.BRANCH && isFetchingBranches
     return (

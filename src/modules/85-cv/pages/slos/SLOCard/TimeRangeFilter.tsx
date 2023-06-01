@@ -30,7 +30,7 @@ const TimeRangeFilter: React.FC<SLOTargetChartWithChangeTimelineProps> = ({
 
   const SLOEndTime = sloPerformanceTrend[sloPerformanceTrend.length - 1]?.timestamp
   const errorBudgetEndTime = errorBudgetBurndown[errorBudgetBurndown.length - 1]?.timestamp
-  const _endTime = (type === SLOCardToggleViews.SLO ? SLOEndTime : errorBudgetEndTime) ?? currentPeriodStartTime
+  const _endTime = (type === SLOCardToggleViews.SLO ? SLOEndTime : errorBudgetEndTime) ?? currentPeriodEndTime
 
   const { startTime = currentPeriodStartTime, endTime = _endTime } = chartTimeRange ?? {}
 

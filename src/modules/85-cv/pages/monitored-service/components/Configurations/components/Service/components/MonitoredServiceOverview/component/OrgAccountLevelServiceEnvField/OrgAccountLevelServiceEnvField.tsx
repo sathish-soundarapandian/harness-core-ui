@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
 import { useToggleOpen } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
@@ -15,6 +16,8 @@ import type { OrgAccountLevelServiceEnvFieldProps } from './OrgAccountLevelServi
 import { onValueChange, shouldShowServiceEnvironmentField } from './OrgAccountLevelServiceEnvField.utils'
 import { COMMON_FIELDS_PROPS } from './OrgAccountLevelServiceEnvField.constants'
 import { ServiceEnvModal } from './ServiceEnvModal'
+import { MonitoredServiceType } from '../../MonitoredServiceOverview.constants'
+import css from './OrgAccountLevelServiceEnvField.module.scss'
 
 export default function OrgAccountLevelServiceEnvField({
   isInputSet,
@@ -23,8 +26,10 @@ export default function OrgAccountLevelServiceEnvField({
   environmentOnSelect
 }: OrgAccountLevelServiceEnvFieldProps): JSX.Element {
   const { getString } = useStrings()
-  const { values } = useFormikContext<{ serviceRef?: string; environmentRef?: string }>()
+  const { values } =
+    useFormikContext<{ type: ValueOf<typeof MonitoredServiceType>; serviceRef?: string; environmentRef?: string }>()
   const { serviceRef, environmentRef } = values
+  const isInfra = values?.type === MonitoredServiceType.INFRASTRUCTURE
   const { isOpen: isAddServiceModalOpen, open: openAddServiceModal, close: closeAddServiceModal } = useToggleOpen()
   const { isOpen: isAddEnvModalOpen, open: openAddEnvModal, close: closeAddEnvModal } = useToggleOpen()
   const { showService, showEnvironment } = shouldShowServiceEnvironmentField({ isInputSet, serviceRef, environmentRef })
@@ -46,11 +51,13 @@ export default function OrgAccountLevelServiceEnvField({
       {showEnvironment && (
         <MultiTypeEnvironmentField
           name="environmentRef"
+          className={cx({ [css.multiSelectEnvDropdown]: isInfra })}
           label={getString('cv.healthSource.environmentLabel')}
           placeholder={getString('cv.selectOrCreateEnv')}
           isOnlyFixedType={!isTemplate}
           setRefValue={isTemplate}
           openAddNewModal={openAddEnvModal}
+          isMultiSelect={isInfra}
           onChange={env => onValueChange({ value: env, isTemplate, onSuccess: environmentOnSelect })}
           {...COMMON_FIELDS_PROPS}
         />

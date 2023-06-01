@@ -7,6 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly accordionClassName: string
+  readonly accordionPanelClassName: string
+  readonly accordionSummaryClassName: string
+  readonly accordionTabWrapper: string
   readonly fullHeight: string
   readonly navigationBtns: string
   readonly setupShell: string

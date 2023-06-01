@@ -66,6 +66,11 @@ export function InfrastructureEntityCard({
     setShowInputs(show => !show)
   }
 
+  const onlyProvisionerInput = React.useMemo(() => {
+    const inputsKeys = Object.keys(infrastructureInputs.spec)
+    return inputsKeys.length === 1 && inputsKeys.includes('provisioner')
+  }, [infrastructureInputs])
+
   return (
     <Card className={css.card}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -104,7 +109,9 @@ export function InfrastructureEntityCard({
           />
         </Container>
       </Layout.Horizontal>
-      {infrastructureInputs && values.infrastructureInputs?.[environmentIdentifier]?.[identifier] ? (
+      {!onlyProvisionerInput &&
+      infrastructureInputs &&
+      values.infrastructureInputs?.[environmentIdentifier]?.[identifier] ? (
         <>
           <Container flex={{ justifyContent: 'center' }}>
             <Button

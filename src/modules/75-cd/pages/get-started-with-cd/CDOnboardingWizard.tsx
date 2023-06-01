@@ -46,7 +46,10 @@ const CDWizardWithAB: React.FC = () => {
     <WithABFFProvider
       fallback={<DeployProvisioningWizard />}
       featureFlagsToken={window.HARNESS_PLG_FF_SDK_KEY}
-      config={{ experimentKey: PLG_EXPERIMENTS.PLG_SERVICE_DELEGATE_TEST, identifier: uuid }}
+      config={{
+        experimentKey: [PLG_EXPERIMENTS.PLG_SERVICE_DELEGATE_TEST, PLG_EXPERIMENTS.CD_GET_STARTED],
+        identifier: uuid
+      }}
     >
       <CDWizardHooks />
     </WithABFFProvider>
@@ -56,12 +59,20 @@ const CDWizardWithAB: React.FC = () => {
 const CDWizardHooks: React.FC = () => {
   const FLOW_TYPE = useFeatureFlag(FeatureFlag.PLG_SERVICE_DELEGATE_AB)
   const trackExposure = useFeatureFlag(FeatureFlag.PLG_SERVICE_DELEGATE_EXPOSURE_ENABLED)
+  const ONBOARDING_FLOW_TYPE = useFeatureFlag(FeatureFlag.PLG_CD_GET_STARTED_AB)
+  const trackOnobardingExposure = useFeatureFlag(FeatureFlag.PLG_GET_STARTED_EXPOSURE_ENABLED)
   const { trackEvent } = useTelemetry()
   useEffect(() => {
     trackExposure &&
       trackEvent(EXPOSURE_EVENT, {
         flag_key: FeatureFlag.PLG_SERVICE_DELEGATE_AB,
         variant: FLOW_TYPE
+      })
+
+    trackOnobardingExposure &&
+      trackEvent(EXPOSURE_EVENT, {
+        flag_key: FeatureFlag.PLG_CD_GET_STARTED_AB,
+        variant: ONBOARDING_FLOW_TYPE
       })
   }, [])
   return <DeployProvisioningWizard flowType={FLOW_TYPE} />

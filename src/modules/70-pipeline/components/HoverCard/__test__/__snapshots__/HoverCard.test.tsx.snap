@@ -17,7 +17,10 @@ exports[`ConditionalExecution matches snapshot with failure 1`] = `
         >
           <span
             class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--font-weight-semi-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
-            style="--text-line-clamp: 1;"
+            style="--text-line-clamp: 2;"
+          />
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
           />
         </div>
         <div

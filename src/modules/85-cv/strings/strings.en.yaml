@@ -59,6 +59,7 @@ searchForAService: Search for a service
 trafficSplit: Traffic Split Percentage (optional)
 pinABaseline: Pin a baseline
 lastSuccessfulRun: Last Successful Job Run
+pinned: Pinned baseline
 jobNamePlaceholder: Enter a Job Name
 identifierPlaceholder: Enter an Identifier
 throughput: Throughput
@@ -1276,3 +1277,5 @@ licenseBanner:
   freePlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the free plan
   teamPlanUsageMessage: You have used {{activeServicesCount}}/{{totalServices}} Services included in the team plan
   limitExceedMessage: You have reached your service subscription limit. Consider increasing your limits to keep using services
+verifyStep:
+  baselineInputInfo: If there's no record of the previous verification, analysis will not be carried out.

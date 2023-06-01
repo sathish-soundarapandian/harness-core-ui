@@ -14,7 +14,7 @@ import { FormInput, Text, Container, AllowedTypes } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
-import { FormMultiTypeTextAreaField } from '@common/components'
+import { FormMultiTypeCheckboxField, FormMultiTypeTextAreaField } from '@common/components'
 import {
   useGitScope,
   shouldRenderRunTimeInputViewWithAllowedValues,
@@ -669,6 +669,21 @@ export const CIStep: React.FC<CIStepProps> = props => {
                 allowedTypesForEntries: SupportedInputTypesForListItems
               })
             : null}
+        </Container>
+      ) : null}
+      {get(enableFields, 'spec.caching') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <FormMultiTypeCheckboxField
+            name={`${prefix}spec.caching`}
+            label={getString('ci.enableDLC')}
+            multiTypeTextbox={{
+              expressions,
+              disabled: readonly,
+              allowableTypes: AllMultiTypeInputTypesForStep
+            }}
+            style={{ marginBottom: 'var(--spacing-small)' }}
+            disabled={readonly}
+          />
         </Container>
       ) : null}
     </>

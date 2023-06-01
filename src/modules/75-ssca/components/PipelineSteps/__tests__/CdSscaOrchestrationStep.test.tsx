@@ -34,7 +34,11 @@ const runtimeValues = {
       }
     },
     attestation: {
-      privateKey: RUNTIME_INPUT_VALUE
+      type: 'cosign',
+      spec: {
+        privateKey: RUNTIME_INPUT_VALUE,
+        password: RUNTIME_INPUT_VALUE
+      }
     },
     infrastructure: {
       type: 'KubernetesDirect',
@@ -67,7 +71,11 @@ const fixedValues = {
       type: 'image'
     },
     attestation: {
-      privateKey: 'testKey'
+      type: 'cosign',
+      spec: {
+        privateKey: 'testKey',
+        password: 'testPassword'
+      }
     },
     infrastructure: {
       type: 'KubernetesDirect',

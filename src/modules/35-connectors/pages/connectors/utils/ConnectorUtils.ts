@@ -2556,6 +2556,7 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
     case Connectors.APP_DYNAMICS:
       return 'service-appdynamics'
     case Connectors.SPLUNK:
+    case Connectors.SignalFX:
       return 'service-splunk'
     case Connectors.NEW_RELIC:
       return 'service-newrelic'
@@ -2615,7 +2616,7 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
     case Connectors.Bamboo:
       return 'service-bamboo'
     case Connectors.AZURE_ARTIFACTS:
-      return 'service-azure-artifact-connector'
+      return 'service-azure-artifacts'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'custom-sm'
     case Connectors.GcpSecretManager:
@@ -2626,8 +2627,6 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'tas'
     case Connectors.TERRAFORM_CLOUD:
       return 'terraform-cloud'
-    case Connectors.SignalFX:
-      return 'service-signalfx'
     default:
       return 'cog'
   }
@@ -2714,7 +2713,7 @@ export const getConnectorDisplayName = (type: string): string => {
     case Connectors.TERRAFORM_CLOUD:
       return 'Terraform Cloud'
     case Connectors.SignalFX:
-      return 'SignalFX'
+      return 'Splunk Observability [SignalFX]'
     default:
       return ''
   }

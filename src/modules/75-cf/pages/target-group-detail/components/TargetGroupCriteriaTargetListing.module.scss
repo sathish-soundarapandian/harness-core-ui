@@ -18,3 +18,9 @@
     border: none !important;
   }
 }
+
+.tagName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}

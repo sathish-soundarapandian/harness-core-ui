@@ -6,24 +6,23 @@
  */
 
 .modalContent {
-  max-height: 460px;
+  max-height: 500px;
   min-height: 150px;
-  overflow: scroll;
   padding: var(--spacing-medium);
   background-color: var(--form-bg);
   .retryHeaderSection {
     border-bottom: 1px solid var(--grey-200);
-    height: 44px;
+    height: 64px;
 
     .retryModalHeader {
       font-size: 20px !important;
+      margin-left: var(--spacing-small);
     }
   }
 
   .card {
     display: block !important;
     box-shadow: var(--card-shadow);
-    border: none !important;
     overflow: hidden;
     margin: var(--spacing-large);
 
@@ -40,7 +39,7 @@
         align-items: center;
       }
       .executionDetail {
-        margin-bottom: var(--spacing-medium);
+        margin-bottom: var(--spacing-small);
       }
 
       .timerIcon {
@@ -79,4 +78,22 @@
   &.retryHistoryBtn {
     flex-grow: 1;
   }
+}
+
+.selected {
+  border: 1px solid var(--primary-7) !important;
+  background: var(--primary-1) !important;
+}
+
+.cardStyle {
+  max-height: 370px;
+  overflow: auto;
+}
+
+.pipelineRunSeq {
+  font-size: var(--font-size-small);
+  color: var(--grey-600);
+  margin-top: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+  margin-left: var(--spacing-small);
 }

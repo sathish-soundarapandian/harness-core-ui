@@ -272,7 +272,7 @@ export const ETNavItem = () => {
 
   return (
     <li className={css.navItem}>
-      <Link {...commonLinkProps} to={routes.toET(params)}>
+      <Link {...commonLinkProps} to={routes.toCET(params)}>
         <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
           <Icon name="cet" size={30} />
           <Text

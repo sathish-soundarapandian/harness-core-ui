@@ -62,3 +62,11 @@
     margin-top: var(--spacing-7) !important;
   }
 }
+
+.getStartedBtnWrapper {
+  :global {
+    .bp3-button {
+      font-size: var(--font-size-xsmall) !important;
+    }
+  }
+}

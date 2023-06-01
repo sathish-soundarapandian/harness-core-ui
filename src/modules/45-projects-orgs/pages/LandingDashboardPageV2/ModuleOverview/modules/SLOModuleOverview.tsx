@@ -6,19 +6,27 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
+import routes from '@common/RouteDefinitions'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
 import DefaultFooter from '../EmptyState/DefaultFooter'
 
 const SLOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded }) => {
+  const { accountId } = useParams<AccountPathProps>()
+
   if (isExpanded) {
     return (
       <EmptyStateExpandedView
         title={'common.moduleDetails.slo.expanded.title'}
         description={'common.moduleDetails.slo.expanded.description'}
         footer={
-          <DefaultFooter learnMoreLink="https://docs.harness.io/category/ko19u4brsv-howtos-service-reliability-management" />
+          <DefaultFooter
+            learnMoreLink="https://docs.harness.io/category/ko19u4brsv-howtos-service-reliability-management"
+            getStartedLink={routes.toCV({ accountId })}
+          />
         }
       />
     )

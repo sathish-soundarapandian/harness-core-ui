@@ -32,7 +32,6 @@ import { useStrings } from 'framework/strings'
 import type { ConfigFileWrapper, ConnectorConfigDTO, StageElementConfig } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
@@ -100,7 +99,6 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
   const [isNewFile, setIsNewFile] = useState(true)
 
   const { expressions } = useVariablesExpression()
-  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
 
   const listOfConfigFiles = React.useMemo(() => {
     if (isPropagating) {
@@ -213,9 +211,9 @@ function ConfigFilesListView(props: ConfigFilesListViewProps): JSX.Element {
 
   const shouldPassPrevStepData = (): boolean => {
     if (initialValues.store === ConfigFilesMap.Harness) {
-      return isEditMode && !!CDS_SERVICE_CONFIG_LAST_STEP
+      return isEditMode
     }
-    return isEditMode && !!selectedConnector && !!CDS_SERVICE_CONFIG_LAST_STEP
+    return isEditMode && !!selectedConnector
   }
 
   const commonLastStepProps = {

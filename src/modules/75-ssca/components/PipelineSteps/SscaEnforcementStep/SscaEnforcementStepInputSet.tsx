@@ -44,10 +44,10 @@ export default function SscaEnforcementStepInputSet(props: SscaEnforcementStepPr
         />
       )}
 
-      {isValueRuntimeInput(get(template, 'spec.verifyAttestation.publicKey', '')) && (
+      {isValueRuntimeInput(get(template, 'spec.verifyAttestation.spec.publicKey', '')) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <MultiTypeSecretInput
-            type="SSHKey"
+            type="SecretFile"
             expressions={expressions}
             name={`${prefix}spec.verifyAttestation.publicKey`}
             label={getString('ssca.publicKey')}

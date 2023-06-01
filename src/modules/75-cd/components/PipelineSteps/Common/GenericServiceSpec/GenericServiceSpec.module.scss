@@ -280,3 +280,12 @@
     top: 22px;
   }
 }
+
+:global {
+  .bp3-menu-item:hover {
+    .menuItemColor {
+      background: var(--primary-6);
+      color: var(--white);
+    }
+  }
+}

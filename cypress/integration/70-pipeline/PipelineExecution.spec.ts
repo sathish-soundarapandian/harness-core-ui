@@ -309,8 +309,8 @@ describe('Pipeline Execution', () => {
         cy.contains('p', 'Env 1').should('be.visible')
       })
 
-      cy.get('.default-node').should('be.visible').trigger('mouseleave')
-      cy.wait(1000)
+      cy.get('.default-node').should('be.visible').trigger('mouseout')
+      cy.wait(2000)
     })
 
     cy.get('.Pane.horizontal.Pane2').within(() => {

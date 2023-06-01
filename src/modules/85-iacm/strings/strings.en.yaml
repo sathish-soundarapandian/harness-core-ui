@@ -10,3 +10,6 @@ cloudformation: Cloud Formation
 permissions:
   iacmWorkspaces: IACM Workspaces
   iacmWorkspace: IACM Workspace
+pipelineSteps:
+  required: '{{name}} is required'
+  description: Run terraform commands against your workspace

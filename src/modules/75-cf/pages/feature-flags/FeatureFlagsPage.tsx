@@ -200,6 +200,7 @@ const FeatureFlagsPage: React.FC = () => {
             pageIndex={pageNumber}
             gotoPage={setPageNumber}
             showPagination
+            hidePageNumbers={projectFlags ? projectFlags.pageCount > 1000 : (features?.pageCount || 0) > 1000}
           />
         )
       }

@@ -23,6 +23,7 @@ import TriggersWizardPage from '@triggers/components/pages/TriggersWizardPage/Tr
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
 import TriggerLandingPage from '@triggers/pages/triggers/TriggerLandingPage/TriggerLandingPage'
 import TriggerDetailPage from '@triggers/pages/triggers/TriggerLandingPage/TriggerDetailPage/TriggerDetailPage'
+import TriggerActivityHistoryPage from './pages/triggers/TriggerLandingPage/TriggerActivityHistoryPage/TriggerActivityHistoryPage'
 
 export const TriggersRouteDestinations: React.FC<{
   moduleParams: ModulePathParams
@@ -57,7 +58,7 @@ export const TriggersRouteDestinations: React.FC<{
       licenseRedirectData={licenseRedirectData}
       sidebarProps={sidebarProps}
       path={routes.toTriggersDetailPage({ ...accountPathProps, ...triggerPathProps, ...moduleParams })}
-      pageName={PAGE_NAME.TriggersDetailPage}
+      pageName={PAGE_NAME.TriggerDetailPage}
     >
       <TriggerLandingPage>
         <TriggerDetailPage />
@@ -68,10 +69,32 @@ export const TriggersRouteDestinations: React.FC<{
       licenseRedirectData={licenseRedirectData}
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toTriggersDetailPage({ ...accountPathProps, ...triggerPathProps })}
-      pageName={PAGE_NAME.TriggersDetailPage}
+      pageName={PAGE_NAME.TriggerDetailPage}
     >
       <TriggerLandingPage>
         <TriggerDetailPage />
+      </TriggerLandingPage>
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toTriggersActivityHistoryPage({ ...accountPathProps, ...triggerPathProps })}
+      pageName={PAGE_NAME.TriggerActivityHistoryPage}
+    >
+      <TriggerLandingPage>
+        <TriggerActivityHistoryPage />
+      </TriggerLandingPage>
+    </RouteWithLayout>
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={sidebarProps}
+      path={routes.toTriggersActivityHistoryPage({ ...accountPathProps, ...triggerPathProps, ...moduleParams })}
+      pageName={PAGE_NAME.TriggerActivityHistoryPage}
+    >
+      <TriggerLandingPage>
+        <TriggerActivityHistoryPage />
       </TriggerLandingPage>
     </RouteWithLayout>
     <RouteWithLayout

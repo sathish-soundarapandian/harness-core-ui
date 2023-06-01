@@ -46,6 +46,7 @@ export interface ECRStepSpec {
   // pull?: MultiTypePullOption
   resources?: Resources
   runAsUser?: string
+  caching?: boolean
 }
 
 export interface ECRStepData {

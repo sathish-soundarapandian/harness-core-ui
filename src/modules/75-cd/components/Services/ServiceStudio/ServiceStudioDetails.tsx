@@ -24,7 +24,7 @@ import {
 } from '@harness/uicore'
 import { parse } from 'yaml'
 import { Color } from '@harness/design-system'
-import { cloneDeep, defaultTo, get, omit, set, unset } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, omit, set, unset } from 'lodash-es'
 import produce from 'immer'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
@@ -48,6 +48,8 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { sanitize } from '@common/utils/JSONUtils'
 import { queryClient } from 'services/queryClient'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDActions, Category } from '@common/constants/TrackingConstants'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
 import { ServiceTabs, setNameIDDescription, ServicePipelineConfig } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
@@ -60,6 +62,7 @@ interface ServiceStudioDetailsProps {
 }
 function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElement | null {
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const [hasYamlValidationErrors, setHasYamlValidationErrors] = React.useState<boolean>(false)
   const { tab } = useQueryParams<{ tab: string }>()
@@ -216,6 +219,11 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     try {
       const response = isServiceCreateModalView ? await createService(body) : await updateService(body)
       if (response.status === 'SUCCESS') {
+        const isManifestPresent = !isEmpty(finalServiceData?.service?.serviceDefinition?.spec?.manifests)
+        isManifestPresent &&
+          trackEvent(CDActions.CreateUpdateManifest, {
+            category: Category.SERVICE
+          })
         if (isServiceCreateModalView) {
           // We invalidate the service list call on creating a new service
           queryClient.invalidateQueries(['getServiceAccessList'])

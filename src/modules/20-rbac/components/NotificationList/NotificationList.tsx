@@ -34,7 +34,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'
 import { TestMSTeamsNotifications } from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureMSTeamsNotifications/ConfigureMSTeamsNotifications'
 import { getNotificationByConfig } from '@rbac/utils/NotificationUtils'
-import { EmailSchema, URLValidationSchema } from '@common/utils/Validation'
+import { EmailSchema, EmailSchemaWithoutRequired, URLValidationSchema } from '@common/utils/Validation'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import ManagePrincipalButton from '../ManagePrincipalButton/ManagePrincipalButton'
@@ -219,10 +219,20 @@ const ChannelRow: React.FC<ChannelRow> = ({
         initialValues={getIntialValues()}
         validationSchema={Yup.object().shape({
           type: Yup.string().required(),
-          groupEmail: Yup.string().when(['type'], {
-            is: 'EMAIL',
-            then: EmailSchema(getString)
-          }),
+          groupEmail: Yup.string()
+            .nullable()
+            .when(['type', 'sendEmailToAllUsers'], {
+              is: (type, sendEmailToAllUsers) => {
+                return type === 'EMAIL' && sendEmailToAllUsers
+              },
+              then: EmailSchemaWithoutRequired(getString)
+            })
+            .when(['type', 'sendEmailToAllUsers'], {
+              is: (type, sendEmailToAllUsers) => {
+                return type === 'EMAIL' && !sendEmailToAllUsers
+              },
+              then: EmailSchema(getString)
+            }),
           slackWebhookUrl: Yup.string().when(['type'], {
             is: 'SLACK',
             then:

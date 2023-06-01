@@ -18,6 +18,7 @@ import { getDateLabelToDisplayText } from '@common/components/TimeRangePicker/Ti
 import type { TimeBasedStats } from 'services/dashboard-service'
 import { getGroupByFromTimeRange } from '@projects-orgs/utils/utils'
 import { numberFormatter } from '@common/utils/utils'
+import routes from '@common/RouteDefinitions'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
@@ -77,7 +78,12 @@ const CIModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
             'common.moduleDetails.ci.expanded.list.two',
             'common.moduleDetails.ci.expanded.list.three'
           ]}
-          footer={<DefaultFooter learnMoreLink="https://docs.harness.io/category/zgffarnh1m-ci-category" />}
+          footer={
+            <DefaultFooter
+              learnMoreLink="https://docs.harness.io/category/zgffarnh1m-ci-category"
+              getStartedLink={routes.toCI({ accountId })}
+            />
+          }
         />
       )
     }
@@ -106,6 +112,7 @@ const CIModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
   const totalCount = data?.data?.buildExecutionInfoList
     ?.map((build: BuildExecutionInfo) => build.builds?.total)
     .reduce((total = 0, value = 0) => total + value, 0)
+
   return (
     <>
       <ModuleColumnChart
@@ -121,6 +128,7 @@ const CIModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, timeR
               }).toUpperCase()
             : undefined
         }
+        yAxisLabel={getString('executionsText')}
       />
     </>
   )

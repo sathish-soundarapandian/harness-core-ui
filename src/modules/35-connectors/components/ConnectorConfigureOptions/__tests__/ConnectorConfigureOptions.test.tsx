@@ -13,7 +13,7 @@ import { ConnectorConfigureOptions, ConnectorConfigureOptionsProps } from '../Co
 import { connectorListResponse } from './mocks'
 
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorListResponse)),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorListResponse)),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorListResponse.data.content[1], refetch: jest.fn(), loading: false }
   })

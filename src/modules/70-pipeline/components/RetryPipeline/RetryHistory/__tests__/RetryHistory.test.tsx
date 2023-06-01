@@ -102,7 +102,7 @@ describe('Retry History Button tests', () => {
       </TestWrapper>
     )
     const retryHistoryButton = await screen.findByRole('button', {
-      name: 'pipeline.retryHistory'
+      name: 'executionHeaderText'
     })
     expect(retryHistoryButton).toBeDisabled()
   })
@@ -115,7 +115,7 @@ describe('Retry History Button tests', () => {
       </TestWrapper>
     )
     const retryHistoryButton = await screen.findByRole('button', {
-      name: 'pipeline.retryHistory'
+      name: 'executionHeaderText'
     })
     expect(retryHistoryButton).not.toBeDisabled()
     userEvent.click(retryHistoryButton)
@@ -138,7 +138,7 @@ describe('Retry History Button tests', () => {
       </TestWrapper>
     )
     const retryHistoryButton = await screen.findByRole('button', {
-      name: 'pipeline.retryHistory'
+      name: 'executionHeaderText'
     })
     userEvent.click(retryHistoryButton)
     const retryHistoryExecutionList = await screen.findByTestId('retryHistoryExecutionList')

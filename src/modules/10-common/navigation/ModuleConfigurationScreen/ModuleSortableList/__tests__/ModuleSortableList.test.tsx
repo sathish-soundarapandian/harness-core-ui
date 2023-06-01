@@ -93,7 +93,6 @@ describe('Module Sortable List', () => {
     const { queryAllByText } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
           CENG_ENABLED: true
         }}
       >
@@ -115,7 +114,6 @@ describe('Module Sortable List', () => {
     const { container } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
           CENG_ENABLED: true
         }}
       >
@@ -143,7 +141,6 @@ describe('Module Sortable List', () => {
     const { container } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
           CENG_ENABLED: true
         }}
       >
@@ -168,7 +165,6 @@ describe('Module Sortable List', () => {
     const { container } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
           CENG_ENABLED: true
         }}
       >

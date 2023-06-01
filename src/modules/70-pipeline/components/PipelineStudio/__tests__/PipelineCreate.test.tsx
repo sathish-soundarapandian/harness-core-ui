@@ -44,7 +44,7 @@ jest.mock('services/cd-ng', () => ({
     return { data: gitConfigs, refetch: getListGitSync }
   }),
   useGetConnector: jest.fn().mockImplementation(() => ({ data: gitHubMock, refetch: getGitConnector })),
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(gitHubMock)),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(gitHubMock)),
   useGetListOfBranchesByConnector: jest.fn().mockImplementation(() => ({ data: branches, refetch: fetchBranches })),
   useGetListOfReposByRefConnector: jest.fn().mockImplementation(() => {
     return { data: mockRepos, refetch: fetchRepos }

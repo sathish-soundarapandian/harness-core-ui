@@ -26,6 +26,7 @@ interface ResourceHandler {
     module?: Module,
     auditEventData?: AuditEventData
   ) => string | undefined
+  additionalDetails?: (auditEventData?: AuditEventData) => Record<StringKeys, string | undefined>
 }
 
 class AuditTrailFactory {

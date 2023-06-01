@@ -29,6 +29,7 @@ const actions: UseActionCreatorReturn = {
   fetchSectionData: jest.fn(),
   fetchingSectionData: jest.fn(),
   updateSectionData: jest.fn(),
+  updateManuallyToggled: jest.fn(),
   toggleSection: jest.fn(),
   resetSection: jest.fn(),
   search: jest.fn(),

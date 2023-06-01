@@ -2392,6 +2392,34 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                     class="Layout--vertical Layout--layout-spacing-large StyledProps--main webhookPipelineInputContainer StyledProps--padding-none"
                   >
                     <div
+                      class="Layout--horizontal StyledProps--main infoBar"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-green500"
+                        data-icon="info-message"
+                      >
+                        <svg
+                          fill="none"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          width="14"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M12 21.494c-5.385 0-9.75-4.365-9.75-9.75s4.365-9.75 9.75-9.75 9.75 4.365 9.75 9.75a9.704 9.704 0 01-1.55 5.276l1.484 3.44a.75.75 0 01-.985.986l-3.447-1.486A9.704 9.704 0 0112 21.494zM10.876 7.62a1.125 1.125 0 102.25 0 1.125 1.125 0 00-2.25 0zM12 10.225a.75.75 0 00-.75.75v4.502a.75.75 0 001.5 0v-4.502a.75.75 0 00-.75-.75z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
+                      >
+                        triggers.toast.payloadInfoBar
+                      </p>
+                    </div>
+                    <div
                       class="inputsetGrid"
                     >
                       <div

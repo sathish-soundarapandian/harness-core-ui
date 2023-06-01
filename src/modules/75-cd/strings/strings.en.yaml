@@ -172,6 +172,12 @@ steps:
     envTypes:
       gen1: '1st gen'
       gen2: '2nd gen'
+  awsSamDeployStep:
+    containerConfigurationText: Container Configuration
+    awsSamDeployCommandOptions: AWS SAM Deploy Command Options
+  awsSamBuildStep:
+    samBuildDockerContainerRegistry: SAM Build Docker Container Registry
+    awsSamBuildCommandOptions: AWS SAM Build Command Options
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -374,7 +380,7 @@ serviceDashboard:
     rollbackTitle: Rollback an artifact from which infrastructure?
     rollbackWarningText: 'Please make sure that you have rollback steps/strategy defined. Otherwise, the rollback would fail. Do you want to proceed with rollback?'
     rollbackConfirmationTitle: Rollback Infrastructure?
-    rollbackConfirmationText: Please confirm that you've initiated rollback for the following?
+    rollbackConfirmationText: Please confirm that you want to initiate rollback for the following
     emptyStateMsg: No Infrastructures available to rollback
     rollbackTriggedSuccessfully: Rollback is triggered successfully
   pod: pod
@@ -513,7 +519,6 @@ serverlessDeployCommandOptions: Serverless Deploy Command Options
 useConnectorCredentials: 'Use Connector Credentials'
 configurationVariable: Configuration Variable
 overrideValue: Override Value
-overrideType: Override Type
 environment:
   delete: '{{ $.common.deleteEnvironment.title }}'
   deleteConfirmation: Are you sure you want to delete this Environment?
@@ -625,6 +630,8 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  getStartedBtn: Get started with a guided deployment
+  whyHarnessCD: Why Harness CD
   cdWizardEventName: CD Wizard - {{ eventName }}
   creatingApp: Creating Application in progress
   main: main
@@ -680,7 +687,7 @@ getStartedWithCD:
   awsRegionHelperText: replace REGION with your AWS region, for example us-west-1
   azureAKSHelperText: replace myResourceGroup with your AKS resource group
   googleGKEHelperText: replace ZONE with your GCP region, for example us-central1-c
-  onboardingTitle: Start your deployments journey with Harness CD
+  onboardingTitle: Start your journey to a standard deployment process in minutes
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
   gitopsOnboardingAgentStep: Connect to Harness by provisioning hosted Agent
   gitopsOnboardingSelectAgent: Select existing agent
@@ -814,6 +821,20 @@ getStartedWithCD:
   artifactInManifest: No, it is hard-coded in my manifest
   giveSample: Give me a Sample
   artifactReferencedInManifest: Fantastic! If your artifact is already referenced in your manifest you are ready to continue to the next step.
+  tryCICTA: '<b>Developer</b>? Check out Harness <a target="_blank" href="{{ciurl}}">Continuous Integration</a> to build and test your code 4x faster with hosted builds and test intelligence. <a target="_blank" href="{{docurl}}">CI or CD?</a>'
+  standardization: 'Standardization: Create consistent, standard deployment processes across the organization'
+  quality: 'Quality: Reduce the percentage of deployments that cause failures in production'
+  restore: 'Time to restore: Quicker triage of failures in production and time to restore services'
+  productivity: 'Productivity: More team productivity because less time is spent waiting for deployments and fixing issues'
+  frequency: 'Deployment frequency: release small changes more often'
+  velocity: 'Deployment velocity: decrease the amount of time it takes a commit to get into production'
+  cdresources:
+    cdtuts: CD tutorials
+    cdbasics: CD pipeline basics
+    firstcdpipeline: Create your first CD pipeline
+    pipelineModeling: CD pipeline modeling overview
+    svcinfra: Services and environments basics
+    terraformcli: Onboarding with Terraform CLI
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
@@ -1002,3 +1023,4 @@ customSequence:
   newlyAddedLabel: NEWLY ADDED
   switchSuccessMsg: Successfully switched to {{sequence}} sequence
   switchFailedMsg: Failed to switch
+samVersionLabel: SAM Version

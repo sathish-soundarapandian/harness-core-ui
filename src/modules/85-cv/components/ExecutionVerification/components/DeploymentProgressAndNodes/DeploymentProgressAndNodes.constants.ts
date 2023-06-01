@@ -6,3 +6,5 @@ export const deploymentTypesToShowNodes: Array<string> = [
   VerificationJobType.ROLLING,
   VerificationJobType.NO_ANALYSIS
 ]
+
+export const defaultDateFormat = 'MMM D, YYYY h:mm A'

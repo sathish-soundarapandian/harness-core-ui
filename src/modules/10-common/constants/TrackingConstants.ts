@@ -220,7 +220,12 @@ export enum Category {
   FEEDBACK = 'Feedback',
   ENFORCEMENT = 'Enforcement',
   FEATUREFLAG = 'Featureflag',
-  CREDIT_CARD = 'CreditCard'
+  CREDIT_CARD = 'CreditCard',
+  SERVICE = 'Service',
+  FILESTORE = 'FileStore',
+  AUDIT_TRAIL = 'AuditTrail',
+  TEMPLATES = 'Templates',
+  PIPELINE_EXECUTION = 'PipelineExecution'
 }
 export enum CreditCard {
   UpgradePlan = 'Upgrade Plan',
@@ -408,6 +413,10 @@ export enum CDOnboardingActions {
   CD_HELP_VIDEO_PLAYED = 'Video played'
 }
 
+export enum CDActions {
+  CreateUpdateManifest = 'Create/Update Manifest',
+  ApplyAdvancedFilter = 'Applied advanced filter'
+}
 export enum CFOverviewActions {
   OverviewStartFreePlan = 'FF Overview - Start a free plan',
   InviteCollaboratorsClick = 'Clicked Invite Collaborators'

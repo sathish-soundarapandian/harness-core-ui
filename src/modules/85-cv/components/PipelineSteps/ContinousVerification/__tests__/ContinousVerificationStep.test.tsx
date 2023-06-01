@@ -24,7 +24,8 @@ import {
   verifyStepInitialValuesWithRunTimeFields,
   mockedCreatedMonitoredService,
   monitoredServiceYamlData,
-  mockedHealthSource
+  mockedHealthSource,
+  mockedSignalFXHealthSource
 } from './ContinousVerificationMocks'
 import {
   getSpecYamlData,
@@ -559,6 +560,15 @@ describe('Test ContinousVerificationStep Step', () => {
       enrichHealthSourceWithVersionForHealthsourceType(mockedHealthSource as UpdatedHealthSourceWithAllSpecs)
     ).toEqual({
       ...mockedHealthSource,
+      version: 'v2'
+    })
+  })
+
+  test('should validate enrichHealthSourceWithVersionForHealthsourceType for SplunkSignalFXMetrics', () => {
+    expect(
+      enrichHealthSourceWithVersionForHealthsourceType(mockedSignalFXHealthSource as UpdatedHealthSourceWithAllSpecs)
+    ).toEqual({
+      ...mockedSignalFXHealthSource,
       version: 'v2'
     })
   })

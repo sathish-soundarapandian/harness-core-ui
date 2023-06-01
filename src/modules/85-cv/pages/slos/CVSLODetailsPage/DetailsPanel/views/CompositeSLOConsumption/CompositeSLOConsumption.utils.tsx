@@ -124,7 +124,7 @@ export const RenderActualSlo: Renderer<CellProps<any>> = ({ row }) => {
   )
 }
 
-export const durationAsString = (consumptionMinutes: number): string => {
+export const durationAsString = (consumptionMinutes?: number): string => {
   const duration = moment.duration(consumptionMinutes, 'minutes')
 
   //Get Days

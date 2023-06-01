@@ -41,6 +41,8 @@ import {
 } from '@pipeline/pages/utils/Filters/filters'
 import { StringUtils } from '@common/exports'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDActions, Category } from '@common/constants/TrackingConstants'
 import type { ExecutionListPageQueryParams } from '../types'
 import { ExecutionListFilterForm } from '../ExecutionListFilterForm/ExecutionListFilterForm'
 import { useExecutionListQueryParams } from '../utils/executionListUtil'
@@ -55,6 +57,7 @@ export function ExecutionListFilter(): React.ReactElement {
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<ExecutionListPageQueryParams>>()
   const queryParams = useExecutionListQueryParams()
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   const { state: isFiltersDrawerOpen, open: openFilterDrawer, close: hideFilterDrawer } = useBooleanStatus()
   const filterRef = React.useRef<FilterRef<FilterDTO> | null>(null)
   const filterDrawerOpenedRef = useRef(false)
@@ -181,6 +184,10 @@ export function ExecutionListFilter(): React.ReactElement {
       filterIdentifier: option.value ? option.value.toString() : undefined,
       filters: undefined
     })
+    option?.value &&
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.PIPELINE_EXECUTION
+      })
   }
 
   const handleFilterClick = (filterIdentifier: string) => {
@@ -197,6 +204,9 @@ export function ExecutionListFilter(): React.ReactElement {
       const filterFromFormData = getValidFilterArguments({ ...inputFormData })
       updateQueryParams({ page: undefined, filterIdentifier: undefined, filters: filterFromFormData || {} })
       hideFilterDrawer()
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.PIPELINE_EXECUTION
+      })
     } else {
       showError(getString('filters.invalidCriteria'))
     }
@@ -217,6 +227,9 @@ export function ExecutionListFilter(): React.ReactElement {
       const updatedFilter = await saveOrUpdateHandler(isUpdate, requestBodyPayload)
       updateQueryParams({ filters: updatedFilter?.filterProperties || {} })
       refetchFilterList()
+      trackEvent(CDActions.ApplyAdvancedFilter, {
+        category: Category.PIPELINE_EXECUTION
+      })
     }
   }
 

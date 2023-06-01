@@ -307,7 +307,7 @@ export default function OptionalConfiguration(props: {
 
       {renderMultiTypeMap({ name: 'spec.infrastructure.spec.labels', stringKey: 'ci.labels' })}
 
-      {renderMultiTypeMap({ name: 'spec.infrastructure.spec.annotations', stringKey: 'ci.annotations' })}
+      {renderMultiTypeMap({ name: 'spec.infrastructure.spec.annotations', stringKey: 'common.annotations' })}
 
       {showContainerSecurityContext && renderContainerSecurityContext()}
 

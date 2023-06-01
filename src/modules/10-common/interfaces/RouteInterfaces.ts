@@ -195,6 +195,10 @@ export interface EnvironmentGroupQueryParams {
   sectionId?: 'CONFIGURATION' | 'ENVIRONMENTS'
 }
 
+export interface ServiceOverridesQueryParams {
+  sectionId?: 'ENVIRONMENT_GLOBAL' | 'ENVIRONMENT_SERVICE_SPECIFIC' | 'INFRA_GLOBAL' | 'INFRA_SERVICE_SPECIFIC'
+}
+
 export interface CVDataSourceTypePathProps {
   dataSourceType: string
 }
@@ -216,7 +220,7 @@ export type ModuleNameMatch =
   | ':module(ssca)'
   | ':module(idp)'
   | ':module(dashboards)'
-  | ':module(et)'
+  | ':module(cet)'
 
 export type Module = ModuleName | ModuleNameMatch
 

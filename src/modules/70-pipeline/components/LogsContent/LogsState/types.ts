@@ -22,6 +22,7 @@ export enum ActionType {
   FetchingSectionData = 'FetchingSectionData',
   UpdateSectionData = 'UpdateSectionData',
   ToggleSection = 'ToggleSection',
+  UpdateManuallyToggled = 'UpdateManuallyToggled',
   ResetSection = 'ResetSection',
   Search = 'Search',
   ResetSearch = 'ResetSearch',

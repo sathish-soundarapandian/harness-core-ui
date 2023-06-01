@@ -18,8 +18,8 @@ import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/Config
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
-import { tagOptions } from '../../../ArtifactHelper'
-import { getArtifactPathToFetchTags, helperTextData, resetTag } from '../../../ArtifactUtils'
+import { ENABLED_ARTIFACT_TYPES, tagOptions } from '../../../ArtifactHelper'
+import { getArtifactPathToFetchTags, helperTextData, resetFieldValue, resetTag } from '../../../ArtifactUtils'
 import type { ArtifactImagePathTagViewProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -144,6 +144,11 @@ function ArtifactImagePathTagView({
     resetTag(formik)
   }
 
+  const resetDigestValue = () => {
+    if (selectedArtifact === ENABLED_ARTIFACT_TYPES.DockerRegistry) {
+      resetFieldValue(formik, 'digest')
+    }
+  }
   return (
     <>
       {isServerlessDeploymentTypeSelected ? null : isArtifactPath ? (
@@ -213,6 +218,9 @@ function ArtifactImagePathTagView({
           radioGroup={{ inline: true }}
           items={tagOptions}
           className={css.radioGroup}
+          onChange={() => {
+            resetDigestValue()
+          }}
         />
       </div>
       {formik?.values?.tagType === 'value' ? (
@@ -249,7 +257,8 @@ function ArtifactImagePathTagView({
                 if (!canFetchTags || canFetchTags()) {
                   onTagInputFocus(e, formik, fetchTags, isArtifactPath, isServerlessDeploymentTypeSelected)
                 }
-              }
+              },
+              onChange: () => resetDigestValue()
             }}
             label={isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
             name="tag"

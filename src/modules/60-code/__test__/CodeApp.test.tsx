@@ -18,7 +18,8 @@ import {
   Compare,
   Webhooks,
   WebhookNew,
-  WebhookDetails
+  WebhookDetails,
+  Tags
 } from '../CodeApp'
 
 // eslint-disable-next-line jest-no-mock
@@ -94,6 +95,14 @@ jest.mock(
 )
 
 jest.mock(
+  'code/Tags',
+  () => ({
+    default: () => <div>code/Tags</div>
+  }),
+  { virtual: true }
+)
+
+jest.mock(
   'code/PullRequests',
   () => ({
     default: () => <div>code/PullRequests</div>
@@ -157,6 +166,7 @@ describe('CodeApp', () => {
         <Repositories />
         <Commits />
         <Branches />
+        <Tags />
         <FileEdit />
         <Settings />
         <PullRequests />

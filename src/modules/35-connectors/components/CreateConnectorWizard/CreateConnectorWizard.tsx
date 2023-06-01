@@ -114,7 +114,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { CVNG_ENABLED, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_TERRAFORM_CLOUD, SRM_SPLUNK_SIGNALFX } = useFeatureFlags()
+  const { CVNG_ENABLED, CDS_TAS_NG, CDS_TERRAFORM_CLOUD, SRM_SPLUNK_SIGNALFX } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -211,7 +211,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.GcpSecretManager:
       return <CreateGCPSecretManager {...commonProps} />
     case Connectors.SPOT:
-      return SPOT_ELASTIGROUP_NG ? <SpotConnector {...commonProps} /> : null
+      return <SpotConnector {...commonProps} />
     case Connectors.AZURE_ARTIFACTS:
       return <CreateAzureArtifactsConnector {...commonProps} />
     case Connectors.TAS:

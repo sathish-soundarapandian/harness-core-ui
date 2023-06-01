@@ -18,6 +18,14 @@
   }
 }
 
+.infoBar {
+  background-color: var(--primary-5) !important;
+  padding: 10px !important;
+
+  .bp3-icon {
+    color: var(--white) !important;
+  }
+}
 .formContentTitle {
   font-weight: bold !important;
   font-size: medium !important;

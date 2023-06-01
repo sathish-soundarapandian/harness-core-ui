@@ -5,8 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, parseStringToTime, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import * as Yup from 'yup'
+import moment from 'moment'
+import type { UseStringsReturn } from 'framework/strings'
+import { DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ApproverInputsSubmitCallInterface, HarnessApprovalData } from './types'
+
+export enum ApproveAction {
+  Approve = 'APPROVE',
+  Reject = 'REJECT'
+}
 
 const getInitialValueForMinCount = (valueFromData: string | number): string | number => {
   if (getMultiTypeFromValue(valueFromData) === MultiTypeInputType.FIXED) {
@@ -71,4 +81,48 @@ export const processForInitialValues = (data: HarnessApprovalData): HarnessAppro
   }
 
   return toReturn
+}
+
+export const scheduleAutoApprovalValidationSchema = (
+  getString: UseStringsReturn['getString'],
+  viewType?: StepViewType
+): Yup.Schema<string | undefined> => {
+  return Yup.lazy((value): Yup.Schema<string> => {
+    if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+      return Yup.string()
+        .trim()
+        .required(getString('common.validation.fieldIsRequired', { name: 'Time' }))
+        .test({
+          test(val: string): boolean | Yup.ValidationError {
+            const timeout: string = (this as any).from[3].value.timeout
+            const isTimeoutFieldRuntime = timeout === RUNTIME_INPUT_VALUE
+            // check only 2nd condition if timeout field is not present in deployment view
+            const isTimeoutUnavailableInDeploymentView = viewType === StepViewType.DeploymentForm && !timeout
+            const parsedTime = parseStringToTime(timeout ?? '')
+
+            const maxApprovalTime: number = Date.now() + (isTimeoutFieldRuntime ? 0 : parsedTime)
+            const minApprovalTime: number = Date.now() + parseStringToTime('15m')
+            const formValue = moment(val, DATE_PARSE_FORMAT).valueOf()
+
+            if (!isTimeoutFieldRuntime && !isTimeoutUnavailableInDeploymentView && formValue > maxApprovalTime)
+              return this.createError({
+                message: getString('pipeline.approvalStep.validation.autoApproveScheduleTimeout')
+              })
+
+            if (
+              (isTimeoutFieldRuntime ||
+                parsedTime > parseStringToTime('15m') ||
+                isTimeoutUnavailableInDeploymentView) &&
+              formValue < minApprovalTime
+            )
+              return this.createError({
+                message: getString('pipeline.approvalStep.validation.autoApproveScheduleCurrentTime')
+              })
+
+            return true
+          }
+        })
+    }
+    return Yup.string().required(getString('common.validation.fieldIsRequired', { name: 'Time' }))
+  })
 }

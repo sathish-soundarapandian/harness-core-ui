@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import cx from 'classnames'
 import {
   Dialog,
@@ -17,7 +17,8 @@ import {
   useToaster,
   Heading,
   ButtonVariation,
-  ExpandingSearchInput
+  ExpandingSearchInput,
+  ExpandingSearchInputHandle
 } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
@@ -45,7 +46,12 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { Sort, SortFields } from '@common/utils/listUtils'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
-import { ServicesQueryParams, ServiceTabs, useServicesQueryParamOptions } from '../utils/ServiceUtils'
+import {
+  ServicesQueryParams,
+  SERVICES_DEFAULT_PAGE_INDEX,
+  ServiceTabs,
+  useServicesQueryParamOptions
+} from '../utils/ServiceUtils'
 import css from './ServicesListPage.module.scss'
 
 interface ServicesListPageProps {
@@ -73,13 +79,13 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
   const queryParamOptions = useServicesQueryParamOptions()
   const queryParams = useQueryParams(queryParamOptions)
   const { updateQueryParams } = useUpdateQueryParams<ServicesQueryParams>()
-  const { page, size } = queryParams
+  const { page, size, searchTerm } = queryParams
 
   const [sort, setSort] = useState<[SortFields, Sort]>(savedSortOption ?? queryParams.sort)
-  const [searchTerm, setSearchTerm] = useState('')
   const [view, setView] = useState(Views.LIST)
   const [mode, setMode] = useState<SelectedView>(SelectedView.VISUAL)
   const [isEdit, setIsEdit] = useState(false)
+  const searchRef = useRef<ExpandingSearchInputHandle>()
   const [serviceDetails, setServiceDetails] = useState({
     name: '',
     identifier: '',
@@ -109,6 +115,14 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [forceDeleteSettingsError])
+
+  const handleSearchTermChange = (query: string): void => {
+    if (query) {
+      updateQueryParams({ searchTerm: query, page: SERVICES_DEFAULT_PAGE_INDEX })
+    } else {
+      updateQueryParams({ searchTerm: undefined })
+    }
+  }
 
   const goToServiceDetails = useCallback(
     (selectedService: ServiceResponseDTO): void => {
@@ -262,9 +276,8 @@ export const ServicesListPage = ({ setShowBanner }: ServicesListPageProps): Reac
             <ExpandingSearchInput
               placeholder={getString('search')}
               throttle={200}
-              onChange={(val: string) => {
-                setSearchTerm(val.trim())
-              }}
+              onChange={handleSearchTermChange}
+              ref={searchRef}
               alwaysExpanded={true}
             />
             <SortOption

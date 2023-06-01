@@ -32,9 +32,9 @@ noData: 'No data found. Click the button below to create a new item.'
 welcome: 'Welcome to Continuous Integration'
 description: Build, test and push artifacts to repositories.
 createPipeline: '{{ $.common.createPipeline }}'
-annotations: Annotations
 labels: '{{ $.pipelineSteps.labelsLabel }}'
 optimize: '{{ $.common.moduleList.optimize }}'
+enableDLC: Enable Docker layer caching (Preview)
 remoteCacheImage:
   label: Remote Cache Image
   dockerInfo: The remote cache repository needs to be created in the same account and organization as the build image. The repository must already exist for caching to work
@@ -58,6 +58,10 @@ runTestsStep:
   sixPointZero: '6.0'
   namespaces: Namespaces
   testReportPaths: Test Report Paths
+  pytest: Pytest
+  unittest: Unittest
+  testRoot: Test Root
+  testGlobs: Test Globs
   validation:
     namespacesRequiredWhenCsharp: 'Namespaces is required in case Language is C#'
 runTestsErrorTrackingSetupText: Do you want to enable Error Tracking?
@@ -119,7 +123,6 @@ buildInfra:
     architecture: Achitecture
     isRequiredWhen: '{{field1}} is required in case {{field2}} is provided'
   cloud: Cloud
-  hostNames: Host Names
   info:
     cloud: Choose Cloud to execute the stage in a Harness Hosted environment.
     local1: Choose Local to run builds in your own machine.
@@ -208,7 +211,7 @@ getStartedWithCI:
   importExistingYAMLHelptext: Use the Harness config file in your repository
   chooseStarterConfig: Choose a Starter Configuration
   configurationOption: Configuration Option
-  validYAMLFile: YAML Path should end with ".yaml" extension
+  validYAMLFile: YAML Path should end with either ".yaml" or ".yml" extension
   storeInGit: Store in Git
   enterBranch: Enter branch name
   createBranchIfNotExists: Create branch if not exists

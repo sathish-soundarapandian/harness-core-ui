@@ -57,7 +57,10 @@ export const VerificationSensitivityOptions: SelectOption[] = [
   { label: 'Low', value: 'LOW' }
 ]
 
-export const baseLineOptions: SelectOption[] = [{ label: 'Last Successful job run', value: 'LAST' }]
+export const baseLineOptions: SelectOption[] = [
+  { label: 'Last Successful job run', value: 'LAST' },
+  { label: 'Pinned baseline', value: 'PINNED' }
+]
 
 export const cvDefaultValues: ContinousVerificationData = {
   name: '',
@@ -128,7 +131,9 @@ export const V2_HEALTHSOURCES = [
   HealthSourceTypes.SumoLogic,
   HealthSourceTypes.SumologicLogs,
   HealthSourceTypes.SumologicMetrics,
-  HealthSourceTypes.Elk
+  HealthSourceTypes.Elk,
+  HealthSourceTypes.SignalFX,
+  HealthSourceTypes.SplunkSignalFXMetrics
 ]
 
 export enum VerifyStepActions {

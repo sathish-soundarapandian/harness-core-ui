@@ -40,7 +40,7 @@ const getConnectorList = jest.fn(() => Promise.resolve(logStreamingConnectorList
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn().mockImplementation(() => ({ refetch: getConnector, loading: false })),
-  getConnectorListPromise: jest.fn().mockImplementation(() => {
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => {
     return getConnectorList()
   })
 }))

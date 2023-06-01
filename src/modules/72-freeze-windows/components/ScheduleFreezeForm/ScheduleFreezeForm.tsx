@@ -212,7 +212,7 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
           <FormikForm>
             <Layout.Vertical width={'320px'} className={css.scheduleFreezeForm}>
               <FormInput.DropDown
-                label={getString('freezeWindows.recurrenceConfig.Timezone')}
+                label={getString('common.timezone')}
                 name="timeZone"
                 items={timeZoneList}
                 dropDownProps={{

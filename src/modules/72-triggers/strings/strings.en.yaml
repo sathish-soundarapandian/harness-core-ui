@@ -23,6 +23,7 @@ triggerConfigurationLabel: 'Trigger Configuration'
 pipelineInputLabel: 'Pipeline Input'
 branchNameCantBeExpression: Branch Name cannot be an expression for non-Webhook triggers
 inputSetIsRequired: With Git Experience enabled it is required to Select Input Set(s) which is stored as part of the pipeline definition in the same repository.
+inputSetV1Required: It is required to Select Input Set(s)
 updateTrigger: 'Update Trigger'
 createTrigger: 'Create Trigger'
 deleteTrigger: 'Delete Trigger'
@@ -44,6 +45,8 @@ triggerCouldNotBeSavedContent: Do you want to continue?
 triggerCouldNotBeSavedGenericError: Failed to save Trigger.
 updateTriggerDetails: 'Your trigger has been overwritten because you have updated your pipeline. You may go to Pipeline Input and update your trigger.'
 retryTriggerSave: The inputset you selected was not found in the default branch in your repository. You can continue to save your Trigger with an error.
+enabled: enabled
+disabled: disabled
 error:
   webhookRegistrationFailed: Webhook Registration Failed
 validation:
@@ -63,12 +66,13 @@ validation:
   repositoryFormat: 'Repository Format is required.'
   configureSecret: 'Secret is required'
 toast:
-  successfulCreate: 'Successfully created {{name}}.'
+  successfulCreate: 'Successfully created {{name}}. Trigger is {{enabled}} by default.'
   successfulUpdate: 'Successfully updated {{name}}.'
   toggleEnable: 'Successfully {{enabled}} {{name}}.'
   webhookUrlCopied: 'Webhook URL is copied to clipboard.'
   webhookCurlCopied: 'Webhook cURL Command is copied to clipboard.'
   existingTriggerError: 'There are some errors with this existing trigger. Please edit and update for more details.'
+  payloadInfoBar: 'You can reference trigger payload values in the pipeline input section. Harness can use values from the trigger payload and map them to variables that are being used in the target pipeline.'
 tooltip:
   defaultGitSyncBranchOnly: Triggers can be added to a Pipeline in the default branch only
 triggerConfigurationPanel:
@@ -150,3 +154,8 @@ schedulePanel:
   cronExpression: '{{$.common.schedulePanel.cronExpression}}'
   unixExpression: 'UNIX Expression'
   quartzExpression: 'Quartz Expression'
+activityHistory:
+  eventCorrelationId: 'Event Correlation Id'
+  triggerStatus: 'Trigger Status'
+  executionDetails: 'Execution Details'
+  emptyStateMessage: 'No trigger activity history'

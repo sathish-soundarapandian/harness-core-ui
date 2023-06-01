@@ -22,6 +22,7 @@ import { Color, Intent } from '@harness/design-system'
 import { parse } from 'yaml'
 import { isEmpty, isUndefined, merge, defaultTo, noop, get, omitBy, omit } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
+import { getPipelineInputs, InputsResponseBody } from '@harnessio/react-pipeline-service-client'
 import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import routes from '@common/RouteDefinitions'
@@ -82,6 +83,8 @@ import type {
 import type { AddConditionInterface } from '@triggers/pages/triggers/views/AddConditionsSection'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
 import {
   getConnectorName,
   getConnectorValue,
@@ -131,6 +134,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
   } = useQueryParams<TriggerGitQueryParams>()
   const history = useHistory()
   const { getString } = useStrings()
+  const [pipelineInputs, setPipelineInputs] = useState<InputsResponseBody>({})
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const { data: template, loading: fetchingTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
       accountIdentifier: accountId,
@@ -325,6 +330,25 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
     )
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
+  useEffect(() => {
+    if (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)) {
+      getPipelineInputs({
+        org: orgIdentifier,
+        project: projectIdentifier,
+        pipeline: pipelineIdentifier,
+        queryParams: {
+          repo_name: repoIdentifier,
+          branch_name: branch,
+          connector_ref: pipelineConnectorRef
+        }
+      })
+        .then(response => {
+          setPipelineInputs(response.content)
+        })
+        .catch((err: Error) => setErrorToasterMessage(err.message))
+    }
+  }, [CI_YAML_VERSIONING])
+
   const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
     {
       accountId,
@@ -347,7 +371,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
   }, [loadingGetTrigger, fetchingTemplate, loadingPipeline, loadingResolvedChildPipeline, loadingMergeInputSet])
 
   useDeepCompareEffect(() => {
-    if (shouldRenderWizard && template?.data?.inputSetTemplateYaml !== undefined) {
+    if (template?.data?.inputSetTemplateYaml !== undefined) {
       if (onEditInitialValues?.pipeline && !isMergedPipelineReady) {
         let newOnEditPipeline = merge(
           parse(template?.data?.inputSetTemplateYaml)?.pipeline,
@@ -383,13 +407,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         setCurrentPipeline(newPipeline)
       }
     }
-  }, [
-    template?.data?.inputSetTemplateYaml,
-    onEditInitialValues?.pipeline,
-    resolvedMergedPipeline,
-    fetchingTemplate,
-    loadingGetTrigger
-  ])
+  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline])
 
   useEffect(() => {
     if (triggerResponse?.data?.enabled === false) {
@@ -680,7 +698,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       } else if (status === ResponseStatus.SUCCESS) {
         showSuccess(
           getString(isCreatingNewTrigger ? 'triggers.toast.successfulCreate' : 'triggers.toast.successfulUpdate', {
-            name: data?.name
+            name: data?.name,
+            enabled: data?.enabled ? getString('triggers.enabled') : getString('triggers.disabled')
           })
         )
 
@@ -1111,6 +1130,18 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
         }
       }
     }
+    if (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)) {
+      // inputSetRefs is required if Input Set is required to run pipeline
+      if (!isEmpty(pipelineInputs.inputs) || !isEmpty(pipelineInputs.options?.clone)) {
+        if (!formikProps?.values?.inputSetSelected?.length) {
+          _inputSetRefsError = getString('triggers.inputSetV1Required')
+        }
+
+        if (parsedTriggerYaml?.trigger?.inputSetRefs?.length || formikProps?.values?.inputSetRefs?.length) {
+          _inputSetRefsError = ''
+        }
+      }
+    }
 
     const { values, setErrors, setSubmitting } = formikProps
     let latestPipelineFromYamlView
@@ -1135,6 +1166,10 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined
+
+    const V1TriggerError = isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
+      ? omitBy({ inputSetRefs: _inputSetRefsError }, value => !value)
+      : undefined
     // https://github.com/formium/formik/issues/1392
     const errors: any = await {
       ...runPipelineFormErrors
@@ -1144,6 +1179,10 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       setErrors(gitXErrors)
       setFormErrors(gitXErrors)
       return gitXErrors
+    } else if (V1TriggerError && Object.keys(V1TriggerError).length) {
+      setErrors(V1TriggerError)
+      setFormErrors(V1TriggerError)
+      return V1TriggerError
     } else if (!isEmpty(runPipelineFormErrors)) {
       setErrors(runPipelineFormErrors)
       return runPipelineFormErrors

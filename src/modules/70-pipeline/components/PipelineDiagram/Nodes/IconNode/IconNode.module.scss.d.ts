@@ -10,6 +10,6 @@ declare const styles: {
   readonly hoverName: string
   readonly iconNode: string
   readonly iconNodeContainer: string
-  readonly inComplete: string
+  readonly incomplete: string
 }
 export default styles

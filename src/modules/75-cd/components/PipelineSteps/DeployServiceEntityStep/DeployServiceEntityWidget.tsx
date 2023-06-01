@@ -62,6 +62,7 @@ import { useDeepCompareEffect } from '@common/hooks'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -98,6 +99,10 @@ const DIALOG_PROPS: Omit<ModalDialogProps, 'isOpen'> = {
 }
 
 function getInitialValues(data: DeployServiceEntityData): FormState {
+  const parallelValue = defaultTo(
+    get(data, 'services.metadata.parallel', true),
+    !!get(data, 'services.metadata.parallel', true)
+  )
   if (data.service && data.service.serviceRef) {
     return {
       service: data.service.serviceRef,
@@ -119,18 +124,19 @@ function getInitialValues(data: DeployServiceEntityData): FormState {
           (p, c) => ({ ...p, [defaultTo(c.serviceRef, '')]: c.serviceInputs }),
           {}
         ),
-        parallel: !!get(data, 'services.metadata.parallel', true)
+
+        parallel: parallelValue
       }
     }
 
     return {
       services: data.services.values,
       serviceInputs: {},
-      parallel: !!get(data, 'services.metadata.parallel', true)
+      parallel: parallelValue
     }
   }
 
-  return { parallel: !!get(data, 'services.metadata.parallel', true) }
+  return { parallel: parallelValue }
 }
 
 export default function DeployServiceEntityWidget({
@@ -198,7 +204,6 @@ export default function DeployServiceEntityWidget({
     loadingServicesList,
     updatingData,
     prependServiceToServiceList,
-    updateServiceInputsData,
     nonExistingServiceIdentifiers
   } = useGetServicesData({
     gitOpsEnabled,
@@ -382,7 +387,6 @@ export default function DeployServiceEntityWidget({
           )?.serviceInputs
         }
       })
-      updateServiceInputsData(updatedService.identifier, mergedServiceInputsResponse)
       setIsFetchingMergeServiceInputs(false)
     }
   }
@@ -412,7 +416,7 @@ export default function DeployServiceEntityWidget({
               )
             : values.services,
           metadata: {
-            parallel: !!values.parallel
+            parallel: defaultTo(values.parallel, !!values.parallel)
           }
         }
       })
@@ -700,9 +704,14 @@ export default function DeployServiceEntityWidget({
                     </Layout.Horizontal>
 
                     {isMultiSvc ? (
-                      <FormInput.CheckBox
+                      <FormMultiTypeCheckboxField
                         label={getString('cd.pipelineSteps.serviceTab.multiServicesParallelDeployLabel')}
                         name="parallel"
+                        multiTypeTextbox={{
+                          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+                          width: 300
+                        }}
+                        style={{ width: '300px' }}
                       />
                     ) : null}
                   </>

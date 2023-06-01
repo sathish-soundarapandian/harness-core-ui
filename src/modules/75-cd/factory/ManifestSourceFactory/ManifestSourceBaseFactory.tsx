@@ -30,6 +30,7 @@ import { TASVarsSource } from '@cd/components/PipelineSteps/TasServiceSpec/Manif
 import { GoogleCloudFunctionDefinitionManifestSource } from '@cd/components/PipelineSteps/GoogleCloudFunction/ManifestSource/GoogleCloudFunctionDefinitionManifestSource/GoogleCloudFunctionDefinitionManifestSource'
 import { AwsLambdaFunctionDefinitionManifestSource } from '@cd/components/PipelineSteps/AwsLambda/AwsLambdaServiceSpec/ManifestSource/AwsLambdaFunctionDefinitionManifestSource/AwsLambdaFunctionDefinitionManifestSource'
 import { AwsLambdaFunctionAliasDefinitionManifestSource } from '@cd/components/PipelineSteps/AwsLambda/AwsLambdaServiceSpec/ManifestSource/AwsLambdaFunctionAliasDefinitionManifestSource/AwsLambdaFunctionAliasDefinitionManifestSource'
+import { AwsSamDirectoryManifestSource } from '@cd/components/PipelineSteps/AwsSam/AwsSamServiceSpec/ManifestSource/AwsSamDirectoryManifestSource'
 import type { ManifestSourceBase } from './ManifestSourceBase'
 
 export class ManifestSourceBaseFactory {
@@ -80,5 +81,6 @@ manifestSourceBaseFactory.registerManifestSource(new GoogleCloudFunctionDefiniti
 manifestSourceBaseFactory.registerManifestSource(new HelmRepoOverrideManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new AwsLambdaFunctionDefinitionManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new AwsLambdaFunctionAliasDefinitionManifestSource())
+manifestSourceBaseFactory.registerManifestSource(new AwsSamDirectoryManifestSource())
 
 export default manifestSourceBaseFactory

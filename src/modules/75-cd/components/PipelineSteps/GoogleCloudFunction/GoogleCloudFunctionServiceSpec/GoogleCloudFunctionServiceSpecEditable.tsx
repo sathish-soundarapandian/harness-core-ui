@@ -162,6 +162,7 @@ const GoogleCloudFunctionServiceSpecEditable: React.FC<GoogleCloudFunctionServic
             {!manifestList.length && (
               <AddManifestSteps
                 selectedDeploymentType={selectedDeploymentType}
+                manifestType={getAllowedManifestTypes()[0]}
                 manifestFileName={manifestFileName}
                 suggestedManifestYaml={getSuggestedManifestYaml(environmentType)}
               />

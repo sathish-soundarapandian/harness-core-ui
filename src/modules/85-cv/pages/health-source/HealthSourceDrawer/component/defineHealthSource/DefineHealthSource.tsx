@@ -85,6 +85,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   const isSignalFXEnabled = useFeatureFlag(FeatureFlag.SRM_SPLUNK_SIGNALFX)
 
+  const isLokiEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_GRAFANA_LOKI_LOGS)
+
   const [productInfo, setProductInfo] = useState<{
     updatedProduct: SelectOption | null
     currentProduct: SelectOption | null
@@ -98,8 +100,12 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
       disabledConnectorsList.push(HealthSourceTypes.SignalFX)
     }
 
+    if (!isLokiEnabled) {
+      disabledConnectorsList.push(HealthSourceTypes.GrafanaLoki)
+    }
+
     return disabledConnectorsList
-  }, [isSignalFXEnabled])
+  }, [isSignalFXEnabled, isLokiEnabled])
 
   const initialValues = useMemo(() => {
     return getInitialValues(sourceData, getString)
