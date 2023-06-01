@@ -2660,6 +2660,8 @@ export interface ConnectorCatalogueItem {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
+    | 'Rancher'
   )[]
 }
 
@@ -2746,6 +2748,8 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
+    | 'Rancher'
   )[]
 }
 
@@ -2808,6 +2812,8 @@ export interface ConnectorInfoDTO {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
+    | 'Rancher'
 }
 
 export interface ConnectorResponse {
@@ -2887,6 +2893,8 @@ export interface ConnectorTypeStatistics {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
+    | 'Rancher'
 }
 
 export interface ConnectorValidationResult {
@@ -3019,6 +3027,19 @@ export type CreatePRStepUpdateConfigScriptInlineSource = CreatePRStepUpdateConfi
 export interface CreatePRStepUpdateConfigScriptWrapper {
   spec: CreatePRStepUpdateConfigScriptBaseSource
   type: string
+}
+
+export interface CreditCardDTO {
+  accountIdentifier: string
+  creditCardIdentifier: string
+  customerIdentifier: string
+  fingerprint: string
+}
+
+export interface CreditCardResponse {
+  createdAt?: number
+  creditCardDTO: CreditCardDTO
+  lastUpdatedAt?: number
 }
 
 export interface CreditDTO {
@@ -3551,6 +3572,12 @@ export interface DeploymentInfoV2 {
 
 export interface DeploymentMetaData {
   [key: string]: any
+}
+
+export interface DeploymentReleaseDetails {
+  deploymentDetails?: DeploymentDetails[]
+  deploymentType?: string
+  taskInfoId?: string
 }
 
 export type DeploymentStageConfig = StageInfoConfig & {
@@ -8923,6 +8950,7 @@ export interface HelmChartResponseDTO {
 export type HelmDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   ignoreReleaseHistFailStatus?: boolean
+  skipSteadyStateCheck?: ParameterFieldBoolean
 }
 
 export interface HelmManifestCommandFlag {
@@ -8951,6 +8979,7 @@ export type HelmRepoOverrideManifest = ManifestAttributes & {
 
 export type HelmRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  skipSteadyStateCheck?: ParameterFieldBoolean
 }
 
 export type HostAttributesFilter = HostFilterSpec & {
@@ -9570,7 +9599,8 @@ export interface InstanceSyncResponseV2 {
 }
 
 export interface InstanceSyncTaskDetails {
-  [key: string]: any
+  details?: PageDeploymentReleaseDetails
+  responseBatchConfig?: ResponseBatchConfig
 }
 
 export interface InstancesByBuildIdList {
@@ -10059,7 +10089,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export interface LDAPSettings {
+export type LDAPSettings = NGAuthSettings & {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -10067,7 +10097,6 @@ export interface LDAPSettings {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -10814,10 +10843,9 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export interface OAuthSettings {
+export type OAuthSettings = NGAuthSettings & {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -11116,6 +11144,17 @@ export interface PageClusterResponse {
 
 export interface PageConnectorResponse {
   content?: ConnectorResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageDeploymentReleaseDetails {
+  content?: DeploymentReleaseDetails[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -12635,6 +12674,13 @@ export interface ResponseCreatePRDTO {
 export interface ResponseCreatePRResponse {
   correlationId?: string
   data?: CreatePRResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCreditCardResponse {
+  correlationId?: string
+  data?: CreditCardResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -16724,6 +16770,7 @@ export interface SlackNotificationSetting {
 }
 
 export interface SmtpConfigDTO {
+  delegateSelectors?: string[]
   fromAddress?: string
   host: string
   password?: string[]
@@ -17531,6 +17578,7 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 }
 
 export interface TemplateLinkConfig {
+  gitBranch?: string
   templateInputs?: JsonNode
   templateRef: string
   templateVariables?: JsonNode
@@ -26705,8 +26753,8 @@ export interface ValidateArtifactForGcrQueryParams {
   registryHostname: string
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactForGcrProps = Omit<
@@ -30174,8 +30222,8 @@ export const updateWhitelistedDomainsPromise = (
 export interface AutoScalingGroupsQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region: string
 }
 
@@ -30491,8 +30539,8 @@ export const getEKSClusterNamesPromise = (
 export interface ElasticLoadBalancersQueryParams {
   awsConnectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region?: string
   envId?: string
   infraDefinitionId?: string
@@ -30545,8 +30593,8 @@ export const elasticLoadBalancersPromise = (
 export interface FilterHostsQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type FilterHostsProps = Omit<GetProps<ResponseListString, Failure | Error, FilterHostsQueryParams, void>, 'path'>
@@ -30645,8 +30693,8 @@ export const getIamRolesForAwsPromise = (
 export interface ListenerRulesQueryParams {
   awsConnectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region?: string
   elasticLoadBalancer: string
   listenerArn: string
@@ -30701,8 +30749,8 @@ export const listenerRulesPromise = (
 export interface ListenersQueryParams {
   awsConnectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region?: string
   elasticLoadBalancer: string
   envId?: string
@@ -30756,8 +30804,8 @@ export const listenersPromise = (
 export interface LoadBalancersQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region: string
 }
 
@@ -30892,8 +30940,8 @@ export const tagsPromise = (
 export interface TagsV2QueryParams {
   awsConnectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region?: string
   envId?: string
   infraDefinitionId?: string
@@ -30987,8 +31035,8 @@ export interface GetLocationsBySubscriptionQueryParams {
   connectorRef: string
   subscriptionId?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetLocationsBySubscriptionProps = Omit<
@@ -31038,8 +31086,8 @@ export const getLocationsBySubscriptionPromise = (
 export interface GetManagementGroupsQueryParams {
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetManagementGroupsProps = Omit<
@@ -31234,8 +31282,8 @@ export const getAzureResourceGroupsBySubscriptionPromise = (
 export interface GetAzureWebAppNamesQueryParams {
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface GetAzureWebAppNamesPathParams {
@@ -31312,8 +31360,8 @@ export const getAzureWebAppNamesPromise = (
 export interface GetAzureWebAppDeploymentSlotsQueryParams {
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface GetAzureWebAppDeploymentSlotsPathParams {
@@ -31653,8 +31701,8 @@ export const getSubscriptionTagsPromise = (
 export interface GetAzureWebAppNamesV2QueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   resourceGroup?: string
   envId?: string
@@ -31708,8 +31756,8 @@ export const getAzureWebAppNamesV2Promise = (
 export interface GetAzureWebAppDeploymentSlotsV2QueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   resourceGroup?: string
   envId?: string
@@ -31798,8 +31846,8 @@ export const getAzureWebAppDeploymentSlotsV2Promise = (
 export interface GetAzureClustersV2QueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   resourceGroup?: string
   envId?: string
@@ -31853,8 +31901,8 @@ export const getAzureClustersV2Promise = (
 export interface GetAzureResourceGroupsV2QueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   envId?: string
   infraDefinitionId?: string
@@ -31907,8 +31955,8 @@ export const getAzureResourceGroupsV2Promise = (
 export interface GetSubscriptionTagsV2QueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   envId?: string
   infraDefinitionId?: string
@@ -31961,8 +32009,8 @@ export const getSubscriptionTagsV2Promise = (
 export interface GetGCSBucketListQueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   fqnPath?: string
   serviceId?: string
 }
@@ -32015,8 +32063,8 @@ export interface GetBucketListForS3QueryParams {
   region?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   fqnPath?: string
   serviceId?: string
 }
@@ -32175,8 +32223,8 @@ export interface ListBucketsWithServiceV2QueryParams {
   region?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   pipelineIdentifier?: string
   fqnPath: string
   serviceId?: string
@@ -32546,6 +32594,8 @@ export interface GetConnectorListQueryParams {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
+    | 'Rancher'
   category?:
     | 'CLOUD_PROVIDER'
     | 'SECRET_MANAGER'
@@ -32953,6 +33003,8 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
+    | 'Rancher'
 }
 
 export type GetAllAllowedFieldValuesProps = Omit<
@@ -33728,6 +33780,57 @@ export const getConnectorPromise = (
   getUsingFetch<ResponseConnectorResponse, Failure | Error, GetConnectorQueryParams, GetConnectorPathParams>(
     getConfig('ng/api'),
     `/connectors/${identifier}`,
+    props,
+    signal
+  )
+
+export interface SaveCardQueryParams {
+  accountIdentifier: string
+}
+
+export type SaveCardProps = Omit<
+  MutateProps<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Saves non-sensitive credit card information
+ */
+export const SaveCard = (props: SaveCardProps) => (
+  <Mutate<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>
+    verb="POST"
+    path={`/credit-cards`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseSaveCardProps = Omit<
+  UseMutateProps<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Saves non-sensitive credit card information
+ */
+export const useSaveCard = (props: UseSaveCardProps) =>
+  useMutate<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>(
+    'POST',
+    `/credit-cards`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Saves non-sensitive credit card information
+ */
+export const saveCardPromise = (
+  props: MutateUsingFetchProps<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/credit-cards`,
     props,
     signal
   )
@@ -34541,8 +34644,8 @@ export const getDeploymentHealthV2Promise = (
 
 export interface GetActiveInstanceGroupedByArtifactQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   environmentIdentifier?: string
   envGroupIdentifier?: string
@@ -34606,8 +34709,8 @@ export const getActiveInstanceGroupedByArtifactPromise = (
 
 export interface GetActiveInstanceGroupedByEnvironmentQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   environmentIdentifier?: string
   envGroupIdentifier?: string
@@ -34737,8 +34840,8 @@ export const getActiveServiceDeploymentsPromise = (
 
 export interface GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   envId: string
   environmentType?: 'PreProduction' | 'Production'
@@ -34876,8 +34979,8 @@ export const getActiveServiceInstanceSummaryPromise = (
 
 export interface GetActiveServiceInstanceSummaryV2QueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   timestamp: number
 }
@@ -34994,8 +35097,8 @@ export const getActiveServiceInstancesPromise = (
 
 export interface GetArtifactInstanceDetailsQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
 }
 
@@ -35268,8 +35371,8 @@ export const getEnvBuildInstanceCountPromise = (
 
 export interface GetEnvironmentInstanceDetailsQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
 }
 
@@ -35348,8 +35451,8 @@ export const getEnvironmentInstanceDetailsPromise = (
 
 export interface GetActiveServiceInstanceCountBreakdownQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string[]
 }
 
@@ -35479,8 +35582,8 @@ export const getInstanceCountHistoryPromise = (
 
 export interface GetInstanceGrowthTrendQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   startTime: number
   endTime: number
@@ -35670,8 +35773,8 @@ export const getInstancesDetailsPromise = (
 
 export interface GetOpenTasksQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   startTime: number
 }
@@ -35739,7 +35842,7 @@ export type GetPipelineExecutionCountProps = Omit<
 >
 
 /**
- * Get pipeline execution count for a service grouped on artifact and status
+ * Get pipeline execution count info
  */
 export const GetPipelineExecutionCount = (props: GetPipelineExecutionCountProps) => (
   <Get<ResponsePipelineExecutionCountInfo, Failure | Error, GetPipelineExecutionCountQueryParams, void>
@@ -35755,7 +35858,7 @@ export type UseGetPipelineExecutionCountProps = Omit<
 >
 
 /**
- * Get pipeline execution count for a service grouped on artifact and status
+ * Get pipeline execution count info
  */
 export const useGetPipelineExecutionCount = (props: UseGetPipelineExecutionCountProps) =>
   useGet<ResponsePipelineExecutionCountInfo, Failure | Error, GetPipelineExecutionCountQueryParams, void>(
@@ -35764,7 +35867,7 @@ export const useGetPipelineExecutionCount = (props: UseGetPipelineExecutionCount
   )
 
 /**
- * Get pipeline execution count for a service grouped on artifact and status
+ * Get pipeline execution count info
  */
 export const getPipelineExecutionCountPromise = (
   props: GetUsingFetchProps<
@@ -35999,8 +36102,8 @@ export const getWorkloadsV2Promise = (
 
 export interface GetServiceDeploymentsQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   startTime: number
   endTime: number
   serviceId?: string
@@ -36224,8 +36327,8 @@ export const getServiceDetailsPromise = (
 
 export interface GetServiceDetailsV2QueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   startTime: number
   endTime: number
   sort?: string[]
@@ -40140,8 +40243,8 @@ export const getEnvironmentsInputYamlAndServiceOverridesPromise = (
 
 export interface GetActiveServiceInstancesForEnvironmentQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   environmentIdentifier: string
   serviceIdentifier?: string
   buildId?: string
@@ -48128,8 +48231,8 @@ export const deleteGitOpsInstancesPromise = (
 
 export interface ProcessGitOpsInstancesQueryParams {
   accountIdentifier?: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   agentIdentifier?: string
 }
 
@@ -48283,6 +48386,75 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
     DelegateResponseDataRequestBody,
     void
   >('POST', getConfig('ng/api'), `/instancesync/response`, props, signal)
+
+export interface FetchTaskDetailsQueryParams {
+  page?: number
+  page_size?: number
+  accountIdentifier: string
+}
+
+export interface FetchTaskDetailsPathParams {
+  perpetualTaskId: string
+}
+
+export type FetchTaskDetailsProps = Omit<
+  GetProps<ResponseInstanceSyncTaskDetails, Failure | Error, FetchTaskDetailsQueryParams, FetchTaskDetailsPathParams>,
+  'path'
+> &
+  FetchTaskDetailsPathParams
+
+/**
+ * Get instance sync perpetual task details
+ */
+export const FetchTaskDetails = ({ perpetualTaskId, ...props }: FetchTaskDetailsProps) => (
+  <Get<ResponseInstanceSyncTaskDetails, Failure | Error, FetchTaskDetailsQueryParams, FetchTaskDetailsPathParams>
+    path={`/instancesync/task/${perpetualTaskId}/details`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseFetchTaskDetailsProps = Omit<
+  UseGetProps<
+    ResponseInstanceSyncTaskDetails,
+    Failure | Error,
+    FetchTaskDetailsQueryParams,
+    FetchTaskDetailsPathParams
+  >,
+  'path'
+> &
+  FetchTaskDetailsPathParams
+
+/**
+ * Get instance sync perpetual task details
+ */
+export const useFetchTaskDetails = ({ perpetualTaskId, ...props }: UseFetchTaskDetailsProps) =>
+  useGet<ResponseInstanceSyncTaskDetails, Failure | Error, FetchTaskDetailsQueryParams, FetchTaskDetailsPathParams>(
+    (paramsInPath: FetchTaskDetailsPathParams) => `/instancesync/task/${paramsInPath.perpetualTaskId}/details`,
+    { base: getConfig('ng/api'), pathParams: { perpetualTaskId }, ...props }
+  )
+
+/**
+ * Get instance sync perpetual task details
+ */
+export const fetchTaskDetailsPromise = (
+  {
+    perpetualTaskId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseInstanceSyncTaskDetails,
+    Failure | Error,
+    FetchTaskDetailsQueryParams,
+    FetchTaskDetailsPathParams
+  > & { perpetualTaskId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseInstanceSyncTaskDetails,
+    Failure | Error,
+    FetchTaskDetailsQueryParams,
+    FetchTaskDetailsPathParams
+  >(getConfig('ng/api'), `/instancesync/task/${perpetualTaskId}/details`, props, signal)
 
 export interface GetInstanceSyncPerpetualTaskResponseV2QueryParams {
   accountIdentifier: string
@@ -60662,8 +60834,8 @@ export const getTasSpacesPromise = (
 
 export interface GetTasSpacesV2QueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   organization?: string
   envId: string
   infraDefinitionId: string
@@ -67104,6 +67276,8 @@ export interface GetYamlSchemaQueryParams {
     | 'Bamboo'
     | 'TerraformCloud'
     | 'SignalFX'
+    | 'Harness'
+    | 'Rancher'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
