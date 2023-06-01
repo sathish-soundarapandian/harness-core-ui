@@ -29,7 +29,7 @@ export function StageRightDrawer(): JSX.Element {
   const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
   const stageType = selectedStage?.stage?.template ? StageType.Template : selectedStage?.stage?.type
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setSelection({ stageDetailsOpen: null, sectionId: null })
   }
 
