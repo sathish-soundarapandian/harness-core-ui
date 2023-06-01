@@ -234,3 +234,50 @@ export const externalAPICallLogsMinimumResponse: RestResponsePageCVNGLogDTO = {
     ]
   }
 }
+
+export const externalAPICallLogsJSONResponse: RestResponsePageCVNGLogDTO = {
+  ...externalAPICallLogsResponse,
+  resource: {
+    ...externalAPICallLogsResponse.resource,
+    content: [
+      {
+        accountId: 'zEaak-FLS425IEO7OLzMUg',
+        traceableId: 'UAlk7Un2Rcq0hS6SXWE6uA',
+        createdAt: 1647015342721,
+        startTime: 1647015120000,
+        endTime: 1647015180000,
+        traceableType: 'VERIFICATION_TASK',
+        requests: [
+          {
+            name: 'url',
+            value: 'https://qva35651.live.dynatrace.com/api/v2/metrics/query?entitySelector=type',
+            type: 'URL'
+          },
+          {
+            name: 'Request Body',
+            value:
+              '{"totalCount":1.0,"nextPageKey":null,"resolution":"1m", "data":[{"dimensions":["SERVICE_METHOD-F3988BEE84FF7388"]}]}',
+            type: 'JSON'
+          }
+        ],
+        responses: [
+          {
+            name: 'Status Code',
+            value: '200',
+            type: 'NUMBER'
+          },
+          {
+            name: 'Response Body',
+            value:
+              '{"totalCount":1.0,"nextPageKey":null,"resolution":"1m", "data":[{"dimensions":["SERVICE_METHOD-F3988BEE84FF7388"]}]}',
+            type: 'JSON'
+          }
+        ],
+        tags: [{ key: 'dataSourceType', value: 'NEW_RELIC', type: 'STRING' }],
+        requestTime: 1647015341267,
+        responseTime: 1647015341484,
+        type: 'ApiCallLog'
+      } as ApiCallLogDTO
+    ]
+  }
+}

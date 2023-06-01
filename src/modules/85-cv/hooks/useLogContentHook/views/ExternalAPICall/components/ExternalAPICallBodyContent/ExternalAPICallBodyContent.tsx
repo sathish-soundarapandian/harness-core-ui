@@ -29,7 +29,7 @@ export default function ExternalAPICallBodyContent({
 
   return (
     <>
-      <Container flex={{ alignItems: 'flex-start' }}>
+      <Container data-testid="externalAPICallBodyContent_Json" flex={{ alignItems: 'flex-start' }}>
         <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_400}>
           {getString('requestBodyLabel')}:
         </Text>
