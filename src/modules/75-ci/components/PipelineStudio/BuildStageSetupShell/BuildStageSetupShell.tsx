@@ -308,7 +308,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
     </Layout.Horizontal>
   )
 
-  const tabList = [
+  const tabList: TabListType[] = [
     {
       id: BuildTabs.OVERVIEW,
       title: (
@@ -468,7 +468,7 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
       ),
       dataTestId: getString('ci.advancedLabel')
     }
-  ].filter(Boolean) as TabListType[]
+  ]
 
   const stageHeaderName = React.useMemo((): string => {
     const stageName = get(selectedStage?.stage, 'name', '')

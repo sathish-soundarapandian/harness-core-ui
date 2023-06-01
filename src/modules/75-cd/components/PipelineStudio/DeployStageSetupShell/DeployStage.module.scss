@@ -77,11 +77,10 @@
   }
   .cardListContainerNew {
     flex-wrap: wrap;
+    column-gap: var(--layout-spacing);
+
     & > * + * {
       margin-left: 0px !important;
-    }
-    & > *:not(:last-child) {
-      margin-right: var(--layout-spacing);
     }
   }
 }
