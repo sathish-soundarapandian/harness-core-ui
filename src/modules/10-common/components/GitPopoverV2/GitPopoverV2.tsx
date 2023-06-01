@@ -32,6 +32,7 @@ interface GitPopoverV2Props {
   customIcon?: React.ReactNode
   btnClassName?: string
   setDefaultBranch?: React.Dispatch<React.SetStateAction<string | undefined>>
+  selectedBranch?: string
 }
 
 const createSelectOption = (value?: string): SelectOption => {
@@ -101,7 +102,8 @@ export const GitPopoverV2 = ({
   onGitBranchChange,
   customIcon,
   btnClassName,
-  setDefaultBranch
+  setDefaultBranch,
+  selectedBranch: selectedBranchInPopover
 }: GitPopoverV2Props): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
@@ -144,8 +146,9 @@ export const GitPopoverV2 = ({
     return []
   }, [response?.data, response?.status])
 
-  const selectedBranch = createSelectOption(defaultTo(branch, response?.data?.defaultBranch?.name))
-
+  const selectedBranch = createSelectOption(
+    defaultTo(selectedBranchInPopover, defaultTo(branch, response?.data?.defaultBranch?.name))
+  )
   const branchUI = (
     <FormInput.Select
       name="branch"
