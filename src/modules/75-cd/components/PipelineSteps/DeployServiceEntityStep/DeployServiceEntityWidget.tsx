@@ -667,8 +667,7 @@ export default function DeployServiceEntityWidget({
                         label={getString('cd.pipelineSteps.serviceTab.multiServicesParallelDeployLabel')}
                         name="parallel"
                         multiTypeTextbox={{
-                          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
-                          width: 300
+                          allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
                         }}
                         style={{ width: '300px' }}
                       />

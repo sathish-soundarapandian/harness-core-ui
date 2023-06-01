@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import {
   AllowedTypes,
   getMultiTypeFromValue,
@@ -15,7 +15,7 @@ import {
   SelectOption,
   useToaster
 } from '@harness/uicore'
-import { cloneDeep, defaultTo, get, isEmpty, isNil, merge, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, merge } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -155,18 +155,6 @@ export function DeployServiceEntityInputStep({
     }
   }, [servicesList])
 
-  useEffect(() => {
-    const clonedFormikValue = cloneDeep(formik.values) as any
-    if (getMultiTypeFromValue(deployParallelTemplate) === MultiTypeInputType.RUNTIME)
-      set(
-        clonedFormikValue,
-        `${localPathPrefix}metadata.parallel`,
-        get(formik, `values.${localPathPrefix}metadata.parallel`) || false
-      )
-
-    formik.setValues({ ...clonedFormikValue })
-  }, [])
-
   useDeepCompareEffect(() => {
     // This is specific handling for service as expression in templatized views
     if (serviceIdentifiers.length === 1 && isValueExpression(serviceValue)) {
@@ -282,7 +270,7 @@ export function DeployServiceEntityInputStep({
 
   return (
     <>
-      <Layout.Horizontal style={{ flexDirection: 'column' }}>
+      <Layout.Vertical>
         <div className={css.inputFieldLayout}>
           {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
             CDS_OrgAccountLevelServiceEnvEnvGroup ? (
@@ -367,6 +355,7 @@ export function DeployServiceEntityInputStep({
                   label={getString('cd.pipelineSteps.serviceTab.multiServicesParallelDeployLabel')}
                   name={`${localPathPrefix}metadata.parallel`}
                   disabled={inputSetData?.readonly}
+                  setToFalseWhenEmpty
                   checkboxStyle={{ flexGrow: 'unset' }}
                   multiTypeTextbox={{
                     expressions,
@@ -379,7 +368,7 @@ export function DeployServiceEntityInputStep({
           </>
         ) : null}
         {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}
-      </Layout.Horizontal>
+      </Layout.Vertical>
     </>
   )
 }
