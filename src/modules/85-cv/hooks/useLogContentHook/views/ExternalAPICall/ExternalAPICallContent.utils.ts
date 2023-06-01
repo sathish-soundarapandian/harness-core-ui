@@ -11,8 +11,6 @@ export const isValidJson = (jsonString?: string) => {
   } catch {
     return false
   }
-
-  return false
 }
 
 export const getStringifyText = (noDataText: string, data?: string): string => {
