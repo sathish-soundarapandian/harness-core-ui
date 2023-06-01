@@ -119,7 +119,8 @@ export const Connectors: ConnectorType = {
   TERRAFORM_CLOUD: 'TerraformCloud',
   Bamboo: 'Bamboo',
   SignalFX: 'SignalFX',
-  Harness: 'Harness'
+  Harness: 'Harness',
+  Rancher: 'Rancher'
 }
 
 export const ConnectorLabels: Record<ConnectorInfoDTO['type'], string> = {
@@ -171,7 +172,8 @@ export const ConnectorLabels: Record<ConnectorInfoDTO['type'], string> = {
   Tas: 'TAS',
   TerraformCloud: 'TerraformCloud',
   SignalFX: 'SignalFX',
-  Harness: 'Harness'
+  Harness: 'Harness',
+  Rancher: 'Rancher'
 }
 
 export const ConnectorStatus: ConnectorStatusType = {
