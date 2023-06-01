@@ -5,38 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { Color } from '@harness/design-system'
-import {
-  ButtonVariation,
-  Container,
-  ExpandingSearchInput,
-  Icon,
-  Layout,
-  MultiSelectDropDown,
-  MultiSelectOption,
-  Page,
-  Text
-} from '@harness/uicore'
+import { Button, ButtonVariation, Container, Layout, Page, Tabs, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
+import moment from 'moment'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import type { ModulePathParams, DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
-import RbacButton from '@rbac/components/Button/Button'
 import { useStrings } from 'framework/strings'
+import { useGetInfra } from 'services/servicediscovery'
+import DiscoveredServices from './views/discovered-resources/DiscoveredServices'
 import css from './DiscoveryDetails.module.scss'
 
 const DiscoveryDetails: React.FC = () => {
-  const items: MultiSelectOption[] = [
-    { label: 'default', value: 'default' },
-    { label: 'litmus', value: 'litmus' },
-    { label: 'kube-dns', value: 'kube-dns' }
-  ]
-  const { accountId, orgIdentifier, projectIdentifier, discoveryId } = useParams<
-    DiscoveryPathProps & ModulePathParams
-  >()
+  const { accountId, orgIdentifier, projectIdentifier, infraId } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { getString } = useStrings()
-  const [value, setValue] = useState<MultiSelectOption[]>()
+
+  const { data: discoveryAgentData } = useGetInfra({ infra_id: infraId })
+
+  const date = moment(discoveryAgentData?.updatedAt).format('MMM DD, YYYY hh:mm A')
+
   return (
     <>
       <Page.Header
@@ -47,59 +36,74 @@ const DiscoveryDetails: React.FC = () => {
           />
         }
         title={
-          <Layout.Horizontal>
+          <Container width={'100%'} flex={{ justifyContent: 'space-between' }}>
             <Layout.Vertical>
-              <Text color={Color.BLACK} style={{ fontSize: '20px', fontWeight: 600, marginBottom: '8px' }}>
-                {discoveryId}
-              </Text>
-              <Layout.Horizontal flex={{ alignItems: 'center' }}>
-                <Text color={'#6B6D85'} font={{ size: 'small' }} margin={{ right: 'small' }}>
-                  {getString('discovery.discoveredBy')}
+              <Layout.Horizontal spacing="small">
+                <Text color={Color.BLACK} style={{ fontSize: '20px', fontWeight: 600, marginBottom: '8px' }}>
+                  {discoveryAgentData?.name}
                 </Text>
-                <Icon name="app-kubernetes" margin={{ right: 'xsmall' }} />
-                <Text color={Color.PRIMARY_7} font={{ size: 'small' }}>
-                  {getString('discovery.agentName')}
+                <Text
+                  margin={{ left: 'small' }}
+                  inline
+                  icon={'full-circle'}
+                  iconProps={{ size: 6, color: Color.GREEN_500 }}
+                  tooltipProps={{ isDark: true, position: 'bottom' }}
+                  font={{ size: 'small' }}
+                >
+                  Connected
                 </Text>
               </Layout.Horizontal>
+              <Text color={'#6B6D85'} font={{ size: 'small' }} margin={{ right: 'small' }}>
+                ID: {discoveryAgentData?.id}
+              </Text>
             </Layout.Vertical>
-            <Layout.Horizontal></Layout.Horizontal>
-            <Layout.Vertical></Layout.Vertical>
+          </Container>
+        }
+        toolbar={
+          <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
+            <Text font={{ size: 'small' }}>Last discovery: {date}</Text>
+            <Button
+              margin={{ left: 'medium' }}
+              icon="edit"
+              rightIcon="chevron-down"
+              variation={ButtonVariation.SECONDARY}
+              text="Edit"
+            />
           </Layout.Horizontal>
         }
       />
-      <Page.SubHeader>
-        <Layout.Horizontal flex={{ justifyContent: 'space-between' }} width={'100%'}>
-          <Layout.Horizontal>
-            <RbacButton
-              text="Enable"
-              variation={ButtonVariation.PRIMARY}
-              rightIcon="chevron-right"
-              onClick={() => void 0}
-              margin={{ right: 'small' }}
-            />
-            <Layout.Horizontal flex>
-              <MultiSelectDropDown
-                items={items}
-                value={value}
-                onChange={item => {
-                  setValue(item)
-                }}
-              />
-            </Layout.Horizontal>
-          </Layout.Horizontal>
-          <Container data-name="monitoredServiceSeachContainer">
-            <ExpandingSearchInput
-              width={250}
-              alwaysExpanded
-              throttle={500}
-              key={''}
-              defaultValue={''}
-              onChange={() => void 0}
-              placeholder={getString('discovery.homepage.searchNeworkMap')}
+      <Page.Body>
+        <Layout.Horizontal className={css.tabsContainerMain} flex={{ justifyContent: 'space-between' }}>
+          <Container width={'100%'}>
+            <Tabs
+              id={'DiscoveredServiceTab'}
+              defaultSelectedTabId={'discovered services'}
+              tabList={[
+                {
+                  id: 'discovered services',
+                  title: 'Discovered Resources',
+                  panel: <DiscoveredServices />
+                },
+                {
+                  id: 'network maps',
+                  title: 'Network Maps',
+                  panel: <div>Network Maps</div>
+                },
+                {
+                  id: 'network details',
+                  title: 'Network Details',
+                  panel: <div>Network Details</div>
+                },
+                {
+                  id: 'settings',
+                  title: 'Settings',
+                  panel: <div>Settings</div>
+                }
+              ]}
             />
           </Container>
         </Layout.Horizontal>
-      </Page.SubHeader>
+      </Page.Body>
     </>
   )
 }

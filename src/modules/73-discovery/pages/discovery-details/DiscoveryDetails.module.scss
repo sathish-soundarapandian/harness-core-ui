@@ -9,3 +9,17 @@
   height: 100px !important;
   background-color: var(--primary-1) !important;
 }
+
+.tabsContainerMain {
+  :global {
+    .bp3-tabs {
+      flex-direction: column;
+      .bp3-tab-list {
+        background-color: var(--white);
+        border-bottom: 1px solid #d9dae5;
+        padding: 0 var(--spacing-medium) !important;
+        box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+      }
+    }
+  }
+}

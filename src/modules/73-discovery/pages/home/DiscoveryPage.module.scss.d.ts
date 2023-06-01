@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly discoveryAgentTable: string
   readonly header: string
   readonly hostingToggle: string
   readonly search: string

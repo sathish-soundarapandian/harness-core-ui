@@ -7,7 +7,14 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly header: string
-  readonly tabsContainerMain: string
+  readonly deleteMenuItem: string
+  readonly idPill: string
+  readonly menuItem: string
+  readonly serviceCountContainer: string
+  readonly serviceCountText: string
+  readonly servicesTable: string
+  readonly tableBody: string
+  readonly toggleAccordion: string
+  readonly totalServiceContainer: string
 }
 export default styles

@@ -416,14 +416,8 @@ const routes = {
   ),
 
   toDiscoveryDetails: withAccountId(
-    ({
-      orgIdentifier,
-      projectIdentifier,
-      infraId,
-      discoveryId,
-      module
-    }: Partial<DiscoveryPathProps & ModulePathParams>) => {
-      const path = `resources/discovery/${infraId}/${discoveryId}`
+    ({ orgIdentifier, projectIdentifier, infraId, module }: Partial<DiscoveryPathProps & ModulePathParams>) => {
+      const path = `resources/discovery/${infraId}`
       return getScopeBasedRoute({
         scope: {
           orgIdentifier,

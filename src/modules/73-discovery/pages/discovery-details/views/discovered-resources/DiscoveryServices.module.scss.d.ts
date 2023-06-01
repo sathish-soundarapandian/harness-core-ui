@@ -7,7 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly header: string
-  readonly tabsContainerMain: string
+  readonly tableBody: string
 }
 export default styles

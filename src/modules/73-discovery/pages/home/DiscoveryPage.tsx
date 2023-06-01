@@ -6,9 +6,10 @@
  */
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { ButtonVariation, Container, ExpandingSearchInput, Icon, Layout, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { Drawer, Position } from '@blueprintjs/core'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -16,8 +17,12 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
+import { useListInfra } from 'services/servicediscovery'
+import RbacButton from '@rbac/components/Button/Button'
+import DiscoveryAgentTable from '@discovery/components/DiscoveryAgentTable/DiscoveryAgentTable'
 import EmptyStateDiscoveryAgent from './views/empty-state/EmptyStateDiscoveryAgent'
 import CreateDAgent from './views/create-discovery-agent/CreateDAgent'
+import css from './DiscoveryPage.module.scss'
 
 const DiscoveryPage: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
@@ -26,6 +31,8 @@ const DiscoveryPage: React.FC = () => {
   const [isOpen, setDrawerOpen] = useState(false)
 
   useDocumentTitle(discoveryLabel)
+
+  const { data: discoveryAgentList, loading: discoveryAgentListLoading } = useListInfra({})
 
   return (
     <>
@@ -45,22 +52,57 @@ const DiscoveryPage: React.FC = () => {
           />
         }
       />
-      {/* <Page.SubHeader>
-        {discoveryView === 'network-map' ? getAddNetworkButton() : getAddDiscoverServiceButton()}
-      </Page.SubHeader> */}
-      <Page.Body>
-        {/* <Container padding={{ top: 'medium', left: 'xlarge', right: 'xlarge' }} height="inherit">
-          {discoveryView === 'network-map' ? (
-            <NetworkMapTable />
+
+      {discoveryAgentListLoading ? (
+        <Container width={'100%'} flex={{ align: 'center-center' }}>
+          <Layout.Vertical spacing={'medium'} style={{ alignItems: 'center' }}>
+            <Icon name="steps-spinner" size={32} color={Color.GREY_600} />
+            <Text font={{ size: 'medium', align: 'center' }} color={Color.GREY_600}>
+              {getString('loading')}
+            </Text>
+          </Layout.Vertical>
+        </Container>
+      ) : (
+        <Container>
+          {discoveryAgentList && discoveryAgentList.items && discoveryAgentList?.items?.length > 0 ? (
+            <>
+              <Page.SubHeader>
+                <Layout.Horizontal flex={{ justifyContent: 'space-between' }} width={'100%'}>
+                  <Layout.Horizontal>
+                    <RbacButton
+                      text="New Discovery Agent"
+                      variation={ButtonVariation.PRIMARY}
+                      icon="plus"
+                      onClick={() => setDrawerOpen(true)}
+                    />
+                  </Layout.Horizontal>
+                  <Container data-name="monitoredServiceSeachContainer">
+                    <ExpandingSearchInput
+                      width={250}
+                      alwaysExpanded
+                      throttle={500}
+                      key={''}
+                      defaultValue={''}
+                      onChange={() => void 0}
+                      placeholder={getString('discovery.homepage.searchNeworkMap')}
+                    />
+                  </Container>
+                </Layout.Horizontal>
+              </Page.SubHeader>
+              <Page.Body className={css.discoveryAgentTable}>
+                <DiscoveryAgentTable list={discoveryAgentList?.items} />
+              </Page.Body>
+            </>
           ) : (
-            <Text>{getString('discovery.serviceDiscoveyTable')}</Text>
+            <Page.Body>
+              <EmptyStateDiscoveryAgent setDrawerOpen={setDrawerOpen} />
+            </Page.Body>
           )}
-        </Container> */}
-        <Drawer position={Position.RIGHT} isOpen={isOpen} isCloseButtonShown={true} size={'86%'}>
-          <CreateDAgent setDrawerOpen={setDrawerOpen} />
-        </Drawer>
-        <EmptyStateDiscoveryAgent setDrawerOpen={setDrawerOpen} />
-      </Page.Body>
+        </Container>
+      )}
+      <Drawer position={Position.RIGHT} isOpen={isOpen} isCloseButtonShown={true} size={'86%'}>
+        <CreateDAgent setDrawerOpen={setDrawerOpen} />
+      </Drawer>
     </>
   )
 }
