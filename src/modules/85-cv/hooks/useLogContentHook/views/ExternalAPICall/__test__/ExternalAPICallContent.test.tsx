@@ -9,7 +9,10 @@ import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { render, screen, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { externalAPICallLogsResponse } from '@cv/hooks/useLogContentHook/__test__/ExecutionLog.mock'
+import {
+  externalAPICallLogsMinimumResponse,
+  externalAPICallLogsResponse
+} from '@cv/hooks/useLogContentHook/__test__/ExecutionLog.mock'
 import ExternalAPICallContent from '../ExternalAPICallContent'
 
 describe('ExternalAPICallContent', () => {
@@ -43,5 +46,35 @@ describe('ExternalAPICallContent', () => {
     expect(screen.getByText('"data(\\"otelcol_exporter_sent_metric_points\\").mean().publish()"')).toBeInTheDocument()
 
     await waitFor(() => expect(container).toMatchSnapshot())
+  })
+
+  test('should render ExternalAPICallContent for minimum available data in the response', async () => {
+    render(
+      <TestWrapper>
+        <ExternalAPICallContent
+          resource={externalAPICallLogsMinimumResponse.resource}
+          loading={false}
+          refetchLogs={jest.fn()}
+          setPageNumber={jest.fn()}
+          isFullScreen={false}
+          setIsFullScreen={jest.fn()}
+          errorLogsOnly={false}
+          setErrorLogsOnly={jest.fn()}
+          pageNumber={0}
+          handleDownloadLogs={jest.fn()}
+        />
+      </TestWrapper>
+    )
+
+    expect(screen.getByText('03/11/2022, 4:15 PM')).toBeInTheDocument()
+    expect(
+      screen.getByText('cv.fetchingDataFrom https://qva35651.live.dynatrace.com/api/v2/metrics/query')
+    ).toBeInTheDocument()
+
+    userEvent.click(screen.getByText('cv.fetchingDataFrom https://qva35651.live.dynatrace.com/api/v2/metrics/query'))
+
+    expect(screen.queryByText('Request Headers')).not.toBeInTheDocument()
+    expect(screen.queryByText('Request Method')).not.toBeInTheDocument()
+    expect(screen.queryByText('Request Body')).not.toBeInTheDocument()
   })
 })

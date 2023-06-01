@@ -14,8 +14,12 @@ export default function ExternalAPICallBodyContent({
 }: {
   data: ApiCallLogDTOField
   noDataText: string
-}): JSX.Element {
+}): JSX.Element | null {
   const { getString } = useStrings()
+
+  if (!data) {
+    return null
+  }
 
   const isDataIsText = data.type === 'TEXT'
 

@@ -111,8 +111,10 @@ const ExternalAPICallContent: React.FC<ExecutionAndAPICallLogProps> = ({
                   <KeyValuePair keyText="URL" value={request?.value} isLink />
                   <KeyValuePair keyText="Request Timestamp" value={formatDate(requestTime)} />
                   <KeyValuePair keyText="Tags" value={getTags(tags)} />
-                  <KeyValuePair keyText={requestMethod?.name ?? ''} value={requestMethod?.value} />
-                  <KeyValuePair keyText={requestHeaders?.name ?? ''} value={requestHeaders?.value} />
+                  {requestMethod && <KeyValuePair keyText={requestMethod?.name ?? ''} value={requestMethod?.value} />}
+                  {requestHeaders && (
+                    <KeyValuePair keyText={requestHeaders?.name ?? ''} value={requestHeaders?.value} />
+                  )}
                   <ExternalAPICallBodyContent data={requestBody as ApiCallLogDTOField} noDataText={TEXT_NO_DATA} />
                 </Container>
                 <Container padding={{ top: 'medium', right: 'large', bottom: 'medium', left: 'large' }}>
