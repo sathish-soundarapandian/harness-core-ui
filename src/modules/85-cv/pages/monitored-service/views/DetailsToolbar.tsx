@@ -22,7 +22,7 @@ const DetailsToolbar: React.FC<ToolbarProps> = ({ loading, monitoredService, las
 
   if (loading) {
     return (
-      <Layout.Vertical spacing="xsmall">
+      <Layout.Vertical spacing="xsmall" data-testid="loading">
         <Container height={15} width={220} className={Classes.SKELETON} />
         <Container height={15} width={220} className={Classes.SKELETON} />
         <Container height={15} width={220} className={Classes.SKELETON} />
