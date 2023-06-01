@@ -10,6 +10,7 @@ import * as Yup from 'yup'
 import { Formik } from 'formik'
 import { Button, Container, FormikForm, Text } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useStrings } from 'framework/strings'
@@ -38,11 +39,13 @@ export function ApprovalStageMinimalMode(props: ApprovalStageMinimalModeProps): 
   const { onChange, onSubmit, data, template } = props
 
   const {
-    state: { pipeline },
+    state: { pipeline, gitDetails },
     contextType
   } = usePipelineContext()
 
   const { branch, repoName } = useQueryParams<GitQueryParams>()
+  const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
+  const parentTemplateRepo = defaultTo(gitDetails?.repoName, repoName)
 
   const handleValidate = (values: ApprovalStageMinimalValues): Record<string, string | undefined> | undefined => {
     const errors: { name?: string } = {}
@@ -58,7 +61,10 @@ export function ApprovalStageMinimalMode(props: ApprovalStageMinimalModeProps): 
   const handleSubmit = (values: ApprovalStageMinimalValues): void => {
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template, branch, repoName) }, values.identifier)
+        onSubmit?.(
+          { stage: createTemplate(values, template, parentTemplateBranch, parentTemplateRepo) },
+          values.identifier
+        )
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

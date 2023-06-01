@@ -74,6 +74,8 @@ import { FeatureFlag } from '@common/featureFlags'
 import { errorCheck } from '@common/utils/formikHelpers'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { getGoogleCloudFunctionsEnvOptions } from '@cd/components/PipelineSteps/GoogleCloudFunction/utils/utils'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks/useQueryParams'
 import SelectDeploymentType from '../../DeployServiceSpecifications/SelectDeploymentType/SelectDeploymentType'
 import type { EditStageFormikType, EditStageViewProps } from '../EditStageViewInterface'
 import css from './EditStageView.module.scss'
@@ -129,7 +131,9 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     allowableTypes,
     updateStage
   } = usePipelineContext()
-
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
+  const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
+  const parentTemplateRepo = defaultTo(gitDetails?.repoName, repoName)
   const { variablesPipeline, metadataMap } = usePipelineVariables()
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
   const allNGVariables = (data?.stage?.variables || []) as AllNGVariables[]
@@ -237,7 +241,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     if (data?.stage) {
       if (template) {
         onSubmit?.(
-          { stage: createTemplate(values, template, gitDetails?.branch, gitDetails?.repoName) },
+          { stage: createTemplate(values, template, parentTemplateBranch, parentTemplateRepo) },
           values.identifier
         )
       } else {

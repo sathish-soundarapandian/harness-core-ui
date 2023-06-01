@@ -8,7 +8,7 @@
 import React from 'react'
 import { Text, Container, Formik, FormikForm, Button, IconName } from '@harness/uicore'
 import * as Yup from 'yup'
-import { get, set } from 'lodash-es'
+import { defaultTo, get, set } from 'lodash-es'
 import type { FormikErrors } from 'formik'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -17,15 +17,18 @@ import { NameId, NameIdDescriptionTags } from '@common/components/NameIdDescript
 import { IdentifierSchemaWithoutHook, NameSchemaWithoutHook } from '@common/utils/Validation'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { PipelineStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { TemplateDetailsResponseWrapper, createTemplate } from '@pipeline/utils/templateUtils'
+import type { TemplateSummaryResponse } from 'services/template-ng'
+import { createTemplate } from '@pipeline/utils/templateUtils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { useQueryParams } from '@common/hooks/useQueryParams'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import css from './PipelineStageMinimalMode.module.scss'
 
 interface EditPipelineStageViewProps {
   data?: StageElementWrapper<PipelineStageElementConfig>
-  template?: TemplateDetailsResponseWrapper
+  template?: TemplateSummaryResponse
   onSubmit?: (
     values: StageElementWrapper<PipelineStageElementConfig>,
     identifier: string,
@@ -66,6 +69,10 @@ export function EditPipelineStageView({
     isReadonly
   } = usePipelineContext()
 
+  const { branch, repoName } = useQueryParams<GitQueryParams>()
+  const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
+  const parentTemplateRepo = defaultTo(gitDetails?.repoName, repoName)
+
   const initialValues: Values = {
     identifier: get(data, 'stage.identifier', ''),
     name: get(data, 'stage.name', ''),
@@ -102,7 +109,7 @@ export function EditPipelineStageView({
     if (data?.stage) {
       if (template) {
         onSubmit?.(
-          { stage: createTemplate(values, template, gitDetails?.branch, gitDetails?.repoName) },
+          { stage: createTemplate(values, template, parentTemplateBranch, parentTemplateRepo) },
           values.identifier
         )
       } else {
