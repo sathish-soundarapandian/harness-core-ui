@@ -7,7 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { isEmpty, get, compact, set } from 'lodash-es'
+import { isEmpty, get, compact } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { connect, FormikErrors, yupToFormErrors } from 'formik'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
@@ -26,7 +26,7 @@ import { DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePic
 import { PipelineStep } from '../../PipelineStep'
 import { StepType } from '../../PipelineStepInterface'
 import { getSanitizedflatObjectForVariablesView } from '../Common/ApprovalCommons'
-import { processFormData, processForInitialValues, scheduleAutoApprovalValidationSchema } from './helper'
+import { processFormData, processForInitialValues } from './helper'
 import HarnessApprovalDeploymentMode from './HarnessApprovalDeploymentMode'
 import HarnessApprovalStepModeWithRef from './HarnessApprovalStepMode'
 import type { HarnessApprovalData, HarnessApprovalVariableListModeProps } from './types'
@@ -188,26 +188,6 @@ export class HarnessApproval extends PipelineStep<HarnessApprovalData> {
             minimumCount: getString?.('pipeline.approvalStep.validation.minimumCountOne')
           }
         }
-      }
-    }
-
-    if (
-      getMultiTypeFromValue(template?.spec?.autoApproval?.scheduledDeadline?.time) === MultiTypeInputType.RUNTIME &&
-      isRequired
-    ) {
-      try {
-        const schema = Yup.object().shape({
-          spec: Yup.object().shape({
-            autoApproval: Yup.object().shape({
-              scheduledDeadline: Yup.object().shape({
-                time: scheduleAutoApprovalValidationSchema(getString!, StepViewType.DeploymentForm)
-              })
-            })
-          })
-        })
-        schema.validateSync(data)
-      } catch (error: any) {
-        set(errors, 'spec.autoApproval.scheduledDeadline.time', error.message)
       }
     }
 

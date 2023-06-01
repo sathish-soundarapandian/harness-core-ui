@@ -323,7 +323,7 @@ export const errorStatusList = [
 const TriggerCategoryToLabelMap: Record<Required<TriggerCatalogItem>['category'], StringKeys> = {
   Webhook: 'execution.triggerType.WEBHOOK',
   Artifact: 'pipeline.artifactTriggerConfigPanel.artifact',
-  MultiArtifact: 'pipeline.artifactTriggerConfigPanel.artifact',
+  MultiRegionArtifact: 'pipeline.artifactTriggerConfigPanel.artifact',
   Manifest: 'manifestsText',
   Scheduled: 'triggers.scheduledLabel'
 }

@@ -213,6 +213,7 @@ describe('<StepCommands /> tests', () => {
 
     const conditionalExecutionSummary = await screen.findByTestId('conditionalExecution-summary')
     expect(conditionalExecutionSummary).toBeInTheDocument()
+    conditionalExecutionSummary.click()
 
     const multiTypeButton = conditionalExecutionSummary.querySelector('button')
     expect(multiTypeButton).toBeInTheDocument()

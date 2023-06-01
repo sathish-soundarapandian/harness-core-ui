@@ -5,16 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { HarnessDocTooltip, Heading, Layout, MultiSelectDropDown, SelectOption } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-
+import type { FormikProps } from 'formik'
 import { ALL_STAGE_VALUE, clearRuntimeInput, getAllStageItem } from '@pipeline/utils/runPipelineUtils'
 import { useStrings } from 'framework/strings'
 import {
-  ResponseMergeInputSetResponse,
   StageExecutionResponse,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   useGetStagesExecutionList
@@ -22,14 +21,33 @@ import {
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet } from '@common/hooks'
 import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
-
 import css from './StageSelection.module.scss'
 
-const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
+const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikProps }) => {
   const { getString } = useStrings()
-
-  const [callMerge, setCallMerge] = React.useState(false)
+  const {
+    stagesToExecute = [],
+    resolvedPipeline,
+    originalPipeline,
+    inputSetRefs = [],
+    pipeline
+  } = formikProps?.values ?? {}
+  const allowStageExecutions = resolvedPipeline?.allowStageExecutions
   const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier } = useParams<PipelinePathProps>()
+  const [selectedStages, setStage] = useState<SelectOption[]>(
+    /**
+     * Pass the stagesToExecute as initial selectedStages do handle the edit case flow.
+     * As we are using stage?.stageIdentifier both as name and value so creating the options using value only
+     */
+
+    stagesToExecute.map((stageToExecute: string) => ({
+      label: stageToExecute,
+      value: stageToExecute
+    }))
+  )
+  const [executionStageList, setExecutionStageList] = useState([getAllStageItem(getString)])
+  const [allStagesSelected, setAllStagesSelect] = useState<boolean>(false)
+
   const { data: stageExecutionData } = useGetStagesExecutionList({
     queryParams: {
       accountIdentifier: accountId,
@@ -39,110 +57,75 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
     }
   })
 
-  const executionStageList =
-    stageExecutionData?.data?.map((stage: StageExecutionResponse) => {
-      return {
-        label: defaultTo(stage?.stageIdentifier, ''),
-        value: defaultTo(stage?.stageIdentifier, '')
-      } as SelectOption
-    }) || []
+  const { data: inputSetData, refetch: refetchInputSetData } = useMutateAsGet(
+    useGetMergeInputSetFromPipelineTemplateWithListInput,
+    {
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
 
-  executionStageList.unshift(getAllStageItem(getString))
-
-  const [selectedStages, setStage] = React.useState<SelectOption[]>([])
-
-  const [inputData, setInputSetData] = React.useState<ResponseMergeInputSetResponse>({})
-
-  const [allStagesSelected, setAllStagesSelect] = React.useState<boolean>(false)
-  const allowStageExecutions = formikProps.values?.resolvedPipeline?.allowStageExecutions
-
-  const {
-    data: inputSetData,
-    loading: loadingInputSetsData,
-    refetch: refetchInputSetData
-  } = useMutateAsGet(useGetMergeInputSetFromPipelineTemplateWithListInput, {
-    body: {
-      inputSetReferences: [],
-      stageIdentifiers: selectedStages.map((stage: SelectOption) => stage.value),
-      lastYamlToMerge: yamlStringify(formikProps.values.inputSetTemplateYamlObj)
-    },
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      pipelineIdentifier,
-
-      getDefaultFromOtherRepo: true
-    },
-    lazy: true
-  })
+        getDefaultFromOtherRepo: true
+      },
+      lazy: true
+    }
+  )
 
   // calling merge input set data
   useEffect(() => {
-    if (selectedStages.length && formikProps.values?.stagesToExecute && !loadingInputSetsData && callMerge) {
-      refetchInputSetData()
-      setCallMerge(false)
-    }
-  }, [selectedStages, formikProps.values?.stagesToExecute, callMerge, loadingInputSetsData, refetchInputSetData])
-
-  // set input set pipelineyaml
-  useEffect(() => {
-    if (inputSetData?.data?.pipelineYaml) {
-      setInputSetData(inputSetData)
-    }
-  }, [inputSetData?.data?.pipelineYaml, inputSetData])
+    refetchInputSetData({
+      /**
+       * Pass inputSetReferences and lastYamlToMerge both as BE first merge the data from inputSetReferences then from lastYamlToMerge
+       * lastYamlToMerge is the latest values provided by the user. In this case its pipeline.
+       */
+      body: {
+        inputSetReferences: inputSetRefs,
+        stageIdentifiers: selectedStages.map((stage: SelectOption) => stage.value),
+        lastYamlToMerge: yamlStringify({ pipeline })
+      }
+    })
+  }, [selectedStages])
 
   useEffect(() => {
     if (
-      (Array.isArray(formikProps.values?.stagesToExecute) && !formikProps.values?.stagesToExecute.length) ||
-      !formikProps.values?.stagesToExecute ||
-      (formikProps.values?.originalPipeline && !allowStageExecutions)
+      (Array.isArray(stagesToExecute) && !stagesToExecute.length) ||
+      !stagesToExecute ||
+      (originalPipeline && !allowStageExecutions)
     ) {
       setAllStagesSelect(true)
     }
-  }, [formikProps.values?.stagesToExecute, allowStageExecutions, formikProps.values?.originalPipeline])
+  }, [stagesToExecute, allowStageExecutions, originalPipeline])
 
-  /*
-     if allowstageexecs is true and selective stagesToExecute is not empty
-     then set SelectedStages values, so selective stage comes with predefined
-     list of stages
-  
-  */
   useEffect(() => {
-    const stagesArr: SelectOption[] = []
-    if (allowStageExecutions) {
-      if (Array.isArray(formikProps.values?.stagesToExecute) && formikProps.values?.stagesToExecute.length) {
-        if (stageExecutionData?.data && stageExecutionData?.data?.length) {
-          for (const stage of stageExecutionData.data) {
-            if (formikProps.values?.stagesToExecute?.includes(stage.stageIdentifier)) {
-              stagesArr.push({ label: stage.stageIdentifier || '', value: stage.stageIdentifier || '' })
-            }
-          }
-        }
-      }
-    } else {
-      stagesArr.push(getAllStageItem(getString))
+    if (inputSetData?.data?.pipelineYaml) {
+      const pipeObj = clearRuntimeInput(memoizedParse<any>(inputSetData.data.pipelineYaml)?.pipeline)
+      formikProps?.setFieldValue('pipeline', pipeObj)
     }
-    setStage(stagesArr)
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputSetData?.data?.pipelineYaml])
+
+  useEffect(() => {
+    setExecutionStageList(list =>
+      list.concat(
+        (stageExecutionData?.data ?? []).map(
+          (stage: StageExecutionResponse) =>
+            ({
+              label: defaultTo(stage?.stageIdentifier, ''),
+              value: defaultTo(stage?.stageIdentifier, '')
+            } as SelectOption)
+        )
+      )
+    )
   }, [stageExecutionData?.data])
 
+  /* if allowStageExecutions is false then stagesToExecute should be set to [] */
   useEffect(() => {
-    if (inputData?.data?.pipelineYaml) {
-      const pipeObj = clearRuntimeInput(memoizedParse<any>(inputData?.data?.pipelineYaml as any)?.pipeline)
-      formikProps.setFieldValue('pipeline', pipeObj)
+    if (originalPipeline && !allowStageExecutions && !stageExecutionData?.data?.length) {
+      formikProps?.setFieldValue('stagesToExecute', [])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputData?.data?.pipelineYaml])
-
-  /* if allowstage execs is false then stagesToexecute should be set to [] */
-
-  useEffect(() => {
-    if (formikProps.values?.originalPipeline && !allowStageExecutions && !stageExecutionData?.data?.length) {
-      formikProps.setFieldValue('stagesToExecute', [])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formikProps.values?.originalPipeline, allowStageExecutions, stageExecutionData?.data])
+  }, [originalPipeline, allowStageExecutions, stageExecutionData?.data])
 
   return (
     <Layout.Vertical>
@@ -157,33 +140,25 @@ const StageSelection: React.FC<{ formikProps: any }> = ({ formikProps }) => {
         disabled={!allowStageExecutions}
         buttonTestId={'stage-select'}
         onChange={(items: SelectOption[]) => {
-          const allStagesChecked = items?.length === formikProps.values?.resolvedPipeline?.stages?.length
-          const hasAllStagesChecked = items.find(item => item.value === ALL_STAGE_VALUE)
+          const allStagesChecked = items?.length === executionStageList.length - 1
+          const isAllStagesChecked = items.some(item => item.value === ALL_STAGE_VALUE)
+          const isOnlyAllStagesUnChecked = allStagesChecked && !items.some(item => item.value === ALL_STAGE_VALUE)
 
-          // const hasAllStagesChecked =
-          //   items.find(item => item.value === getAllStageItem(getString).value) || allStagesChecked
-          const hasOnlyAllStagesUnChecked =
-            allStagesChecked && !items.find(item => item.value === getAllStageItem(getString).value)
-
-          if (hasOnlyAllStagesUnChecked || items?.length === 0 || (!allStagesSelected && hasAllStagesChecked)) {
+          if (isOnlyAllStagesUnChecked || items?.length === 0 || (!allStagesSelected && isAllStagesChecked)) {
             setStage([])
             setAllStagesSelect(true)
+            formikProps?.setFieldValue('stagesToExecute', [])
           } else {
             const newItems = items.filter((option: SelectOption) => {
               return option.value !== ALL_STAGE_VALUE
             })
             setAllStagesSelect(false)
             setStage(newItems)
+            formikProps?.setFieldValue(
+              'stagesToExecute',
+              newItems.map((stage: SelectOption) => stage.value)
+            )
           }
-
-          setCallMerge(true)
-        }}
-        onPopoverClose={() => {
-          const hasAllStagesChecked = selectedStages.find(
-            (item: SelectOption) => item.value === getAllStageItem(getString).value
-          )
-          const stages = hasAllStagesChecked ? [] : selectedStages.map((stage: SelectOption) => stage.value)
-          formikProps.setFieldValue('stagesToExecute', hasAllStagesChecked ? [] : stages)
         }}
         value={allStagesSelected ? [getAllStageItem(getString)] : selectedStages}
         items={executionStageList}
