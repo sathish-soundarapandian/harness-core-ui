@@ -120,9 +120,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const [selectedTab, setSelectedTab] = React.useState<TemplateTabs>(TemplateTabs.INPUTS)
   const params = useParams<ProjectPathProps & ModulePathParams>()
   const { accountId, module } = params
-  const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>(storeMetadata?.branch)
+  const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>()
   const [defaultBranch, setDefaultBranch] = React.useState<string | undefined>()
-  const gitPopoverBranch = selectedBranch
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
       ?.versionLabel
@@ -147,7 +146,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       orgIdentifier: selectedTemplate?.orgIdentifier,
       projectIdentifier: selectedTemplate?.projectIdentifier,
       versionLabel: selectedTemplate?.versionLabel,
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params, loadFromFallbackBranch })
+      ...getGitQueryParamsWithParentScope({ storeMetadata, params, branch: selectedBranch, loadFromFallbackBranch })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true
@@ -188,7 +187,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         storeMetadata,
         params,
         repoIdentifier: repo,
-        branch: selectedTemplateBranch
+        branch: selectedBranch ?? selectedTemplateBranch
       })
     },
     lazy: true,
@@ -215,7 +214,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         storeMetadata,
         params,
         repoIdentifier: repo,
-        branch: selectedTemplateBranch
+        branch: selectedBranch ?? selectedTemplateBranch
       })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
@@ -257,12 +256,18 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   }, [templates])
 
   React.useEffect(() => {
-    if (
-      templateYamlError &&
-      (selectedTemplate as TemplateResponse).storeType === 'REMOTE' &&
-      !isEmpty((selectedTemplate as TemplateResponse).cacheResponseMetadata)
-    ) {
-      setSelectedTemplate({ ...selectedTemplate, cacheResponseMetadata: undefined } as TemplateResponse)
+    if (templateYamlError && selectedTemplate) {
+      const updatedSelectedTemplate = produce(selectedTemplate, draft => {
+        if (!isEmpty(draft?.yaml)) {
+          set(draft, 'yaml', '')
+        }
+        if (
+          (selectedTemplate as TemplateResponse).storeType === 'REMOTE' &&
+          !isEmpty((selectedTemplate as TemplateResponse).cacheResponseMetadata)
+        )
+          set(draft, 'cacheResponseMetadata', undefined)
+      })
+      setSelectedTemplate(updatedSelectedTemplate)
     }
   }, [templateYamlError])
 
@@ -303,6 +308,10 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       setSelectedTemplate(templateWithYaml)
     }
   }, [templateYamlData?.data])
+
+  React.useEffect(() => {
+    if (selectedTemplate?.identifier) setSelectedBranch(undefined)
+  }, [selectedTemplate?.identifier])
 
   const onChange = React.useCallback(
     (option: SelectOption): void => {
@@ -469,11 +478,11 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                     <Layout.Horizontal flex={{ alignItems: 'center' }}>
                       <GitPopoverV2
                         setDefaultBranch={setDefaultBranch}
+                        selectedBranch={selectedBranch}
                         storeMetadata={{
                           ...storeMetadata,
                           connectorRef: (selectedTemplate as TemplateResponse).connectorRef,
-                          storeType: (selectedTemplate as TemplateResponse).storeType,
-                          branch: gitPopoverBranch
+                          storeType: (selectedTemplate as TemplateResponse).storeType
                         }}
                         gitDetails={selectedTemplate.gitDetails!}
                         onGitBranchChange={onGitBranchChange}
