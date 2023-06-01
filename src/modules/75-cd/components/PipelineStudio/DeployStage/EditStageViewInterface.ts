@@ -5,14 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { TemplateSummaryResponse } from 'services/template-ng'
-
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { TemplateDetailsResponseWrapper } from '@pipeline/utils/templateUtils'
 
 export interface EditStageViewProps {
   data?: StageElementWrapper<DeploymentStageElementConfig>
-  template?: TemplateSummaryResponse
+  template?: TemplateDetailsResponseWrapper
   onSubmit?: (values: StageElementWrapper<DeploymentStageElementConfig>, identifier?: string) => void
   onChange?: (values: DeploymentStageElementConfig) => void
   context?: string

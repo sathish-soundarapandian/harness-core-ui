@@ -73,8 +73,6 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { errorCheck } from '@common/utils/formikHelpers'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { getGoogleCloudFunctionsEnvOptions } from '@cd/components/PipelineSteps/GoogleCloudFunction/utils/utils'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { useQueryParams } from '@common/hooks/useQueryParams'
 import SelectDeploymentType from '../../DeployServiceSpecifications/SelectDeploymentType/SelectDeploymentType'
 import type { EditStageFormikType, EditStageViewProps } from '../EditStageViewInterface'
 import css from './EditStageView.module.scss'
@@ -122,7 +120,8 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   const {
     state: {
       selectionState: { selectedStageId },
-      pipeline: { stages = [] }
+      pipeline: { stages = [] },
+      gitDetails
     },
     stepsFactory,
     getStageFromPipeline,
@@ -130,7 +129,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     allowableTypes,
     updateStage
   } = usePipelineContext()
-  const { branch, repoName } = useQueryParams<GitQueryParams>()
+
   const { variablesPipeline, metadataMap } = usePipelineVariables()
   const domRef = React.useRef<HTMLDivElement | null>(null)
   const scrollRef = customRef || domRef
@@ -238,7 +237,10 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     /* istanbul ignore else */
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template, branch, repoName) }, values.identifier)
+        onSubmit?.(
+          { stage: createTemplate(values, template, gitDetails?.branch, gitDetails?.repoName) },
+          values.identifier
+        )
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

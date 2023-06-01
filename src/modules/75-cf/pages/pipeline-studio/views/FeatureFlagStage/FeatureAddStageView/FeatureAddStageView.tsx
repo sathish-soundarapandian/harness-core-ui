@@ -19,15 +19,12 @@ import { useStrings } from 'framework/strings'
 import { NameIdDescription } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
-import { createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
-import type { TemplateSummaryResponse } from 'services/template-ng'
-import { useQueryParams } from '@common/hooks/useQueryParams'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { TemplateDetailsResponseWrapper, createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import css from './FeatureAddStageView.module.scss'
 
 export interface FeatureAddEditStageViewProps {
   data?: StageElementWrapper<FeatureFlagStageElementConfig>
-  template?: TemplateSummaryResponse
+  template?: TemplateDetailsResponseWrapper
   onSubmit?: (values: StageElementWrapper<FeatureFlagStageElementConfig>, identifier: string) => void
   onChange?: (values: Values) => void
 }
@@ -46,11 +43,9 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
 }): JSX.Element => {
   const { getString } = useStrings()
   const {
-    state: { pipeline },
+    state: { pipeline, gitDetails },
     contextType
   } = usePipelineContext()
-
-  const { branch, repoName } = useQueryParams<GitQueryParams>()
 
   const isTemplate = contextType === PipelineContextType.StageTemplate
 
@@ -90,7 +85,10 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
   const handleSubmit = (values: Values): void => {
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template, branch, repoName) }, values.identifier)
+        onSubmit?.(
+          { stage: createTemplate(values, template, gitDetails?.branch, gitDetails?.repoName) },
+          values.identifier
+        )
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

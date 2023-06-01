@@ -21,7 +21,7 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, isEmpty, noop, unset } from 'lodash-es'
+import { defaultTo, isEmpty, noop, set, unset } from 'lodash-es'
 import produce from 'immer'
 import { parse } from 'yaml'
 import { useStrings } from 'framework/strings'
@@ -72,6 +72,7 @@ import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { EntityCachedCopy } from '@pipeline/components/PipelineStudio/PipelineCanvas/EntityCachedCopy/EntityCachedCopy'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
+import type { TemplateDetailsResponseWrapper } from '@pipeline/utils/templateUtils'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -114,12 +115,13 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [templates, setTemplates] = React.useState<TemplateSummaryResponse[] | TemplateMetadataSummaryResponse[]>([])
-  const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateSummaryResponse | TemplateResponse>()
+  const [selectedTemplate, setSelectedTemplate] = React.useState<TemplateDetailsResponseWrapper>()
   const [selectedParentTab, setSelectedParentTab] = React.useState<ParentTemplateTabs>(ParentTemplateTabs.BASIC)
   const [selectedTab, setSelectedTab] = React.useState<TemplateTabs>(TemplateTabs.INPUTS)
   const params = useParams<ProjectPathProps & ModulePathParams>()
   const { accountId, module } = params
   const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>(storeMetadata?.branch)
+  const [defaultBranch, setDefaultBranch] = React.useState<string | undefined>()
   const gitPopoverBranch = selectedBranch
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
@@ -279,12 +281,17 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
 
   React.useEffect(() => {
     if (selectedTemplate) {
-      setTemplate?.(selectedTemplate)
+      const data = produce(selectedTemplate, draft => {
+        if (defaultBranch) {
+          set(draft, 'gitDetails.defaultBranch', defaultBranch)
+        }
+      })
+      setTemplate?.(data)
       if (isEmpty(selectedTemplate?.yaml)) {
         refetchTemplateYaml()
       }
     }
-  }, [selectedTemplate])
+  }, [selectedTemplate, defaultBranch])
 
   React.useEffect(() => {
     if (templateYamlData?.data) {
@@ -462,6 +469,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                   {supportingTemplatesGitx && (
                     <Layout.Horizontal flex={{ alignItems: 'center' }}>
                       <GitPopoverV2
+                        setDefaultBranch={setDefaultBranch}
                         storeMetadata={{
                           ...storeMetadata,
                           connectorRef: (selectedTemplate as TemplateResponse).connectorRef,
@@ -470,7 +478,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                         }}
                         gitDetails={selectedTemplate.gitDetails!}
                         onGitBranchChange={onGitBranchChange}
-                        // branchChangeDisabled={storeMetadata?.repoName !== template?.gitDetails?.repoName}
                         forceFetch
                         btnClassName={css.gitBtn}
                         customIcon={
