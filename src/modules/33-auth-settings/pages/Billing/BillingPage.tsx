@@ -27,6 +27,7 @@ import BillingAdminsCard from './BillingAdminsCard'
 import ActiveSubscriptionCard, { ActiveSubscriptionDetails } from './ActiveSubscriptionCard'
 import PaymentMethods from './PaymentMethods'
 import css from './BillingPage.module.scss'
+import { useCreditCardWidget } from './CreditCardWidget'
 
 const getActiveSubscriptionDetails = (items: SubscriptionDetailDTO[]): ActiveSubscriptionDetails => {
   const subscriptionDetails = {
@@ -76,6 +77,12 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
       setsubscriptions(getSubscriptionByPaymentFrequency(data.data as SubscriptionDetailDTO[]))
     }
   }, [data])
+  const { openSubscribeModal } = useCreditCardWidget({
+    // refresh to fetch new license after subscribe
+    onClose: () => {
+      history.push(routes.toSubscriptions({ accountId, tab: SubscriptionTabNames.PLANS }))
+    }
+  })
   const activeSubscriptionDetails = React.useMemo(() => {
     return getActiveSubscriptionDetails(data?.data as SubscriptionDetailDTO[])
   }, [data?.data])
