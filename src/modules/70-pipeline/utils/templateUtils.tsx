@@ -27,7 +27,8 @@ import {
   getTemplateListPromise,
   GetTemplateListQueryParams,
   ResponsePageTemplateSummaryResponse,
-  TemplateResponse
+  TemplateResponse,
+  EntityGitDetails
 } from 'services/template-ng'
 import {
   getIdentifierFromValue,
@@ -49,6 +50,15 @@ import type { TemplateIcons } from './types'
 export const TEMPLATE_INPUT_PATH = 'template.templateInputs'
 export interface TemplateServiceDataType {
   [key: string]: ServiceDefinition['type']
+}
+
+type TemplateDetailsResponse = TemplateSummaryResponse | TemplateResponse
+interface TemplateEntityGitDetails extends EntityGitDetails {
+  defaultBranch?: string
+}
+
+export type TemplateDetailsResponseWrapper = Omit<TemplateDetailsResponse, 'gitDetails'> & {
+  gitDetails?: TemplateEntityGitDetails
 }
 
 export const extractGitBranchUsingTemplateRef = (
@@ -113,7 +123,7 @@ export const setTemplateInputs = (
 
 export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig | StepOrStepGroupOrTemplateStepData>(
   data?: T,
-  template?: TemplateSummaryResponse,
+  template?: TemplateDetailsResponseWrapper,
   branch?: string,
   repoName?: string
 ): T => {
@@ -127,10 +137,14 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
       }
       if (template.gitDetails?.branch && template.gitDetails?.repoName) {
         if (
-          (repoName === template.gitDetails.repoName && branch !== template.gitDetails.branch) ||
-          repoName !== template.gitDetails.repoName
-        )
-          set(draft, 'template.gitBranch', template.gitDetails.branch)
+          template.gitDetails.branch !== template.gitDetails?.defaultBranch ||
+          (template.gitDetails?.repoName === repoName && branch !== template.gitDetails?.defaultBranch)
+        ) {
+          set(draft, 'template.gitBranch', template?.gitDetails?.branch)
+        }
+        if (template.gitDetails?.repoName === repoName && template.gitDetails?.branch === branch) {
+          unset(draft, 'template.gitBranch')
+        }
       }
       set(draft, 'template.templateInputs', get(data, 'template.templateInputs'))
     }
@@ -146,7 +160,7 @@ export const getTemplateRefVersionLabelObject = (template: TemplateSummaryRespon
 }
 
 export const createStepNodeFromTemplate = (
-  template: TemplateSummaryResponse,
+  template: TemplateDetailsResponseWrapper,
   isCopied = false,
   branch?: string,
   repoName?: string
@@ -165,10 +179,14 @@ export const createStepNodeFromTemplate = (
         }
         if (template.gitDetails?.branch && template.gitDetails?.repoName) {
           if (
-            (repoName === template.gitDetails.repoName && branch !== template.gitDetails.branch) ||
-            repoName !== template.gitDetails.repoName
-          )
-            set(draft, 'template.gitBranch', template.gitDetails.branch)
+            template.gitDetails.branch !== template.gitDetails?.defaultBranch ||
+            (template.gitDetails?.repoName === repoName && branch !== template.gitDetails?.defaultBranch)
+          ) {
+            set(draft, 'template.gitBranch', template?.gitDetails?.branch)
+          }
+          if (template.gitDetails?.repoName === repoName && template.gitDetails?.branch === branch) {
+            unset(draft, 'template.gitBranch')
+          }
         }
       })) as unknown as StepElementConfig
 }

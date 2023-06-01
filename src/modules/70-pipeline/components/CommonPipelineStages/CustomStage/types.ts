@@ -8,11 +8,11 @@
 import type React from 'react'
 import type { tagsType } from '@harness/uicore'
 import type { CustomStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import type { TemplateSummaryResponse } from 'services/template-ng'
+import type { TemplateDetailsResponseWrapper } from '@pipeline/utils/templateUtils'
 
 export interface CustomStageMinimalModeProps {
   data?: StageElementWrapper<CustomStageElementConfig>
-  template?: TemplateSummaryResponse
+  template?: TemplateDetailsResponseWrapper
   onSubmit?: (values: StageElementWrapper<CustomStageElementConfig>, identifier: string) => void
   onChange?: (values: CustomStageMinimalValues) => void
 }

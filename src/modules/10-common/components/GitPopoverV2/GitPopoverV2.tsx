@@ -31,6 +31,7 @@ interface GitPopoverV2Props {
   forceFetch?: boolean
   customIcon?: React.ReactNode
   btnClassName?: string
+  setDefaultBranch?: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
 const createSelectOption = (value?: string): SelectOption => {
@@ -99,7 +100,8 @@ export const GitPopoverV2 = ({
   forceFetch = false,
   onGitBranchChange,
   customIcon,
-  btnClassName
+  btnClassName,
+  setDefaultBranch
 }: GitPopoverV2Props): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
@@ -130,6 +132,10 @@ export const GitPopoverV2 = ({
       refetch()
     }
   }, [forceFetch, branchChangeDisabled, refetch])
+
+  useEffect(() => {
+    if (response?.data?.defaultBranch?.name) setDefaultBranch?.(response?.data?.defaultBranch?.name)
+  }, [response?.data?.defaultBranch?.name])
 
   const branchOptions = useMemo(() => {
     if (response?.status === 'SUCCESS' && !isEmpty(response?.data)) {

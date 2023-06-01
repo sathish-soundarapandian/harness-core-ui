@@ -17,18 +17,15 @@ import { NameId, NameIdDescriptionTags } from '@common/components/NameIdDescript
 import { IdentifierSchemaWithoutHook, NameSchemaWithoutHook } from '@common/utils/Validation'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { PipelineStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import type { TemplateSummaryResponse } from 'services/template-ng'
-import { createTemplate } from '@pipeline/utils/templateUtils'
+import { TemplateDetailsResponseWrapper, createTemplate } from '@pipeline/utils/templateUtils'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
-import { useQueryParams } from '@common/hooks/useQueryParams'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import css from './PipelineStageMinimalMode.module.scss'
 
 interface EditPipelineStageViewProps {
   data?: StageElementWrapper<PipelineStageElementConfig>
-  template?: TemplateSummaryResponse
+  template?: TemplateDetailsResponseWrapper
   onSubmit?: (
     values: StageElementWrapper<PipelineStageElementConfig>,
     identifier: string,
@@ -64,12 +61,10 @@ export function EditPipelineStageView({
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const {
-    state: { pipeline },
+    state: { pipeline, gitDetails },
     contextType,
     isReadonly
   } = usePipelineContext()
-
-  const { branch, repoName } = useQueryParams<GitQueryParams>()
 
   const initialValues: Values = {
     identifier: get(data, 'stage.identifier', ''),
@@ -106,7 +101,10 @@ export function EditPipelineStageView({
   const handleSubmit = (values: Values): void => {
     if (data?.stage) {
       if (template) {
-        onSubmit?.({ stage: createTemplate(values, template, branch, repoName) }, values.identifier)
+        onSubmit?.(
+          { stage: createTemplate(values, template, gitDetails?.branch, gitDetails?.repoName) },
+          values.identifier
+        )
       } else {
         data.stage.identifier = values.identifier
         data.stage.name = values.name

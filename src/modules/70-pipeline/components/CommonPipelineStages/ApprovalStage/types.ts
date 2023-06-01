@@ -8,11 +8,11 @@
 import type React from 'react'
 import type { tagsType } from '@harness/uicore'
 import type { ApprovalStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import type { TemplateSummaryResponse } from 'services/template-ng'
+import type { TemplateDetailsResponseWrapper } from '@pipeline/utils/templateUtils'
 
 export interface ApprovalStageMinimalModeProps {
   data?: StageElementWrapper<ApprovalStageElementConfig>
-  template?: TemplateSummaryResponse
+  template?: TemplateDetailsResponseWrapper
   onSubmit?: (values: StageElementWrapper<ApprovalStageElementConfig>, identifier: string) => void
   onChange?: (values: ApprovalStageMinimalValues) => void
 }

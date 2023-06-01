@@ -11,9 +11,10 @@ import { TemplateSelectorContext } from 'framework/Templates/TemplateSelectorCon
 import type { TemplateType } from '@common/interfaces/RouteInterfaces'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { TemplateUsage } from '@templates-library/utils/templatesUtils'
+import type { TemplateDetailsResponseWrapper } from '@pipeline/utils/templateUtils'
 
 export interface GetTemplateResponse {
-  template: TemplateSummaryResponse
+  template: TemplateDetailsResponseWrapper
   isCopied: boolean
 }
 

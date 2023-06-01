@@ -130,7 +130,9 @@ export const InfraProvisioningBase = (
         gitDetails,
         storeMetadata
       })
-      const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
+      const newStepData = {
+        step: createStepNodeFromTemplate(template, isCopied, gitDetails?.branch, gitDetails?.repoName)
+      }
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId || ''))
       executionRef.current?.stepGroupUpdated?.(newStepData.step)
       if (pipelineStage && !get(pipelineStage?.stage, 'spec.environment.provisioner')) {
