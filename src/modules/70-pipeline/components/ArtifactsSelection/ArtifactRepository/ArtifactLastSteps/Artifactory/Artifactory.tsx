@@ -735,7 +735,6 @@ function Artifactory({
                   />
                 </div>
 
-                {isGenericArtifactory ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
                 {formik.values?.tagType === 'value' ? (
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTypeInput
