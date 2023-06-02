@@ -167,7 +167,7 @@ function Artifactory({
   }, [repositoryFormat])
 
   useEffect(() => {
-    let repoFormat = RepositoryFormatTypes.Docker
+    let repoFormat = repositoryFormat
     if (shouldChooseGenericAsDefault) repoFormat = RepositoryFormatTypes.Generic
     if (showRepositoryFormatForAllowedTypes) {
       const repoFormatFromValues = getRepositoryFormat(initialValues) as RepositoryFormatTypes
@@ -734,6 +734,8 @@ function Artifactory({
                     className={css.radioGroup}
                   />
                 </div>
+
+                {isGenericArtifactory ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
                 {formik.values?.tagType === 'value' ? (
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTypeInput

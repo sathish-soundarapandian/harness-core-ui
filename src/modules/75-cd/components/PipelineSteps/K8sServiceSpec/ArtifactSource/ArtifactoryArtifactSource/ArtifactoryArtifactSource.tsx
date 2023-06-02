@@ -211,7 +211,6 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     artifacts,
     useArtifactV1Data = false
   } = props
-
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
