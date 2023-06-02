@@ -31,6 +31,15 @@ jest.mock('services/cv', () => ({
   })
 }))
 
+const showPrimary = jest.fn()
+
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
+  useToaster: jest.fn(() => ({
+    showPrimary
+  }))
+}))
+
 describe('CloudWatch', () => {
   beforeAll(() => {
     jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
@@ -268,7 +277,7 @@ describe('CloudWatch', () => {
     expect(onSubmit).toHaveBeenCalledWith(submitRequestDataPayload, submitRequestFormikPayload)
   })
 
-  test('should check new metric is added correctly', () => {
+  test('should check new metric is added correctly', async () => {
     const onSubmit = jest.fn()
     const { container } = render(
       <TestWrapper>
@@ -298,7 +307,7 @@ describe('CloudWatch', () => {
       userEvent.click(screen.getByTestId('sideNav-CustomMetric 1'))
     })
 
-    expect(metricName2).not.toBeInTheDocument()
+    await waitFor(() => expect(metricName2).not.toBeInTheDocument())
 
     const deleteMetricIcons = container.querySelectorAll('span[data-icon="main-delete"]')
 
@@ -309,6 +318,41 @@ describe('CloudWatch', () => {
     })
 
     expect(screen.queryByText('CustomMetric 2')).not.toBeInTheDocument()
+  })
+
+  test('should check toaster is shown when user changes custom metric from invalid custom metric', async () => {
+    const onSubmit = jest.fn()
+    const { container } = render(
+      <TestWrapper>
+        <CloudWatch data={mockData} onSubmit={onSubmit} />
+      </TestWrapper>
+    )
+
+    const addCustomMetricButton = screen.getByTestId('addCustomMetricButton')
+    expect(addCustomMetricButton).not.toBeDisabled()
+
+    const metricNameInput = screen.getByPlaceholderText(/common.namePlaceholder/)
+
+    expect(metricNameInput).toHaveValue('CustomMetric 1')
+
+    act(() => {
+      userEvent.click(addCustomMetricButton)
+    })
+
+    const metricName2 = container.querySelector('input[name="customMetrics.1.metricName"]')
+
+    expect(metricName2).toHaveValue('customMetric 2')
+
+    expect(screen.getByTestId('sideNav-customMetric 2')).toBeInTheDocument()
+    expect(screen.getByTestId('sideNav-CustomMetric 1')).toBeInTheDocument()
+
+    act(() => {
+      userEvent.click(screen.getByTestId('sideNav-CustomMetric 1'))
+    })
+
+    await waitFor(() =>
+      expect(screen.getByText(/cv.monitoringSources.prometheus.validation.groupName/)).toBeInTheDocument()
+    )
   })
 
   test('should show loading skeleton for metric packs, if metric pack call is in progress', () => {

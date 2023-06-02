@@ -7,6 +7,8 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
+import { Formik } from 'formik'
+import { noop } from 'lodash'
 import { TestWrapper } from '@common/utils/testUtils'
 import { MultiItemsSideNav } from '../MultiItemsSideNav'
 import { getFilteredGroupedCreatedMetric, getSelectedMetricIndex } from '../MultiItemsSideNav.utils'
@@ -19,16 +21,18 @@ describe('Unit tests for Multi Items side nav', () => {
   test('Ensure that all passed in metrics are rendered', async () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <MultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1', 'app2', 'app3']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="app1"
-        />
+        <Formik initialValues={{}} onSubmit={noop}>
+          <MultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['app1', 'app2', 'app3']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="app1"
+          />
+        </Formik>
       </TestWrapper>
     )
 
@@ -44,16 +48,18 @@ describe('Unit tests for Multi Items side nav', () => {
     const onRemoveMock = jest.fn()
     const { container, getByText } = render(
       <TestWrapper>
-        <MultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1', 'app2', 'app3']}
-          onRemoveMetric={onRemoveMock}
-          onSelectMetric={onSelectMock}
-          isValidInput={true}
-          renamedMetric="app1"
-        />
+        <Formik initialValues={{}} onSubmit={noop}>
+          <MultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['app1', 'app2', 'app3']}
+            onRemoveMetric={onRemoveMock}
+            onSelectMetric={onSelectMock}
+            isValidInput={true}
+            renamedMetric="app1"
+          />
+        </Formik>
       </TestWrapper>
     )
 
@@ -79,16 +85,18 @@ describe('Unit tests for Multi Items side nav', () => {
   test('Ensure that only when app is there delete button does not exist', async () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <MultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="app1"
-        />
+        <Formik initialValues={{}} onSubmit={noop}>
+          <MultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['app1']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="app1"
+          />
+        </Formik>
       </TestWrapper>
     )
 
@@ -100,16 +108,18 @@ describe('Unit tests for Multi Items side nav', () => {
   test('Ensure that when selected app nam changes, the nav shows that change', async () => {
     const { container, getByText, rerender } = render(
       <TestWrapper>
-        <MultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="app1"
-        />
+        <Formik initialValues={{}} onSubmit={noop}>
+          <MultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['app1']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="app1"
+          />
+        </Formik>
       </TestWrapper>
     )
 
@@ -119,16 +129,18 @@ describe('Unit tests for Multi Items side nav', () => {
 
     rerender(
       <TestWrapper>
-        <MultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={jest.fn()}
-          isValidInput={true}
-          renamedMetric="solo-dolo"
-        />
+        <Formik initialValues={{}} onSubmit={noop}>
+          <MultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['app1']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={jest.fn()}
+            isValidInput={true}
+            renamedMetric="solo-dolo"
+          />
+        </Formik>
       </TestWrapper>
     )
 
@@ -141,16 +153,18 @@ describe('Unit tests for Multi Items side nav', () => {
     const onSelectMock = jest.fn()
     const { container, getByText } = render(
       <TestWrapper>
-        <MultiItemsSideNav
-          tooptipMessage={tooptipMessage}
-          defaultMetricName={defaultMetricName}
-          addFieldLabel={addFieldLabel}
-          createdMetrics={['app1']}
-          onRemoveMetric={jest.fn()}
-          onSelectMetric={onSelectMock}
-          isValidInput={true}
-          renamedMetric="app1"
-        />
+        <Formik initialValues={{}} onSubmit={noop}>
+          <MultiItemsSideNav
+            tooptipMessage={tooptipMessage}
+            defaultMetricName={defaultMetricName}
+            addFieldLabel={addFieldLabel}
+            createdMetrics={['app1']}
+            onRemoveMetric={jest.fn()}
+            onSelectMetric={onSelectMock}
+            isValidInput={true}
+            renamedMetric="app1"
+          />
+        </Formik>
       </TestWrapper>
     )
 
