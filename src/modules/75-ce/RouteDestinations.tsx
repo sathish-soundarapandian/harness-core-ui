@@ -11,8 +11,8 @@ import { createClient, Provider, dedupExchange, cacheExchange, fetchExchange } f
 import { requestPolicyExchange } from '@urql/exchange-request-policy'
 import { get } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
-import type { SidebarContext } from '@common/navigation/SidebarProvider'
-import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+// import type { SidebarContext } from '@common/navigation/SidebarProvider'
+import { accountPathProps } from '@common/utils/routeUtils'
 import { RouteWithLayout } from '@common/router'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
@@ -21,7 +21,7 @@ import SessionToken from 'framework/utils/SessionToken'
 // eslint-disable-next-line no-restricted-imports
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 
-import CESideNav from '@ce/components/CESideNav/CESideNav'
+// import CESideNav from '@ce/components/CESideNav/CESideNav'
 import { ModuleName } from 'framework/types/ModuleName'
 import { getConfig } from 'services/config'
 import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
@@ -29,7 +29,7 @@ import featureFactory from 'framework/featureStore/FeaturesFactory'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { BannerType } from '@common/layouts/Constants'
 import { FEATURE_USAGE_WARNING_LIMIT } from '@common/layouts/FeatureBanner'
-import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+// import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
@@ -43,20 +43,21 @@ import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarni
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
 import SideNav from '@common/navigation/SideNav'
-import CEHomePage from './pages/home/CEHomePage'
-import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
-import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
-import CECOEditGatewayPage from './pages/co-edit-gateway/CECOEditGatewayPage'
-import CECOLoadBalancersPage from './pages/co-access-points/CECOAccessPointsPage'
-import CETrialHomePage from './pages/home/CETrialHomePage'
+import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
+// import CEHomePage from './pages/home/CEHomePage'
+// import CECODashboardPage from './pages/co-dashboard/CECODashboardPage'
+// import CECOCreateGatewayPage from './pages/co-create-gateway/CECOCreateGatewayPage'
+// import CECOEditGatewayPage from './pages/co-edit-gateway/CECOEditGatewayPage'
+// import CECOLoadBalancersPage from './pages/co-access-points/CECOAccessPointsPage'
+// import CETrialHomePage from './pages/home/CETrialHomePage'
 
-import OverviewPage from './pages/overview/OverviewPage'
+// import OverviewPage from './pages/overview/OverviewPage'
 import formatCost from './utils/formatCost'
 import OverviewAddCluster from './components/OverviewPage/OverviewAddCluster'
-import CORuleDetailsPage from './pages/co-rule-details/CORuleDetailsPage'
-import CommitmentOrchestration from './pages/CommitmentOrchestration/CommitmentOrchestration'
-import CommitmentOrchestrationSetup from './pages/CommitmentOrchestration/CommitmentOrchestrationSetup'
-import CloudIntegrationPage from './pages/cloud-integration/CloudIntegrationPage'
+// import CORuleDetailsPage from './pages/co-rule-details/CORuleDetailsPage'
+// import CommitmentOrchestration from './pages/CommitmentOrchestration/CommitmentOrchestration'
+// import CommitmentOrchestrationSetup from './pages/CommitmentOrchestration/CommitmentOrchestrationSetup'
+// import CloudIntegrationPage from './pages/cloud-integration/CloudIntegrationPage'
 import AnomaliesFilter from './components/AnomaliesFilter/AnomaliesFilter'
 import GatewayListFilters from './components/COGatewayList/GatewayListFilters'
 import PerspectiveResourceModalBody from './components/ResourceGroupModals/Perspective/PerspectiveResourceModalBody'
@@ -327,12 +328,12 @@ AuditTrailFactory.registerResourceHandler('CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEME
   }
 })
 
-const CESideNavProps: SidebarContext = {
-  navComponent: CESideNav,
-  subtitle: 'CLOUD COST',
-  title: 'Management',
-  icon: 'ce-main'
-}
+// const CESideNavProps: SidebarContext = {
+//   navComponent: CESideNav,
+//   subtitle: 'CLOUD COST',
+//   title: 'Management',
+//   icon: 'ce-main'
+// }
 
 const RedirectToModuleTrialHome = (): React.ReactElement => {
   const { accountId } = useParams<{
@@ -363,23 +364,23 @@ const RedirectToOverviewPage = (): React.ReactElement => {
   )
 }
 
-const RedirectToBudgetDetails = (): React.ReactElement => {
-  const { accountId, budgetId, budgetName } = useParams<{
-    accountId: string
-    budgetId: string
-    budgetName: string
-  }>()
+// const RedirectToBudgetDetails = (): React.ReactElement => {
+//   const { accountId, budgetId, budgetName } = useParams<{
+//     accountId: string
+//     budgetId: string
+//     budgetName: string
+//   }>()
 
-  return (
-    <Redirect
-      to={routes.toCEBudgetDetails({
-        accountId,
-        budgetName,
-        budgetId
-      })}
-    />
-  )
-}
+//   return (
+//     <Redirect
+//       to={routes.toCEBudgetDetails({
+//         accountId,
+//         budgetName,
+//         budgetId
+//       })}
+//     />
+//   )
+// }
 
 const RedirectToSubscriptions = (): React.ReactElement => {
   const { accountId } = useParams<{
@@ -396,22 +397,22 @@ const RedirectToSubscriptions = (): React.ReactElement => {
   )
 }
 
-const RedirectToNewNodeRecommendationDetailsRoute = (): React.ReactElement => {
-  const { recommendation, recommendationName, accountId } = useParams<{
-    recommendationName: string
-    recommendation: string
-    accountId: string
-  }>()
-  return (
-    <Redirect
-      to={routes.toCENodeRecommendationDetails({
-        accountId,
-        recommendationName,
-        recommendation
-      })}
-    />
-  )
-}
+// const RedirectToNewNodeRecommendationDetailsRoute = (): React.ReactElement => {
+//   const { recommendation, recommendationName, accountId } = useParams<{
+//     recommendationName: string
+//     recommendation: string
+//     accountId: string
+//   }>()
+//   return (
+//     <Redirect
+//       to={routes.toCENodeRecommendationDetails({
+//         accountId,
+//         recommendationName,
+//         recommendation
+//       })}
+//     />
+//   )
+// }
 
 const licenseRedirectData: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CCM_LICENSE_STATE,
@@ -584,7 +585,8 @@ const CERoutes: React.FC = () => {
               GatewayListFilters,
               FeatureWarningBanner,
               FeatureWarningTooltip,
-              SideNav
+              SideNav,
+              NavExpandable
             }}
             customHooks={{
               useTestConnectionModal

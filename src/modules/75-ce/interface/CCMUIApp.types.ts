@@ -6,6 +6,7 @@
  */
 
 import type React from 'react'
+import type NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
 import type { OverviewAddClusterProps } from '@ce/components/OverviewPage/OverviewAddCluster'
 import type { AnomalyFiltersProps } from '@ce/components/AnomaliesFilter/AnomaliesFilter'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -14,6 +15,7 @@ import type FeatureWarningBanner from '@common/components/FeatureWarning/Feature
 import type { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import type useTestConnectionModal from '@connectors/common/useTestConnectionModal/useTestConnectionModal'
 import type { SideNavProps } from '@common/navigation/SideNav/SideNav'
+
 export interface CCMUIAppCustomProps {
   customComponents: {
     OverviewAddCluster: React.ComponentType<OverviewAddClusterProps>
@@ -23,6 +25,7 @@ export interface CCMUIAppCustomProps {
     FeatureWarningBanner: typeof FeatureWarningBanner
     FeatureWarningTooltip: typeof FeatureWarningTooltip
     SideNav: React.ComponentType<React.PropsWithChildren<SideNavProps>>
+    NavExpandable: typeof NavExpandable
   }
   customHooks: {
     useTestConnectionModal: typeof useTestConnectionModal
