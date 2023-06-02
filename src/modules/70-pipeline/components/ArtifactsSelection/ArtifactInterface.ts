@@ -89,6 +89,7 @@ export interface ImagePathTypes {
   repositoryPortorRepositoryURL?: string
   artifactDirectory?: string
   repositoryFormat?: string
+  registryId?: string
 }
 
 export interface VariableInterface {

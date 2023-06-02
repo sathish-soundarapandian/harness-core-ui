@@ -36,6 +36,7 @@ import {
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
@@ -261,13 +262,18 @@ export function ECRArtifact({
     ) as ImagePathTypes
     const specValues = get(initialValues, 'spec', null)
     values.region = specValues?.region
+    values.registryId = specValues?.registryId
     return values
   }, [initialValues, isIdentifierAllowed, regions, selectedArtifact])
 
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
     const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
 
-    merge(artifactObj.spec, { region: formData?.region, digest: formData?.digest })
+    merge(artifactObj.spec, {
+      region: formData?.region,
+      digest: formData?.digest,
+      ...(formData?.registryId ? { registryId: formData?.registryId } : {})
+    })
     handleSubmit(artifactObj)
   }
 
@@ -340,6 +346,7 @@ export function ECRArtifact({
                     onChange: () => {
                       tagList.length && setTagList([])
                       resetFieldValue(formik, `imagePath`)
+                      resetFieldValue(formik, `registryId`)
                       resetFieldValue(formik, `tag`)
                     },
                     selectProps: {
@@ -369,7 +376,31 @@ export function ECRArtifact({
                   </div>
                 )}
               </div>
-
+              <div className={css.imagePathContainer}>
+                <FormInput.MultiTextInput
+                  label={getString('pipeline.artifactsSelection.registryId')}
+                  name="registryId"
+                  placeholder={getString('pipeline.artifactsSelection.registryIdPlaceholder')}
+                  disabled={isReadonly}
+                  isOptional={true}
+                  multiTextInputProps={{ expressions, allowableTypes }}
+                />
+                {getMultiTypeFromValue(formik.values?.registryId) === MultiTypeInputType.RUNTIME && (
+                  <div className={css.configureOptions}>
+                    <ConfigureOptions
+                      value={formik.values?.registryId || ''}
+                      type="String"
+                      variableName="registryId"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => {
+                        formik.setFieldValue('registryId', value)
+                      }}
+                      isReadonly={isReadonly}
+                    />
+                  </div>
+                )}
+              </div>
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTypeInput
                   name="imagePath"

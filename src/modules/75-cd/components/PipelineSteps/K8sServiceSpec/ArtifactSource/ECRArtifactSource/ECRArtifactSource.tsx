@@ -461,6 +461,21 @@ const Content = (props: ECRRenderContent): JSX.Element => {
             />
           )}
 
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.registryId`, template) && (
+            <TextFieldInputSetView
+              label={getString('pipeline.artifactsSelection.registryId')}
+              placeholder={getString('pipeline.artifactsSelection.registryIdPlaceholder')}
+              name={`${path}.artifacts.${artifactPath}.spec.registryId`}
+              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.registryId`)}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              fieldPath={`artifacts.${artifactPath}.spec.registryId`}
+              template={template}
+            />
+          )}
+
           {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
             <SelectInputSetView
               fieldPath={`artifacts.${artifactPath}.spec.imagePath`}

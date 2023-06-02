@@ -3931,6 +3931,8 @@ export interface StringsMap {
   'pipeline.artifactsSelection.packageNamePlaceholder': string
   'pipeline.artifactsSelection.projectIDPlaceholder': string
   'pipeline.artifactsSelection.projectPlaceholder': string
+  'pipeline.artifactsSelection.registryId': string
+  'pipeline.artifactsSelection.registryIdPlaceholder': string
   'pipeline.artifactsSelection.repositoryPlaceholder': string
   'pipeline.artifactsSelection.repositoryPort': string
   'pipeline.artifactsSelection.repositoryPortPlaceholder': string

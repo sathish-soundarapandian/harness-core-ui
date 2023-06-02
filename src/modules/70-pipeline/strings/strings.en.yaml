@@ -983,6 +983,8 @@ artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
   loadingRepository: Loading Repository...
   artifactId: Artifact ID
+  registryId: Registry ID
+  registryIdPlaceholder: Enter Registry ID
   customArtifactManualFill: Manually Enter an artifact version
   customArtifactScriptFill: Provide a script to dynamically pull the artifact location.
   artifactIdPlaceholder: Enter Artifact ID
