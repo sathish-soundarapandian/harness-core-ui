@@ -25,14 +25,6 @@ module.exports = {
             loader: 'ts-loader',
             options: {
               configFile: 'src/microfrontends/tsconfig.json',
-              getCustomTransformers: program => {
-                const transformer = tsTransformPaths(program)
-
-                return {
-                  before: [transformer.before], // for updating paths in generated code
-                  afterDeclarations: [transformer.afterDeclarations] // for updating paths in declaration files
-                }
-              }
             }
           }
         ],
@@ -47,7 +39,7 @@ module.exports = {
         configFile: 'src/microfrontends/tsconfig.json',
         logLevel: 'info',
         extensions: ['.ts', '.tsx'],
-        mainFields: ['browser', 'main']
+         mainFields: ["@rbac", "main"],
         // baseUrl: "/foo"
       })
     ]
