@@ -32,7 +32,13 @@ const DiscoveryPage: React.FC = () => {
 
   useDocumentTitle(discoveryLabel)
 
-  const { data: discoveryAgentList, loading: discoveryAgentListLoading } = useListInfra({})
+  const { data: discoveryAgentList, loading: discoveryAgentListLoading } = useListInfra({
+    queryParams: {
+      accountIdentifier: accountId,
+      organizationIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier
+    }
+  })
 
   return (
     <>

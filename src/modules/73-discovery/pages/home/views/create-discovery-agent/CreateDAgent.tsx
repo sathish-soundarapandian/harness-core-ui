@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React from 'react'
-import { Button, ButtonVariation, Container, FormInput, FormikForm, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Container, FormInput, FormikForm, Layout, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Formik, FormikProps } from 'formik'
 import * as Yup from 'yup'
@@ -16,6 +16,7 @@ import { useStrings } from 'framework/strings'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import List from '@discovery/components/List/List'
+import { useCreateInfra } from 'services/servicediscovery'
 import css from './CreateDAgent.module.scss'
 
 interface FormValues {
@@ -30,9 +31,16 @@ export interface DrawerProps {
 const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
+  const { showError } = useToaster()
   const dAgentFormRef = React.useRef<FormikProps<FormValues>>()
 
-  // const {data, loading} = useCreateInfra({  })
+  const { mutate: infraMutate } = useCreateInfra({
+    queryParams: {
+      accountIdentifier: accountId,
+      organizationIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier
+    }
+  })
 
   const inputValues: FormValues = {
     discoveryAgentName: '',
@@ -40,9 +48,27 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
   }
 
   const handleSubmit = (): void => {
-    // eslint-disable-next-line no-console
-    console.log(dAgentFormRef.current)
-    setDrawerOpen(false)
+    if (dAgentFormRef.current) {
+      dAgentFormRef.current.validateForm().then(errors => {
+        if (Object.keys(errors).length === 0) {
+          infraMutate({
+            k8sConnectorID: dAgentFormRef.current?.values.connectorRef,
+            name: dAgentFormRef.current?.values.discoveryAgentName,
+            config: {
+              kubernetes: {
+                namespace: 'default'
+              }
+            }
+          })
+            .then(() => {
+              setDrawerOpen(false)
+            })
+            .catch(e => showError(e))
+        } else {
+          showError('Invalid configuration, validation failed')
+        }
+      })
+    }
   }
 
   return (
@@ -78,16 +104,14 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
             innerRef={dAgentFormRef as React.Ref<FormikProps<FormValues>>}
             initialValues={inputValues}
             validationSchema={Yup.object().shape({
-              name: Yup.string()
+              discoveryAgentName: Yup.string()
                 .trim()
                 .matches(/^[a-z0-9-]*$/, 'Network Map name can only contain lowercase letters, numbers and dashes')
                 .matches(/^[^-].*$/, 'Network Map name can not start with -')
                 .matches(/^.*[^-]$/, 'Network Map name can not end with -')
                 .max(50, 'Network Map name can have a max length of 50 characters')
                 .required('Network Map name is required!'),
-              connector: Yup.object().shape({
-                id: Yup.string().trim().required('Please select a Connector!')
-              })
+              connectorRef: Yup.string().trim().required('Please select a Connector!')
             })}
             onSubmit={() => void 0}
           >
