@@ -5,8 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useEffect, useMemo, useState } from 'react'
-import { Button, Container, Utils } from '@harness/uicore'
+import { Button, Container, Utils, useToaster } from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
+import { useFormikContext } from 'formik'
+import { useStrings } from 'framework/strings'
 import { SelectedAppsSideNav } from './components/SelectedAppsSideNav/SelectedAppsSideNav'
 import {
   getCreatedMetricLength,
@@ -53,7 +55,14 @@ export function MultiItemsSideNav(props: MultiItemsSideNavProps): JSX.Element {
   const [createdMetrics, setCreatedMetrics] = useState<string[]>(
     propsCreatedMetrics?.length ? propsCreatedMetrics : [defaultMetricName]
   )
+
+  const { getString } = useStrings()
+
   const [selectedMetric, setSelectedMetric] = useState<string | undefined>(defaultSelectedMetric || createdMetrics[0])
+
+  const { isValid, submitForm } = useFormikContext()
+
+  const { showPrimary } = useToaster()
 
   useEffect(() => {
     const selectedMetricIndex = getSelectedMetricIndex(createdMetrics, selectedMetric, renamedMetric)
@@ -83,6 +92,17 @@ export function MultiItemsSideNav(props: MultiItemsSideNavProps): JSX.Element {
 
   const hasOnRemove = shouldBeAbleToDeleteLastMetric ? shouldBeAbleToDeleteLastMetric : createdMetricsLength > 1
 
+  const onChangeCustomMetric = async (newlySelectedMetric: string, index: number): Promise<void> => {
+    await submitForm()
+
+    if (isValid) {
+      onSelectMetric(newlySelectedMetric, createdMetrics, index)
+      setSelectedMetric(newlySelectedMetric)
+    } else {
+      showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
+    }
+  }
+
   return (
     <Container className={css.main}>
       <Button
@@ -106,10 +126,7 @@ export function MultiItemsSideNav(props: MultiItemsSideNavProps): JSX.Element {
         {addFieldLabel}
       </Button>
       <SelectedAppsSideNav
-        onSelect={(newlySelectedMetric, index) => {
-          onSelectMetric(newlySelectedMetric, createdMetrics, index)
-          setSelectedMetric(newlySelectedMetric)
-        }}
+        onSelect={onChangeCustomMetric}
         selectedItem={selectedMetric}
         selectedApps={metricsToRender}
         groupedSelectedApps={filteredGroupMetric}

@@ -570,6 +570,7 @@ cvTrialHomePage:
       description: Start 14 day CV Enterprise trial
 monitoredServices:
   title: '{{ $.common.monitoredServices }}'
+  changeCustomMetricTooltip: Fill all required fields before changing query
   listToggleSwitchDisableMessage: Nice work! You've reached our plan limits. Upgrade to enable SLO and service health for a monitored service.
   heading: Monitored Service
   filterlabel: 'Environment:'

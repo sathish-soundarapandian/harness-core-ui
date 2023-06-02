@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react'
-import { Container, Text, CollapseList, CollapseListPanel } from '@harness/uicore'
+import { Container, Text, CollapseList, CollapseListPanel, useToaster } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -34,7 +34,9 @@ export default function GroupedSideNav({
 }: GroupedSideNavInterface): JSX.Element {
   const { getString } = useStrings()
 
-  const { values: formValues } = useFormikContext()
+  const { showPrimary } = useToaster()
+
+  const { values: formValues, isValid: isFormValid, submitForm } = useFormikContext()
 
   const getShowPromptOnDelete = (metricName?: string): boolean => {
     return Boolean(
@@ -86,8 +88,14 @@ export default function GroupedSideNav({
                   <Container
                     key={selectedApp.metricName}
                     className={css.seletedAppContainer}
-                    onClick={() => {
-                      onSelect?.(selectedApp?.metricName || '', selectedApp.index as number)
+                    onClick={async () => {
+                      await submitForm()
+
+                      if (isFormValid) {
+                        onSelect?.(selectedApp?.metricName || '', selectedApp.index as number)
+                      } else {
+                        showPrimary(getString('cv.monitoredServices.changeCustomMetricTooltip'))
+                      }
                     }}
                     data-testid={`sideNav-${selectedApp.metricName}`}
                   >

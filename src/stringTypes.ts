@@ -8960,6 +8960,7 @@ export interface StringsMap {
   'cv.monday': string
   'cv.monitoredServices.addNewMonitoredServices': string
   'cv.monitoredServices.assignLabel': string
+  'cv.monitoredServices.changeCustomMetricTooltip': string
   'cv.monitoredServices.changeMonitoredServiceType': string
   'cv.monitoredServices.changeMonitoredServiceTypeMessage': string
   'cv.monitoredServices.changesTable.impact': string
