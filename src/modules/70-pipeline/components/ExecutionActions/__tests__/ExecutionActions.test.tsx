@@ -14,7 +14,12 @@ import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import mockImport from 'framework/utils/mockImport'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { HandleInterruptQueryParams, useHandleInterrupt, useHandleStageInterrupt } from 'services/pipeline-ng'
+import {
+  HandleInterruptQueryParams,
+  HandleStageInterruptQueryParams,
+  useHandleInterrupt,
+  useHandleStageInterrupt
+} from 'services/pipeline-ng'
 import { accountPathProps, executionPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import ExecutionActions from '../ExecutionActions'
@@ -107,10 +112,15 @@ describe('<ExecutionActions /> tests', () => {
     expect(document.body.querySelector('.bp3-menu')).toMatchSnapshot('Menu')
   })
 
-  test.each<[ExecutionStatus, string, HandleInterruptQueryParams['interruptType']]>([
-    ['Paused', 'play', 'Resume'],
-    ['Running', 'pause', 'Pause'],
-    ['Running', 'stop', 'AbortAll']
+  test.each<
+    [
+      ExecutionStatus,
+      string,
+      HandleInterruptQueryParams['interruptType'] | HandleStageInterruptQueryParams['interruptType']
+    ]
+  >([
+    ['Running', 'stop', 'AbortAll'],
+    ['Running', 'mark-as-failed', 'UserMarkedFailure']
   ])('Interrupt "%s" status  with action "%s"', async (executionStatus, icon, interruptType) => {
     const mutate = jest.fn()
     ;(useHandleInterrupt as jest.Mock).mockImplementation(() => ({
@@ -136,7 +146,13 @@ describe('<ExecutionActions /> tests', () => {
 
     act(() => {
       const btn = result!.container.querySelector(`[data-icon="${icon}"]`)?.closest('button')
-      fireEvent.click(btn!)
+
+      // UserMarkedFailure interrupt is not allowed at pipeline level
+      if (interruptType === 'UserMarkedFailure') {
+        expect(btn).toBeFalsy()
+      } else {
+        fireEvent.click(btn!)
+      }
     })
 
     await waitFor(() => {
@@ -149,23 +165,26 @@ describe('<ExecutionActions /> tests', () => {
         fireEvent.click(confirmButton!)
       }
 
-      expect(mutate).toHaveBeenCalledWith(
-        {},
-        {
-          queryParams: {
-            accountIdentifier: pathParams.accountId,
-            orgIdentifier: pathParams.orgIdentifier,
-            projectIdentifier: pathParams.projectIdentifier,
-            interruptType
+      if (interruptType === 'UserMarkedFailure') {
+        expect(mutate).toHaveBeenCalledTimes(0)
+      } else {
+        expect(mutate).toHaveBeenCalledWith(
+          {},
+          {
+            queryParams: {
+              accountIdentifier: pathParams.accountId,
+              orgIdentifier: pathParams.orgIdentifier,
+              projectIdentifier: pathParams.projectIdentifier,
+              interruptType
+            }
           }
-        }
-      )
+        )
+      }
     })
   })
 
-  test.each<[ExecutionStatus, string, string, HandleInterruptQueryParams['interruptType']]>([
-    ['Paused', 'play', 'selectedStageId', 'Resume'],
-    ['Running', 'pause', 'selectedStageId', 'Pause'],
+  test.each<[ExecutionStatus, string, string, HandleStageInterruptQueryParams['interruptType']]>([
+    ['Running', 'mark-as-failed', 'selectedStageId', 'UserMarkedFailure'],
     ['Running', 'stop', 'selectedStageId', 'AbortAll']
   ])(
     'Interrupt "%s" status  with action "%s" for stage "%s"',
@@ -200,14 +219,12 @@ describe('<ExecutionActions /> tests', () => {
       })
 
       await waitFor(() => {
-        if (interruptType === 'AbortAll') {
-          const dialog = document.body.querySelector('.bp3-dialog')
+        const dialog = document.body.querySelector('.bp3-dialog')
 
-          expect(dialog).toBeDefined()
-          const confirmButton = dialog?.querySelector('.bp3-button')
+        expect(dialog).toBeDefined()
+        const confirmButton = dialog?.querySelector('.bp3-button')
 
-          fireEvent.click(confirmButton!)
-        }
+        fireEvent.click(confirmButton!)
 
         expect(mutate).toHaveBeenCalledWith(
           {},

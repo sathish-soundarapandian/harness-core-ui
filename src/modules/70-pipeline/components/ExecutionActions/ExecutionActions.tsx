@@ -33,8 +33,6 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import {
   isExecutionComplete,
   isExecutionActive,
-  isExecutionPaused,
-  isExecutionPausing,
   ExecutionStatus,
   isRetryPipelineAllowed
 } from '@pipeline/utils/statusHelpers'
@@ -104,39 +102,32 @@ function MarkAsFailedConfirmationContent(): JSX.Element {
   )
 }
 
-export function getValidExecutionActions(canExecute: boolean, executionStatus?: ExecutionStatus) {
+export function getValidExecutionActions(
+  canExecute: boolean,
+  executionStatus?: ExecutionStatus
+): { [key: string]: boolean } {
   return {
     canAbort: isExecutionActive(executionStatus) && canExecute,
     canMarkAsFailed: isExecutionActive(executionStatus) && canExecute,
-    canPause:
-      isExecutionActive(executionStatus) &&
-      !isExecutionPaused(executionStatus) &&
-      !isExecutionPausing(executionStatus) &&
-      canExecute,
-    canRerun: isExecutionComplete(executionStatus) && canExecute,
-    canResume: isExecutionPaused(executionStatus) && canExecute
+    canRerun: isExecutionComplete(executionStatus) && canExecute
   }
 }
 
 function getActionTexts(stageId?: string): {
   abortText: StringKeys
-  pauseText: StringKeys
   rerunText: StringKeys
-  resumeText: StringKeys
   UserMarkedFailure: StringKeys
 } {
   return {
     abortText: stageId ? 'pipeline.execution.actions.abortStage' : 'pipeline.execution.actions.abortPipeline',
-    pauseText: stageId ? 'pipeline.execution.actions.pauseStage' : 'pipeline.execution.actions.pausePipeline',
     rerunText: stageId ? 'pipeline.execution.actions.rerunStage' : 'pipeline.execution.actions.rerunPipeline',
-    resumeText: stageId ? 'pipeline.execution.actions.resumeStage' : 'pipeline.execution.actions.resumePipeline',
     UserMarkedFailure: 'pipeline.failureStrategies.strategiesLabel.UserMarkedFailure'
   }
 }
 
 function getSuccessMessage(
   getString: (key: StringKeys, vars?: Record<string, any>) => string,
-  interruptType: HandleInterruptQueryParams['interruptType'],
+  interruptType: HandleInterruptQueryParams['interruptType'] | HandleStageInterruptQueryParams['interruptType'],
   stageId?: string,
   stageName?: string
 ): string {
@@ -145,25 +136,11 @@ function getSuccessMessage(
       ? getString('pipeline.execution.stageActionMessages.abortedMessage', {
           stageName
         })
-      : interruptType === 'Pause'
-      ? getString('pipeline.execution.stageActionMessages.pausedMessage', {
-          stageName
-        })
-      : interruptType === 'Resume'
-      ? getString('pipeline.execution.stageActionMessages.resumedMessage', {
-          stageName
-        })
       : interruptType === 'UserMarkedFailure'
       ? getString('pipeline.execution.stageActionMessages.userMarkFailedMessage', { stageName })
       : ''
   } else {
-    return interruptType === 'AbortAll'
-      ? getString('pipeline.execution.pipelineActionMessages.abortedMessage')
-      : interruptType === 'Pause'
-      ? getString('pipeline.execution.pipelineActionMessages.pausedMessage')
-      : interruptType === 'Resume'
-      ? getString('pipeline.execution.pipelineActionMessages.resumedMessage')
-      : ''
+    return interruptType === 'AbortAll' ? getString('pipeline.execution.pipelineActionMessages.abortedMessage') : ''
   }
 }
 
@@ -246,15 +223,10 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     }
   })
 
-  const { CI_YAML_VERSIONING, PIE_DEPRECATE_PAUSE_INTERRUPT_NG } = useFeatureFlags()
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
-  const { canAbort, canPause, canRerun, canResume, canMarkAsFailed } = getValidExecutionActions(
-    canExecute,
-    executionStatus
-  )
-  const { abortText, pauseText, rerunText, resumeText, UserMarkedFailure } = getActionTexts(stageId)
-
-  const interruptMethod = stageId ? stageInterrupt : interrupt
+  const { canAbort, canRerun, canMarkAsFailed } = getValidExecutionActions(canExecute, executionStatus)
+  const { abortText, rerunText, UserMarkedFailure } = getActionTexts(stageId)
 
   const commonRouteProps = {
     orgIdentifier,
@@ -280,14 +252,22 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     clear()
     try {
       const successMessage = getSuccessMessage(getString, interruptType, stageId, stageName)
-      await interruptMethod({} as never, {
-        queryParams: {
-          orgIdentifier,
-          accountIdentifier: accountId,
-          projectIdentifier,
-          interruptType
-        }
-      })
+      const interruptQueryParams = {
+        orgIdentifier,
+        accountIdentifier: accountId,
+        projectIdentifier,
+        interruptType
+      }
+      stageId
+        ? await stageInterrupt({} as never, {
+            queryParams: interruptQueryParams
+          })
+        : await interrupt({} as never, {
+            queryParams: {
+              ...interruptQueryParams,
+              interruptType: interruptType as HandleInterruptQueryParams['interruptType']
+            }
+          })
       showSuccess(successMessage)
     } catch (e) {
       const errorMessage = getRBACErrorMessage(e)
@@ -297,14 +277,6 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
 
   async function abortPipeline(): Promise<void> {
     await executeAction('AbortAll')
-  }
-
-  async function pausePipeline(): Promise<void> {
-    await executeAction('Pause')
-  }
-
-  async function resumePipeline(): Promise<void> {
-    await executeAction('Resume')
   }
 
   async function markStageAsFailed(): Promise<void> {
@@ -351,28 +323,6 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     <Layout.Horizontal onClick={killEvent}>
       {!menuOnlyActions && (
         <>
-          {!PIE_DEPRECATE_PAUSE_INTERRUPT_NG && canResume && (
-            <Button
-              size={ButtonSize.SMALL}
-              icon="play"
-              tooltip={getString(resumeText)}
-              onClick={resumePipeline}
-              {...commonButtonProps}
-              disabled={!canExecute}
-            />
-          )}
-
-          {!PIE_DEPRECATE_PAUSE_INTERRUPT_NG && canPause && (
-            <Button
-              size={ButtonSize.SMALL}
-              icon="pause"
-              tooltip={getString(pauseText)}
-              onClick={pausePipeline}
-              {...commonButtonProps}
-              disabled={!canExecute}
-            />
-          )}
-
           {canAbort && (
             <Button
               size={ButtonSize.SMALL}
@@ -440,12 +390,6 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               />
             )}
             <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />
-            {PIE_DEPRECATE_PAUSE_INTERRUPT_NG ? null : (
-              <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
-            )}
-            {PIE_DEPRECATE_PAUSE_INTERRUPT_NG ? null : (
-              <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
-            )}
 
             {onViewCompiledYaml ? (
               <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />

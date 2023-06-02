@@ -10377,19 +10377,7 @@ export interface HandleInterruptQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  interruptType:
-    | 'AbortAll'
-    | 'Abort'
-    | 'Pause'
-    | 'Resume'
-    | 'Ignore'
-    | 'StageRollback'
-    | 'StepGroupRollback'
-    | 'MarkAsSuccess'
-    | 'ExpireAll'
-    | 'Retry'
-    | 'MarkAsFailure'
-    | 'UserMarkedFailure'
+  interruptType: 'AbortAll'
 }
 
 export interface HandleInterruptPathParams {
@@ -10409,7 +10397,7 @@ export type HandleInterruptProps = Omit<
   HandleInterruptPathParams
 
 /**
- * pause, resume or stop the pipeline executions
+ * stop the pipeline executions
  */
 export const HandleInterrupt = ({ planExecutionId, ...props }: HandleInterruptProps) => (
   <Mutate<
@@ -10439,7 +10427,7 @@ export type UseHandleInterruptProps = Omit<
   HandleInterruptPathParams
 
 /**
- * pause, resume or stop the pipeline executions
+ * stop the pipeline executions
  */
 export const useHandleInterrupt = ({ planExecutionId, ...props }: UseHandleInterruptProps) =>
   useMutate<
@@ -10455,7 +10443,7 @@ export const useHandleInterrupt = ({ planExecutionId, ...props }: UseHandleInter
   })
 
 /**
- * pause, resume or stop the pipeline executions
+ * stop the pipeline executions
  */
 export const handleInterruptPromise = (
   {
@@ -10482,19 +10470,7 @@ export interface HandleStageInterruptQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  interruptType:
-    | 'AbortAll'
-    | 'Abort'
-    | 'Pause'
-    | 'Resume'
-    | 'Ignore'
-    | 'StageRollback'
-    | 'StepGroupRollback'
-    | 'MarkAsSuccess'
-    | 'ExpireAll'
-    | 'Retry'
-    | 'MarkAsFailure'
-    | 'UserMarkedFailure'
+  interruptType: 'AbortAll' | 'UserMarkedFailure'
 }
 
 export interface HandleStageInterruptPathParams {
@@ -10515,7 +10491,7 @@ export type HandleStageInterruptProps = Omit<
   HandleStageInterruptPathParams
 
 /**
- * pause, resume or stop the stage executions
+ * mark as failure or stop the stage executions
  */
 export const HandleStageInterrupt = ({ planExecutionId, nodeExecutionId, ...props }: HandleStageInterruptProps) => (
   <Mutate<
@@ -10545,7 +10521,7 @@ export type UseHandleStageInterruptProps = Omit<
   HandleStageInterruptPathParams
 
 /**
- * pause, resume or stop the stage executions
+ * mark as failure or stop the stage executions
  */
 export const useHandleStageInterrupt = ({ planExecutionId, nodeExecutionId, ...props }: UseHandleStageInterruptProps) =>
   useMutate<
@@ -10562,7 +10538,7 @@ export const useHandleStageInterrupt = ({ planExecutionId, nodeExecutionId, ...p
   )
 
 /**
- * pause, resume or stop the stage executions
+ * mark as failure or stop the stage executions
  */
 export const handleStageInterruptPromise = (
   {
