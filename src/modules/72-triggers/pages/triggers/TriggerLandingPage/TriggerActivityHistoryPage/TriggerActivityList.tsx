@@ -11,7 +11,7 @@ import ReactTimeago from 'react-timeago'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { Text, Layout, TableV2, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo } from 'lodash-es'
+import { capitalize, defaultTo } from 'lodash-es'
 import { Drawer } from '@blueprintjs/core'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
@@ -20,6 +20,8 @@ import routes from '@common/RouteDefinitions'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
+import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
+import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import css from './TriggerActivityHistoryPage.module.scss'
 
 interface TriggerActivityListProps {
@@ -47,6 +49,20 @@ const RenderColumnEventId: CellType = ({ row }) => {
     <Layout.Horizontal flex={{ align: 'center-center' }} style={{ justifyContent: 'flex-start' }} spacing="xsmall">
       <Text>{data?.eventCorrelationId}</Text>
     </Layout.Horizontal>
+  )
+}
+
+const RenderColumnStatus: CellType = ({ row }) => {
+  const data = row.original.triggerEventStatus
+  return (
+    <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
+      <ExecutionStatusLabel status={capitalize(data?.status) as ExecutionStatus} />
+      <div className={css.statusMessage}>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500} lineClamp={1}>
+          {data?.message}
+        </Text>
+      </div>
+    </Layout.Vertical>
   )
 }
 
@@ -121,8 +137,9 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
       },
       {
         Header: getString('triggers.activityHistory.triggerStatus'),
-        width: '25%'
-        // Cell: RenderColumnStatus {<TODO/>}
+        accessor: 'triggerEventStatus',
+        width: '25%',
+        Cell: RenderColumnStatus
       },
       {
         Header: getString('triggers.activityHistory.executionDetails'),
