@@ -282,7 +282,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
             sourceBranch,
             targetBranch,
             buildType,
-            repositoryName: repoName ? repoName[0] : undefined,
+            repositoryName: typeof repoName === 'string' ? repoName : undefined,
             deploymentType: deploymentTypes,
             infrastructureType: infrastructureTypes ? infrastructureTypes[0] : undefined,
             services: getMultiSelectFormOptions(serviceNames, 'service'),
