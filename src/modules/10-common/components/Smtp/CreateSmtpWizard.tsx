@@ -13,7 +13,9 @@ import { ConnectorInfoDTO, NgSmtpDTO, useCreateSmtpConfig, useUpdateSmtp } from 
 import StepSmtpDetails from './views/StepDetails'
 import StepCredentials from './views/StepCredentials'
 import StepTestConnection from './views/StepTestConnection'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import DelegateSelectorStep, {
+  NonConnectorsTypeToUseDelegateStep
+} from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
@@ -41,7 +43,7 @@ const CreateSmtpWizard: React.FC<CreateSmtpWizardProps & SmtpSharedObj> = props 
       const createData = await createSmtpConfig(data)
 
       if (createData.status === 'SUCCESS') {
-        resolve(createData as ConnectorInfoDTO)
+        resolve({ ...data, uuid: createData.data?.uuid })
       } else {
         reject(createData as ConnectorInfoDTO)
       }
@@ -58,9 +60,9 @@ const CreateSmtpWizard: React.FC<CreateSmtpWizardProps & SmtpSharedObj> = props 
       const updateData = await updateSmtp(data)
 
       if (updateData.status === 'SUCCESS') {
-        props.nextStep?.({ ...data, uuid: updateData.data?.uuid })
+        //props.nextStep?.({ ...data, uuid: updateData.data?.uuid })
 
-        resolve(updateData as ConnectorInfoDTO)
+        resolve({ ...data, uuid: updateData.data?.uuid })
       } else {
         modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(updateData))
 
@@ -88,6 +90,7 @@ const CreateSmtpWizard: React.FC<CreateSmtpWizardProps & SmtpSharedObj> = props 
         {...props}
         isEditMode={!!props.isEdit}
         connectorInfo={undefined}
+        nonConnectorsTypeToUseDelegateStep={NonConnectorsTypeToUseDelegateStep.SMTP}
       />
       <StepTestConnection name={getString('common.smtp.testConnection')} {...props} />
     </StepWizard>

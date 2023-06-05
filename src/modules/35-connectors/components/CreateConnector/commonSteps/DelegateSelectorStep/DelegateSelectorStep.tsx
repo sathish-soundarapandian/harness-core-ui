@@ -28,7 +28,8 @@ import type {
   ConnectorRequestBody,
   ConnectorInfoDTO,
   EntityGitDetails,
-  ResponseConnectorResponse
+  ResponseConnectorResponse,
+  ResponseNgSmtpDTO
 } from 'services/cd-ng'
 import { PageSpinner } from '@common/components'
 import {
@@ -47,6 +48,10 @@ interface DelegateSelectorStepData extends BuildPayloadProps {
   delegateSelectors: Array<string>
 }
 
+export enum NonConnectorsTypeToUseDelegateStep {
+  SMTP = 'SMTP'
+}
+
 export interface DelegateSelectorProps {
   buildPayload: (data: DelegateSelectorStepData) => ConnectorRequestBody
   hideModal?: () => void
@@ -60,6 +65,7 @@ export interface DelegateSelectorProps {
   customHandleCreate?: (payload: ConnectorConfigDTO) => Promise<ConnectorInfoDTO | undefined>
   customHandleUpdate?: (payload: ConnectorConfigDTO) => Promise<ConnectorInfoDTO | undefined>
   helpPanelReferenceId?: string
+  nonConnectorsTypeToUseDelegateStep?: NonConnectorsTypeToUseDelegateStep
 }
 
 type InitialFormData = { delegateSelectors: Array<string> }
@@ -117,7 +123,15 @@ const isDelegateSelectorMandatory = (prevStepData: ConnectorConfigDTO = {}): boo
 }
 
 const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSelectorProps> = props => {
-  const { prevStepData, nextStep, buildPayload, customHandleCreate, customHandleUpdate, connectorInfo } = props
+  const {
+    prevStepData,
+    nextStep,
+    buildPayload,
+    customHandleCreate,
+    customHandleUpdate,
+    connectorInfo,
+    nonConnectorsTypeToUseDelegateStep
+  } = props
   const {
     accountId,
     projectIdentifier: projectIdentifierFromUrl,
@@ -138,18 +152,22 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
     helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 1050 } : undefined
   })
 
-  const afterSuccessHandler = (response: ResponseConnectorResponse): void => {
-    props.onConnectorCreated?.(response?.data)
-    if (prevStepData?.branch) {
-      // updating connector branch to handle if new branch was created while commit
-      prevStepData.branch = response?.data?.gitDetails?.branch
-    }
-
-    if (stepDataRef?.skipDefaultValidation) {
-      props.hideModal?.()
+  const afterSuccessHandler = (response: ResponseConnectorResponse | ResponseNgSmtpDTO): void => {
+    if (nonConnectorsTypeToUseDelegateStep === NonConnectorsTypeToUseDelegateStep.SMTP) {
+      nextStep?.(response)
     } else {
-      nextStep?.({ ...prevStepData, ...stepDataRef } as ConnectorConfigDTO)
-      props.setIsEditMode?.(true)
+      props.onConnectorCreated?.((response as ResponseConnectorResponse)?.data)
+      if (prevStepData?.branch) {
+        // updating connector branch to handle if new branch was created while commit
+        prevStepData.branch = (response as ResponseConnectorResponse)?.data?.gitDetails?.branch
+      }
+
+      if (stepDataRef?.skipDefaultValidation) {
+        props.hideModal?.()
+      } else {
+        nextStep?.({ ...prevStepData, ...stepDataRef } as ConnectorConfigDTO)
+        props.setIsEditMode?.(true)
+      }
     }
   }
 

@@ -172,7 +172,14 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
       } else {
         {
           if (customHandleUpdate || customHandleCreate) {
-            props.isEditMode ? customHandleUpdate?.(payload) : customHandleCreate?.(payload)
+            const connectorCustomCreateOrUpdate = props.isEditMode
+              ? customHandleUpdate?.(payload)
+              : customHandleCreate?.(payload)
+            connectorCustomCreateOrUpdate?.then(val => {
+              if (val) {
+                props?.afterSuccessHandler(val as any)
+              }
+            })
           } else {
             handleCreateOrEdit(connectorFormData, { payload: payload }) /* Handling non-git flow */
               .then(res => {
