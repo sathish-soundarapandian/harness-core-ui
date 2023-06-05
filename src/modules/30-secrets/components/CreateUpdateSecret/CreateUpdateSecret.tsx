@@ -42,6 +42,8 @@ import {
   ListSecretsV2QueryParams,
   JsonNode
 } from 'services/cd-ng'
+
+import { Connectors } from '@connectors/constants'
 import type { SecretTextSpecDTO, SecretFileSpecDTO } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
 import { IdentifierSchema, NameSchema, VariableSchemaWithoutHook } from '@common/utils/Validation'
@@ -57,6 +59,8 @@ import VaultFormFields from './views/VaultFormFields'
 import LocalFormFields from './views/LocalFormFields'
 import CustomFormFields from './views/CustomFormFields/CustomFormFields'
 import css from './CreateUpdateSecret.module.scss'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { DefaultSettingConnectorField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 export type SecretFormData = Omit<SecretDTOV2, 'spec'> & SecretTextSpecDTO & SecretFileSpecDTO & TemplateInputInterface
 interface TemplateInputInterface {
   templateInputs?: JsonNode
@@ -528,42 +532,32 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
             const typeOfSelectedSecretManager = selectedSecretManager?.type
             return (
               <FormikForm>
-                <FormInput.Select
-                  onQueryChange={(query: string) => {
-                    if (!initialSecretManagerChangedOrSearchStared) {
-                      setInitialSecretManagerChangedOrSearchStared(true)
-                    }
-                    setSearchTerm(query)
-                  }}
-                  name="secretManagerIdentifier"
-                  label={getString('secrets.labelSecretsManager')}
-                  items={secretManagersOptions}
-                  disabled={editing || loadingSecretsManagers || loadingConnectorDetails}
-                  onChange={item => {
-                    if (!initialSecretManagerChangedOrSearchStared) {
-                      setInitialSecretManagerChangedOrSearchStared(true)
-                    }
-                    const secretManagerData = secretManagersApiResponse?.data?.content?.find(
-                      itemValue => itemValue.connector?.identifier === item.value
-                    )?.connector
-                    const readOnlyTemp =
-                      secretManagerData?.type === 'Vault'
-                        ? (secretManagerData?.spec as VaultConnectorDTO)?.readOnly
-                        : false
-                    setReadOnlySecretManager(readOnlyTemp)
-                    formikProps.setFieldValue(
-                      'valueType',
-                      secretManagerData?.type === 'CustomSecretManager'
-                        ? 'CustomSecretManagerValues'
-                        : readOnlyTemp
-                        ? 'Reference'
-                        : 'Inline'
-                    )
-
-                    initializeTemplateInputs(secretManagerData)
-                    setSelectedSecretManager(secretManagerData)
-                  }}
+                <DefaultSettingConnectorField
+                  name={'secretManagerIdentifier'}
+                  type={[
+                    Connectors.GCP_KMS,
+                    Connectors.VAULT,
+                    Connectors.AWS_SECRET_MANAGER,
+                    Connectors.CUSTOM_SECRET_MANAGER,
+                    Connectors.AZURE_KEY_VAULT,
+                    Connectors.GcpSecretManager
+                  ]}
                 />
+
+                {/* <FormMultiTypeConnectorField
+                  name={'secretManagerIdentifier'}
+                  type={[Connectors.AwsSecretManager, Connectors.Vault]}
+                  label={getString('connector')}
+                  width={400}
+                  placeholder={loading ? getString('loading') : getString('common.entityPlaceholderText')}
+                  accountIdentifier={accountIdentifier}
+                  projectIdentifier={projectIdentifier}
+                  orgIdentifier={orgIdentifier}
+                  tooltipProps={{ dataTooltipId: 'rightBarForm_connectorRef' }}
+                  setRefValue
+                  onChange={() => {}}
+                /> */}
+
                 {!secretTypeFromProps ? (
                   <FormInput.RadioGroup
                     name="type"

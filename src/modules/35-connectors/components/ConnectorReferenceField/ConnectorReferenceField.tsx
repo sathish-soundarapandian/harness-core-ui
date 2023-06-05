@@ -469,6 +469,7 @@ export function getReferenceFieldProps({
   ReferenceSelectProps<ConnectorReferenceDTO>,
   'onChange' | 'onMultiSelectChange' | 'onCancel' | 'pagination'
 > {
+  console.log(type, category)
   return {
     name,
     width,
@@ -521,7 +522,9 @@ export function getReferenceFieldProps({
 
       return request
         .then(responseData => {
+          console.log('swaraj23')
           if (responseData?.data?.content) {
+            console.log('swaraj')
             const connectors = responseData.data.content
             setPagedConnectorData(responseData)
             const response: EntityReferenceResponse<ConnectorReferenceDTO>[] = []
@@ -979,6 +982,7 @@ export const DefaultSettingConnectorField: React.FC<SettingRendererProps & { typ
     const { getString } = useStrings()
     const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
     const formik = useFormikContext<any>()
+    console.log(formik.values)
     return (
       <ConnectorReferenceField
         name={identifier}
@@ -991,9 +995,11 @@ export const DefaultSettingConnectorField: React.FC<SettingRendererProps & { typ
         {...(orgIdentifier ? { orgIdentifier } : {})}
         {...(projectIdentifier ? { projectIdentifier } : {})}
         onChange={(value, scope) => {
+          console.log('inside cdefault settings')
           const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
-          setFieldValue(identifier, connectorRefWithScope)
-          onSettingSelectionChange(connectorRefWithScope)
+          setFieldValue?.(identifier, connectorRefWithScope)
+          onSettingSelectionChange?.(connectorRefWithScope)
+          formik?.setValue(identifier, connectorRefWithScope)
         }}
         disabled={settingValue && !settingValue.isSettingEditable}
       />
