@@ -160,7 +160,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         params,
         branch: selectedBranch,
         loadFromFallbackBranch,
-        sendParentEntityDetails: isStandAlone && parentEntityDetails ? true : false
+        sendParentEntityDetails: isStandAlone && !parentEntityDetails ? false : true
       })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
@@ -206,7 +206,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
          For diff repo we want storeMetadata bra nch to initially go as in BE we have
         logic to pick default branch of that specfic repo and template*/
         branch: isStandAlone ? selectedBranch : selectedTemplateBranch,
-        sendParentEntityDetails: isStandAlone && parentEntityDetails ? true : false
+        sendParentEntityDetails: isStandAlone && !parentEntityDetails ? false : true
       })
     },
     lazy: true,
@@ -296,7 +296,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     if (selectedTemplate?.yaml) {
       refetchTemplateInputSetYaml()
     }
-  }, [selectedTemplate])
+  }, [selectedTemplate?.yaml])
 
   useDeepCompareEffect(() => {
     if (selectedTemplateSpec && selectedTemplate?.templateEntityType === TemplateType.Pipeline) {
@@ -317,7 +317,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         refetchTemplateYaml()
       }
     }
-  }, [selectedTemplate, defaultBranch])
+  }, [selectedTemplate?.yaml, defaultBranch])
 
   React.useEffect(() => {
     if (templateYamlData?.data) {

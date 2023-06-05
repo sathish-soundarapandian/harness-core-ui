@@ -96,14 +96,14 @@ describe('<TemplateDetails /> git experience', () => {
     useGetTemplateMock.mockReset()
   })
 
-  test('Template GET API sends parent entity context in query params', () => {
+  test('Template GET API sends parent entity context in query params only when default behaviour is there', () => {
     const baseProps: TemplateDetailsProps = {
       template: defaultTo(mockTemplates?.data?.content?.[0], {}),
       storeMetadata: {
         connectorRef: 'connectorRefTest',
         storeType: 'REMOTE',
         branch: 'branchTest',
-        repoName: 'repoNameTest'
+        repoName: 'manju-test-template-qq-12344'
       }
     }
 
@@ -124,7 +124,7 @@ describe('<TemplateDetails /> git experience', () => {
         parentEntityConnectorRef: 'connectorRefTest',
         parentEntityOrgIdentifier: 'default',
         parentEntityProjectIdentifier: 'projectId',
-        parentEntityRepoName: 'repoNameTest',
+        parentEntityRepoName: 'manju-test-template-qq-12344',
         projectIdentifier: 'Templateproject',
         versionLabel: 'v4',
         repoIdentifier: undefined
