@@ -33,13 +33,15 @@ export const getGitQueryParamsWithParentScope = ({
   params,
   repoIdentifier,
   branch,
-  loadFromFallbackBranch = false
+  loadFromFallbackBranch = false,
+  sendParentEntityDetails = true
 }: {
   storeMetadata: StoreMetadata | undefined
   params: ProjectPathProps
   repoIdentifier?: string
   branch?: string
   loadFromFallbackBranch?: boolean
+  sendParentEntityDetails?: boolean
 }): Partial<GetTemplateQueryParams> => {
   const parentEntityIds = {
     parentEntityAccountIdentifier: params.accountId,
@@ -55,9 +57,10 @@ export const getGitQueryParamsWithParentScope = ({
     branch: branchParam,
 
     // Git experience uses storeMetadata
-    parentEntityConnectorRef: storeMetadata?.connectorRef,
-    parentEntityRepoName: storeMetadata?.repoName,
-    ...(!isEmpty(storeMetadata?.connectorRef) ? parentEntityIds : {}),
+    ...(sendParentEntityDetails
+      ? { parentEntityConnectorRef: storeMetadata?.connectorRef, parentEntityRepoName: storeMetadata?.repoName }
+      : {}),
+    ...(!isEmpty(storeMetadata?.connectorRef) && sendParentEntityDetails ? parentEntityIds : {}),
     ...(!branchParam && loadFromFallbackBranch && { loadFromFallbackBranch })
   }
 }

@@ -137,13 +137,11 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
       }
       if (template.gitDetails?.branch && template.gitDetails?.repoName) {
         if (
-          template.gitDetails.branch !== template.gitDetails?.defaultBranch ||
-          (template.gitDetails?.repoName === repoName && branch !== template.gitDetails?.defaultBranch)
+          (template.gitDetails.repoName === repoName && template.gitDetails.branch !== branch) ||
+          (template.gitDetails.repoName !== repoName &&
+            template.gitDetails.branch !== template.gitDetails?.defaultBranch)
         ) {
           set(draft, 'template.gitBranch', template?.gitDetails?.branch)
-        }
-        if (template.gitDetails?.repoName === repoName && template.gitDetails?.branch === branch) {
-          unset(draft, 'template.gitBranch')
         }
       }
       set(draft, 'template.templateInputs', get(data, 'template.templateInputs'))

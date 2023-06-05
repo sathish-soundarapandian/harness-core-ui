@@ -21,7 +21,7 @@ import {
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, isEmpty, noop, set, unset } from 'lodash-es'
+import { defaultTo, isEmpty, isUndefined, noop, set, unset } from 'lodash-es'
 import produce from 'immer'
 import { parse } from 'yaml'
 import { useStrings } from 'framework/strings'
@@ -101,7 +101,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     template,
     setTemplate,
     storeMetadata,
-    isStandAlone = false,
+    isStandAlone = false, // when we use template inside pipeline/template studio, then it is set to true
     disableVersionChange = false,
     loadFromFallbackBranch = false
   } = props
@@ -121,7 +121,11 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const params = useParams<ProjectPathProps & ModulePathParams>()
   const { accountId, module } = params
   const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>()
+
+  /* default branch will be sent in template object so as to give reference while creating stage/step template in pipeline studio
+  and help us know whether to show gitBranch in yaml or not */
   const [defaultBranch, setDefaultBranch] = React.useState<string | undefined>()
+
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
       ?.versionLabel
@@ -133,6 +137,11 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const selectedTemplateBranch =
     (selectedTemplate as TemplateSummaryResponse)?.gitDetails?.branch ||
     (selectedTemplate as NGTemplateInfoConfigWithGitDetails)?.branch
+
+  const parentEntityDetails =
+    isUndefined(selectedBranch) ||
+    (selectedTemplate?.gitDetails?.repoName !== storeMetadata?.repoName &&
+      selectedTemplate?.gitDetails?.defaultBranch === selectedBranch)
 
   const {
     data: templateYamlData,
@@ -146,7 +155,13 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       orgIdentifier: selectedTemplate?.orgIdentifier,
       projectIdentifier: selectedTemplate?.projectIdentifier,
       versionLabel: selectedTemplate?.versionLabel,
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params, branch: selectedBranch, loadFromFallbackBranch })
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params,
+        branch: selectedBranch,
+        loadFromFallbackBranch,
+        sendParentEntityDetails: isStandAlone && parentEntityDetails ? true : false
+      })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true
@@ -187,7 +202,11 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         storeMetadata,
         params,
         repoIdentifier: repo,
-        branch: selectedBranch ?? selectedTemplateBranch
+        /* When isStandalone is true then, if selected branch is undefined, it will pick from storemetadata.
+         For diff repo we want storeMetadata bra nch to initially go as in BE we have
+        logic to pick default branch of that specfic repo and template*/
+        branch: isStandAlone ? selectedBranch : selectedTemplateBranch,
+        sendParentEntityDetails: isStandAlone && parentEntityDetails ? true : false
       })
     },
     lazy: true,
@@ -214,7 +233,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         storeMetadata,
         params,
         repoIdentifier: repo,
-        branch: selectedBranch ?? selectedTemplateBranch
+        branch: isStandAlone ? selectedBranch : selectedTemplateBranch
       })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
@@ -258,6 +277,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   React.useEffect(() => {
     if (templateYamlError && selectedTemplate) {
       const updatedSelectedTemplate = produce(selectedTemplate, draft => {
+        //This make sures yaml is set to empty on branch change which is responsible for rendering of useTemplate button in Template selector component
         if (!isEmpty(draft?.yaml)) {
           set(draft, 'yaml', '')
         }
@@ -292,6 +312,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         }
       })
       setTemplate?.(data)
+      setSelectedTemplate?.(data)
       if (isEmpty(selectedTemplate?.yaml)) {
         refetchTemplateYaml()
       }
@@ -355,7 +376,13 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
           orgIdentifier: selectedTemplate?.orgIdentifier,
           projectIdentifier: selectedTemplate?.projectIdentifier,
           versionLabel: defaultTo(selectedTemplate?.versionLabel, ''),
-          ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier: repo, branch })
+          ...getGitQueryParamsWithParentScope({
+            storeMetadata,
+            params,
+            repoIdentifier: repo,
+            branch,
+            sendParentEntityDetails: isStandAlone && parentEntityDetails ? true : false
+          })
         }
       })
       if (selectedTemplate?.templateEntityType === TemplateType.Pipeline) {
@@ -388,7 +415,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         templateIdentifier: selectedTemplate.identifier,
         versionLabel: selectedTemplate.versionLabel,
         repoIdentifier: selectedTemplate.gitDetails?.repoIdentifier,
-        branch: selectedBranch || selectedTemplate.gitDetails?.branch
+        branch: selectedBranch || storeMetadata?.branch
       })
       if (isStandAlone) {
         window.open(`${windowLocationUrlPartBeforeHash()}#${url}`, '_blank')
@@ -479,7 +506,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                     <Layout.Horizontal flex={{ alignItems: 'center' }}>
                       <GitPopoverV2
                         setDefaultBranch={setDefaultBranch}
-                        selectedBranch={selectedBranch}
+                        selectedBranch={selectedBranch} // to always show selected branch in popover
                         storeMetadata={{
                           ...storeMetadata,
                           connectorRef: (selectedTemplate as TemplateResponse).connectorRef,

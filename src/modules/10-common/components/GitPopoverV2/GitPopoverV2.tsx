@@ -136,6 +136,7 @@ export const GitPopoverV2 = ({
   }, [forceFetch, branchChangeDisabled, refetch])
 
   useEffect(() => {
+    //here, default branch is set which is getting consumed in template details for setting it in selected template gitdetails object
     if (response?.data?.defaultBranch?.name) setDefaultBranch?.(response?.data?.defaultBranch?.name)
   }, [response?.data?.defaultBranch?.name])
 
