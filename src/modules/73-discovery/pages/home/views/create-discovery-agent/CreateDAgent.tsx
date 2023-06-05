@@ -56,7 +56,9 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
             name: dAgentFormRef.current?.values.discoveryAgentName,
             config: {
               kubernetes: {
-                namespace: 'default'
+                namespace: 'sd1',
+                imageRegistry: 'index.docker.io/shovan1995',
+                serviceAccount: 'cluster-admin-1'
               }
             }
           })
