@@ -41,15 +41,16 @@ import {
   Variation
 } from 'services/cf'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
-
 import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
+import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import patch from '../../utils/instructions'
 import SaveFlagToGitSubForm from '../SaveFlagToGitSubForm/SaveFlagToGitSubForm'
 import { PrerequisiteItem } from './FlagPrerequisiteItem'
+
 interface FlagPrerequisitesProps {
   featureFlag: Feature
   gitSync: UseGitSync
@@ -74,6 +75,7 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
   const [searchTerm, setSearchTerm] = useState<string>()
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
   const gitSyncFormMeta = gitSync?.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.UPDATES_FLAG_PREREQS)
+  const { activeEnvironment } = useActiveEnvironment()
 
   const queryParams = useMemo(
     () => ({
@@ -345,8 +347,10 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
   }, [featureList, isEditingPrerequisites, gitSync.isGitSyncEnabled, gitSync.isAutoCommitEnabled, loading])
 
   const rbacPermission: Omit<PermissionsRequest, 'permissions'> & { permission: PermissionIdentifier } = {
-    resource: { resourceType: ResourceType.FEATUREFLAG },
-    permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG
+    permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
+    resource: activeEnvironment
+      ? { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment }
+      : { resourceType: ResourceType.FEATUREFLAG }
   }
 
   const planEnforcementProps = isPlanEnforcementEnabled
