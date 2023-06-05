@@ -174,6 +174,9 @@ export default function Configurations(
         cloneTemplateValue.spec.sources['changeSources'] = defaultMonitoredService?.sources?.changeSources
         sethasTemplateChangeSourceSet(true)
       }
+      if (defaultMonitoredService?.type) {
+        cloneTemplateValue.spec['type'] = defaultMonitoredService?.type
+      }
       updateTemplate?.(cloneTemplateValue?.spec as MonitoredServiceForm)
     }
   }, [storeMetadata?.storeType, templateValue?.name, defaultMonitoredService])

@@ -30,7 +30,7 @@ export const getInitFormData = (
       description: '',
       tags: templateValue?.tags || {},
       serviceRef: templateScope !== Scope.PROJECT ? RUNTIME_INPUT_VALUE : templateValue?.spec?.serviceRef,
-      type: MonitoredServiceType.APPLICATION as MonitoredServiceForm['type'],
+      type: defaultMonitoredService?.type ?? (MonitoredServiceType.APPLICATION as MonitoredServiceForm['type']),
       environmentRef: templateScope !== Scope.PROJECT ? RUNTIME_INPUT_VALUE : templateValue?.spec?.environmentRef,
       environmentRefList: [],
       sources: templateValue?.spec?.sources,

@@ -6,6 +6,7 @@
  */
 
 import { isUndefined } from 'lodash-es'
+import type { SelectOption } from '@harness/uicore'
 import type {
   onChangeProps,
   ShouldShowServiceEnvironmentFieldProps,
@@ -14,8 +15,12 @@ import type {
 import { DefaultShowServiceEnvironment } from './OrgAccountLevelServiceEnvField.constants'
 
 export const onValueChange = ({ isTemplate, value, onSuccess }: onChangeProps): void => {
-  const selectedService = isTemplate ? { label: value, value: value } : value
-  onSuccess(selectedService)
+  if (Array.isArray(value)) {
+    onSuccess(value as unknown as SelectOption)
+  } else {
+    const selectedService = isTemplate ? { label: value, value: value } : value
+    onSuccess(selectedService)
+  }
 }
 
 export const shouldShowServiceEnvironmentField = ({

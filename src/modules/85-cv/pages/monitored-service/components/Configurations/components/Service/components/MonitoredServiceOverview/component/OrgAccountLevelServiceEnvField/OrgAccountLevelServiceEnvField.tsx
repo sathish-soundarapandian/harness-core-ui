@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { useToggleOpen } from '@harness/uicore'
+import { SelectOption, useToggleOpen } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
@@ -58,6 +58,9 @@ export default function OrgAccountLevelServiceEnvField({
           setRefValue={isTemplate}
           openAddNewModal={openAddEnvModal}
           isMultiSelect={isInfra}
+          onMultiSelectChange={(records: SelectOption[]) => {
+            onValueChange({ value: records, isTemplate, onSuccess: environmentOnSelect })
+          }}
           onChange={env => onValueChange({ value: env, isTemplate, onSuccess: environmentOnSelect })}
           {...COMMON_FIELDS_PROPS}
         />
