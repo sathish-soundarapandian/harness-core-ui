@@ -27,6 +27,7 @@ import useCreateDelegateViaCommandsModal from '@delegates/pages/delegates/delega
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 import css from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector.module.scss'
+import type { NonConnectorsTypeToUseDelegateStep } from '../DelegateSelectorStep'
 
 export enum DelegateOptions {
   DelegateOptionsAny = 'DelegateOptions.DelegateOptionsAny',
@@ -46,6 +47,8 @@ export interface DelegateSelectorProps extends ProjectPathProps {
   setDelegateSelectors: (delegateSelectors: Array<string>) => void
   setDelegatesFound: (delegatesFound: DelegatesFoundState) => void
   delegateSelectorMandatory: boolean
+
+  nonConnectorsTypeToUseDelegateStep?: NonConnectorsTypeToUseDelegateStep
 }
 
 export interface DelegateGroupDetailsCustom extends DelegateGroupDetails {
@@ -105,15 +108,18 @@ const CustomRadioGroup: React.FC<CustomRadioGroupProps> = props => {
     </Container>
   )
 }
-
-export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
+export interface DelegateSelectorForConnectorsProps extends DelegateSelectorProps {
+  nonConnectorsTypeToUseDelegateStep?: NonConnectorsTypeToUseDelegateStep
+}
+export const DelegateSelector: React.FC<DelegateSelectorForConnectorsProps> = props => {
   const {
     mode,
     setMode,
     delegateSelectors = [],
     setDelegateSelectors,
     setDelegatesFound,
-    delegateSelectorMandatory = false
+    delegateSelectorMandatory = false,
+    nonConnectorsTypeToUseDelegateStep
   } = props
   const [formattedData, setFormattedData] = useState<DelegateGroupDetailsCustom[]>([])
   const { getString } = useStrings()
@@ -321,7 +327,9 @@ export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
   return (
     <Layout.Vertical className={css.delegateSelectorContainer}>
       <Text color={Color.GREY_800} margin={{ top: 'xlarge', bottom: 'medium' }}>
-        {getString('connectors.delegate.configure')}
+        {nonConnectorsTypeToUseDelegateStep
+          ? getString('connectors.delegate.configureForNonConnectors')
+          : getString('connectors.delegate.configure')}
       </Text>
       <CustomRadioGroup items={options} handleClick={newMode => resetDelegateSelectorsAndUpdateMode(newMode)} />
       {CustomComponent}

@@ -6,25 +6,11 @@
  */
 
 import React from 'react'
-import {
-  Button,
-  StepProps,
-  FormikForm,
-  Formik,
-  Container,
-  Layout,
-  FormInput,
-  ModalErrorHandlerBinding,
-  ButtonVariation,
-  getErrorInfoFromErrorObject,
-  PageSpinner
-} from '@harness/uicore'
-
-import { useParams } from 'react-router-dom'
-import { NgSmtpDTO, SmtpConfigDTO, useCreateSmtpConfig, useUpdateSmtp } from 'services/cd-ng'
+import { Button, StepProps, FormikForm, Formik, Container, Layout, FormInput, ButtonVariation } from '@harness/uicore'
+import type { NgSmtpDTO, SmtpConfigDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import * as Yup from 'yup'
 
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CreateSmtpWizardProps, SmtpSharedObj } from '../CreateSmtpWizard'
 
 import { SmtpModalHeader } from './StepDetails'
@@ -39,32 +25,6 @@ const StepCredentials: React.FC<StepProps<NgSmtpDTO> & SmtpSharedObj & CreateSmt
   isEdit
 }) => {
   const { getString } = useStrings()
-  const { accountId } = useParams<ProjectPathProps>()
-
-  const [modalErrorHandler, setModalErrorHandler] = React.useState<ModalErrorHandlerBinding>()
-  const { loading: saveSmtpLoading, mutate: createSmtpConfig } = useCreateSmtpConfig({
-    queryParams: { accountIdentifier: accountId }
-  })
-  const { loading: updateSmtpLoading, mutate: updateSmtp } = useUpdateSmtp({
-    queryParams: { accountIdentifier: accountId }
-  })
-  const save = async (data: NgSmtpDTO): Promise<void> => {
-    try {
-      const uuid = detailsData?.uuid || prevStepData?.uuid
-      const returnValue =
-        uuid || isEdit
-          ? await updateSmtp({ ...data, uuid, accountId }, { headers: { 'content-type': 'application/json' } })
-          : await createSmtpConfig({ ...data, accountId }, { headers: { 'content-type': 'application/json' } })
-
-      if (returnValue.status === 'SUCCESS') {
-        nextStep?.({ ...data, uuid: returnValue.data?.uuid })
-      } else {
-        modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(returnValue))
-      }
-    } catch (err) {
-      modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(err))
-    }
-  }
   const handlePrev = (): void => {
     if (prevStepData) {
       previousStep?.({ ...prevStepData })
@@ -84,6 +44,10 @@ const StepCredentials: React.FC<StepProps<NgSmtpDTO> & SmtpSharedObj & CreateSmt
           } as any)
         }
       }}
+      validationSchema={Yup.object().shape({
+        username: Yup.string().trim().required(),
+        password: Yup.string().trim().required()
+      })}
       formName="smtpStepCredentialsForm"
       initialValues={{
         username: prevStepData?.value?.username || detailsData?.value?.username || '',
@@ -93,14 +57,8 @@ const StepCredentials: React.FC<StepProps<NgSmtpDTO> & SmtpSharedObj & CreateSmt
       {() => {
         return (
           <>
-            {updateSmtpLoading || saveSmtpLoading ? (
-              <PageSpinner
-                message={isEdit ? getString('common.smtp.updatingSMTP') : getString('common.smtp.savingSMTP')}
-              />
-            ) : null}
             <Container padding="small" height={570}>
               <SmtpModalHeader
-                errorHandler={setModalErrorHandler}
                 mainHeading={getString('credentials')}
                 subHeading={getString('common.smtp.modalSubHeading')}
               />
@@ -116,12 +74,7 @@ const StepCredentials: React.FC<StepProps<NgSmtpDTO> & SmtpSharedObj & CreateSmt
                       icon="chevron-left"
                       onClick={handlePrev}
                     ></Button>
-                    <Button
-                      type="submit"
-                      variation={ButtonVariation.PRIMARY}
-                      text={getString('saveAndContinue')}
-                      disabled={updateSmtpLoading || saveSmtpLoading}
-                    />
+                    <Button type="submit" variation={ButtonVariation.PRIMARY} text={getString('continue')} />
                   </Layout.Horizontal>
                 </FormikForm>
               </Container>

@@ -35,14 +35,14 @@ export interface DetailsForm extends Omit<SmtpConfigDTO, 'port'> {
   port?: number
 }
 export interface SmtpModalHeaderProps {
-  errorHandler: React.Dispatch<React.SetStateAction<ModalErrorHandlerBinding | undefined>>
+  errorHandler?: React.Dispatch<React.SetStateAction<ModalErrorHandlerBinding | undefined>>
   mainHeading: string
   subHeading: string
 }
 export const SmtpModalHeader: React.FC<SmtpModalHeaderProps> = ({ errorHandler, mainHeading, subHeading }) => {
   return (
     <>
-      <ModalErrorHandler bind={errorHandler} />
+      {errorHandler && <ModalErrorHandler bind={errorHandler} />}
       <Text margin={{ bottom: 'small' }} font={{ variation: FontVariation.H3 }}>
         {mainHeading}
       </Text>

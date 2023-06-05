@@ -37,16 +37,19 @@ const SmtpDetails: React.FC = () => {
     queryParams: { accountIdentifier: accountId }
   })
   const [errorOnPage, setErrorOnPage] = useState<string>('')
+  const [closedModal, setClosedModal] = useState(false)
   const refetchData = (): void => {
+    setClosedModal(true)
     refetch()
   }
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchData })
 
   useEffect(() => {
-    if (loading && !data) {
+    console.log({ loading, data })
+    if (!loading && data && !data.data && !closedModal) {
       openCreateSmtpModal()
     }
-  }, [data])
+  }, [data, loading])
 
   const handleEdit = (): void => {
     openCreateSmtpModal(data?.data)
@@ -87,7 +90,11 @@ const SmtpDetails: React.FC = () => {
         },
         { label: getString('common.smtp.fromAddress'), value: smtpData?.value?.fromAddress || emtpyString },
         { label: getString('username'), value: smtpData?.value?.username || emtpyString },
-        { label: getString('password'), value: smtpData?.value?.password || emtpyString }
+        { label: getString('password'), value: smtpData?.value?.password || emtpyString },
+        {
+          label: getString('delegate.DelegateName'),
+          value: smtpData?.value?.delegateSelectors?.join(',') || emtpyString
+        }
       ]
     }
     return []

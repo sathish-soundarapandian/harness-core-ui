@@ -16,7 +16,8 @@ import {
   ModalErrorHandlerBinding,
   FormikForm as Form,
   StepProps,
-  ButtonVariation
+  ButtonVariation,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -29,7 +30,8 @@ import type {
   ConnectorInfoDTO,
   EntityGitDetails,
   ResponseConnectorResponse,
-  ResponseNgSmtpDTO
+  ResponseNgSmtpDTO,
+  NgSmtpDTO
 } from 'services/cd-ng'
 import { PageSpinner } from '@common/components'
 import {
@@ -42,6 +44,8 @@ import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/use
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+
+import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import css from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector.module.scss'
 
 interface DelegateSelectorStepData extends BuildPayloadProps {
@@ -51,9 +55,12 @@ interface DelegateSelectorStepData extends BuildPayloadProps {
 export enum NonConnectorsTypeToUseDelegateStep {
   SMTP = 'SMTP'
 }
+export type CustomHandlerDelegateSelectorProp = (payload: ConnectorConfigDTO) => Promise<ResponseNgSmtpDTO>
+export type BuildPayLoadDelegateSelectorStepPropForNonConnectorType = (data: ConnectorConfigDTO) => ConnectorConfigDTO
 
 export interface DelegateSelectorProps {
-  buildPayload: (data: DelegateSelectorStepData) => ConnectorRequestBody
+  buildPayload?: (data: DelegateSelectorStepData) => ConnectorRequestBody
+  buildPayloadForNonConnectors?: BuildPayLoadDelegateSelectorStepPropForNonConnectorType
   hideModal?: () => void
   onConnectorCreated?: (data?: ConnectorRequestBody) => void | Promise<void>
   isEditMode: boolean
@@ -64,6 +71,8 @@ export interface DelegateSelectorProps {
   submitOnNextStep?: boolean
   customHandleCreate?: (payload: ConnectorConfigDTO) => Promise<ConnectorInfoDTO | undefined>
   customHandleUpdate?: (payload: ConnectorConfigDTO) => Promise<ConnectorInfoDTO | undefined>
+  customHandleCreateForNonConnectors?: CustomHandlerDelegateSelectorProp
+  customHandleUpdateForNonConnectors?: CustomHandlerDelegateSelectorProp
   helpPanelReferenceId?: string
   nonConnectorsTypeToUseDelegateStep?: NonConnectorsTypeToUseDelegateStep
 }
@@ -130,7 +139,10 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
     customHandleCreate,
     customHandleUpdate,
     connectorInfo,
-    nonConnectorsTypeToUseDelegateStep
+    nonConnectorsTypeToUseDelegateStep,
+    customHandleCreateForNonConnectors,
+    customHandleUpdateForNonConnectors,
+    buildPayloadForNonConnectors
   } = props
   const {
     accountId,
@@ -154,7 +166,11 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
 
   const afterSuccessHandler = (response: ResponseConnectorResponse | ResponseNgSmtpDTO): void => {
     if (nonConnectorsTypeToUseDelegateStep === NonConnectorsTypeToUseDelegateStep.SMTP) {
-      nextStep?.(response)
+      if (response.status === 'SUCCESS') {
+        nextStep?.(response.data)
+      } else {
+        modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(response))
+      }
     } else {
       props.onConnectorCreated?.((response as ResponseConnectorResponse)?.data)
       if (prevStepData?.branch) {
@@ -182,13 +198,18 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
   )
   const [delegatesFound, setDelegatesFound] = useState<DelegatesFoundState>(DelegatesFoundState.ActivelyConnected)
   let stepDataRef: ConnectorConfigDTO | null = null
-
+  const onErrorHandler = (error: ResponseMessage) => {
+    modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(error))
+  }
   const { onInitiate, loading } = useCreateEditConnector<DelegateSelectorStepData>({
     accountId,
     isEditMode: props.isEditMode,
     isGitSyncEnabled,
     afterSuccessHandler,
-    gitDetails: props.gitDetails
+    gitDetails: props.gitDetails,
+    ...(nonConnectorsTypeToUseDelegateStep === NonConnectorsTypeToUseDelegateStep.SMTP && {
+      onErrorHandler: onErrorHandler
+    })
   })
 
   const isSaveButtonDisabled =
@@ -259,13 +280,35 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
               orgIdentifier: orgIdentifier
             }
             stepDataRef = updatedStepData
+            if (
+              nonConnectorsTypeToUseDelegateStep === NonConnectorsTypeToUseDelegateStep.SMTP &&
+              buildPayloadForNonConnectors
+            ) {
+              const payload = buildPayloadForNonConnectors(connectorData)
+              if (customHandleCreateForNonConnectors || customHandleUpdateForNonConnectors) {
+                const connectorCustomCreateOrUpdate = props.isEditMode
+                  ? customHandleUpdateForNonConnectors?.(payload)
+                  : customHandleCreateForNonConnectors?.(payload)
 
-            onInitiate({
-              connectorFormData: connectorData,
-              buildPayload,
-              customHandleCreate,
-              customHandleUpdate
-            })
+                connectorCustomCreateOrUpdate
+                  ?.then(val => {
+                    if (val) {
+                      afterSuccessHandler(val as ResponseNgSmtpDTO)
+                    }
+                  })
+                  .catch((error: ResponseMessage) => {
+                    onErrorHandler(error)
+                  })
+              }
+            }
+            if (buildPayload) {
+              onInitiate({
+                connectorFormData: connectorData,
+                buildPayload,
+                customHandleCreate,
+                customHandleUpdate
+              })
+            }
           }}
         >
           <Form>
@@ -279,6 +322,7 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
               accountId={accountId}
               orgIdentifier={orgIdentifier}
               projectIdentifier={projectIdentifier}
+              nonConnectorsTypeToUseDelegateStep={nonConnectorsTypeToUseDelegateStep}
             />
             <Layout.Horizontal padding={{ top: 'small' }} margin={{ top: 'xxxlarge' }} spacing="medium">
               <Button

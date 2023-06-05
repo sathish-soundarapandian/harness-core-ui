@@ -71,7 +71,11 @@ const StepTestConnection: React.FC<StepProps<NgSmtpDTO> & SmtpSharedObj & Create
 
   const handlePrev = (): void => {
     if (prevStepData) {
-      previousStep?.({ ...prevStepData })
+      previousStep?.({
+        ...prevStepData,
+        delegateSelectors: prevStepData.value.delegateSelectors,
+        isEditMode: true
+      } as any)
     }
   }
   return (

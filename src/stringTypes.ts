@@ -2949,6 +2949,7 @@ export interface StringsMap {
   'connectors.datadog.urlValidation': string
   'connectors.datadogConnectorDetails': string
   'connectors.delegate.configure': string
+  'connectors.delegate.configureForNonConnectors': string
   'connectors.delegate.couldNotFetch': string
   'connectors.delegate.delegateSelectorAny': string
   'connectors.delegate.delegateSelectorSelective': string

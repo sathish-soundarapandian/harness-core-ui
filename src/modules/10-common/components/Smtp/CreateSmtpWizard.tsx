@@ -6,16 +6,21 @@
  */
 
 import React from 'react'
-import { ModalErrorHandlerBinding, StepWizard, getErrorInfoFromErrorObject } from '@harness/uicore'
+import { StepWizard, PageSpinner } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { ConnectorInfoDTO, NgSmtpDTO, useCreateSmtpConfig, useUpdateSmtp } from 'services/cd-ng'
+import {
+  ConnectorConfigDTO,
+  NgSmtpDTO,
+  useCreateSmtpConfig,
+  useUpdateSmtp
+} from 'services/cd-ng'
 import StepSmtpDetails from './views/StepDetails'
 import StepCredentials from './views/StepCredentials'
 import StepTestConnection from './views/StepTestConnection'
 import DelegateSelectorStep, {
-  NonConnectorsTypeToUseDelegateStep
-} from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+  CustomHandlerDelegateSelectorProp,
+  NonConnectorsTypeToUseDelegateStep} from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
@@ -33,67 +38,43 @@ const CreateSmtpWizard: React.FC<CreateSmtpWizardProps & SmtpSharedObj> = props 
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
 
-  const [modalErrorHandler, setModalErrorHandler] = React.useState<ModalErrorHandlerBinding>()
   const { loading: saveSmtpLoading, mutate: createSmtpConfig } = useCreateSmtpConfig({
     queryParams: { accountIdentifier: accountId }
   })
-  function createSmtp(data: any, props: any) {
-    console.log({ props })
-    const returnPromise: Promise<ConnectorInfoDTO> = new Promise(async (resolve, reject) => {
-      const createData = await createSmtpConfig(data)
-
-      if (createData.status === 'SUCCESS') {
-        resolve({ ...data, uuid: createData.data?.uuid })
-      } else {
-        reject(createData as ConnectorInfoDTO)
-      }
-    })
-    return returnPromise
-  }
   const { loading: updateSmtpLoading, mutate: updateSmtp } = useUpdateSmtp({
     queryParams: { accountIdentifier: accountId }
   })
 
-  function updateSmtpLocal(data: any, props: any) {
-    console.log({ props })
-    const returnPromise: Promise<ConnectorInfoDTO> = new Promise(async (resolve, reject) => {
-      const updateData = await updateSmtp(data)
-
-      if (updateData.status === 'SUCCESS') {
-        //props.nextStep?.({ ...data, uuid: updateData.data?.uuid })
-
-        resolve({ ...data, uuid: updateData.data?.uuid })
-      } else {
-        modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(updateData))
-
-        reject(updateData as ConnectorInfoDTO)
-      }
-    })
-    return returnPromise
-  }
   return (
-    <StepWizard icon="smtp" iconProps={{ size: 56, color: Color.WHITE }} title={getString('common.smtp.conifg')}>
-      <StepSmtpDetails name={getString('details')} {...props} />
-      <StepCredentials name={getString('credentials')} {...props} />
-      <DelegateSelectorStep
-        name={getString('delegate.DelegateselectionLabel')}
-        buildPayload={(dataLocal: any) => {
-          const data = { ...dataLocal }
-          const delegateSelectors = data?.delegateSelectors
-          const value = { ...data?.value, delegateSelectors }
-          delete data.delegateSelectors
-          return { ...data, accountId, value } as any
-        }}
-        customHandleCreate={createSmtp as any}
-        customHandleUpdate={updateSmtpLocal as any}
-        disableGitSync
-        {...props}
-        isEditMode={!!props.isEdit}
-        connectorInfo={undefined}
-        nonConnectorsTypeToUseDelegateStep={NonConnectorsTypeToUseDelegateStep.SMTP}
-      />
-      <StepTestConnection name={getString('common.smtp.testConnection')} {...props} />
-    </StepWizard>
+    <>
+      {updateSmtpLoading || saveSmtpLoading ? (
+        <PageSpinner
+          message={props.isEdit ? getString('common.smtp.updatingSMTP') : getString('common.smtp.savingSMTP')}
+        />
+      ) : null}
+      <StepWizard icon="smtp" iconProps={{ size: 56, color: Color.WHITE }} title={getString('common.smtp.conifg')}>
+        <StepSmtpDetails name={getString('details')} {...props} />
+        <StepCredentials name={getString('credentials')} {...props} />
+        <DelegateSelectorStep
+          name={getString('delegate.DelegateselectionLabel')}
+          buildPayloadForNonConnectors={data => {
+            const delegateSelectors = data?.delegateSelectors
+            const value = { ...data?.value, delegateSelectors }
+            let returnValue: ConnectorConfigDTO = { ...data, accountId, value }
+            delete returnValue?.delegateSelectors
+            return returnValue
+          }}
+          customHandleCreateForNonConnectors={createSmtpConfig as CustomHandlerDelegateSelectorProp}
+          customHandleUpdateForNonConnectors={updateSmtp as CustomHandlerDelegateSelectorProp}
+          disableGitSync
+          {...props}
+          isEditMode={!!props.isEdit}
+          connectorInfo={undefined}
+          nonConnectorsTypeToUseDelegateStep={NonConnectorsTypeToUseDelegateStep.SMTP}
+        />
+        <StepTestConnection name={getString('common.smtp.testConnection')} {...props} />
+      </StepWizard>
+    </>
   )
 }
 
