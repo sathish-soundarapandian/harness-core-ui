@@ -2096,6 +2096,7 @@ export interface StringsMap {
   'authSettings.billing.next': string
   'authSettings.billing.totalDuetoday': string
   'authSettings.billingInfo.addCC': string
+  'authSettings.billingInfo.addCard': string
   'authSettings.billingInfo.address': string
   'authSettings.billingInfo.annualSubscriptions': string
   'authSettings.billingInfo.annualTotal': string
@@ -12765,6 +12766,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   servicesWithCount: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  setAsDefaultCard: string
   /**
    * @deprecated migrate this string to module level file
    */

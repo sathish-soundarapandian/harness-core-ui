@@ -60,7 +60,6 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({ nameOnCard, setNameOnCard
         <Layout.Vertical>
           <Text
             font={{ size: 'small', weight: 'bold' }}
-            icon="info"
             iconProps={{ color: Color.PRIMARY_7 }}
             padding="small"
             className={css.warning}

@@ -1,0 +1,22 @@
+.dialog {
+  width: 740px;
+  height: 380px;
+  display: flex;
+  padding: var(--spacing-9) var(--spacing-9) var(--spacing-xxlarge) var(--spacing-8);
+
+  background: var(--primary-bg) !important;
+  :global(.bp3-dialog-header) {
+    margin-bottom: reset !important;
+  }
+}
+
+.view {
+  min-width: 1200px;
+  height: calc(100% - 48px);
+}
+
+.success {
+  width: 700px;
+  height: 500px;
+  overflow: hidden;
+}

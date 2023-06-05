@@ -298,6 +298,7 @@ billingInfo:
   endingIn: ending in
   expires: Expires
   updateCard: Update Card
+  addCard: Add Card
   monthlySubscriptions: Monthly Subscriptions
   annualSubscriptions: Annual Subscriptions
   selectPaymentMethod: Select Payment Method

@@ -274,6 +274,7 @@ verify: Verify
 done: Done
 save: Save
 back: Back
+setAsDefaultCard: set as default card
 next: Next
 finish: Finish
 continue: Continue

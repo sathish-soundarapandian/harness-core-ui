@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { capitalize, isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Text, Card, Layout, OverlaySpinner, ButtonVariation, Button } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -18,6 +18,8 @@ import visa from './images/visa.svg'
 import discover from './images/discover.svg'
 import mastercard from './images/mastercard.svg'
 import css from './BillingPage.module.scss'
+import { useCreditCardWidget } from './CreditCardWidget'
+import routes from '@common/RouteDefinitions'
 
 const cardByImageMap: { [key: string]: string } = {
   amex,
@@ -31,6 +33,13 @@ function PaymentMethods(): JSX.Element {
   const { data, loading } = useListPaymentMethods({
     queryParams: { accountIdentifier: accountId }
   })
+  const history = useHistory()
+  const { openSubscribeModal } = useCreditCardWidget({
+    // refresh to fetch new license after subscribe
+    onClose: () => {
+      history.push(routes.toBilling({ accountId }))
+    }
+  })
   return (
     <OverlaySpinner show={loading}>
       <Card className={css.card}>
@@ -38,13 +47,21 @@ function PaymentMethods(): JSX.Element {
           <Text color={Color.GREY_500} font={{ variation: FontVariation.CARD_TITLE }}>
             {getString('authSettings.billingInfo.paymentMethods')}
           </Text>
-          {!isEmpty(data?.data?.paymentMethods) && (
+          {!isEmpty(data?.data?.paymentMethods) ? (
             <Button
-              disabled
-              tooltip={getString('common.featureComingSoon')}
-              tooltipProps={{ isDark: true }}
+              onClick={() => {
+                openSubscribeModal()
+              }}
               variation={ButtonVariation.LINK}
               text={getString('authSettings.billingInfo.updateCard')}
+            />
+          ) : (
+            <Button
+              variation={ButtonVariation.LINK}
+              text={getString('authSettings.billingInfo.addCard')}
+              onClick={() => {
+                openSubscribeModal()
+              }}
             />
           )}
         </div>
