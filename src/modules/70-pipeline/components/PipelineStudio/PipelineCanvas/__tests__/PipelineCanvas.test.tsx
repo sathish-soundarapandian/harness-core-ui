@@ -458,26 +458,4 @@ describe('Existing pipeline', () => {
       expect(screen.getByText('continue')).toBeInTheDocument()
     })
   })
-
-  test('sets to yaml view when there is an error in loading pipeline studio', async () => {
-    const props = getProps()
-    const pipelineProps = {
-      ...props,
-      error: {
-        message: 'unexpected typeerror in js file'
-      }
-    }
-    const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false })
-    render(
-      <TestWrapper {...testWrapperProps}>
-        <PipelineContext.Provider value={contextValue}>
-          <PipelineCanvas {...pipelineProps} />
-        </PipelineContext.Provider>
-      </TestWrapper>
-    )
-
-    await waitFor(() => {
-      expect(contextValue.setView).toBeCalledWith('YAML')
-    })
-  })
 })

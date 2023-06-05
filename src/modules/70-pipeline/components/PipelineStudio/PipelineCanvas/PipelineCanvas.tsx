@@ -110,15 +110,13 @@ export interface PipelineCanvasProps {
     onSubmit: (values: PipelineInfoConfig, storeMetadata?: StoreMetadata, gitDetails?: EntityGitDetails) => void,
     onClose: () => void
   ) => React.ReactElement<OtherModalProps>
-  error?: Error
 }
 
 export function PipelineCanvas({
   // diagram,
   toPipelineList,
   toPipelineStudio,
-  getOtherModal,
-  error
+  getOtherModal
 }: PipelineCanvasProps): React.ReactElement {
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -170,18 +168,12 @@ export function PipelineCanvas({
     templateError,
     yamlSchemaErrorWrapper
   } = state
-  const { showError, clear } = useToaster()
+
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } = useParams<
     PipelineType<PipelinePathProps> & GitQueryParams
   >()
   const history = useHistory()
-
-  React.useEffect(() => {
-    if (error) {
-      setView(SelectedView.YAML)
-    }
-  }, [error, setView])
 
   // For remote pipeline queryParam will always as branch as selected branch except coming from list view
   // While opeining studio from list view, selected branch can be any branch as in pipeline response
@@ -200,11 +192,7 @@ export function PipelineCanvas({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [branch, gitDetails?.branch, module, originalPipeline?.identifier, projectIdentifier])
 
-  React.useEffect(() => {
-    if (error) {
-      showError(getString('pipeline.loadingErrorMsg'))
-    }
-  }, [error, showError])
+  const { showError, clear } = useToaster()
 
   useDocumentTitle([parse(pipeline?.name || getString('pipelines'))])
   const [discardBEUpdateDialog, setDiscardBEUpdate] = React.useState(false)
