@@ -93,9 +93,9 @@ function CICodebaseInputSetFormV1Internal({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const formattedPath = isEmpty(path) ? '' : `${path}.`
-  const buildPath = `${formattedPath}options.clone.ref.value`
+  const buildPath = `${formattedPath}options.clone.ref.name`
   const codeBaseTypePath = `${formattedPath}options.clone.ref.type`
-  const codeBaseInputFieldFormName = `${formattedPath}options.clone.ref.value`
+  const codeBaseInputFieldFormName = `${formattedPath}options.clone.ref.name`
   const [codeBaseType, setCodeBaseType] = useState<CodebaseTypes | undefined>(get(formik?.values, codeBaseTypePath))
 
   const [isFetchingBranches, setIsFetchingBranches] = useState<boolean>(false)
@@ -136,7 +136,7 @@ function CICodebaseInputSetFormV1Internal({
     // OnEdit Case, persists saved ciCodebase build spec
     if (codeBaseType) {
       savedValues.current = Object.assign(savedValues.current, {
-        [codeBaseType]: get(formik?.values, `${formattedPath}options.clone.ref.value`, '')
+        [codeBaseType]: get(formik?.values, `${formattedPath}options.clone.ref.name`, '')
       })
       const existingValues = { ...formik?.values }
       const updatedValues = set(existingValues, codeBaseTypePath, codeBaseType)
