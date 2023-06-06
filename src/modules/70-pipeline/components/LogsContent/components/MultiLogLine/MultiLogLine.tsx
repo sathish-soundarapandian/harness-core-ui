@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useContext } from 'react'
+import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import { ansiToJson, AnserJsonEntry } from 'anser'
 import { tokenize } from 'linkifyjs'
@@ -15,6 +16,7 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 import { sanitizeHTML } from '@common/utils/StringUtils'
 import { getRegexForSearch } from '../../LogsState/utils'
 import type { LogLineData } from '../../LogsState/types'
+import { LogsSelectionContext } from '../LogsSectionProvider/LogsSectionProvider'
 import css from './MultiLogLine.module.scss'
 
 export interface AnserJsonWithLink extends AnserJsonEntry {
@@ -27,6 +29,7 @@ export interface TextWithSearchMarkersProps {
   searchIndices?: number[]
   currentSearchIndex: number
   className?: string
+  inSelection?: boolean
 }
 
 export function TextWithSearchMarkers(props: TextWithSearchMarkersProps): React.ReactElement {
@@ -83,7 +86,7 @@ export function TextWithSearchMarkers(props: TextWithSearchMarkersProps): React.
 }
 
 export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps): React.ReactElement {
-  const { searchText, txt, searchIndices, currentSearchIndex, className } = props
+  const { searchText, txt, searchIndices, currentSearchIndex, className, inSelection } = props
 
   if (!txt) {
     return <span className={className} />
@@ -103,7 +106,7 @@ export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps)
   })
 
   return (
-    <span className={className}>
+    <span className={cx(className, { [css.customSelection]: inSelection })}>
       {tokens.map((token, i) => {
         /***Change the html entities back to actual characters
         as we are no longer using dangerouslySetInnerHTML.
@@ -150,10 +153,23 @@ export interface MultiLogLineProps extends LogLineData {
   limit: number
   searchText?: string
   currentSearchIndex?: number
+  index: number
+  className?: string
 }
 
 export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
-  const { text = {}, lineNumber, limit, searchText = '', currentSearchIndex = 0, searchIndices } = props
+  const {
+    text = {},
+    lineNumber,
+    limit,
+    searchText = '',
+    currentSearchIndex = 0,
+    searchIndices,
+    index,
+    className
+  } = props
+  const selectionContex = useContext(LogsSelectionContext)
+  const { setSelectionFrom, setSelectionTo, setSelectionProgress, hasSelection, isInSelection } = selectionContex
 
   const { preference: logsInfoViewSettings } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
@@ -169,7 +185,7 @@ export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
 
   return (
     <div
-      className={css.logLine}
+      className={cx(className, css.logLine, { [css.hideNativeSelection]: hasSelection })}
       style={
         {
           gridTemplateColumns: `${Math.max(defaultTo(limit.toString().length, 3), 3)}ch${showLogInfo ? ' 5ch' : ''}${
@@ -177,6 +193,9 @@ export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
           } 1fr`
         } as React.CSSProperties
       }
+      onMouseDown={() => setSelectionFrom(index)}
+      onMouseUp={() => setSelectionTo(index)}
+      onMouseMove={() => setSelectionProgress(index)}
     >
       <span className={css.lineNumber}>{lineNumber + 1}</span>
       {showLogInfo && (
@@ -203,6 +222,7 @@ export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
         searchText={searchText}
         searchIndices={searchIndices?.out}
         currentSearchIndex={currentSearchIndex}
+        inSelection={isInSelection(index)}
       />
     </div>
   )

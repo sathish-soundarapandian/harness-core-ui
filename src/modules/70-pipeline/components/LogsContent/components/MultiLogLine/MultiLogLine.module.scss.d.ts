@@ -7,6 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly customSelection: string
+  readonly hideNativeSelection: string
   readonly level: string
   readonly lineNumber: string
   readonly logLine: string

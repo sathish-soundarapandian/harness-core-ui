@@ -20,6 +20,30 @@
     background-color: var(--grey-800);
   }
 
+  &.hideNativeSelection {
+    &::selection {
+      background: rgba(0, 0, 0, 0) !important;
+    }
+
+    span::selection {
+      background: rgba(0, 0, 0, 0) !important;
+    }
+  }
+
+  .customSelection {
+    &::selection {
+      background: rgba(0, 0, 0, 0) !important;
+    }
+
+    *::selection {
+      background: rgba(0, 0, 0, 0) !important;
+    }
+
+    span {
+      background-color: rgba(125, 188, 255, 0.4) !important;
+    }
+  }
+
   .lineNumber {
     display: inline-block;
     text-align: right;

@@ -7,12 +7,13 @@
 
 import React from 'react'
 import { GroupedVirtuoso, GroupedVirtuosoHandle } from 'react-virtuoso'
-import { sum } from 'lodash-es'
+import { flatten, sum } from 'lodash-es'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 
 import { GroupHeader, GroupHeaderProps, LogViewerAccordionStatus } from './GroupHeader/GroupHeader'
 import { MultiLogLineMemo as MultiLogLine } from './MultiLogLine/MultiLogLine'
 import type { CommonLogsProps } from './LogsProps'
+import { CUSTOM_SELECTION_LINE_ROOT, LogsSelectionProvider } from './LogsSectionProvider/LogsSectionProvider'
 import css from '../LogsContent.module.scss'
 
 const STATUSES_FOR_ACCORDION_SKIP: LogViewerAccordionStatus[] = ['LOADING', 'NOT_STARTED']
@@ -28,6 +29,25 @@ export function GroupedLogs(
     const section = state.dataMap[key]
     return section.isOpen ? section.data.length : 0
   })
+
+  // const getFlattenData = React.useCallback(
+  //   () =>
+  //     flatten(
+  //       state.logKeys.map(key => {
+  //         return state.dataMap[key].data
+  //       })
+  //     ).map(d => d.text?.out || ''),
+  //   [state.logKeys, state.dataMap]
+  // )
+
+  const data = flatten(
+    state.logKeys
+      .map(key => {
+        return state.dataMap[key]
+      })
+      .filter(item => item.isOpen)
+      .map(item => item.data)
+  ).map(d => d.text?.out || '')
 
   function handleGoToIndex(index: number) {
     return (event: React.MouseEvent<Element, MouseEvent>) => {
@@ -62,50 +82,58 @@ export function GroupedLogs(
 
   return (
     <pre className={css.container} {...addHotJarSuppressionAttribute()}>
-      <GroupedVirtuoso
-        increaseViewportBy={40}
-        ref={ref}
-        groupCounts={groupedCounts}
-        atBottomThreshold={Math.ceil(sum(groupedCounts) / 3)}
-        followOutput="auto"
-        groupContent={index => {
-          const logKey = state.logKeys[index]
-          const unit = state.dataMap[logKey]
-          const startIndex = sum(groupedCounts.slice(0, index))
-          const endIndex = startIndex + groupedCounts[index] - 1
+      <LogsSelectionProvider
+        data={data}
+        rootClassSelector={css.container}
+        lineClassSelector={CUSTOM_SELECTION_LINE_ROOT}
+      >
+        <GroupedVirtuoso
+          increaseViewportBy={40}
+          ref={ref}
+          groupCounts={groupedCounts}
+          atBottomThreshold={Math.ceil(sum(groupedCounts) / 3)}
+          followOutput="auto"
+          groupContent={index => {
+            const logKey = state.logKeys[index]
+            const unit = state.dataMap[logKey]
+            const startIndex = sum(groupedCounts.slice(0, index))
+            const endIndex = startIndex + groupedCounts[index] - 1
 
-          return (
-            <GroupHeader
-              {...unit}
-              id={logKey}
-              onSectionClick={handleSectionClick}
-              onGoToTop={handleGoToIndex(startIndex)}
-              onGoToBottom={handleGoToIndex(endIndex)}
-            />
-          )
-        }}
-        itemContent={(index, groupIndex) => {
-          const logKey = state.logKeys[groupIndex]
-          const unit = state.dataMap[logKey]
-          const previousCount = sum(groupedCounts.slice(0, groupIndex))
-          const lineNumber = index - previousCount
-          const logData = unit.data[lineNumber]
+            return (
+              <GroupHeader
+                {...unit}
+                id={logKey}
+                onSectionClick={handleSectionClick}
+                onGoToTop={handleGoToIndex(startIndex)}
+                onGoToBottom={handleGoToIndex(endIndex)}
+              />
+            )
+          }}
+          itemContent={(index, groupIndex) => {
+            const logKey = state.logKeys[groupIndex]
+            const unit = state.dataMap[logKey]
+            const previousCount = sum(groupedCounts.slice(0, groupIndex))
+            const lineNumber = index - previousCount
+            const logData = unit.data[lineNumber]
 
-          if (!unit.isOpen) {
-            return <div style={{ height: '1px' }} />
-          }
+            if (!unit.isOpen) {
+              return <div style={{ height: '1px' }} />
+            }
 
-          return (
-            <MultiLogLine
-              {...logData}
-              lineNumber={lineNumber}
-              limit={unit.data.length}
-              searchText={state.searchData.text}
-              currentSearchIndex={state.searchData.currentIndex}
-            />
-          )
-        }}
-      />
+            return (
+              <MultiLogLine
+                {...logData}
+                lineNumber={lineNumber}
+                limit={unit.data.length}
+                searchText={state.searchData.text}
+                currentSearchIndex={state.searchData.currentIndex}
+                index={index}
+                className={CUSTOM_SELECTION_LINE_ROOT}
+              />
+            )
+          }}
+        />
+      </LogsSelectionProvider>
     </pre>
   )
 }
