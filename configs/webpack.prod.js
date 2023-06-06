@@ -68,6 +68,15 @@ const config = {
         __DEV__: false
       }
     }),
+    new HTMLWebpackPlugin({
+      template: 'src/public.html',
+      filename: '../public.html',
+      minify: false,
+      templateParameters: {
+        __DEV__: false
+      },
+      inject: false
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash:6].css',
       chunkFilename: '[name].[id].[contenthash:6].css'
