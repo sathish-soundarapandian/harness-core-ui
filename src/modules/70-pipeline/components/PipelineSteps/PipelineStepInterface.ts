@@ -213,8 +213,8 @@ export enum StepType {
   KubernetesAws = 'KubernetesAws',
   AwsSamService = 'AwsSamService',
   AwsSamInfra = 'AwsSamInfra',
-  IACMTerraformPlugin = 'IACMTerraformPlugin'
-  KubernetesAws = 'KubernetesAws',
+  AwsSam = 'AWS_SAM',
+  IACMTerraformPlugin = 'IACMTerraformPlugin',
   IACMApproval = 'IACMApproval'
 }
 
