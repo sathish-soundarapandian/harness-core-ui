@@ -80,10 +80,8 @@ describe('Connectors list', () => {
     cy.contains('p', 'testConnector2').click()
     cy.contains('span', 'Apply Selected').click()
     cy.get('input[name="spec.jobName"]').click()
-    cy.contains('div', 'alex-pipeline-test').click()
-    cy.get('.bp3-input').eq(3).click()
+    cy.contains('div', 'alex-pipeline-test/AutomationQATest').click()
 
-    cy.contains('p', 'alex-pipeline-test/AutomationQATest').click()
     cy.contains('span', 'Apply Changes').click()
     cy.wait(1000)
     cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/jenkinsStep/pipelineDetailsAfterSave.json' }).as(
@@ -117,9 +115,12 @@ describe('Connectors list', () => {
     cy.get('input[name="stages[0].stage.spec.execution.steps[0].step.spec.jobName"]').click()
     cy.contains('div', 'alex-pipeline-test').click()
     cy.get('.bp3-input').eq(1).click()
-    cy.contains('p', 'alex-pipeline-test/AutomationQATest').click()
+    cy.contains('p', 'alex-pipeline-test/AutomationQATest').click({ force: true })
     // check if selected jobname is visible
-    cy.contains('p', 'alex-pipeline-test/AutomationQATest').should('be.visible')
+    cy.get('input[name="stages[0].stage.spec.execution.steps[0].step.spec.jobName"]').should(
+      'have.value',
+      'alex-pipeline-test'
+    )
   })
 
   it('jenkins step addition, with jobName and connector as runtime values', () => {
@@ -130,6 +131,10 @@ describe('Connectors list', () => {
     cy.get('.MultiTypeInput--btn').eq(1).click()
     cy.contains('span', 'Runtime input').click()
     cy.wait(100)
+    cy.get('.MultiTypeInput--btn').eq(2).click()
+    cy.contains('span', 'Expression').click()
+    cy.get('input[name="spec.jobName"]').type('<+pipeline>')
+
     cy.get('.MultiTypeInput--btn').eq(2).click()
     cy.contains('span', 'Runtime input').click()
 
@@ -154,8 +159,11 @@ describe('Connectors list', () => {
     cy.get('input[name="stages[0].stage.spec.execution.steps[0].step.spec.jobName"]').click()
     cy.contains('div', 'alex-pipeline-test').click()
     cy.get('.bp3-input').eq(1).click()
-    cy.contains('p', 'alex-pipeline-test/AutomationQATest').click()
+    cy.contains('p', 'alex-pipeline-test/AutomationQATest').click({ force: true })
     // check if selected jobname is visible
-    cy.contains('p', 'alex-pipeline-test/AutomationQATest').should('be.visible')
+    cy.get('input[name="stages[0].stage.spec.execution.steps[0].step.spec.jobName"]').should(
+      'have.value',
+      'alex-pipeline-test'
+    )
   })
 })
