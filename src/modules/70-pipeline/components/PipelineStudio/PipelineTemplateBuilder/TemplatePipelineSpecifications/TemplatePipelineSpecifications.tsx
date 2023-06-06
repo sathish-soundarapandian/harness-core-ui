@@ -94,7 +94,8 @@ export function TemplatePipelineSpecifications({
         storeMetadata,
         params: queryParams,
         repoIdentifier: gitDetails.repoIdentifier,
-        branch: gitDetails.branch
+        branch: defaultTo(pipeline.template?.gitBranch, gitDetails.branch),
+        sendParentEntityDetails: pipeline.template?.gitBranch ? false : true
       })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }

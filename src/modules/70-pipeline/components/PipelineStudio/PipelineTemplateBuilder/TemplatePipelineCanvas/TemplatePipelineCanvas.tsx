@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom'
 import { parse } from '@common/utils/YamlHelperMethods'
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { findAllByKey, usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
+import { extractGitBranchUsingTemplateRef, getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import {
   getIdentifierFromValue,
@@ -81,7 +81,8 @@ export function TemplatePipelineCanvas(): React.ReactElement {
         storeMetadata,
         params: queryParams,
         repoIdentifier: gitDetails.repoIdentifier,
-        branch: gitDetails.branch
+        branch: defaultTo(pipeline.template?.gitBranch, gitDetails.branch),
+        sendParentEntityDetails: pipeline.template?.gitBranch ? false : true
       })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
@@ -93,6 +94,7 @@ export function TemplatePipelineCanvas(): React.ReactElement {
     if (storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)) {
       return
     }
+    const gitBranches = extractGitBranchUsingTemplateRef(pipeline, '')
     getTemplateTypesByRef(
       {
         accountIdentifier: queryParams.accountId,
@@ -106,7 +108,8 @@ export function TemplatePipelineCanvas(): React.ReactElement {
       templateRefs,
       storeMetadata,
       supportingTemplatesGitx,
-      true
+      true,
+      gitBranches
     ).then(resp => {
       setTemplateTypes(merge(templateTypes, resp.templateTypes))
       setTemplateIcons({ ...merge(templateIcons, resp.templateIcons) })

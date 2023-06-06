@@ -71,6 +71,7 @@ function TemplateStepWidget(
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const stepTemplateRef = getIdentifierFromValue(initialValues.template.templateRef)
   const stepTemplateVersionLabel = defaultTo(initialValues.template.versionLabel, '')
+  const stepTemplateGitBranch = defaultTo(initialValues.template.gitBranch, branch)
   const scope = getScopeFromValue(initialValues.template.templateRef)
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
   const [formValues, setFormValues] = React.useState<TemplateStepNode>(initialValues)
@@ -90,7 +91,13 @@ function TemplateStepWidget(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: queryParams,
+        repoIdentifier,
+        branch: stepTemplateGitBranch,
+        sendParentEntityDetails: initialValues.template.gitBranch ? false : true
+      })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
@@ -111,7 +118,13 @@ function TemplateStepWidget(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params: queryParams,
+        repoIdentifier,
+        branch: stepTemplateGitBranch,
+        sendParentEntityDetails: initialValues.template.gitBranch ? false : true
+      })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })

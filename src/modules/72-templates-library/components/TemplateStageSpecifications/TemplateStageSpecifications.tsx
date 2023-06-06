@@ -101,7 +101,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
         storeMetadata,
         params: queryParams,
         repoIdentifier,
-        branch: templateGitBranch
+        branch: templateGitBranch,
+        sendParentEntityDetails: stage?.stage?.template?.gitBranch ? false : true
       })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }
@@ -129,7 +130,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
         storeMetadata,
         params: queryParams,
         repoIdentifier,
-        branch: templateGitBranch
+        branch: templateGitBranch,
+        sendParentEntityDetails: stage?.stage?.template?.gitBranch ? false : true
       })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } }

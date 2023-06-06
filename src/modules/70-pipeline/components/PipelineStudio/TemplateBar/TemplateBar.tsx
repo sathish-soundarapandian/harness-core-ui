@@ -78,7 +78,13 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     queryParams: {
       ...getScopeBasedProjectPathParams(params, scope),
       versionLabel: defaultTo(templateLinkConfig.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch: templateGitBranch })
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params,
+        repoIdentifier,
+        branch: templateGitBranch,
+        sendParentEntityDetails: templateLinkConfig?.gitBranch ? false : true
+      })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)

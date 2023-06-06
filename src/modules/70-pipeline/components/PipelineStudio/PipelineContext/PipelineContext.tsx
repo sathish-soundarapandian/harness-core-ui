@@ -399,6 +399,7 @@ const getTemplateType = (
   loadFromCache?: boolean
 ): ReturnType<typeof getTemplateTypesByRef> => {
   const templateRefs = uniq(findAllByKey('templateRef', pipeline))
+  const gitBranches = extractGitBranchUsingTemplateRef(pipeline, '')
   return getTemplateTypesByRef(
     {
       accountIdentifier: queryParams.accountIdentifier,
@@ -412,7 +413,8 @@ const getTemplateType = (
     templateRefs,
     storeMetadata,
     supportingTemplatesGitx,
-    loadFromCache
+    loadFromCache,
+    gitBranches
   )
 }
 

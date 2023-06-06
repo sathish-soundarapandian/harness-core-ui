@@ -256,7 +256,8 @@ const getPromisesForTemplateGet = (
               projectIdentifier: defaultTo(params.projectIdentifier, '')
             },
             repoIdentifier: params.repoIdentifier,
-            branch: gitBranches?.[templateRef] ?? params.branch
+            branch: gitBranches?.[templateRef] ?? params.branch,
+            sendParentEntityDetails: gitBranches?.[templateRef] ? false : true
           })
         },
         requestOptions: {
