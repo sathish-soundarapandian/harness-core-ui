@@ -100,7 +100,8 @@ function ArtifactTriggerInputPanelForm({
     },
     body: {
       stageIdentifiers: formikProps.values?.stagesToExecute ?? []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
@@ -124,7 +125,8 @@ function ArtifactTriggerInputPanelForm({
       branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   useEffect(() => {

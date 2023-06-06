@@ -146,7 +146,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
     },
     body: {
       stageIdentifiers: []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const { data: triggerResponse, loading: loadingGetTrigger } = useGetTrigger({
@@ -168,7 +169,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       projectIdentifier,
       getTemplatesResolvedPipeline: true,
       branch
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
@@ -230,6 +232,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
       parentEntityConnectorRef: pipelineConnectorRef,
       parentEntityRepoName: pipelineRepoName
     },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true
   })
 

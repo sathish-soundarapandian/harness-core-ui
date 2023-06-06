@@ -167,7 +167,8 @@ export default function WebhookTriggerWizard(
     },
     body: {
       stageIdentifiers: []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const { data: pipelineResponse } = useGetPipeline({
@@ -180,7 +181,8 @@ export default function WebhookTriggerWizard(
       branch,
       parentEntityConnectorRef: pipelineConnectorRef,
       parentEntityRepoName: pipelineRepoName
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   //! This can be moved to the wizard to load the schema yaml when yaml builder loads
@@ -275,6 +277,7 @@ export default function WebhookTriggerWizard(
       parentEntityConnectorRef: pipelineConnectorRef,
       parentEntityRepoName: pipelineRepoName
     },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true
   })
 

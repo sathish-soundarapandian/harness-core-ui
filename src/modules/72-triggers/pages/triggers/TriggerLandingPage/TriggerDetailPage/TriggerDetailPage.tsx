@@ -283,7 +283,8 @@ export default function TriggerDetailPage(): JSX.Element {
       projectIdentifier,
       repoIdentifier,
       branch
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false

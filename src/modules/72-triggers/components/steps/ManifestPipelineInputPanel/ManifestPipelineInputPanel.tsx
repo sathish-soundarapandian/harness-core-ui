@@ -100,7 +100,8 @@ function ManifestTriggerInputPanelForm({
     },
     body: {
       stageIdentifiers: formikProps.values?.stagesToExecute ?? []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
@@ -124,7 +125,8 @@ function ManifestTriggerInputPanelForm({
       branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   useEffect(() => {

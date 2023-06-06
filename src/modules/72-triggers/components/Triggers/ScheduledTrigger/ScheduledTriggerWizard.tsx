@@ -144,7 +144,8 @@ export default function ScheduledTriggerWizard(
     },
     body: {
       stageIdentifiers: []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const { data: pipelineResponse } = useGetPipeline({
@@ -157,7 +158,8 @@ export default function ScheduledTriggerWizard(
       branch,
       parentEntityConnectorRef: pipelineConnectorRef,
       parentEntityRepoName: pipelineRepoName
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   //! This can be moved to the wizard to load the schema yaml when yaml builder loads
@@ -250,6 +252,7 @@ export default function ScheduledTriggerWizard(
       parentEntityConnectorRef: pipelineConnectorRef,
       parentEntityRepoName: pipelineRepoName
     },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true
   })
 

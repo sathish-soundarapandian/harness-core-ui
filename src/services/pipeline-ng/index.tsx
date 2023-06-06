@@ -695,6 +695,12 @@ export type AuditFilterProperties = FilterProperties & {
   staticFilter?: 'EXCLUDE_LOGIN_EVENTS' | 'EXCLUDE_SYSTEM_EVENTS'
 }
 
+export interface AutoApprovalParams {
+  action: 'APPROVE'
+  comments?: string
+  scheduledDeadline: ScheduledDeadline
+}
+
 export interface AwsCodeCommitEventSpec {
   [key: string]: any
 }
@@ -961,6 +967,13 @@ export interface CcmConnectorFilter {
   k8sConnectorRef?: string[]
 }
 
+export type CdSscaEnforcementStepInfo = StepSpecType & {
+  infrastructure: ContainerStepInfra
+  policy: EnforcementPolicy
+  source: SbomSource
+  verifyAttestation: VerifyAttestation
+}
+
 export type CdSscaOrchestrationStepInfo = StepSpecType & {
   attestation: Attestation
   infrastructure: ContainerStepInfra
@@ -1171,6 +1184,10 @@ export type CosignAttestation = AttestationSpec & {
   privateKey?: string
 }
 
+export type CosignVerifyAttestation = VerifyAttestationSpec & {
+  publicKey?: string
+}
+
 export interface CriteriaSpec {
   [key: string]: any
 }
@@ -1371,6 +1388,10 @@ export type EmptyDirYaml = CIVolume & {
 export interface EmptyDirYamlSpec {
   medium?: string
   size?: string
+}
+
+export interface EnforcementPolicy {
+  store?: PolicyStore
 }
 
 export interface EntityGitDetails {
@@ -3115,6 +3136,7 @@ export type HarnessApprovalStepInfo = StepSpecType & {
   approvalMessage?: string
   approverInputs?: ApproverInputInfo[]
   approvers: Approvers
+  autoApproval?: AutoApprovalParams
   includePipelineExecutionHistory: boolean
   isAutoRejectEnabled?: boolean
 }
@@ -3166,6 +3188,10 @@ export type HarnessPushSpec = HarnessEventSpec & {
 export type HarnessSpec = WebhookTriggerSpecV2 & {
   spec?: HarnessEventSpec
   type?: 'PullRequest' | 'Push' | 'IssueComment'
+}
+
+export type HarnessStore = StoreSpec & {
+  file?: string
 }
 
 export type HelmManifestSpec = ManifestTypeSpec & {
@@ -4567,6 +4593,11 @@ export type PolicyStepInfo = StepSpecType & {
   policySets: string[]
   policySpec?: PolicySpec
   type?: string
+}
+
+export interface PolicyStore {
+  spec?: StoreSpec
+  type: 'harness'
 }
 
 export interface PollingSubscriptionStatus {
@@ -6089,6 +6120,11 @@ export interface SbomSourceSpec {
   [key: string]: any
 }
 
+export interface ScheduledDeadline {
+  time?: string
+  timeZone?: string
+}
+
 export type ScheduledTriggerConfig = NGTriggerSpecV2 & {
   spec?: ScheduledTriggerSpec
   type?: string
@@ -6521,6 +6557,10 @@ export interface StepWhenCondition {
   stageStatus: 'Success' | 'Failure' | 'All'
 }
 
+export interface StoreSpec {
+  [key: string]: any
+}
+
 export interface StrategyConfig {
   matrix?: ParameterFieldMatrixConfigInterface
   parallelism?: number
@@ -6918,6 +6958,15 @@ export interface VariableResponseMapValue {
 export interface VariationYamlSpec {
   variation: string
   weight: number
+}
+
+export interface VerifyAttestation {
+  spec?: VerifyAttestationSpec
+  type?: 'cosign'
+}
+
+export interface VerifyAttestationSpec {
+  [key: string]: any
 }
 
 export interface WaitStepExecutionDetailsDto {
@@ -18117,6 +18166,7 @@ export interface GetSchemaYamlQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -18431,6 +18481,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

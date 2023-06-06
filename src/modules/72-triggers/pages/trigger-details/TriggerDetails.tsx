@@ -180,7 +180,8 @@ export default function TriggerDetails({
       projectIdentifier,
       repoIdentifier,
       branch
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   useDocumentTitle([

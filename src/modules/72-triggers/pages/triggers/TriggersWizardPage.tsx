@@ -180,7 +180,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     },
     body: {
       stageIdentifiers: []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const { data: triggerResponse, loading: loadingGetTrigger } = useGetTrigger({
@@ -204,7 +205,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       branch,
       parentEntityConnectorRef: pipelineConnectorRef,
       parentEntityRepoName: pipelineRepoName
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const {
@@ -294,6 +296,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       parentEntityConnectorRef: pipelineConnectorRef,
       parentEntityRepoName: pipelineRepoName
     },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true
   })
 

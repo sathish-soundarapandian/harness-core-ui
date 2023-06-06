@@ -148,7 +148,8 @@ export default function ManifestTriggerWizard(
     },
     body: {
       stageIdentifiers: []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const { data: triggerResponse, loading: loadingGetTrigger } = useGetTrigger({
@@ -172,7 +173,8 @@ export default function ManifestTriggerWizard(
       branch,
       parentEntityConnectorRef: pipelineConnectorRef,
       parentEntityRepoName: pipelineRepoName
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
@@ -254,6 +256,7 @@ export default function ManifestTriggerWizard(
       parentEntityConnectorRef: pipelineConnectorRef,
       parentEntityRepoName: pipelineRepoName
     },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true
   })
 
