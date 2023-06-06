@@ -26,7 +26,7 @@ import '@pipeline/RouteDestinations'
 import CDRoutes from '@cd/RouteDestinations'
 import CIRoutes from '@ci/RouteDestinations'
 import SSCARoutes from '@ssca/RouteDestinations'
-import SRMRoutes from '@cv/RouteDestinations'
+import { SRMRoutes, SRMMFERoutes } from '@cv/RouteDestinations'
 import CFRoutes from '@cf/RouteDestinations'
 import CERoutes from '@ce/RouteDestinations'
 import STORoutes from '@sto/RouteDestinations'
@@ -89,9 +89,10 @@ export default function RouteDestinations(): React.ReactElement {
       {ChaosRoutes().props.children}
       {CIRoutes.props.children}
       {CDRoutes.props.children}
+      {isCVModuleEnabled ? SRMRoutes.props.children : null}
       {isCVModuleEnabled ? (
         <Route path="/account/:accountId/:module(cv)">
-          <SRMRoutes />
+          <SRMMFERoutes />
         </Route>
       ) : null}
       {GitOpsRoutes.props.children}

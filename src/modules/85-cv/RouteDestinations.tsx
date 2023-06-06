@@ -297,7 +297,7 @@ const RedirectToCVCodeErrorsControl = (): React.ReactElement => {
   }
 }
 
-const NonMFERoute = (
+export const SRMRoutes = (
   <>
     <Route
       path={[routes.toCV({ ...accountPathProps }), routes.toCVProject({ ...accountPathProps, ...projectPathProps })]}
@@ -572,16 +572,14 @@ const NonMFERoute = (
   </>
 )
 
-export const SRMRoutes: React.FC = () => {
-  const { SRM_MICRO_FRONTEND } = useFeatureFlags()
-  const enableMicroFrontend = SRM_MICRO_FRONTEND
+export const SRMMFERoutes: React.FC = () => {
+  const { SRM_MICRO_FRONTEND: enableMicroFrontend } = useFeatureFlags()
   const mfePaths = enableMicroFrontend
     ? [routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]
     : []
 
   return (
     <>
-      {NonMFERoute.props.children}
       {enableMicroFrontend ? (
         <RouteWithLayout exact path={[...mfePaths]} sidebarProps={CVSideNavProps}>
           <ChildAppMounter<SRMCustomMicroFrontendProps>
@@ -606,5 +604,3 @@ export const SRMRoutes: React.FC = () => {
     </>
   )
 }
-
-export default SRMRoutes
