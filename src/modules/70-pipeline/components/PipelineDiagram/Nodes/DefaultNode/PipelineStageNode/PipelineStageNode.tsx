@@ -284,6 +284,9 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
                       unset(draft, 'stage.when.condition')
                     } else {
                       set(draft, 'stage.when.condition', 'false')
+                      if (!pipelineStage?.stage?.when?.pipelineStatus) {
+                        set(draft, 'stage.when.pipelineStatus', 'All')
+                      }
                     }
                   })
                   if (stageData.stage) updateStage(stageData.stage)
