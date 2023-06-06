@@ -127,26 +127,32 @@ export function LogsSelectionProvider({
   // handle copy to clipboard
   React.useEffect(() => {
     const handleClipboard = (e: ClipboardEvent): void => {
-      if ((e.target as HTMLElement)?.closest(`.${rootClassSelector}`)) {
-        e.stopPropagation()
-        const selectedLogs = getSelectedLogs(dataRef.current, exposedFrom, exposedTo)
-        const formatedLogs = formatLogsForClipboard(selectedLogs)
-        navigator?.clipboard?.writeText(formatedLogs).then(
-          () => {
-            showSuccess(getString('clipboardCopySuccess'))
-          },
-          () => {
-            showError(getString('clipboardCopyFail'))
-          }
-        )
+      if (!hasSelection) {
+        return
       }
+
+      if (!(e.target as HTMLElement)?.closest(`.${rootClassSelector}`)) {
+        return
+      }
+
+      e.stopPropagation()
+      const selectedLogs = getSelectedLogs(dataRef.current, exposedFrom, exposedTo)
+      const formatedLogs = formatLogsForClipboard(selectedLogs)
+      navigator?.clipboard?.writeText(formatedLogs).then(
+        () => {
+          showSuccess(getString('clipboardCopySuccess'))
+        },
+        () => {
+          showError(getString('clipboardCopyFail'))
+        }
+      )
     }
 
     document.addEventListener('copy', handleClipboard)
     return () => {
       document.removeEventListener('copy', handleClipboard)
     }
-  }, [exposedFrom, exposedTo])
+  }, [exposedFrom, exposedTo, hasSelection])
 
   return (
     <LogsSelectionContext.Provider
