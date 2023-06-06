@@ -399,7 +399,7 @@ const getTemplateType = (
   loadFromCache?: boolean
 ): ReturnType<typeof getTemplateTypesByRef> => {
   const templateRefs = uniq(findAllByKey('templateRef', pipeline))
-  const gitBranches = extractGitBranchUsingTemplateRef(pipeline, '')
+  const templateGitBranches = extractGitBranchUsingTemplateRef(pipeline, '')
   return getTemplateTypesByRef(
     {
       accountIdentifier: queryParams.accountIdentifier,
@@ -414,7 +414,7 @@ const getTemplateType = (
     storeMetadata,
     supportingTemplatesGitx,
     loadFromCache,
-    gitBranches
+    templateGitBranches
   )
 }
 
@@ -1239,16 +1239,16 @@ export function PipelineProvider({
       return
     }
 
+    const templateGitBranch = getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage
+      ?.template?.gitBranch
     const getBranchForSelectedStage = () => {
-      return getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template?.gitBranch
-        ? getStageFromPipeline(state.selectionState?.selectedStageId as string)?.stage?.stage?.template?.gitBranch
-        : state?.gitDetails?.branch
+      return templateGitBranch ? templateGitBranch : state?.gitDetails?.branch
     }
 
     const templateRefs = findAllByKey('templateRef', state.pipeline).filter(templateRef =>
       isEmpty(get(state.templateTypes, templateRef))
     )
-    const gitBranches = extractGitBranchUsingTemplateRef(state.pipeline, '')
+    const templateGitBranches = extractGitBranchUsingTemplateRef(state.pipeline, '')
     getTemplateTypesByRef(
       {
         ...queryParams,
@@ -1261,7 +1261,7 @@ export function PipelineProvider({
       state.storeMetadata,
       supportingTemplatesGitx,
       true,
-      gitBranches
+      templateGitBranches
     ).then(({ templateTypes, templateServiceData, templateIcons }) => {
       setTemplateTypes(merge(state.templateTypes, templateTypes))
       setTemplateIcons({ ...merge(state.templateIcons, templateIcons) })

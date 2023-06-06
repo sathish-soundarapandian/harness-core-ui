@@ -94,7 +94,7 @@ export function TemplatePipelineCanvas(): React.ReactElement {
     if (storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)) {
       return
     }
-    const gitBranches = extractGitBranchUsingTemplateRef(pipeline, '')
+    const templateGitBranches = extractGitBranchUsingTemplateRef(pipeline, '')
     getTemplateTypesByRef(
       {
         accountIdentifier: queryParams.accountId,
@@ -109,7 +109,7 @@ export function TemplatePipelineCanvas(): React.ReactElement {
       storeMetadata,
       supportingTemplatesGitx,
       true,
-      gitBranches
+      templateGitBranches
     ).then(resp => {
       setTemplateTypes(merge(templateTypes, resp.templateTypes))
       setTemplateIcons({ ...merge(templateIcons, resp.templateIcons) })

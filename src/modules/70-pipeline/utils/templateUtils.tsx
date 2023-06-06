@@ -235,7 +235,7 @@ const getPromisesForTemplateGet = (
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
   loadFromCache?: boolean,
-  gitBranches?: { [key: string]: string }
+  templateGitBranches?: { [key: string]: string }
 ): Promise<ResponseTemplateResponse>[] => {
   const promises: Promise<ResponseTemplateResponse>[] = []
   templateRefs.forEach(templateRef => {
@@ -256,8 +256,8 @@ const getPromisesForTemplateGet = (
               projectIdentifier: defaultTo(params.projectIdentifier, '')
             },
             repoIdentifier: params.repoIdentifier,
-            branch: gitBranches?.[templateRef] ?? params.branch,
-            sendParentEntityDetails: gitBranches?.[templateRef] ? false : true
+            branch: templateGitBranches?.[templateRef] ?? params.branch,
+            sendParentEntityDetails: templateGitBranches?.[templateRef] ? false : true
           })
         },
         requestOptions: {
@@ -305,14 +305,14 @@ export const getTemplateTypesByRef = (
   storeMetadata?: StoreMetadata,
   supportingTemplatesGitx?: boolean,
   loadFromCache?: boolean,
-  gitBranches?: { [key: string]: string }
+  templateGitBranches?: { [key: string]: string }
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
   templateIcons: TemplateIcons
 }> => {
   return supportingTemplatesGitx
-    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata, loadFromCache, gitBranches)
+    ? getTemplateTypesByRefV2(params, templateRefs, storeMetadata, loadFromCache, templateGitBranches)
     : getTemplateTypesByRefV1(params as GetTemplateListQueryParams, templateRefs)
 }
 
@@ -367,7 +367,7 @@ export const getTemplateTypesByRefV2 = (
   templateRefs: string[],
   storeMetadata?: StoreMetadata,
   loadFromCache?: boolean,
-  gitBranches?: { [key: string]: string }
+  templateGitBranches?: { [key: string]: string }
 ): Promise<{
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
@@ -378,7 +378,7 @@ export const getTemplateTypesByRefV2 = (
     templateRefs,
     storeMetadata,
     loadFromCache,
-    gitBranches
+    templateGitBranches
   )
   return Promise.all(promises)
     .then(responses => {

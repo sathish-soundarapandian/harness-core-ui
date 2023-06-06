@@ -154,7 +154,7 @@ export function TemplatePipelineProvider({
     }
 
     const templateRefs = findAllByKey('templateRef', initialValue)
-    const gitBranches = extractGitBranchUsingTemplateRef(initialValue, '')
+    const templateGitBranches = extractGitBranchUsingTemplateRef(initialValue, '')
     if (templateRefs.length > 0) {
       const { templateTypes, templateServiceData, templateIcons } = await getTemplateTypesByRef(
         {
@@ -170,7 +170,7 @@ export function TemplatePipelineProvider({
         storeMetadata,
         supportingTemplatesGitx,
         true,
-        gitBranches
+        templateGitBranches
       )
       dispatch(
         PipelineContextActions.setTemplateTypes({
