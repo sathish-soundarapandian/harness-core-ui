@@ -48,7 +48,6 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@connectors/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import { isValueFixed } from '@common/utils/utils'
 import type { JenkinsStepProps } from './JenkinsStep'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JenkinsFormContentInterface, JenkinsStepData, jobParameterInterface } from './types'
@@ -75,6 +74,9 @@ function FormContent({
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [jobDetails, setJobDetails] = useState<SelectWithBiLevelOption[]>([])
+  const [jobDetailsType, setJobDetailsType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(formValues.spec.jobName)
+  )
   const [childJobDetails, setChildJobDetails] = useState<SelectWithBiLevelOption[]>([])
   const [childJob, setChildJob] = useState<SelectWithBiLevelOption>(
     (formValues.spec.childJobName !== undefined
@@ -295,7 +297,7 @@ function FormContent({
       if (parentJob) return parentJob
     }
 
-    if (formValues?.spec?.jobName && isValueFixed(formValues?.spec?.jobName)) {
+    if (formValues?.spec?.jobName && jobDetailsType === MultiTypeInputType.FIXED) {
       return getJobValue(formValues?.spec?.jobName)
     }
 
@@ -455,7 +457,7 @@ function FormContent({
                 }
               })
             },
-            onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.jobName', type),
+            onTypeChange: (type: MultiTypeInputType) => setJobDetailsType(type),
             expressions,
             selectProps: {
               allowCreatingNewItems: true,
