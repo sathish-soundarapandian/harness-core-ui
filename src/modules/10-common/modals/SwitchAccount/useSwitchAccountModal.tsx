@@ -28,39 +28,18 @@ interface SwitchAccountModalProps {
 
 const useSwitchAccountModal = (props: SwitchAccountModalProps): ModalReturn => {
   const { mock } = props
-  const [searchString, setSearchString] = useState<string>('')
-  const { getString } = useStrings()
 
   const [showModal, hideModal] = useModalHook(
     () => (
-      <Dialog
-        isOpen
-        enforceFocus={false}
-        title={
-          <Layout.Horizontal spacing="small" className={css.alignCenter}>
-            <Text color={Color.BLACK} font={{ size: 'medium' }}>
-              <String stringID="common.switchAccount" />
-            </Text>
-            <ExpandingSearchInput
-              placeholder={getString('common.switchAccountSearch')}
-              defaultValue={searchString}
-              onChange={str => setSearchString(str.trim())}
-              width={350}
-            />
-          </Layout.Horizontal>
-        }
-        onClose={hideModal}
-        className={css.modal}
-      >
-        <SwitchAccount hideModal={hideModal} searchString={searchString} mock={mock} />
+      <Dialog isOpen enforceFocus={false} title={''} onClose={hideModal} className={css.modal}>
+        <SwitchAccount hideModal={hideModal} mock={mock} />
       </Dialog>
     ),
-    [searchString]
+    []
   )
 
   return {
     openSwitchAccountModal: () => {
-      setSearchString('')
       showModal()
     },
     closeSwitchAccountModal: hideModal

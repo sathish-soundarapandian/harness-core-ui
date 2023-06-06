@@ -16,12 +16,16 @@ import {
   useConfirmationDialog,
   useToaster,
   NoDataCard,
-  Pagination
+  Pagination,
+  Layout,
+  ExpandingSearchInput
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { useParams, useHistory } from 'react-router-dom'
 import { get } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
+import cx from 'classnames'
 import {
   useSetDefaultAccountForCurrentUser,
   RestResponseUser,
@@ -31,7 +35,7 @@ import {
 import type { Account } from 'services/portal'
 import { PageSpinner } from '@common/components'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
@@ -72,7 +76,7 @@ const ReAuthenticationNote: React.FC<ReAuthenticationNoteProps> = ({ accounts, a
   ) : null
 }
 
-const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
+const SwitchAccount: React.FC<SwitchAccountProps> = () => {
   const { accountId } = useParams<AccountPathProps>()
   const [page, setPage] = useState(0)
   const [switchAccountId, setSwitchAccountId] = useState<string | undefined>()
@@ -80,6 +84,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
   const history = useHistory()
   const { getString } = useStrings()
   const { currentUserInfo, updateAppStore } = useAppStore()
+  const [searchString, setSearchString] = useState<string>('')
 
   const { data, loading, refetch, error } = useGetUserAccounts({
     queryParams: {
@@ -239,6 +244,23 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
 
   return (
     <>
+      <Layout.Horizontal
+        spacing="small"
+        className={cx(css.header, { [css.loading]: loading })}
+        padding={{ left: 'large' }}
+      >
+        <Text color={Color.BLACK} font={{ size: 'medium' }}>
+          <String stringID="common.switchAccount" />
+        </Text>
+        <ExpandingSearchInput
+          placeholder={getString('common.switchAccountSearch')}
+          defaultValue={searchString}
+          onChange={str => setSearchString(str.trim())}
+          disabled={loading}
+          autoFocus
+          width={350}
+        />
+      </Layout.Horizontal>
       <ReAuthenticationNote accounts={accounts} accountId={accountId} />
       <Container padding={{ left: 'large', right: 'large' }} className={css.container}>
         {loading || userInfoLoading || settingDefault ? <PageSpinner /> : undefined}

@@ -15,9 +15,15 @@
     overflow: scroll;
   }
 
-  .alignCenter {
+  .header {
+    margin-top: calc(-1 * var(--spacing-xxlarge)) !important;
     align-items: center;
+
+    &.loading {
+      pointer-events: none;
+    }
   }
+
   .noDataCard {
     margin-top: 0px !important;
     justify-content: center !important;
