@@ -142,7 +142,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     isUndefined(selectedBranch) ||
     (selectedTemplate?.gitDetails?.repoName !== storeMetadata?.repoName &&
       selectedTemplate?.gitDetails?.defaultBranch === selectedBranch)
-
   const {
     data: templateYamlData,
     refetch: refetchTemplateYaml,
@@ -381,7 +380,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
             params,
             repoIdentifier: repo,
             branch,
-            sendParentEntityDetails: isStandAlone && parentEntityDetails ? true : false
+            sendParentEntityDetails: isStandAlone && !defaultSelected ? false : true
           })
         }
       })
