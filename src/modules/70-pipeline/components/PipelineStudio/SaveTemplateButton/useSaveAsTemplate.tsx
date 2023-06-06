@@ -12,7 +12,8 @@ import { isEmpty, omit } from 'lodash-es'
 import { Dialog } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import classNames from 'classnames'
-import { useToaster } from '@harness/uicore'
+import { useToaster, Heading } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { DefaultTemplate } from 'framework/Templates/templates'
 import {
   ModalProps,
@@ -35,6 +36,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
+import type { GovernanceMetadata } from 'services/pipeline-ng'
+import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import css from './SaveAsTemplate.module.scss'
 
 interface TemplateActionsReturnType {
@@ -49,13 +52,15 @@ export function useSaveAsTemplate({
   gitDetails,
   storeMetadata
 }: SaveAsTemplateProps): TemplateActionsReturnType {
-  const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [modalProps, setModalProps] = React.useState<ModalProps>()
+  const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
   const { supportingTemplatesGitx } = React.useContext(AppStoreContext)
   const { showSuccess, showError, clear } = useToaster()
   const { getString } = useStrings()
   const templateConfigDialogHandler = useRef<TemplateConfigModalHandle>(null)
   const { openTemplateReconcileErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.TEMPLATE })
+
   const { getRBACErrorMessage } = useRBACError()
 
   const [showConfigModal, hideConfigModal] = useModalHook(
@@ -75,19 +80,52 @@ export function useSaveAsTemplate({
     [modalProps, templateConfigDialogHandler.current]
   )
 
-  const { saveAndPublish } = useSaveTemplate({
-    onSuccessCallback: async (
-      latestTemplate: TemplateSummaryResponse,
-      updatedGitDetails?: SaveToGitFormInterface,
-      updatedStoreMetadata?: StoreMetadata
-    ) => {
-      window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: latestTemplate }))
-      const isInlineTemplate = isEmpty(updatedGitDetails) && updatedStoreMetadata?.storeType !== StoreType.REMOTE
-      if (isInlineTemplate) {
-        clear()
-        showSuccess(getString('common.template.saveTemplate.publishTemplate'))
-      }
+  const [showOPAErrorModal, closeOPAErrorModal] = useModalHook(
+    () => (
+      <Dialog
+        isOpen
+        onClose={() => {
+          closeOPAErrorModal()
+          const { status, createdTemplate, updatedGitDetails } = governanceMetadata as GovernanceMetadata
+          if (status === 'warning') {
+            nextCallback(createdTemplate, updatedGitDetails, storeMetadata)
+          }
+        }}
+        title={
+          <Heading level={3} font={{ variation: FontVariation.H3 }} padding={{ top: 'medium' }}>
+            {getString('common.policiesSets.evaluations')}
+          </Heading>
+        }
+        enforceFocus={false}
+        className={css.policyEvaluationDialog}
+      >
+        <PolicyManagementEvaluationView
+          metadata={governanceMetadata}
+          accountId={accountId}
+          module={module}
+          headingErrorMessage={getString('pipeline.policyEvaluations.failedToSaveTemplate')}
+        />
+      </Dialog>
+    ),
+    [governanceMetadata]
+  )
+  const nextCallback = async (
+    latestTemplate: TemplateSummaryResponse,
+    updatedGitDetails?: SaveToGitFormInterface,
+    updatedStoreMetadata?: StoreMetadata
+  ) => {
+    window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: latestTemplate }))
+    const isInlineTemplate = isEmpty(updatedGitDetails) && updatedStoreMetadata?.storeType !== StoreType.REMOTE
+    if (isInlineTemplate) {
+      clear()
+      showSuccess(getString('common.template.saveTemplate.publishTemplate'))
     }
+  }
+
+  const { saveAndPublish } = useSaveTemplate({
+    onSuccessCallback: nextCallback,
+    showOPAErrorModal,
+    setGovernanceMetadata
   })
 
   const onFailure = (error: any, latestTemplate: NGTemplateInfoConfig) => {

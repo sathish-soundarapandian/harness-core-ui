@@ -9,5 +9,6 @@
 declare const styles: {
   readonly contentContainer: string
   readonly mainContainer: string
+  readonly policyEvaluationDialog: string
 }
 export default styles

@@ -9,5 +9,6 @@
 declare const styles: {
   readonly configDialog: string
   readonly gitConfigDialog: string
+  readonly policyEvaluationDialog: string
 }
 export default styles

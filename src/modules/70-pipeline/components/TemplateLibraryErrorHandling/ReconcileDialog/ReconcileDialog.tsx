@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Container, Layout, Text, useToaster, PageSpinner } from '@harness/uicore'
+import { Dialog } from '@blueprintjs/core'
+import { Button, ButtonVariation, Container, Layout, Text, useToaster, PageSpinner, Heading } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { clone, defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import { useModalHook } from '@harness/use-modal'
 import {
   refreshAllPromise as refreshAllTemplatePromise,
   ErrorNodeSummary,
@@ -21,7 +23,11 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String, useStrings } from 'framework/strings'
-import { EntityGitDetails, refreshAllPromise as refreshAllPipelinePromise } from 'services/pipeline-ng'
+import {
+  EntityGitDetails,
+  GovernanceMetadata,
+  refreshAllPromise as refreshAllPipelinePromise
+} from 'services/pipeline-ng'
 import { getScopeBasedProjectPathParams, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
@@ -30,6 +36,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import { getFirstLeafNode, getTitleFromErrorNodeSummary, TemplateErrorEntity } from '../utils'
 import { TemplateYamlDiffViewWrapper } from './TemplateYamlDiffViewWrapper'
 import css from './ReconcileDialog.module.scss'
@@ -61,6 +68,7 @@ export function ReconcileDialog({
   const hasChildren = !isEmpty(childrenErrorNodes)
   const [selectedErrorNodeSummary, setSelectedErrorNodeSummary] = React.useState<ErrorNodeSummary>()
   const [resolvedTemplateResponses, setResolvedTemplateResponses] = React.useState<TemplateResponse[]>([])
+  const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
   const params = useParams<ProjectPathProps & ModulePathParams>()
   const [loading, setLoading] = React.useState<boolean>(false)
   const { showError } = useToaster()
@@ -76,12 +84,46 @@ export function ReconcileDialog({
     permissions: [PermissionIdentifier.EDIT_TEMPLATE]
   })
 
-  const { saveAndPublish } = useSaveTemplate({
-    onSuccessCallback: async () => {
-      if (selectedErrorNodeSummary?.templateResponse) {
-        setResolvedTemplateResponses([...resolvedTemplateResponses, clone(selectedErrorNodeSummary?.templateResponse)])
-      }
+  const [showOPAErrorModal, closeOPAErrorModal] = useModalHook(
+    () => (
+      <Dialog
+        isOpen
+        onClose={() => {
+          closeOPAErrorModal()
+          const { status } = governanceMetadata as GovernanceMetadata
+          if (status === 'warning') {
+            nextCallback()
+          }
+        }}
+        title={
+          <Heading level={3} font={{ variation: FontVariation.H3 }} padding={{ top: 'medium' }}>
+            {getString('common.policiesSets.evaluations')}
+          </Heading>
+        }
+        enforceFocus={false}
+        className={css.policyEvaluationDialog}
+      >
+        <PolicyManagementEvaluationView
+          metadata={governanceMetadata}
+          accountId={params.accountId}
+          module={module}
+          headingErrorMessage={getString('pipeline.policyEvaluations.failedToSaveTemplate')}
+        />
+      </Dialog>
+    ),
+    [governanceMetadata]
+  )
+
+  const nextCallback = async () => {
+    if (selectedErrorNodeSummary?.templateResponse) {
+      setResolvedTemplateResponses([...resolvedTemplateResponses, clone(selectedErrorNodeSummary?.templateResponse)])
     }
+  }
+
+  const { saveAndPublish } = useSaveTemplate({
+    onSuccessCallback: nextCallback,
+    showOPAErrorModal,
+    setGovernanceMetadata
   })
 
   const updateButtonEnabled = React.useMemo(() => {

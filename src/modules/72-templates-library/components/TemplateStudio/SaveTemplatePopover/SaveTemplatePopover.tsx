@@ -8,7 +8,16 @@
 import React from 'react'
 import { Dialog, Spinner } from '@blueprintjs/core'
 import { parse } from 'yaml'
-import { Button, ButtonVariation, SplitButton, SplitButtonOption, useToaster, Container } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  SplitButton,
+  SplitButtonOption,
+  useToaster,
+  Container,
+  Heading
+} from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { isEmpty, unset } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
@@ -27,7 +36,13 @@ import {
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { useTemplateAlreadyExistsDialog } from '@templates-library/hooks/useTemplateAlreadyExistsDialog'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
-import type { EntityGitDetails, Failure, NGTemplateInfoConfig, TemplateSummaryResponse } from 'services/template-ng'
+import type {
+  EntityGitDetails,
+  Failure,
+  GovernanceMetadata,
+  NGTemplateInfoConfig,
+  TemplateSummaryResponse
+} from 'services/template-ng'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import useCommentModal from '@common/hooks/CommentModal/useCommentModal'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
@@ -42,6 +57,7 @@ import { getErrorsList } from '@pipeline/utils/errorUtils'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { PolicyManagementEvaluationView } from '@governance/PolicyManagementEvaluationView'
 import { isNewTemplate } from '../TemplateStudioUtils'
 import css from './SaveTemplatePopover.module.scss'
 
@@ -94,6 +110,7 @@ function SaveTemplatePopover(
   const { getRBACErrorMessage } = useRBACError()
   const history = useHistory()
   const [savedComment, setSavedComment] = React.useState('')
+  const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
 
   const [showConfigModal, hideConfigModal] = useModalHook(
     () => (
@@ -110,6 +127,36 @@ function SaveTemplatePopover(
       </Dialog>
     ),
     [modalProps, templateConfigModalHandler.current]
+  )
+
+  const [showOPAErrorModal, closeOPAErrorModal] = useModalHook(
+    () => (
+      <Dialog
+        isOpen
+        onClose={() => {
+          closeOPAErrorModal()
+          const { status, createdTemplate, updatedGitDetails, saveAsType } = governanceMetadata as GovernanceMetadata
+          if (status === 'warning') {
+            nextCallback(createdTemplate, updatedGitDetails, storeMetadata, saveAsType)
+          }
+        }}
+        title={
+          <Heading level={3} font={{ variation: FontVariation.H3 }} padding={{ top: 'medium' }}>
+            {getString('common.policiesSets.evaluations')}
+          </Heading>
+        }
+        enforceFocus={false}
+        className={css.policyEvaluationDialog}
+      >
+        <PolicyManagementEvaluationView
+          metadata={governanceMetadata}
+          accountId={accountId}
+          module={module}
+          headingErrorMessage={getString('pipeline.policyEvaluations.failedToSaveTemplate')}
+        />
+      </Dialog>
+    ),
+    [governanceMetadata]
   )
 
   const { openTemplateAlreadyExistsDialog } = useTemplateAlreadyExistsDialog({
@@ -204,7 +251,9 @@ function SaveTemplatePopover(
   }
 
   const { saveAndPublish } = useSaveTemplate({
-    onSuccessCallback: nextCallback
+    onSuccessCallback: nextCallback,
+    showOPAErrorModal,
+    setGovernanceMetadata
   })
 
   const triggerSave = async (latestTemplate: NGTemplateInfoConfig, comment?: string) => {

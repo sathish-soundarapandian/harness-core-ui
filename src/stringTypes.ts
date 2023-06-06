@@ -4849,6 +4849,7 @@ export interface StringsMap {
   'pipeline.policyEvaluations.evaluatedTime': string
   'pipeline.policyEvaluations.evaluations': string
   'pipeline.policyEvaluations.failedToSavePipeline': string
+  'pipeline.policyEvaluations.failedToSaveTemplate': string
   'pipeline.policyEvaluations.failureHeadingEvaluationDetail': string
   'pipeline.policyEvaluations.policySetName': string
   'pipeline.policyEvaluations.policySets': string

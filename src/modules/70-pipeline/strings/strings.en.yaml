@@ -1417,6 +1417,7 @@ featureRestriction:
 policyEvaluations:
   title: Policy Evaluations
   failedToSavePipeline: Pipeline can not be saved due to the policy evaluation failures.
+  failedToSaveTemplate: Template can not be saved due to the policy evaluation failures.
   evaluatedTime: 'Evaluated '
   policySets: 'Policy Sets ({{count}})'
   evaluations: Evaluations {{count}}

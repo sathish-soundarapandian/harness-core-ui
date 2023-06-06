@@ -101,7 +101,9 @@ function Wrapped({ updatedGitDetails, ...rest }: WrappedComponentProps): React.R
 describe('useSaveTemplate Test', () => {
   test('create should work as expected', async () => {
     const props: TemplateContextMetadata = {
-      onSuccessCallback: jest.fn()
+      onSuccessCallback: jest.fn(),
+      setGovernanceMetadata: jest.fn(),
+      showOPAErrorModal: jest.fn()
     }
     const { getByText } = render(
       <TestWrapper>
@@ -118,7 +120,9 @@ describe('useSaveTemplate Test', () => {
   })
   test('edit should work as expected', async () => {
     const props: TemplateContextMetadata = {
-      onSuccessCallback: jest.fn()
+      onSuccessCallback: jest.fn(),
+      setGovernanceMetadata: jest.fn(),
+      showOPAErrorModal: jest.fn()
     }
     const { getByText } = render(
       <TestWrapper>
@@ -137,6 +141,8 @@ describe('useSaveTemplate Test', () => {
   test('filePath should be expected', async () => {
     const props: WrappedComponentProps = {
       onSuccessCallback: jest.fn(),
+      setGovernanceMetadata: jest.fn(),
+      showOPAErrorModal: jest.fn(),
       updatedGitDetails: {
         repoIdentifier: 'testRepo',
         branch: 'testBranch'
@@ -163,6 +169,8 @@ describe('useSaveTemplate Test', () => {
   test('filePath should be expected for underscore and hyphen', async () => {
     const props: WrappedComponentProps = {
       onSuccessCallback: jest.fn(),
+      setGovernanceMetadata: jest.fn(),
+      showOPAErrorModal: jest.fn(),
       updatedGitDetails: {
         repoIdentifier: 'testRepo',
         branch: 'testBranch'
@@ -196,7 +204,9 @@ describe('useSaveTemplate Test', () => {
           repoIdentifier: 'gitSyncRepo',
           rootFolder: '/rootFolderTest/.harness/'
         },
-        onSuccessCallback: jest.fn()
+        onSuccessCallback: jest.fn(),
+        setGovernanceMetadata: jest.fn(),
+        showOPAErrorModal: jest.fn()
       }
       const { getByText } = render(
         <GitSyncTestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true }}>
@@ -242,7 +252,9 @@ describe('useSaveTemplate Test', () => {
           repoIdentifier: 'gitSyncRepo',
           rootFolder: '/rootFolderTest/.harness/'
         },
-        onSuccessCallback: jest.fn()
+        onSuccessCallback: jest.fn(),
+        setGovernanceMetadata: jest.fn(),
+        showOPAErrorModal: jest.fn()
       }
       const { getByText } = render(
         <GitSyncTestWrapper defaultAppStoreValues={{ isGitSyncEnabled: true }}>
@@ -279,6 +291,8 @@ describe('useSaveTemplate Test', () => {
     test('create should work as expected', async () => {
       const props: WrappedComponentProps = {
         onSuccessCallback: jest.fn(),
+        setGovernanceMetadata: jest.fn(),
+        showOPAErrorModal: jest.fn(),
         updatedGitDetails: {
           branch: 'feature',
           filePath: 'test_pipeline.yaml',
@@ -322,6 +336,8 @@ describe('useSaveTemplate Test', () => {
 
       const props: WrappedComponentProps = {
         onSuccessCallback: jest.fn(),
+        setGovernanceMetadata: jest.fn(),
+        showOPAErrorModal: jest.fn(),
         updatedGitDetails: {
           branch: 'feature',
           filePath: 'test_pipeline.yaml',

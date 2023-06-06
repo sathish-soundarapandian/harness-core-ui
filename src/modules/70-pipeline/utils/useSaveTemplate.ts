@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
-import { cloneDeep, defaultTo, isEmpty, omit } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import type { ShowModal } from '@harness/use-modal'
 import {
   createTemplatePromise,
   EntityGitDetails,
+  GovernanceMetadata,
   NGTemplateInfoConfig,
   TemplateSummaryResponse,
   updateExistingTemplateVersionPromise
@@ -64,9 +66,15 @@ export interface TemplateContextMetadata {
     updatedStoreMetadata?: StoreMetadata,
     saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
   ) => Promise<void>
+  showOPAErrorModal: ShowModal
+  setGovernanceMetadata: React.Dispatch<React.SetStateAction<GovernanceMetadata | undefined>>
 }
 
-export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata): UseSaveTemplateReturnType {
+export function useSaveTemplate({
+  onSuccessCallback,
+  showOPAErrorModal,
+  setGovernanceMetadata
+}: TemplateContextMetadata): UseSaveTemplateReturnType {
   const { templateIdentifier, projectIdentifier, orgIdentifier, accountId } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
@@ -114,6 +122,16 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
       requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
     })
     if (response && response.status === 'SUCCESS') {
+      const governanceData: GovernanceMetadata | undefined = get(response, 'data.governanceMetadata')
+
+      setGovernanceMetadata({ ...governanceData, latestTemplate, updatedGitDetails, storeMetadata, saveAsType })
+      if (governanceData?.status === 'error' || governanceData?.status === 'warning') {
+        showOPAErrorModal()
+        return {
+          status: 'FAILURE',
+          governanceMetaData: { ...governanceData, latestTemplate, updatedGitDetails, storeMetadata, saveAsType }
+        }
+      }
       const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
       if (isInlineTemplate) {
         onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata, saveAsType)
@@ -168,7 +186,18 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
         requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
       })
       if (response && response.status === 'SUCCESS') {
+        const governanceData: GovernanceMetadata | undefined = get(response, 'data.governanceMetadata')
         const createdTemplate = response.data?.templateResponseDTO as TemplateSummaryResponse
+
+        setGovernanceMetadata({ ...governanceData, createdTemplate, updatedGitDetails, storeMetadata, saveAsType })
+        if (governanceData?.status === 'error' || governanceData?.status === 'warning') {
+          showOPAErrorModal()
+          return {
+            status: 'FAILURE',
+            governanceMetaData: { ...governanceData, createdTemplate, updatedGitDetails, storeMetadata, saveAsType }
+          }
+        }
+
         const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
         if (isInlineTemplate) {
           onSuccessCallback(createdTemplate, updatedGitDetails, storeMetadata, saveAsType)

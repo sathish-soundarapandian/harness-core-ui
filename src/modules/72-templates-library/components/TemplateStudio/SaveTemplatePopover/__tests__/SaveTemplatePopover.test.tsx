@@ -99,14 +99,17 @@ describe('<SaveTemplatePopover /> tests', () => {
       fireEvent.click(saveButton)
     })
 
-    expect(useSaveTemplate({ onSuccessCallback: expect.anything }).saveAndPublish).toBeCalledWith(
-      stepTemplateContextMock.state.template,
-      {
-        comment: 'Some Comment',
-        isEdit: false,
-        updatedGitDetails: {}
-      }
-    )
+    expect(
+      useSaveTemplate({
+        onSuccessCallback: expect.anything,
+        setGovernanceMetadata: jest.fn(),
+        showOPAErrorModal: jest.fn()
+      }).saveAndPublish
+    ).toBeCalledWith(stepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: false,
+      updatedGitDetails: {}
+    })
   })
 
   test('should not call saveAndPublish if yaml is empty or yaml has schema validation errors', async () => {
@@ -137,7 +140,13 @@ describe('<SaveTemplatePopover /> tests', () => {
       fireEvent.click(saveButton)
     })
 
-    expect(useSaveTemplate({ onSuccessCallback: expect.anything }).saveAndPublish).not.toBeCalled()
+    expect(
+      useSaveTemplate({
+        onSuccessCallback: expect.anything,
+        setGovernanceMetadata: jest.fn(),
+        showOPAErrorModal: jest.fn()
+      }).saveAndPublish
+    ).not.toBeCalled()
   })
 
   test('should call saveAndPublish with correct params when updating a template', async () => {
@@ -158,14 +167,17 @@ describe('<SaveTemplatePopover /> tests', () => {
       fireEvent.click(updateButton)
     })
 
-    expect(useSaveTemplate({ onSuccessCallback: expect.anything }).saveAndPublish).toBeCalledWith(
-      updatedStepTemplateContextMock.state.template,
-      {
-        comment: 'Some Comment',
-        isEdit: true,
-        updatedGitDetails: {}
-      }
-    )
+    expect(
+      useSaveTemplate({
+        onSuccessCallback: expect.anything,
+        setGovernanceMetadata: jest.fn(),
+        showOPAErrorModal: jest.fn()
+      }).saveAndPublish
+    ).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: true,
+      updatedGitDetails: {}
+    })
   })
 
   test('should call saveAndPublish with correct params when updating a template when git sync is enabled', async () => {
@@ -188,16 +200,19 @@ describe('<SaveTemplatePopover /> tests', () => {
       fireEvent.click(updateButton)
     })
 
-    expect(useSaveTemplate({ onSuccessCallback: expect.anything }).saveAndPublish).toBeCalledWith(
-      updatedStepTemplateContextMock.state.template,
-      {
-        isEdit: true,
-        updatedGitDetails: {
-          repoIdentifier: 'repoIdentifier',
-          branch: 'branch'
-        }
+    expect(
+      useSaveTemplate({
+        onSuccessCallback: expect.anything,
+        setGovernanceMetadata: jest.fn(),
+        showOPAErrorModal: jest.fn()
+      }).saveAndPublish
+    ).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      isEdit: true,
+      updatedGitDetails: {
+        repoIdentifier: 'repoIdentifier',
+        branch: 'branch'
       }
-    )
+    })
   })
 
   test('should show dialog when saving as new version', async () => {
@@ -274,14 +289,17 @@ describe('<SaveTemplatePopover /> tests', () => {
       expect(spinner).toBeInTheDocument()
     })
 
-    expect(useSaveTemplate({ onSuccessCallback: expect.anything }).saveAndPublish).toBeCalledWith(
-      updatedStepTemplateContextMock.state.template,
-      {
-        comment: 'Some Comment',
-        isEdit: true,
-        updatedGitDetails: {}
-      }
-    )
+    expect(
+      useSaveTemplate({
+        onSuccessCallback: expect.anything,
+        setGovernanceMetadata: jest.fn(),
+        showOPAErrorModal: jest.fn()
+      }).saveAndPublish
+    ).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: true,
+      updatedGitDetails: {}
+    })
   })
 
   test('should openTemplateErrorsModal if save threw exception', async () => {
@@ -313,14 +331,17 @@ describe('<SaveTemplatePopover /> tests', () => {
       fireEvent.click(updateButton)
     })
 
-    expect(useSaveTemplate({ onSuccessCallback: expect.anything }).saveAndPublish).toBeCalledWith(
-      updatedStepTemplateContextMock.state.template,
-      {
-        comment: 'Some Comment',
-        isEdit: true,
-        updatedGitDetails: {}
-      }
-    )
+    expect(
+      useSaveTemplate({
+        onSuccessCallback: expect.anything,
+        setGovernanceMetadata: jest.fn(),
+        showOPAErrorModal: jest.fn()
+      }).saveAndPublish
+    ).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: true,
+      updatedGitDetails: {}
+    })
 
     await waitFor(() => expect(openTemplateReconcileErrorsModalMock).toBeCalled())
   })
