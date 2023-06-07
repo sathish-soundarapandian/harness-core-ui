@@ -296,12 +296,8 @@ export const getSubscriptionByPaymentFrequency = (
     [TimeType.MONTHLY]: [] as SubscriptionDetailDTO[]
   }
   data.forEach(subs => {
-    if (get(subs, 'latestInvoiceDetail.items[1].price.metaData.billed') === TimeType.YEARLY) {
-      subscriptionByPaymentFrequencyMap[TimeType.YEARLY].push(subs)
-    }
-    if (get(subs, 'latestInvoiceDetail.items[1].price.metaData.billed') === TimeType.MONTHLY) {
-      subscriptionByPaymentFrequencyMap[TimeType.MONTHLY].push(subs)
-    }
+    subscriptionByPaymentFrequencyMap[TimeType.YEARLY].push(subs)
+    subscriptionByPaymentFrequencyMap[TimeType.MONTHLY].push(subs)
   })
   return subscriptionByPaymentFrequencyMap
 }
@@ -333,7 +329,7 @@ export const getQuantityFromValue = (value: string, multiplier: string, unit: st
   const currValue = toInteger(strToNumber(value))
   const sampleMultiplier = toInteger(strToNumber(multiplier))
 
-  return `${currValue / sampleMultiplier}${unit}`
+  return `${currValue / sampleMultiplier}`
 }
 export const getRecommendedNumbers = (
   recommeneded: number,

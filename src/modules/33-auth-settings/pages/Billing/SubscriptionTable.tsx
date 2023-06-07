@@ -31,7 +31,6 @@ import { TimeType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './BillingPage.module.scss'
-import type { lessThan } from '@common/utils/rsql'
 
 interface SubscriptionTableProps {
   data?: SubscriptionDetailDTO[]
@@ -165,17 +164,21 @@ interface TableRowProps {
   row?: ItemDTO[]
 }
 
-const calculateModulePrice = (row: ItemDTO[]) => {
+const calculateModulePrice = (row: ItemDTO[], mauQty: number) => {
   let totalCost = 0
   row?.forEach(r => {
-    totalCost += (r.quantity || 0) * toDollars(r.price?.unitAmount || 0)
+    let qty = r.quantity
+    if (r.price?.metaData?.type === 'MAU' || r.price?.metaData?.type === 'MAU_SUPOPRT') {
+      qty = mauQty
+    }
+    totalCost += (qty || 0) * toDollars(r.price?.unitAmount || 0)
   })
   return totalCost
 }
-const TableRow = ({ name = 'cf', module = ModuleName.CF, data, row }: TableRowProps): JSX.Element => {
+const TableRow = ({ name = 'cf', using = '-', module = ModuleName.CF, data, row }: TableRowProps): JSX.Element => {
   const { getString } = useStrings()
   const history = useHistory()
-  const totalPrice = calculateModulePrice(row || [])
+
   const { accountId } = useParams<AccountPathProps>()
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
     | DynamicPopoverHandlerBinding<{ priceData?: InvoiceDetailDTO; hideDialog?: () => void; moduleName: Module }>
@@ -183,9 +186,21 @@ const TableRow = ({ name = 'cf', module = ModuleName.CF, data, row }: TableRowPr
   >()
   const items = data?.items?.filter(item => item.price?.metaData?.module?.toLowerCase() === module)
   const priceDetails = getParsedData(items)
+  const mauQtyString =
+    name.toLowerCase() === 'cf'
+      ? getQuantityFromValue(
+          priceDetails.maus?.price?.metaData?.max as string,
+          priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
+          priceDetails.maus?.price?.metaData?.sampleUnit as string
+        )
+      : ''
+  const mauQty = Number(mauQtyString)
+  const totalPrice = calculateModulePrice(row || [], mauQty)
   const renderPopover = ({ priceData }: { priceData?: InvoiceDetailDTO }): JSX.Element => {
     return (
       <PriceBreakdownTooltipFF
+        mauQtyString={mauQtyString}
+        mauQty={mauQty}
         moduleName={name as Module}
         priceData={priceData}
         icon={getModuleIcon(module)}
@@ -201,13 +216,10 @@ const TableRow = ({ name = 'cf', module = ModuleName.CF, data, row }: TableRowPr
       moduleName: name as Module
     })
   }
+  const unit = priceDetails.maus?.price?.metaData?.sampleUnit as string
   const ffString = `${priceDetails.developers?.quantity} ${getString(
     'common.subscriptions.usage.developers'
-  )} / ${getQuantityFromValue(
-    priceDetails.maus?.price?.metaData?.max as string,
-    priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
-    priceDetails.maus?.price?.metaData?.sampleUnit as string
-  )} ${getString('authSettings.costCalculator.maus')}`
+  )} / ${mauQtyString}${unit} ${getString('authSettings.costCalculator.maus')}`
   const ciString = `${priceDetails.developers?.quantity} ${getString('common.subscriptions.usage.developers')}`
   return (
     <div className={css.tableRow}>
@@ -217,6 +229,7 @@ const TableRow = ({ name = 'cf', module = ModuleName.CF, data, row }: TableRowPr
       <Text font={{ variation: FontVariation.BODY }}>
         {module === ModuleName.CF.toLowerCase() ? ffString : ciString}
       </Text>
+      <Text font={{ variation: FontVariation.BODY }}> {`${using}`}</Text>
       <Text font={{ variation: FontVariation.BODY }}>
         <RbacButton
           text={getString('common.plans.manageSubscription')}
@@ -232,7 +245,7 @@ const TableRow = ({ name = 'cf', module = ModuleName.CF, data, row }: TableRowPr
         />
       </Text>
       <Layout.Vertical className={css.lastCol}>
-        <Text font={{ variation: FontVariation.BODY, weight: 'bold' }}>{`$${toDollars(totalPrice)}`}</Text>
+        <Text font={{ variation: FontVariation.BODY, weight: 'bold' }}>{`$${totalPrice}`}</Text>
         <Text
           onClick={showBreakdown}
           className={cx(css.breakdown)}
@@ -248,13 +261,15 @@ const TableRow = ({ name = 'cf', module = ModuleName.CF, data, row }: TableRowPr
 }
 
 const PriceBreakdownTooltipFF = ({
-  priceData,
+  mauQtyString,
+  mauQty,
   moduleName,
   icon,
   hideDialog,
-  isMonthly,
   priceDetails
 }: {
+  mauQtyString?: string
+  mauQty?: number
   priceData?: InvoiceDetailDTO
   hideDialog?: () => void
   moduleName: Module
@@ -263,6 +278,8 @@ const PriceBreakdownTooltipFF = ({
   priceDetails: PriceDetails
 }): JSX.Element => {
   const { getString } = useStrings()
+  const unit = priceDetails.maus?.price?.metaData?.sampleUnit as string
+  const mauQtyStringWithUnit = `${mauQtyString}${unit}`
 
   return (
     <>
@@ -281,44 +298,20 @@ const PriceBreakdownTooltipFF = ({
               'common.subscriptions.usage.developers'
             )}`}</Text>
             <Text color={Color.BLACK} className={css.right}>
-              ${toDollars(priceDetails.developers?.amount)}
+              ${(priceDetails.developers?.quantity || 0) * toDollars(priceDetails.developers?.price?.unitAmount)}
             </Text>
-          </Layout.Horizontal>
-          <Layout.Horizontal flex className={css.fullWidth}>
-            <Text color={Color.BLACK} font={{ size: 'small' }} width={200}>{`${
-              priceDetails.developers?.quantity
-            } ${lowerCase(getString('common.subscriptions.usage.developers'))} x $${toDollars(
-              priceDetails.developers?.price?.unitAmount
-            )} ${
-              isMonthly ? getString('common.perMonthWithoutSlash') : getString('common.perYearWithoutSlash')
-            }`}</Text>
           </Layout.Horizontal>
         </Layout.Vertical>
         {moduleName.toLowerCase() === 'cf' ? (
           <Layout.Vertical flex className={css.breakdownRow} data-testid="maus">
             <Layout.Horizontal className={cx(css.fullWidth, css.alignSpace)}>
-              <Text color={Color.BLACK} width={200}>{`${getQuantityFromValue(
-                priceDetails.maus?.price?.metaData?.max as string,
-                priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
-                priceDetails.maus?.price?.metaData?.sampleUnit as string
-              )} ${getString('authSettings.costCalculator.maus')}`}</Text>
+              <Text color={Color.BLACK} width={200}>{`${mauQtyStringWithUnit} ${getString(
+                'authSettings.costCalculator.maus'
+              )}`}</Text>
               <Text color={Color.BLACK} className={css.right}>
-                ${toDollars(priceDetails.maus?.amount)}
+                ${(mauQty || 0) * toDollars(priceDetails.maus?.price?.unitAmount)}
               </Text>
             </Layout.Horizontal>
-            {/* <Layout.Horizontal flex className={css.fullWidth}>
-            <Text color={Color.BLACK} font={{ size: 'small' }} width={200}>
-              {`${getQuantityFromValue(
-                priceDetails.maus?.price?.metaData?.max as string,
-                priceDetails.maus?.price?.metaData?.sampleMultiplier as string,
-                priceDetails.maus?.price?.metaData?.sampleUnit as string
-              )} x $${toDollars(priceDetails.developers?.price?.unitAmount)} ${getString(
-                'common.per'
-              )} ${getSampleMinValue(priceDetails.maus?.price?.metaData?.sampleUnit)} ${getString(
-                'authSettings.costCalculator.maus'
-              )}  ${isMonthly ? getString('common.perMonth') : getString('common.perYearWithoutSlash')}`}
-            </Text>
-          </Layout.Horizontal> */}
           </Layout.Vertical>
         ) : null}
         {toDollars(priceDetails.premiumSupport) > 0 && (
@@ -346,7 +339,10 @@ const PriceBreakdownTooltipFF = ({
             {getString('total')}
           </Text>
           <Text color={Color.BLACK} font={{ weight: 'bold' }} className={css.right}>
-            ${toDollars(priceData?.totalAmount)}
+            $
+            {toDollars(priceDetails.premiumSupport) +
+              (mauQty || 0) * toDollars(priceDetails.maus?.price?.unitAmount) +
+              (priceDetails.developers?.quantity || 0) * toDollars(priceDetails.developers?.price?.unitAmount)}
           </Text>
         </Layout.Horizontal>
       </Layout.Vertical>

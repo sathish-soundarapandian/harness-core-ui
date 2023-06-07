@@ -108,14 +108,14 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
             <BillingAdminsCard />
           </Layout.Horizontal>
 
-          {subscriptions[TimeType.YEARLY]?.length > 0 && (
+          {subscriptionsPerItem[TimeType.YEARLY]?.length > 0 && (
             <SubscriptionTable
               frequency={TimeType.YEARLY}
               data={subscriptions[TimeType.YEARLY]}
               dataPerModule={subscriptionsPerItem[TimeType.YEARLY]}
             />
           )}
-          {subscriptions[TimeType.MONTHLY]?.length > 0 && (
+          {subscriptionsPerItem[TimeType.MONTHLY]?.length > 0 && (
             <SubscriptionTable
               frequency={TimeType.MONTHLY}
               data={subscriptions[TimeType.MONTHLY]}
@@ -123,9 +123,13 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
             />
           )}
 
-          {!loading && isEmpty(subscriptions[TimeType.YEARLY]) && isEmpty(subscriptions[TimeType.MONTHLY]) && (
-            <NoSubscriptionsCard gotoSubscriptions={gotoSubscriptions} getString={getString} />
-          )}
+          {!loading &&
+            isEmpty(subscriptions[TimeType.YEARLY]) &&
+            isEmpty(subscriptions[TimeType.MONTHLY]) &&
+            isEmpty(subscriptionsPerItem[TimeType.YEARLY]) &&
+            isEmpty(subscriptionsPerItem[TimeType.MONTHLY]) && (
+              <NoSubscriptionsCard gotoSubscriptions={gotoSubscriptions} getString={getString} />
+            )}
         </Layout.Vertical>
       </Page.Body>
     </>
