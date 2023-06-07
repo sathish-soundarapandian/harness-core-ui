@@ -1,0 +1,46 @@
+import {
+  gitSyncEnabledCall,
+  pipelineDetails,
+  pipelineStudioRoute,
+  stepLibrary
+} from '../../support/70-pipeline/constants'
+
+describe('Enable/disable stage/step execution', () => {
+  const visitExecutionStageWithAssertion = (): void => {
+    cy.visit(pipelineStudioRoute, {
+      timeout: 30000
+    })
+    cy.wait(2000)
+    cy.visitPageAssertion()
+    cy.wait('@pipelineDetailsAPIRoute', { timeout: 30000 })
+    cy.wait(2000)
+  }
+  beforeEach(() => {
+    cy.initializeRoute()
+    cy.intercept('GET', gitSyncEnabledCall, {
+      connectivityMode: null,
+      gitSyncEnabled: false,
+      gitSimplificationEnabled: false
+    })
+    cy.intercept('POST', stepLibrary, { fixture: 'pipeline/api/jenkinsStep/stepLibraryResponse.json' }).as(
+      'stepLibrary'
+    )
+    cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/pipelineWithAllStages.json' }).as(
+      'pipelineDetailsAPIRoute'
+    )
+    visitExecutionStageWithAssertion()
+  })
+  it('disabling stages', () => {
+    cy.get('div[data-testid="toggle-stage1"]').click({ force: true })
+    cy.wait(500)
+    cy.get('div[data-testid="toggle-pipeline"]').click({ force: true })
+    cy.wait(500)
+    cy.get('div[data-testid="toggle-customStage"]').click({ force: true })
+    cy.wait(500)
+
+    cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/pipelineWithAllStagesAfterSave.json' }).as(
+      'pipelineDetailsAPIRouteAfterSave'
+    )
+    cy.contains('span', 'Save').click()
+  })
+})

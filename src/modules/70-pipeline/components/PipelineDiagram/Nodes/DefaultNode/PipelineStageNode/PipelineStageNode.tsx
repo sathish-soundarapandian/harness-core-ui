@@ -276,6 +276,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
           {!props?.data?.isInComplete && (
             <div
               className={cx(defaultCss.switch, { [defaultCss.stageSelectedSwitch]: isSelectedNode() })}
+              data-testid={`toggle-${props?.identifier}`}
               onClick={e => {
                 e.stopPropagation()
                 if (pipelineStage && pipelineStage?.stage) {
