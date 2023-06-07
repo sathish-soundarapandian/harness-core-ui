@@ -9,9 +9,10 @@ interface ContentContainerProps {
   assessmentId: string
   title: string
   children?: React.ReactNode
+  backButton?: React.ReactNode
 }
 
-const ContentContainer = ({ assessmentId, title, children }: ContentContainerProps): JSX.Element => {
+const ContentContainer = ({ assessmentId, title, children, backButton }: ContentContainerProps): JSX.Element => {
   const { resultsCode } = useParams<{ resultsCode: string }>()
   return (
     <Layout.Horizontal>
@@ -19,7 +20,7 @@ const ContentContainer = ({ assessmentId, title, children }: ContentContainerPro
         <SideNav resultCode={resultsCode} />
       </Container>
       <Layout.Vertical className={css.rightNavigation}>
-        <Header title={title} assessmentId={assessmentId} />
+        <Header title={title} assessmentId={assessmentId} backButton={backButton} />
         {children}
       </Layout.Vertical>
     </Layout.Horizontal>

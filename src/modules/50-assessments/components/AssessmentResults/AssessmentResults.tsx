@@ -50,14 +50,12 @@ export default function AssessmentResults(): JSX.Element {
   useEffect(() => {
     const filteredResults: SectionScore[] = getFilteredResultsForLevel(selectedLevel, sectionResultsData?.sectionScores)
     setCurrentResponses(filteredResults)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedLevel])
+  }, [sectionResultsData?.sectionScores, selectedLevel])
 
   useEffect(() => {
     const filteredResults: SectionScore[] = getFilteredResultsForSearch(sectionResultsData?.sectionScores, search)
     setCurrentResponses(filteredResults)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search])
+  }, [search, sectionResultsData?.sectionScores])
 
   return (
     <ContentContainer assessmentId={sectionResultsData?.assessmentId || ''} title={getString('assessments.result')}>

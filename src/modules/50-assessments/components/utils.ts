@@ -2,7 +2,8 @@ import { merge } from 'lodash-es'
 import PlanningAndRequirementsProcessImage from '../assets/PlanningAndRequirementsProcess.svg'
 import DiscoverabilityAndDocumentationImage from '../assets/DiscoverabilityAndDocumentation.svg'
 import DeveloperEnvironmentExperienceImage from '../assets/DeveloperEnvironmentExperience.svg'
-import DevelopmentProcecssImage from '../assets/DeploymentProcess.svg'
+import DeploymentProcessImage from '../assets/DeploymentProcess.svg'
+import DevelopmentProcecssImage from '../assets/DevelopmentProcess.svg'
 import IntegratedSecurityGovImage from '../assets/IntegratedSecurityGovernance.svg'
 import BuildProcessImage from '../assets/BuildProcess.svg'
 import MetricsInsightsImage from '../assets/MetricsandInsights.svg'
@@ -12,7 +13,7 @@ import ResilienceTestingImage from '../assets/ResilienceTesting.svg'
 
 export function getSectionImage(sectionName?: string): string {
   let sectionImage = PlanningAndRequirementsProcessImage
-  switch (sectionName) {
+  switch (sectionName?.trim()) {
     case 'Planning and Requirements Process':
       sectionImage = PlanningAndRequirementsProcessImage
       break
@@ -24,6 +25,9 @@ export function getSectionImage(sectionName?: string): string {
       break
     case 'Development Process':
       sectionImage = DevelopmentProcecssImage
+      break
+    case 'Deployment Process':
+      sectionImage = DeploymentProcessImage
       break
     case 'Build Process':
       sectionImage = BuildProcessImage

@@ -88,7 +88,7 @@ describe('Improve Maturity', () => {
       error: null
     }))
     ;(useGetAssessmentSectionOverviewResults as jest.Mock).mockImplementation(() => ({
-      data: null,
+      data: sectionScoreOverview,
       error: null,
       loading: true,
       refetch: jest.fn()
@@ -98,13 +98,15 @@ describe('Improve Maturity', () => {
       loading: false
     }))
 
-    const { getAllByText } = render(
+    const { getByText } = render(
       <TestWrapper>
         <ImproveMaturity />
       </TestWrapper>
     )
 
-    expect(getAllByText('assessments.improveMaturity')).toHaveLength(2)
+    expect(getByText('assessments.recommendations')).toBeInTheDocument()
+    expect(getByText('common.category')).toBeInTheDocument()
+    expect(getByText('assessments.projectedScoreWithRec')).toBeInTheDocument()
   })
 
   test('On selection of row checkbox, the maturity score gets updated', () => {

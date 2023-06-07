@@ -19,6 +19,7 @@ describe('Capability container', () => {
           benchmark={undefined}
           setBenchMark={jest.fn()}
           resultCode={'resultcode'}
+          groupByHarness={jest.fn()}
         />
       </TestWrapper>
     )

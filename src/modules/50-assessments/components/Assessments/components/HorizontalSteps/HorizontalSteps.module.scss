@@ -5,7 +5,7 @@
   .step {
     border-radius: 50%;
     border: 2px solid var(--grey-0);
-    box-shadow: 0px 0px 1px #888888, 0px 2px 4px #606170;
+    box-shadow: var(--elevation-2);
     width: 24px;
     height: 24px;
     padding: 2px;

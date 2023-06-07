@@ -7,6 +7,7 @@ searchForCategory: Search for category
 scoreOutOf10: score out of 10
 comparison: score comparison
 recommendations: recommendations
+recommendation: Recommendation
 question: question
 level: 'Level:'
 yourScore: Your score
@@ -51,7 +52,8 @@ benchmarkScore: Benchmark Score
 levelString: Level
 projectedScore: Projected Score
 recommendedModule: Recommended module to use
-howHarnessCanHelp: See how Harness can help improve your maturity score
+howHarnessCanHelpToImprove: See how Harness can help improve your maturity score
+howHarnessCanHelp: See how Harness can help
 groupBySDLC: Group by SDLC category
 projectedScoreWithRec: Projected Score With Recommendation
 modules:
@@ -68,3 +70,6 @@ modules:
   idp: '{{$.common.purpose.idp.fullName}}'
   scm: 'Source Control Management'
   ssca: '{{$.common.sscaText}}'
+backToImproveMaturity: Back to Improve Maturity
+welcomeDescription: Assess the software delivery maturity of your team in a few minutes! Answer a few questions to see how you stack up against others and your industry peers. Get recommendations on Software Delivery capabilities to advance to the next level.
+youAreAt: You are at

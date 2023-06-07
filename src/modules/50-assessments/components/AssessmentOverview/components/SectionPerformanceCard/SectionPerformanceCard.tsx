@@ -1,23 +1,32 @@
 import { Card, Layout, Tag, Text } from '@harness/uicore'
-import { Intent } from '@harness/design-system'
-import React from 'react'
+import { Color } from '@harness/design-system'
+import React, { useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { SectionScore } from 'services/assessments'
 import { getSectionImage } from '../../../utils'
 import { getLevelImage } from './SectionPerformanceCard.utils'
+import ResultTag from '../../../ResultTag/ResultTag'
 import css from './SectionPerformanceCard.module.scss'
 
 interface SectionPerformanceCardProps {
   sectionScore: SectionScore
+  resultCode: string
 }
 
-const SectionPerformanceCard = ({ sectionScore }: SectionPerformanceCardProps): JSX.Element => {
+const SectionPerformanceCard = ({ sectionScore, resultCode }: SectionPerformanceCardProps): JSX.Element => {
   const { getString } = useStrings()
+  const history = useHistory()
   const sectionImage = getSectionImage(sectionScore.sectionText)
   const level = sectionScore.sectionScore?.maturityLevel || 'LEL_1'
   const levelImage = getLevelImage(level)
+  const onCardClick = useCallback(() => {
+    history.push(
+      `/assessment/results/${resultCode}?focusCategory=${sectionScore.sectionText?.replace(/ /g, '').toLowerCase()}`
+    )
+  }, [history, resultCode, sectionScore.sectionText])
   return (
-    <Card className={css.sectionPerformanceCard}>
+    <Card className={css.sectionPerformanceCard} onClick={onCardClick}>
       <Layout.Vertical>
         <img src={sectionImage} width="45" height="45" alt="" className={css.sectionIcon} />
         <Text className={css.sectionName} font={{ weight: 'bold', size: 'normal' }}>
@@ -29,9 +38,15 @@ const SectionPerformanceCard = ({ sectionScore }: SectionPerformanceCardProps): 
         </Text>
         <div className={css.margin}>
           {sectionScore.numRecommendations ? (
-            <Tag intent={Intent.PRIMARY}>{`${sectionScore.numRecommendations} ${getString(
-              'assessments.recommendations'
-            )}`}</Tag>
+            <ResultTag
+              content={
+                <Text
+                  font={{ weight: 'semi-bold', size: 'normal' }}
+                  color={Color.PRIMARY_7}
+                  padding={{ left: 'xsmall' }}
+                >{`${sectionScore.numRecommendations} ${getString('assessments.recommendations')}`}</Text>
+              }
+            />
           ) : (
             <Tag>{getString('assessments.youAreBestInCategory')}</Tag>
           )}

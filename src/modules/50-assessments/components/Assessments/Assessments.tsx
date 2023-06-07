@@ -11,8 +11,10 @@ import Questionnaire from './components/Questionnaire/Questionnaire'
 import { getInitialUserResponse } from './Assessments.utils'
 import QuizSideNav from './components/QuizSideNav/QuizSideNav'
 import { buildResponse } from './components/Questionnaire/Questionnarie.utils'
+import WelcomeModal from './components/WelcomeModal/WelcomeModal'
 
 export default function Assessments(): JSX.Element {
+  const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState<boolean>(true)
   const { getString } = useStrings()
   const { showError, showSuccess } = useToaster()
   const history = useHistory()
@@ -27,6 +29,12 @@ export default function Assessments(): JSX.Element {
   } = useGetAssessmentForUser({
     assessmentInviteId: inviteCode
   })
+
+  useEffect(() => {
+    if (!getAssessmentLoading && !getAssessmentError) {
+      setIsWelcomeModalOpen(data?.status === 'NOT_STARTED')
+    }
+  }, [data?.status, getAssessmentError, getAssessmentLoading])
 
   const {
     loading: submitAssessmentLoading,
@@ -74,7 +82,7 @@ export default function Assessments(): JSX.Element {
       {!loading && error && (
         <PageError message={get(error?.data as Error, 'message') || error?.message} onClick={() => refetch()} />
       )}
-      {!loading && !error && data ? (
+      {!loading && !error && data && !isWelcomeModalOpen ? (
         <Formik<AssessmentsForm>
           initialValues={{ userResponse: initialUserResponse }}
           enableReinitialize
@@ -95,6 +103,10 @@ export default function Assessments(): JSX.Element {
           </>
         </Formik>
       ) : null}
+      <WelcomeModal
+        isOpen={isWelcomeModalOpen && !getAssessmentLoading}
+        closeModal={() => setIsWelcomeModalOpen(false)}
+      />
     </>
   )
 }

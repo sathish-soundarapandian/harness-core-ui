@@ -28,8 +28,9 @@ describe('SurveyDrawer', () => {
         />
       </TestWrapper>
     )
-    const sectionText = screen.getByText(/Planning and Requirements Process?/i)
+    const sectionText = screen.getByText('Scope Creep')
     expect(sectionText).toBeInTheDocument()
+    expect(screen.getByText('assessments.youAreAt assessments.levelString 3')).toBeInTheDocument()
   })
 
   test('does not render the benchmark score if not available', () => {

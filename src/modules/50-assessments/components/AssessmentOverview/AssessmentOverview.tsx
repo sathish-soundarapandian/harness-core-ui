@@ -105,8 +105,8 @@ export default function AssessmentOverview(): JSX.Element {
               />
             </Container>
             <HomeScoreGlance sectionResult={resultsData} />
-            <PerformanceOverview sectionList={best} isBest />
-            <PerformanceOverview sectionList={worst} />
+            <PerformanceOverview sectionList={best} isBest resultsCode={resultsCode} />
+            <PerformanceOverview sectionList={worst} resultsCode={resultsCode} />
           </Layout.Vertical>
         </ContentContainer>
       ) : null}

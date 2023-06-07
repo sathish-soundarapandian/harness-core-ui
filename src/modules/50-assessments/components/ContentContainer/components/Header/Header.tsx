@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Position, PopoverInteractionKind, Menu } from '@blueprintjs/core'
-import { Button, ButtonVariation, Container, Popover, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Layout, Popover, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { StringKeys } from 'framework/strings'
@@ -13,10 +13,11 @@ import css from './Header.module.scss'
 interface HeaderProps {
   assessmentId: string
   title: string
+  backButton?: React.ReactNode
 }
 
 const Header = (props: HeaderProps): JSX.Element => {
-  const { assessmentId, title } = props
+  const { assessmentId, title, backButton } = props
   const { getString } = useStrings()
   const [isShareResultsModalOpen, setIsShareResultsModalOpen] = useState<boolean>(false)
   const [isInviteAssessmentModalOpen, setIsInviteAssessmentModalOpen] = useState<boolean>(false)
@@ -50,9 +51,12 @@ const Header = (props: HeaderProps): JSX.Element => {
 
   return (
     <Container className={css.topHeader} flex={{ justifyContent: 'space-between' }}>
-      <Text padding={{ left: 'medium' }} className={css.welcomeText}>
-        {title}
-      </Text>
+      <Layout.Vertical>
+        {backButton}
+        <Text padding={{ left: 'medium' }} className={css.welcomeText}>
+          {title}
+        </Text>
+      </Layout.Vertical>
       <Popover
         minimal
         position={Position.BOTTOM}

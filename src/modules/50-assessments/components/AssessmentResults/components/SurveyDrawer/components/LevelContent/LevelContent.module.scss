@@ -1,0 +1,21 @@
+.questionLevel {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+}
+.selected {
+  width: 56px;
+  height: 56px;
+}
+.levelImageContainer {
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.imageContianerSelected {
+  background: var(--primary-1);
+  border: 1px solid var(--primary-3);
+}

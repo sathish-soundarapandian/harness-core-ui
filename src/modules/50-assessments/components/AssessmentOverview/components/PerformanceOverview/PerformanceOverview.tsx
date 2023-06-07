@@ -8,9 +8,10 @@ import css from './PerformanceOverview.module.scss'
 interface PerformanceOverviewProps {
   sectionList: SectionScore[]
   isBest?: boolean
+  resultsCode: string
 }
 
-const PerformanceOverview = ({ sectionList, isBest }: PerformanceOverviewProps): JSX.Element => {
+const PerformanceOverview = ({ sectionList, isBest, resultsCode }: PerformanceOverviewProps): JSX.Element => {
   const { getString } = useStrings()
   const titleProp = isBest ? 'yourBestPerformance' : 'yourTopOpportunities'
   return (
@@ -22,7 +23,7 @@ const PerformanceOverview = ({ sectionList, isBest }: PerformanceOverviewProps):
       <Container className={css.recommendationsContainer}>
         {sectionList.length
           ? sectionList.map(sec => {
-              return <SectionPerformanceCard key={sec.sectionId} sectionScore={sec} />
+              return <SectionPerformanceCard key={sec.sectionId} sectionScore={sec} resultCode={resultsCode} />
             })
           : null}
       </Container>

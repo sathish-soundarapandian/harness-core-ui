@@ -10,16 +10,18 @@ import css from './FlatRecommendationTable.module.scss'
 
 interface CapabilitiesContainerProps {
   questionMaturityList: QuestionMaturity[]
-  onSelectionChange: (questionId: string, sectionId: string, value: boolean) => void
-  groupSelection: (value: boolean, sectionId?: string) => void
+  onSelectionChange?: (questionId: string, sectionId: string, value: boolean) => void
+  groupSelection?: (value: boolean, sectionId?: string) => void
   sectionId?: string
+  harnessComponent?: string
 }
 
 const FlatRecommendationTable = ({
   questionMaturityList,
   onSelectionChange,
   groupSelection,
-  sectionId
+  sectionId,
+  harnessComponent
 }: CapabilitiesContainerProps): JSX.Element => {
   const { getString } = useStrings()
   const renderRowSubComponent = useCallback(({ row }) => <HarnessRecommendation row={row} />, [])
@@ -34,16 +36,18 @@ const FlatRecommendationTable = ({
 
   const selectedRows = useMemo(
     () =>
-      questionMaturityList.reduce((acc: Record<string, boolean>, question: QuestionMaturity, currentIndex) => {
-        if (question.selected) {
-          acc = {
-            ...acc,
-            [currentIndex.toString()]: true
-          }
-        }
-        return acc
-      }, {}),
-    [questionMaturityList]
+      harnessComponent
+        ? {}
+        : questionMaturityList.reduce((acc: Record<string, boolean>, question: QuestionMaturity, currentIndex) => {
+            if (question.selected) {
+              acc = {
+                ...acc,
+                [currentIndex.toString()]: true
+              }
+            }
+            return acc
+          }, {}),
+    [questionMaturityList, harnessComponent]
   )
 
   const RenderHeaderCheckbox: Renderer<HeaderProps<QuestionMaturity>> = useCallback(() => {
@@ -52,7 +56,7 @@ const FlatRecommendationTable = ({
         checked={selectionState === 'CHECKED'}
         indeterminate={selectionState === 'INDETERMINATE'}
         className={css.noPadding}
-        onChange={() => groupSelection(selectionState !== 'CHECKED', sectionId)}
+        onChange={() => groupSelection && groupSelection(selectionState !== 'CHECKED', sectionId)}
         data-testid="header-checkbox"
       />
     )
@@ -68,11 +72,12 @@ const FlatRecommendationTable = ({
             data-testid="row-checkbox"
             onClick={e => {
               killEvent(e)
-              onSelectionChange(
-                row?.original?.questionId || '',
-                row?.original?.sectionId || '',
-                !row?.original?.selected
-              )
+              onSelectionChange &&
+                onSelectionChange(
+                  row?.original?.questionId || '',
+                  row?.original?.sectionId || '',
+                  !row?.original?.selected
+                )
             }}
           ></Checkbox>
         </Container>
@@ -95,7 +100,7 @@ const FlatRecommendationTable = ({
         id: 'rowRecommandation',
         Cell: RenderRecommendation,
         disableSortBy: true,
-        width: sectionId ? '60%' : '32%'
+        width: sectionId ? '50%' : '36%'
       },
       {
         Header: getString('common.category'),
@@ -109,12 +114,12 @@ const FlatRecommendationTable = ({
         id: 'projection',
         Cell: RenderProjection,
         disableSortBy: true,
-        width: '30%'
+        width: '26%'
       }
     ],
     [CheckboxCell, RenderHeaderCheckbox, getString, sectionId]
   )
-  const hiddenColumns = sectionId ? ['category'] : []
+  const hiddenColumns = sectionId ? ['category'] : harnessComponent ? ['rowSelect'] : []
   return (
     <TableV2
       data={questionMaturityList}

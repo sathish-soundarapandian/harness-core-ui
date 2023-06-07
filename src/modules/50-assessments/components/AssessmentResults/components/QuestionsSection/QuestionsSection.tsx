@@ -80,23 +80,25 @@ export default function QuestionsSection(props: QuestionsSectionProps): JSX.Elem
           className={css.questionSectionTable}
           autoResetExpanded={false}
         />
-        <>
-          <SurveyDrawer
-            isOpen={isOpen}
-            onHideCallback={onHideCallback}
-            currentSection={currentSection}
-            currentRowDetails={currentRowDetails}
-          />
-          {isOpen ? (
-            <Button
-              minimal
-              className={css.almostFullScreenCloseBtn}
-              icon="cross"
-              withoutBoxShadow
-              onClick={onHideCallback}
+        {currentRowDetails && (
+          <>
+            <SurveyDrawer
+              isOpen={isOpen}
+              onHideCallback={onHideCallback}
+              currentSection={currentSection}
+              currentRowDetails={currentRowDetails}
             />
-          ) : null}
-        </>
+            {isOpen ? (
+              <Button
+                minimal
+                className={css.almostFullScreenCloseBtn}
+                icon="cross"
+                withoutBoxShadow
+                onClick={onHideCallback}
+              />
+            ) : null}
+          </>
+        )}
       </>
     )
   } else {

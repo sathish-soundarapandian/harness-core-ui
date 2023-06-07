@@ -23,6 +23,14 @@ export default function Questionnaire(props: QuestionnaireProps): JSX.Element {
   const [questionId, setQuestionId] = useState<string>('')
   const [sectionDetails, setsectionDetails] = useState<SectionDetails | undefined>()
   const [question, setQuestion] = useState<QuestionResponse | undefined>()
+  const [prevQn, setPrevQn] = useState<{ sectionId: string; questionId: string }>({
+    sectionId: '',
+    questionId: ''
+  })
+  const [nextQn, setNextQn] = useState<{ sectionId: string; questionId: string }>({
+    sectionId: '',
+    questionId: ''
+  })
   const { showError } = useToaster()
 
   useEffect(() => {
@@ -96,26 +104,26 @@ export default function Questionnaire(props: QuestionnaireProps): JSX.Element {
     [sectionValues, questionId]
   )
 
-  const questionIndex = useMemo(
-    () => (sectionDetails ? sectionDetails.questionIds.findIndex((questId: string) => questId === questionId) : 0),
-    [questionId, sectionDetails]
-  )
+  useEffect(() => {
+    const prev = getPreviousQn(sectionQuestions, sectionId, questionId)
+    const next = getNextQuestion(sectionQuestions, sectionId, questionId)
+    setPrevQn(prev)
+    setNextQn(next)
+  }, [questionId, sectionId, sectionQuestions])
 
   const previousClick = useCallback(() => {
-    const prevQn = getPreviousQn(sectionQuestions, sectionId, questionId)
     if (prevQn.sectionId !== sectionId) {
       setSectionId(prevQn.sectionId)
     }
     setQuestionId(prevQn.questionId)
-  }, [questionId, sectionId, sectionQuestions, setSectionId])
+  }, [prevQn, sectionId, setSectionId])
 
   const forwardClick = useCallback(() => {
-    const nextQn = getNextQuestion(sectionQuestions, sectionId, questionId)
     if (nextQn.sectionId !== sectionId) {
       setSectionId(nextQn.sectionId)
     }
     setQuestionId(nextQn.questionId)
-  }, [questionId, sectionId, sectionQuestions, setSectionId])
+  }, [nextQn, sectionId, setSectionId])
 
   if (!sectionQuestions || !question) return <PageSpinner />
   const { questionNumber, questionText, possibleResponses } = question
@@ -134,7 +142,7 @@ export default function Questionnaire(props: QuestionnaireProps): JSX.Element {
         />
       </Container>
       <FooterNav
-        disablePrevious={questionIndex === 0}
+        disablePrevious={!prevQn.questionId}
         disableForward={selectedValues.length === 0}
         previousClick={previousClick}
         forwardClick={forwardClick}

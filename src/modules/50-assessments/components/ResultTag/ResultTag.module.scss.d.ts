@@ -7,11 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly charts: string
-  readonly drawerContent: string
-  readonly drawerHeader: string
-  readonly scoreLabels: string
-  readonly sideDrawerTitle: string
-  readonly surveryDrawer: string
+  readonly resultTag: string
 }
 export default styles

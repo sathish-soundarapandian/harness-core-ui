@@ -51,7 +51,7 @@ describe('PerformanceOverview', () => {
   test('should render top opportunities by default', () => {
     const { getByText } = render(
       <TestWrapper>
-        <PerformanceOverview sectionList={mockSectionList} />
+        <PerformanceOverview sectionList={mockSectionList} resultsCode={'resultsCode'} />
       </TestWrapper>
     )
     expect(getByText('assessments.yourTopOpportunities')).toBeInTheDocument()
@@ -59,7 +59,7 @@ describe('PerformanceOverview', () => {
   test('should render best performances', () => {
     const { getByText } = render(
       <TestWrapper>
-        <PerformanceOverview sectionList={mockSectionList} isBest />
+        <PerformanceOverview sectionList={mockSectionList} isBest resultsCode={'resultsCode'} />
       </TestWrapper>
     )
     expect(getByText('assessments.yourBestPerformance')).toBeInTheDocument()
@@ -67,7 +67,7 @@ describe('PerformanceOverview', () => {
   test('should display empty when no section values', () => {
     const { container } = render(
       <TestWrapper>
-        <PerformanceOverview sectionList={[]} />
+        <PerformanceOverview sectionList={[]} resultsCode={'resultsCode'} />
       </TestWrapper>
     )
     expect(container.getElementsByClassName('sectionPerformanceCard').length).toBe(0)

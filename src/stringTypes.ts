@@ -3667,6 +3667,7 @@ export interface StringsMap {
   'projectsOrgs.whyCreateProject': string
   'projectsOrgs.youHaveNoProjects': string
   'assessments.answered': string
+  'assessments.backToImproveMaturity': string
   'assessments.basedOnResultsHarnessRecommendations': string
   'assessments.benchmark': string
   'assessments.benchmarkComparison': string
@@ -3684,6 +3685,7 @@ export interface StringsMap {
   'assessments.externalBenchmarkScore': string
   'assessments.groupBySDLC': string
   'assessments.howHarnessCanHelp': string
+  'assessments.howHarnessCanHelpToImprove': string
   'assessments.howYouPerformedInSections': string
   'assessments.howYourScoreCompare': string
   'assessments.improveMaturity': string
@@ -3716,6 +3718,7 @@ export interface StringsMap {
   'assessments.projectedScoreWithRec': string
   'assessments.question': string
   'assessments.questions': string
+  'assessments.recommendation': string
   'assessments.recommendations': string
   'assessments.recommendedModule': string
   'assessments.result': string
@@ -3731,6 +3734,8 @@ export interface StringsMap {
   'assessments.typicalComparison': string
   'assessments.viewInDetail': string
   'assessments.viewResults': string
+  'assessments.welcomeDescription': string
+  'assessments.youAreAt': string
   'assessments.youAreBestInCategory': string
   'assessments.yourBestPerformance': string
   'assessments.yourScore': string

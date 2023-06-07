@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Container, PageError, PageSpinner, SelectOption, useToaster } from '@harness/uicore'
+import { Button, ButtonVariation, Container, PageError, PageSpinner, SelectOption, useToaster } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { get, isEqual } from 'lodash-es'
+import { cloneDeep, get, isEqual } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   ImprovedMaturityDTO,
@@ -16,11 +16,13 @@ import ContentContainer from '../ContentContainer/ContentContainer'
 import MaturityScore from './components/MaturityScore/MaturityScore'
 import CapabilitiesContainer from './components/CapabilitiesContainer/CapabilitiesContainer'
 import { getImprovedScore, updateQuestionsOnQuestionID, updateQuestionsOnSectionId } from './ImproveMaturity.utils'
+import GroupByHarness from './components/GroupByHarness/GroupByHarness'
 import css from './ImproveMaturity.module.scss'
 
 const ImproveMaturity = (): JSX.Element => {
   const [values, setValues] = useState<ImprovedMaturityDTO | null>()
   const [benchmark, setBenchmark] = useState<SelectOption>()
+  const [groupByHarness, setGroupByHarness] = useState<boolean>(false)
   const { getString } = useStrings()
   const { resultsCode } = useParams<{ resultsCode: string }>()
   const [improvementScore, setImprovementScore] = useState<number>(0)
@@ -87,29 +89,66 @@ const ImproveMaturity = (): JSX.Element => {
     })
   }
 
+  const selectOnHarnessModule = (harnessModules: string[]): void => {
+    const clonedData: QuestionMaturity[] = cloneDeep(values?.questionLevelMaturityList || [])
+    if (harnessModules?.length) {
+      clonedData.forEach((question: QuestionMaturity) => {
+        question.selected = harnessModules.includes(question.recommendation?.harnessModule || '')
+      })
+    } else {
+      clonedData.forEach((question: QuestionMaturity) => (question.selected = false))
+    }
+    setValues({
+      ...values,
+      questionLevelMaturityList: clonedData
+    })
+  }
+
   useEffect(() => {
     const improvedValue = getImprovedScore(tableData)
     setImprovementScore(improvedValue)
   }, [tableData])
 
+  const headerBackButton = useMemo(() => {
+    if (groupByHarness) {
+      return (
+        <Button
+          text={getString('assessments.backToImproveMaturity')}
+          icon="chevron-left"
+          variation={ButtonVariation.LINK}
+          onClick={() => setGroupByHarness(false)}
+        />
+      )
+    }
+    return <></>
+  }, [getString, groupByHarness])
+
   if (loading) return <PageSpinner />
   if (error)
     return <PageError message={get(error?.data as Error, 'message') || error?.message} onClick={() => refetch()} />
   return (
-    <ContentContainer assessmentId={'DEVOPSTest15'} title={getString('assessments.improveMaturity')}>
+    <ContentContainer
+      assessmentId={'DEVOPSTest15'}
+      title={groupByHarness ? getString('assessments.howHarnessCanHelp') : getString('assessments.improveMaturity')}
+      backButton={headerBackButton}
+    >
       <Container className={css.improveMaturityContainer}>
-        <MaturityScore improvementScore={improvementScore} benchmarkId={benchmark?.value.toString() || ''} />
+        <MaturityScore improvementScore={improvementScore} benchmarkId={benchmark?.value?.toString() || ''} />
         <Container background={Color.PRIMARY_BG} className={css.container}>
-          {data && (
-            <CapabilitiesContainer
-              questionMaturityList={tableData}
-              onSelectionChange={onSelectionChange}
-              groupSelection={groupSelection}
-              benchmark={benchmark}
-              setBenchMark={setBenchmark}
-              resultCode={resultsCode}
-            />
-          )}
+          {data &&
+            (groupByHarness ? (
+              <GroupByHarness questionMaturityList={tableData} onModulesSelectionChange={selectOnHarnessModule} />
+            ) : (
+              <CapabilitiesContainer
+                questionMaturityList={tableData}
+                onSelectionChange={onSelectionChange}
+                groupSelection={groupSelection}
+                benchmark={benchmark}
+                setBenchMark={setBenchmark}
+                groupByHarness={() => setGroupByHarness(true)}
+                resultCode={resultsCode}
+              />
+            ))}
         </Container>
       </Container>
     </ContentContainer>

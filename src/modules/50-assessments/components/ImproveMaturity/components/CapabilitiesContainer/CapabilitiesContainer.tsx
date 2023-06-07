@@ -9,7 +9,7 @@ import {
   SelectOption
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useStrings } from 'framework/strings'
 import type { QuestionMaturity } from 'services/assessments'
 import ImprovemenIdeaImage from '@assessments/assets/ImprovemenIdea.svg'
@@ -25,6 +25,7 @@ interface CapabilitiesContainerProps {
   benchmark: SelectOption | undefined
   setBenchMark: (benchMark: SelectOption) => void
   resultCode: string
+  groupByHarness: () => void
 }
 
 const CapabilitiesContainer = ({
@@ -33,7 +34,8 @@ const CapabilitiesContainer = ({
   groupSelection,
   benchmark,
   setBenchMark,
-  resultCode
+  resultCode,
+  groupByHarness
 }: CapabilitiesContainerProps): JSX.Element => {
   const [search, setSearch] = useState<string>()
   const [groupByCategory, setGroupByCategory] = useState<boolean>(false)
@@ -53,8 +55,8 @@ const CapabilitiesContainer = ({
     }
   }, [benchmarkData, setBenchMark])
 
-  return (
-    <Container className={css.capabilitiesContainer}>
+  const header = useMemo(
+    () => (
       <Layout.Horizontal className={css.subHeader}>
         <Layout.Horizontal>
           <Select
@@ -85,9 +87,18 @@ const CapabilitiesContainer = ({
           autoFocus={false}
         />
       </Layout.Horizontal>
+    ),
+    [benchmark, benchmarkItems, getString, groupByCategory, loading, search, setBenchMark]
+  )
+
+  return (
+    <Container className={css.capabilitiesContainer}>
+      {header}
       <Layout.Horizontal className={css.infoDisplay} margin="large" background={Color.PRIMARY_1}>
         <img src={ImprovemenIdeaImage} width="32" height="40" alt="" />
-        <Button variation={ButtonVariation.LINK}>{getString('assessments.howHarnessCanHelp')}</Button>
+        <Button variation={ButtonVariation.LINK} onClick={groupByHarness}>
+          {getString('assessments.howHarnessCanHelpToImprove')}
+        </Button>
       </Layout.Horizontal>
       <Container margin="large">
         {groupByCategory ? (

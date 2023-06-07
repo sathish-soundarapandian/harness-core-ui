@@ -13,13 +13,17 @@ import type { ScoreOverviewDTO, SectionScore } from 'services/assessments'
 import { useStrings } from 'framework/strings'
 import { calculatePercentage, getScoreComparisonChartOptions, getSectionImage } from '../../../utils'
 import { SURVEY_CHART_OPTIONS } from './ResultTable.constants'
+import ResultTag from '../../../ResultTag/ResultTag'
 import css from './ResultTable.module.scss'
 
 export const RenderCategory: Renderer<CellProps<SectionScore>> = ({ row }) => {
   const sectionName = row.original.sectionText
   const sectionImage = getSectionImage(sectionName)
   return (
-    <Layout.Horizontal flex={{ justifyContent: 'left', alignItems: 'center' }}>
+    <Layout.Horizontal
+      flex={{ justifyContent: 'left', alignItems: 'center' }}
+      id={sectionName?.replace(/ /g, '').toLowerCase()}
+    >
       <img src={sectionImage} width="30" height="30" alt="" />
       <Text padding={'medium'} font={{ weight: 'bold', size: 'medium' }} color={Color.GREY_600}>
         {sectionName}
@@ -86,21 +90,19 @@ export const RenderComparison: Renderer<CellProps<SectionScore>> = ({ row }) => 
 }
 
 export const RenderRecommendations: Renderer<CellProps<SectionScore>> = ({ row }) => {
+  const { getString } = useStrings()
   const recommendationsCount = row.original.numRecommendations
   if (recommendationsCount && recommendationsCount > 0) {
     return (
-      <Container
-        flex={{ justifyContent: 'left', alignItems: 'center' }}
-        background={Color.PRIMARY_1}
-        className={css.recommendationContainer}
-        margin={{ left: 'small' }}
-      >
-        <Text
-          font={{ weight: 'semi-bold', size: 'normal' }}
-          color={Color.PRIMARY_7}
-          padding={{ left: 'xsmall' }}
-        >{`${recommendationsCount} Recommendations`}</Text>
-      </Container>
+      <ResultTag
+        content={
+          <Text
+            font={{ weight: 'semi-bold', size: 'normal' }}
+            color={Color.PRIMARY_7}
+            padding={{ left: 'xsmall' }}
+          >{`${recommendationsCount} ${getString('assessments.recommendations')}`}</Text>
+        }
+      />
     )
   } else {
     return (

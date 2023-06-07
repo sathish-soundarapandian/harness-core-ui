@@ -10,7 +10,7 @@ import css from './FlatRecommendationTable.module.scss'
 
 export const RenderRecommendation: Renderer<CellProps<QuestionMaturity>> = ({ row }) => {
   return (
-    <Container className={css.recommendationContainer}>
+    <Container className={css.recommendationContainer} padding={{ left: 'medium' }}>
       <Text font={{ weight: 'bold' }} color={Color.GREY_1000} margin={{ bottom: 'small' }}>
         {row.original.capability}
       </Text>
