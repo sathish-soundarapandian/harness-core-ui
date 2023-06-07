@@ -243,7 +243,6 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
   const reset = () => replaceQueryParams({})
 
   /**End Handlers */
-
   return (
     <Layout.Horizontal>
       <FilterSelector<FilterDTO>
@@ -282,7 +281,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
             sourceBranch,
             targetBranch,
             buildType,
-            repositoryName: repoName ? repoName[0] : undefined,
+            repositoryName: repoName,
             deploymentType: deploymentTypes,
             infrastructureType: infrastructureTypes ? infrastructureTypes[0] : undefined,
             services: getMultiSelectFormOptions(serviceNames, 'service'),
