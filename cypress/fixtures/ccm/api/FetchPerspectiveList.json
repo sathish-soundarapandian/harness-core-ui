@@ -1,0 +1,21 @@
+{
+  "data": {
+    "perspectives": {
+      "customerViews": [
+        { "id": "aiyAh-2jSQ2sKK74Q8BJ9g", "name": "Perspective-DK35E5-azure", "__typename": "QLCEView" },
+        { "id": "C2-FQpzdRZSYfeEIZVagOA", "name": "Perspective-QZQHIG", "__typename": "QLCEView" },
+        { "id": "Ga0RHle1SRqqz9GSKwnIQg", "name": "Perspective-8TUDH6", "__typename": "QLCEView" },
+        { "id": "j11_Dv4sTtu24Nz4Wd0PdA", "name": "Perspective-V1RVA9", "__typename": "QLCEView" },
+        { "id": "jMSmE6-OQ8K2VMh9MGK7QA", "name": "Perspective-AWS", "__typename": "QLCEView" },
+        { "id": "8tfxPLrOQTq840uoSE_T0Q", "name": "Perspective-GCP", "__typename": "QLCEView" },
+        { "id": "4mSYW2pbQtymZOgjYKS52g", "name": "Perspective-Cluster", "__typename": "QLCEView" },
+        { "id": "SygFBw4VQzGzD9YXC5E6RA", "name": "Perspective-Common", "__typename": "QLCEView" },
+        { "id": "L9R10AbQQCGIqSGinovS4g", "name": "Aws", "__typename": "QLCEView" },
+        { "id": "OxMcD2sdTuKkiCRpbaROtw", "name": "Azure", "__typename": "QLCEView" },
+        { "id": "Shza0IsVQwm_ZMPiCM45pQ", "name": "Gcp", "__typename": "QLCEView" },
+        { "id": "KQBamVi4QhSCDOylbwHXDg", "name": "Cluster", "__typename": "QLCEView" }
+      ],
+      "__typename": "PerspectiveData"
+    }
+  }
+}

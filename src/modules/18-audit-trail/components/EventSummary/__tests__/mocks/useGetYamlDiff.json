@@ -1,0 +1,9 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "oldYaml": "",
+    "newYaml": "orgIdentifier: HOST\nprojectIdentifier: NodeGoat\nname: harngess-delegate-ng\nidentifier: _harngess_delegate_ng\ndelegateType: KUBERNETES\n"
+  },
+  "metaData": null,
+  "correlationId": "d2ed69b7-6dc8-42d6-baea-36e37e4760c2"
+}

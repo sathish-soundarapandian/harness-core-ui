@@ -1,0 +1,26 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "uuid": "sampleUUID",
+    "name": "Perspective-IXOG6G",
+    "accountId": "accountId",
+    "viewVersion": "v1",
+    "viewTimeRange": { "viewTimeRangeType": "LAST_7", "startTime": 0, "endTime": 0 },
+    "viewRules": [],
+    "dataSources": null,
+    "viewVisualization": {
+      "granularity": "DAY",
+      "groupBy": { "fieldId": "product", "fieldName": "Product", "identifier": "COMMON", "identifierName": "COMMON" },
+      "chartType": "STACKED_LINE_CHART"
+    },
+    "viewType": "CUSTOMER",
+    "viewState": "DRAFT",
+    "totalCost": 0.0,
+    "createdAt": 1645077405865,
+    "lastUpdatedAt": 1645077405865,
+    "createdBy": null,
+    "lastUpdatedBy": null
+  },
+  "metaData": null,
+  "correlationId": "7de788fb-7e1f-43f1-bbfc-53f669a3f6f8"
+}

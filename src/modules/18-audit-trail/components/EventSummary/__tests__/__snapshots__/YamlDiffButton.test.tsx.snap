@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Event summary test render 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main yamlButton StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--color StyledProps--color-grey800 StyledProps--padding-top-small StyledProps--padding-bottom-small"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--margin-right-xsmall StyledProps--font-variation-small-semi"
+    >
+      auditTrail.yamlDifference
+    </p>
+    <span
+      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-primary7"
+      icon="chevron-down"
+    >
+      <svg
+        data-icon="chevron-down"
+        height="16"
+        viewBox="0 0 16 16"
+        width="16"
+      >
+        <desc>
+          chevron-down
+        </desc>
+        <path
+          d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+          fill-rule="evenodd"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;

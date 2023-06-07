@@ -1,0 +1,17 @@
+{
+  "status": "ERROR",
+  "code": "INVALID_REQUEST",
+  "message": "Invalid request: Error in creating budget. Budget with given name already exists",
+  "correlationId": "c4c65a72-1309-4bea-90b4-4917ddd0e1ea",
+  "detailedMessage": null,
+  "responseMessages": [
+    {
+      "code": "INVALID_REQUEST",
+      "level": "ERROR",
+      "message": "Invalid request: Error in creating budget. Budget with given name already exists",
+      "exception": null,
+      "failureTypes": []
+    }
+  ],
+  "metadata": null
+}

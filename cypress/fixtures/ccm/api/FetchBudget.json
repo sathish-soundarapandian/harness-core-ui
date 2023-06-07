@@ -1,0 +1,125 @@
+{
+  "data": {
+    "budgetList": [
+      {
+        "id": "nMLZeEwPPk2ZA0Q",
+        "uuid": "nMLZeEwPPk2ZA0Q",
+        "name": "Test-1",
+        "budgetAmount": 2000.0,
+        "actualCost": 6200.62,
+        "timeLeft": 14,
+        "timeUnit": "days",
+        "timeScope": "monthly",
+        "actualCostAlerts": [20.0],
+        "forecastCostAlerts": [],
+        "forecastCost": 17373.19,
+        "perspectiveId": "KQBamVi4QhSCDOylbwHXDg",
+        "growthRate": 0.0,
+        "startTime": 1642636800000,
+        "type": "SPECIFIED_AMOUNT",
+        "period": "MONTHLY",
+        "alertThresholds": [
+          {
+            "basedOn": "ACTUAL_COST",
+            "percentage": 20.0,
+            "emailAddresses": ["abc@example.com"],
+            "userGroupIds": [],
+            "__typename": "AlertThreshold"
+          }
+        ],
+        "__typename": "BudgetSummary"
+      },
+      {
+        "id": "QRBRN6AIYwVzLs5Ow",
+        "uuid": "QRBRN6AIYwVzLs5Ow",
+        "name": "sv-test-25-jan",
+        "budgetAmount": 5000.0,
+        "actualCost": 4399.05,
+        "timeLeft": 3,
+        "timeUnit": "days",
+        "timeScope": "weekly",
+        "actualCostAlerts": [70.0, 90.0],
+        "forecastCostAlerts": [],
+        "forecastCost": 16586.82,
+        "perspectiveId": "BZic_QgvSGerJxrV-i_gSA",
+        "growthRate": 0.0,
+        "startTime": 1643760000000,
+        "type": "SPECIFIED_AMOUNT",
+        "period": "WEEKLY",
+        "alertThresholds": [
+          {
+            "basedOn": "ACTUAL_COST",
+            "percentage": 70.0,
+            "emailAddresses": ["abc@example.com"],
+            "userGroupIds": [],
+            "__typename": "AlertThreshold"
+          },
+          {
+            "basedOn": "ACTUAL_COST",
+            "percentage": 90.0,
+            "emailAddresses": ["abc@example.com"],
+            "userGroupIds": [],
+            "__typename": "AlertThreshold"
+          }
+        ],
+        "__typename": "BudgetSummary"
+      },
+      {
+        "id": "Li2-f3RpjQWy267Q",
+        "uuid": "Li2-f3RpjQWy267Q",
+        "name": "sv-test-18jan-budget",
+        "budgetAmount": 50248.14,
+        "actualCost": 5189.75,
+        "timeLeft": 23,
+        "timeUnit": "days",
+        "timeScope": "monthly",
+        "actualCostAlerts": [78.0],
+        "forecastCostAlerts": [],
+        "forecastCost": 49253.87,
+        "perspectiveId": "jGo1Nu3ZA2pw",
+        "growthRate": 0.0,
+        "startTime": 1643673600000,
+        "type": "PREVIOUS_PERIOD_SPEND",
+        "period": "MONTHLY",
+        "alertThresholds": [
+          {
+            "basedOn": "ACTUAL_COST",
+            "percentage": 78.0,
+            "emailAddresses": ["abc@example.com"],
+            "userGroupIds": [],
+            "__typename": "AlertThreshold"
+          }
+        ],
+        "__typename": "BudgetSummary"
+      },
+      {
+        "id": "gEXFNmSjzpDeIGENtw",
+        "uuid": "gEXFNmSjzpDeIGENtw",
+        "name": "test1",
+        "budgetAmount": 200.0,
+        "actualCost": 15.46,
+        "timeLeft": 23,
+        "timeUnit": "days",
+        "timeScope": "monthly",
+        "actualCostAlerts": [100.0],
+        "forecastCostAlerts": [],
+        "forecastCost": 156.88,
+        "perspectiveId": "KQBamVi4QhSCDOylbwHXDg",
+        "growthRate": 0.0,
+        "startTime": 1643673600000,
+        "type": "SPECIFIED_AMOUNT",
+        "period": "MONTHLY",
+        "alertThresholds": [
+          {
+            "basedOn": "ACTUAL_COST",
+            "percentage": 100.0,
+            "emailAddresses": ["abc@example.com"],
+            "userGroupIds": [],
+            "__typename": "AlertThreshold"
+          }
+        ],
+        "__typename": "BudgetSummary"
+      }
+    ]
+  }
+}

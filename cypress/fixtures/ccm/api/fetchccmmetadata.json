@@ -1,0 +1,20 @@
+{
+  "data": {
+    "ccmMetaData": {
+      "k8sClusterConnectorPresent": true,
+      "cloudDataPresent": true,
+      "awsConnectorsPresent": true,
+      "gcpConnectorsPresent": true,
+      "azureConnectorsPresent": true,
+      "applicationDataPresent": true,
+      "inventoryDataPresent": false,
+      "clusterDataPresent": true,
+      "isSampleClusterPresent": false,
+      "defaultAzurePerspectiveId": "OxMcD2sdTuKkiCRpbaROtw",
+      "defaultAwsPerspectiveId": "L9R10AbQQCGIqSGinovS4g",
+      "defaultGcpPerspectiveId": "Shza0IsVQwm_ZMPiCM45pQ",
+      "defaultClusterPerspectiveId": "KQBamVi4QhSCDOylbwHXDg",
+      "__typename": "CCMMetaData"
+    }
+  }
+}

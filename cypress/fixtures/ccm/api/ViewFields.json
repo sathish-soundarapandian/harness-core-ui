@@ -1,0 +1,260 @@
+{
+  "data": {
+    "perspectiveFields": {
+      "fieldIdentifierData": [
+        {
+          "identifier": "COMMON",
+          "identifierName": "Common",
+          "values": [
+            {
+              "fieldId": "region",
+              "fieldName": "Region",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "product",
+              "fieldName": "Product",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "label",
+              "fieldName": "Label",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "none",
+              "fieldName": "None",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            }
+          ],
+          "__typename": "QLCEViewFieldIdentifierData"
+        },
+        {
+          "identifier": "CUSTOM",
+          "identifierName": "Custom",
+          "values": [],
+          "__typename": "QLCEViewFieldIdentifierData"
+        },
+        {
+          "identifier": "BUSINESS_MAPPING",
+          "identifierName": "Business Mapping",
+          "values": [
+            {
+              "fieldId": "zM-OwnFtTaeCFnrRmNs5kA",
+              "fieldName": "test",
+              "identifier": "BUSINESS_MAPPING",
+              "identifierName": "Business Mapping",
+              "__typename": "QLCEViewField"
+            }
+          ],
+          "__typename": "QLCEViewFieldIdentifierData"
+        },
+        {
+          "identifier": "CLUSTER",
+          "identifierName": "Cluster",
+          "values": [
+            {
+              "fieldId": "clusterName",
+              "fieldName": "Cluster Name",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "namespace",
+              "fieldName": "Namespace",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "workloadName",
+              "fieldName": "Workload",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "appId",
+              "fieldName": "Application",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "envId",
+              "fieldName": "Environment",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "serviceId",
+              "fieldName": "Service",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            }
+          ],
+          "__typename": "QLCEViewFieldIdentifierData"
+        },
+        {
+          "identifier": "AWS",
+          "identifierName": "AWS",
+          "values": [
+            {
+              "fieldId": "awsServicecode",
+              "fieldName": "Service",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "awsUsageAccountId",
+              "fieldName": "Account",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "awsInstancetype",
+              "fieldName": "Instance Type",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "awsUsagetype",
+              "fieldName": "Usage Type",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            }
+          ],
+          "__typename": "QLCEViewFieldIdentifierData"
+        },
+        {
+          "identifier": "GCP",
+          "identifierName": "GCP",
+          "values": [
+            {
+              "fieldId": "gcpProduct",
+              "fieldName": "Product",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "gcpProjectId",
+              "fieldName": "Project",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "gcpSkuDescription",
+              "fieldName": "SKUs",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            }
+          ],
+          "__typename": "QLCEViewFieldIdentifierData"
+        },
+        {
+          "identifier": "AZURE",
+          "identifierName": "Azure",
+          "values": [
+            {
+              "fieldId": "azureSubscriptionGuid",
+              "fieldName": "Subscription id",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "azureMeterName",
+              "fieldName": "Meter",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "azureMeterCategory",
+              "fieldName": "Meter category",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "azureMeterSubcategory",
+              "fieldName": "Meter subcategory",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "azureMeterId",
+              "fieldName": "Resource guid",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "azureResourceGroup",
+              "fieldName": "Resource group name",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "azureResourceType",
+              "fieldName": "Resource type",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "azureResource",
+              "fieldName": "Resource",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "azureServiceName",
+              "fieldName": "Service name",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "azureServiceTier",
+              "fieldName": "Service tier",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            },
+            {
+              "fieldId": "azureInstanceId",
+              "fieldName": "Instance id",
+              "identifier": null,
+              "identifierName": null,
+              "__typename": "QLCEViewField"
+            }
+          ],
+          "__typename": "QLCEViewFieldIdentifierData"
+        }
+      ],
+      "__typename": "PerspectiveFieldsData"
+    }
+  }
+}

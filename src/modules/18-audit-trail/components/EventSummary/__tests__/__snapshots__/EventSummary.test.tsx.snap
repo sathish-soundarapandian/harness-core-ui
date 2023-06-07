@@ -1,0 +1,263 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Event summary test render 1`] = `
+<div
+  class="bp3-drawer drawer bp3-overlay-content bp3-overlay-appear bp3-overlay-appear-active"
+  style="width: 790px;"
+  tabindex="0"
+>
+  <div
+    class="bp3-drawer-header"
+  >
+    <h4
+      class="bp3-heading"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+      >
+        auditTrail.eventSummary
+      </p>
+    </h4>
+    <button
+      aria-label="Close"
+      class="bp3-button bp3-minimal bp3-dialog-close-button"
+      type="button"
+    >
+      <span
+        class="bp3-icon bp3-icon-small-cross"
+        icon="small-cross"
+      >
+        <svg
+          data-icon="small-cross"
+          height="20"
+          viewBox="0 0 20 20"
+          width="20"
+        >
+          <desc>
+            small-cross
+          </desc>
+          <path
+            d="M11.41 10l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L10 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L8.59 10 5.3 13.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l3.29-3.3 3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L11.41 10z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </button>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--background-grey100 StyledProps--padding-xlarge"
+    style="height: 100%;"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card card"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey800"
+      >
+        Feb 24, 2022, 12:04 pm
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey350 StyledProps--font-variation-small-semi StyledProps--margin-bottom-large StyledProps--margin-top-xsmall"
+      >
+        common.moduleLabel: na
+      </p>
+      <div
+        class="TableV2--table table"
+      >
+        <div
+          class="TableV2--header"
+          role="row"
+        >
+          <div
+            class="TableV2--cell"
+            colspan="1"
+            role="columnheader"
+            style="width: 25%;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              common.userLabel
+            </p>
+          </div>
+          <div
+            class="TableV2--cell"
+            colspan="1"
+            role="columnheader"
+            style="width: 25%;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              action
+            </p>
+          </div>
+          <div
+            class="TableV2--cell"
+            colspan="1"
+            role="columnheader"
+            style="width: 25%;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              common.resourceTypeLabel
+            </p>
+          </div>
+          <div
+            class="TableV2--cell"
+            colspan="1"
+            role="columnheader"
+            style="width: 25%;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              auditTrail.resourceNameLabel
+            </p>
+          </div>
+        </div>
+        <div
+          class="TableV2--body"
+        >
+          <div
+            class="TableV2--row TableV2--card tableRow"
+            role="row"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 25%;"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-right-xlarge StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+              >
+                <div
+                  class="avatar Avatar--Avatar Avatar--contentStyle"
+                >
+                  <span
+                    class="bp3-popover-wrapper Avatar--avatarPopOver"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class="Avatar--AvatarInner"
+                        style="border-radius: 100%; line-height: 26px; width: 32px; height: 32px; font-size: 10px;"
+                        tabindex="0"
+                      >
+                        N
+                      </div>
+                    </span>
+                  </span>
+                </div>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main"
+                  style="--text-line-clamp: 1;"
+                >
+                  nataraja@harness.io
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 25%;"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-right-xlarge"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main"
+                  style="--text-line-clamp: 1;"
+                >
+                  auditTrail.actions.login
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 25%;"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-right-xlarge"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main"
+                  style="--text-line-clamp: 1;"
+                >
+                  USER
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 25%;"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--padding-right-xlarge"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main"
+                  style="--text-line-clamp: 1;"
+                >
+                  nataraja@harness.io
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main yamlButton StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--color StyledProps--color-grey800 StyledProps--padding-top-small StyledProps--padding-bottom-small"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--margin-right-xsmall StyledProps--font-variation-small-semi"
+        >
+          auditTrail.yamlDifference
+        </p>
+        <span
+          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-primary7"
+          icon="chevron-down"
+        >
+          <svg
+            data-icon="chevron-down"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              chevron-down
+            </desc>
+            <path
+              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </div>
+    </div>
+    <div
+      class="bp3-card bp3-elevation-0 Card--card card"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-h6 StyledProps--color StyledProps--color-grey800"
+      >
+        auditTrail.supplementaryDetails
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey350 StyledProps--font-variation-small-semi StyledProps--margin-bottom-xsmall StyledProps--margin-top-xlarge"
+      >
+        auditTrail.eventSource
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-variation-body"
+      >
+        auditTrail.http
+      </p>
+    </div>
+  </div>
+</div>
+`;

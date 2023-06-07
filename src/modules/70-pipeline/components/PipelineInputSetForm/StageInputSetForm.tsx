@@ -19,7 +19,7 @@ import {
 } from '@harness/uicore'
 import { connect, FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, get, some, isEmpty, isNil, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -171,7 +171,7 @@ export function StageInputSetFormInternal({
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
   const { CIE_HOSTED_VMS_WINDOWS, CDS_OrgAccountLevelServiceEnvEnvGroup, IACM_ENABLED } = useFeatureFlags()
-  const iacmRequired = some(formik?.values?.stages, stages => stages?.stage?.type === StageType.IACM)
+  const iacmRequired = stageType === StageType.IACM
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
     ({
@@ -517,8 +517,8 @@ export function StageInputSetFormInternal({
                   scope === Scope.PROJECT
                     ? allowableTypes
                     : ((allowableTypes as MultiTypeInputType[]).filter(
-                        item => item !== MultiTypeInputType.FIXED
-                      ) as AllowedTypes)
+                      item => item !== MultiTypeInputType.FIXED
+                    ) as AllowedTypes)
                 }
                 readonly={readonly}
                 customStepProps={{ stageIdentifier }}
@@ -581,8 +581,8 @@ export function StageInputSetFormInternal({
           scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
             ? allowableTypes
             : ((allowableTypes as MultiTypeInputType[])?.filter(
-                item => item !== MultiTypeInputType.FIXED
-              ) as AllowedTypes)
+              item => item !== MultiTypeInputType.FIXED
+            ) as AllowedTypes)
         }
         path={path}
         viewType={viewType}
@@ -599,8 +599,8 @@ export function StageInputSetFormInternal({
           scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
             ? allowableTypes
             : ((allowableTypes as MultiTypeInputType[])?.filter(
-                item => item !== MultiTypeInputType.FIXED
-              ) as AllowedTypes)
+              item => item !== MultiTypeInputType.FIXED
+            ) as AllowedTypes)
         }
         path={path}
         viewType={viewType}
@@ -617,8 +617,8 @@ export function StageInputSetFormInternal({
             scope === Scope.PROJECT
               ? allowableTypes
               : ((allowableTypes as MultiTypeInputType[])?.filter(
-                  item => item !== MultiTypeInputType.FIXED
-                ) as AllowedTypes)
+                item => item !== MultiTypeInputType.FIXED
+              ) as AllowedTypes)
           }
           path={path}
           viewType={viewType}
@@ -627,7 +627,7 @@ export function StageInputSetFormInternal({
         />
       )}
 
-      {(deploymentStageTemplate.infrastructure || (deploymentStageTemplate as any).platform) && (
+      {!iacmRequired && (deploymentStageTemplate.infrastructure || (deploymentStageTemplate as any).platform) && (
         <div id={`Stage.${stageIdentifier}.Infrastructure`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('infrastructureText')}</div>
 
@@ -714,7 +714,10 @@ export function StageInputSetFormInternal({
                         multiTypeInputProps={{
                           selectItems: [
                             { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
-                            { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
+                            {
+                              label: getString('pipeline.infraSpecifications.osTypes.windows'),
+                              value: OsTypes.Windows
+                            }
                           ],
                           multiTypeInputProps: {
                             allowableTypes: [MultiTypeInputType.FIXED]
@@ -865,23 +868,23 @@ export function StageInputSetFormInternal({
               })}
             {((deploymentStageTemplate.infrastructure as any)?.spec?.runAsUser ||
               (deploymentStageTemplate.infrastructure as any)?.spec?.containerSecurityContext?.runAsUser) && (
-              <Container className={cx(stepCss.formGroup, stepCss.sm, stepCss.bottomMargin3)}>
-                {renderMultiTypeTextField({
-                  name: `${namePath}infrastructure.spec.containerSecurityContext.runAsUser`,
-                  tooltipId: 'runAsUser',
-                  labelKey: 'pipeline.stepCommonFields.runAsUser',
-                  inputProps: {
-                    multiTextInputProps: {
-                      expressions,
-                      allowableTypes: allowableTypes,
-                      placeholder: '1000'
+                <Container className={cx(stepCss.formGroup, stepCss.sm, stepCss.bottomMargin3)}>
+                  {renderMultiTypeTextField({
+                    name: `${namePath}infrastructure.spec.containerSecurityContext.runAsUser`,
+                    tooltipId: 'runAsUser',
+                    labelKey: 'pipeline.stepCommonFields.runAsUser',
+                    inputProps: {
+                      multiTextInputProps: {
+                        expressions,
+                        allowableTypes: allowableTypes,
+                        placeholder: '1000'
+                      },
+                      disabled: readonly
                     },
-                    disabled: readonly
-                  },
-                  fieldPath: 'spec.containerSecurityContext.runAsUser'
-                })}
-              </Container>
-            )}
+                    fieldPath: 'spec.containerSecurityContext.runAsUser'
+                  })}
+                </Container>
+              )}
             {hasContainerSecurityContextFields && <Separator topSeparation={16} bottomSeparation={16} />}
             {(deploymentStageTemplate.infrastructure as any)?.spec?.priorityClassName && (
               <Container className={cx(stepCss.formGroup, stepCss.sm, stepCss.bottomMargin3)}>
@@ -983,8 +986,8 @@ export function StageInputSetFormInternal({
                   scope === Scope.PROJECT
                     ? allowableTypes
                     : ((allowableTypes as MultiTypeInputType[]).filter(
-                        item => item !== MultiTypeInputType.FIXED
-                      ) as AllowedTypes)
+                      item => item !== MultiTypeInputType.FIXED
+                    ) as AllowedTypes)
                 }
                 path={`${path}.infrastructure`}
                 readonly={readonly}
