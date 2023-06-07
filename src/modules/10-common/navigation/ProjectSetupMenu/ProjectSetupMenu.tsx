@@ -34,13 +34,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     projectIdentifier: projectIdentifierFromParams
   } = useParams<PipelineType<ProjectPathProps>>()
 
-  const {
-    CVNG_TEMPLATE_MONITORED_SERVICE,
-    SRM_ET_EXPERIMENTAL,
-    SRM_DOWNTIME,
-    STO_JIRA_INTEGRATION,
-    USE_OLD_GIT_SYNC
-  } = useFeatureFlags()
+  const { CVNG_TEMPLATE_MONITORED_SERVICE, SRM_ET_EXPERIMENTAL, SRM_DOWNTIME, STO_JIRA_INTEGRATION, USE_OLD_GIT_SYNC } =
+    useFeatureFlags()
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const { isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF, selectedProject } = useAppStore()
