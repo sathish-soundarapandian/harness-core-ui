@@ -5579,6 +5579,7 @@ export interface StringsMap {
   'triggers.validation.selectedArtifact': string
   'triggers.validation.triggerName': string
   'discovery.agentName': string
+  'discovery.allDiscoveredServices': string
   'discovery.approxTime': string
   'discovery.createDiscoveryAgent': string
   'discovery.createNetworkMap': string

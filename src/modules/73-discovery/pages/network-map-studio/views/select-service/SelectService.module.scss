@@ -5,24 +5,55 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.overviewContainer {
+.services {
+  position: relative;
   min-height: calc(100% - 118px);
-  height: calc(100vh - 170px);
-  width: 60%;
+  height: calc(100vh - 120px) !important;
+  background-color: var(--primary-bg);
+  width: 45%;
   :global {
     .OverlaySpinner--overlaySpinner {
       height: 100%;
     }
   }
+
+  .bottomNav {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--white) !important;
+  }
 }
 
-.details {
-  width: 40%;
+.visualization {
+  width: 55%;
   height: 100%;
   background-color: var(--white) !important;
   min-height: 80vh;
 
+  $dot-color: #95c2d2; /* stylelint-disable-line color-no-hex */
+  $bg-color: #fbfbfc; /* stylelint-disable-line color-no-hex */
+
+  $dot-size: 1px;
+  $dot-space: 10px;
+
+  background: linear-gradient(90deg, $bg-color ($dot-space - $dot-size), transparent 1%) center,
+    linear-gradient($bg-color ($dot-space - $dot-size), transparent 1%) center, $dot-color !important;
+  background-size: $dot-space $dot-space !important;
+
   .image {
     margin: 50px auto;
+  }
+}
+
+.tableBody {
+  overflow-y: auto;
+  div[class*='TableV2--row TableV2--card'] {
+    border-radius: 6px !important;
+    padding: var(--spacing-medium) 0px !important;
+  }
+
+  div[class*='TableV2--rowSubComponent'] {
+    background-color: var(--grey-50);
   }
 }

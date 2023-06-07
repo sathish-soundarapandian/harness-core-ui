@@ -35,3 +35,4 @@ serviceDiscoveyTable: Service Discovery Table
 discoveredBy: Discovery by
 agentName: Agent Name
 createNetworkMap: Create Network Map
+allDiscoveredServices: All Discovered Services
