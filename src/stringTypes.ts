@@ -2511,6 +2511,7 @@ export interface StringsMap {
   'connectors.azureArtifacts.azureArtifactsUrlRequired': string
   'connectors.azureArtifacts.tokenRefRequired': string
   'connectors.azureKeyVault.labels.fetchVault': string
+  'connectors.azureKeyVault.labels.manuallyConfigureVault': string
   'connectors.azureKeyVault.labels.setupVault': string
   'connectors.azureKeyVault.labels.subscription': string
   'connectors.azureKeyVault.labels.tenantId': string

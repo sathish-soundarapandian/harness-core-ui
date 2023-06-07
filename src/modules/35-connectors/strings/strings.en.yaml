@@ -606,6 +606,7 @@ azureKeyVault:
     subscription: '{{ $.common.plans.subscription }}'
     vaultName: Vault Name
     fetchVault: Fetch Vault
+    manuallyConfigureVault: Manually Configure Vault
     setupVault: Setup Vault
   validation:
     tenantId: '{{ $.connectors.tenantIdRequired }}'

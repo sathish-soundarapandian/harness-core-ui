@@ -46,6 +46,7 @@ import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import type { IOptionProps } from '@blueprintjs/core'
 
 export interface SetupVaultFormData {
   vaultName?: string
@@ -163,6 +164,17 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
     category: Category.CONNECTOR
   })
 
+  const engineTypeOptions: IOptionProps[] = [
+    {
+      label: getString('connectors.azureKeyVault.labels.fetchVault'),
+      value: 'fetch'
+    },
+    {
+      label: getString('connectors.azureKeyVault.labels.manuallyConfigureVault'),
+      value: 'manual'
+    }
+  ]
+
   return (
     <Container padding={{ top: 'medium' }}>
       <Text font={{ variation: FontVariation.H3 }}>{getString('connectors.azureKeyVault.labels.setupVault')}</Text>
@@ -186,41 +198,52 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
             handleCreateOrEdit(formData)
           }}
         >
-          <FormikForm>
-            <Container height={490}>
-              <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-                <FormInput.Select
-                  name="vaultName"
-                  label={getString('connectors.azureKeyVault.labels.vaultName')}
-                  items={vaultNameOptions}
-                  disabled={vaultNameOptions.length === 0 || loading}
-                />
-                <Button
-                  margin={{ top: 'large' }}
-                  intent="primary"
-                  text={getString('connectors.azureKeyVault.labels.fetchVault')}
-                  onClick={() => handleFetchEngines(prevStepData as ConnectorConfigDTO)}
-                  disabled={loading}
-                  loading={loading}
-                />
-              </Layout.Horizontal>
-            </Container>
-            <Layout.Horizontal spacing="medium">
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                onClick={() => previousStep?.(prevStepData)}
-              />
-              <Button
-                type="submit"
-                intent="primary"
-                rightIcon="chevron-right"
-                text={getString('saveAndContinue')}
-                disabled={creating || updating}
-              />
-            </Layout.Horizontal>
-          </FormikForm>
+          {formik => {
+            return (
+              <FormikForm>
+                <Container height={490}>
+                  <FormInput.RadioGroup name="vaultType" radioGroup={{ inline: true }} items={engineTypeOptions} />
+                  <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+                    {formik.values['vaultType'] === 'manual' ? (
+                      <FormInput.Text name="vaultName" label={getString('connectors.azureKeyVault.labels.vaultName')} />
+                    ) : (
+                      <>
+                        <FormInput.Select
+                          name="vaultName"
+                          label={getString('connectors.azureKeyVault.labels.vaultName')}
+                          items={vaultNameOptions}
+                          disabled={vaultNameOptions.length === 0 || loading}
+                        />
+                        <Button
+                          margin={{ top: 'large' }}
+                          intent="primary"
+                          text={getString('connectors.azureKeyVault.labels.fetchVault')}
+                          onClick={() => handleFetchEngines(prevStepData as ConnectorConfigDTO)}
+                          disabled={loading}
+                          loading={loading}
+                        />
+                      </>
+                    )}
+                  </Layout.Horizontal>
+                </Container>
+                <Layout.Horizontal spacing="medium">
+                  <Button
+                    variation={ButtonVariation.SECONDARY}
+                    text={getString('back')}
+                    icon="chevron-left"
+                    onClick={() => previousStep?.(prevStepData)}
+                  />
+                  <Button
+                    type="submit"
+                    intent="primary"
+                    rightIcon="chevron-right"
+                    text={getString('saveAndContinue')}
+                    disabled={creating || updating}
+                  />
+                </Layout.Horizontal>
+              </FormikForm>
+            )
+          }}
         </Formik>
       )}
     </Container>
