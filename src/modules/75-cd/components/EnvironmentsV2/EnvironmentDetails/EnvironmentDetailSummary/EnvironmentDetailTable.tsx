@@ -275,13 +275,13 @@ const columnsProperties = {
   service: {
     width: {
       summary: '0%',
-      full: '35%'
+      full: '30%'
     }
   },
   latestBadge: {
     width: {
       summary: '0%',
-      full: '2%'
+      full: '10%'
     }
   },
   artifacts: {
@@ -293,7 +293,7 @@ const columnsProperties = {
   infras: {
     width: {
       summary: '58%',
-      full: '40%'
+      full: '30%'
     }
   },
   instancesCount: {
