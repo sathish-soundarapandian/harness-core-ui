@@ -87,7 +87,8 @@ const config = {
         historyApiFallback: {
           disableDotRule: true
         },
-        port: 8181,
+        port: 8282,
+        allowedHosts: "all",
         client: {
           overlay: !(isCypress || isCypressCoverage)
         },
@@ -103,7 +104,8 @@ const config = {
             key,
             Object.assign({ logLevel: 'info', secure: false, changeOrigin: true }, value)
           ])
-        )
+        ),
+        static: [path.join(process.cwd(), 'src/static')]
       },
   module: {
     rules: [

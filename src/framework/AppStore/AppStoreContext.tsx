@@ -27,7 +27,7 @@ import {
 } from 'services/cd-ng'
 import { useGetFeatureFlags } from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FeatureFlag } from '@common/featureFlags'
+import type { FeatureFlag } from '@common/featureFlags'
 import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import type { Module } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -53,6 +53,7 @@ export interface AppStoreContextProps {
   readonly supportingTemplatesGitx?: boolean
   readonly connectivityMode?: GitEnabledDTO['connectivityMode'] //'MANAGER' | 'DELEGATE'
   readonly currentUserInfo: UserInfo
+  readonly publicAccessEnabled?: boolean
   /** feature flags */
   readonly featureFlags: FeatureFlagMap
 
@@ -77,7 +78,8 @@ export const AppStoreContext = React.createContext<AppStoreContextProps>({
   currentUserInfo: { uuid: '' },
   isGitSyncEnabled: false,
   connectivityMode: undefined,
-  updateAppStore: () => void 0
+  updateAppStore: () => void 0,
+  publicAccessEnabled: false
 })
 
 const MAX_RECENT_PROJECTS_COUNT = 5
@@ -134,7 +136,8 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     supportingGitSimplification: true,
     gitSyncEnabledOnlyForFF: false,
     supportingTemplatesGitx: false,
-    connectivityMode: undefined
+    connectivityMode: undefined,
+    publicAccessEnabled: window.publicAccessOnAccount
   })
 
   if (!projectIdentifier && !orgIdentifier) {
@@ -161,7 +164,8 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     lazy: true
   })
   const { data: userInfo, loading: userInfoLoading } = useGetCurrentUserInfo({
-    queryParams: { accountIdentifier: accountId }
+    queryParams: { accountIdentifier: accountId },
+    lazy: state.publicAccessEnabled
   })
 
   const { source, module } = useQueryParams<{ source?: string; module?: Module }>()
@@ -233,10 +237,13 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
   }, [legacyFeatureFlags])
 
   useEffect(() => {
+    if (state.publicAccessEnabled) {
+      return
+    }
     if (window.featureFlagsConfig.useLegacyFeatureFlags) {
       fetchLegacyFeatureFlags()
     }
-  }, [fetchLegacyFeatureFlags])
+  }, [fetchLegacyFeatureFlags, state.publicAccessEnabled])
 
   useEffect(() => {
     if (!window.featureFlagsConfig.useLegacyFeatureFlags && !loadingFeatureFlags) {
@@ -313,7 +320,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     projectIdentifierFromPath,
     orgIdentifierFromPath,
     state.isGitSyncEnabled,
-    state.featureFlags[FeatureFlag.USE_OLD_GIT_SYNC]
+    state.featureFlags['USE_OLD_GIT_SYNC']
   ])
 
   // set selectedOrg when orgDetails are fetched
@@ -326,6 +333,9 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
 
   // When projectIdentifier in URL changes, fetch projectDetails, and update selectedProject & savedProject-preference
   useEffect(() => {
+    if (state.publicAccessEnabled) {
+      return
+    }
     if (projectIdentifier && orgIdentifier) {
       getProjectPromise({
         identifier: projectIdentifier,
@@ -371,8 +381,12 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectIdentifier, orgIdentifier])
+
   // update selectedOrg when orgidentifier in url changes
   useEffect(() => {
+    if (state.publicAccessEnabled) {
+      return
+    }
     if (orgIdentifier) {
       refetchOrg()
     }

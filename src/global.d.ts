@@ -85,6 +85,7 @@ declare interface Window {
   }
   noAuthHeader: boolean
   MonacoEnvironment: any
+  publicAccessOnAccount?: boolean
 }
 
 declare interface WindowEventMap {

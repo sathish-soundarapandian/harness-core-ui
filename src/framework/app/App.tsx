@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, Suspense, useRef } from 'react'
+import React, { useEffect, Suspense } from 'react'
 
 import { useParams } from 'react-router-dom'
 import { RestfulProvider } from 'restful-react'
@@ -13,11 +13,11 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { FocusStyleManager } from '@blueprintjs/core'
 import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY } from '@harness/uicore'
 import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
-import { HarnessReactAPIClient as AuditServiceClient } from '@harnessio/react-audit-service-client'
 import { setAutoFreeze, enableMapSet } from 'immer'
-import SessionToken from 'framework/utils/SessionToken'
+import { debounce } from 'lodash-es'
+import SessionToken, { TokenTimings } from 'framework/utils/SessionToken'
+import useOpenApiClients from 'framework/hooks/useOpenAPIClients'
 import { queryClient } from 'services/queryClient'
-
 import { AppStoreProvider } from 'framework/AppStore/AppStoreContext'
 import { PreferenceStoreProvider, PREFERENCES_TOP_LEVEL_KEY } from 'framework/PreferenceStore/PreferenceStoreContext'
 
@@ -26,7 +26,7 @@ import { LicenseStoreProvider } from 'framework/LicenseStore/LicenseStoreContext
 import RouteDestinationsWithoutAuth from 'modules/RouteDestinationsWithoutAuth'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { StringsContextProvider } from 'framework/strings/StringsContextProvider'
-import { useLogout } from 'framework/utils/SessionUtils'
+import { useLogout, ErrorCode } from 'framework/utils/SessionUtils'
 import SecureStorage from 'framework/utils/SecureStorage'
 import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
 import { useRefreshToken } from 'services/portal'
@@ -45,11 +45,14 @@ const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
 const TOO_MANY_REQUESTS_MESSAGE = 'Too many requests received, please try again later'
 
+const NOT_WHITELISTED_IP_MESSAGE = 'NOT_WHITELISTED_IP_MESSAGE'
+
 FocusStyleManager.onlyShowFocusOnTabs()
 SecureStorage.registerCleanupException(PREFERENCES_TOP_LEVEL_KEY)
 SecureStorage.registerCleanupException(MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY)
 SecureStorage.registerCleanupException(HELP_PANEL_STORAGE_KEY)
 SecureStorage.registerCleanupException(REFERER_URL)
+SecureStorage.registerCleanupSessionException(NOT_WHITELISTED_IP_MESSAGE)
 
 // set up Immer
 setAutoFreeze(false)
@@ -59,7 +62,9 @@ interface AppProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   strings: Record<string, any>
 }
-
+const LEAST_REFRESH_TIME_MINUTES = 15
+const MAX_REFRESH_TIME_MINUTES = 120
+const REFRESH_TIME_PERCENTAGE_IN_MINUTES = 5
 export const getRequestOptions = (): Partial<RequestInit> => {
   const token = SessionToken.getToken()
   const headers: RequestInit['headers'] = {}
@@ -73,6 +78,32 @@ export const getRequestOptions = (): Partial<RequestInit> => {
   return { headers }
 }
 
+const getNotWhitelistedMessage = (res: any): any => {
+  return (res?.body || res)?.responseMessages?.find((message: any) => message?.code === 'NOT_WHITELISTED_IP')
+}
+
+const notifyBugsnag = (
+  errorString: string,
+  metadataString: string,
+  response: any,
+  username: string,
+  accountId: string
+): void => {
+  window.bugsnagClient?.notify?.(
+    new Error(errorString),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function (event: any) {
+      event.severity = 'error'
+      event.setUser(username)
+      event.addMetadata(metadataString, {
+        url: response.url,
+        status: response.status,
+        accountId
+      })
+    }
+  )
+}
+
 export function AppWithAuthentication(props: AppProps): React.ReactElement {
   const { showError } = useToaster()
   const username = SessionToken.username()
@@ -80,7 +111,66 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   // if user lands on /, they'll first get redirected to a path with accountId
   const { accountId } = useParams<AccountPathProps>()
   const { forceLogout } = useLogout()
-  const auditServiceClientObjRef = useRef<AuditServiceClient>()
+  const globalResponseHandler = (response: Response): void => {
+    if (!response.ok) {
+      switch (response.status) {
+        case 401: {
+          response
+            .clone()
+            .json()
+            .then(res => {
+              const notWhiteListedMessage = getNotWhitelistedMessage(res)
+              if (notWhiteListedMessage) {
+                const msg = notWhiteListedMessage.message
+                showError(msg)
+                // NG-Auth-UI expects to read "NOT_WHITELISTED_IP_MESSAGE" from session
+                sessionStorage.setItem(NOT_WHITELISTED_IP_MESSAGE, msg)
+                forceLogout(ErrorCode.unauth)
+              }
+            })
+            .catch(() => {
+              notifyBugsnag('Error handling 401 status code', '401 Details', response, username, accountId)
+            })
+            .finally(() => {
+              forceLogout()
+              return
+            })
+          break
+        }
+        case 400: {
+          response
+            .clone()
+            .json()
+            .then(res => {
+              const notWhiteListedMessage = getNotWhitelistedMessage(res)
+              if (notWhiteListedMessage) {
+                showError(notWhiteListedMessage.message)
+                forceLogout()
+              }
+            })
+            .catch(() => {
+              notifyBugsnag('Error handling 400 status code', '400 Details', response, username, accountId)
+            })
+          return
+        }
+        case 429: {
+          response
+            .clone()
+            .json()
+            .then(res => {
+              showError(res.message || TOO_MANY_REQUESTS_MESSAGE)
+            })
+        }
+      }
+    }
+  }
+  const {
+    auditServiceClientRef,
+    idpServiceClientRef,
+    pipelineServiceClientRef,
+    ngManagerServiceClientRef,
+    sscaServiceClientRef
+  } = useOpenApiClients(globalResponseHandler, accountId)
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -101,12 +191,12 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     SecureStorage.set('acctId', accountId)
   }, [accountId])
 
-  useEffect(() => {
-    const token = SessionToken.getToken()
-    if (!token) {
-      forceLogout()
-    }
-  }, [forceLogout])
+  // useEffect(() => {
+  //   const token = SessionToken.getToken()
+  //   if (!token) {
+  //     forceLogout()
+  //   }
+  // }, [forceLogout])
 
   useEffect(() => {
     if (refreshTokenResponse?.resource) {
@@ -116,64 +206,34 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     }
   }, [refreshTokenResponse])
 
-  const checkAndRefreshToken = (): void => {
+  //  calling Refreshtoken api on REFRESH_TIME_PERCENTAGE of token expiry time,
+  // like if the token expiry time (i.e, difference between expiry time  and issued time ) is
+  // 24 hours we would be calling the refresh token api on every 1.2 hours, if refresh time  is below LEAST_REFRESH_TIME
+  // we would round it off to LEAST_REFRESH_TIME of  if more than MAX_REFRESH_TIME then will round it off to MAX_REFRESH_TIME
+  const checkAndRefreshToken = debounce(function checkAndRefreshTokenFun() {
     const currentTime = Date.now()
-    const lastTokenSetTime = SessionToken.getLastTokenSetTime() as number
-    const refreshInterval = 60 * 60 * 1000 // one hour in milliseconds
-    if (currentTime - lastTokenSetTime > refreshInterval && !refreshingToken) {
-      refreshToken()
+    const milliSecondsToMinutes = 1000 * 60 // 1000 milliseconds is equal to 1 second, 60 seconds equal to one minute
+    const lastTokenSetTime = SessionToken.getLastTokenTimings(TokenTimings.Creation) as number
+    const lastTokenExpiryTime = SessionToken.getLastTokenTimings(TokenTimings.Expiration) as number
+    let refreshInterval = (lastTokenExpiryTime - lastTokenSetTime) / milliSecondsToMinutes
+    refreshInterval = (refreshInterval / 100) * REFRESH_TIME_PERCENTAGE_IN_MINUTES
+    const differenceInMinutes = (currentTime - lastTokenSetTime) / milliSecondsToMinutes
+    refreshInterval = Math.min(Math.max(refreshInterval, LEAST_REFRESH_TIME_MINUTES), MAX_REFRESH_TIME_MINUTES)
+    if (differenceInMinutes > refreshInterval && !refreshingToken) {
+      refreshToken({ queryParams: getQueryParams() as any, requestOptions: getRequestOptions() })
     }
-  }
+  }, 2000)
+  useEffect(() => {
+    // considering user to be active when user is either doing mouse or key board events
+    document?.addEventListener('mousedown', checkAndRefreshToken)
+    document?.addEventListener('keypress', checkAndRefreshToken)
 
-  const globalResponseHandler = (response: Response): void => {
-    if (!response.ok) {
-      switch (response.status) {
-        case 401: {
-          forceLogout()
-          return
-        }
-        case 400: {
-          response
-            .clone()
-            .json()
-            .then(res => {
-              const notWhiteListedMessage = res?.responseMessages?.find(
-                (message: any) => message?.code === 'NOT_WHITELISTED_IP'
-              )
-              if (notWhiteListedMessage) {
-                showError(notWhiteListedMessage.message)
-                forceLogout()
-              }
-            })
-            .catch(() => {
-              window.bugsnagClient?.notify?.(
-                new Error('Error handling 400 status code'),
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                function (event: any) {
-                  event.severity = 'error'
-                  event.setUser(username)
-                  event.addMetadata('400 Details', {
-                    url: response.url,
-                    status: response.status,
-                    accountId
-                  })
-                }
-              )
-            })
-          return
-        }
-        case 429: {
-          response
-            .clone()
-            .json()
-            .then(res => {
-              showError(res.message || TOO_MANY_REQUESTS_MESSAGE)
-            })
-        }
-      }
+    const removeEventListners = () => {
+      document?.removeEventListener('mousedown', checkAndRefreshToken)
+      document?.removeEventListener('keypress', checkAndRefreshToken)
     }
-    checkAndRefreshToken()
-  }
+    return removeEventListners
+  }, [])
 
   useGlobalEventListener('PROMISE_API_RESPONSE', ({ detail }) => {
     if (detail && detail.response) {
@@ -182,24 +242,12 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   })
 
   const updateHeadersForOpenApiClients = (headers: Record<string, any>): void => {
-    auditServiceClientObjRef.current?.updateHeaders(headers)
+    auditServiceClientRef.current?.updateHeaders(headers)
+    idpServiceClientRef.current?.updateHeaders(headers)
+    pipelineServiceClientRef.current?.updateHeaders(headers)
+    ngManagerServiceClientRef.current?.updateHeaders(headers)
+    sscaServiceClientRef.current?.updateHeaders(headers)
   }
-
-  useEffect(() => {
-    // Initializing open-api clients
-    auditServiceClientObjRef.current = new AuditServiceClient({
-      responseInterceptor: response => {
-        globalResponseHandler(response.clone())
-        return response
-      },
-      urlInterceptor: (url: string) => {
-        return window.getApiBaseUrl(url)
-      },
-      getRequestHeaders: () => {
-        return { token: SessionToken.getToken(), 'Harness-Account': accountId }
-      }
-    })
-  }, [accountId])
 
   return (
     <RestfulProvider

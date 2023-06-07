@@ -77,7 +77,8 @@ function _ExecutionListSubHeader(
   const {
     supportingGitSimplification,
     isGitSyncEnabled: isGitSyncEnabledForProject,
-    gitSyncEnabledOnlyForFF
+    gitSyncEnabledOnlyForFF,
+    publicAccessEnabled
   } = useAppStore()
   const { borderless = true, onBranchChange, selectedBranch } = props
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
@@ -144,27 +145,30 @@ function _ExecutionListSubHeader(
               {getString('runPipelineText')}
             </RbacButton>
           )}
-          <Checkbox
-            font={{ size: 'small', weight: 'semi-bold' }}
-            color={Color.GREY_800}
-            label={getString(
-              (() => {
-                switch (module) {
-                  case 'ci':
-                    return 'pipeline.myBuildsText'
-                  case 'cd':
-                    return 'pipeline.myDeploymentsText'
-                  case 'sto':
-                    return 'pipeline.mySecurityTestsText'
-                  default:
-                    return 'pipeline.myExecutionsText'
-                }
-              })()
-            )}
-            checked={queryParams.myDeployments}
-            onChange={e => changeQueryParam('myDeployments', e.currentTarget.checked)}
-            className={cx(css.myDeploymentsCheckbox, { [css.selected]: queryParams.myDeployments })}
-          />
+
+          {!publicAccessEnabled && (
+            <Checkbox
+              font={{ size: 'small', weight: 'semi-bold' }}
+              color={Color.GREY_800}
+              label={getString(
+                (() => {
+                  switch (module) {
+                    case 'ci':
+                      return 'pipeline.myBuildsText'
+                    case 'cd':
+                      return 'pipeline.myDeploymentsText'
+                    case 'sto':
+                      return 'pipeline.mySecurityTestsText'
+                    default:
+                      return 'pipeline.myExecutionsText'
+                  }
+                })()
+              )}
+              checked={queryParams.myDeployments}
+              onChange={e => changeQueryParam('myDeployments', e.currentTarget.checked)}
+              className={cx(css.myDeploymentsCheckbox, { [css.selected]: queryParams.myDeployments })}
+            />
+          )}
 
           {props.showBranchFilter && isPipelineRemote && !isGitSyncEnabled ? (
             <BranchFilter
