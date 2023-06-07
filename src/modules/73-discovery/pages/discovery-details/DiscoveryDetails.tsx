@@ -22,7 +22,14 @@ const DiscoveryDetails: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { getString } = useStrings()
 
-  const { data: discoveryAgentData } = useGetInfra({ infraID: dAgentId })
+  const { data: discoveryAgentData } = useGetInfra({
+    infraID: dAgentId,
+    queryParams: {
+      accountIdentifier: accountId,
+      organizationIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier
+    }
+  })
 
   const date = moment(discoveryAgentData?.updatedAt).format('MMM DD, YYYY hh:mm A')
 
@@ -92,7 +99,7 @@ const DiscoveryDetails: React.FC = () => {
                 {
                   id: 'network details',
                   title: 'Network Details',
-                  panel: <div>Network Details</div>
+                  panel: <div>Disovery History</div>
                 },
                 {
                   id: 'settings',
