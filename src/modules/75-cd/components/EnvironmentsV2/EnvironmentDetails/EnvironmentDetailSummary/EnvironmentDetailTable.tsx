@@ -278,6 +278,7 @@ const columnsProperties = {
       full: '30%'
     }
   },
+
   latestBadge: {
     width: {
       summary: '0%',
