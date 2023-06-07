@@ -45,11 +45,7 @@ useGetAccountNGMock.mockImplementation(() => {
 describe('Side nav', () => {
   test('test expanded side nav', () => {
     const { container } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          SPG_SIDENAV_COLLAPSE: true
-        }}
-      >
+      <TestWrapper>
         <SideNav title="title" subtitle="sub title" />
       </TestWrapper>
     )
@@ -59,11 +55,7 @@ describe('Side nav', () => {
 
   test('test collapsed side nav', () => {
     const { container } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          SPG_SIDENAV_COLLAPSE: true
-        }}
-      >
+      <TestWrapper>
         <SideNav collapseByDefault />
       </TestWrapper>
     )
@@ -73,11 +65,7 @@ describe('Side nav', () => {
 
   test('click on collapse button', async () => {
     const { container } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          SPG_SIDENAV_COLLAPSE: true
-        }}
-      >
+      <TestWrapper>
         <SideNav />
       </TestWrapper>
     )
@@ -91,11 +79,7 @@ describe('Side nav', () => {
 
   test('click on rezie button when expanded', async () => {
     const { container } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          SPG_SIDENAV_COLLAPSE: true
-        }}
-      >
+      <TestWrapper>
         <SideNav collapseByDefault />
       </TestWrapper>
     )
@@ -109,12 +93,7 @@ describe('Side nav', () => {
 
   test('test launch button', async () => {
     const { queryByText } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          SPG_SIDENAV_COLLAPSE: true,
-          PLG_ENABLE_CROSS_GENERATION_ACCESS: true
-        }}
-      >
+      <TestWrapper>
         <SideNav collapseByDefault launchButtonText="launch button" launchButtonRedirectUrl="testUrl" />
       </TestWrapper>
     )
@@ -125,7 +104,6 @@ describe('Side nav', () => {
     const { container, queryByText } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          SPG_SIDENAV_COLLAPSE: true,
           PLG_ENABLE_CROSS_GENERATION_ACCESS: true
         }}
       >
