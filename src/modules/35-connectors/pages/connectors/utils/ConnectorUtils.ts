@@ -2424,6 +2424,28 @@ export const buildDynatracePayload = (formData: FormData) => {
   }
 }
 
+const AUTH_TYPE_VS_PAYLOAD_GETTER = {
+  [AuthTypes.USER_PASSWORD]: (formData: FormData) => ({
+    username: formData?.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
+    usernameRef: formData?.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
+    passwordRef: formData?.passwordRef?.referenceString
+  }),
+  [AuthTypes.ADFS]: (formData: FormData) => ({
+    resourceIdRef: formData?.resourceIdRef?.referenceString,
+    clientIdRef: formData?.clientIdRef?.referenceString,
+    certificateRef: formData?.certificateRef?.referenceString,
+    privateKeyRef: formData?.privateKeyRef?.referenceString,
+    adfsUrl: formData?.adfsUrl
+  }),
+  [AuthTypes.REFRESH_TOKEN]: (formData: FormData) => ({
+    tokenUrl: formData?.tokenUrl,
+    clientIdRef: formData?.clientIdRef?.referenceString,
+    refreshTokenRef: formData?.refreshTokenRef?.referenceString,
+    clientSecretRef: formData?.clientSecretRef?.referenceString,
+    scope: formData?.scope
+  })
+}
+
 export const buildServiceNowPayload = (formData: FormData) => {
   const savedData = {
     ...pick(formData, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'description', 'tags']),
@@ -2433,33 +2455,39 @@ export const buildServiceNowPayload = (formData: FormData) => {
       serviceNowUrl: formData.serviceNowUrl,
       auth: {
         type: formData.authType,
-        spec: {
-          username: formData?.username?.type === ValueType.TEXT ? formData.username?.value : undefined,
-          usernameRef: formData?.username?.type === ValueType.ENCRYPTED ? formData.username?.value : undefined,
-          passwordRef: formData?.passwordRef?.referenceString,
-          resourceIdRef: formData?.resourceIdRef?.referenceString,
-          clientIdRef: formData?.clientIdRef?.referenceString,
-          certificateRef: formData?.certificateRef?.referenceString,
-          privateKeyRef: formData?.privateKeyRef?.referenceString,
-          adfsUrl: formData?.adfsUrl
-        }
+        spec: defaultTo(AUTH_TYPE_VS_PAYLOAD_GETTER[formData.authType]?.(formData), {})
       }
     }
   }
 
-  if (formData.authType === AuthTypes.USER_PASSWORD) {
-    delete savedData.spec.auth.spec.resourceIdRef
-    delete savedData.spec.auth.spec.clientIdRef
-    delete savedData.spec.auth.spec.certificateRef
-    delete savedData.spec.auth.spec.privateKeyRef
-    delete savedData.spec.auth.spec.adfsUrl
-  } else {
-    delete savedData.spec.auth.spec.username
-    delete savedData.spec.auth.spec.usernameRef
-    delete savedData.spec.auth.spec.passwordRef
-  }
-
   return { connector: savedData }
+}
+
+const AUTH_TYPE_VS_FORM_DATA_GETTER = {
+  [AuthTypes.USER_PASSWORD]: async (connectorInfo: ConnectorInfoDTO, scopeQueryParams: GetSecretV2QueryParams) => ({
+    username:
+      connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef
+        ? {
+            value: connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef,
+            type: connectorInfo.spec.auth.spec?.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+    passwordRef: await setSecretField(connectorInfo.spec.auth.spec?.passwordRef, scopeQueryParams)
+  }),
+  [AuthTypes.ADFS]: async (connectorInfo: ConnectorInfoDTO, scopeQueryParams: GetSecretV2QueryParams) => ({
+    resourceIdRef: await setSecretField(connectorInfo.spec.auth.spec?.resourceIdRef, scopeQueryParams),
+    clientIdRef: await setSecretField(connectorInfo.spec.auth.spec?.clientIdRef, scopeQueryParams),
+    certificateRef: await setSecretField(connectorInfo.spec.auth.spec?.certificateRef, scopeQueryParams),
+    privateKeyRef: await setSecretField(connectorInfo.spec.auth.spec?.privateKeyRef, scopeQueryParams),
+    adfsUrl: connectorInfo.spec.auth.spec?.adfsUrl
+  }),
+  [AuthTypes.REFRESH_TOKEN]: async (connectorInfo: ConnectorInfoDTO, scopeQueryParams: GetSecretV2QueryParams) => ({
+    clientIdRef: await setSecretField(connectorInfo.spec.auth.spec?.clientIdRef, scopeQueryParams),
+    clientSecretRef: await setSecretField(connectorInfo.spec.auth.spec?.clientSecretRef, scopeQueryParams),
+    refreshTokenRef: await setSecretField(connectorInfo.spec.auth.spec?.refreshTokenRef, scopeQueryParams),
+    tokenUrl: connectorInfo.spec.auth.spec?.tokenUrl,
+    scope: connectorInfo.spec.auth.spec?.scope
+  })
 }
 export const setupServiceNowFormData = async (
   connectorInfo: ConnectorInfoDTO,
@@ -2471,40 +2499,11 @@ export const setupServiceNowFormData = async (
     orgIdentifier: connectorInfo.orgIdentifier
   }
 
-  const formData = {
+  return {
     serviceNowUrl: connectorInfo.spec.serviceNowUrl,
     authType: connectorInfo.spec.auth.type,
-    username:
-      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD &&
-      (connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef)
-        ? {
-            value: connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef,
-            type: connectorInfo.spec.auth.spec?.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
-          }
-        : undefined,
-    passwordRef:
-      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
-        ? await setSecretField(connectorInfo.spec.auth.spec?.passwordRef, scopeQueryParams)
-        : undefined,
-    resourceIdRef:
-      connectorInfo.spec.auth.type === AuthTypes.ADFS
-        ? await setSecretField(connectorInfo.spec.auth.spec?.resourceIdRef, scopeQueryParams)
-        : undefined,
-    clientIdRef:
-      connectorInfo.spec.auth.type === AuthTypes.ADFS
-        ? await setSecretField(connectorInfo.spec.auth.spec?.clientIdRef, scopeQueryParams)
-        : undefined,
-    certificateRef:
-      connectorInfo.spec.auth.type === AuthTypes.ADFS
-        ? await setSecretField(connectorInfo.spec.auth.spec?.certificateRef, scopeQueryParams)
-        : undefined,
-    privateKeyRef:
-      connectorInfo.spec.auth.type === AuthTypes.ADFS
-        ? await setSecretField(connectorInfo.spec.auth.spec?.privateKeyRef, scopeQueryParams)
-        : undefined,
-    adfsUrl: connectorInfo.spec.auth.type === AuthTypes.ADFS ? connectorInfo.spec.auth.spec?.adfsUrl : undefined
+    ...AUTH_TYPE_VS_FORM_DATA_GETTER[connectorInfo.spec.auth.type]?.(connectorInfo, scopeQueryParams)
   }
-  return formData
 }
 
 export const setupAzureKeyVaultFormData = async (

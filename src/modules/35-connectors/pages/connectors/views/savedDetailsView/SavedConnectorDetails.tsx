@@ -962,6 +962,22 @@ const getServiceNowSchema = (connector: ConnectorInfoDTO): Array<ActivityDetails
     {
       label: 'connectors.serviceNow.adfsUrl',
       value: connector?.spec?.auth?.spec?.adfsUrl
+    },
+    {
+      label: 'common.clientSecret',
+      value: connector?.spec?.auth?.spec?.clientSecretRef
+    },
+    {
+      label: 'connectors.serviceNow.refreshToken',
+      value: connector?.spec?.auth?.spec?.refreshTokenRef
+    },
+    {
+      label: 'connectors.serviceNow.tokenUrl',
+      value: connector?.spec?.auth?.spec?.tokenUrl
+    },
+    {
+      label: 'common.scopeLabel',
+      value: connector?.spec?.auth?.spec?.scope
     }
   ]
 }

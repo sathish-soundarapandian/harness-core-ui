@@ -23,7 +23,8 @@ export const AuthTypes = {
   PERSONAL_ACCESS_TOKEN: 'PersonalAccessToken',
   ADFS: 'AdfsClientCredentialsWithCertificate',
   API_TOKEN: 'ApiToken',
-  BEARER_TOKEN_RANCHER: 'BearerToken'
+  BEARER_TOKEN_RANCHER: 'BearerToken',
+  REFRESH_TOKEN: 'RefreshTokenGrantType',
 }
 
 export enum GitAuthTypes {

@@ -26,7 +26,8 @@ import cx from 'classnames'
 import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
-
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import { setupServiceNowFormData, useGetHelpPanel } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Connectors } from '@connectors/constants'
@@ -47,6 +48,10 @@ interface ServiceNowFormData {
   certificateRef: SecretReferenceInterface | void
   privateKeyRef: SecretReferenceInterface | void
   adfsUrl: string
+  tokenUrl: string
+  refreshTokenRef: SecretReferenceInterface | void
+  clientSecretRef: SecretReferenceInterface | void
+  scope: string
 }
 
 interface AuthenticationProps {
@@ -73,7 +78,11 @@ const defaultInitialFormData: ServiceNowFormData = {
   clientIdRef: undefined,
   certificateRef: undefined,
   privateKeyRef: undefined,
-  adfsUrl: ''
+  adfsUrl: '',
+  tokenUrl: '',
+  refreshTokenRef: undefined,
+  clientSecretRef: undefined,
+  scope: ''
 }
 
 const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & AuthenticationProps> = props => {
@@ -82,11 +91,13 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
   const [initialValues, setInitialValues] = React.useState(defaultInitialFormData)
   const [loadConnector] = React.useState(false)
 
+  const isServiceNowRefreshTokenAuthEnabled = useFeatureFlag(FeatureFlag.CDS_SERVICENOW_REFRESH_TOKEN_AUTH)
+
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = React.useState(true && props.isEditMode)
   const { getString } = useStrings()
 
-  const authOptions: SelectOption[] = React.useMemo(
-    () => [
+  const authOptions: SelectOption[] = React.useMemo(() => {
+    const baseAuthOptions = [
       {
         label: getString('connectors.serviceNow.usernamePasswordAPIKey'),
         value: AuthTypes.USER_PASSWORD
@@ -95,9 +106,17 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
         label: getString('connectors.serviceNow.adfs'),
         value: AuthTypes.ADFS
       }
-    ],
-    []
-  )
+    ]
+
+    if (isServiceNowRefreshTokenAuthEnabled) {
+      return [
+        ...baseAuthOptions,
+        { label: getString('connectors.serviceNow.refreshToken'), value: AuthTypes.REFRESH_TOKEN }
+      ]
+    }
+
+    return baseAuthOptions
+  }, [isServiceNowRefreshTokenAuthEnabled])
 
   React.useEffect(() => {
     if (loadingConnectorSecrets) {
@@ -158,7 +177,7 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
             otherwise: Yup.object().nullable()
           }),
           clientIdRef: Yup.object().when('authType', {
-            is: val => val === AuthTypes.ADFS,
+            is: val => val === AuthTypes.ADFS || val === AuthTypes.REFRESH_TOKEN,
             then: Yup.object().required(getString('connectors.validation.clientID')),
             otherwise: Yup.object().nullable()
           }),
@@ -179,6 +198,19 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
               .required(getString('connectors.validation.adfsUrl'))
               .url(getString('validation.urlIsNotValid')),
             otherwise: Yup.string().nullable()
+          }),
+          tokenUrl: Yup.string().when('authType', {
+            is: val => val === AuthTypes.REFRESH_TOKEN,
+            then: Yup.string()
+              .trim()
+              .required(getString('connectors.validation.tokenUrl'))
+              .url(getString('validation.urlIsNotValid')),
+            otherwise: Yup.string().nullable()
+          }),
+          refreshTokenRef: Yup.object().when('authType', {
+            is: val => val === AuthTypes.REFRESH_TOKEN,
+            then: Yup.object().required(getString('connectors.validation.refreshToken')),
+            otherwise: Yup.object().nullable()
           })
         })}
         onSubmit={stepData => {
@@ -253,6 +285,43 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
                       name="adfsUrl"
                       placeholder={getString('UrlLabel')}
                       label={getString('connectors.serviceNow.adfsUrl')}
+                      className={css.detailsFormWidth}
+                    />
+                  </>
+                ) : null}
+                {formik.values.authType === AuthTypes.REFRESH_TOKEN ? (
+                  <>
+                    <Layout.Horizontal>
+                      <Layout.Vertical className={css.detailsFormWidth} margin={{ right: 'xxlarge' }}>
+                        <SecretInput
+                          name={'clientIdRef'}
+                          label={getString('connectors.serviceNow.clientID')}
+                          isMultiTypeSelect
+                        />
+                        <SecretInput
+                          name={'clientSecretRef'}
+                          label={getString('common.clientSecret')}
+                          isMultiTypeSelect
+                        />
+                      </Layout.Vertical>
+                      <Layout.Vertical className={css.detailsFormWidth}>
+                        <SecretInput
+                          name={'refreshTokenRef'}
+                          label={getString('connectors.serviceNow.refreshToken')}
+                          isMultiTypeSelect
+                        />
+                      </Layout.Vertical>
+                    </Layout.Horizontal>
+                    <FormInput.Text
+                      name="tokenUrl"
+                      placeholder={getString('UrlLabel')}
+                      label={getString('connectors.serviceNow.tokenUrl')}
+                      className={css.detailsFormWidth}
+                    />
+                    <FormInput.Text
+                      name="scope"
+                      placeholder={getString('connectors.serviceNow.scopePlaceholder')}
+                      label={getString('common.scopeLabel')}
                       className={css.detailsFormWidth}
                     />
                   </>
