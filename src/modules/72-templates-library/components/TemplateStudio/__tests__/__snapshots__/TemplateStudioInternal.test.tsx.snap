@@ -23,7 +23,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for new template with gi
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/main-dashboard"
+                href="/account/dummy/home/projects/all"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -44,7 +44,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for new template with gi
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
                 >
-                  common.home
+                  projectsText
                 </p>
               </a>
               <span
@@ -403,7 +403,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for new template without
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/main-dashboard"
+                href="/account/dummy/home/projects/all"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -424,7 +424,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for new template without
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
                 >
-                  common.home
+                  projectsText
                 </p>
               </a>
               <span
@@ -783,7 +783,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for template studio in v
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/main-dashboard"
+                href="/account/dummy/home/projects/all"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -804,7 +804,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for template studio in v
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
                 >
-                  common.home
+                  projectsText
                 </p>
               </a>
               <span

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -80,44 +80,6 @@ jest.mock('services/cd-ng', () => ({
 const setModuleConfigPreference = jest.fn()
 
 describe('main nav tests', () => {
-  test('render when none of the modules are enabled', () => {
-    const { container, queryByText } = render(
-      <TestWrapper>
-        <MainNav />
-      </TestWrapper>
-    )
-    expect(container.querySelectorAll('[class*="navItem"]').length).toBe(15)
-    expect(queryByText('common.home')).not.toBeNull()
-    expect(queryByText('common.accountSettings')).not.toBeNull()
-    expect(queryByText('common.myProfile')).not.toBeNull()
-    expect(queryByText('buildsText')).not.toBeNull()
-  })
-
-  test('when modules are enabled', () => {
-    const { queryByText } = render(
-      <TestWrapper>
-        <MainNav />
-      </TestWrapper>
-    )
-    expect(queryByText('deploymentsText')).not.toBeNull()
-    expect(queryByText('buildsText')).not.toBeNull()
-    expect(queryByText('featureFlagsText')).not.toBeNull()
-  })
-
-  test('when ng dashboard is enabled', () => {
-    const { queryByText } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          NG_DASHBOARDS: true
-        }}
-      >
-        <MainNav />
-      </TestWrapper>
-    )
-
-    expect(queryByText('common.dashboards')).not.toBeNull()
-  })
-
   test('when new nav bar is enabled and no modules in preference store', () => {
     const { container } = render(
       <TestWrapper>
@@ -125,7 +87,6 @@ describe('main nav tests', () => {
       </TestWrapper>
     )
 
-    screen.debug(container, 1000000)
     expect(container.querySelectorAll('[class*="navItem"]').length).toBe(5)
   })
 

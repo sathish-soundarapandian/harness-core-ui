@@ -10,7 +10,7 @@ exports[`RouteWithLayout basic 1`] = `
       Main nav
     </div>
     <div
-      class="main sideNavExpanded"
+      class="main sideNavExpanded newNav"
     >
       <div>
         <div>
@@ -38,6 +38,38 @@ exports[`RouteWithLayout basic 1`] = `
             </p>
           </div>
         </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main sideNavResizeBtn collapse"
+      >
+        <span
+          class="bp3-popover-wrapper"
+        >
+          <span
+            class="bp3-popover-target"
+          >
+            <span
+              class="bp3-icon bp3-icon-symbol-triangle-up StyledProps--main triangle"
+              icon="symbol-triangle-up"
+              tabindex="0"
+            >
+              <svg
+                data-icon="symbol-triangle-up"
+                height="12"
+                viewBox="0 0 16 16"
+                width="12"
+              >
+                <desc>
+                  symbol-triangle-up
+                </desc>
+                <path
+                  d="M12.89 11.56l-3.99-8h-.01c-.17-.32-.5-.55-.89-.55s-.72.23-.89.55H7.1l-4 8h.01c-.06.14-.11.29-.11.45 0 .55.45 1 1 1h8c.55 0 1-.45 1-1 0-.16-.05-.31-.11-.45z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+        </span>
       </div>
     </div>
     <div
@@ -75,7 +107,7 @@ exports[`RouteWithLayout empty 1`] = `
 exports[`RouteWithLayout minimal 1`] = `
 <div>
   <div
-    class="main"
+    class="main flex"
     data-layout="minimal"
   >
     <div>
@@ -106,7 +138,7 @@ exports[`RouteWithLayout that the license store will render the child if the lic
       Main nav
     </div>
     <div
-      class="main sideNavExpanded"
+      class="main sideNavExpanded newNav"
     >
       <div>
         <div>
@@ -134,6 +166,38 @@ exports[`RouteWithLayout that the license store will render the child if the lic
             </p>
           </div>
         </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main sideNavResizeBtn collapse"
+      >
+        <span
+          class="bp3-popover-wrapper"
+        >
+          <span
+            class="bp3-popover-target"
+          >
+            <span
+              class="bp3-icon bp3-icon-symbol-triangle-up StyledProps--main triangle"
+              icon="symbol-triangle-up"
+              tabindex="0"
+            >
+              <svg
+                data-icon="symbol-triangle-up"
+                height="12"
+                viewBox="0 0 16 16"
+                width="12"
+              >
+                <desc>
+                  symbol-triangle-up
+                </desc>
+                <path
+                  d="M12.89 11.56l-3.99-8h-.01c-.17-.32-.5-.55-.89-.55s-.72.23-.89.55H7.1l-4 8h.01c-.06.14-.11.29-.11.45 0 .55.45 1 1 1h8c.55 0 1-.45 1-1 0-.16-.05-.31-.11-.45z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+        </span>
       </div>
     </div>
     <div

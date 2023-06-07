@@ -24,7 +24,7 @@ exports[`Project Page List Create Project and Close 1`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/main-dashboard"
+                href="/account/testAcc/home/projects/all"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -45,7 +45,7 @@ exports[`Project Page List Create Project and Close 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
                 >
-                  common.home
+                  projectsText
                 </p>
               </a>
               <span
@@ -3670,7 +3670,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/main-dashboard"
+                href="/account/testAcc/home/projects/all"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -3691,7 +3691,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
                 >
-                  common.home
+                  projectsText
                 </p>
               </a>
               <span
@@ -7316,7 +7316,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/main-dashboard"
+                href="/account/testAcc/home/projects/all"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -7337,7 +7337,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
                 >
-                  common.home
+                  projectsText
                 </p>
               </a>
               <span
@@ -10962,7 +10962,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/main-dashboard"
+                href="/account/testAcc/home/projects/all"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -10983,7 +10983,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
                 >
-                  common.home
+                  projectsText
                 </p>
               </a>
               <span
