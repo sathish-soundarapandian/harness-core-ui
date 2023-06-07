@@ -5581,6 +5581,7 @@ export interface StringsMap {
   'discovery.agentName': string
   'discovery.approxTime': string
   'discovery.createDiscoveryAgent': string
+  'discovery.createNetworkMap': string
   'discovery.createNewDiscoveryAgent': string
   'discovery.dAgentName': string
   'discovery.discoverServices': string

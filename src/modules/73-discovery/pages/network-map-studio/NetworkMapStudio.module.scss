@@ -5,11 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.header {
-  padding: var(--spacing-large) var(--spacing-xlarge) !important;
-  background: var(--white) !important;
-  border-bottom: 1px solid var(--grey-300);
+.headerIcon {
+  color: var(--primary-7) !important;
 }
+
 .listBody {
   --page-header-height: 146px;
 }

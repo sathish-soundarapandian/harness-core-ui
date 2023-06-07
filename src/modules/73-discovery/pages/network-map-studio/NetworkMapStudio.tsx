@@ -4,20 +4,18 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Icon, Tab, Tabs } from '@harness/uicore'
+import { Icon, Layout, Tab, Tabs, Text, TextInput } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 
 import { useStrings } from 'framework/strings'
 
 import { Page } from '@common/exports'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import routes from '@common/RouteDefinitions'
-import ScopedTitle from '@common/components/Title/ScopedTitle'
 import { accountPathProps } from '@common/utils/routeUtils'
 import SelectService from './views/select-service/SelectService'
 import css from './NetworkMapStudio.module.scss'
@@ -28,10 +26,14 @@ enum StudioTabs {
 }
 
 const NetworkMapStudio: React.FC = () => {
+  const { dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
   const history = useHistory()
-  const createNetworkMapLabel = 'Create Network Map'
+  const createNetworkMapLabel = getString('discovery.createNetworkMap')
+
+  const [toggleEditName, setToggleEditName] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>('Untitled Network Map')
 
   useDocumentTitle(createNetworkMapLabel)
 
@@ -51,20 +53,40 @@ const NetworkMapStudio: React.FC = () => {
       <Page.Header
         breadcrumbs={
           <NGBreadcrumbs
-            links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
+            links={[
+              {
+                url: routes.toDiscovery({ accountId, orgIdentifier, projectIdentifier }),
+                label: getString('common.discovery')
+              },
+              {
+                url: routes.toDiscoveryDetails({ accountId, orgIdentifier, projectIdentifier, dAgentId }),
+                label: dAgentId
+              }
+            ]}
           />
         }
         title={
-          <ScopedTitle
-            title={{
-              [Scope.PROJECT]: createNetworkMapLabel,
-              [Scope.ORG]: createNetworkMapLabel,
-              [Scope.ACCOUNT]: createNetworkMapLabel
-            }}
-          />
+          <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+            <Icon
+              name="code-edit"
+              size={20}
+              className={css.headerIcon}
+              onClick={() => setToggleEditName(prev => !prev)}
+            />
+            {toggleEditName ? (
+              <TextInput
+                defaultValue=""
+                placeholder={title === 'Untitled Network Map' ? 'Network Map Name' : title}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value)}
+              />
+            ) : (
+              <Text color={title === 'Untitled Network Map' ? Color.GREY_200 : Color.GREY_900} font="medium">
+                {title}
+              </Text>
+            )}
+          </Layout.Horizontal>
         }
       />
-
       <Page.Body className={css.listBody}>
         <section className={css.setupShell}>
           <Tabs id="networkMapTabs" onChange={handleTabChange} selectedTabId={StudioTabs.SELECT_SERVICES}>
@@ -78,7 +100,7 @@ const NetworkMapStudio: React.FC = () => {
               height={20}
               size={20}
               margin={{ right: 'small', left: 'small' }}
-              color={'grey400'}
+              color={Color.GREY_400}
               style={{ alignSelf: 'center' }}
             />
             <Tab
