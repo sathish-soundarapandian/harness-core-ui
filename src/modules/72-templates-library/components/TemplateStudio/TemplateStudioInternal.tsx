@@ -309,7 +309,7 @@ export function TemplateStudioInternal(): React.ReactElement {
         orgIdentifier,
         templateIdentifier,
         repoIdentifier,
-        branch,
+        branch: defaultTo(storeMetadata?.branch, branch),
         versionLabel: defaultTo(template.versionLabel, versionLabel),
         getDefaultFromOtherRepo: true
       }
