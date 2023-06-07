@@ -52,7 +52,8 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
     gitSyncEnabledOnlyForFF,
-    supportingGitSimplification
+    supportingGitSimplification,
+    publicAccessEnabled
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const location = useLocation()
@@ -272,6 +273,90 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
     }
   }
 
+  const nonPublicLinks = [
+    {
+      label: getString('pipelineStudio'),
+      to: isYAMLSimplicationEnabledForCI
+        ? routes.toPipelineStudioV1({
+            orgIdentifier,
+            projectIdentifier,
+            pipelineIdentifier,
+            accountId,
+            module,
+            connectorRef,
+            repoIdentifier,
+            repoName,
+            branch,
+            storeType
+          })
+        : routes.toPipelineStudio({
+            orgIdentifier,
+            projectIdentifier,
+            pipelineIdentifier,
+            accountId,
+            module,
+            connectorRef,
+            repoIdentifier,
+            repoName,
+            branch,
+            storeType
+          })
+    },
+    {
+      label: getString('inputSetsText'),
+      to: routes.toInputSetList({
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
+        accountId,
+        module,
+        connectorRef,
+        repoIdentifier,
+        repoName,
+        branch,
+        storeType
+      }),
+      disabled: pipelineIdentifier === DefaultNewPipelineId
+    },
+    {
+      label: getString('common.triggersLabel'),
+      to: routes.toTriggersPage({
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
+        accountId,
+        module,
+        connectorRef,
+        repoIdentifier,
+        repoName,
+        branch,
+        storeType
+      }),
+      disabled: pipelineIdentifier === DefaultNewPipelineId || triggerTabDisabled
+    }
+  ]
+
+  const publicLinks = [
+    {
+      label: getString('executionHeaderText'),
+      to: routes.toPipelineDeploymentList({
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
+        accountId,
+        module,
+        connectorRef,
+        repoIdentifier,
+        repoName,
+        branch,
+        storeType
+      }),
+      disabled: pipelineIdentifier === DefaultNewPipelineId
+    }
+  ]
+
+  const navLinks = [...(!publicAccessEnabled ? nonPublicLinks : []), ...publicLinks]
+
   return (
     <>
       <BannerEOL isVisible={showBanner} />
@@ -314,89 +399,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
             )}
           </Layout.Vertical>
         }
-        toolbar={
-          <TabNavigation
-            size={'small'}
-            links={[
-              {
-                label: getString('pipelineStudio'),
-                to: isYAMLSimplicationEnabledForCI
-                  ? routes.toPipelineStudioV1({
-                      orgIdentifier,
-                      projectIdentifier,
-                      pipelineIdentifier,
-                      accountId,
-                      module,
-                      connectorRef,
-                      repoIdentifier,
-                      repoName,
-                      branch,
-                      storeType
-                    })
-                  : routes.toPipelineStudio({
-                      orgIdentifier,
-                      projectIdentifier,
-                      pipelineIdentifier,
-                      accountId,
-                      module,
-                      connectorRef,
-                      repoIdentifier,
-                      repoName,
-                      branch,
-                      storeType
-                    })
-              },
-              {
-                label: getString('inputSetsText'),
-                to: routes.toInputSetList({
-                  orgIdentifier,
-                  projectIdentifier,
-                  pipelineIdentifier,
-                  accountId,
-                  module,
-                  connectorRef,
-                  repoIdentifier,
-                  repoName,
-                  branch,
-                  storeType
-                }),
-                disabled: pipelineIdentifier === DefaultNewPipelineId
-              },
-              {
-                label: getString('common.triggersLabel'),
-                to: routes.toTriggersPage({
-                  orgIdentifier,
-                  projectIdentifier,
-                  pipelineIdentifier,
-                  accountId,
-                  module,
-                  connectorRef,
-                  repoIdentifier,
-                  repoName,
-                  branch,
-                  storeType
-                }),
-                disabled: pipelineIdentifier === DefaultNewPipelineId || triggerTabDisabled
-              },
-              {
-                label: getString('executionHeaderText'),
-                to: routes.toPipelineDeploymentList({
-                  orgIdentifier,
-                  projectIdentifier,
-                  pipelineIdentifier,
-                  accountId,
-                  module,
-                  connectorRef,
-                  repoIdentifier,
-                  repoName,
-                  branch,
-                  storeType
-                }),
-                disabled: pipelineIdentifier === DefaultNewPipelineId
-              }
-            ]}
-          />
-        }
+        toolbar={<TabNavigation size={'small'} links={navLinks} />}
       />
       <Page.Body className={isPipelineStudioV0Route ? css.rightMargin : ''}>{children}</Page.Body>
     </>

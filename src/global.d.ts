@@ -91,6 +91,7 @@ declare interface Window {
   onYouTubeIframeAPIReady?: () => void
   getIP?: (ipJson: { ip: string }) => void
   currentIP?: string | undefined
+  publicAccessOnAccount?: boolean
 }
 
 declare interface WindowEventMap {

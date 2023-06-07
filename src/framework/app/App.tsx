@@ -191,12 +191,12 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     SecureStorage.set('acctId', accountId)
   }, [accountId])
 
-  useEffect(() => {
-    const token = SessionToken.getToken()
-    if (!token) {
-      forceLogout()
-    }
-  }, [forceLogout])
+  // useEffect(() => {
+  //   const token = SessionToken.getToken()
+  //   if (!token) {
+  //     forceLogout()
+  //   }
+  // }, [forceLogout])
 
   useEffect(() => {
     if (refreshTokenResponse?.resource) {
