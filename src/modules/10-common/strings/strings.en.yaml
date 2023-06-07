@@ -1410,6 +1410,7 @@ selectProject: Select Project
 googleCloudPlatform: Google Cloud Platform
 updated: Updated
 python: Python
+networkMap: Network Map
 successfullyAdded: Successfully added
 successfullyUpdated: Successfully updated
 errorOccured: 'Error occured while {{verb}} {{entity}}'

@@ -179,9 +179,7 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
             padding={{ top: 'xxlarge', left: 'xlarge', right: 'xlarge', bottom: 'xxlarge' }}
           >
             <Layout.Horizontal flex={{ justifyContent: 'space-between' }} margin={{ bottom: 'large' }}>
-              <Text font={{ variation: FontVariation.H5, weight: 'semi-bold' }}>
-                {getString('discovery.networkMap')}
-              </Text>
+              <Text font={{ variation: FontVariation.H5, weight: 'semi-bold' }}>{getString('common.networkMap')}</Text>
               <Text
                 font={{ variation: FontVariation.SMALL_BOLD }}
                 color={Color.PRIMARY_7}

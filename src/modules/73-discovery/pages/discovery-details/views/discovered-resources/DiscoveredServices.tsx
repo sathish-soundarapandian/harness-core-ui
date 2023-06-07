@@ -66,9 +66,9 @@ const ThreeDotMenu: Renderer<CellProps<DatabaseServiceCollection>> = () => (
 )
 
 const DiscoveredServices: React.FC = () => {
-  const { infraId } = useParams<DiscoveryPathProps & ModulePathParams>()
+  const { dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { getString } = useStrings()
-  const { data: serviceList, loading: serviceListLoader } = useListService({ infra_id: infraId })
+  const { data: serviceList, loading: serviceListLoader } = useListService({ infraID: dAgentId })
 
   return (
     <>

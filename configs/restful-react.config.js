@@ -26,7 +26,7 @@ module.exports = {
   },
   'servicediscovery': {
     output: 'src/services/servicediscovery/index.tsx',
-    url: 'http://localhost:8888/swagger/doc.json',
+    url: 'http://104.198.104.46/servicediscovery/swagger/doc.json',
     transformer: 'scripts/swagger-transform.js',
     customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps, mutateUsingFetch, MutateUsingFetchProps } from "../config";`,
     customProps: {

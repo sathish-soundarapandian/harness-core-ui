@@ -19,10 +19,10 @@ import DiscoveredServices from './views/discovered-resources/DiscoveredServices'
 import css from './DiscoveryDetails.module.scss'
 
 const DiscoveryDetails: React.FC = () => {
-  const { accountId, orgIdentifier, projectIdentifier, infraId } = useParams<DiscoveryPathProps & ModulePathParams>()
+  const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { getString } = useStrings()
 
-  const { data: discoveryAgentData } = useGetInfra({ infra_id: infraId })
+  const { data: discoveryAgentData } = useGetInfra({ infraID: dAgentId })
 
   const date = moment(discoveryAgentData?.updatedAt).format('MMM DD, YYYY hh:mm A')
 

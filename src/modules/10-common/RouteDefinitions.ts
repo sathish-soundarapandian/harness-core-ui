@@ -416,8 +416,8 @@ const routes = {
   ),
 
   toDiscoveryDetails: withAccountId(
-    ({ orgIdentifier, projectIdentifier, infraId, module }: Partial<DiscoveryPathProps & ModulePathParams>) => {
-      const path = `resources/discovery/${infraId}`
+    ({ orgIdentifier, projectIdentifier, dAgentId, module }: Partial<DiscoveryPathProps & ModulePathParams>) => {
+      const path = `resources/discovery/${dAgentId}`
       return getScopeBasedRoute({
         scope: {
           orgIdentifier,
@@ -429,9 +429,9 @@ const routes = {
     }
   ),
 
-  toNetworkMapOverview: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
-      const path = `resources/discovery/overview`
+  toCreateNetworkMap: withAccountId(
+    ({ orgIdentifier, projectIdentifier, dAgentId, module }: Partial<DiscoveryPathProps & ModulePathParams>) => {
+      const path = `resources/discovery/${dAgentId}/create-network-map`
       return getScopeBasedRoute({
         scope: {
           orgIdentifier,

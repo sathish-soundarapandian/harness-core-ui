@@ -23,6 +23,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String as LocaleString } from 'framework/strings'
 import DiscoveryDetails from './pages/discovery-details/DiscoveryDetails'
 import DiscoveryPage from './pages/home/DiscoveryPage'
+import NetworkMapStudio from './pages/network-map-studio/NetworkMapStudio'
 
 // const platformLabel = 'common.resourceCenter.ticketmenu.platform'
 // Enable when BE adds support for Network Map Audit
@@ -46,6 +47,13 @@ export default (
     >
       <DiscoveryDetails />
     </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routes.toCreateNetworkMap({ ...accountPathProps, ...discoveryPathProps })}
+      exact
+    >
+      <NetworkMapStudio />
+    </RouteWithLayout>
   </>
 )
 
@@ -65,7 +73,7 @@ export const DiscoveryRouteDestinations: React.FC<{
 
     RbacFactory.registerResourceTypeHandler(ResourceType.NETWORK_MAP, {
       icon: 'chaos-service-discovery',
-      label: 'discovery.networkMap',
+      label: 'common.networkMap',
       category: ResourceCategory.DISCOVERY,
       permissionLabels: {
         [PermissionIdentifier.VIEW_NETWORK_MAP]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -92,9 +100,18 @@ export const DiscoveryRouteDestinations: React.FC<{
         licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
         path={routes.toDiscoveryDetails({ ...accountPathProps, ...discoveryPathProps, ...moduleParams })}
-        pageName={PAGE_NAME.NetworkMapOverview}
+        pageName={PAGE_NAME.DiscoveryDetails}
       >
         <DiscoveryDetails />
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toCreateNetworkMap({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+        pageName={PAGE_NAME.CreateNetworkMap}
+      >
+        <NetworkMapStudio />
       </RouteWithLayout>
     </>
   )

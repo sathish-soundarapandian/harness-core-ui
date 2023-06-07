@@ -69,7 +69,7 @@ export interface GitOpsAppPathProps extends ProjectPathProps {
 }
 
 export interface DiscoveryPathProps extends ProjectPathProps {
-  infraId: string
+  dAgentId: string
   discoveryId: string
 }
 
