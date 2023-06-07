@@ -94,7 +94,11 @@ export function TemplatePipelineCanvas(): React.ReactElement {
     if (storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)) {
       return
     }
-    const templateGitBranches = extractGitBranchUsingTemplateRef(pipeline, '')
+    const templateGitBranches = extractGitBranchUsingTemplateRef(
+      resolvedPipeline?.stages as StageElementWrapperConfig,
+      ''
+    )
+
     getTemplateTypesByRef(
       {
         accountIdentifier: queryParams.accountId,

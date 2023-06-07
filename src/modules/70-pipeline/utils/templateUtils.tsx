@@ -17,7 +17,8 @@ import type {
   TemplateLinkConfig,
   TemplateStepNode,
   Failure,
-  Error
+  Error,
+  StageElementWrapperConfig
 } from 'services/pipeline-ng'
 import {
   getTemplatePromise,
@@ -62,7 +63,7 @@ export type TemplateDetailsResponseWrapper = Omit<TemplateDetailsResponse, 'gitD
 }
 
 export const extractGitBranchUsingTemplateRef = (
-  pipeline?: PipelineInfoConfig,
+  pipeline?: PipelineInfoConfig | StageElementWrapperConfig,
   branch?: string
 ): { [key: string]: string } => {
   let tempBranch = branch as string
