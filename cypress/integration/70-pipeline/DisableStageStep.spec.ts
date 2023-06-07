@@ -42,5 +42,11 @@ describe('Enable/disable stage/step execution', () => {
       'pipelineDetailsAPIRouteAfterSave'
     )
     cy.contains('span', 'Save').click()
+    cy.wait(500)
+    // Verify all details in YAML view
+    cy.get('div[data-name="toggle-option-two"]').click()
+    cy.wait(1000)
+    cy.contains('span', 'condition').should('be.visible') // Conditional execution is there
+    cy.contains('span', 'false').should('be.visible') // Jexl is made false
   })
 })
