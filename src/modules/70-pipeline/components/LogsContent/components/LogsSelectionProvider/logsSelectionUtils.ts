@@ -1,7 +1,7 @@
 import { ansiToJson } from 'anser'
 
 export function getSelectedLogs(data: string[], fromIdx: number, toIdx: number): string[] {
-  return data.splice(fromIdx, toIdx - fromIdx + 1)
+  return [...data].splice(fromIdx, toIdx - fromIdx + 1)
 }
 
 export function formatLogsForClipboard(data: string[]): string {

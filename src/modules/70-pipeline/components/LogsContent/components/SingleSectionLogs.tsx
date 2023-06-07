@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
+import { flatten } from 'lodash-es'
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso'
 import { Button, ButtonSize, ButtonVariation } from '@harness/uicore'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
-
 import { MultiLogLineMemo as MultiLogLine } from './MultiLogLine/MultiLogLine'
+import { CUSTOM_SELECTION_LINE_ROOT, LogsSelectionProvider } from './LogsSelectionProvider/LogsSelectionProvider'
+
 import type { CommonLogsProps } from './LogsProps'
 
 import css from '../LogsContent.module.scss'
@@ -27,6 +29,14 @@ export function SingleSectionLogs(
   const length = unit.data.length
   const [isAtBottom, setIsAtBottom] = React.useState(false)
 
+  const data = flatten(
+    state.logKeys
+      .map(key => {
+        return state.dataMap[key]
+      })
+      .map(item => item.data)
+  ).map(d => d.text?.out || '')
+
   function handleClick(): void {
     if (!ref || !(ref as React.MutableRefObject<VirtuosoHandle | null>).current) {
       return
@@ -39,23 +49,33 @@ export function SingleSectionLogs(
 
   return (
     <pre className={css.container} {...addHotJarSuppressionAttribute()}>
-      <Virtuoso
-        increaseViewportBy={40}
-        totalCount={length}
-        atBottomThreshold={Math.ceil(length / 3)}
-        atBottomStateChange={setIsAtBottom}
-        ref={ref}
-        followOutput="auto"
-        itemContent={index => (
-          <MultiLogLine
-            {...unit.data[index]}
-            lineNumber={index}
-            limit={length}
-            searchText={state.searchData.text}
-            currentSearchIndex={state.searchData.currentIndex}
-          />
-        )}
-      />
+      <LogsSelectionProvider
+        data={data}
+        rootClassSelector={css.container}
+        lineClassSelector={CUSTOM_SELECTION_LINE_ROOT}
+      >
+        <Virtuoso
+          increaseViewportBy={40}
+          totalCount={length}
+          atBottomThreshold={Math.ceil(length / 3)}
+          atBottomStateChange={setIsAtBottom}
+          ref={ref}
+          followOutput="auto"
+          itemContent={index => (
+            <MultiLogLine
+              {...unit.data[index]}
+              lineNumber={index}
+              limit={length}
+              searchText={state.searchData.text}
+              currentSearchIndex={state.searchData.currentIndex}
+              customSelectionProps={{
+                index,
+                className: CUSTOM_SELECTION_LINE_ROOT
+              }}
+            />
+          )}
+        />
+      </LogsSelectionProvider>
       <Button
         className={css.singleSectionScrollBtn}
         variation={ButtonVariation.PRIMARY}

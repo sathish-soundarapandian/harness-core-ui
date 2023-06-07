@@ -5,7 +5,7 @@ import { formatLogsForClipboard, getSelectedLogs } from './logsSelectionUtils'
 
 export const CUSTOM_SELECTION_LINE_ROOT = 'custom-selection-line-root'
 
-interface LogsSelectionContextProps {
+export interface LogsSelectionContextProps {
   from: number
   to: number
   setSelectionFrom: (from: number) => void
@@ -37,9 +37,6 @@ export function LogsSelectionProvider({
   rootClassSelector,
   lineClassSelector
 }: LogsSelectionProviderProps): React.ReactElement {
-  const dataRef = React.useRef<string[]>(data)
-  dataRef.current = data
-
   const { showError, showSuccess } = useToaster()
   const { getString } = useStrings()
 
@@ -111,7 +108,7 @@ export function LogsSelectionProvider({
       }
     }
 
-    const handleMouseUp = () => () => {
+    const handleMouseUp = (): void => {
       setIsDown(false)
     }
 
@@ -136,7 +133,7 @@ export function LogsSelectionProvider({
       }
 
       e.stopPropagation()
-      const selectedLogs = getSelectedLogs(dataRef.current, exposedFrom, exposedTo)
+      const selectedLogs = getSelectedLogs(data, exposedFrom, exposedTo)
       const formatedLogs = formatLogsForClipboard(selectedLogs)
       navigator?.clipboard?.writeText(formatedLogs).then(
         () => {
@@ -152,7 +149,7 @@ export function LogsSelectionProvider({
     return () => {
       document.removeEventListener('copy', handleClipboard)
     }
-  }, [exposedFrom, exposedTo, hasSelection])
+  }, [exposedFrom, exposedTo, hasSelection, data])
 
   return (
     <LogsSelectionContext.Provider

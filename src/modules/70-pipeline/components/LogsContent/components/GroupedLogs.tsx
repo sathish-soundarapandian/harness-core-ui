@@ -13,7 +13,7 @@ import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 import { GroupHeader, GroupHeaderProps, LogViewerAccordionStatus } from './GroupHeader/GroupHeader'
 import { MultiLogLineMemo as MultiLogLine } from './MultiLogLine/MultiLogLine'
 import type { CommonLogsProps } from './LogsProps'
-import { CUSTOM_SELECTION_LINE_ROOT, LogsSelectionProvider } from './LogsSectionProvider/LogsSectionProvider'
+import { CUSTOM_SELECTION_LINE_ROOT, LogsSelectionProvider } from './LogsSelectionProvider/LogsSelectionProvider'
 import css from '../LogsContent.module.scss'
 
 const STATUSES_FOR_ACCORDION_SKIP: LogViewerAccordionStatus[] = ['LOADING', 'NOT_STARTED']
@@ -127,8 +127,10 @@ export function GroupedLogs(
                 limit={unit.data.length}
                 searchText={state.searchData.text}
                 currentSearchIndex={state.searchData.currentIndex}
-                index={index}
-                className={CUSTOM_SELECTION_LINE_ROOT}
+                customSelectionProps={{
+                  index,
+                  className: CUSTOM_SELECTION_LINE_ROOT
+                }}
               />
             )
           }}

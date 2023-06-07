@@ -41,6 +41,8 @@
 
     span {
       background-color: rgba(125, 188, 255, 0.4) !important;
+      // this makes custom seletion looks the same as nativ selection
+      padding-bottom: 4px;
     }
   }
 

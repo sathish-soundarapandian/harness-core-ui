@@ -16,7 +16,7 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 import { sanitizeHTML } from '@common/utils/StringUtils'
 import { getRegexForSearch } from '../../LogsState/utils'
 import type { LogLineData } from '../../LogsState/types'
-import { LogsSelectionContext } from '../LogsSectionProvider/LogsSectionProvider'
+import { LogsSelectionContext, LogsSelectionContextProps } from '../LogsSelectionProvider/LogsSelectionProvider'
 import css from './MultiLogLine.module.scss'
 
 export interface AnserJsonWithLink extends AnserJsonEntry {
@@ -29,7 +29,6 @@ export interface TextWithSearchMarkersProps {
   searchIndices?: number[]
   currentSearchIndex: number
   className?: string
-  inSelection?: boolean
 }
 
 export function TextWithSearchMarkers(props: TextWithSearchMarkersProps): React.ReactElement {
@@ -85,8 +84,10 @@ export function TextWithSearchMarkers(props: TextWithSearchMarkersProps): React.
   return <span className={className} dangerouslySetInnerHTML={{ __html: highlightedString }} />
 }
 
-export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps): React.ReactElement {
-  const { searchText, txt, searchIndices, currentSearchIndex, className, inSelection } = props
+export function TextWithSearchMarkersAndLinks(
+  props: TextWithSearchMarkersProps & { customSelectionPros?: { selected?: boolean } }
+): React.ReactElement {
+  const { searchText, txt, searchIndices, currentSearchIndex, className, customSelectionPros = {} } = props
 
   if (!txt) {
     return <span className={className} />
@@ -106,7 +107,7 @@ export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps)
   })
 
   return (
-    <span className={cx(className, { [css.customSelection]: inSelection })}>
+    <span className={cx(className, { [css.customSelection]: customSelectionPros.selected })}>
       {tokens.map((token, i) => {
         /***Change the html entities back to actual characters
         as we are no longer using dangerouslySetInnerHTML.
@@ -145,7 +146,13 @@ export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps)
   )
 }
 
-export interface MultiLogLineProps extends LogLineData {
+export interface CustomSelectionProps {
+  customSelectionProps?: {
+    index: number
+    className?: string
+  }
+}
+export interface MultiLogLineProps extends LogLineData, CustomSelectionProps {
   /**
    * Zero index based line number
    */
@@ -153,8 +160,6 @@ export interface MultiLogLineProps extends LogLineData {
   limit: number
   searchText?: string
   currentSearchIndex?: number
-  index: number
-  className?: string
 }
 
 export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
@@ -165,11 +170,12 @@ export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
     searchText = '',
     currentSearchIndex = 0,
     searchIndices,
-    index,
-    className
+    customSelectionProps: { index, className } = { index: 0 }
   } = props
+  //NOTE: custom selection works if contex is defined
   const selectionContex = useContext(LogsSelectionContext)
-  const { setSelectionFrom, setSelectionTo, setSelectionProgress, hasSelection, isInSelection } = selectionContex
+  const { setSelectionFrom, setSelectionTo, setSelectionProgress, hasSelection, isInSelection } = (selectionContex ||
+    {}) as Partial<LogsSelectionContextProps>
 
   const { preference: logsInfoViewSettings } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
@@ -193,9 +199,9 @@ export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
           } 1fr`
         } as React.CSSProperties
       }
-      onMouseDown={() => setSelectionFrom(index)}
-      onMouseUp={() => setSelectionTo(index)}
-      onMouseMove={() => setSelectionProgress(index)}
+      onMouseDown={() => setSelectionFrom?.(index)}
+      onMouseUp={() => setSelectionTo?.(index)}
+      onMouseMove={() => setSelectionProgress?.(index)}
     >
       <span className={css.lineNumber}>{lineNumber + 1}</span>
       {showLogInfo && (
@@ -222,7 +228,7 @@ export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
         searchText={searchText}
         searchIndices={searchIndices?.out}
         currentSearchIndex={currentSearchIndex}
-        inSelection={isInSelection(index)}
+        customSelectionPros={{ selected: isInSelection?.(index) }}
       />
     </div>
   )
