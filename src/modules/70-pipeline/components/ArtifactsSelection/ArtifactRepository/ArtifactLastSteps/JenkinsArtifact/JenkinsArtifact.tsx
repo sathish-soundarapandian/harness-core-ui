@@ -60,7 +60,6 @@ import {
   getJobName,
   getJobValue
 } from '@pipeline/components/PipelineSteps/Steps/JenkinsStep/helper'
-import { isValueFixed } from '@common/utils/utils'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -109,6 +108,9 @@ function FormComponent({
   )
   const jobNameValue = getJobName(formValues?.spec?.jobName, formValues?.spec?.childJobName)
   const artifactValue = getGenuineValue(formValues?.spec?.artifactPath)
+  const [jobDetailsType, setJobDetailsType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(formValues.spec.jobName)
+  )
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const {
@@ -336,7 +338,7 @@ function FormComponent({
       if (parentJob) return parentJob
     }
 
-    if (formValues?.spec?.jobName && isValueFixed(formValues?.spec?.jobName)) {
+    if (formValues?.spec?.jobName && jobDetailsType === MultiTypeInputType.FIXED) {
       return getJobValue(formValues?.spec?.jobName)
     }
 
@@ -408,7 +410,8 @@ function FormComponent({
                 })
               },
 
-              onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.jobName', type),
+              onTypeChange: (type: MultiTypeInputType) => setJobDetailsType(type),
+
               expressions,
               selectProps: {
                 allowCreatingNewItems: true,

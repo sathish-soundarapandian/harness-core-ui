@@ -107,6 +107,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     branch,
     pipelineIdentifier
   }
+  const [jobDetailsType, setJobDetailsType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`))
+  )
 
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
@@ -438,13 +441,13 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const getJobnameValue = () => {
     const jobName = get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
-    if (getMultiTypeFromValue(jobName) !== MultiTypeInputType.FIXED) return jobName
+    if (jobDetailsType !== MultiTypeInputType.FIXED) return jobName
     if (showChildJobField) {
       const parentJob = jobDetails.find(job => job.label === recentParentJob?.current)
       if (parentJob) return parentJob
     }
     const jobDetail = jobDetails.find(job => job.label === jobName)
-    if (jobDetail) return jobDetail
+    if (jobDetail && jobDetailsType === MultiTypeInputType.FIXED) return jobDetail
     return {
       label: jobName,
       value: jobName,
@@ -548,13 +551,13 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     formik.setFieldValue(
                       `${path}.artifacts.${artifactPath}.spec.jobName`,
                       getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED
-                        ? primaryValue.label
+                        ? primaryValue?.label
                         : primaryValue
                     )
                   },
 
-                  onTypeChange: (type: MultiTypeInputType) =>
-                    formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.jobName`, type),
+                  onTypeChange: (type: MultiTypeInputType) => setJobDetailsType(type),
+
                   expressions,
                   selectProps: {
                     allowCreatingNewItems: true,
