@@ -80,7 +80,11 @@ import {
   isCloneCodebaseEnabledAtLeastOneStage,
   isCodebaseFieldsRuntimeInputs
 } from '@pipeline/utils/CIUtils'
-import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import {
+  checkForPlaceHolderExpressions,
+  clearRuntimeInput,
+  mergeTemplateWithInputSetData
+} from '@pipeline/utils/runPipelineUtils'
 
 import TabWizard from '@triggers/components/TabWizard/TabWizard'
 
@@ -133,6 +137,7 @@ export default function WebhookTriggerWizard(
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [selectedView, setSelectedView] = useTriggerView(isNewTrigger)
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
+  // const [showErrorToaster, setShowErrorToaster] = useState<boolean>(false)
 
   const history = useHistory()
   const { getString } = useStrings()
@@ -1384,9 +1389,13 @@ export default function WebhookTriggerWizard(
   }
 
   const onSubmit = async (val: FlatValidWebhookFormikValuesInterface): Promise<void> => {
-    const triggerYaml = getWebhookTriggerYaml({ values: val })
+    if (!checkForPlaceHolderExpressions(val.pipeline)) {
+      const triggerYaml = getWebhookTriggerYaml({ values: val })
 
-    submitTrigger(triggerYaml)
+      submitTrigger(triggerYaml)
+    } else {
+      showError(getString('triggers.toast.placeHolderExpressionError'))
+    }
   }
 
   const handleModeSwitch = (view: SelectedView): void => {

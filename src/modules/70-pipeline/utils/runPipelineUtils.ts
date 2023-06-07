@@ -16,7 +16,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { InputSetErrorResponse, PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeExpression, isMultiTypeFixed, isMultiTypeRuntime, isValueExpression } from '@common/utils/utils'
 import cdExecutionListIllustration from '../pages/execution-list/images/cd-execution-illustration.svg'
 import ciExecutionListIllustration from '../pages/execution-list/images/ci-execution-illustration.svg'
 import stoExecutionListIllustration from '../pages/execution-list/images/sto-execution-illustration.svg'
@@ -92,6 +92,21 @@ export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAls
       }
     })
   })
+}
+
+export function checkForPlaceHolderExpressions(template: any, expressions: string[] = []): boolean {
+  const keysArr = Object.keys(template)
+  for (const key of keysArr) {
+    if (typeof template[key] === 'object') {
+      return checkForPlaceHolderExpressions(template[key], expressions)
+    } else {
+      if (isValueExpression(template[key]) && template[key].includes('<+trigger.payload._placeholder')) {
+        return true
+      }
+    }
+  }
+
+  return false
 }
 
 function mergeStage(props: MergeStageProps): StageElementWrapperConfig {

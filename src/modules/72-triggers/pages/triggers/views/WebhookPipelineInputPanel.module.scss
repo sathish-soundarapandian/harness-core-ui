@@ -27,6 +27,13 @@
     color: var(--white) !important;
   }
 }
+
+.errorContainer {
+  background-color: var(--red-400) !important;
+  padding: 10px !important;
+  position: relative;
+  top: 10px;
+}
 .formContentTitle {
   font-weight: bold !important;
   font-size: medium !important;

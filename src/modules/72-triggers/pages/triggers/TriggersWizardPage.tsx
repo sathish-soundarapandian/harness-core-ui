@@ -28,7 +28,11 @@ import { Page, useToaster } from '@common/exports'
 import Wizard from '@common/components/Wizard/Wizard'
 import { connectorUrlType } from '@connectors/constants'
 import routes from '@common/RouteDefinitions'
-import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import {
+  checkForPlaceHolderExpressions,
+  clearRuntimeInput,
+  mergeTemplateWithInputSetData
+} from '@pipeline/utils/runPipelineUtils'
 import type { Pipeline } from '@pipeline/utils/types'
 import { useGetConnector, GetConnectorQueryParams, getConnectorListV2Promise, Failure } from 'services/cd-ng'
 import {
@@ -168,6 +172,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   const history = useHistory()
   const { getString } = useStrings()
   const [pipelineInputs, setPipelineInputs] = useState<InputsResponseBody>({})
+  const [showErrorToast, setShowErrToast] = useState(false)
   const { data: template, loading: fetchingTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
       accountIdentifier: accountId,
@@ -1457,9 +1462,14 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
   }
 
   const handleWebhookSubmit = async (val: FlatValidWebhookFormikValuesInterface): Promise<void> => {
-    const triggerYaml = getWebhookTriggerYaml({ values: val })
+    const hasPlaceHolderExpression = checkForPlaceHolderExpressions(val.pipeline)
+    if (!hasPlaceHolderExpression) {
+      const triggerYaml = getWebhookTriggerYaml({ values: val })
 
-    submitTrigger(triggerYaml)
+      submitTrigger(triggerYaml)
+    } else {
+      setShowErrToast(true)
+    }
   }
 
   const handleScheduleSubmit = async (val: FlatValidScheduleFormikValuesInterface): Promise<void> => {
@@ -2050,7 +2060,10 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         {isSimplifiedYAML ? (
           <WebhookPipelineInputPanelV1 gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
         ) : (
-          <WebhookPipelineInputPanel gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+          <WebhookPipelineInputPanel
+            gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
+            showErrorToast={showErrorToast}
+          />
         )}
       </Wizard>
     )
@@ -2106,7 +2119,10 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         {isSimplifiedYAML ? (
           <WebhookPipelineInputPanelV1 gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
         ) : (
-          <WebhookPipelineInputPanel gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+          <WebhookPipelineInputPanel
+            gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
+            showErrorToast={showErrorToast}
+          />
         )}
       </Wizard>
     )
@@ -2159,7 +2175,10 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         {isSimplifiedYAML ? (
           <WebhookPipelineInputPanelV1 gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
         ) : (
-          <WebhookPipelineInputPanel gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
+          <WebhookPipelineInputPanel
+            gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
+            showErrorToast={showErrorToast}
+          />
         )}
       </Wizard>
     )

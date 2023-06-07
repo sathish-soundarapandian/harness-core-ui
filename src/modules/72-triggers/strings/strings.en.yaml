@@ -73,6 +73,7 @@ toast:
   webhookCurlCopied: 'Webhook cURL Command is copied to clipboard.'
   existingTriggerError: 'There are some errors with this existing trigger. Please edit and update for more details.'
   payloadInfoBar: 'You can reference trigger payload values in the pipeline input section. Harness can use values from the trigger payload and map them to variables that are being used in the target pipeline.'
+  placeHolderExpressionError: 'One or more fields have the expression <+trigger.payload._placeholder>. <+trigger.payload._placeholder> cannot be used as an expression in the trigger as is. This is meant to assist in the definition of the trigger payload expression. Please replace the “_placeholder” property with the correct property from the triggering source payload.'
 tooltip:
   defaultGitSyncBranchOnly: Triggers can be added to a Pipeline in the default branch only
 triggerConfigurationPanel:

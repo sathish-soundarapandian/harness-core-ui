@@ -10,6 +10,7 @@ declare const styles: {
   readonly bp3Icon: string
   readonly cardCard: string
   readonly divider: string
+  readonly errorContainer: string
   readonly errorHeader: string
   readonly formContent: string
   readonly formContentTitle: string

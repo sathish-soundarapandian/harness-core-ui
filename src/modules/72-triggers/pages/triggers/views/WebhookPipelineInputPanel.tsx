@@ -67,6 +67,7 @@ interface WebhookPipelineInputPanelPropsInterface {
   formikProps?: any
   isEdit?: boolean
   gitAwareForTriggerEnabled?: boolean
+  showErrorToast: boolean
 }
 
 const applyArtifactToPipeline = (newPipelineObject: any, formikProps: FormikProps<any>): PipelineInfoConfig => {
@@ -157,7 +158,8 @@ const applySelectedArtifactToPipelineObject = (
 function WebhookPipelineInputPanelForm({
   formikProps,
   isEdit,
-  gitAwareForTriggerEnabled
+  gitAwareForTriggerEnabled,
+  showErrorToast
 }: WebhookPipelineInputPanelPropsInterface): React.ReactElement {
   const {
     values: { inputSetSelected, pipeline, resolvedPipeline },
@@ -532,6 +534,11 @@ function WebhookPipelineInputPanelForm({
 
         <Text color={Color.WHITE}>{getString('triggers.toast.payloadInfoBar')}</Text>
       </Layout.Horizontal>
+      {showErrorToast ? (
+        <Layout.Horizontal className={css.errorContainer}>
+          <Text color={Color.WHITE}>{getString('triggers.toast.placeHolderExpressionError')}</Text>
+        </Layout.Horizontal>
+      ) : null}
 
       {loading && !isPipelineBranchNameInFocus() ? (
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
