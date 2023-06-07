@@ -124,6 +124,8 @@ export function LogsSelectionProvider({
   // handle copy to clipboard
   React.useEffect(() => {
     const handleClipboard = (e: ClipboardEvent): void => {
+      setIsDown(false)
+
       if (!hasSelection) {
         return
       }

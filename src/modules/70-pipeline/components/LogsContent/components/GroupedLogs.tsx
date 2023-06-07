@@ -30,16 +30,6 @@ export function GroupedLogs(
     return section.isOpen ? section.data.length : 0
   })
 
-  // const getFlattenData = React.useCallback(
-  //   () =>
-  //     flatten(
-  //       state.logKeys.map(key => {
-  //         return state.dataMap[key].data
-  //       })
-  //     ).map(d => d.text?.out || ''),
-  //   [state.logKeys, state.dataMap]
-  // )
-
   const data = flatten(
     state.logKeys
       .map(key => {
