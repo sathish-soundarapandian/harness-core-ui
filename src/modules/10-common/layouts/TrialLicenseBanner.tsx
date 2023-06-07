@@ -194,29 +194,8 @@ const ExtendOrFeedBackBtn: React.FC<{
       </Layout.Horizontal>
     )
   }
-  if (expiredDays > 14) {
-    return <></>
-  }
-  return (
-    <Layout.Horizontal padding={{ right: 'large' }} flex={{ alignItems: 'center' }}>
-      <Text
-        padding={{ left: 'small', right: 'small' }}
-        color={Color.WHITE}
-        font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
-      >
-        {'or'}
-      </Text>
-      <Text
-        onClick={handleExtendTrial}
-        color={Color.WHITE}
-        className={css.link}
-        flex={{ alignItems: 'center' }}
-        font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}
-      >
-        {getString('common.banners.trial.expired.extendTrial')}
-      </Text>
-    </Layout.Horizontal>
-  )
+
+  return <></>
 }
 
 export const TrialLicenseBanner: React.FC = () => {
