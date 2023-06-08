@@ -753,9 +753,11 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
               </div>
               <div className={css.reconcileMenu}>
                 <Button
-                  text="View Diff"
+                  text={getString('pipeline.viewDiff')}
                   variation={ButtonVariation.PRIMARY}
-                  onClick={props.openDiffModal}
+                  onClick={() => {
+                    props.openDiffModal()
+                  }}
                   style={{ marginLeft: '15px' }}
                 />
                 <Popover

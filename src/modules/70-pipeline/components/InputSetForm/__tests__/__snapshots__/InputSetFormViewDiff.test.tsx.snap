@@ -1,0 +1,354 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Forms - Snapshot Testing when clicked on view diff button, should show the difference in yaml 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard pageHeaderStyles StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/testAcc/cd"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="cd-main"
+              >
+                <svg
+                  height="16"
+                  viewBox="0 0 32 32"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M26.427 7.06A5.073 5.073 0 0129 11.52l-.077 8.934a5.073 5.073 0 01-2.537 4.35l-8.002 4.618a5.073 5.073 0 01-5.035.021l-7.776-4.402A5.073 5.073 0 013 20.583l.077-8.935a5.073 5.073 0 012.537-4.35l8.002-4.619a5.073 5.073 0 015.035-.02l7.776 4.402zm-2.83 6.938c-.42 1.586-2.029 2.538-3.601 2.141l-7.489-2.026a4.696 4.696 0 00-3.62.48 4.773 4.773 0 00-2.222 2.925 4.835 4.835 0 00.479 3.664 4.757 4.757 0 002.905 2.251 4.696 4.696 0 003.62-.48 4.773 4.773 0 002.222-2.924l.26-1.047a.25.25 0 00-.177-.302l-1.258-.34a.25.25 0 00-.307.18l-.256 1.025c-.426 1.602-2.064 2.556-3.651 2.127-1.582-.428-2.523-2.073-2.1-3.67.421-1.586 2.03-2.538 3.602-2.142l7.489 2.027a4.696 4.696 0 003.62-.48 4.773 4.773 0 002.222-2.925 4.835 4.835 0 00-.479-3.664 4.757 4.757 0 00-2.905-2.251 4.696 4.696 0 00-3.62.48 4.773 4.773 0 00-2.222 2.924l-.247.828a.25.25 0 00.174.312l1.259.34a.25.25 0 00.304-.169l.248-.827c.426-1.602 2.064-2.557 3.651-2.127 1.582.428 2.523 2.073 2.1 3.67z"
+                    fill="url(#cd-main_svg__a)"
+                    fill-rule="evenodd"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="cd-main_svg__a"
+                      x1="6.774"
+                      x2="21.5"
+                      y1="2"
+                      y2="30"
+                    >
+                      <stop
+                        stop-color="#62F91F"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#45BD35"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                test
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                pipelines
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/testAcc/cd/orgs/testOrg/projects/test/pipelines/pipeline/input-sets?connectorRef=ValidGithubRepo&repoName=gitSyncRepo&branch=feature&storeType=REMOTE"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
+              >
+                testsdfsdf
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main"
+        style="width: 42%;"
+      >
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-variation-h4 StyledProps--margin-right-medium"
+          style="--text-line-clamp: 1;"
+        >
+          inputSets.editTitle
+        </p>
+        <div
+          class="optionBtns"
+        >
+          <div
+            class="PillToggle--optionBtns"
+          >
+            <div
+              class="PillToggle--item PillToggle--disabledMode"
+              data-name="toggle-option-one"
+              role="button"
+              tabindex="0"
+            >
+              VISUAL
+            </div>
+            <div
+              class="PillToggle--item PillToggle--selected PillToggle--disabledMode"
+              data-name="toggle-option-two"
+              role="button"
+              tabindex="0"
+            >
+              YAML
+            </div>
+          </div>
+        </div>
+        <div
+          class="reconcileMenu"
+        >
+          <button
+            aria-label="pipeline.viewDiff"
+            class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+            disabled=""
+            style="margin-left: 15px;"
+            tabindex="-1"
+            type="button"
+          >
+            <div
+              class="bp3-spinner bp3-button-spinner"
+            >
+              <div
+                class="bp3-spinner-animation"
+              >
+                <svg
+                  height="20"
+                  stroke-width="16.00"
+                  viewBox="-3.00 -3.00 106.00 106.00"
+                  width="20"
+                >
+                  <path
+                    class="bp3-spinner-track"
+                    d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                  />
+                  <path
+                    class="bp3-spinner-head"
+                    d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                    pathLength="280"
+                    stroke-dasharray="280 280"
+                    stroke-dashoffset="210"
+                  />
+                </svg>
+              </div>
+            </div>
+            <span
+              class="bp3-button-text"
+            >
+              pipeline.viewDiff
+            </span>
+          </button>
+          <span
+            class="bp3-popover-wrapper bp3-dark"
+          >
+            <span
+              class="bp3-popover-target"
+            >
+              <button
+                aria-label="input set menu actions"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                type="button"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="Options"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="16"
+                    viewBox="0 0 4 16"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="2"
+                      cy="2"
+                      r="1.5"
+                    />
+                    <circle
+                      cx="2"
+                      cy="8"
+                      r="1.5"
+                    />
+                    <circle
+                      cx="2"
+                      cy="14"
+                      r="1.5"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <div
+      class="StyledProps--font StyledProps--main inputSetForm"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+      >
+        <div
+          class="OverlaySpinner--overlaySpinner"
+        >
+          <div
+            class="editor"
+          >
+            <div
+              class="bp3-callout bp3-intent-danger bp3-callout-icon"
+            >
+              <span
+                class="bp3-icon bp3-icon-error"
+                icon="error"
+              >
+                <svg
+                  data-icon="error"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  width="20"
+                >
+                  <desc>
+                    error
+                  </desc>
+                  <path
+                    d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm1 16H9v-2h2v2zm0-3H9V4h2v9z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              pipeline.inputSetInvalidStoreTypeCallout
+            </div>
+            <div
+              class="Layout--vertical StyledProps--main content StyledProps--padding-xlarge"
+            >
+              <div>
+                <span>
+                  Yaml View
+                </span>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main footer StyledProps--padding-xlarge"
+            >
+              <button
+                aria-label="save"
+                class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+                disabled=""
+                tabindex="-1"
+                type="submit"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  save
+                </span>
+              </button>
+                 
+              <button
+                aria-label="cancel"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-tertiary"
+                type="button"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  cancel
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

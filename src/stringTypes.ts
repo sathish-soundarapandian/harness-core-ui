@@ -5345,6 +5345,7 @@ export interface StringsMap {
   'pipeline.verification.unpinBaseline': string
   'pipeline.verification.waitForAnalysis': string
   'pipeline.verificationResult': string
+  'pipeline.viewDiff': string
   'pipeline.viewExecution': string
   'pipeline.viewFreeze': string
   'pipeline.viewLatestExecution': string

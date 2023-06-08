@@ -181,7 +181,7 @@ exports[`Input Set - error scenarios if API errors are displayed in yellow accor
           class="reconcileMenu"
         >
           <button
-            aria-label="View Diff"
+            aria-label="pipeline.viewDiff"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
             style="margin-left: 15px;"
             type="button"
@@ -189,7 +189,7 @@ exports[`Input Set - error scenarios if API errors are displayed in yellow accor
             <span
               class="bp3-button-text"
             >
-              View Diff
+              pipeline.viewDiff
             </span>
           </button>
           <span
