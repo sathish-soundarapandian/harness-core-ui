@@ -8,6 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { Container, Button } from '@harness/uicore'
+import { omit } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
@@ -16,7 +17,7 @@ import { getTemplateContextMock } from '@templates-library/components/TemplateSt
 import { MonitoredTemplateCanvasWithRef } from '../MonitoredServiceTemplateCanvas'
 import { MonitoredServiceTemplate } from '../MonitoredServiceTemplate'
 import { monitoredServiceDefaultTemplateMock } from './MonitoredServiceTemplateCanvas.mock'
-import { createdInitTemplateValue } from '../MonitoredServiceTemplateCanvas.utils'
+import { createdInitTemplateValue, getMonitoredServiceTemplateScope } from '../MonitoredServiceTemplateCanvas.utils'
 import { DefaultSpec } from '../MonitoredServiceTemplateCanvas.constants'
 
 const monitoredServiceTemplateContextMock = getTemplateContextMock(TemplateType.MonitoredService)
@@ -141,5 +142,21 @@ describe('Test MonitoredTemplateCanvasWithRef', () => {
     monitoredServiceDefaultTemplateMock.name = 'MS Template'
     monitoredServiceDefaultTemplateMock.spec = { changeSource: [], healthSource: [] }
     expect(createdInitTemplateValue(monitoredServiceDefaultTemplateMock)).toEqual(monitoredServiceDefaultTemplateMock)
+  })
+
+  test('should validate getMonitoredServiceTemplateScope', () => {
+    expect(getMonitoredServiceTemplateScope('account1', { ...monitoredServiceDefaultTemplateMock } as any)).toEqual(
+      Scope.PROJECT
+    )
+    expect(
+      getMonitoredServiceTemplateScope('account1', {
+        ...omit(monitoredServiceDefaultTemplateMock, 'projectIdentifier')
+      } as any)
+    ).toEqual(Scope.ORG)
+    expect(
+      getMonitoredServiceTemplateScope('account1', {
+        ...omit(monitoredServiceDefaultTemplateMock, ['projectIdentifier', 'orgIdentifier'])
+      } as any)
+    ).toEqual(Scope.ACCOUNT)
   })
 })
