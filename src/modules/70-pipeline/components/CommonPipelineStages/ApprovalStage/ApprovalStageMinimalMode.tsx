@@ -45,7 +45,7 @@ export function ApprovalStageMinimalMode(props: ApprovalStageMinimalModeProps): 
 
   const { branch, repoName } = useQueryParams<GitQueryParams>()
   const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
-  const parentTemplateRepo = defaultTo(gitDetails?.repoName, repoName)
+  const parentTemplateRepo = defaultTo(defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier), repoName)
 
   const handleValidate = (values: ApprovalStageMinimalValues): Record<string, string | undefined> | undefined => {
     const errors: { name?: string } = {}

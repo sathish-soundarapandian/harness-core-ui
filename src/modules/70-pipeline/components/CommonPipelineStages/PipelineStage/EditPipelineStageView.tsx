@@ -71,7 +71,10 @@ export function EditPipelineStageView({
 
   const { branch, repoName } = useQueryParams<GitQueryParams>()
   const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
-  const parentTemplateRepo = defaultTo(gitDetails?.repoName, repoName)
+  const parentTemplateRepo = defaultTo(
+    defaultTo(defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier), gitDetails?.repoIdentifier),
+    repoName
+  )
 
   const initialValues: Values = {
     identifier: get(data, 'stage.identifier', ''),

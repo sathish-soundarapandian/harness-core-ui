@@ -44,7 +44,8 @@ export function CustomStageMinimalMode(props: CustomStageMinimalModeProps): Reac
 
   const { branch, repoName } = useQueryParams<GitQueryParams>()
   const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
-  const parentTemplateRepo = defaultTo(gitDetails?.repoName, repoName)
+  //repoName is for pipelines and repoIdentifier for templates
+  const parentTemplateRepo = defaultTo(defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier), repoName)
 
   const handleValidate = (values: CustomStageMinimalValues): Record<string, string | undefined> | undefined => {
     const errors: { name?: string } = {}

@@ -106,7 +106,7 @@ export const EditStageView: React.FC<EditStageView> = ({
   }>()
   const { repoIdentifier, branch, repoName } = useQueryParams<GitQueryParams>()
   const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
-  const parentTemplateRepo = defaultTo(gitDetails?.repoName, repoName)
+  const parentTemplateRepo = defaultTo(defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier), repoName)
 
   const initialValues: Values = {
     identifier: data?.stage?.identifier || '',

@@ -52,7 +52,7 @@ export const FeatureAddEditStageView: React.FC<FeatureAddEditStageViewProps> = (
 
   const { branch, repoName } = useQueryParams<GitQueryParams>()
   const parentTemplateBranch = defaultTo(gitDetails?.branch, branch)
-  const parentTemplateRepo = defaultTo(gitDetails?.repoName, repoName)
+  const parentTemplateRepo = defaultTo(defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier), repoName)
 
   const isTemplate = contextType === PipelineContextType.StageTemplate
 
