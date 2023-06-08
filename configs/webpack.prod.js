@@ -23,23 +23,11 @@ const CONTEXT = process.cwd()
 // this BUGSNAG_TOKEN needs to be same which is passed in the docker file
 const BUGSNAG_TOKEN = process.env.BUGSNAG_TOKEN
 const BUGSNAG_SOURCEMAPS_UPLOAD = process.env.BUGSNAG_SOURCEMAPS_UPLOAD === 'true'
-const harnessPackages = Object.keys(packageJson.dependencies)
-  .filter(name => name.startsWith('@harness'))
-  .reduce(
-    (accumulator, current) => ({
-      ...accumulator,
-      [current]: JSON.parse(
-        fs.readFileSync(path.resolve(process.cwd(), `./node_modules/${current}/package.json`), 'utf8')
-      ).version
-    }),
-    {}
-  )
 
 const versionContent = {
   version: packageJson.version,
   gitCommit: process.env.GIT_COMMIT,
-  gitBranch: process.env.GIT_BRANCH,
-  ...harnessPackages
+  gitBranch: process.env.GIT_BRANCH
 }
 
 console.table(versionContent)
@@ -79,12 +67,6 @@ const config = {
     new CircularDependencyPlugin({
       exclude: /node_modules/,
       failOnError: true
-    }),
-    new HTMLWebpackPlugin({
-      template: 'src/versions.html',
-      filename: 'versions.html',
-      minify: false,
-      inject: false
     })
   ]
 }
