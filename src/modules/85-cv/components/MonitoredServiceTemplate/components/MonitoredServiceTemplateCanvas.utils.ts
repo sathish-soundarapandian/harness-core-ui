@@ -6,7 +6,9 @@
  */
 
 import { isEmpty } from 'lodash-es'
-import type { JsonNode, NGTemplateInfoConfig } from 'services/template-ng'
+import type { JsonNode, NGTemplateInfoConfig, TemplateSummaryResponse } from 'services/template-ng'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import { DefaultSpec } from './MonitoredServiceTemplateCanvas.constants'
 
 /**
@@ -21,3 +23,21 @@ export const createdInitTemplateValue = (template: NGTemplateInfoConfig): NGTemp
         spec: { ...DefaultSpec } as JsonNode
       }
     : template
+
+export const getMonitoredServiceTemplateScope = (
+  accountId: string,
+  template: TemplateInputsProps['template'] & { templateScope: TemplateSummaryResponse['templateScope'] }
+): TemplateSummaryResponse['templateScope'] => {
+  const { orgIdentifier = '', projectIdentifier = '' } = template
+  let templateScope = template?.templateScope
+
+  if (!templateScope) {
+    templateScope = getScopeFromDTO({
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    })
+  }
+
+  return templateScope
+}
