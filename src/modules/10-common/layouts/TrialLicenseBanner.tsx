@@ -137,14 +137,11 @@ const ExtendOrFeedBackBtn: React.FC<{
   module?: Module
   openExtendTrialOrFeedbackModal: () => void
   setExtendingTrial: React.Dispatch<React.SetStateAction<boolean>>
-}> = ({ isExpired, expiredDays, module, openExtendTrialOrFeedbackModal, setExtendingTrial }) => {
+}> = ({ isExpired, openExtendTrialOrFeedbackModal, setExtendingTrial }) => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { trackEvent } = useTelemetry()
-  const { showError } = useToaster()
-  const { licenseInformation, updateLicenseStore } = useLicenseStore()
 
-  const { mutate: extendTrial, loading } = useExtendTrialLicense({
+  const { loading } = useExtendTrialLicense({
     queryParams: {
       accountIdentifier: accountId
     }
@@ -152,25 +149,6 @@ const ExtendOrFeedBackBtn: React.FC<{
   useEffect(() => {
     setExtendingTrial(loading)
   }, [loading])
-
-  const handleExtendTrial = async (): Promise<void> => {
-    try {
-      trackEvent(LicenseActions.ExtendTrial, {
-        category: Category.LICENSE
-      })
-
-      const extendedData = await extendTrial({
-        moduleType: module as StartTrialDTO['moduleType'],
-        edition: Editions.ENTERPRISE
-      })
-      if (module) {
-        handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, extendedData?.data)
-      }
-      openExtendTrialOrFeedbackModal()
-    } catch (error) {
-      showError(error.data?.message || error.message)
-    }
-  }
 
   if (!isExpired) {
     return (
