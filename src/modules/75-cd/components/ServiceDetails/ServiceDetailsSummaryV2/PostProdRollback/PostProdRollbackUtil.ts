@@ -47,7 +47,7 @@ export type CellTypeWithActions<D extends Record<string, any>, V = any> = TableI
 export type CellType = Renderer<CellTypeWithActions<PostProdTableData>>
 export type CellProps = CellTypeWithActions<PostProdTableData>
 
-export const supportedDeploymentTypesForPostProdRollback: ServiceDefinition['type'][] = ['Kubernetes', 'TAS']
+export const supportedDeploymentTypesForPostProdRollback: ServiceDefinition['type'][] = ['Kubernetes', 'TAS', 'ECS']
 
 export const columnWidth = {
   envs: {
