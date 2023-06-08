@@ -202,7 +202,8 @@ export default function MonitoredServiceInputSetsTemplate({
       versionLabel: selectedTemplateVersionLabel = '',
       accountId: selectedTemplateAccountId = '',
       orgIdentifier: selectedTemplateOrgIdentifier = '',
-      projectIdentifier: selectedTemplateProjectIdentifier = ''
+      projectIdentifier: selectedTemplateProjectIdentifier = '',
+      templateScope: selectedTemplateScope = ''
     } = template
     if (selectedTemplateVersionLabel && selectedTemplateIdentifier) {
       updateQueryParams({
@@ -211,7 +212,8 @@ export default function MonitoredServiceInputSetsTemplate({
           versionLabel: selectedTemplateVersionLabel,
           accountId: selectedTemplateAccountId,
           orgIdentifier: selectedTemplateOrgIdentifier,
-          projectIdentifier: selectedTemplateProjectIdentifier
+          projectIdentifier: selectedTemplateProjectIdentifier,
+          templateScope: selectedTemplateScope
         })
       })
     }
