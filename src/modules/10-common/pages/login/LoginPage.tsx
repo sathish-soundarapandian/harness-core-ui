@@ -75,6 +75,7 @@ const LoginPage: React.FC = () => {
         SecureStorage.set('token', json.resource.token)
         SecureStorage.set('acctId', json.resource.defaultAccountId)
         SecureStorage.set('uuid', json.resource.uuid)
+        SecureStorage.set('email', json.resource.email)
         SecureStorage.set('lastTokenSetTime', Date.now())
 
         // this is naive redirect for now

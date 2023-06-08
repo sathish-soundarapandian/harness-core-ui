@@ -206,7 +206,7 @@ Cypress.Commands.add('visitPipelinesList', () => {
   cy.contains('p', 'Projects').click()
   cy.visitPageAssertion('.PageBody--pageBody')
   cy.contains('p', 'Project 1').click()
-  cy.contains('p', 'Delivery').click()
+  cy.contains('p', 'Deployments').click()
   cy.contains('p', 'Pipelines').click()
 })
 
