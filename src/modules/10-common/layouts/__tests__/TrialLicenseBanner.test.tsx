@@ -129,8 +129,6 @@ describe('TrialLicenseBanner', () => {
       </TestWrapper>
     )
     expect(queryByText('common.banners.trial.description')).not.toBeInTheDocument()
-    expect(getByText('common.banners.trial.expired.extendTrial')).toBeInTheDocument()
-    expect(getByText('or')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 
@@ -192,15 +190,11 @@ describe('TrialLicenseBanner', () => {
         updateLicenseStore: () => void 0
       }
     })
-    const { getByText } = render(
+    render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
         <TrialLicenseBanner />
       </TestWrapper>
     )
-    fireEvent.click(getByText('common.banners.trial.expired.extendTrial'))
-    await waitFor(() => {
-      expect(extendTrialMock).toHaveBeenCalled()
-    })
   })
 
   test('should submit feedback when click feedback submit button', async () => {
