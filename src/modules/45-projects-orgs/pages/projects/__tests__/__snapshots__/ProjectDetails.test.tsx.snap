@@ -20,7 +20,7 @@ exports[`Project Details render with modules and edit menu 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/testAcc/main-dashboard"
+              href="/account/testAcc/home/projects/all"
             >
               <span
                 class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -38,36 +38,6 @@ exports[`Project Details render with modules and edit menu 1`] = `
                   />
                 </svg>
               </span>
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
-              >
-                common.home
-              </p>
-            </a>
-            <span
-              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
-              data-icon="main-chevron-right"
-            >
-              <svg
-                height="8"
-                viewBox="0 0 8 14"
-                width="8"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
-                  fill="#4d5969"
-                />
-              </svg>
-            </span>
-          </div>
-          <div
-            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
-          >
-            <a
-              class="Breadcrumbs--breadcrumb"
-              href="/account/testAcc/home/projects"
-            >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
               >
@@ -472,373 +442,209 @@ exports[`Project Details render with modules and edit menu 1`] = `
       class="Layout--horizontal StyledProps--main"
     >
       <div
-        class="StyledProps--font StyledProps--main enabledModules StyledProps--padding-xxlarge"
+        class="StyledProps--font StyledProps--main enabledModules fullWidth StyledProps--padding-xxlarge"
       >
         <div
           class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-small"
         >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black"
-          >
-            modules
-          </p>
           <div
-            class="bp3-card bp3-interactive bp3-elevation-0 Card--card card Card--interactive"
-            tabindex="0"
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
           >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-bold StyledProps--color StyledProps--color-black"
+            >
+              projectsOrgs.landingDashboard.atAGlance
+            </p>
             <div
-              class="Layout--horizontal StyledProps--main"
+              class="bp3-popover-wrapper timeRangeSelect Select--main bp3-fill"
             >
               <div
-                class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--border StyledProps--border-right StyledProps--border-color-white"
-                style="width: 100%;"
+                class="bp3-popover-target"
               >
                 <div
-                  class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex"
+                  class="bp3-input-group"
                 >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    placeholder="- Select -"
+                    style="padding-right: 0px;"
+                    type="text"
+                    value="projectsOrgs.landingDashboard.last30Days"
+                  />
                   <span
-                    class="bp3-icon StyledProps--main"
-                    data-icon="cd-main"
+                    class="bp3-input-action"
                   >
-                    <svg
-                      height="70"
-                      viewBox="0 0 32 32"
-                      width="70"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <span
+                      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                      icon="chevron-down"
+                    >
+                      <svg
+                        data-icon="chevron-down"
+                        height="14"
+                        viewBox="0 0 16 16"
+                        width="14"
+                      >
+                        <desc>
+                          chevron-down
+                        </desc>
+                        <path
+                          d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-large StyledProps--main container"
+          >
+            <div
+              class="glanceCards glanceCardContainer"
+            >
+              <div
+                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+              >
+                <span
+                  class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
+                  data-icon="placeholder"
+                >
+                  <svg
+                    height="24"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <filter
+                      id="placeholder_svg__a"
+                    >
+                      <fecolormatrix
+                        in="SourceGraphic"
+                        values="0 0 0 0 0.453512 0 0 0 0 0.490089 0 0 0 0 0.533316 0 0 0 1.000000 0"
+                      />
+                    </filter>
+                    <g
+                      fill="none"
+                      fill-rule="evenodd"
+                      filter="url(#placeholder_svg__a)"
                     >
                       <path
-                        clip-rule="evenodd"
-                        d="M26.427 7.06A5.073 5.073 0 0129 11.52l-.077 8.934a5.073 5.073 0 01-2.537 4.35l-8.002 4.618a5.073 5.073 0 01-5.035.021l-7.776-4.402A5.073 5.073 0 013 20.583l.077-8.935a5.073 5.073 0 012.537-4.35l8.002-4.619a5.073 5.073 0 015.035-.02l7.776 4.402zm-2.83 6.938c-.42 1.586-2.029 2.538-3.601 2.141l-7.489-2.026a4.696 4.696 0 00-3.62.48 4.773 4.773 0 00-2.222 2.925 4.835 4.835 0 00.479 3.664 4.757 4.757 0 002.905 2.251 4.696 4.696 0 003.62-.48 4.773 4.773 0 002.222-2.924l.26-1.047a.25.25 0 00-.177-.302l-1.258-.34a.25.25 0 00-.307.18l-.256 1.025c-.426 1.602-2.064 2.556-3.651 2.127-1.582-.428-2.523-2.073-2.1-3.67.421-1.586 2.03-2.538 3.602-2.142l7.489 2.027a4.696 4.696 0 003.62-.48 4.773 4.773 0 002.222-2.925 4.835 4.835 0 00-.479-3.664 4.757 4.757 0 00-2.905-2.251 4.696 4.696 0 00-3.62.48 4.773 4.773 0 00-2.222 2.924l-.247.828a.25.25 0 00.174.312l1.259.34a.25.25 0 00.304-.169l.248-.827c.426-1.602 2.064-2.557 3.651-2.127 1.582.428 2.523 2.073 2.1 3.67z"
-                        fill="url(#cd-main_svg__a)"
-                        fill-rule="evenodd"
+                        d="M12 0c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0zm2.86 8.822a.551.551 0 00-.44.219l-2.92 3.853a.363.363 0 01-.57 0l-1.6-1.982a.544.544 0 00-.855 0l-3.104 4.092a.755.755 0 00-.154.454v.679a.56.56 0 00.548.559h13.513a.56.56 0 00.548-.56v-.685a.755.755 0 00-.146-.447L15.297 9.04a.551.551 0 00-.438-.219zM9.6 6.261c-.807 0-1.46.667-1.46 1.49s.653 1.491 1.46 1.491c.807 0 1.46-.667 1.46-1.49S10.408 6.26 9.6 6.26z"
+                        fill="#d8d8d8"
                       />
-                      <defs>
-                        <lineargradient
-                          gradientUnits="userSpaceOnUse"
-                          id="cd-main_svg__a"
-                          x1="6.774"
-                          x2="21.5"
-                          y1="2"
-                          y2="30"
-                        >
-                          <stop
-                            stop-color="#62F91F"
-                          />
-                          <stop
-                            offset="1"
-                            stop-color="#45BD35"
-                          />
-                        </lineargradient>
-                      </defs>
-                    </svg>
-                  </span>
-                  <div>
-                    <div
-                      class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                      >
-                        PROJECTSORGS.PURPOSELIST.CONTINUOUS
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--color StyledProps--color-black"
-                      >
-                        common.purpose.cd.delivery
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="bp3-card bp3-interactive bp3-elevation-0 Card--card card Card--interactive"
-            tabindex="0"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main"
-            >
-              <div
-                class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--border StyledProps--border-right StyledProps--border-color-white"
-                style="width: 100%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex"
+                    </g>
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main lineClamp lineHeight StyledProps--color StyledProps--color-black StyledProps--font-variation-h3"
                 >
-                  <span
-                    class="bp3-icon StyledProps--main"
-                    data-icon="ci-main"
+                  0
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main lineClamp StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-top-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  na
+                </p>
+              </div>
+              <div
+                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+              >
+                <span
+                  class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
+                  data-icon="placeholder"
+                >
+                  <svg
+                    height="24"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <svg
-                      height="70"
-                      viewBox="0 0 32 32"
-                      width="70"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <filter
+                      id="placeholder_svg__a"
+                    >
+                      <fecolormatrix
+                        in="SourceGraphic"
+                        values="0 0 0 0 0.453512 0 0 0 0 0.490089 0 0 0 0 0.533316 0 0 0 1.000000 0"
+                      />
+                    </filter>
+                    <g
+                      fill="none"
+                      fill-rule="evenodd"
+                      filter="url(#placeholder_svg__a)"
                     >
                       <path
-                        clip-rule="evenodd"
-                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
-                        fill="url(#ci-main_svg__a)"
-                        fill-rule="evenodd"
+                        d="M12 0c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0zm2.86 8.822a.551.551 0 00-.44.219l-2.92 3.853a.363.363 0 01-.57 0l-1.6-1.982a.544.544 0 00-.855 0l-3.104 4.092a.755.755 0 00-.154.454v.679a.56.56 0 00.548.559h13.513a.56.56 0 00.548-.56v-.685a.755.755 0 00-.146-.447L15.297 9.04a.551.551 0 00-.438-.219zM9.6 6.261c-.807 0-1.46.667-1.46 1.49s.653 1.491 1.46 1.491c.807 0 1.46-.667 1.46-1.49S10.408 6.26 9.6 6.26z"
+                        fill="#d8d8d8"
                       />
-                      <defs>
-                        <lineargradient
-                          gradientUnits="userSpaceOnUse"
-                          id="ci-main_svg__a"
-                          x1="-5.398"
-                          x2="11.398"
-                          y1="11.398"
-                          y2="37.398"
-                        >
-                          <stop
-                            stop-color="#73DFE7"
-                          />
-                          <stop
-                            offset="1"
-                            stop-color="#0095F7"
-                          />
-                        </lineargradient>
-                      </defs>
-                    </svg>
-                  </span>
-                  <div>
-                    <div
-                      class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                      >
-                        PROJECTSORGS.PURPOSELIST.CONTINUOUS
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--color StyledProps--color-black"
-                      >
-                        common.purpose.ci.integration
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="bp3-card bp3-interactive bp3-elevation-0 Card--card card Card--interactive"
-            tabindex="0"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main"
-            >
-              <div
-                class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--border StyledProps--border-right StyledProps--border-color-white"
-                style="width: 100%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex"
+                    </g>
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main lineClamp lineHeight StyledProps--color StyledProps--color-black StyledProps--font-variation-h3"
                 >
-                  <span
-                    class="bp3-icon StyledProps--main"
-                    data-icon="cf-main"
-                  >
-                    <svg
-                      height="70"
-                      viewBox="0 0 32 32"
-                      width="70"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <lineargradient
-                        gradientUnits="userSpaceOnUse"
-                        id="cf-main_svg__a"
-                        x1="6.837"
-                        x2="23.78"
-                        y1="2"
-                        y2="28.227"
-                      >
-                        <stop
-                          offset="0"
-                          stop-color="#ffc100"
-                        />
-                        <stop
-                          offset="1"
-                          stop-color="#e66b35"
-                        />
-                      </lineargradient>
-                      <g
-                        fill="url(#cf-main_svg__a)"
-                      >
-                        <path
-                          d="M10.632 2.08A5.19 5.19 0 004.62 6.29L2.08 20.697a5.19 5.19 0 004.21 6.012l7.463 1.316a.2.2 0 00.208-.298L6.882 15.656c-.296-.469-.292-1.382.05-1.6.08-.05.313-.259.313-.259l.398-.436.066-.072c.37-.406.704-.773 1.76-1.302l.227-.079c1.548-.484 2.41-.449 3.27-.414.862.035 1.724.07 3.274-.414 1.272-.398 2.43-1.178 3.074-1.667a.622.622 0 01.9.15l4.596 7.362a.53.53 0 01-.101.696 8.694 8.694 0 01-2.834 1.538c-1.549.484-2.432.463-3.316.442-.884-.021-1.768-.042-3.318.442-1.314.41-1.868.948-2.07 1.204-.048.061-.07.21-.032.279.4.724 2.295 4.06 3.794 6.693a.998.998 0 00.695.49l3.07.541a5.19 5.19 0 006.012-4.21l2.54-14.408a5.19 5.19 0 00-4.21-6.012z"
-                        />
-                        <path
-                          d="M16.646 13.074c-1.303.34-2.093.316-2.882.29-.79-.024-1.58-.049-2.881.291-.744.216-1.178.592-1.587 1.072a.197.197 0 00-.018.23l2.482 4.069c.064.106.209.13.307.055.374-.283 1.28-.9 2.42-1.198 1.469-.383 2.348-.375 3.273-.366.717.007 1.462.014 2.53-.16a4.454 4.454 0 001.629-.635.347.347 0 00.094-.488L19.472 12.3a.421.421 0 00-.56-.128 9.57 9.57 0 01-2.265.902z"
-                        />
-                      </g>
-                    </svg>
-                  </span>
-                  <div>
-                    <div
-                      class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                      >
-                        COMMON.PURPOSE.CF.FEATURE
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--color StyledProps--color-black"
-                      >
-                        common.purpose.cf.flags
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="bp3-card bp3-interactive bp3-elevation-0 Card--card card Card--interactive"
-            tabindex="0"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main"
-            >
-              <div
-                class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--border StyledProps--border-right StyledProps--border-color-white"
-                style="width: 100%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex"
+                  0
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main lineClamp StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-top-small"
+                  style="--text-line-clamp: 1;"
                 >
-                  <span
-                    class="bp3-icon StyledProps--main"
-                    data-icon="ce-main"
+                  na
+                </p>
+              </div>
+              <div
+                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+              >
+                <span
+                  class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
+                  data-icon="placeholder"
+                >
+                  <svg
+                    height="24"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <svg
-                      height="70"
-                      viewBox="0 0 32 32"
-                      width="70"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <filter
+                      id="placeholder_svg__a"
+                    >
+                      <fecolormatrix
+                        in="SourceGraphic"
+                        values="0 0 0 0 0.453512 0 0 0 0 0.490089 0 0 0 0 0.533316 0 0 0 1.000000 0"
+                      />
+                    </filter>
+                    <g
+                      fill="none"
+                      fill-rule="evenodd"
+                      filter="url(#placeholder_svg__a)"
                     >
                       <path
-                        d="M15.84 26.552a.5.5 0 00.5.5h8.343v-.005a6.579 6.579 0 00.284-13.13.548.548 0 01-.492-.429C23.563 9.21 19.761 6 15.21 6a9.473 9.473 0 00-9.474 9.473c0 .056-.039.103-.093.114a5.791 5.791 0 001.146 11.465h6.661a.5.5 0 00.5-.5v-1.568a.527.527 0 00-.436-.51c-1.04-.2-1.932-.63-2.542-1.244-.546-.55-.872-1.232-.973-2.032-.035-.277.194-.505.474-.504l1.113.005c.268.001.48.215.541.475.256 1.093 1.245 1.813 2.711 1.82.571.003 2.7-.264 2.707-1.736.006-1.177-1.542-1.623-3.006-1.984a38.2 38.2 0 01-.758-.193c-1.656-.44-3.407-.943-3.398-3.062.01-2.058 1.742-3.119 3.567-3.335V10.71a.5.5 0 01.5-.5h.887a.5.5 0 01.5.5v2.028c1.316.212 3.089.878 3.39 2.906.04.28-.19.512-.472.511l-1.12-.005c-.256-.001-.463-.2-.54-.445-.29-.926-1.2-1.488-2.532-1.494-.886-.005-2.17.466-2.176 1.54-.005.973.74 1.305 3.52 2.023l.369.094.148.036c1.06.256 3.232.78 3.221 3.11-.008 1.839-1.265 3.096-3.364 3.47a.526.526 0 00-.442.511v1.557z"
-                        fill="url(#ce-main_svg__a)"
+                        d="M12 0c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0zm2.86 8.822a.551.551 0 00-.44.219l-2.92 3.853a.363.363 0 01-.57 0l-1.6-1.982a.544.544 0 00-.855 0l-3.104 4.092a.755.755 0 00-.154.454v.679a.56.56 0 00.548.559h13.513a.56.56 0 00.548-.56v-.685a.755.755 0 00-.146-.447L15.297 9.04a.551.551 0 00-.438-.219zM9.6 6.261c-.807 0-1.46.667-1.46 1.49s.653 1.491 1.46 1.491c.807 0 1.46-.667 1.46-1.49S10.408 6.26 9.6 6.26z"
+                        fill="#d8d8d8"
                       />
-                      <defs>
-                        <lineargradient
-                          gradientUnits="userSpaceOnUse"
-                          id="ce-main_svg__a"
-                          x1="5.821"
-                          x2="19.271"
-                          y1="4.393"
-                          y2="33.469"
-                        >
-                          <stop
-                            stop-color="#00CFDE"
-                          />
-                          <stop
-                            offset="1"
-                            stop-color="#05A660"
-                          />
-                        </lineargradient>
-                      </defs>
-                    </svg>
-                  </span>
-                  <div>
-                    <div
-                      class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                      >
-                        COMMON.PURPOSE.CE.CLOUDCOST
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--color StyledProps--color-black"
-                      >
-                        common.purpose.ce.management
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                    </g>
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main lineClamp lineHeight StyledProps--color StyledProps--color-black StyledProps--font-variation-h3"
+                >
+                  0
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main lineClamp StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-top-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  na
+                </p>
               </div>
             </div>
           </div>
           <div
-            class="bp3-card bp3-interactive bp3-elevation-0 Card--card card Card--interactive"
-            tabindex="0"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main"
-            >
-              <div
-                class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--border StyledProps--border-right StyledProps--border-color-white"
-                style="width: 100%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex"
-                >
-                  <span
-                    class="bp3-icon StyledProps--main"
-                    data-icon="cv-main"
-                  >
-                    <svg
-                      height="70"
-                      viewBox="0 0 32 32"
-                      width="70"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <lineargradient
-                        gradientUnits="userSpaceOnUse"
-                        id="cv-main_svg__a"
-                        x1="7.5"
-                        x2="20.926"
-                        y1="3"
-                        y2="28.987"
-                      >
-                        <stop
-                          offset="0"
-                          stop-color="#bea1ff"
-                        />
-                        <stop
-                          offset="1"
-                          stop-color="#8a36ff"
-                        />
-                      </lineargradient>
-                      <g
-                        clip-rule="evenodd"
-                        fill-rule="evenodd"
-                      >
-                        <path
-                          d="M25.933 24.357A12.972 12.972 0 0116 28.969a12.972 12.972 0 01-9.933-4.612l6.026-3.834A5.976 5.976 0 0016 21.969a5.977 5.977 0 003.907-1.446zm1.066-1.455l-5.906-3.759a6.001 6.001 0 00-4.193-9.107V3C23.66 3.462 29 9.092 29 15.97a12.94 12.94 0 01-2 6.932zM15.1 3C8.34 3.462 3 9.092 3 15.97c0 2.548.733 4.925 2 6.932l5.907-3.759a6.001 6.001 0 014.192-9.107z"
-                          fill="url(#cv-main_svg__a)"
-                        />
-                        <path
-                          d="M19.558 13.286a.9.9 0 01-.044 1.272l-4.286 4a.9.9 0 01-1.228 0l-1.714-1.6a.9.9 0 011.228-1.316l1.1 1.027 3.672-3.427a.9.9 0 011.272.044z"
-                          fill="#ae82fc"
-                        />
-                      </g>
-                    </svg>
-                  </span>
-                  <div>
-                    <div
-                      class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
-                    >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-                      >
-                        COMMON.PURPOSE.CV.SERVICERELIABILITY
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--color StyledProps--color-black"
-                      >
-                        common.purpose.ce.management
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-top-huge"
+          />
         </div>
       </div>
     </div>
@@ -866,7 +672,7 @@ exports[`Project Details render with no modules and invite collaborators 1`] = `
           >
             <a
               class="Breadcrumbs--breadcrumb"
-              href="/account/testAcc/main-dashboard"
+              href="/account/testAcc/home/projects/all"
             >
               <span
                 class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -884,36 +690,6 @@ exports[`Project Details render with no modules and invite collaborators 1`] = `
                   />
                 </svg>
               </span>
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
-              >
-                common.home
-              </p>
-            </a>
-            <span
-              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
-              data-icon="main-chevron-right"
-            >
-              <svg
-                height="8"
-                viewBox="0 0 8 14"
-                width="8"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
-                  fill="#4d5969"
-                />
-              </svg>
-            </span>
-          </div>
-          <div
-            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
-          >
-            <a
-              class="Breadcrumbs--breadcrumb"
-              href="/account/testAcc/home/projects"
-            >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
               >
@@ -1240,43 +1016,209 @@ exports[`Project Details render with no modules and invite collaborators 1`] = `
       class="Layout--horizontal StyledProps--main"
     >
       <div
-        class="StyledProps--font StyledProps--main enabledModules StyledProps--padding-xxlarge"
+        class="StyledProps--font StyledProps--main enabledModules fullWidth StyledProps--padding-xxlarge"
       >
         <div
           class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-small"
         >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black"
-          >
-            modules
-          </p>
           <div
-            class="Layout--vertical Layout--layout-spacing-huge StyledProps--main StyledProps--padding-huge StyledProps--flex StyledProps--flex-align-center-center"
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
           >
-            <span
-              class="bp3-icon StyledProps--main"
-              data-icon="nav-project"
-            >
-              <svg
-                height="70"
-                viewBox="0 0 16 16"
-                width="70"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M8.163 1.126a.5.5 0 00-.5 0L2.056 4.36a.5.5 0 00-.25.433v6.234a.5.5 0 00.248.432l5.87 3.415a.5.5 0 00.501 0l5.631-3.259a.5.5 0 00.25-.433V7.478a.5.5 0 00-1 0v3.417l-4.625 2.677.035-5.07 5.34-3.091a.5.5 0 000-.865l-5.894-3.42zM7.717 8.5l-.035 5.077-4.875-2.837V5.66l4.91 2.84zm.502-.865l-4.913-2.84 4.606-2.659 4.897 2.842-4.59 2.657zm-3.864-.068a.5.5 0 10-.5.866l2.165 1.25a.5.5 0 10.5-.866l-2.165-1.25z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-medium"
+              class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-weight-bold StyledProps--color StyledProps--color-black"
             >
-              projectsOrgs.noModules
+              projectsOrgs.landingDashboard.atAGlance
             </p>
+            <div
+              class="bp3-popover-wrapper timeRangeSelect Select--main bp3-fill"
+            >
+              <div
+                class="bp3-popover-target"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    placeholder="- Select -"
+                    style="padding-right: 0px;"
+                    type="text"
+                    value="projectsOrgs.landingDashboard.last30Days"
+                  />
+                  <span
+                    class="bp3-input-action"
+                  >
+                    <span
+                      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                      icon="chevron-down"
+                    >
+                      <svg
+                        data-icon="chevron-down"
+                        height="14"
+                        viewBox="0 0 16 16"
+                        width="14"
+                      >
+                        <desc>
+                          chevron-down
+                        </desc>
+                        <path
+                          d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-large StyledProps--main container"
+          >
+            <div
+              class="glanceCards glanceCardContainer"
+            >
+              <div
+                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+              >
+                <span
+                  class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
+                  data-icon="placeholder"
+                >
+                  <svg
+                    height="24"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <filter
+                      id="placeholder_svg__a"
+                    >
+                      <fecolormatrix
+                        in="SourceGraphic"
+                        values="0 0 0 0 0.453512 0 0 0 0 0.490089 0 0 0 0 0.533316 0 0 0 1.000000 0"
+                      />
+                    </filter>
+                    <g
+                      fill="none"
+                      fill-rule="evenodd"
+                      filter="url(#placeholder_svg__a)"
+                    >
+                      <path
+                        d="M12 0c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0zm2.86 8.822a.551.551 0 00-.44.219l-2.92 3.853a.363.363 0 01-.57 0l-1.6-1.982a.544.544 0 00-.855 0l-3.104 4.092a.755.755 0 00-.154.454v.679a.56.56 0 00.548.559h13.513a.56.56 0 00.548-.56v-.685a.755.755 0 00-.146-.447L15.297 9.04a.551.551 0 00-.438-.219zM9.6 6.261c-.807 0-1.46.667-1.46 1.49s.653 1.491 1.46 1.491c.807 0 1.46-.667 1.46-1.49S10.408 6.26 9.6 6.26z"
+                        fill="#d8d8d8"
+                      />
+                    </g>
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main lineClamp lineHeight StyledProps--color StyledProps--color-black StyledProps--font-variation-h3"
+                >
+                  0
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main lineClamp StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-top-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  na
+                </p>
+              </div>
+              <div
+                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+              >
+                <span
+                  class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
+                  data-icon="placeholder"
+                >
+                  <svg
+                    height="24"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <filter
+                      id="placeholder_svg__a"
+                    >
+                      <fecolormatrix
+                        in="SourceGraphic"
+                        values="0 0 0 0 0.453512 0 0 0 0 0.490089 0 0 0 0 0.533316 0 0 0 1.000000 0"
+                      />
+                    </filter>
+                    <g
+                      fill="none"
+                      fill-rule="evenodd"
+                      filter="url(#placeholder_svg__a)"
+                    >
+                      <path
+                        d="M12 0c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0zm2.86 8.822a.551.551 0 00-.44.219l-2.92 3.853a.363.363 0 01-.57 0l-1.6-1.982a.544.544 0 00-.855 0l-3.104 4.092a.755.755 0 00-.154.454v.679a.56.56 0 00.548.559h13.513a.56.56 0 00.548-.56v-.685a.755.755 0 00-.146-.447L15.297 9.04a.551.551 0 00-.438-.219zM9.6 6.261c-.807 0-1.46.667-1.46 1.49s.653 1.491 1.46 1.491c.807 0 1.46-.667 1.46-1.49S10.408 6.26 9.6 6.26z"
+                        fill="#d8d8d8"
+                      />
+                    </g>
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main lineClamp lineHeight StyledProps--color StyledProps--color-black StyledProps--font-variation-h3"
+                >
+                  0
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main lineClamp StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-top-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  na
+                </p>
+              </div>
+              <div
+                class="bp3-card bp3-elevation-0 Card--card card glanceCard"
+              >
+                <span
+                  class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-grey600"
+                  data-icon="placeholder"
+                >
+                  <svg
+                    height="24"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <filter
+                      id="placeholder_svg__a"
+                    >
+                      <fecolormatrix
+                        in="SourceGraphic"
+                        values="0 0 0 0 0.453512 0 0 0 0 0.490089 0 0 0 0 0.533316 0 0 0 1.000000 0"
+                      />
+                    </filter>
+                    <g
+                      fill="none"
+                      fill-rule="evenodd"
+                      filter="url(#placeholder_svg__a)"
+                    >
+                      <path
+                        d="M12 0c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0zm2.86 8.822a.551.551 0 00-.44.219l-2.92 3.853a.363.363 0 01-.57 0l-1.6-1.982a.544.544 0 00-.855 0l-3.104 4.092a.755.755 0 00-.154.454v.679a.56.56 0 00.548.559h13.513a.56.56 0 00.548-.56v-.685a.755.755 0 00-.146-.447L15.297 9.04a.551.551 0 00-.438-.219zM9.6 6.261c-.807 0-1.46.667-1.46 1.49s.653 1.491 1.46 1.491c.807 0 1.46-.667 1.46-1.49S10.408 6.26 9.6 6.26z"
+                        fill="#d8d8d8"
+                      />
+                    </g>
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main lineClamp lineHeight StyledProps--color StyledProps--color-black StyledProps--font-variation-h3"
+                >
+                  0
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main lineClamp StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--margin-top-small"
+                  style="--text-line-clamp: 1;"
+                >
+                  na
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-top-huge"
+          />
         </div>
       </div>
     </div>
