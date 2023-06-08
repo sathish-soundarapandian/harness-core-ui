@@ -8,11 +8,14 @@
 import React from 'react'
 import { render, act, fireEvent, waitFor, screen } from '@testing-library/react'
 import { set } from 'lodash-es'
+
 import { putPipelinePromise, createPipelineV2Promise, PipelineInfoConfig } from 'services/pipeline-ng'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { useMutateAsGet } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import * as cdngServices from 'services/cd-ng'
+import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
+
 import { PipelineCanvas, PipelineCanvasProps } from '../PipelineCanvas'
 import { PipelineContext } from '../../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../../PipelineContext/PipelineActions'
@@ -28,7 +31,17 @@ const getProps = (): PipelineCanvasProps => ({
   toPipelineList: jest.fn(),
   toPipelineProject: jest.fn()
 })
+jest.mock('@common/components/MonacoEditor/MonacoEditor')
+jest.mock('react-monaco-editor', () => ({
+  MonacoDiffEditor: MonacoEditor
+}))
 
+const mockCallBack = jest.fn()
+jest.mock('@common/hooks/useDiffDialog', () => {
+  return jest.fn(() => ({
+    open: mockCallBack
+  }))
+})
 /* Mocks */
 jest.spyOn(cdngServices, 'useGetSettingValue').mockImplementation(() => {
   return { data: { data: { value: 'false' } } } as any
@@ -326,6 +339,28 @@ describe('Pipeline Canvas - new pipeline', () => {
       </TestWrapper>
     )
     expect(queryByText('unsavedChanges')).toBeTruthy()
+  })
+
+  test('click on unsaved changes', () => {
+    const props = getProps()
+    const contextValue = getDummyPipelineCanvasContextValue({
+      isLoading: false,
+      gitDetails: undefined,
+      isReadonly: false,
+      isUpdated: true
+    })
+    const dummyPermissionsMap = new Map()
+    dummyPermissionsMap.set('EXECUTE_PIPELINE', true)
+    const { queryByText } = render(
+      <TestWrapper defaultPermissionValues={{ permissions: dummyPermissionsMap }}>
+        <PipelineContext.Provider value={contextValue}>
+          <PipelineCanvas {...props} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    expect(queryByText('unsavedChanges')).toBeTruthy()
+    fireEvent.click(queryByText('unsavedChanges')!)
+    expect(mockCallBack).toBeCalled()
   })
 
   test('Enabling Edit Mode in YAML editor and checking for retention', async () => {
