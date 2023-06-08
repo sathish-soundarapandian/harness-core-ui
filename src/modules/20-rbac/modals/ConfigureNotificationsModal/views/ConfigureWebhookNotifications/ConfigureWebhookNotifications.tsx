@@ -21,8 +21,7 @@ import {
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { isEmpty } from 'lodash-es'
-import { URLValidationSchema, URLValidationSchemaWithoutRequired } from '@common/utils/Validation'
+import { URLValidationSchema } from '@common/utils/Validation'
 import { useToaster } from '@common/components'
 import { useTestNotificationSetting, SlackSettingDTO } from 'services/notifications'
 import { NotificationType, WebhookNotificationConfiguration, TestStatus } from '@rbac/interfaces/Notifications'
@@ -43,8 +42,6 @@ interface ConfigureWebhookNotificationsProps {
 
 interface WebhookNotificationData {
   webhookUrl: string
-  slackWebhookUrl?: string
-  userGroups: string[]
 }
 
 export const TestWebhookNotifications: React.FC<{
@@ -68,11 +65,11 @@ export const TestWebhookNotifications: React.FC<{
       const resp = await testNotificationSetting({
         accountId,
         type: 'SLACK',
-        recipient: testData.webhookUrl || testData.slackWebhookUrl,
+        recipient: testData.webhookUrl,
         notificationId: 'asd'
       } as SlackSettingDTO)
       if (resp.status === 'SUCCESS' && resp.data) {
-        showSuccess(getString('rbac.notifications.slackTestSuccess'))
+        showSuccess(getString('rbac.notifications.webhookTestSuccess'))
         setTestStatus(TestStatus.SUCCESS)
       } else {
         showError(getString('somethingWentWrong'))
@@ -125,21 +122,13 @@ const ConfigureWebhookNotifications: React.FC<ConfigureWebhookNotificationsProps
           formName="configureWebhookNotifications"
           validationSchema={Yup.object().shape({
             // TODO: Create global validation function for url validation
-            webhookUrl: Yup.string().when('userGroups', {
-              is: val => isEmpty(val),
-              then:
-                webhookUrlType === MultiTypeInputType.EXPRESSION
-                  ? Yup.string().required()
-                  : URLValidationSchema(getString),
-              otherwise:
-                webhookUrlType === MultiTypeInputType.EXPRESSION
-                  ? Yup.string()
-                  : URLValidationSchemaWithoutRequired(getString)
-            })
+            webhookUrl:
+              webhookUrlType === MultiTypeInputType.EXPRESSION
+                ? Yup.string().required()
+                : URLValidationSchema(getString)
           })}
           initialValues={{
             webhookUrl: '',
-            userGroups: [],
             ...props.config
           }}
         >
@@ -166,7 +155,6 @@ const ConfigureWebhookNotifications: React.FC<ConfigureWebhookNotificationsProps
                     buttonProps={{ disabled: webhookUrlType === MultiTypeInputType.EXPRESSION }}
                   />
                 </Layout.Horizontal>
-                {/* <UserGroupsInput name="userGroups" label={getString('rbac.notifications.labelSlackUserGroups')} /> */}
                 {props.isStep ? (
                   <Layout.Horizontal spacing="large" className={css.buttonGroupSlack}>
                     <Button
@@ -178,7 +166,7 @@ const ConfigureWebhookNotifications: React.FC<ConfigureWebhookNotificationsProps
                     />
                     <Button
                       text={props.submitButtonText || getString('next')}
-                      disabled={!(formik.values.userGroups.length || formik.values.webhookUrl?.length)}
+                      disabled={!formik.values.webhookUrl?.length}
                       variation={ButtonVariation.PRIMARY}
                       type="submit"
                     />

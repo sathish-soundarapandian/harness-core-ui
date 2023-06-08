@@ -318,6 +318,7 @@ notifications:
   slackwebhookUrl: Slack Webhook URL
   slackuserGroups: Notify the Slack Channels associated with these user groups
   slackTestSuccess: Slack test is successfully executed
+  webhookTestSuccess: Webhook test is successfully executed
   pagerDutykey: PagerDuty Key (Optional)
   pagerDutyuserGroups: Notify these user groups
   pagerDutyTestSuccess: Pager Duty test is successfully executed

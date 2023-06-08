@@ -15,7 +15,7 @@ export enum NotificationType {
 
 interface NotificationConfiguration {
   type: NotificationType
-  userGroups: string[]
+  userGroups?: string[]
 }
 
 export interface EmailNotificationConfiguration extends NotificationConfiguration {
