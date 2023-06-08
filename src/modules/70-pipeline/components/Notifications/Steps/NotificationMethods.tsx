@@ -17,6 +17,7 @@ import ConfigureEmailNotifications from '@rbac/modals/ConfigureNotificationsModa
 import ConfigureSlackNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureSlackNotifications/ConfigureSlackNotifications'
 import ConfigurePagerDutyNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigurePagerDutyNotifications/ConfigurePagerDutyNotifications'
 import ConfigureMSTeamsNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureMSTeamsNotifications/ConfigureMSTeamsNotifications'
+import ConfigureWebhookNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureWebhookNotifications/ConfigureWebhookNotifications'
 
 export interface NotificationMethodsProps extends StepProps<NotificationRules> {
   typeOptions?: SelectOption[]
@@ -143,6 +144,44 @@ function NotificationMethods({
 
         {method?.value === NotificationType.Slack ? (
           <ConfigureSlackNotifications
+            withoutHeading={true}
+            submitButtonText={getString('finish')}
+            onSuccess={data => {
+              nextStep?.({
+                ...prevStepData,
+                notificationMethod: {
+                  type: method.value.toString(),
+                  spec: {
+                    userGroups: data.userGroups,
+                    webhookUrl: data.webhookUrl
+                  }
+                }
+              })
+            }}
+            expressions={expressions}
+            hideModal={noop}
+            isStep={true}
+            onBack={data =>
+              previousStep?.({
+                ...prevStepData,
+                notificationMethod: {
+                  type: method.value.toString(),
+                  spec: {
+                    userGroups: data?.userGroups,
+                    webhookUrl: data?.webhookUrl
+                  }
+                }
+              })
+            }
+            config={{
+              type: NotificationType.Slack,
+              webhookUrl: (prevStepData?.notificationMethod?.spec as PmsSlackChannel)?.webhookUrl || '',
+              userGroups: (prevStepData?.notificationMethod?.spec as PmsSlackChannel)?.userGroups || []
+            }}
+          />
+        ) : null}
+        {method?.value === NotificationType.Webhook ? (
+          <ConfigureWebhookNotifications
             withoutHeading={true}
             submitButtonText={getString('finish')}
             onSuccess={data => {

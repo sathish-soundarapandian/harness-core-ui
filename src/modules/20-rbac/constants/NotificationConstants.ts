@@ -29,5 +29,9 @@ export const NotificationTypeSelectOptions: SelectOption[] = [
   {
     label: 'Microsoft Teams',
     value: NotificationType.MsTeams
+  },
+  {
+    label: NotificationType.Webhook,
+    value: NotificationType.Webhook
   }
 ]

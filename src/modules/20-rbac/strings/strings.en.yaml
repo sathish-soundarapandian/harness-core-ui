@@ -314,6 +314,7 @@ notifications:
   notificationMethod: '{{$.notificationMethod}}'
   emailRecipients: Type emails of your recipients
   emailTestSuccess: Email test is successfully executed
+  webhookUrl: Enter the URL to be called
   slackwebhookUrl: Slack Webhook URL
   slackuserGroups: Notify the Slack Channels associated with these user groups
   slackTestSuccess: Slack test is successfully executed

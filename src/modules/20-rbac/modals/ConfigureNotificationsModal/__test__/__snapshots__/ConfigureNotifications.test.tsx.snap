@@ -1173,3 +1173,109 @@ exports[`ConfigureNotifications Slack 1`] = `
   </div>
 </div>
 `;
+
+exports[`ConfigureNotifications Webhook 1`] = `
+<div>
+  <div
+    class="body"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-large StyledProps--main"
+    >
+      <div
+        class="OverlaySpinner--overlaySpinner"
+      >
+        <form
+          action="#"
+          class="FormikForm--main"
+        >
+          <div>
+            <div
+              class="bp3-form-group"
+              data-id="webhookUrl-0"
+            >
+              <label
+                class="bp3-label"
+                for="webhookUrl"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="configureWebhookNotifications_webhookUrl"
+                >
+                  rbac.notifications.webhookUrl
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="webhookUrl"
+                    type="text"
+                    value="http://valid.url"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-xxlarge"
+              style="align-items: center;"
+            >
+              <div
+                class="Button--withDocsTooltip"
+                data-tooltip-id="testWebhookConfigButton"
+              >
+                <button
+                  aria-label="test"
+                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
+                  type="button"
+                >
+                  <span
+                    class="bp3-button-text"
+                  >
+                    test
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--margin-top-xxlarge"
+            >
+              <button
+                aria-label="submit"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+                type="submit"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  submit
+                </span>
+              </button>
+              <button
+                aria-label="cancel"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+                type="button"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  cancel
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;

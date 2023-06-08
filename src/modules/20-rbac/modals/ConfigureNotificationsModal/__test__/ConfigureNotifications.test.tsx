@@ -18,6 +18,7 @@ import ConfigureEmailNotifications, {
 import ConfigureSlackNotifications from '../views/ConfigureSlackNotifications/ConfigureSlackNotifications'
 import ConfigurePagerDutyNotifications from '../views/ConfigurePagerDutyNotifications/ConfigurePagerDutyNotifications'
 import ConfigureMSTeamsNotifications from '../views/ConfigureMSTeamsNotifications/ConfigureMSTeamsNotifications'
+import ConfigureWebhookNotifications from '../views/ConfigureWebhookNotifications/ConfigureWebhookNotifications'
 
 const testNotificationMock = jest.fn()
 testNotificationMock.mockImplementation((): Promise<{ status: string }> => {
@@ -69,6 +70,48 @@ describe('ConfigureNotifications', () => {
     await waitFor(() =>
       expect(handleSuccess).toHaveBeenCalledWith({
         type: NotificationType.Slack,
+        webhookUrl: 'http://valid.url',
+        userGroups: []
+      })
+    )
+  })
+
+  test('Webhook', async () => {
+    const handleSuccess = jest.fn()
+
+    const { container, getByText } = render(
+      <TestWrapper path="/account/:accountId/test" pathParams={{ accountId: 'dummy' }}>
+        <ConfigureWebhookNotifications hideModal={noop} onSuccess={handleSuccess} />
+      </TestWrapper>
+    )
+
+    fillAtForm([
+      {
+        container,
+        fieldId: 'webhookUrl',
+        type: InputTypes.TEXTFIELD,
+        value: 'http://valid.url'
+      }
+    ])
+
+    expect(container).toMatchSnapshot()
+
+    act(() => {
+      fireEvent.click(getByText('test'))
+    })
+
+    expect(testNotificationMock).toHaveBeenCalledWith({
+      accountId: 'dummy',
+      type: 'WEBHOOK',
+      recipient: 'http://valid.url',
+      notificationId: 'asd'
+    })
+
+    clickSubmit(container)
+
+    await waitFor(() =>
+      expect(handleSuccess).toHaveBeenCalledWith({
+        type: NotificationType.Webhook,
         webhookUrl: 'http://valid.url',
         userGroups: []
       })
