@@ -22,7 +22,6 @@ import { useContactSalesMktoModal } from '@common/modals/ContactSales/useContact
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
   useExtendTrialLicense,
-  StartTrialDTO,
   useSaveFeedback,
   FeedbackFormDTO,
   useGetLicensesAndSummary,
@@ -35,9 +34,6 @@ import {
   FORM_TYPE,
   FeedbackFormValues
 } from '@common/modals/ExtendTrial/useExtendTrialOrFeedbackModal'
-import { Editions } from '@common/constants/SubscriptionTypes'
-import { useTelemetry } from '@common/hooks/useTelemetry'
-import { Category, LicenseActions } from '@common/constants/TrackingConstants'
 import css from './layouts.module.scss'
 
 export const BANNER_KEY = 'license_banner_dismissed'
