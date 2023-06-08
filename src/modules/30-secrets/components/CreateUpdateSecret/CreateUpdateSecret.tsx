@@ -60,7 +60,11 @@ import LocalFormFields from './views/LocalFormFields'
 import CustomFormFields from './views/CustomFormFields/CustomFormFields'
 import css from './CreateUpdateSecret.module.scss'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { DefaultSettingConnectorField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import {
+  ConnectorReferenceField,
+  DefaultSettingConnectorField
+} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 export type SecretFormData = Omit<SecretDTOV2, 'spec'> & SecretTextSpecDTO & SecretFileSpecDTO & TemplateInputInterface
 interface TemplateInputInterface {
   templateInputs?: JsonNode
@@ -240,7 +244,7 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   useEffect(() => {
     if (secretResponse?.data?.secret && !loadingSecret) {
       setSecret(secretResponse?.data?.secret)
-
+      console.log('calling connector')
       getConnectorDetails({
         queryParams: {
           accountIdentifier,
@@ -430,6 +434,15 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
       setReadOnlySecretManager((selectedSM?.spec as VaultConnectorDTO)?.readOnly)
     }
   }, [defaultSecretManagerId, connectorDetails, secretManagersApiResponse])
+  const getSecretManagerIdentifier = () => {
+    console.log(
+      'initialize smid ',
+      selectedSecretManager?.identifier || (!initialSecretManagerChangedOrSearchStared && defaultSecretManagerId) || ''
+    )
+    return (
+      selectedSecretManager?.identifier || (!initialSecretManagerChangedOrSearchStared && defaultSecretManagerId) || ''
+    )
+  }
   return (
     <>
       <ModalErrorHandler bind={setModalErrorHandler} />
@@ -450,10 +463,7 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                 ? 'Reference'
                 : 'Inline',
             type,
-            secretManagerIdentifier:
-              selectedSecretManager?.identifier ||
-              (!initialSecretManagerChangedOrSearchStared && defaultSecretManagerId) ||
-              '',
+            secretManagerIdentifier: getSecretManagerIdentifier(),
             orgIdentifier,
             projectIdentifier,
             templateInputs: templateInputSets,
@@ -532,7 +542,50 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
             const typeOfSelectedSecretManager = selectedSecretManager?.type
             return (
               <FormikForm>
-                <DefaultSettingConnectorField
+                <ConnectorReferenceField
+                  label={getString('secrets.labelSecretsManager')}
+                  name={'secretManagerIdentifier'}
+                  componentName={getString('connectors.title.secretManager')}
+                  type={[
+                    Connectors.GCP_KMS,
+                    Connectors.VAULT,
+                    Connectors.AWS_SECRET_MANAGER,
+                    Connectors.CUSTOM_SECRET_MANAGER,
+                    Connectors.AZURE_KEY_VAULT,
+                    Connectors.GcpSecretManager
+                  ]}
+                  selected={formikProps.values['secretManagerIdentifier']}
+                  placeholder={`- ${getString('select')} -`}
+                  accountIdentifier={accountIdentifier}
+                  {...(orgIdentifier ? { orgIdentifier } : {})}
+                  {...(projectIdentifier ? { projectIdentifier } : {})}
+                  onChange={(value, scope) => {
+                    console.log('inside cdefault settings', value)
+
+                    const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
+                    const secretManagerData = { ...value, identifier: connectorRefWithScope }
+                    const readOnlyTemp =
+                      secretManagerData?.type === 'Vault'
+                        ? (secretManagerData?.spec as VaultConnectorDTO)?.readOnly
+                        : false
+                    setReadOnlySecretManager(readOnlyTemp)
+                    formikProps.setFieldValue(
+                      'valueType',
+                      secretManagerData?.type === 'CustomSecretManager'
+                        ? 'CustomSecretManagerValues'
+                        : readOnlyTemp
+                        ? 'Reference'
+                        : 'Inline'
+                    )
+
+                    initializeTemplateInputs(secretManagerData)
+                    setSelectedSecretManager(secretManagerData)
+
+                    formikProps?.setFieldValue('secretManagerIdentifier', connectorRefWithScope)
+                  }}
+                />
+
+                {/* <DefaultSettingConnectorField
                   name={'secretManagerIdentifier'}
                   type={[
                     Connectors.GCP_KMS,
@@ -542,7 +595,32 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                     Connectors.AZURE_KEY_VAULT,
                     Connectors.GcpSecretManager
                   ]}
-                />
+                  onSettingSelectionChange={val => {
+                    console.log({ val })
+                    console.log(formikProps.values)
+
+                    const secretManagerData = val?.value
+                    const readOnlyTemp =
+                      secretManagerData?.type === 'Vault'
+                        ? (secretManagerData?.spec as VaultConnectorDTO)?.readOnly
+                        : false
+                    setReadOnlySecretManager(readOnlyTemp)
+                    formikProps.setFieldValue(
+                      'valueType',
+                      secretManagerData?.type === 'CustomSecretManager'
+                        ? 'CustomSecretManagerValues'
+                        : readOnlyTemp
+                        ? 'Reference'
+                        : 'Inline'
+                    )
+
+                    initializeTemplateInputs(secretManagerData)
+                    setSelectedSecretManager(secretManagerData)
+
+                    formikProps.setFieldValue('secretManagerIdentifier2', val.connectorRefWithScope)
+                    setSecretMangerScope(val?.connectorRefWithScope)
+                  }}
+                /> */}
 
                 {/* <FormMultiTypeConnectorField
                   name={'secretManagerIdentifier'}

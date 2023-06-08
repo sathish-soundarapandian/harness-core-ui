@@ -142,6 +142,7 @@ export interface ConnectorReferenceFieldProps extends Omit<IFormGroupProps, 'lab
   onMultiSelectChange?: (arg: ScopeAndIdentifier[]) => void
   isRecordDisabled?: (val?: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
+  componentName?: string
 }
 
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
@@ -464,7 +465,8 @@ export function getReferenceFieldProps({
   isMultiSelect,
   selectedConnectors,
   isRecordDisabled,
-  renderRecordDisabledWarning
+  renderRecordDisabledWarning,
+  componentName
 }: GetReferenceFieldMethodProps): Omit<
   ReferenceSelectProps<ConnectorReferenceDTO>,
   'onChange' | 'onMultiSelectChange' | 'onCancel' | 'pagination'
@@ -477,7 +479,7 @@ export function getReferenceFieldProps({
     selected,
     placeholder,
     defaultScope,
-    createNewLabel: getString('newConnector'),
+    createNewLabel: componentName || getString('newConnector'),
     // recordClassName: css.listItem,
     isNewConnectorLabelVisible: true,
     fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected, sortMethod) => {
@@ -647,6 +649,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     onMultiSelectChange,
     isRecordDisabled,
     renderRecordDisabledWarning,
+    componentName,
     ...rest
   } = props
 
@@ -873,7 +876,8 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     isMultiSelect,
     selectedConnectors,
     isRecordDisabled,
-    renderRecordDisabledWarning
+    renderRecordDisabledWarning,
+    componentName
   })
 
   return (
@@ -898,7 +902,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
         )}
         {...optionalReferenceSelectProps}
         disabled={disabled || loading}
-        componentName="Connector"
+        componentName={componentName || getString('connector')}
         noDataCard={{ image: ConnectorsEmptyState }}
         pagination={{
           itemCount: pagedConnectorData?.data?.totalItems || 0,

@@ -22,6 +22,8 @@ import {
   TableV2,
   ButtonVariation
 } from '@harness/uicore'
+
+import { Scope } from '@common/interfaces/SecretsInterface'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
@@ -34,7 +36,7 @@ import { useVerifyModal as useVerifyModalSSH } from '@secrets/modals/CreateSSHCr
 import { useVerifyModal as useVerifyModalWinRM } from '@secrets/modals/CreateWinRmCredModal/useVerifyModal'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { SecretIdentifiers } from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -47,6 +49,8 @@ import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationPro
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { SECRETS_DEFAULT_PAGE_INDEX, SECRETS_DEFAULT_PAGE_SIZE } from '../../Constants'
 import css from './SecretsList.module.scss'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 
 interface SecretsListProps {
   secrets?: PageSecretResponseWrapper
@@ -87,13 +91,46 @@ const RenderColumnSecret: Renderer<CellProps<SecretResponseWrapper>> = ({ row })
 
 const RenderColumnDetails: Renderer<CellProps<SecretResponseWrapper>> = ({ row }) => {
   const data = row.original.secret
+
+  const { getString } = useStrings()
+  const { accountId } = useParams<AccountPathProps>()
+  const {
+    selectedProject,
+    selectedOrg,
+    currentUserInfo: { accounts = [] }
+  } = useAppStore()
+  const selectedAccount = accounts.find(account => account.uuid === accountId)
+  const scope = getScopeFromValue((data.spec as SecretTextSpecDTO).secretManagerIdentifier)
+  const getScopeName = () => {
+    switch (scope) {
+      case Scope.PROJECT: {
+        return `${getString('projectLabel')}: ${selectedProject?.name}`
+      }
+
+      case Scope.ORG: {
+        return `${getString('orgLabel')}: ${selectedOrg?.name}`
+      }
+
+      default: {
+        return `${getString('account')}: ${selectedAccount?.accountName}`
+      }
+    }
+  }
   return (
     <>
       {data.type === 'SecretText' || data.type === 'SecretFile' ? (
-        <Text color={Color.BLACK} lineClamp={1} width={230}>
-          {(data.spec as SecretTextSpecDTO).secretManagerIdentifier}
-        </Text>
+        <>
+          <Text color={Color.BLACK} lineClamp={1} width={230}>
+            {`${getString('connectors.title.secretManager')}: ${
+              (data.spec as SecretTextSpecDTO).secretManagerIdentifier
+            }`}
+          </Text>
+          <Text color={Color.GREY_600} lineClamp={1} font={{ size: 'small' }} width={230}>
+            {getScopeName()}
+          </Text>
+        </>
       ) : null}
+
       {/* TODO {Abhinav} display SM name */}
       <Text color={Color.GREY_600} font={{ size: 'small' }}>
         {getStringForType(data.type)}
