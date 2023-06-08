@@ -516,7 +516,7 @@ function FormContent({
                   }
                 })
               },
-              onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.jobName', type),
+              onTypeChange: (type: MultiTypeInputType) => setJobDetailsType(type),
               expressions,
               selectProps: {
                 allowCreatingNewItems: false,

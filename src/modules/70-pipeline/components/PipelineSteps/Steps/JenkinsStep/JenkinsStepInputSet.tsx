@@ -69,6 +69,9 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
 
   const [jobDetails, setJobDetails] = useState<SelectWithBiLevelOption[]>([])
   const [showChildJobField, setShowChildJobField] = useState<boolean>(false)
+  const [jobDetailsType, setJobDetailsType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(get(formik, `values.${prefix}spec.jobName`))
+  )
   const [childJob, setChildJob] = useState<SelectWithBiLevelOption>({} as SelectWithBiLevelOption)
   const getJobItems = (jobs: JobDetails[]): SelectWithBiLevelOption[] => {
     return jobs?.map(job => {
@@ -205,13 +208,13 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
 
   const getJobnameValue = () => {
     const jobName = get(formik, `values.${prefix}spec.jobName`)
-    if (getMultiTypeFromValue(jobName) !== MultiTypeInputType.FIXED) return jobName
+    if (jobDetailsType !== MultiTypeInputType.FIXED) return jobName
     if (showChildJobField) {
       const parentJob = jobDetails.find(job => job.label === lastOpenedJob?.current)
       if (parentJob) return parentJob
     }
     const jobDetail = jobDetails.find(job => job.label === jobName)
-    if (jobDetail) return jobDetail
+    if (jobDetail && jobDetailsType === MultiTypeInputType.FIXED) return jobDetail
     return {
       label: jobName,
       value: jobName,
@@ -337,12 +340,12 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                     formik.setFieldValue(
                       `${prefix}spec.jobName`,
                       getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED
-                        ? primaryValue.label
+                        ? primaryValue?.label
                         : primaryValue
                     )
                   },
 
-                  onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.jobName', type),
+                  onTypeChange: (type: MultiTypeInputType) => setJobDetailsType(type),
                   expressions,
                   selectProps: {
                     allowCreatingNewItems: true,
