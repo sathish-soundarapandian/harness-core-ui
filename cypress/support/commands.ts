@@ -240,6 +240,7 @@ Cypress.Commands.add('visitChangeIntelligence', () => {
   cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
 
   cy.visitPageAssertion('[class^=SideNav-module_main]')
+  cy.get('[data-icon="grid"]').click()
   cy.contains('span', 'Service Reliability').click()
   cy.get('[data-tab-id="ProjectTab"]').click()
   cy.get('[data-testid="project-select-button"]').click()
@@ -248,6 +249,7 @@ Cypress.Commands.add('visitChangeIntelligence', () => {
 
 Cypress.Commands.add('visitChangeIntelligenceForSLOs', () => {
   cy.visitPageAssertion('[class^=SideNav-module_main]')
+  cy.get('[data-icon="grid"]').click()
   cy.contains('span', 'Service Reliability').click()
   cy.get('[data-tab-id="ProjectTab"]').click()
   cy.contains('p', 'Select a Project').click()
