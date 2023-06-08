@@ -25,8 +25,6 @@ import { GetTriggerListForTargetQueryParams, useGetTriggerListForTarget } from '
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { AddDrawer } from '@common/components'
-import { DrawerContext } from '@common/components/AddDrawer/AddDrawer'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -39,7 +37,7 @@ import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
-import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
+import type { ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
 import TriggerCatalogDrawer from './TriggerCatalogDrawer'
 import css from './TriggersList.module.scss'
 
@@ -64,8 +62,6 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
     size = PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE,
     searchTerm
   } = useQueryParams<GitQueryParams & Pick<GetTriggerListForTargetQueryParams, 'page' | 'size' | 'searchTerm'>>()
-  const { CD_TRIGGER_V2, CD_TRIGGER_CATALOG_API_ENABLED, CDS_GOOGLE_CLOUD_FUNCTION, BAMBOO_ARTIFACT_NG } =
-    useFeatureFlags()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const { getString } = useStrings()
@@ -188,18 +184,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
       }
     }
 
-    if (CD_TRIGGER_CATALOG_API_ENABLED) {
-      return <TriggerCatalogDrawer hideDrawer={hideDrawer} onSelect={onSelect} />
-    }
-
-    return (
-      <AddDrawer
-        addDrawerMap={getCategoryItems(getString, false, CD_TRIGGER_V2, CDS_GOOGLE_CLOUD_FUNCTION, BAMBOO_ARTIFACT_NG)}
-        onSelect={onSelect}
-        onClose={hideDrawer}
-        drawerContext={DrawerContext.STUDIO}
-      />
-    )
+    return <TriggerCatalogDrawer hideDrawer={hideDrawer} onSelect={onSelect} />
   })
   const buttonProps = incompatibleGitSyncBranch
     ? {

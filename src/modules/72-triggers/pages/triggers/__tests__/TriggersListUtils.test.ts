@@ -6,11 +6,10 @@
  */
 
 import type { CategoryInterface } from '@common/components/AddDrawer/AddDrawer'
-import { Connectors } from '@connectors/constants'
 import { TriggerBaseType } from '@triggers/components/Triggers/TriggerInterface'
 import type { StringKeys } from 'framework/strings'
 import type { TriggerCatalogResponse } from 'services/pipeline-ng'
-import { getCategoryItems, getTriggerCategoryDrawerMapFromTriggerCatalogItem } from '../utils/TriggersListUtils'
+import { getTriggerCategoryDrawerMapFromTriggerCatalogItem } from '../utils/TriggersListUtils'
 import { triggerCatalogSuccessResponse } from './TriggerCatalogResponseMockData'
 
 const getString = (key: StringKeys): string => key
@@ -113,16 +112,6 @@ const scheduledTriggerCategoryItems = [
 ]
 
 describe('Test util methods', () => {
-  test('Test getCategoryItems method', () => {
-    const triggerCategories = getCategoryItems(getString, true, true, true, true).categories
-    let webhookTriggerCategories = triggerCategories.find((item: CategoryInterface) => item.categoryValue === 'Webhook')
-    expect(triggerCategories.length).toBe(5)
-    webhookTriggerCategories = triggerCategories.find((item: CategoryInterface) => item.categoryValue === 'Webhook')
-    expect(webhookTriggerCategories).toBeDefined()
-    expect(webhookTriggerCategories?.items?.find(item => item.value === Connectors.AZURE_REPO)).toBeDefined()
-    expect(webhookTriggerCategories?.items?.length).toBe(5)
-  })
-
   test('Test getTriggerCategoryDrawerMapFromTriggerCatalogItem method', () => {
     const triggerCategoryDrawerData = getTriggerCategoryDrawerMapFromTriggerCatalogItem(
       getString,
