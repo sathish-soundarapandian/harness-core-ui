@@ -5598,10 +5598,27 @@ export interface StringsMap {
   'discovery.homepage.slogan': string
   'discovery.howToCreateNetworkMap': string
   'discovery.howToCreateNetworkMapDesc': string
+  'discovery.networkMap': string
   'discovery.networkMapDescription': string
   'discovery.selectAConnector': string
   'discovery.selectAConnectorDescription': string
   'discovery.serviceDiscoveyTable': string
+  'discovery.serviceDrawer.annotations': string
+  'discovery.serviceDrawer.cluster': string
+  'discovery.serviceDrawer.header': string
+  'discovery.serviceDrawer.ipAddress': string
+  'discovery.serviceDrawer.ipFamily': string
+  'discovery.serviceDrawer.kind': string
+  'discovery.serviceDrawer.labels': string
+  'discovery.serviceDrawer.namespace': string
+  'discovery.serviceDrawer.overview': string
+  'discovery.serviceDrawer.port': string
+  'discovery.serviceDrawer.replicas': string
+  'discovery.serviceDrawer.resources': string
+  'discovery.serviceDrawer.selector': string
+  'discovery.serviceDrawer.serviceDetails': string
+  'discovery.serviceDrawer.targetPort': string
+  'discovery.serviceDrawer.workloads': string
   'discovery.tabs.configureRelations': string
   'discovery.tabs.selectServices': string
   'discovery.testConnector': string

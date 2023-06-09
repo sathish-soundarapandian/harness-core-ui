@@ -5,41 +5,62 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Classes, Menu, MenuItem, Position } from '@blueprintjs/core'
+import { Classes, Drawer, Menu, MenuItem, Position } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, Icon, Layout, Popover, TableV2, Text } from '@harness/uicore'
 import React from 'react'
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
 import { useParams } from 'react-router-dom'
+import { DatabaseK8SCustomServiceCollection, useListK8SCustomService } from 'services/servicediscovery'
 import { killEvent } from '@common/utils/eventUtils'
 import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
-import { DatabaseServiceCollection, useListService } from 'services/servicediscovery'
 import { useStrings } from 'framework/strings'
+import ServiceDetails from '@discovery/components/ServiceDetails/ServiceDetails'
 import css from './DiscoveryServices.module.scss'
+interface ServiceDetailsProps {
+  infraID: string
+  serviceID: string
+  serviceName: string
+}
 
-const Name: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (
-  <Text font={{ size: 'normal', weight: 'semi-bold' }} margin={{ left: 'medium' }} color={Color.PRIMARY_7}>
-    {row.original.name}
-  </Text>
-)
+const Name: Renderer<CellProps<DatabaseK8SCustomServiceCollection>> = ({ row }) => {
+  return (
+    <Text
+      font={{ size: 'normal', weight: 'semi-bold' }}
+      margin={{ left: 'medium' }}
+      color={Color.PRIMARY_7}
+      style={{ cursor: 'pointer' }}
+    >
+      {row.original.name}
+    </Text>
+  )
+}
 
-const Namepspace: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (
+const Namepspace: Renderer<CellProps<DatabaseK8SCustomServiceCollection>> = ({ row }) => (
   <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
     <Icon name="app-kubernetes" size={24} margin={{ right: 'small' }} />
     <Text>{row.original.namespace}</Text>
   </Layout.Horizontal>
 )
-const NetworkDetails: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (
+const NetworkDetails: Renderer<CellProps<DatabaseK8SCustomServiceCollection>> = ({ row }) => (
   <Layout.Vertical>
     <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_500}>
-      IP Address: {row.original.spec?.clusterIP}
+      IP Address: {row.original.service?.clusterIP}
     </Text>
     <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_500}>
-      Port Number: {row.original.spec && row.original.spec?.ports && row.original.spec?.ports[0]?.port}
+      Port Number:{' '}
+      {row.original.service &&
+        row.original.service?.ports &&
+        row.original.service?.ports.map((value, index) => {
+          if (index + 1 == row.original.service?.ports?.length) {
+            return `${value.port} `
+          }
+          return `${value.port}, `
+        })}
     </Text>
   </Layout.Vertical>
 )
-const LastModified: Renderer<CellProps<DatabaseServiceCollection>> = () => (
+const LastModified: Renderer<CellProps<DatabaseK8SCustomServiceCollection>> = () => (
   <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }}>
     {/* <Avatar hoverCard={false} name={row.original.lastUpdatedBy} size="normal" />
     <Layout.Vertical spacing={'xsmall'}>
@@ -53,7 +74,7 @@ const LastModified: Renderer<CellProps<DatabaseServiceCollection>> = () => (
   </Layout.Horizontal>
 )
 
-const ThreeDotMenu: Renderer<CellProps<DatabaseServiceCollection>> = () => (
+const ThreeDotMenu: Renderer<CellProps<DatabaseK8SCustomServiceCollection>> = () => (
   <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
     <Popover className={Classes.DARK} position={Position.LEFT}>
       <Button variation={ButtonVariation.ICON} icon="Options" />
@@ -66,9 +87,22 @@ const ThreeDotMenu: Renderer<CellProps<DatabaseServiceCollection>> = () => (
 )
 
 const DiscoveredServices: React.FC = () => {
-  const { dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
+  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { getString } = useStrings()
-  const { data: serviceList, loading: serviceListLoader } = useListService({ infraID: dAgentId })
+  const { data: serviceList, loading: serviceListLoader } = useListK8SCustomService({
+    infraID: dAgentId,
+    queryParams: {
+      accountIdentifier: accountId,
+      organizationIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier
+    }
+  })
+  const [isOpen, setDrawerOpen] = React.useState(false)
+  const [serviceDetails, selectedServiceDetails] = React.useState<ServiceDetailsProps>({
+    serviceID: '',
+    infraID: '',
+    serviceName: ''
+  })
 
   return (
     <>
@@ -83,7 +117,7 @@ const DiscoveredServices: React.FC = () => {
         </Container>
       ) : (
         <Container width="95%" style={{ margin: 'auto' }}>
-          <TableV2<DatabaseServiceCollection>
+          <TableV2<DatabaseK8SCustomServiceCollection>
             className={css.tableBody}
             columns={[
               {
@@ -113,7 +147,25 @@ const DiscoveredServices: React.FC = () => {
               }
             ]}
             data={serviceList?.items ?? []}
+            onRowClick={data => {
+              selectedServiceDetails({
+                infraID: data.infraID ?? '',
+                serviceID: data.id ?? '',
+                serviceName: data.name ?? ''
+              })
+              setDrawerOpen(true)
+            }}
           />
+          <Drawer position={Position.RIGHT} isOpen={isOpen} isCloseButtonShown={true} size={'86%'}>
+            <ServiceDetails
+              serviceName={serviceDetails.serviceName}
+              serviceId={serviceDetails.serviceID}
+              infraId={serviceDetails.infraID}
+              closeModal={() => {
+                setDrawerOpen(false)
+              }}
+            />
+          </Drawer>
         </Container>
       )}
     </>

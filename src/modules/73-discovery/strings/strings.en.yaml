@@ -36,3 +36,21 @@ discoveredBy: Discovery by
 agentName: Agent Name
 createNetworkMap: Create Network Map
 allDiscoveredServices: All Discovered Services
+networkMap: Network Map
+serviceDrawer:
+  header: SERVICE
+  overview: Overview
+  resources: Resources
+  serviceDetails: Service Details
+  cluster: Cluster
+  namespace: Namespace
+  ipFamily: IP Families
+  ipAddress: IP Address
+  port: Port
+  targetPort: Target Port
+  selector: Selector
+  kind: Kind
+  replicas: Replicas
+  labels: Labels
+  annotations: Annotations
+  workloads: Workload Information
