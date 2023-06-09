@@ -7,6 +7,7 @@ import { useStrings } from 'framework/strings'
 import WhatToDeploy from './WhatToDeploy'
 import WhereAndHowToDepoy from './WhereAndHowToDepoy'
 import DeploymentSetupSteps from './DeploymentSetupSteps/DeploymentSetupSteps'
+import WhatToDeployPreview from './Previews/WhatToDeployPreview'
 import css from '../GetStartedWithCD.module.scss'
 
 export default function CDOnboardingWizardWithCLI(): JSX.Element {
@@ -37,7 +38,7 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
               title: getString('cd.getStartedWithCD.flowbyquestions.what.title'),
               // subTitle: 'subs',
               panel: <WhatToDeploy />,
-              // preview: <div>prebiew</div>,
+              preview: <WhatToDeployPreview />,
               helpPanelReferenceId: 'aaa',
               errorMessage: ['error']
             },
