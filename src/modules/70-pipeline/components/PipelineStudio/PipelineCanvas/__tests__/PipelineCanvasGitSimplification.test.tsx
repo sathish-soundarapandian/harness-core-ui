@@ -63,6 +63,26 @@ jest.mock('framework/GitRepoStore/GitSyncStoreContext', () => ({
   useGitSyncStore: jest.fn().mockReturnValue({ gitSyncRepos: [{ identifier: 'repoIdentifier', name: 'repoName' }] })
 }))
 
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
+  }),
+  useGetConnector: jest.fn().mockImplementation(() => {
+    return { data: {} }
+  }),
+  useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetFileByBranch: () => ({
+    data: {},
+    mutate: jest.fn(),
+    refetch: jest.fn()
+  }),
+  useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: () => {} }
+  })
+}))
+
 jest.mock('services/pipeline-ng', () => ({
   putPipelinePromise: jest.fn(),
   createPipelinePromise: jest.fn(),

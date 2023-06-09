@@ -22,7 +22,6 @@ export const SetUpGitSync: React.FC = () => {
   const history = useHistory()
 
   const GIT_EX_ENABLED = useFeatureFlag(FeatureFlag.FF_FLAG_SYNC_THROUGH_GITEX_ENABLED)
-
   return (
     <>
       {GIT_EX_ENABLED && isOpen && <GitSyncSetupModal hideModal={hideModal} />}

@@ -13,13 +13,15 @@ import * as GitSyncFormModule from '@gitsync/components/GitSyncForm/GitSyncForm'
 import * as cfServices from 'services/cf'
 import { GitSyncSetupModal, GitSyncSetupModalProps } from '../GitSyncSetupModal'
 
+import * as usePermission from '@rbac/hooks/usePermission'
+
 const renderComponent = (props: Partial<GitSyncSetupModalProps> = {}): RenderResult =>
   render(
     <TestWrapper>
       <GitSyncSetupModal hideModal={jest.fn()} {...props} />
     </TestWrapper>
   )
-
+jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [false])
 describe('GitSyncSetupModal', () => {
   const createGitRepo = jest.fn()
 

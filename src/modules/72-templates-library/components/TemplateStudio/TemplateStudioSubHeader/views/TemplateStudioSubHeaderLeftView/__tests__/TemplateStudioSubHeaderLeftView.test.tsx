@@ -26,6 +26,11 @@ jest.mock('@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService', ()
   getLanguageService: jest.fn()
 }))
 
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
+  })
+}))
 jest.mock('services/template-ng', () => ({
   useUpdateStableTemplate: jest.fn().mockImplementation(() => {
     return {

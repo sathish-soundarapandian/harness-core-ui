@@ -12,7 +12,7 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
 import { SetUpGitSync } from '../SetUpGitSync'
-
+import * as usePermission from '@rbac/hooks/usePermission'
 const renderComponent = (gitExFlag = true): RenderResult => {
   return render(
     <TestWrapper
@@ -27,6 +27,7 @@ const renderComponent = (gitExFlag = true): RenderResult => {
   )
 }
 
+jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [false])
 describe('SetUpGitSync', () => {
   const createGitRepoMock = jest.fn()
 

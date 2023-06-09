@@ -30,6 +30,12 @@ jest.mock('@common/hooks/CommentModal/useCommentModal', () => ({
   }
 }))
 
+jest.mock('services/cd-ng', () => ({
+  useGetSettingValue: jest.fn().mockImplementation(() => {
+    return { data: { data: { value: 'false' } } }
+  })
+}))
+
 jest.mock('@pipeline/utils/useSaveTemplate', () => ({
   useSaveTemplate: jest.fn().mockReturnValue({
     saveAndPublish: jest.fn().mockImplementation(() => {
