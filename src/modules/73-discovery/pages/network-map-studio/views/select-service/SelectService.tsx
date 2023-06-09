@@ -5,19 +5,32 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React, { useMemo, useState } from 'react'
-import { Button, ButtonVariation, Checkbox, Container, Icon, Layout, TableV2, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Checkbox, Container, Icon, Layout, TableV2, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer, Row } from 'react-table'
 import { useStrings } from 'framework/strings'
-import { DatabaseServiceCollection, useListService } from 'services/servicediscovery'
+import {
+  ApiCreateNetworkMapRequest,
+  DatabaseConnection,
+  DatabaseServiceCollection,
+  useCreateNetworkMap,
+  useListService
+} from 'services/servicediscovery'
 import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 import css from './SelectService.module.scss'
 
-const SelectService: React.FC = () => {
+interface Props {
+  name: string
+}
+
+const SelectService: React.FC<Props> = ({ name }) => {
   const { getString } = useStrings()
+  const history = useHistory()
   const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
   const [selectedServices, setSelectedServices] = useState<DatabaseServiceCollection[]>([])
+  const { showError, showSuccess } = useToaster()
 
   const { data: discoveredServices, loading } = useListService({
     infraID: dAgentId,
@@ -28,16 +41,61 @@ const SelectService: React.FC = () => {
     }
   })
 
+  const { mutate: createNetworkMapMutate } = useCreateNetworkMap({
+    queryParams: {
+      accountIdentifier: accountId,
+      organizationIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier
+    },
+    infraID: dAgentId
+  })
+
   const handleSelectChange = (isSelect: boolean, row: Row<DatabaseServiceCollection>): void => {
-    if (isSelect) setSelectedServices(prevState => [...prevState, row.original])
-    else {
-      // TODO: Optimize this, currently a bug
-      selectedServices.map((selectedService, i) => {
-        discoveredServices?.items?.map(service => {
-          if (service.id === selectedService.id) setSelectedServices(selectedServices.splice(i, 1))
-        })
+    if (isSelect) {
+      setSelectedServices(state => state.concat(row.original))
+    } else {
+      setSelectedServices(state => state.filter(service => service.id !== row.original.id))
+    }
+  }
+
+  const handleCreateNetworkMap = (): void => {
+    const connections: DatabaseConnection[] = []
+    for (let index = 0; index < selectedServices.length - 1; index++) {
+      const service = selectedServices[index]
+      const nextService = selectedServices[index + 1]
+      connections.push({
+        from: {
+          id: service.id,
+          kind: service.kind
+        },
+        port: service.spec && service.spec.ports && service.spec.ports[0].port?.toString(),
+        to: {
+          id: nextService.id,
+          kind: nextService.kind
+        }
       })
     }
+    const response: ApiCreateNetworkMapRequest = {
+      connections: connections,
+      infraID: dAgentId,
+      name
+    }
+
+    createNetworkMapMutate({
+      ...response
+    })
+      .then(() => {
+        showSuccess('Network Map Created Successfully')
+        history.push(
+          routes.toDiscoveryDetails({
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            dAgentId: dAgentId
+          })
+        )
+      })
+      .catch(e => showError(e))
   }
 
   const RenderSelectServiceCheckbox: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (
@@ -164,8 +222,26 @@ const SelectService: React.FC = () => {
         </Container>
         <Container className={css.bottomNav} padding={'medium'} height="8vh">
           <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing={'medium'}>
-            <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={() => void 0} />
-            <Button type="submit" variation={ButtonVariation.PRIMARY} text={'Submit'} onClick={() => void 0} />
+            <Button
+              variation={ButtonVariation.TERTIARY}
+              text={getString('cancel')}
+              onClick={() =>
+                history.push(
+                  routes.toDiscoveryDetails({
+                    accountId,
+                    orgIdentifier,
+                    projectIdentifier,
+                    dAgentId: dAgentId
+                  })
+                )
+              }
+            />
+            <Button
+              type="submit"
+              variation={ButtonVariation.PRIMARY}
+              text={'Create Network Map'}
+              onClick={() => handleCreateNetworkMap()}
+            />
           </Layout.Horizontal>
         </Container>
       </Container>

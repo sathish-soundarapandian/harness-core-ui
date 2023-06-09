@@ -92,7 +92,7 @@ const NetworkMapStudio: React.FC = () => {
           <Tabs id="networkMapTabs" onChange={handleTabChange} selectedTabId={StudioTabs.SELECT_SERVICES}>
             <Tab
               id={StudioTabs.SELECT_SERVICES}
-              panel={<SelectService />}
+              panel={<SelectService name={title} />}
               title={getString('discovery.tabs.selectServices')}
             />
             <Icon
