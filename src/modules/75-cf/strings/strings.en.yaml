@@ -168,7 +168,10 @@ featureFlags:
     cannotArchive: '{{ flagName }} cannot be archived because it is still being used by the following flags as a prerequisite'
     confirmFlag: Type the flag name to confirm
     mismatchNameError: The flag name does not match
+    restore: Restore
     removeFlag: You must remove the flag as a prerequisite before you can archive it.
+    restoreFlag: Restore Flag
+    restoreDescription: Restoring makes it available for evaluation if there are references in your code
     warningDescription: This flag is being served in at least one environment.<br/><br/>
       Archiving a flag removes it from all environments, but you can restore it within 30 days.<br/><br/>
       Please ensure all references to this flag are removed prior to archiving. <br/><br/>
