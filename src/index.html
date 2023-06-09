@@ -253,9 +253,11 @@
       }
     </script>
     <!-- End of Harness Feature Flags -->
+    <% if (__DEV__) { %>
     <script>
       window.publicAccessOnAccount = true
     </script>
+    <% } %>
   </head>
   <body>
     <div id="react-root">
