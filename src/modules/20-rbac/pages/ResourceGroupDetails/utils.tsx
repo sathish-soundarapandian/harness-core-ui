@@ -21,7 +21,7 @@ import type {
 } from 'services/resourcegroups'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { UseStringsReturn } from 'framework/strings'
-import RbacFactory from '@rbac/factories/RbacFactory'
+import RbacFactory, { ResourceHandler } from '@rbac/factories/RbacFactory'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 
 interface Option {
@@ -379,4 +379,8 @@ export const getDefaultIncludedScope = (
 
 export const includesCurrentScope = (scopes: ScopeSelector[], resourceScope: Scope): boolean => {
   return !!scopes.find(scope => getScopeFromDTO(scope) === resourceScope && scope.filter === 'EXCLUDING_CHILD_SCOPES')
+}
+
+export const useGetResourceTypeHandler = (resourceType: ResourceType): ResourceHandler | undefined => {
+  return RbacFactory.getResourceTypeHandler(resourceType)
 }

@@ -31,6 +31,8 @@ import SessionToken from 'framework/utils/SessionToken'
 import { useAnyEnterpriseLicense, useCurrentEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { OverviewChartsWithToggle } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
+import { useGetResourceGroupListV2 } from 'services/resourcegroups'
+import { getSelectedScopeLabel, useGetResourceTypeHandler } from '@rbac/pages/ResourceGroupDetails/utils'
 
 export interface RouteMatch {
   path: string
@@ -56,7 +58,10 @@ const customHooks = {
   useGetOrganizationList,
   useGetProjectList,
   isOnPrem,
-  useGetConnectorListV2
+  useGetConnectorListV2,
+  useGetResourceGroupListV2,
+  useGetResourceTypeHandler,
+  getSelectedScopeLabel
 }
 
 const customComponents = {
