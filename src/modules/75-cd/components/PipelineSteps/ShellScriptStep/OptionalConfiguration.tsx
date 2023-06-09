@@ -123,7 +123,7 @@ export default function OptionalConfiguration(props: {
             />
           </MultiTypeFieldSelector>
         </div>
-        {enableOutputVar ? (
+        {enableOutputVar && Array.isArray(formValues.spec.outputVariables) ? (
           <div className={stepCss.formGroup}>
             <MultiTypeFieldSelector
               name="spec.outputVariables"
@@ -149,32 +149,33 @@ export default function OptionalConfiguration(props: {
                           })}
                         </span>
                       </div>
-                      {formValues.spec.outputVariables?.map(({ id }: ShellScriptOutputStepVariable, i: number) => {
-                        return (
-                          <div className={css.outputVarHeader} key={id}>
-                            <FormInput.Text
-                              name={`spec.outputVariables[${i}].name`}
-                              placeholder={getString('name')}
-                              disabled={readonly}
-                            />
-                            <FormInput.Select
-                              items={scriptOutputType}
-                              name={`spec.outputVariables[${i}].type`}
-                              placeholder={getString('typeLabel')}
-                              disabled={readonly}
-                            />
+                      {Array.isArray(formValues.spec.outputVariables) &&
+                        formValues.spec.outputVariables?.map(({ id }: ShellScriptOutputStepVariable, i: number) => {
+                          return (
+                            <div className={css.outputVarHeader} key={id}>
+                              <FormInput.Text
+                                name={`spec.outputVariables[${i}].name`}
+                                placeholder={getString('name')}
+                                disabled={readonly}
+                              />
+                              <FormInput.Select
+                                items={scriptOutputType}
+                                name={`spec.outputVariables[${i}].type`}
+                                placeholder={getString('typeLabel')}
+                                disabled={readonly}
+                              />
 
-                            <OptionalVariables
-                              variablePath={`spec.outputVariables[${i}].value`}
-                              allowableTypes={allowableTypes}
-                              readonly={readonly}
-                              variableTypePath={`spec.outputVariables[${i}].type`}
-                            />
+                              <OptionalVariables
+                                variablePath={`spec.outputVariables[${i}].value`}
+                                allowableTypes={allowableTypes}
+                                readonly={readonly}
+                                variableTypePath={`spec.outputVariables[${i}].type`}
+                              />
 
-                            <Button minimal icon="main-trash" onClick={() => remove(i)} disabled={readonly} />
-                          </div>
-                        )
-                      })}
+                              <Button minimal icon="main-trash" onClick={() => remove(i)} disabled={readonly} />
+                            </div>
+                          )
+                        })}
                       <Button
                         icon="plus"
                         variation={ButtonVariation.LINK}

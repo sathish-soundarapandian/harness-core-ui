@@ -60,7 +60,7 @@ export interface ShellScriptInline {
 export interface ShellScriptData extends StepElementConfig {
   spec: Omit<ShellScriptStepInfo, 'environmentVariables' | 'outputVariables' | 'source'> & {
     environmentVariables?: Array<Omit<ShellScriptStepVariable, 'id'>>
-    outputVariables?: Array<Omit<ShellScriptOutputStepVariable, 'id'>>
+    outputVariables?: Array<Omit<ShellScriptOutputStepVariable, 'id'>> | string
     source?: ShellScriptSource
   }
 }
@@ -68,7 +68,7 @@ export interface ShellScriptData extends StepElementConfig {
 export interface ShellScriptFormData extends StepElementConfig {
   spec: Omit<ShellScriptStepInfo, 'environmentVariables' | 'outputVariables' | 'source'> & {
     environmentVariables?: Array<ShellScriptStepVariable>
-    outputVariables?: Array<ShellScriptOutputStepVariable>
+    outputVariables?: Array<ShellScriptOutputStepVariable> | string
     source?: ShellScriptSource
   }
 }

@@ -160,7 +160,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
         const schema = Yup.object().shape({
           spec: Yup.object().shape({
             environmentVariables: variableSchema(getString),
-            outputVariables: variableSchema(getString)
+            outputVariables: variableSchema(getString) // typeError is necessary here, otherwise we
           })
         })
         schema.validateSync(data)
@@ -353,7 +353,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
               ...variable,
               value: defaultTo(variable.value, '')
             }))
-          : undefined
+          : data.spec?.outputVariables
       }
     }
 

@@ -60,7 +60,11 @@ export function ShellScriptWidget(
         })
       }),
       environmentVariables: variableSchema(getString),
-      outputVariables: variableSchema(getString)
+      outputVariables: Yup.lazy(value =>
+        typeof value === 'object'
+          ? variableSchema(getString) // typeError is necessary here, otherwise we get a bad-looking yup error
+          : Yup.string()
+      )
     }),
     ...getNameAndIdentifierSchema(getString, stepViewType)
   })
