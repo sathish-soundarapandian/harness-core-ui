@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
@@ -41,11 +48,11 @@ const Overview: React.FC<Overview> = props => {
   let totalReplicas = 0
 
   if (serviceWorkloadData) {
-    {
-      serviceWorkloadData?.workloads?.forEach(workloads => {
-        totalReplicas += workloads?.replicas ? workloads.replicas.length : 0
+    serviceWorkloadData.items?.map(item => {
+      item.workloads?.forEach(workload => {
+        totalReplicas += workload?.replicas ? workload.replicas.length : 0
       })
-    }
+    })
   }
 
   return (
@@ -210,7 +217,7 @@ const Overview: React.FC<Overview> = props => {
               title={getString('discovery.serviceDrawer.kind')}
               content={
                 <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-                  {serviceWorkloadData?.kind}
+                  {serviceWorkloadData && serviceWorkloadData.items?.map(item => item?.kind)}
                 </Text>
               }
             />
@@ -224,13 +231,16 @@ const Overview: React.FC<Overview> = props => {
               padding={{ top: 'medium' }}
             />
             <Divider />
-            {serviceWorkloadData?.workloads && serviceWorkloadData?.workloads[0]?.podLabels ? (
+            {serviceWorkloadData &&
+            serviceWorkloadData.items?.map(item => item.workloads && item.workloads[0]?.podLabels) ? (
               <>
                 <ListItems
                   title={getString('discovery.serviceDrawer.labels')}
                   content={
                     <Layout.Vertical width={'60%'}>
-                      {Object.entries(serviceWorkloadData?.workloads[0]?.podLabels).map(([key, value]) => {
+                      {Object.entries(
+                        serviceWorkloadData?.items?.map(item => item.workloads && item.workloads[0]?.podLabels)
+                      ).map(([key, value]) => {
                         return (
                           <Text
                             color={Color.GREY_700}
@@ -251,12 +261,15 @@ const Overview: React.FC<Overview> = props => {
             ) : (
               <></>
             )}
-            {serviceWorkloadData?.workloads && serviceWorkloadData?.workloads[0]?.podAnnotations ? (
+            {serviceWorkloadData &&
+            serviceWorkloadData.items?.map(item => item.workloads && item.workloads[0]?.podAnnotations) ? (
               <ListItems
                 title={getString('discovery.serviceDrawer.annotations')}
                 content={
                   <Layout.Vertical width={'60%'}>
-                    {Object.entries(serviceWorkloadData?.workloads[0]?.podAnnotations).map(([key, value]) => {
+                    {Object.entries(
+                      serviceWorkloadData?.items?.map(item => item.workloads && item.workloads[0]?.podAnnotations)
+                    ).map(([key, value]) => {
                       return (
                         <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }} lineClamp={1} key={key}>
                           {key}:{value}

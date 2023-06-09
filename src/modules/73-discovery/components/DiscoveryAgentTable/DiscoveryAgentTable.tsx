@@ -14,16 +14,16 @@ import moment from 'moment'
 import { Link, useParams } from 'react-router-dom'
 import { killEvent } from '@common/utils/eventUtils'
 import { getTimeAgo } from '@pipeline/utils/CIUtils'
-import type { DatabaseInstallInfraCollection } from 'services/servicediscovery'
+import type { ApiGetInfraResponse } from 'services/servicediscovery'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './DiscoveryAgentTable.module.scss'
 
 interface DiscoveryAgentTableProps {
-  list: DatabaseInstallInfraCollection[]
+  list: ApiGetInfraResponse[]
 }
 
-const Name: Renderer<CellProps<DatabaseInstallInfraCollection>> = ({ row }) => {
+const Name: Renderer<CellProps<ApiGetInfraResponse>> = ({ row }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   return (
     <>
@@ -65,7 +65,7 @@ const Name: Renderer<CellProps<DatabaseInstallInfraCollection>> = ({ row }) => {
   )
 }
 
-const NetworkCount: Renderer<CellProps<DatabaseInstallInfraCollection>> = () => (
+const NetworkCount: Renderer<CellProps<ApiGetInfraResponse>> = () => (
   <Layout.Vertical width={60} height={50} className={css.totalServiceContainer}>
     <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.GREY_500}>
       10
@@ -73,7 +73,7 @@ const NetworkCount: Renderer<CellProps<DatabaseInstallInfraCollection>> = () => 
   </Layout.Vertical>
 )
 
-const ServiceCount: Renderer<CellProps<DatabaseInstallInfraCollection>> = () => (
+const ServiceCount: Renderer<CellProps<ApiGetInfraResponse>> = () => (
   <Layout.Vertical width={60} height={50} className={css.totalServiceContainer}>
     <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.GREY_500}>
       10
@@ -81,8 +81,8 @@ const ServiceCount: Renderer<CellProps<DatabaseInstallInfraCollection>> = () => 
   </Layout.Vertical>
 )
 
-const LastServiceDiscovery: Renderer<CellProps<DatabaseInstallInfraCollection>> = ({ row }) => {
-  const date = moment(row.original.created).format('MMM DD, YYYY hh:mm A')
+const LastServiceDiscovery: Renderer<CellProps<ApiGetInfraResponse>> = ({ row }) => {
+  const date = moment(row.original.createdAt).format('MMM DD, YYYY hh:mm A')
   return (
     <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }}>
       <Layout.Vertical spacing={'xsmall'}>
@@ -94,7 +94,7 @@ const LastServiceDiscovery: Renderer<CellProps<DatabaseInstallInfraCollection>> 
   )
 }
 
-const LastModified: Renderer<CellProps<DatabaseInstallInfraCollection>> = ({ row }) => (
+const LastModified: Renderer<CellProps<ApiGetInfraResponse>> = ({ row }) => (
   <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }}>
     <Avatar hoverCard={false} name={'Amit Das'} size="normal" />
     <Layout.Vertical spacing={'xsmall'}>
@@ -102,13 +102,13 @@ const LastModified: Renderer<CellProps<DatabaseInstallInfraCollection>> = ({ row
         Amit Das
       </Text>
       <Text font={{ size: 'xsmall' }} color={Color.GREY_500} lineClamp={1}>
-        {getTimeAgo(new Date(row?.original?.created ?? 0).getTime())}
+        {getTimeAgo(new Date(row?.original?.createdAt ?? 0).getTime())}
       </Text>
     </Layout.Vertical>
   </Layout.Horizontal>
 )
 
-const ThreeDotMenu: Renderer<CellProps<DatabaseInstallInfraCollection>> = () => (
+const ThreeDotMenu: Renderer<CellProps<ApiGetInfraResponse>> = () => (
   <Layout.Horizontal style={{ justifyContent: 'flex-end', marginRight: '10px' }} onClick={killEvent}>
     <Popover className={Classes.DARK} position={Position.LEFT}>
       <Button variation={ButtonVariation.ICON} icon="Options" />
@@ -125,7 +125,7 @@ const ThreeDotMenu: Renderer<CellProps<DatabaseInstallInfraCollection>> = () => 
 
 const DiscoveryAgentTable: React.FC<DiscoveryAgentTableProps> = ({ list }) => {
   return (
-    <TableV2<DatabaseInstallInfraCollection>
+    <TableV2<ApiGetInfraResponse>
       className={css.tableBody}
       sortable={true}
       columns={[

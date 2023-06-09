@@ -13,6 +13,7 @@ import { useStrings } from 'framework/strings'
 import {
   ApiCreateNetworkMapRequest,
   DatabaseConnection,
+  DatabaseNetworkMapEntity,
   DatabaseServiceCollection,
   useCreateNetworkMap,
   useListService
@@ -32,12 +33,17 @@ const SelectService: React.FC<Props> = ({ name }) => {
   const [selectedServices, setSelectedServices] = useState<DatabaseServiceCollection[]>([])
   const { showError, showSuccess } = useToaster()
 
+  const [page, setPage] = useState<number>(0)
+  const [limit, setLimit] = useState<number>(15)
+
   const { data: discoveredServices, loading } = useListService({
     infraID: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
-      projectIdentifier: projectIdentifier
+      projectIdentifier: projectIdentifier,
+      limit: limit,
+      page: page
     }
   })
 
@@ -60,6 +66,9 @@ const SelectService: React.FC<Props> = ({ name }) => {
 
   const handleCreateNetworkMap = (): void => {
     const connections: DatabaseConnection[] = []
+    const resources: DatabaseNetworkMapEntity[] = []
+
+    // For loop to loop over connections serially, to be removed after graph is introduced
     for (let index = 0; index < selectedServices.length - 1; index++) {
       const service = selectedServices[index]
       const nextService = selectedServices[index + 1]
@@ -75,9 +84,16 @@ const SelectService: React.FC<Props> = ({ name }) => {
         }
       })
     }
+    for (let index = 0; index < selectedServices.length - 1; index++) {
+      resources.push({
+        id: selectedServices[index].id,
+        kind: selectedServices[index].kind
+      })
+    }
     const response: ApiCreateNetworkMapRequest = {
       connections: connections,
       infraID: dAgentId,
+      resources,
       name
     }
 
@@ -216,6 +232,14 @@ const SelectService: React.FC<Props> = ({ name }) => {
                 className={css.tableBody}
                 columns={columns}
                 data={discoveredServices?.items ?? []}
+                pagination={{
+                  itemCount: discoveredServices?.items?.length || 0,
+                  pageSize: limit,
+                  pageCount: discoveredServices?.items ? Math.ceil(discoveredServices?.items?.length / limit) : 1,
+                  pageIndex: page,
+                  gotoPage: index => setPage(index),
+                  onPageSizeChange: index => setLimit(index)
+                }}
               />
             </Container>
           )}
