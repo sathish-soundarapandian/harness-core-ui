@@ -7,7 +7,7 @@
 
 import { clone, omit } from 'lodash-es'
 import { isUpdated, determineUnSaveState, onSubmit } from '../Configurations.utils'
-import { monitoredService } from './Configurations.mock'
+import { infraMonitoredService, monitoredService } from './Configurations.mock'
 
 const cachedInitialValues = clone(monitoredService)
 cachedInitialValues.dependencies = []
@@ -129,6 +129,27 @@ describe('Validate configuration tab util function', () => {
       saveMonitoredService,
       fetchMonitoredService,
       setOverrideBlockNavigation
+    })
+  })
+
+  test('validate Infra monitoredservice onSubmit', async () => {
+    await onSubmit({
+      formikValues: infraMonitoredService,
+      identifier: 'infraMonitoredService',
+      orgIdentifier: 'default',
+      projectIdentifier: 'Demo',
+      cachedInitialValues: infraMonitoredService,
+      updateMonitoredService,
+      saveMonitoredService,
+      fetchMonitoredService,
+      setOverrideBlockNavigation
+    })
+    const createPayload = omit(infraMonitoredService, 'isEdit')
+    expect(updateMonitoredService).toHaveBeenCalledWith({
+      ...createPayload,
+      notificationRuleRefs: undefined,
+      environmentRef: 'EnvironmentRef101',
+      environmentRefList: ['EnvironmentRef101', 'EnvironmentRef102']
     })
   })
 })

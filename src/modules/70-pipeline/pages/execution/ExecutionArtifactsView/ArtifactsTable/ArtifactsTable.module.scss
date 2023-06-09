@@ -1,11 +1,6 @@
-.toggleAccordion {
-  // to have better click target area for toggle
-  padding: var(--spacing-large) var(--spacing-medium) !important;
-}
-
 .table {
   padding: var(--spacing-large);
-
+  overflow-y: auto;
   [role='cell'],
   [role='columnheader'] {
     width: auto !important;
@@ -15,10 +10,14 @@
   div[class*='TableV2--cells'],
   div[class*='TableV2--header'] {
     display: grid !important;
-    grid-template-columns: 2.5rem 1.5fr 1.5fr 1fr 1fr 1.5fr;
+    grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1.5fr;
   }
 }
 
 .uppercase {
   text-transform: uppercase;
+}
+
+.violations {
+  margin-left: calc(var(--spacing-4) * -1) !important;
 }

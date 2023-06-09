@@ -14,6 +14,7 @@ declare const styles: {
   readonly outputVarHeader: string
   readonly panel: string
   readonly radioGroup: string
+  readonly runtimeVarHeader: string
   readonly separator: string
   readonly stepDesc: string
   readonly stepType: string

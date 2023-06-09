@@ -60,8 +60,6 @@ export interface EnvCardComponentProps {
     React.SetStateAction<{
       envId?: string
       isEnvGroup: boolean
-      envName?: string
-      isRollbackAllowed?: boolean
     }>
   >
   env?: EnvCardProps
@@ -100,4 +98,16 @@ export interface ArtifactCardProps {
   artifact?: ArtifactInstanceDetail | null
   selectedArtifact?: string
   setArtifactFilterApplied?: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export interface PipelineExecInfoProps {
+  pipelineId: string
+  planExecutionId: string
+  lastDeployedAt: number
+  count: number
+  infrastructureMappingId?: string
+  instanceKey?: string
+  rollbackStatus?: 'UNAVAILABLE' | 'NOT_STARTED' | 'STARTED' | 'SUCCESS' | 'FAILURE'
+  stageNodeExecutionId?: string
+  stageSetupId?: string
 }

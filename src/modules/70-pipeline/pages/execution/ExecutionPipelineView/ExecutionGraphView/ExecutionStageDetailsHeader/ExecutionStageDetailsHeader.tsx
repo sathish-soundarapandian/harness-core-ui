@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { defaultTo, find, get, identity, isEmpty } from 'lodash-es'
-
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -16,7 +15,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import factory from '@pipeline/factories/ExecutionFactory'
-import type { StageType } from '@pipeline/utils/stageHelpers'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { Duration } from '@common/components/Duration/Duration'
 import { ExecutionStatus, isExecutionFailed, isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
@@ -32,10 +31,12 @@ import { extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
+import IACMWorkspaceHeader from './IACMWorkspaceHeader'
 import css from './ExecutionStageDetailsHeader.module.scss'
 
 export function ExecutionStageDetailsHeader(): React.ReactElement {
   const {
+    allStagesMap,
     selectedStageId,
     selectedChildStageId,
     pipelineStagesMap,
@@ -104,7 +105,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     [orgIdentifier, projectIdentifier, accountId, pipelineIdentifier]
   )
   const stageNode = find(allNodeMap, node => node.setupId === getNodeId || node?.uuid === getNodeId)
-
+  const selectedIACMStage = allStagesMap.get(selectedStageId)?.module === StageType.IACM.toLowerCase()
   let waitingStepsCount = 0
 
   Object.keys(allNodeMap).forEach(key => {
@@ -261,6 +262,7 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
             {getString('common.moreInfo')}
           </Text> */}
         </div>
+        {selectedIACMStage && <IACMWorkspaceHeader allNodeMap={allNodeMap} />}
         <div>
           {stage && stageDetail?.component
             ? React.createElement<StageDetailProps>(stageDetail.component, {

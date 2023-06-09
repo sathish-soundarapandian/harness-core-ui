@@ -61,6 +61,9 @@ export const successValidationResult: ResponsePipelineValidationResponseDTO = {
     templateValidationResponse: {
       validYaml: true,
       exceptionMessage: undefined
+    },
+    validateTemplateReconcileResponseDTO: {
+      reconcileNeeded: true
     }
   },
   correlationId: 'correlationId'

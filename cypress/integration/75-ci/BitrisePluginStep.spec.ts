@@ -8,7 +8,8 @@ import {
   addTrigger,
   visitTemplatesPage,
   addTemplate,
-  selectStepInStepLibrary
+  selectStepInStepLibrary,
+  selectStage
 } from '../../support/75-ci/CIpipeline.utils'
 
 const runtimeInputParagraphLabels = ['Uses', 'Settings', 'Environment Variables']
@@ -19,6 +20,7 @@ describe('Bitrise Plugin Step', () => {
   })
 
   it('add Bitrise plugin step to base pipeline', () => {
+    selectStage('CI_Stage1')
     addStepToPipeline()
     selectStepInStepLibrary('Bitrise Plugin')
     cy.get('.bp3-input-group').eq(0).type('Bitrise plugin')

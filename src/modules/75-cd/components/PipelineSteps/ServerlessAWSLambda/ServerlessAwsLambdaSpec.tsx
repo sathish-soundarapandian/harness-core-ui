@@ -21,6 +21,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 import { connectorTypes } from '@pipeline/utils/constants'
+
 import {
   ServerlessInputForm,
   ServerlessSpecEditable,
@@ -40,7 +41,12 @@ const ServerlessAwsConnectorRegex = /^.+infrastructure\.infrastructureDefinition
 export class ServerlessAwsLambdaSpec extends PipelineStep<ServerlessAwsLambdaInfrastructureSpecStep> {
   lastFetched: number
   protected type = StepType.ServerlessAwsInfra
-  protected defaultValues: ServerlessAwsLambdaInfrastructure = { connectorRef: '', region: '', stage: '' }
+  protected defaultValues: ServerlessAwsLambdaInfrastructure = {
+    connectorRef: '',
+    region: '',
+    stage: '',
+    provisioner: ''
+  }
 
   protected stepIcon: IconName = 'service-aws'
   protected stepName = 'Specify your AWS connector'

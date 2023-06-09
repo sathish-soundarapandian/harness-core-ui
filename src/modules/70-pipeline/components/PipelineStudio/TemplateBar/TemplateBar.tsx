@@ -31,6 +31,7 @@ import { useQueryParams } from '@common/hooks'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import css from './TemplateBar.module.scss'
 
 interface TemplateMenuItem {
@@ -213,14 +214,30 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
       <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
         <Icon size={11} color={Color.WHITE} name={'template-library'} />
         {loading && (
-          <Text style={{ flexGrow: 1 }} font={{ size: 'small' }} color={Color.WHITE}>
+          <Text font={{ size: 'small' }} color={Color.WHITE}>
             {getString('loading')}
           </Text>
         )}
         {!loading && !isEmpty(selectedTemplate) && (
-          <Text style={{ flexGrow: 1 }} font={{ size: 'small' }} color={Color.WHITE}>
+          <Text
+            font={{ size: 'small' }}
+            color={Color.WHITE}
+            lineClamp={1}
+            className={selectedTemplate?.storeType === StoreType.INLINE ? css.inlineText : ''}
+          >
             {`Using Template: ${getTemplateNameWithLabel(selectedTemplate)}`}
           </Text>
+        )}
+        {selectedTemplate?.storeType === StoreType.REMOTE && (
+          <div className={css.gitRemoteDetailsWrapper}>
+            <GitRemoteDetails
+              repoName={selectedTemplate?.gitDetails?.repoName}
+              branch={selectedTemplate?.gitDetails?.branch}
+              flags={{ readOnly: true, normalInputStyle: true }}
+              branchCustomClassName={css.gitRemoteDetails}
+              customClassName={css.gitRemoteDetails}
+            />
+          </div>
         )}
         <Popover
           isOpen={menuOpen}

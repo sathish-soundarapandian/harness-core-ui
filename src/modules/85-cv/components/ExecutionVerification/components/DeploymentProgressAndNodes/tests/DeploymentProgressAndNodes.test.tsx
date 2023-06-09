@@ -6,69 +6,21 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { cloneDeep } from 'lodash-es'
+import userEvent from '@testing-library/user-event'
 import { Classes } from '@blueprintjs/core'
+import * as cvServices from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import { DeploymentProgressAndNodes, DeploymentProgressAndNodesProps } from '../DeploymentProgressAndNodes'
+import { BaselineDeploymentMockData } from './DeploymentProgressAndNodes.mock'
 
-const BaselineDeploymentMockData: DeploymentProgressAndNodesProps = {
-  data: {
-    spec: {
-      analysedServiceIdentifier: 'sumo_service_v2',
-      analysedEnvIdentifier: 'sumo_env_v2',
-      monitoredServiceType: 'DEFAULT',
-      monitoredServiceIdentifier: 'KQE5GbbKTD6w39T6_jwUog',
-      analysisType: 'BLUE_GREEN',
-      sensitivity: 'HIGH',
-      durationInMinutes: 5,
-      isFailOnNoAnalysis: false
-    },
-    appliedDeploymentAnalysisType: 'ROLLING',
-    verificationStatus: 'VERIFICATION_PASSED',
-    verificationProgressPercentage: 100,
-    verificationStartTimestamp: 1674145324888,
-    testNodes: {
-      nodeType: 'POST_DEPLOYMENT',
-      nodes: [
-        {
-          type: 'DEPLOYMENT_NODE',
-          nodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02',
-          verificationResult: 'PASSED',
-          failedMetrics: 0,
-          failedLogClusters: 0
-        }
-      ]
-    },
-    controlNodes: {
-      nodeType: 'PRE_DEPLOYMENT',
-      nodes: [
-        {
-          type: 'DEPLOYMENT_NODE',
-          nodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02'
-        }
-      ]
-    },
-    metricsAnalysis: {
-      healthy: 1,
-      warning: 0,
-      unhealthy: 0,
-      noAnalysis: 0
-    },
-    logClusters: {
-      knownClustersCount: 0,
-      unknownClustersCount: 0,
-      unexpectedFrequencyClustersCount: 0
-    },
-    errorClusters: {
-      knownClustersCount: 0,
-      unknownClustersCount: 0,
-      unexpectedFrequencyClustersCount: 0
-    }
-  },
-  className: 'ExecutionVerificationSummary-module_details_xcmdgQ',
-  isConsoleView: true
-}
+const showError = jest.fn()
+
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
+  useToaster: jest.fn(() => ({ showError }))
+}))
 
 const CanaryDeploymentMockData: DeploymentProgressAndNodesProps = {
   data: {
@@ -228,5 +180,401 @@ describe('Deployment progress and nodes unit tests', () => {
     expect(getByText(/AFTER/)).toBeInTheDocument()
     const deploymentNodes = container.querySelectorAll('[class~="hexagon"]')
     expect(deploymentNodes.length).toBe(2)
+  })
+
+  describe('Baseline based verification', () => {
+    test('Should not show pin baseline button when applicableForBaseline property is false in baseline overview', () => {
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...BaselineDeploymentMockData} />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByTestId(/pinBaselineButton/)).not.toBeInTheDocument()
+    })
+
+    test('Should not render pin baseline button and status message when feature flag is disabled', () => {
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+        data: {
+          ...BaselineDeploymentMockData.data,
+          baselineOverview: {
+            applicableForBaseline: true,
+            baseline: true
+          }
+        }
+      }
+      render(
+        <TestWrapper>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByTestId(/pinBaselineButton/)).not.toBeInTheDocument()
+      expect(screen.queryByTestId(/baselineStatusMessage/)).not.toBeInTheDocument()
+    })
+
+    test('Should show pin baseline button when applicableForBaseline property is true in baseline overview', () => {
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+        data: {
+          ...BaselineDeploymentMockData.data,
+          baselineOverview: {
+            applicableForBaseline: true,
+            baseline: true
+          }
+        }
+      }
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      expect(screen.getByTestId(/pinBaselineButton/)).toBeInTheDocument()
+      expect(screen.getByTestId(/pinBaselineButton/)).toHaveTextContent('pinpipeline.verification.unpinBaseline')
+    })
+
+    test('Should show pin baseline button when applicableForBaseline property is true in baseline overview', async () => {
+      const updateBaselineMock = jest.fn()
+      jest.spyOn(cvServices, 'useUpdateBaseline1').mockReturnValue({
+        mutate: updateBaselineMock,
+        cancel: function (): void {
+          throw new Error('Function not implemented.')
+        },
+        error: null,
+        loading: false
+      })
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+        data: {
+          ...BaselineDeploymentMockData.data,
+          baselineOverview: {
+            applicableForBaseline: true,
+            baseline: false
+          }
+        }
+      }
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      const pinBaselineButton = screen.getByTestId(/pinBaselineButton/)
+
+      expect(pinBaselineButton).toBeInTheDocument()
+      expect(pinBaselineButton).toHaveTextContent('pinpipeline.verification.pinBaseline')
+
+      await act(async () => {
+        await userEvent.click(pinBaselineButton)
+      })
+
+      await waitFor(() => expect(updateBaselineMock).toHaveBeenCalledWith({ baseline: true }))
+    })
+
+    test('Should show error toast when update baseline API errors', async () => {
+      const updateBaselineMock = jest.fn().mockReturnValue(Promise.reject())
+      jest.spyOn(cvServices, 'useUpdateBaseline1').mockReturnValue({
+        mutate: updateBaselineMock,
+        cancel: function (): void {
+          throw new Error('Function not implemented.')
+        },
+        error: {
+          data: {
+            message: 'Some error'
+          },
+          message: 'some error'
+        },
+        loading: false
+      })
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+        data: {
+          ...BaselineDeploymentMockData.data,
+          baselineOverview: {
+            applicableForBaseline: true,
+            baseline: false
+          }
+        }
+      }
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      const pinBaselineButton = screen.getByTestId(/pinBaselineButton/)
+
+      await act(async () => {
+        await userEvent.click(pinBaselineButton)
+      })
+
+      await waitFor(() => expect(updateBaselineMock).toHaveBeenCalledWith({ baseline: true }))
+      await waitFor(() => expect(showError).toHaveBeenCalledWith('Some error'))
+    })
+
+    test('Should show confirmation modal when pin baseline button is clicked with already available baseline', async () => {
+      const updateBaselineMock = jest.fn()
+      jest.spyOn(cvServices, 'useUpdateBaseline1').mockReturnValue({
+        mutate: updateBaselineMock,
+        cancel: function (): void {
+          throw new Error('Function not implemented.')
+        },
+        error: null,
+        loading: false
+      })
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+        data: {
+          ...BaselineDeploymentMockData.data,
+          baselineOverview: {
+            applicableForBaseline: true,
+            baseline: false,
+            baselineVerificationJobInstanceId: 'new'
+          }
+        }
+      }
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      const pinBaselineButton = screen.getByTestId(/pinBaselineButton/)
+
+      expect(pinBaselineButton).toBeInTheDocument()
+      expect(pinBaselineButton).toHaveTextContent('pinpipeline.verification.pinBaseline')
+
+      await act(async () => {
+        await userEvent.click(pinBaselineButton)
+      })
+
+      await waitFor(() => expect(updateBaselineMock).not.toHaveBeenCalled())
+
+      const confimationButton = screen.getByTestId(/pinBaslineButton_confirmationButton/)
+
+      await waitFor(() => expect(confimationButton).toBeInTheDocument())
+
+      await act(async () => {
+        await userEvent.click(confimationButton)
+      })
+
+      await waitFor(() => expect(updateBaselineMock).toHaveBeenCalledWith({ baseline: true }))
+    })
+
+    test('Should show confirmation modal when pin baseline button is clicked and cancel button click should not make any API call', async () => {
+      const updateBaselineMock = jest.fn()
+      jest.spyOn(cvServices, 'useUpdateBaseline1').mockReturnValue({
+        mutate: updateBaselineMock,
+        cancel: function (): void {
+          throw new Error('Function not implemented.')
+        },
+        error: null,
+        loading: false
+      })
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+        data: {
+          ...BaselineDeploymentMockData.data,
+          baselineOverview: {
+            applicableForBaseline: true,
+            baseline: false,
+            baselineVerificationJobInstanceId: 'new'
+          }
+        }
+      }
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      const pinBaselineButton = screen.getByTestId(/pinBaselineButton/)
+
+      expect(pinBaselineButton).toBeInTheDocument()
+      expect(pinBaselineButton).toHaveTextContent('pinpipeline.verification.pinBaseline')
+
+      await act(async () => {
+        await userEvent.click(pinBaselineButton)
+      })
+
+      await waitFor(() => expect(updateBaselineMock).not.toHaveBeenCalled())
+
+      const cancelButton = screen.getByTestId(/pinBaslineButton_cancelButton/)
+
+      await waitFor(() => expect(cancelButton).toBeInTheDocument())
+
+      await act(async () => {
+        await userEvent.click(cancelButton)
+      })
+
+      await waitFor(() => expect(updateBaselineMock).not.toHaveBeenCalled())
+    })
+
+    test('Should not show confirmation modal when unpin baseline button is clicked with already available baseline', async () => {
+      const updateBaselineMock = jest.fn()
+      jest.spyOn(cvServices, 'useUpdateBaseline1').mockReturnValue({
+        mutate: updateBaselineMock,
+        cancel: function (): void {
+          throw new Error('Function not implemented.')
+        },
+        error: null,
+        loading: false
+      })
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+        data: {
+          ...BaselineDeploymentMockData.data,
+          baselineOverview: {
+            applicableForBaseline: true,
+            baseline: true,
+            baselineVerificationJobInstanceId: 'new'
+          }
+        }
+      }
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      const pinBaselineButton = screen.getByTestId(/pinBaselineButton/)
+
+      expect(pinBaselineButton).toBeInTheDocument()
+      expect(pinBaselineButton).toHaveTextContent('pinpipeline.verification.unpinBaseline')
+
+      await act(async () => {
+        await userEvent.click(pinBaselineButton)
+      })
+
+      const confimationButton = screen.queryByTestId(/pinBaslineButton_confirmationButton/)
+      expect(confimationButton).not.toBeInTheDocument()
+
+      await waitFor(() => expect(updateBaselineMock).toHaveBeenCalledWith({ baseline: false }))
+    })
+
+    test('Should show passed baseline status message when verification is passed with baseline data', async () => {
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+        data: {
+          ...BaselineDeploymentMockData.data,
+          baselineOverview: {
+            applicableForBaseline: true,
+            baseline: true,
+            baselineVerificationJobInstanceId: 'new'
+          }
+        }
+      }
+
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      expect(screen.getByTestId(/baselineStatusMessage/)).toHaveTextContent(
+        'pipeline.verification.baselineMessages.passed'
+      )
+    })
+
+    test('Should show passed baseline status message when verification is passed with no baseline data', async () => {
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+        data: {
+          ...BaselineDeploymentMockData.data,
+          baselineOverview: {
+            applicableForBaseline: true,
+            baseline: true
+          }
+        }
+      }
+
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      expect(screen.getByTestId(/baselineStatusMessage/)).toHaveTextContent(
+        'pipeline.verification.baselineMessages.passedWithNoBaseline'
+      )
+    })
+
+    test('Should show baseline expited message when baseline verification is expired', async () => {
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+        data: {
+          ...BaselineDeploymentMockData.data,
+          baselineOverview: {
+            applicableForBaseline: true,
+            baseline: true,
+            baselineExpired: true,
+            baselineExpiryTimestamp: 1676545440000
+          }
+        }
+      }
+
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      expect(screen.getByTestId(/baselineStatusMessage/)).toHaveTextContent(
+        'pipeline.verification.baselineMessages.expired'
+      )
+    })
+
+    test('Should show verification failed message when verification is failed', () => {
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+
+        data: {
+          ...BaselineDeploymentMockData.data,
+          verificationStatus: 'VERIFICATION_FAILED'
+        }
+      }
+
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      expect(screen.getByTestId(/baselineStatusMessage/)).toHaveTextContent(
+        'pipeline.verification.baselineMessages.failed'
+      )
+    })
+
+    test('Should not show status message when no matching scenario is found', () => {
+      const baselinePropsWithData: DeploymentProgressAndNodesProps = {
+        ...BaselineDeploymentMockData,
+
+        data: {
+          ...BaselineDeploymentMockData.data,
+          verificationStatus: 'ABORTED'
+        }
+      }
+
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...baselinePropsWithData} />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByTestId(/baselineStatusMessage/)).not.toBeInTheDocument()
+    })
+
+    test('Should show dash (-) if deployment tag is null string value', () => {
+      render(
+        <TestWrapper defaultFeatureFlagValues={{ SRM_ENABLE_BASELINE_BASED_VERIFICATION: true }}>
+          <DeploymentProgressAndNodes {...BaselineDeploymentMockData} />
+        </TestWrapper>
+      )
+
+      expect(screen.getByTestId(/baselineTestName/)).toHaveTextContent('tag1')
+      expect(screen.getByTestId(/currentTestName/)).toHaveTextContent('-')
+    })
   })
 })

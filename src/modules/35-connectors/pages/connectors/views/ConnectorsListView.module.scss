@@ -15,6 +15,20 @@
       border: none;
     }
   }
+  .row {
+    .favoriteStar {
+      visibility: hidden;
+    }
+    .favorite {
+      visibility: visible;
+    }
+
+    &:hover {
+      .favoriteStar {
+        visibility: visible;
+      }
+    }
+  }
 }
 
 .layout {

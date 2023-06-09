@@ -58,6 +58,10 @@
   max-width: 400px;
 }
 
+.tooltipWrapper {
+  display: inline-flex;
+}
+
 .triggerNameStyle {
   display: grid !important;
   grid-template-columns: 10% 90%;

@@ -44,9 +44,8 @@ import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelectio
 import { getValue } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-
 import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
@@ -59,6 +58,8 @@ import {
   shouldFetchTagsSource
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
+import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
+import { useGetDigestDetailsForAcrArtifact } from './hooks/useGetDigestDetailsForAcrArtifact'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface ACRRenderContent extends ArtifactSourceRenderProps {
@@ -121,7 +122,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
   )
 
   const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
-
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
   const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
 
   const getFqnPathForEntity = (entityName: string): string =>
@@ -153,6 +154,10 @@ const Content = (props: ACRRenderContent): JSX.Element => {
   const repositoryValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repository`, ''), artifact?.spec?.repository),
     get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
+  )
+  const tagValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tag`, ''), artifact?.spec?.tag),
+    get(initialValues?.artifacts, `${artifactPath}.spec.tag`, '')
   )
 
   const { fetchTags, fetchingTags, fetchTagsError, acrTagsData } = useGetBuildDetailsForAcrArtifact({
@@ -241,6 +246,35 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     },
     lazy: true,
     debounce: 300
+  })
+
+  const {
+    fetchDigest,
+    fetchingDigest,
+    fetchDigestError: digestError,
+    acrDigestData: digestData
+  } = useGetDigestDetailsForAcrArtifact({
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    subscriptionId: getFinalQueryParamValue(subscriptionIdValue),
+    registry: getFinalQueryParamValue(registryValue),
+    repository: getFinalQueryParamValue(repositoryValue),
+    tag: getFinalQueryParamValue(tagValue),
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    useArtifactV1Data,
+    formik,
+    path,
+    initialValues,
+    isPropagatedStage,
+    serviceId,
+    isSidecar,
+    artifactPath,
+    stageIdentifier,
+    pipelineIdentifier,
+    stepViewType
   })
 
   useEffect(() => {
@@ -663,6 +697,23 @@ const Content = (props: ACRRenderContent): JSX.Element => {
               template={template}
             />
           )}
+
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <div className={css.inputFieldLayout}>
+                <DigestField
+                  {...props}
+                  fetchingDigest={fetchingDigest}
+                  fetchDigestError={digestError}
+                  fetchDigest={fetchDigest}
+                  expressions={expressions}
+                  stageIdentifier={stageIdentifier}
+                  digestData={digestData}
+                  disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                />
+              </div>
+            )}
         </Layout.Vertical>
       )}
     </>

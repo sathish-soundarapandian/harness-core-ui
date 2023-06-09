@@ -24,7 +24,7 @@ jest.mock('services/cd-ng', () => ({
   usePostSecret: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   usePostSecretFileV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
 
-  getConnectorListPromise: jest.fn().mockImplementation(() => {
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => {
     return Promise.resolve(mockData)
   }),
   usePutSecretFileV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),

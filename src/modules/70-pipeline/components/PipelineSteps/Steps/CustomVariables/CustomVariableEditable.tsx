@@ -118,7 +118,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
 
   function addNew(): void {
     setSelectedVariable({
-      variable: { name: '', type: 'String', value: '', description: '' },
+      variable: { name: '', type: 'String', value: '', description: '', required: false },
       index: -1
     })
   }

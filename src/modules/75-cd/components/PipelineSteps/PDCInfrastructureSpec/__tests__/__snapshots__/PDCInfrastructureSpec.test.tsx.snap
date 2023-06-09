@@ -255,7 +255,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
                 class="bp3-form-content"
               >
                 <label
-                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--inline"
                   style="margin: 0px;"
                 >
                   <input

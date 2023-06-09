@@ -18,6 +18,7 @@ export interface EditStageViewProps {
   context?: string
   isReadonly: boolean
   updateDeploymentType?: (deploymentType: ServiceDeploymentType, isDeleteStage?: boolean) => void
+  customRef?: React.Ref<HTMLDivElement>
 }
 
 export interface EditStageFormikType {

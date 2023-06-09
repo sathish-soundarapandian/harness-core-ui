@@ -18,7 +18,7 @@ import {
 import * as Yup from 'yup'
 import cx from 'classnames'
 
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -373,6 +373,26 @@ export class TerraformRollback extends PipelineStep<TFRollbackData> {
 
     return errors
   }
+
+  processFormData(data: TFRollbackData): TFRollbackData {
+    const cmdFlags = data.spec?.commandFlags
+    const processCmdFlags = (): TerraformCliOptionFlag[] | undefined => {
+      if (cmdFlags?.length && cmdFlags[0].commandType) {
+        return cmdFlags.map((commandFlag: TerraformCliOptionFlag) => ({
+          commandType: commandFlag.commandType,
+          flag: defaultTo(commandFlag?.flag, '')
+        }))
+      }
+    }
+    return {
+      ...data,
+      spec: {
+        ...data.spec,
+        commandFlags: processCmdFlags()
+      }
+    }
+  }
+
   renderStep(props: StepProps<TFRollbackData, unknown>): JSX.Element {
     const {
       initialValues,
@@ -409,8 +429,8 @@ export class TerraformRollback extends PipelineStep<TFRollbackData> {
     return (
       <TerraformRollbackWidgetWithRef
         initialValues={initialValues}
-        onUpdate={onUpdate}
-        onChange={onChange}
+        onUpdate={values => onUpdate?.(this.processFormData(values))}
+        onChange={values => onChange?.(this.processFormData(values))}
         allowableTypes={allowableTypes}
         isNewStep={isNewStep}
         stepViewType={stepViewType}

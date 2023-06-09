@@ -45,9 +45,17 @@ export function getStagePathFromPipeline(stageId: string, prefix: string, pipeli
       }
 
       if (item.parallel) {
-        return getStagePathFromPipeline(stageId, `${prefix}.${i}.parallel`, {
-          stages: item.parallel
-        } as PipelineInfoConfig)
+        const parallelIndex = item.parallel.findIndex(parallelStage => parallelStage.stage?.identifier === stageId)
+        if (parallelIndex !== -1) {
+          return `${prefix}.${i}.parallel.${parallelIndex}`
+        }
+      }
+
+      if (item.stage) {
+        const stagePath = getStagePathFromPipeline(stageId, `${prefix}.${i}`, item.stage)
+        if (stagePath !== `${prefix}.${i}`) {
+          return stagePath
+        }
       }
     }
   }

@@ -52,7 +52,7 @@ export interface MultiTypeMapProps {
   keyValuePlaceholders?: Array<string>
 }
 
-export const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
+const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
   const {
     name,
     multiTypeFieldSelectorProps,

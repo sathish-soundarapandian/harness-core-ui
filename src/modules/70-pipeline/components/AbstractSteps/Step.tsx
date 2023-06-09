@@ -36,6 +36,7 @@ export interface ValidateInputSetProps<T> {
   template?: T
   getString?: UseStringsReturn['getString']
   viewType: StepViewType
+  allValues?: T
 }
 
 export type StepFormikRef<T> = Pick<FormikProps<T>, 'submitForm' | 'errors'>
@@ -58,6 +59,7 @@ export interface StepProps<T, U = unknown> {
   formikRef?: StepFormikFowardRef<T>
   customStepProps?: U
   allowableTypes: AllowedTypes
+  viewTypeMetadata?: Record<string, boolean>
 }
 
 export function setFormikRef<T = unknown, U = unknown>(ref: StepFormikFowardRef<T>, formik: FormikProps<U>): void {

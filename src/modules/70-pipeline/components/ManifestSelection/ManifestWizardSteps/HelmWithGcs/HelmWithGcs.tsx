@@ -33,7 +33,6 @@ import { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, useGetGCSBuc
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/components'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
@@ -81,7 +80,6 @@ function HelmWithGcs({
   editManifestModePrevStepData
 }: StepProps<ConnectorConfigDTO> & HelmWithGcsPropType): React.ReactElement {
   const { getString } = useStrings()
-  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
@@ -489,37 +487,35 @@ function HelmWithGcs({
                   />
                 </div>
               </Layout.Horizontal>
-              {NG_CDS_HELM_SUB_CHARTS && (
-                <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
-                  <div
-                    className={cx(helmcss.halfWidth, {
-                      [helmcss.runtimeInput]:
-                        getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME
-                    })}
-                  >
-                    <FormInput.MultiTextInput
-                      label={getString('pipeline.manifestType.subChart')}
-                      placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
-                      name="subChartPath"
-                      multiTextInputProps={{ expressions, allowableTypes }}
-                      isOptional
+              <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
+                <div
+                  className={cx(helmcss.halfWidth, {
+                    [helmcss.runtimeInput]:
+                      getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME
+                  })}
+                >
+                  <FormInput.MultiTextInput
+                    label={getString('pipeline.manifestType.subChart')}
+                    placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
+                    name="subChartPath"
+                    multiTextInputProps={{ expressions, allowableTypes }}
+                    isOptional
+                  />
+                  {getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME && (
+                    <ConfigureOptions
+                      style={{ alignSelf: 'center', marginBottom: 5 }}
+                      value={formik.values?.subChartPath as string}
+                      type="String"
+                      variableName="subChartPath"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => formik.setFieldValue('subChartPath', value)}
+                      isReadonly={isReadonly}
+                      allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                     />
-                    {getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME && (
-                      <ConfigureOptions
-                        style={{ alignSelf: 'center', marginBottom: 5 }}
-                        value={formik.values?.subChartPath as string}
-                        type="String"
-                        variableName="subChartPath"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        onChange={value => formik.setFieldValue('subChartPath', value)}
-                        isReadonly={isReadonly}
-                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                      />
-                    )}
-                  </div>
-                </Layout.Horizontal>
-              )}
+                  )}
+                </div>
+              </Layout.Horizontal>
               <div
                 className={cx({
                   [helmcss.runtimeInput]:

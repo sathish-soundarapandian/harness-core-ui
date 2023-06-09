@@ -46,7 +46,10 @@ const CDWizardWithAB: React.FC = () => {
     <WithABFFProvider
       fallback={<DeployProvisioningWizard />}
       featureFlagsToken={window.HARNESS_PLG_FF_SDK_KEY}
-      config={{ experimentKey: PLG_EXPERIMENTS.PLG_SERVICE_DELEGATE_TEST, identifier: uuid }}
+      config={{
+        experimentKey: [PLG_EXPERIMENTS.PLG_SERVICE_DELEGATE_TEST, PLG_EXPERIMENTS.CD_GET_STARTED],
+        identifier: uuid
+      }}
     >
       <CDWizardHooks />
     </WithABFFProvider>

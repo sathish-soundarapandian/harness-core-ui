@@ -259,7 +259,7 @@ const setTemplateProperties = (
 ): void => {
   const templateData = parse<any>(template.yaml || '').template
   const scopeBasedTemplateRef = getScopeBasedTemplateRef(template)
-  set(templateTypes, scopeBasedTemplateRef, templateData.spec.type)
+  set(templateTypes, scopeBasedTemplateRef, defaultTo(templateData.spec.type, templateData?.type))
   set(templateIcons, scopeBasedTemplateRef, template.icon || templateData.icon)
 
   const serviceData = defaultTo(

@@ -51,7 +51,8 @@ const AllStrategies = Object.values(Strategy)
 const allowedStrategies = difference(AllStrategies, [
   Strategy.ManualIntervention,
   Strategy.Retry,
-  Strategy.PipelineRollback
+  Strategy.PipelineRollback,
+  Strategy.RetryStepGroup
 ])
 
 describe('<ManualInterventionTab /> tests', () => {

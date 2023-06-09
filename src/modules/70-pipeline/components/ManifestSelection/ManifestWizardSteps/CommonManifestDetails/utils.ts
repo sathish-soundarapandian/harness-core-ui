@@ -5,10 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { ServiceDefinition } from 'services/cd-ng'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { ManifestDataType } from '../../Manifesthelper'
 import type { ManifestTypes } from '../../ManifestInterface'
 
-export const shouldAllowOnlyOneFilePath = (selectedManifest: ManifestTypes): boolean => {
+export const shouldAllowOnlyOneFilePath = (
+  selectedManifest: ManifestTypes,
+  selectedDeploymentType?: ServiceDefinition['type']
+): boolean => {
+  if (selectedDeploymentType === ServiceDeploymentType.AwsSam && selectedManifest === ManifestDataType.Values) {
+    return true
+  }
+
   return [
     ManifestDataType.ServerlessAwsLambda,
     ManifestDataType.EcsTaskDefinition,
@@ -22,7 +31,8 @@ export const shouldAllowOnlyOneFilePath = (selectedManifest: ManifestTypes): boo
     ManifestDataType.GoogleCloudFunctionDefinition,
     ManifestDataType.GoogleCloudFunctionGenOneDefinition,
     ManifestDataType.AwsLambdaFunctionDefinition,
-    ManifestDataType.AwsLambdaFunctionAliasDefinition
+    ManifestDataType.AwsLambdaFunctionAliasDefinition,
+    ManifestDataType.AwsSamDirectory
   ].includes(selectedManifest)
 }
 

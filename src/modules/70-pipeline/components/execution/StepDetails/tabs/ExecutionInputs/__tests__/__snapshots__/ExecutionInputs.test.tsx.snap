@@ -96,7 +96,7 @@ exports[`<ExecutionInputs /> tests stage inputs submit works 1`] = `
                     class="variableListTable"
                   >
                     <div
-                      class="Layout--vertical StyledProps--main"
+                      class="Layout--vertical StyledProps--main nameTypeColumn"
                     >
                       <p
                         class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-bold StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
@@ -111,13 +111,12 @@ exports[`<ExecutionInputs /> tests stage inputs submit works 1`] = `
                       </p>
                     </div>
                     <p
-                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
-                      style="--text-line-clamp: 3;"
+                      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-variation-body"
                     >
                       -
                     </p>
                     <div
-                      class="valueRow"
+                      class="inputSetValueRow"
                     >
                       <div
                         class="fieldAndOptions variableInput"

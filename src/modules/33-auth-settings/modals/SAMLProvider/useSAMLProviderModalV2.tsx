@@ -50,7 +50,7 @@ export const useSAMLProviderModalV2 = ({ onSuccess }: Props): UseSAMLProviderRet
               <Overview name={getString('overview')} samlSettings={samlProvider} />
               <IdentityProvider name={getString('authSettings.identityProviderLabel')} samlProvider={samlProvider} />
               <AdditionalFunctions
-                name={getString('authSettings.additionalFunctions')}
+                name={getString('common.advancedSettings')}
                 onSubmit={() => {
                   onSuccess()
                   hideModal()
@@ -64,7 +64,7 @@ export const useSAMLProviderModalV2 = ({ onSuccess }: Props): UseSAMLProviderRet
               <SelectProvider name={getString('authSettings.selectProvider')} />
               <IdentityProvider name={getString('authSettings.identityProviderLabel')} samlProvider={samlProvider} />
               <AdditionalFunctions
-                name={getString('authSettings.additionalFunctions')}
+                name={getString('common.advancedSettings')}
                 onSubmit={() => {
                   onSuccess()
                   hideModal()

@@ -2,7 +2,7 @@
 
 exports[`Inline Overlay Input Set Error Exp should render input set menu action button 1`] = `
 <div
-  class="bp3-dialog"
+  class="bp3-dialog overlayInputSetDialog"
   style="min-width: 700px;"
 >
   <div
@@ -11,7 +11,41 @@ exports[`Inline Overlay Input Set Error Exp should render input set menu action 
     <h4
       class="bp3-heading"
     >
-      inputSets.editOverlayTitle
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target Text--targetClass"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-variation-h4"
+            data-testid="overlay-input-set-description-tooltip"
+            style="display: flex; align-items: center;"
+            tabindex="0"
+          >
+            inputSets.editOverlayTitle
+            <span
+              class="bp3-icon bp3-icon-info-sign StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7 StyledProps--margin-left-xsmall"
+              icon="info-sign"
+            >
+              <svg
+                data-icon="info-sign"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  info-sign
+                </desc>
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM7 3h2v2H7V3zm3 10H6v-1h1V7H6V6h3v6h1v1z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </p>
+        </span>
+      </span>
     </h4>
     <button
       aria-label="Close"

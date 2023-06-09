@@ -868,7 +868,7 @@ exports[`Blackduck Step Edit View edit mode works 1`] = `
                   style="flex-grow: 1;"
                 >
                   <label
-                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                   >
                     <input
                       checked=""
@@ -3219,7 +3219,7 @@ exports[`Blackduck Step Edit View renders runtime inputs - Extraction Container 
                   style="flex-grow: 1;"
                 >
                   <label
-                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                   >
                     <input
                       checked=""
@@ -9122,7 +9122,7 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Contain
                   style="flex-grow: 1;"
                 >
                   <label
-                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                   >
                     <input
                       checked=""
@@ -11328,7 +11328,7 @@ exports[`Blackduck Step Edit View renders runtime inputs - Orchestration Reposit
                   style="flex-grow: 1;"
                 >
                   <label
-                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                   >
                     <input
                       checked=""
@@ -13326,7 +13326,7 @@ exports[`Blackduck Step Edit View should render properly 1`] = `
                   style="flex-grow: 1;"
                 >
                   <label
-                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                   >
                     <input
                       checked=""

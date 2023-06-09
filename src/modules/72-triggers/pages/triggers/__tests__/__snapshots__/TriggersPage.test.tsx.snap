@@ -325,12 +325,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                 class="TableV2--cell"
                 role="cell"
                 style="width: 18%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="AllValues"
-                />
-              </div>
+              />
               <div
                 class="TableV2--cell"
                 role="cell"
@@ -649,12 +644,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                 class="TableV2--cell"
                 role="cell"
                 style="width: 18%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="test1"
-                />
-              </div>
+              />
               <div
                 class="TableV2--cell"
                 role="cell"
@@ -891,12 +881,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                 class="TableV2--cell"
                 role="cell"
                 style="width: 18%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="trigger2"
-                />
-              </div>
+              />
               <div
                 class="TableV2--cell"
                 role="cell"
@@ -1100,12 +1085,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                 class="TableV2--cell"
                 role="cell"
                 style="width: 18%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="testcustomtrigger1"
-                />
-              </div>
+              />
               <div
                 class="TableV2--cell"
                 role="cell"
@@ -1314,12 +1294,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                 class="TableV2--cell"
                 role="cell"
                 style="width: 18%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="sdfsdfdsfdfd"
-                />
-              </div>
+              />
               <div
                 class="TableV2--cell"
                 role="cell"
@@ -1503,41 +1478,18 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                 role="cell"
                 style="width: 18%;"
               >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="gcrmanifest"
-                >
+                <div>
                   <span
-                    class="bp3-popover-wrapper"
+                    class="bp3-popover-wrapper tooltipWrapper"
                   >
                     <span
                       class="bp3-popover-target Text--targetClass"
                     >
                       <span
                         class="StyledProps--font StyledProps--main StyledProps--inline"
-                        style="display: inline-flex; align-items: center;"
                         tabindex="0"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-warning-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red500"
-                          icon="warning-sign"
-                        >
-                          <svg
-                            data-icon="warning-sign"
-                            height="12"
-                            viewBox="0 0 16 16"
-                            width="12"
-                          >
-                            <desc>
-                              warning-sign
-                            </desc>
-                            <path
-                              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        failed
+                        
                       </span>
                     </span>
                   </span>
@@ -1726,41 +1678,18 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                 role="cell"
                 style="width: 18%;"
               >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="H1"
-                >
+                <div>
                   <span
-                    class="bp3-popover-wrapper"
+                    class="bp3-popover-wrapper tooltipWrapper"
                   >
                     <span
                       class="bp3-popover-target Text--targetClass"
                     >
                       <span
                         class="StyledProps--font StyledProps--main StyledProps--inline"
-                        style="display: inline-flex; align-items: center;"
                         tabindex="0"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-warning-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red500"
-                          icon="warning-sign"
-                        >
-                          <svg
-                            data-icon="warning-sign"
-                            height="12"
-                            viewBox="0 0 16 16"
-                            width="12"
-                          >
-                            <desc>
-                              warning-sign
-                            </desc>
-                            <path
-                              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        failed
+                        
                       </span>
                     </span>
                   </span>
@@ -1950,41 +1879,18 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                 role="cell"
                 style="width: 18%;"
               >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="webhookautoregistrationfailed"
-                >
+                <div>
                   <span
-                    class="bp3-popover-wrapper"
+                    class="bp3-popover-wrapper tooltipWrapper"
                   >
                     <span
                       class="bp3-popover-target Text--targetClass"
                     >
                       <span
                         class="StyledProps--font StyledProps--main StyledProps--inline"
-                        style="display: inline-flex; align-items: center;"
                         tabindex="0"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-warning-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red500"
-                          icon="warning-sign"
-                        >
-                          <svg
-                            data-icon="warning-sign"
-                            height="12"
-                            viewBox="0 0 16 16"
-                            width="12"
-                          >
-                            <desc>
-                              warning-sign
-                            </desc>
-                            <path
-                              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        triggers.error.webhookRegistrationFailed
+                        
                       </span>
                     </span>
                   </span>
@@ -3626,12 +3532,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
                 class="TableV2--cell"
                 role="cell"
                 style="width: 18%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="AllValues"
-                />
-              </div>
+              />
               <div
                 class="TableV2--cell"
                 role="cell"
@@ -3950,12 +3851,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
                 class="TableV2--cell"
                 role="cell"
                 style="width: 18%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="test1"
-                />
-              </div>
+              />
               <div
                 class="TableV2--cell"
                 role="cell"
@@ -4192,12 +4088,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
                 class="TableV2--cell"
                 role="cell"
                 style="width: 18%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="trigger2"
-                />
-              </div>
+              />
               <div
                 class="TableV2--cell"
                 role="cell"
@@ -4401,12 +4292,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
                 class="TableV2--cell"
                 role="cell"
                 style="width: 18%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="testcustomtrigger1"
-                />
-              </div>
+              />
               <div
                 class="TableV2--cell"
                 role="cell"
@@ -4615,12 +4501,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
                 class="TableV2--cell"
                 role="cell"
                 style="width: 18%;"
-              >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="sdfsdfdsfdfd"
-                />
-              </div>
+              />
               <div
                 class="TableV2--cell"
                 role="cell"
@@ -4804,41 +4685,18 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
                 role="cell"
                 style="width: 18%;"
               >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="gcrmanifest"
-                >
+                <div>
                   <span
-                    class="bp3-popover-wrapper"
+                    class="bp3-popover-wrapper tooltipWrapper"
                   >
                     <span
                       class="bp3-popover-target Text--targetClass"
                     >
                       <span
                         class="StyledProps--font StyledProps--main StyledProps--inline"
-                        style="display: inline-flex; align-items: center;"
                         tabindex="0"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-warning-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red500"
-                          icon="warning-sign"
-                        >
-                          <svg
-                            data-icon="warning-sign"
-                            height="12"
-                            viewBox="0 0 16 16"
-                            width="12"
-                          >
-                            <desc>
-                              warning-sign
-                            </desc>
-                            <path
-                              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        failed
+                        
                       </span>
                     </span>
                   </span>
@@ -5027,41 +4885,18 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
                 role="cell"
                 style="width: 18%;"
               >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="H1"
-                >
+                <div>
                   <span
-                    class="bp3-popover-wrapper"
+                    class="bp3-popover-wrapper tooltipWrapper"
                   >
                     <span
                       class="bp3-popover-target Text--targetClass"
                     >
                       <span
                         class="StyledProps--font StyledProps--main StyledProps--inline"
-                        style="display: inline-flex; align-items: center;"
                         tabindex="0"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-warning-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red500"
-                          icon="warning-sign"
-                        >
-                          <svg
-                            data-icon="warning-sign"
-                            height="12"
-                            viewBox="0 0 16 16"
-                            width="12"
-                          >
-                            <desc>
-                              warning-sign
-                            </desc>
-                            <path
-                              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        failed
+                        
                       </span>
                     </span>
                   </span>
@@ -5251,41 +5086,18 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - Shows Tr
                 role="cell"
                 style="width: 18%;"
               >
-                <div
-                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-                  data-testid="webhookautoregistrationfailed"
-                >
+                <div>
                   <span
-                    class="bp3-popover-wrapper"
+                    class="bp3-popover-wrapper tooltipWrapper"
                   >
                     <span
                       class="bp3-popover-target Text--targetClass"
                     >
                       <span
                         class="StyledProps--font StyledProps--main StyledProps--inline"
-                        style="display: inline-flex; align-items: center;"
                         tabindex="0"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-warning-sign StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-red500"
-                          icon="warning-sign"
-                        >
-                          <svg
-                            data-icon="warning-sign"
-                            height="12"
-                            viewBox="0 0 16 16"
-                            width="12"
-                          >
-                            <desc>
-                              warning-sign
-                            </desc>
-                            <path
-                              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        triggers.error.webhookRegistrationFailed
+                        
                       </span>
                     </span>
                   </span>

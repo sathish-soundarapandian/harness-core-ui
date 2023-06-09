@@ -83,7 +83,7 @@ export default function PipelineStudio(): React.ReactElement {
     )
   }
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, IACM_ENABLED } = useFeatureFlags()
+  const { IACM_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
@@ -105,7 +105,7 @@ export default function PipelineStudio(): React.ReactElement {
           args,
           getString,
           module,
-          isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
+          isCIEnabled: licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE,
           isCDEnabled: shouldVisible,
           isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
           isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,

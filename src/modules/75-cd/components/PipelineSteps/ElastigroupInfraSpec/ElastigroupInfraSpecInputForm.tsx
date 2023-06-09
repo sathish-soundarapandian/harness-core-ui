@@ -12,7 +12,7 @@ import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Layout, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 
-import type { ElastigroupInfrastructure } from 'services/cd-ng'
+import type { ElastigroupInfrastructure, ExecutionElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -20,6 +20,7 @@ import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { connectorTypes } from '@pipeline/utils/constants'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import { fileTypes } from './ElastigroupInfraTypes'
 import css from './ElastigroupInfra.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -32,13 +33,15 @@ export interface ElastigroupInfraSpecInputFormProps {
   template?: ElastigroupInfrastructure
   allowableTypes: AllowedTypes
   path: string
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 const ElastigroupInfraSpecInputForm = ({
   template,
   readonly = false,
   path,
-  allowableTypes
+  allowableTypes,
+  provisioner
 }: ElastigroupInfraSpecInputFormProps): React.ReactElement => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -50,9 +53,15 @@ const ElastigroupInfraSpecInputForm = ({
     ? 'configuration.store.spec.secretFiles'
     : `${path}.configuration.store.spec.secretFiles`
   const configFilesName = isEmpty(path) ? 'configuration.store.spec.files' : `${path}.configuration.store.spec.files`
+  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
 
   return (
     <Layout.Vertical spacing="small">
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField name={provisionerName} path={path} provisioners={provisioner} />
+        </div>
+      )}
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

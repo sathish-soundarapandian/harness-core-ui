@@ -1,0 +1,3282 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "imagePaths": [
+      {
+        "imagePath": "adoptopenjdk/maven-openjdk11"
+      },
+      {
+        "imagePath": "adoptopenjdk/openjdk11"
+      },
+      {
+        "imagePath": "adoptopenjdk/openjdk14"
+      },
+      {
+        "imagePath": "adoptopenjdk/openjdk8"
+      },
+      {
+        "imagePath": "aelsabbahy/goss"
+      },
+      {
+        "imagePath": "aequitas/http-api-resource"
+      },
+      {
+        "imagePath": "aerokube/moon-api-debug"
+      },
+      {
+        "imagePath": "aerokube/moon-debug"
+      },
+      {
+        "imagePath": "aerokube/moon-monitor"
+      },
+      {
+        "imagePath": "aerokube/selenoid"
+      },
+      {
+        "imagePath": "aerokube/selenoid-ui"
+      },
+      {
+        "imagePath": "airshipit/promenade"
+      },
+      {
+        "imagePath": "ajaytripathy/kubecost-checks"
+      },
+      {
+        "imagePath": "alexisplantin/kube-gitlab-authn"
+      },
+      {
+        "imagePath": "alfresco/alfresco-content-repository-community"
+      },
+      {
+        "imagePath": "alfresco/alfresco-libreoffice"
+      },
+      {
+        "imagePath": "alfresco/alfresco-pdf-renderer"
+      },
+      {
+        "imagePath": "alfresco/alfresco-search-services"
+      },
+      {
+        "imagePath": "alfresco/alfresco-share"
+      },
+      {
+        "imagePath": "alpine"
+      },
+      {
+        "imagePath": "alpine/flake8"
+      },
+      {
+        "imagePath": "alpine/git"
+      },
+      {
+        "imagePath": "alpine/helm"
+      },
+      {
+        "imagePath": "alpine/k8s"
+      },
+      {
+        "imagePath": "alpine/socat"
+      },
+      {
+        "imagePath": "alterway/registrator"
+      },
+      {
+        "imagePath": "altinity/clickhouse-operator"
+      },
+      {
+        "imagePath": "altinity/metrics-exporter"
+      },
+      {
+        "imagePath": "alxrem/prometheus-logstash-exporter"
+      },
+      {
+        "imagePath": "amazon/aws-alb-ingress-controller"
+      },
+      {
+        "imagePath": "amazon/aws-cli"
+      },
+      {
+        "imagePath": "amazon/aws-efs-csi-driver"
+      },
+      {
+        "imagePath": "amazon/aws-for-fluent-bit"
+      },
+      {
+        "imagePath": "amazon/aws-node-termination-handler"
+      },
+      {
+        "imagePath": "amazon/aws-xray-daemon"
+      },
+      {
+        "imagePath": "amazon/cloudwatch-agent"
+      },
+      {
+        "imagePath": "amazon/dynamodb-local"
+      },
+      {
+        "imagePath": "amazon/opendistro-for-elasticsearch"
+      },
+      {
+        "imagePath": "amazon/opendistro-for-elasticsearch-kibana"
+      },
+      {
+        "imagePath": "andrcuns/dependabot-gitlab"
+      },
+      {
+        "imagePath": "andyneff/uuidgen"
+      },
+      {
+        "imagePath": "ansible-deployer"
+      },
+      {
+        "imagePath": "apache/airflow"
+      },
+      {
+        "imagePath": "apache/nifi-minifi"
+      },
+      {
+        "imagePath": "apachepulsar/pulsar-all"
+      },
+      {
+        "imagePath": "apachepulsar/pulsar-manager"
+      },
+      {
+        "imagePath": "apicurio/apicurio-registry-jpa"
+      },
+      {
+        "imagePath": "apicurio/apicurio-studio-api"
+      },
+      {
+        "imagePath": "apicurio/apicurio-studio-auth"
+      },
+      {
+        "imagePath": "appdynamics/cluster-agent"
+      },
+      {
+        "imagePath": "appdynamics/cluster-agent-operator"
+      },
+      {
+        "imagePath": "appdynamics/machine-agent-netviz"
+      },
+      {
+        "imagePath": "appsvc/canary"
+      },
+      {
+        "imagePath": "appsvc/dotnetcore"
+      },
+      {
+        "imagePath": "appsvc/kudu"
+      },
+      {
+        "imagePath": "appsvc/kudulite"
+      },
+      {
+        "imagePath": "appsvc/middleware"
+      },
+      {
+        "imagePath": "appsvc/msitokenservice"
+      },
+      {
+        "imagePath": "appsvc/node"
+      },
+      {
+        "imagePath": "appsvc/php"
+      },
+      {
+        "imagePath": "appsvc/python"
+      },
+      {
+        "imagePath": "appsvc/ruby"
+      },
+      {
+        "imagePath": "aquasec/kube-bench"
+      },
+      {
+        "imagePath": "aquasec/kube-hunter"
+      },
+      {
+        "imagePath": "aquasec/trivy"
+      },
+      {
+        "imagePath": "arbourd/concourse-slack-alert-resource"
+      },
+      {
+        "imagePath": "argoproj/argocd"
+      },
+      {
+        "imagePath": "argoproj/argocli"
+      },
+      {
+        "imagePath": "argoproj/argoexec"
+      },
+      {
+        "imagePath": "argoproj/eventbus-controller"
+      },
+      {
+        "imagePath": "argoproj/eventsource"
+      },
+      {
+        "imagePath": "argoproj/eventsource-controller"
+      },
+      {
+        "imagePath": "argoproj/gateway-client"
+      },
+      {
+        "imagePath": "argoproj/resource-gateway"
+      },
+      {
+        "imagePath": "argoproj/sensor"
+      },
+      {
+        "imagePath": "argoproj/workflow-controller"
+      },
+      {
+        "imagePath": "argoprojlabs/argocd-notifications"
+      },
+      {
+        "imagePath": "arm64v8/python"
+      },
+      {
+        "imagePath": "arminc/clair-db"
+      },
+      {
+        "imagePath": "arminc/clair-local-scan"
+      },
+      {
+        "imagePath": "artifactory-build-promotion"
+      },
+      {
+        "imagePath": "artifactory-docker"
+      },
+      {
+        "imagePath": "artifactory-fluentd"
+      },
+      {
+        "imagePath": "artifactory-generic-download"
+      },
+      {
+        "imagePath": "artifactory-generic-upload"
+      },
+      {
+        "imagePath": "artifactory-maven"
+      },
+      {
+        "imagePath": "artifactory-maven-test"
+      },
+      {
+        "imagePath": "artifactory-npm"
+      },
+      {
+        "imagePath": "artifactory-xray-scan"
+      },
+      {
+        "imagePath": "atlassian/confluence-server"
+      },
+      {
+        "imagePath": "atlassian/crowd"
+      },
+      {
+        "imagePath": "atlassian/jira-software"
+      },
+      {
+        "imagePath": "atmoz/sftp"
+      },
+      {
+        "imagePath": "automation/git-vcs-demo"
+      },
+      {
+        "imagePath": "automationalpine"
+      },
+      {
+        "imagePath": "automatit/nginx-ingress-controller"
+      },
+      {
+        "imagePath": "balabit/syslog-ng"
+      },
+      {
+        "imagePath": "banzaicloud/bank-vaults"
+      },
+      {
+        "imagePath": "banzaicloud/drone-kaniko"
+      },
+      {
+        "imagePath": "banzaicloud/vault-operator"
+      },
+      {
+        "imagePath": "bats/bats"
+      },
+      {
+        "imagePath": "bde2020/spark-master"
+      },
+      {
+        "imagePath": "benmtz/npm-resource"
+      },
+      {
+        "imagePath": "binaryanalysisplatform/bap"
+      },
+      {
+        "imagePath": "bioconductor/bioconductor_docker"
+      },
+      {
+        "imagePath": "bitnami/alertmanager"
+      },
+      {
+        "imagePath": "bitnami/chartmuseum"
+      },
+      {
+        "imagePath": "bitnami/elasticsearch"
+      },
+      {
+        "imagePath": "bitnami/elasticsearch-curator"
+      },
+      {
+        "imagePath": "bitnami/etcd"
+      },
+      {
+        "imagePath": "bitnami/external-dns"
+      },
+      {
+        "imagePath": "bitnami/harbor-core"
+      },
+      {
+        "imagePath": "bitnami/harbor-notary-server"
+      },
+      {
+        "imagePath": "bitnami/harbor-notary-signer"
+      },
+      {
+        "imagePath": "bitnami/harbor-portal"
+      },
+      {
+        "imagePath": "bitnami/kafka"
+      },
+      {
+        "imagePath": "bitnami/kubeapps-apprepository-controller"
+      },
+      {
+        "imagePath": "bitnami/kubeapps-asset-syncer"
+      },
+      {
+        "imagePath": "bitnami/kubeapps-assetsvc"
+      },
+      {
+        "imagePath": "bitnami/kubeapps-kubeops"
+      },
+      {
+        "imagePath": "bitnami/kubectl"
+      },
+      {
+        "imagePath": "bitnami/mariadb-galera"
+      },
+      {
+        "imagePath": "bitnami/matomo"
+      },
+      {
+        "imagePath": "bitnami/metallb-controller"
+      },
+      {
+        "imagePath": "bitnami/metallb-speaker"
+      },
+      {
+        "imagePath": "bitnami/minideb"
+      },
+      {
+        "imagePath": "bitnami/minio"
+      },
+      {
+        "imagePath": "bitnami/mongodb"
+      },
+      {
+        "imagePath": "bitnami/mysql"
+      },
+      {
+        "imagePath": "bitnami/nginx"
+      },
+      {
+        "imagePath": "bitnami/phpmyadmin"
+      },
+      {
+        "imagePath": "bitnami/postgresql"
+      },
+      {
+        "imagePath": "bitnami/rabbitmq"
+      },
+      {
+        "imagePath": "bitnami/redis"
+      },
+      {
+        "imagePath": "bitnami/redis-cluster"
+      },
+      {
+        "imagePath": "bitnami/redis-exporter"
+      },
+      {
+        "imagePath": "bitnami/redis-sentinel"
+      },
+      {
+        "imagePath": "bitnami/thanos"
+      },
+      {
+        "imagePath": "bitnami/zookeeper"
+      },
+      {
+        "imagePath": "bitnami/zookeeper-exporter"
+      },
+      {
+        "imagePath": "bitteam/bit-docker"
+      },
+      {
+        "imagePath": "blackducksoftware/blackduck-authentication"
+      },
+      {
+        "imagePath": "blackducksoftware/blackduck-imageinspector-alpine"
+      },
+      {
+        "imagePath": "blackducksoftware/blackduck-imageinspector-centos"
+      },
+      {
+        "imagePath": "blackducksoftware/blackduck-imageinspector-ubuntu"
+      },
+      {
+        "imagePath": "blackducksoftware/blackduck-registration"
+      },
+      {
+        "imagePath": "blackducksoftware/blackduck-scan"
+      },
+      {
+        "imagePath": "blackfire/blackfire"
+      },
+      {
+        "imagePath": "blazemeter/taurus"
+      },
+      {
+        "imagePath": "bloomberg/goldpinger"
+      },
+      {
+        "imagePath": "bmarshall/ubuntu-toolbox"
+      },
+      {
+        "imagePath": "bonniernews/logstash_exporter"
+      },
+      {
+        "imagePath": "boo"
+      },
+      {
+        "imagePath": "boomi/molecule"
+      },
+      {
+        "imagePath": "boxboat/kubectl"
+      },
+      {
+        "imagePath": "boxfuse/flyway"
+      },
+      {
+        "imagePath": "buchgr/bazel-remote-cache"
+      },
+      {
+        "imagePath": "buildkite/puppeteer"
+      },
+      {
+        "imagePath": "buoyantio/emojivoto-emoji-svc"
+      },
+      {
+        "imagePath": "buoyantio/emojivoto-voting-svc"
+      },
+      {
+        "imagePath": "buoyantio/emojivoto-web"
+      },
+      {
+        "imagePath": "busybox"
+      },
+      {
+        "imagePath": "byrnedo/alpine-curl"
+      },
+      {
+        "imagePath": "caapm/universalmonitoragent"
+      },
+      {
+        "imagePath": "calico/cni"
+      },
+      {
+        "imagePath": "calico/ctl"
+      },
+      {
+        "imagePath": "calico/kube-controllers"
+      },
+      {
+        "imagePath": "calico/node"
+      },
+      {
+        "imagePath": "calico/pod2daemon-flexvol"
+      },
+      {
+        "imagePath": "camunda/camunda-bpm-platform"
+      },
+      {
+        "imagePath": "cathive/concourse-sonarqube-resource"
+      },
+      {
+        "imagePath": "ccaominh/intellij-inspect"
+      },
+      {
+        "imagePath": "ceph/ceph"
+      },
+      {
+        "imagePath": "cerberustesting/cerberus-as-tomcat"
+      },
+      {
+        "imagePath": "cfcommunity/slack-notification-resource"
+      },
+      {
+        "imagePath": "cftoolsmiths/cron-resource"
+      },
+      {
+        "imagePath": "charts-ci"
+      },
+      {
+        "imagePath": "chef/chefworkstation"
+      },
+      {
+        "imagePath": "chef/inspec"
+      },
+      {
+        "imagePath": "cilium/cilium"
+      },
+      {
+        "imagePath": "circleci/node"
+      },
+      {
+        "imagePath": "circleci/python"
+      },
+      {
+        "imagePath": "cirrusci/wget"
+      },
+      {
+        "imagePath": "cloudbees/cloudbees-cloud-core-oc"
+      },
+      {
+        "imagePath": "cloudbees/cloudbees-core-agent"
+      },
+      {
+        "imagePath": "cloudbees/cloudbees-core-mm"
+      },
+      {
+        "imagePath": "cloudbees/managed-master-hibernation-monitor"
+      },
+      {
+        "imagePath": "cloudposse/slack-notifier"
+      },
+      {
+        "imagePath": "cloudreach/alpine-curl"
+      },
+      {
+        "imagePath": "codefresh/cf-docker-test-reporting"
+      },
+      {
+        "imagePath": "codefresh/dind"
+      },
+      {
+        "imagePath": "codefresh/dind-volume-cleanup"
+      },
+      {
+        "imagePath": "cognitechs/cogtl-server"
+      },
+      {
+        "imagePath": "collabora/code"
+      },
+      {
+        "imagePath": "conan-io-website"
+      },
+      {
+        "imagePath": "conanlog2elastic"
+      },
+      {
+        "imagePath": "concourse/bosh-cli"
+      },
+      {
+        "imagePath": "concourse/buildroot"
+      },
+      {
+        "imagePath": "concourse/concourse-pipeline-resource"
+      },
+      {
+        "imagePath": "concourse/git-resource"
+      },
+      {
+        "imagePath": "concourse/registry-image-resource"
+      },
+      {
+        "imagePath": "concourse/s3-resource"
+      },
+      {
+        "imagePath": "confluentinc/confluent-operator"
+      },
+      {
+        "imagePath": "confluentinc/cp-enterprise-control-center"
+      },
+      {
+        "imagePath": "confluentinc/cp-enterprise-control-center-operator"
+      },
+      {
+        "imagePath": "confluentinc/cp-enterprise-kafka"
+      },
+      {
+        "imagePath": "confluentinc/cp-enterprise-replicator"
+      },
+      {
+        "imagePath": "confluentinc/cp-enterprise-replicator-operator"
+      },
+      {
+        "imagePath": "confluentinc/cp-init-container-operator"
+      },
+      {
+        "imagePath": "confluentinc/cp-kafka"
+      },
+      {
+        "imagePath": "confluentinc/cp-kafka-connect"
+      },
+      {
+        "imagePath": "confluentinc/cp-kafka-rest"
+      },
+      {
+        "imagePath": "confluentinc/cp-kafkacat"
+      },
+      {
+        "imagePath": "confluentinc/cp-ksqldb-server"
+      },
+      {
+        "imagePath": "confluentinc/cp-operator-service"
+      },
+      {
+        "imagePath": "confluentinc/cp-schema-registry"
+      },
+      {
+        "imagePath": "confluentinc/cp-schema-registry-operator"
+      },
+      {
+        "imagePath": "confluentinc/cp-server"
+      },
+      {
+        "imagePath": "confluentinc/cp-server-connect-operator"
+      },
+      {
+        "imagePath": "confluentinc/cp-zookeeper"
+      },
+      {
+        "imagePath": "confluentinc/cp-zookeeper-operator"
+      },
+      {
+        "imagePath": "connecteverything/nats-server-config-reloader"
+      },
+      {
+        "imagePath": "containernetworking/azure-npm"
+      },
+      {
+        "imagePath": "containrrr/watchtower"
+      },
+      {
+        "imagePath": "continuumio/anaconda3"
+      },
+      {
+        "imagePath": "continuumio/miniconda3"
+      },
+      {
+        "imagePath": "cookiemonsterz/gemini"
+      },
+      {
+        "imagePath": "coredns/coredns"
+      },
+      {
+        "imagePath": "couchbase/server"
+      },
+      {
+        "imagePath": "curlimages/curl"
+      },
+      {
+        "imagePath": "cyberark/conjur-authn-k8s-client"
+      },
+      {
+        "imagePath": "cypress/base"
+      },
+      {
+        "imagePath": "cypress/browsers"
+      },
+      {
+        "imagePath": "cypress/included"
+      },
+      {
+        "imagePath": "danielqsj/kafka-exporter"
+      },
+      {
+        "imagePath": "dannydainton/htmlextra"
+      },
+      {
+        "imagePath": "datadog/agent"
+      },
+      {
+        "imagePath": "datadog/synthetics-private-location-worker"
+      },
+      {
+        "imagePath": "datastax/dse-server"
+      },
+      {
+        "imagePath": "datawire/telepresence-k8s"
+      },
+      {
+        "imagePath": "dcm4che/dcm4chee-arc-psql"
+      },
+      {
+        "imagePath": "dcm4che/postgres-dcm4chee"
+      },
+      {
+        "imagePath": "dcm4che/slapd-dcm4chee"
+      },
+      {
+        "imagePath": "ddidier/sphinx-doc"
+      },
+      {
+        "imagePath": "debezium/postgres"
+      },
+      {
+        "imagePath": "debezium/zookeeper"
+      },
+      {
+        "imagePath": "deis/brig"
+      },
+      {
+        "imagePath": "deis/brigade-controller"
+      },
+      {
+        "imagePath": "deis/brigade-vacuum"
+      },
+      {
+        "imagePath": "deis/git-sidecar"
+      },
+      {
+        "imagePath": "deislabs/duffle"
+      },
+      {
+        "imagePath": "demilletech/concourse-gitlab-release-resource"
+      },
+      {
+        "imagePath": "denvazh/gatling"
+      },
+      {
+        "imagePath": "dependabot/dependabot-core"
+      },
+      {
+        "imagePath": "devopsinfra/docker-terragrunt"
+      },
+      {
+        "imagePath": "digitalocean/ceph_exporter"
+      },
+      {
+        "imagePath": "digitsy/kafka-magic"
+      },
+      {
+        "imagePath": "directxman12/k8s-prometheus-adapter"
+      },
+      {
+        "imagePath": "directxman12/k8s-prometheus-adapter-amd64"
+      },
+      {
+        "imagePath": "dist"
+      },
+      {
+        "imagePath": "distribution-mongo"
+      },
+      {
+        "imagePath": "dmilhdef/missing-container-metrics"
+      },
+      {
+        "imagePath": "docker"
+      },
+      {
+        "imagePath": "docker-local"
+      },
+      {
+        "imagePath": "docker-local/boo"
+      },
+      {
+        "imagePath": "docker.jfrog.io/jfrog/xray-mongo"
+      },
+      {
+        "imagePath": "docker/compose"
+      },
+      {
+        "imagePath": "docker/docker/docker"
+      },
+      {
+        "imagePath": "docker/dockerfile"
+      },
+      {
+        "imagePath": "docker/dockerfile-copy"
+      },
+      {
+        "imagePath": "docker/github-actions"
+      },
+      {
+        "imagePath": "docker/library/automationalpine"
+      },
+      {
+        "imagePath": "docker/library/ngtrigger"
+      },
+      {
+        "imagePath": "docker/sridhar/hello-world"
+      },
+      {
+        "imagePath": "docker/sridhar/hello-world1"
+      },
+      {
+        "imagePath": "docker/venkat/hello-world"
+      },
+      {
+        "imagePath": "docker/vinicius/hello-world"
+      },
+      {
+        "imagePath": "dockerid31415926/pod-pvc-mapping"
+      },
+      {
+        "imagePath": "doitandbedone/ispyagentdvr"
+      },
+      {
+        "imagePath": "dosel/zalenium"
+      },
+      {
+        "imagePath": "dpage/pgadmin4"
+      },
+      {
+        "imagePath": "dpb587/github-status-resource"
+      },
+      {
+        "imagePath": "drone/cli"
+      },
+      {
+        "imagePath": "drone/drone-runner-docker"
+      },
+      {
+        "imagePath": "drone/gc"
+      },
+      {
+        "imagePath": "drone/git"
+      },
+      {
+        "imagePath": "dtzar/helm-kubectl"
+      },
+      {
+        "imagePath": "dwdraju/alpine-curl-jq"
+      },
+      {
+        "imagePath": "dynamictivity/docker-ansible"
+      },
+      {
+        "imagePath": "dynatrace/dynatrace-oneagent-operator"
+      },
+      {
+        "imagePath": "dynatrace/oneagent"
+      },
+      {
+        "imagePath": "eclecticiq/cabby"
+      },
+      {
+        "imagePath": "ekidd/rust-musl-builder"
+      },
+      {
+        "imagePath": "elastic/filebeat"
+      },
+      {
+        "imagePath": "elastic/kibana"
+      },
+      {
+        "imagePath": "elastic/logstash"
+      },
+      {
+        "imagePath": "elasticsearch"
+      },
+      {
+        "imagePath": "elasticsearch/elasticsearch"
+      },
+      {
+        "imagePath": "elasticsearch/elasticsearch-oss"
+      },
+      {
+        "imagePath": "elgalu/selenium"
+      },
+      {
+        "imagePath": "elkozmon/zoonavigator"
+      },
+      {
+        "imagePath": "emeraldsquad/cf-cli"
+      },
+      {
+        "imagePath": "endemics/docker-apigeelint"
+      },
+      {
+        "imagePath": "eniconfigcontroller/eniconfig-controller"
+      },
+      {
+        "imagePath": "envoyproxy/envoy"
+      },
+      {
+        "imagePath": "envoyproxy/envoy-alpine"
+      },
+      {
+        "imagePath": "envoyproxy/ratelimit"
+      },
+      {
+        "imagePath": "eqalpha/keydb"
+      },
+      {
+        "imagePath": "erohmensing/nginx-https"
+      },
+      {
+        "imagePath": "everpeace/curl-jq"
+      },
+      {
+        "imagePath": "evildecay/etcdkeeper"
+      },
+      {
+        "imagePath": "f5networks/k8s-bigip-ctlr"
+      },
+      {
+        "imagePath": "fabric8/java-alpine-openjdk11-jre"
+      },
+      {
+        "imagePath": "falcosecurity/falco"
+      },
+      {
+        "imagePath": "ferrarimarco/github-changelog-generator"
+      },
+      {
+        "imagePath": "filebrowser/filebrowser"
+      },
+      {
+        "imagePath": "fjogeleit/policy-reporter"
+      },
+      {
+        "imagePath": "fjogeleit/policy-reporter-ui"
+      },
+      {
+        "imagePath": "flant/shell-operator"
+      },
+      {
+        "imagePath": "flant/werf-stapel"
+      },
+      {
+        "imagePath": "fluent/fluent-bit"
+      },
+      {
+        "imagePath": "fluent/fluentd"
+      },
+      {
+        "imagePath": "fluent/fluentd-kubernetes-daemonset"
+      },
+      {
+        "imagePath": "fluxcd/flux"
+      },
+      {
+        "imagePath": "flyway/flyway"
+      },
+      {
+        "imagePath": "freeradius/freeradius-server"
+      },
+      {
+        "imagePath": "frodenas/gcs-resource"
+      },
+      {
+        "imagePath": "frolvlad/alpine-glibc"
+      },
+      {
+        "imagePath": "fthomas/scala-steward"
+      },
+      {
+        "imagePath": "fullmod"
+      },
+      {
+        "imagePath": "gabeochoa/toolbox"
+      },
+      {
+        "imagePath": "genomicsengland/docker-compose"
+      },
+      {
+        "imagePath": "gerritk/ytt"
+      },
+      {
+        "imagePath": "getsentry/relay"
+      },
+      {
+        "imagePath": "giantswarm/tiny-tools"
+      },
+      {
+        "imagePath": "gitea/gitea"
+      },
+      {
+        "imagePath": "gitlab/gitlab-ce"
+      },
+      {
+        "imagePath": "gitlab/gitlab-ee"
+      },
+      {
+        "imagePath": "gitlab/gitlab-runner"
+      },
+      {
+        "imagePath": "gitlab/gitlab-runner-helper"
+      },
+      {
+        "imagePath": "gliderlabs/alpine"
+      },
+      {
+        "imagePath": "gluufederation/config-init"
+      },
+      {
+        "imagePath": "gluufederation/jackrabbit"
+      },
+      {
+        "imagePath": "gluufederation/opendj"
+      },
+      {
+        "imagePath": "gluufederation/oxauth"
+      },
+      {
+        "imagePath": "gluufederation/oxshibboleth"
+      },
+      {
+        "imagePath": "gluufederation/oxtrust"
+      },
+      {
+        "imagePath": "gluufederation/scim"
+      },
+      {
+        "imagePath": "gocd/gocd-agent-docker-dind"
+      },
+      {
+        "imagePath": "gocd/gocd-agent-ubuntu-16.04"
+      },
+      {
+        "imagePath": "gocd/gocd-server"
+      },
+      {
+        "imagePath": "golangci/golangci-lint"
+      },
+      {
+        "imagePath": "google-cloud-builder/java/jfrog"
+      },
+      {
+        "imagePath": "google/cloud-sdk"
+      },
+      {
+        "imagePath": "governmentpaas/awscli"
+      },
+      {
+        "imagePath": "governmentpaas/bosh-cli-v2"
+      },
+      {
+        "imagePath": "governmentpaas/cf-cli"
+      },
+      {
+        "imagePath": "governmentpaas/curl-ssl"
+      },
+      {
+        "imagePath": "governmentpaas/git-ssh"
+      },
+      {
+        "imagePath": "governmentpaas/spruce"
+      },
+      {
+        "imagePath": "grafana/grafana"
+      },
+      {
+        "imagePath": "grafana/grafana-enterprise"
+      },
+      {
+        "imagePath": "grafana/grafana-image-renderer"
+      },
+      {
+        "imagePath": "grafana/loki"
+      },
+      {
+        "imagePath": "grafana/promtail"
+      },
+      {
+        "imagePath": "gremlin/gremlin"
+      },
+      {
+        "imagePath": "grokzen/redis-cluster"
+      },
+      {
+        "imagePath": "groundnuty/k8s-wait-for"
+      },
+      {
+        "imagePath": "hackmdio/hackmd"
+      },
+      {
+        "imagePath": "hadolint/hadolint"
+      },
+      {
+        "imagePath": "halternz/jfrog-cli-go"
+      },
+      {
+        "imagePath": "haraldb/alpine-squid"
+      },
+      {
+        "imagePath": "harness/aqua-trivy-job-runner"
+      },
+      {
+        "imagePath": "harness/ci-addon"
+      },
+      {
+        "imagePath": "harness/ci-lite-engine"
+      },
+      {
+        "imagePath": "harness/delegate"
+      },
+      {
+        "imagePath": "harness/drone-git"
+      },
+      {
+        "imagePath": "harness/sto-plugin"
+      },
+      {
+        "imagePath": "hashicorp/consul"
+      },
+      {
+        "imagePath": "hashicorp/consul-enterprise"
+      },
+      {
+        "imagePath": "hashicorp/consul-k8s"
+      },
+      {
+        "imagePath": "hashicorp/consul-template"
+      },
+      {
+        "imagePath": "hashicorp/secrets-store-csi-driver-provider-vault"
+      },
+      {
+        "imagePath": "hashicorp/terraform"
+      },
+      {
+        "imagePath": "hashicorp/vault"
+      },
+      {
+        "imagePath": "hashicorp/vault-enterprise"
+      },
+      {
+        "imagePath": "hashicorp/vault-k8s"
+      },
+      {
+        "imagePath": "hasura/graphql-engine"
+      },
+      {
+        "imagePath": "hazelcast/hazelcast"
+      },
+      {
+        "imagePath": "helm"
+      },
+      {
+        "imagePath": "helm-hub-sync"
+      },
+      {
+        "imagePath": "hipages/php-fpm_exporter"
+      },
+      {
+        "imagePath": "hiromasaono/curl"
+      },
+      {
+        "imagePath": "hjacobs/kube-downscaler"
+      },
+      {
+        "imagePath": "hjacobs/kube-resource-report"
+      },
+      {
+        "imagePath": "hlebalbau/kafka-manager"
+      },
+      {
+        "imagePath": "hortonworks/cbd-smartsense"
+      },
+      {
+        "imagePath": "hypertrace/entity-service"
+      },
+      {
+        "imagePath": "ibmcom/datapower"
+      },
+      {
+        "imagePath": "ibmcom/ibm-common-service-catalog"
+      },
+      {
+        "imagePath": "ibmcom/streams-qse"
+      },
+      {
+        "imagePath": "ictu/sshpass"
+      },
+      {
+        "imagePath": "imply/druiditbase"
+      },
+      {
+        "imagePath": "infernocommunity/fhir-validator-app"
+      },
+      {
+        "imagePath": "infernocommunity/fhir-validator-service"
+      },
+      {
+        "imagePath": "infrastructureascode/aws-cli"
+      },
+      {
+        "imagePath": "insight/elasticsearch"
+      },
+      {
+        "imagePath": "instana/agent"
+      },
+      {
+        "imagePath": "instana/leader-elector"
+      },
+      {
+        "imagePath": "intel/oneapi-hpckit"
+      },
+      {
+        "imagePath": "istio/install-cni"
+      },
+      {
+        "imagePath": "istio/mixer"
+      },
+      {
+        "imagePath": "istio/operator"
+      },
+      {
+        "imagePath": "istio/pilot"
+      },
+      {
+        "imagePath": "istio/proxy_init"
+      },
+      {
+        "imagePath": "istio/proxyv2"
+      },
+      {
+        "imagePath": "istio/sidecar_injector"
+      },
+      {
+        "imagePath": "ithakabsys/slack-jirabot"
+      },
+      {
+        "imagePath": "itstarting/semver-config-concourse-resource"
+      },
+      {
+        "imagePath": "itzg/minecraft-bedrock-server"
+      },
+      {
+        "imagePath": "jaegertracing/all-in-one"
+      },
+      {
+        "imagePath": "jaegertracing/jaeger-agent"
+      },
+      {
+        "imagePath": "jaegertracing/jaeger-cassandra-schema"
+      },
+      {
+        "imagePath": "jaegertracing/jaeger-collector"
+      },
+      {
+        "imagePath": "jaegertracing/jaeger-es-index-cleaner"
+      },
+      {
+        "imagePath": "jaegertracing/jaeger-operator"
+      },
+      {
+        "imagePath": "jaegertracing/jaeger-query"
+      },
+      {
+        "imagePath": "jaegertracing/spark-dependencies"
+      },
+      {
+        "imagePath": "jamesdbloom/mockserver"
+      },
+      {
+        "imagePath": "janeczku/go-dnsmasq"
+      },
+      {
+        "imagePath": "jasonrivers/nagios"
+      },
+      {
+        "imagePath": "jbergknoff/postgresql-client"
+      },
+      {
+        "imagePath": "jboss/keycloak"
+      },
+      {
+        "imagePath": "jdub/ami-resource"
+      },
+      {
+        "imagePath": "jellyfin/jellyfin"
+      },
+      {
+        "imagePath": "jenkins/inbound-agent"
+      },
+      {
+        "imagePath": "jenkins/jenkins"
+      },
+      {
+        "imagePath": "jenkins/jnlp-slave"
+      },
+      {
+        "imagePath": "jettech/kube-webhook-certgen"
+      },
+      {
+        "imagePath": "jfrog-ecosystem-integration-env"
+      },
+      {
+        "imagePath": "jfrog/art-nginx"
+      },
+      {
+        "imagePath": "jfrog/artifactory-cpp-ce"
+      },
+      {
+        "imagePath": "jfrog/artifactory-ha-primary"
+      },
+      {
+        "imagePath": "jfrog/artifactory-ha-secondary"
+      },
+      {
+        "imagePath": "jfrog/artifactory-jcr"
+      },
+      {
+        "imagePath": "jfrog/artifactory-oss"
+      },
+      {
+        "imagePath": "jfrog/artifactory-pro"
+      },
+      {
+        "imagePath": "jfrog/artifactory-registry"
+      },
+      {
+        "imagePath": "jfrog/auto-mat"
+      },
+      {
+        "imagePath": "jfrog/dcos-artifactory-pro"
+      },
+      {
+        "imagePath": "jfrog/devops/logs_collection/jfrog-saas-deployer"
+      },
+      {
+        "imagePath": "jfrog/dind-options"
+      },
+      {
+        "imagePath": "jfrog/distribution-distribution"
+      },
+      {
+        "imagePath": "jfrog/distribution-distributor"
+      },
+      {
+        "imagePath": "jfrog/distribution-installer"
+      },
+      {
+        "imagePath": "jfrog/distribution-mongo"
+      },
+      {
+        "imagePath": "jfrog/distribution-postgres"
+      },
+      {
+        "imagePath": "jfrog/distribution-redis"
+      },
+      {
+        "imagePath": "jfrog/distroless/base/access-java"
+      },
+      {
+        "imagePath": "jfrog/distroless/base/artifactory-java"
+      },
+      {
+        "imagePath": "jfrog/distroless/base/artifactory-java-base"
+      },
+      {
+        "imagePath": "jfrog/distroless/base/artifactory-sh"
+      },
+      {
+        "imagePath": "jfrog/distroless/base/java"
+      },
+      {
+        "imagePath": "jfrog/elasticsearch"
+      },
+      {
+        "imagePath": "jfrog/elasticsearch-oss"
+      },
+      {
+        "imagePath": "jfrog/elasticsearch-oss-sg"
+      },
+      {
+        "imagePath": "jfrog/elasticsearch-sg"
+      },
+      {
+        "imagePath": "jfrog/insight-core"
+      },
+      {
+        "imagePath": "jfrog/insight-executor"
+      },
+      {
+        "imagePath": "jfrog/insight-scheduler"
+      },
+      {
+        "imagePath": "jfrog/insight-server"
+      },
+      {
+        "imagePath": "jfrog/jenkins"
+      },
+      {
+        "imagePath": "jfrog/jfmc-influxdb"
+      },
+      {
+        "imagePath": "jfrog/jfmc-installer"
+      },
+      {
+        "imagePath": "jfrog/jfmc-mongo"
+      },
+      {
+        "imagePath": "jfrog/jfrog-cli"
+      },
+      {
+        "imagePath": "jfrog/jfrog-cli-full"
+      },
+      {
+        "imagePath": "jfrog/jfrog-cli-full-v2"
+      },
+      {
+        "imagePath": "jfrog/jfrog-cli-full-v2-jf"
+      },
+      {
+        "imagePath": "jfrog/jfrog-cli-go"
+      },
+      {
+        "imagePath": "jfrog/jfrog-cli-v2"
+      },
+      {
+        "imagePath": "jfrog/jfrog-cli-v2-jf"
+      },
+      {
+        "imagePath": "jfrog/jfrog-nexus-migrator"
+      },
+      {
+        "imagePath": "jfrog/mission-control"
+      },
+      {
+        "imagePath": "jfrog/nginx-art"
+      },
+      {
+        "imagePath": "jfrog/nginx-artifactory"
+      },
+      {
+        "imagePath": "jfrog/nginx-artifactory-pro"
+      },
+      {
+        "imagePath": "jfrog/observability"
+      },
+      {
+        "imagePath": "jfrog/openjdk"
+      },
+      {
+        "imagePath": "jfrog/pdn/node"
+      },
+      {
+        "imagePath": "jfrog/pdn/server"
+      },
+      {
+        "imagePath": "jfrog/pipelines-api"
+      },
+      {
+        "imagePath": "jfrog/pipelines-c7"
+      },
+      {
+        "imagePath": "jfrog/pipelines-c7cpp"
+      },
+      {
+        "imagePath": "jfrog/pipelines-c7dotnet"
+      },
+      {
+        "imagePath": "jfrog/pipelines-c7dotnetcore"
+      },
+      {
+        "imagePath": "jfrog/pipelines-c7go"
+      },
+      {
+        "imagePath": "jfrog/pipelines-c7java"
+      },
+      {
+        "imagePath": "jfrog/pipelines-c7node"
+      },
+      {
+        "imagePath": "jfrog/pipelines-c8cpp"
+      },
+      {
+        "imagePath": "jfrog/pipelines-c8go"
+      },
+      {
+        "imagePath": "jfrog/pipelines-c8java"
+      },
+      {
+        "imagePath": "jfrog/pipelines-c8node"
+      },
+      {
+        "imagePath": "jfrog/pipelines-dind"
+      },
+      {
+        "imagePath": "jfrog/pipelines-distrobase"
+      },
+      {
+        "imagePath": "jfrog/pipelines-frontend"
+      },
+      {
+        "imagePath": "jfrog/pipelines-installer"
+      },
+      {
+        "imagePath": "jfrog/pipelines-micro"
+      },
+      {
+        "imagePath": "jfrog/pipelines-msg"
+      },
+      {
+        "imagePath": "jfrog/pipelines-nodepool-service"
+      },
+      {
+        "imagePath": "jfrog/pipelines-nodepoolmanager"
+      },
+      {
+        "imagePath": "jfrog/pipelines-observability"
+      },
+      {
+        "imagePath": "jfrog/pipelines-postgres"
+      },
+      {
+        "imagePath": "jfrog/pipelines-redis"
+      },
+      {
+        "imagePath": "jfrog/pipelines-reqkick"
+      },
+      {
+        "imagePath": "jfrog/pipelines-router"
+      },
+      {
+        "imagePath": "jfrog/pipelines-step-service"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u16cpp"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u16go"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u16java"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u16microbase"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u16node"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u16reqproc"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u18cpp"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u18dotnet"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u18dotnetcore"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u18go"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u18java"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u18node"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u20cpp"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u20dotnet"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u20dotnetcore"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u20go"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u20java"
+      },
+      {
+        "imagePath": "jfrog/pipelines-u20node"
+      },
+      {
+        "imagePath": "jfrog/pipelines-vault"
+      },
+      {
+        "imagePath": "jfrog/pipelines-vault-init"
+      },
+      {
+        "imagePath": "jfrog/pipelines-w19cpp"
+      },
+      {
+        "imagePath": "jfrog/pipelines-w19dotnet"
+      },
+      {
+        "imagePath": "jfrog/pipelines-w19dotnetcore"
+      },
+      {
+        "imagePath": "jfrog/pipelines-w19go"
+      },
+      {
+        "imagePath": "jfrog/pipelines-w19java"
+      },
+      {
+        "imagePath": "jfrog/pipelines-w19node"
+      },
+      {
+        "imagePath": "jfrog/pipelines-www"
+      },
+      {
+        "imagePath": "jfrog/router"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/access-java"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/access-java-17"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/artifactory"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/artifactory-java"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/distribution"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/insight"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/mc"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/pdn"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/pdn/node"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/pdn/server"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/pipelines"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/router"
+      },
+      {
+        "imagePath": "jfrog/ubi-micro/base/xray"
+      },
+      {
+        "imagePath": "jfrog/ubi-minimal"
+      },
+      {
+        "imagePath": "jfrog/xray-analysis"
+      },
+      {
+        "imagePath": "jfrog/xray-event"
+      },
+      {
+        "imagePath": "jfrog/xray-indexer"
+      },
+      {
+        "imagePath": "jfrog/xray-installer"
+      },
+      {
+        "imagePath": "jfrog/xray-jas-contextual-analysis"
+      },
+      {
+        "imagePath": "jfrog/xray-jas-exposures"
+      },
+      {
+        "imagePath": "jfrog/xray-mongo"
+      },
+      {
+        "imagePath": "jfrog/xray-persist"
+      },
+      {
+        "imagePath": "jfrog/xray-postgres"
+      },
+      {
+        "imagePath": "jfrog/xray-rabbitmq"
+      },
+      {
+        "imagePath": "jfrog/xray-server"
+      },
+      {
+        "imagePath": "jhipster/jhipster"
+      },
+      {
+        "imagePath": "jimmidyson/configmap-reload"
+      },
+      {
+        "imagePath": "jkris/mountebank"
+      },
+      {
+        "imagePath": "jpillora/dnsmasq"
+      },
+      {
+        "imagePath": "jtblin/kube2iam"
+      },
+      {
+        "imagePath": "jumanjiman/rsyslog"
+      },
+      {
+        "imagePath": "jupyterhub/k8s-hub"
+      },
+      {
+        "imagePath": "justwatch/elasticsearch_exporter"
+      },
+      {
+        "imagePath": "jwilder/docker-gen"
+      },
+      {
+        "imagePath": "k8scloudprovider/k8s-keystone-auth"
+      },
+      {
+        "imagePath": "karlkfi/yq"
+      },
+      {
+        "imagePath": "kedacore/keda"
+      },
+      {
+        "imagePath": "kerberos/enterprise-machinery"
+      },
+      {
+        "imagePath": "keycloak/keycloak-gatekeeper"
+      },
+      {
+        "imagePath": "kiali/kiali"
+      },
+      {
+        "imagePath": "kindest/node"
+      },
+      {
+        "imagePath": "kiosksh/kiosk"
+      },
+      {
+        "imagePath": "kiwigrid/k8s-sidecar"
+      },
+      {
+        "imagePath": "klakegg/hugo"
+      },
+      {
+        "imagePath": "koalaman/shellcheck"
+      },
+      {
+        "imagePath": "koalaman/shellcheck-alpine"
+      },
+      {
+        "imagePath": "kolide/fleet"
+      },
+      {
+        "imagePath": "ktchen14/static-resource"
+      },
+      {
+        "imagePath": "kubeaws/kube-spot-termination-notice-handler"
+      },
+      {
+        "imagePath": "kubeflowkatib/katib-db-manager"
+      },
+      {
+        "imagePath": "kubeless/cronjob-trigger-controller"
+      },
+      {
+        "imagePath": "kubeless/function-controller"
+      },
+      {
+        "imagePath": "kubeless/http-trigger-controller"
+      },
+      {
+        "imagePath": "kubemq/kubemq-operator"
+      },
+      {
+        "imagePath": "kubenab"
+      },
+      {
+        "imagePath": "kubernetesui/dashboard"
+      },
+      {
+        "imagePath": "kubernetesui/dashboard-amd64"
+      },
+      {
+        "imagePath": "kubernetesui/metrics-scraper"
+      },
+      {
+        "imagePath": "kubexray"
+      },
+      {
+        "imagePath": "lambci/lambda"
+      },
+      {
+        "imagePath": "landoop/schema-registry-ui"
+      },
+      {
+        "imagePath": "laurentverbruggen/concourse-git-semver-tag-resource"
+      },
+      {
+        "imagePath": "learning-engine"
+      },
+      {
+        "imagePath": "lensesioextra/sql-processor"
+      },
+      {
+        "imagePath": "lfkeitel/tacacs_plus"
+      },
+      {
+        "imagePath": "library/adminer"
+      },
+      {
+        "imagePath": "library/adoptopenjdk"
+      },
+      {
+        "imagePath": "library/alpine"
+      },
+      {
+        "imagePath": "library/amazoncorretto"
+      },
+      {
+        "imagePath": "library/amazonlinux"
+      },
+      {
+        "imagePath": "library/bash"
+      },
+      {
+        "imagePath": "library/buildpack-deps"
+      },
+      {
+        "imagePath": "library/busybox"
+      },
+      {
+        "imagePath": "library/cassandra"
+      },
+      {
+        "imagePath": "library/centos"
+      },
+      {
+        "imagePath": "library/chronograf"
+      },
+      {
+        "imagePath": "library/composer"
+      },
+      {
+        "imagePath": "library/consul"
+      },
+      {
+        "imagePath": "library/couchdb"
+      },
+      {
+        "imagePath": "library/debian"
+      },
+      {
+        "imagePath": "library/docker"
+      },
+      {
+        "imagePath": "library/elasticsearch"
+      },
+      {
+        "imagePath": "library/gcc"
+      },
+      {
+        "imagePath": "library/golang"
+      },
+      {
+        "imagePath": "library/gradle"
+      },
+      {
+        "imagePath": "library/groovy"
+      },
+      {
+        "imagePath": "library/haproxy"
+      },
+      {
+        "imagePath": "library/hello-world"
+      },
+      {
+        "imagePath": "library/httpd"
+      },
+      {
+        "imagePath": "library/influxdb"
+      },
+      {
+        "imagePath": "library/java"
+      },
+      {
+        "imagePath": "library/jruby"
+      },
+      {
+        "imagePath": "library/kibana"
+      },
+      {
+        "imagePath": "library/kong"
+      },
+      {
+        "imagePath": "library/logstash"
+      },
+      {
+        "imagePath": "library/mariadb"
+      },
+      {
+        "imagePath": "library/maven"
+      },
+      {
+        "imagePath": "library/memcached"
+      },
+      {
+        "imagePath": "library/mongo"
+      },
+      {
+        "imagePath": "library/mongo-express"
+      },
+      {
+        "imagePath": "library/mysql"
+      },
+      {
+        "imagePath": "library/nats"
+      },
+      {
+        "imagePath": "library/neo4j"
+      },
+      {
+        "imagePath": "library/nginx"
+      },
+      {
+        "imagePath": "library/node"
+      },
+      {
+        "imagePath": "library/openjdk"
+      },
+      {
+        "imagePath": "library/oraclelinux"
+      },
+      {
+        "imagePath": "library/percona"
+      },
+      {
+        "imagePath": "library/php"
+      },
+      {
+        "imagePath": "library/postgres"
+      },
+      {
+        "imagePath": "library/pypy"
+      },
+      {
+        "imagePath": "library/python"
+      },
+      {
+        "imagePath": "library/rabbitmq"
+      },
+      {
+        "imagePath": "library/redis"
+      },
+      {
+        "imagePath": "library/registry"
+      },
+      {
+        "imagePath": "library/rocket.chat"
+      },
+      {
+        "imagePath": "library/ruby"
+      },
+      {
+        "imagePath": "library/rust"
+      },
+      {
+        "imagePath": "library/solr"
+      },
+      {
+        "imagePath": "library/sonarqube"
+      },
+      {
+        "imagePath": "library/telegraf"
+      },
+      {
+        "imagePath": "library/tomcat"
+      },
+      {
+        "imagePath": "library/tomee"
+      },
+      {
+        "imagePath": "library/traefik"
+      },
+      {
+        "imagePath": "library/ubuntu"
+      },
+      {
+        "imagePath": "library/vault"
+      },
+      {
+        "imagePath": "library/websphere-liberty"
+      },
+      {
+        "imagePath": "library/zookeeper"
+      },
+      {
+        "imagePath": "lightstep/opentelemetry-prometheus-sidecar"
+      },
+      {
+        "imagePath": "line/kubectl-kustomize"
+      },
+      {
+        "imagePath": "linkedin/datahub-frontend"
+      },
+      {
+        "imagePath": "linuxserver/plex"
+      },
+      {
+        "imagePath": "lirt/velero-plugin-swift"
+      },
+      {
+        "imagePath": "lmenezes/cerebro"
+      },
+      {
+        "imagePath": "lmierzwa/karma"
+      },
+      {
+        "imagePath": "loadimpact/k6"
+      },
+      {
+        "imagePath": "localstack/localstack"
+      },
+      {
+        "imagePath": "localstack/localstack-full"
+      },
+      {
+        "imagePath": "longhornio/csi-attacher"
+      },
+      {
+        "imagePath": "longhornio/csi-node-driver-registrar"
+      },
+      {
+        "imagePath": "longhornio/csi-provisioner"
+      },
+      {
+        "imagePath": "longhornio/csi-resizer"
+      },
+      {
+        "imagePath": "longhornio/csi-snapshotter"
+      },
+      {
+        "imagePath": "longhornio/longhorn-instance-manager"
+      },
+      {
+        "imagePath": "longhornio/longhorn-manager"
+      },
+      {
+        "imagePath": "lucas"
+      },
+      {
+        "imagePath": "maildev/maildev"
+      },
+      {
+        "imagePath": "mailhog/mailhog"
+      },
+      {
+        "imagePath": "mailu/clamav"
+      },
+      {
+        "imagePath": "manager"
+      },
+      {
+        "imagePath": "markhobson/node-chrome"
+      },
+      {
+        "imagePath": "mbentley/ldap-utils"
+      },
+      {
+        "imagePath": "mc"
+      },
+      {
+        "imagePath": "mdillon/postgis"
+      },
+      {
+        "imagePath": "meisterplan/jfrog-cli"
+      },
+      {
+        "imagePath": "mendix/rootfs"
+      },
+      {
+        "imagePath": "mesosphere/mesos-master"
+      },
+      {
+        "imagePath": "metabase/metabase"
+      },
+      {
+        "imagePath": "metallb/controller"
+      },
+      {
+        "imagePath": "metallb/speaker"
+      },
+      {
+        "imagePath": "mfominov/docker-jsonlint"
+      },
+      {
+        "imagePath": "microcks/microcks"
+      },
+      {
+        "imagePath": "microcks/microcks-postman-runtime"
+      },
+      {
+        "imagePath": "microsoft/dotnet"
+      },
+      {
+        "imagePath": "microsoft/mssql-server-linux"
+      },
+      {
+        "imagePath": "microsoft/powershell"
+      },
+      {
+        "imagePath": "mikefarah/yq"
+      },
+      {
+        "imagePath": "minio/mc"
+      },
+      {
+        "imagePath": "minio/minio"
+      },
+      {
+        "imagePath": "miniroy/openvswitch"
+      },
+      {
+        "imagePath": "mirantis/salt"
+      },
+      {
+        "imagePath": "mixed"
+      },
+      {
+        "imagePath": "mockserver/mockserver"
+      },
+      {
+        "imagePath": "mongo"
+      },
+      {
+        "imagePath": "mssql"
+      },
+      {
+        "imagePath": "mvdan/shfmt"
+      },
+      {
+        "imagePath": "my/alpine/image/test"
+      },
+      {
+        "imagePath": "my/bash/image/test"
+      },
+      {
+        "imagePath": "my/docker/image/test"
+      },
+      {
+        "imagePath": "my/redis/image/test"
+      },
+      {
+        "imagePath": "mysql"
+      },
+      {
+        "imagePath": "nadir88/java-https-client"
+      },
+      {
+        "imagePath": "ncabatoff/process-exporter"
+      },
+      {
+        "imagePath": "ndywicki/openjdk8-alpine-fontconfig"
+      },
+      {
+        "imagePath": "netapp/trident"
+      },
+      {
+        "imagePath": "netapp/trident-autosupport"
+      },
+      {
+        "imagePath": "netapp/trident-operator"
+      },
+      {
+        "imagePath": "newrelic/cli"
+      },
+      {
+        "imagePath": "newrelic/infrastructure-bundle"
+      },
+      {
+        "imagePath": "newtmitch/sonar-scanner"
+      },
+      {
+        "imagePath": "nfvpe/multus"
+      },
+      {
+        "imagePath": "nginx/nginx-prometheus-exporter"
+      },
+      {
+        "imagePath": "nginxinc/nginx-unprivileged"
+      },
+      {
+        "imagePath": "nicolaka/netshoot"
+      },
+      {
+        "imagePath": "nikolaik/python-nodejs"
+      },
+      {
+        "imagePath": "nirmata/static-egressip-gateway-manager"
+      },
+      {
+        "imagePath": "noiro/aci-containers-host"
+      },
+      {
+        "imagePath": "noiro/cnideploy"
+      },
+      {
+        "imagePath": "noiro/gbp-server"
+      },
+      {
+        "imagePath": "nulldriver/cf-cli-resource"
+      },
+      {
+        "imagePath": "nulldriver/maven-resource"
+      },
+      {
+        "imagePath": "nvidia/cuda"
+      },
+      {
+        "imagePath": "nyurik/alpine-python3-requests"
+      },
+      {
+        "imagePath": "obcon/fakesmtp"
+      },
+      {
+        "imagePath": "octopusdeploy/octo"
+      },
+      {
+        "imagePath": "odb"
+      },
+      {
+        "imagePath": "odise/busybox-curl"
+      },
+      {
+        "imagePath": "olhtbr/metadata-resource"
+      },
+      {
+        "imagePath": "oliver006/redis_exporter"
+      },
+      {
+        "imagePath": "openapitools/openapi-generator-cli"
+      },
+      {
+        "imagePath": "opencti/connector-export-file-stix"
+      },
+      {
+        "imagePath": "opencti/worker"
+      },
+      {
+        "imagePath": "openidentityplatform/opendj"
+      },
+      {
+        "imagePath": "openjdk"
+      },
+      {
+        "imagePath": "openpolicyagent/gatekeeper"
+      },
+      {
+        "imagePath": "openpolicyagent/kube-mgmt"
+      },
+      {
+        "imagePath": "openpolicyagent/opa"
+      },
+      {
+        "imagePath": "openshift/origin-cli"
+      },
+      {
+        "imagePath": "openshift/origin-control-plane"
+      },
+      {
+        "imagePath": "openshift/origin-deployer"
+      },
+      {
+        "imagePath": "openshift/origin-docker-builder"
+      },
+      {
+        "imagePath": "openshift/origin-docker-registry"
+      },
+      {
+        "imagePath": "openshift/origin-haproxy-router"
+      },
+      {
+        "imagePath": "openshift/origin-pod"
+      },
+      {
+        "imagePath": "openshift/origin-service-serving-cert-signer"
+      },
+      {
+        "imagePath": "openshift/origin-web-console"
+      },
+      {
+        "imagePath": "openstackhelm/neutron"
+      },
+      {
+        "imagePath": "openstackhelm/openvswitch"
+      },
+      {
+        "imagePath": "openstackhelm/requirements"
+      },
+      {
+        "imagePath": "openstackmagnum/heat-container-agent"
+      },
+      {
+        "imagePath": "openstackmagnum/helm-client"
+      },
+      {
+        "imagePath": "openstacktools/openstack-client"
+      },
+      {
+        "imagePath": "openzipkin/zipkin"
+      },
+      {
+        "imagePath": "oracleinanutshell/oracle-xe-11g"
+      },
+      {
+        "imagePath": "orangecloudfoundry/bosh-cli-v2-cf-cli"
+      },
+      {
+        "imagePath": "orangecloudfoundry/concourse-fly-resource"
+      },
+      {
+        "imagePath": "orangecloudfoundry/concourse-pipeline-resource"
+      },
+      {
+        "imagePath": "orangecloudfoundry/git-branch-heads-resource"
+      },
+      {
+        "imagePath": "orangecloudfoundry/k8s-tools"
+      },
+      {
+        "imagePath": "orangecloudfoundry/orange-cf-bosh-cli"
+      },
+      {
+        "imagePath": "orangecloudfoundry/terraform"
+      },
+      {
+        "imagePath": "orangeopensource/concourse"
+      },
+      {
+        "imagePath": "oryd/hydra"
+      },
+      {
+        "imagePath": "osixia/openldap"
+      },
+      {
+        "imagePath": "osixia/openldap-backup"
+      },
+      {
+        "imagePath": "otel/opentelemetry-collector"
+      },
+      {
+        "imagePath": "otel/opentelemetry-collector-contrib"
+      },
+      {
+        "imagePath": "outcoldsolutions/collectorforkubernetes"
+      },
+      {
+        "imagePath": "owasp/zap2docker-stable"
+      },
+      {
+        "imagePath": "paketobuildpacks/run"
+      },
+      {
+        "imagePath": "pavelsr/alpine-perl-libxml2"
+      },
+      {
+        "imagePath": "pcfseceng/email-resource"
+      },
+      {
+        "imagePath": "pghalliday/tftp"
+      },
+      {
+        "imagePath": "philipssoftware/python"
+      },
+      {
+        "imagePath": "philipssoftware/sonar-scanner"
+      },
+      {
+        "imagePath": "phpqa/phpcpd"
+      },
+      {
+        "imagePath": "phusion/passenger-ruby26"
+      },
+      {
+        "imagePath": "pingidentity/ldap-sdk-tools"
+      },
+      {
+        "imagePath": "pipelinecomponents/flake8"
+      },
+      {
+        "imagePath": "pipelinecomponents/markdownlint"
+      },
+      {
+        "imagePath": "pipelinecomponents/xmllint"
+      },
+      {
+        "imagePath": "pipelinecomponents/yamllint"
+      },
+      {
+        "imagePath": "pipelines-init"
+      },
+      {
+        "imagePath": "pipelines-installer"
+      },
+      {
+        "imagePath": "pipelines-k8s-agent"
+      },
+      {
+        "imagePath": "pipelines-k8s-node"
+      },
+      {
+        "imagePath": "pipelines-node"
+      },
+      {
+        "imagePath": "pipelines-pod-vm"
+      },
+      {
+        "imagePath": "pipelines-vault-init"
+      },
+      {
+        "imagePath": "pivotalcf/pivnet-resource"
+      },
+      {
+        "imagePath": "pivotalservices/artifactory-resource"
+      },
+      {
+        "imagePath": "pivotalservices/bosh2-docker"
+      },
+      {
+        "imagePath": "pivotalservices/cf-mgmt"
+      },
+      {
+        "imagePath": "plantuml/plantuml-server"
+      },
+      {
+        "imagePath": "plndr/kube-vip"
+      },
+      {
+        "imagePath": "plugins/docker"
+      },
+      {
+        "imagePath": "plugins/gcr"
+      },
+      {
+        "imagePath": "plugins/gcs"
+      },
+      {
+        "imagePath": "plugins/kaniko"
+      },
+      {
+        "imagePath": "plugins/kaniko-ecr"
+      },
+      {
+        "imagePath": "plugins/kaniko-gcr"
+      },
+      {
+        "imagePath": "plugins/npm"
+      },
+      {
+        "imagePath": "plugins/pypi"
+      },
+      {
+        "imagePath": "plugins/s3"
+      },
+      {
+        "imagePath": "plugins/s3-cache"
+      },
+      {
+        "imagePath": "plugins/slack"
+      },
+      {
+        "imagePath": "plugins/slack-blame"
+      },
+      {
+        "imagePath": "plugins/webhook"
+      },
+      {
+        "imagePath": "polinux/stress"
+      },
+      {
+        "imagePath": "portainer/agent"
+      },
+      {
+        "imagePath": "portainer/portainer"
+      },
+      {
+        "imagePath": "postgis/postgis"
+      },
+      {
+        "imagePath": "postgres"
+      },
+      {
+        "imagePath": "postgres/postgres"
+      },
+      {
+        "imagePath": "postgresql"
+      },
+      {
+        "imagePath": "praqma/network-multitool"
+      },
+      {
+        "imagePath": "prefecthq/apollo"
+      },
+      {
+        "imagePath": "prefecthq/server"
+      },
+      {
+        "imagePath": "prefecthq/ui"
+      },
+      {
+        "imagePath": "premiereglobal/stim"
+      },
+      {
+        "imagePath": "prom/alertmanager"
+      },
+      {
+        "imagePath": "prom/blackbox-exporter"
+      },
+      {
+        "imagePath": "prom/haproxy-exporter"
+      },
+      {
+        "imagePath": "prom/mysqld-exporter"
+      },
+      {
+        "imagePath": "prom/node-exporter"
+      },
+      {
+        "imagePath": "prom/prometheus"
+      },
+      {
+        "imagePath": "prom/pushgateway"
+      },
+      {
+        "imagePath": "prom/statsd-exporter"
+      },
+      {
+        "imagePath": "proxy"
+      },
+      {
+        "imagePath": "pryorda/vmware_exporter"
+      },
+      {
+        "imagePath": "pryvio/open-pryv.io"
+      },
+      {
+        "imagePath": "publysher/hugo"
+      },
+      {
+        "imagePath": "puppet/pdk"
+      },
+      {
+        "imagePath": "puppet/puppetdb"
+      },
+      {
+        "imagePath": "puppet/puppetserver"
+      },
+      {
+        "imagePath": "purbon/kafka-topology-builder"
+      },
+      {
+        "imagePath": "purestorage/k8s"
+      },
+      {
+        "imagePath": "purestorage/psctl"
+      },
+      {
+        "imagePath": "pusher/wave"
+      },
+      {
+        "imagePath": "rabbitmq"
+      },
+      {
+        "imagePath": "radial/busyboxplus"
+      },
+      {
+        "imagePath": "rancher/backup-restore-operator"
+      },
+      {
+        "imagePath": "rancher/banzaicloud-fluentd"
+      },
+      {
+        "imagePath": "rancher/banzaicloud-logging-operator"
+      },
+      {
+        "imagePath": "rancher/busybox"
+      },
+      {
+        "imagePath": "rancher/calico-cni"
+      },
+      {
+        "imagePath": "rancher/calico-ctl"
+      },
+      {
+        "imagePath": "rancher/calico-node"
+      },
+      {
+        "imagePath": "rancher/calico-pod2daemon-flexvol"
+      },
+      {
+        "imagePath": "rancher/cis-operator"
+      },
+      {
+        "imagePath": "rancher/cluster-proportional-autoscaler"
+      },
+      {
+        "imagePath": "rancher/configmap-reload"
+      },
+      {
+        "imagePath": "rancher/coredns-coredns"
+      },
+      {
+        "imagePath": "rancher/coreos-configmap-reload"
+      },
+      {
+        "imagePath": "rancher/coreos-etcd"
+      },
+      {
+        "imagePath": "rancher/coreos-flannel"
+      },
+      {
+        "imagePath": "rancher/coreos-kube-state-metrics"
+      },
+      {
+        "imagePath": "rancher/coreos-prometheus-config-reloader"
+      },
+      {
+        "imagePath": "rancher/coreos-prometheus-operator"
+      },
+      {
+        "imagePath": "rancher/directxman12-k8s-prometheus-adapter-amd64"
+      },
+      {
+        "imagePath": "rancher/eks-operator"
+      },
+      {
+        "imagePath": "rancher/fleet"
+      },
+      {
+        "imagePath": "rancher/fleet-agent"
+      },
+      {
+        "imagePath": "rancher/fluent-fluent-bit"
+      },
+      {
+        "imagePath": "rancher/grafana-grafana"
+      },
+      {
+        "imagePath": "rancher/istio-citadel"
+      },
+      {
+        "imagePath": "rancher/istio-galley"
+      },
+      {
+        "imagePath": "rancher/istio-install-cni"
+      },
+      {
+        "imagePath": "rancher/istio-mixer"
+      },
+      {
+        "imagePath": "rancher/istio-pilot"
+      },
+      {
+        "imagePath": "rancher/istio-proxyv2"
+      },
+      {
+        "imagePath": "rancher/jaegertracing-all-in-one"
+      },
+      {
+        "imagePath": "rancher/jetstack-cert-manager-controller"
+      },
+      {
+        "imagePath": "rancher/k3s"
+      },
+      {
+        "imagePath": "rancher/k3s-upgrade"
+      },
+      {
+        "imagePath": "rancher/k8s-dns-node-cache"
+      },
+      {
+        "imagePath": "rancher/k8s-dns-sidecar"
+      },
+      {
+        "imagePath": "rancher/kiali-kiali"
+      },
+      {
+        "imagePath": "rancher/kiwigrid-k8s-sidecar"
+      },
+      {
+        "imagePath": "rancher/klipper-helm"
+      },
+      {
+        "imagePath": "rancher/klipper-lb"
+      },
+      {
+        "imagePath": "rancher/kube-api-auth"
+      },
+      {
+        "imagePath": "rancher/kubectl"
+      },
+      {
+        "imagePath": "rancher/library-busybox"
+      },
+      {
+        "imagePath": "rancher/library-nginx"
+      },
+      {
+        "imagePath": "rancher/local-path-provisioner"
+      },
+      {
+        "imagePath": "rancher/longhornio-csi-snapshotter"
+      },
+      {
+        "imagePath": "rancher/metrics-server"
+      },
+      {
+        "imagePath": "rancher/minio-minio"
+      },
+      {
+        "imagePath": "rancher/mirrored-coredns-coredns"
+      },
+      {
+        "imagePath": "rancher/mirrored-coreos-prometheus-operator"
+      },
+      {
+        "imagePath": "rancher/mirrored-directxman12-k8s-prometheus-adapter"
+      },
+      {
+        "imagePath": "rancher/mirrored-jettech-kube-webhook-certgen"
+      },
+      {
+        "imagePath": "rancher/mirrored-jimmidyson-configmap-reload"
+      },
+      {
+        "imagePath": "rancher/mirrored-kiwigrid-k8s-sidecar"
+      },
+      {
+        "imagePath": "rancher/mirrored-library-nginx"
+      },
+      {
+        "imagePath": "rancher/mirrored-longhornio-longhorn-manager"
+      },
+      {
+        "imagePath": "rancher/mirrored-prometheus-prometheus"
+      },
+      {
+        "imagePath": "rancher/mirrored-sonobuoy-sonobuoy"
+      },
+      {
+        "imagePath": "rancher/nginx"
+      },
+      {
+        "imagePath": "rancher/nginx-ingress-controller"
+      },
+      {
+        "imagePath": "rancher/nginx-ingress-controller-defaultbackend"
+      },
+      {
+        "imagePath": "rancher/opa-gatekeeper"
+      },
+      {
+        "imagePath": "rancher/pause"
+      },
+      {
+        "imagePath": "rancher/pipeline-jenkins-server"
+      },
+      {
+        "imagePath": "rancher/prom-alertmanager"
+      },
+      {
+        "imagePath": "rancher/prom-node-exporter"
+      },
+      {
+        "imagePath": "rancher/prom-prometheus"
+      },
+      {
+        "imagePath": "rancher/prometheus-auth"
+      },
+      {
+        "imagePath": "rancher/pushprox-client"
+      },
+      {
+        "imagePath": "rancher/pushprox-proxy"
+      },
+      {
+        "imagePath": "rancher/rancher-agent"
+      },
+      {
+        "imagePath": "rancher/rancher-operator"
+      },
+      {
+        "imagePath": "rancher/rancher-runtime"
+      },
+      {
+        "imagePath": "rancher/rke-tools"
+      },
+      {
+        "imagePath": "rancher/scheduler"
+      },
+      {
+        "imagePath": "rancher/sonobuoy-sonobuoy"
+      },
+      {
+        "imagePath": "rancher/squareup-ghostunnel"
+      },
+      {
+        "imagePath": "rancherlabs/swiss-army-knife"
+      },
+      {
+        "imagePath": "rapid7/geppetto"
+      },
+      {
+        "imagePath": "rapid7/msf-centos6-x64-omnibus"
+      },
+      {
+        "imagePath": "rasa/duckling"
+      },
+      {
+        "imagePath": "rasa/nginx"
+      },
+      {
+        "imagePath": "rasa/rasa"
+      },
+      {
+        "imagePath": "rasa/rasa-x"
+      },
+      {
+        "imagePath": "rasa/rasa-x-demo"
+      },
+      {
+        "imagePath": "reactnativecommunity/react-native-android"
+      },
+      {
+        "imagePath": "redfactorlabs/concourse-smuggler-resource"
+      },
+      {
+        "imagePath": "redis"
+      },
+      {
+        "imagePath": "rediscommander/redis-commander"
+      },
+      {
+        "imagePath": "redislabs/k8s-controller"
+      },
+      {
+        "imagePath": "redislabs/rebloom"
+      },
+      {
+        "imagePath": "redislabs/redisgears"
+      },
+      {
+        "imagePath": "redisoperator/redisnode"
+      },
+      {
+        "imagePath": "redocly/openapi-cli"
+      },
+      {
+        "imagePath": "reg2/fluentd"
+      },
+      {
+        "imagePath": "reg2/fluentd-1.12.0"
+      },
+      {
+        "imagePath": "renovate/renovate"
+      },
+      {
+        "imagePath": "reportportal/service-api"
+      },
+      {
+        "imagePath": "reportportal/service-authorization"
+      },
+      {
+        "imagePath": "richarvey/nginx-php-fpm"
+      },
+      {
+        "imagePath": "rmohr/activemq"
+      },
+      {
+        "imagePath": "rodolpheche/wiremock"
+      },
+      {
+        "imagePath": "roffe/kubectl"
+      },
+      {
+        "imagePath": "rook/ceph"
+      },
+      {
+        "imagePath": "ryts/kaniko-executor"
+      },
+      {
+        "imagePath": "sb464f/jobrunner"
+      },
+      {
+        "imagePath": "schemaspy/schemaspy"
+      },
+      {
+        "imagePath": "sckyzo/debian-thales"
+      },
+      {
+        "imagePath": "scylladb/scylla"
+      },
+      {
+        "imagePath": "scylladb/scylla-manager-agent"
+      },
+      {
+        "imagePath": "scylladb/scylla-operator"
+      },
+      {
+        "imagePath": "sdesbure/yamllint"
+      },
+      {
+        "imagePath": "sdkman/sdkman-website"
+      },
+      {
+        "imagePath": "selenium/hub"
+      },
+      {
+        "imagePath": "selenium/node-chrome"
+      },
+      {
+        "imagePath": "selenium/standalone-chrome"
+      },
+      {
+        "imagePath": "selenium/standalone-chrome-debug"
+      },
+      {
+        "imagePath": "selenoid/video-recorder"
+      },
+      {
+        "imagePath": "selenoid/vnc"
+      },
+      {
+        "imagePath": "sequenceiq/alpine-curl"
+      },
+      {
+        "imagePath": "sergevs42/vault-group-secrets-manager"
+      },
+      {
+        "imagePath": "sitespeedio/sitespeed.io"
+      },
+      {
+        "imagePath": "slmitch/glpi"
+      },
+      {
+        "imagePath": "snyk/kubernetes-monitor"
+      },
+      {
+        "imagePath": "snyk/snyk-cli"
+      },
+      {
+        "imagePath": "solace/solace-product-download"
+      },
+      {
+        "imagePath": "solace/solace-pubsub-standard"
+      },
+      {
+        "imagePath": "solsson/kafka-cp"
+      },
+      {
+        "imagePath": "solsson/kafka-prometheus-jmx-exporter"
+      },
+      {
+        "imagePath": "sonarsource/sonar-scanner-cli"
+      },
+      {
+        "imagePath": "sorintlab/stolon"
+      },
+      {
+        "imagePath": "sothr/concourse-rclone-resource"
+      },
+      {
+        "imagePath": "splunk/fluentd-hec"
+      },
+      {
+        "imagePath": "splunk/kube-objects"
+      },
+      {
+        "imagePath": "splunk/splunk"
+      },
+      {
+        "imagePath": "splunk/universalforwarder"
+      },
+      {
+        "imagePath": "spotify/docker-gc"
+      },
+      {
+        "imagePath": "spotinst/kubernetes-cluster-controller"
+      },
+      {
+        "imagePath": "spreaker/prometheus-pgbouncer-exporter"
+      },
+      {
+        "imagePath": "springio/artifactory-resource"
+      },
+      {
+        "imagePath": "squareup/ghostunnel"
+      },
+      {
+        "imagePath": "sscaling/jmx-prometheus-exporter"
+      },
+      {
+        "imagePath": "ssheehy/mongodb-exporter"
+      },
+      {
+        "imagePath": "starburstdata/presto"
+      },
+      {
+        "imagePath": "stoplight/prism"
+      },
+      {
+        "imagePath": "streamsets/datacollector"
+      },
+      {
+        "imagePath": "strimzi/operator"
+      },
+      {
+        "imagePath": "swaggerapi/swagger-ui"
+      },
+      {
+        "imagePath": "swce/keyval-resource"
+      },
+      {
+        "imagePath": "swce/metadata-resource"
+      },
+      {
+        "imagePath": "synadia/prometheus-nats-exporter"
+      },
+      {
+        "imagePath": "sysdig/agent"
+      },
+      {
+        "imagePath": "sysdig/node-image-analyzer"
+      },
+      {
+        "imagePath": "tarantool/tarantool"
+      },
+      {
+        "imagePath": "tchiotludo/akhq"
+      },
+      {
+        "imagePath": "teknand/kubetools"
+      },
+      {
+        "imagePath": "teliaoss/github-pr-resource"
+      },
+      {
+        "imagePath": "terraform"
+      },
+      {
+        "imagePath": "testcontainers/ryuk"
+      },
+      {
+        "imagePath": "testcontainersofficial/ryuk"
+      },
+      {
+        "imagePath": "testcontainersofficial/vnc-recorder"
+      },
+      {
+        "imagePath": "themattrix/tox-base"
+      },
+      {
+        "imagePath": "thyrlian/android-sdk"
+      },
+      {
+        "imagePath": "tiangolo/uvicorn-gunicorn-fastapi"
+      },
+      {
+        "imagePath": "tinkerpop/gremlin-server"
+      },
+      {
+        "imagePath": "tobiasdenzler/pong"
+      },
+      {
+        "imagePath": "todolist"
+      },
+      {
+        "imagePath": "trion/ng-cli"
+      },
+      {
+        "imagePath": "trion/ng-cli-karma"
+      },
+      {
+        "imagePath": "troykinsella/concourse-artifactory-deb-resource"
+      },
+      {
+        "imagePath": "troykinsella/concourse-artifactory-resource"
+      },
+      {
+        "imagePath": "troykinsella/concourse-docker-compose-resource"
+      },
+      {
+        "imagePath": "troykinsella/concourse-docker-image-resource"
+      },
+      {
+        "imagePath": "troykinsella/concourse-fly-resource"
+      },
+      {
+        "imagePath": "troykinsella/concourse-util"
+      },
+      {
+        "imagePath": "troykinsella/git-lint"
+      },
+      {
+        "imagePath": "troykinsella/s3-resource-simple"
+      },
+      {
+        "imagePath": "trustpilot/beat-exporter"
+      },
+      {
+        "imagePath": "tutum/dnsutils"
+      },
+      {
+        "imagePath": "tutum/hello-world"
+      },
+      {
+        "imagePath": "txn2/rsyncd"
+      },
+      {
+        "imagePath": "ubi-minimal"
+      },
+      {
+        "imagePath": "ubi8/ubi-micro"
+      },
+      {
+        "imagePath": "ubi8/ubi-minimal"
+      },
+      {
+        "imagePath": "ubi9/ubi-minimal"
+      },
+      {
+        "imagePath": "udacity/haproxy-consul"
+      },
+      {
+        "imagePath": "ui"
+      },
+      {
+        "imagePath": "untergeek/curator"
+      },
+      {
+        "imagePath": "upmcenterprises/elasticsearch-operator"
+      },
+      {
+        "imagePath": "vault"
+      },
+      {
+        "imagePath": "velero/velero"
+      },
+      {
+        "imagePath": "velero/velero-plugin-for-aws"
+      },
+      {
+        "imagePath": "velero/velero-plugin-for-microsoft-azure"
+      },
+      {
+        "imagePath": "venkat"
+      },
+      {
+        "imagePath": "veracode/api-wrapper-java"
+      },
+      {
+        "imagePath": "veracode/pipeline-scan"
+      },
+      {
+        "imagePath": "verofeevfsb/release-cli"
+      },
+      {
+        "imagePath": "vmware/powerclicore"
+      },
+      {
+        "imagePath": "wagoodman/dive"
+      },
+      {
+        "imagePath": "weaveworks/kured"
+      },
+      {
+        "imagePath": "weaveworks/plugin"
+      },
+      {
+        "imagePath": "weaveworks/weave"
+      },
+      {
+        "imagePath": "weaveworks/weave-kube"
+      },
+      {
+        "imagePath": "weaveworks/weave-npc"
+      },
+      {
+        "imagePath": "weaveworks/weaveexec"
+      },
+      {
+        "imagePath": "webcenter/activemq"
+      },
+      {
+        "imagePath": "webdevops/pagerduty-exporter"
+      },
+      {
+        "imagePath": "webuni/openssh"
+      },
+      {
+        "imagePath": "wework/speccy"
+      },
+      {
+        "imagePath": "whitestar/kubectl"
+      },
+      {
+        "imagePath": "willwill/wait-for-it"
+      },
+      {
+        "imagePath": "wingsplugins/todolist"
+      },
+      {
+        "imagePath": "wso2/wso2is"
+      },
+      {
+        "imagePath": "wurstmeister/kafka"
+      },
+      {
+        "imagePath": "wurstmeister/zookeeper"
+      },
+      {
+        "imagePath": "xray"
+      },
+      {
+        "imagePath": "xtellurian/openapi-diff-container"
+      },
+      {
+        "imagePath": "yandex/clickhouse-server"
+      },
+      {
+        "imagePath": "yelp/docker-custodian"
+      },
+      {
+        "imagePath": "yvonnick/gitmoji-changelog"
+      },
+      {
+        "imagePath": "zabbix/zabbix-web-apache-mysql"
+      },
+      {
+        "imagePath": "zaquestion/sonarqube-scanner"
+      },
+      {
+        "imagePath": "zenika/alpine-chrome"
+      },
+      {
+        "imagePath": "zerok/celery-prometheus-exporter"
+      },
+      {
+        "imagePath": "zlabjp/kubernetes-resource"
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "e76bc19a-4ba6-4088-bb45-df2d6c2c6ce5"
+}

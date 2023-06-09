@@ -33,7 +33,6 @@ const getString = (str: keyof StringsMap, vars?: Record<string, any> | undefined
 
 jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: () => Promise.resolve(spotConnector),
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(spotConnector)),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: { data: spotConnector.data?.content?.[0] }, refetch: fetchConnector, loading: false }
   })

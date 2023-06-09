@@ -1,0 +1,10 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "inputSetTemplateYaml": "pipeline:\n  identifier: \"GCR_Trigger\"\n  stages:\n  - stage:\n      identifier: \"S1\"\n      type: \"Deployment\"\n      spec:\n        execution:\n          steps:\n          - step:\n              identifier: \"ShellScript_1\"\n              type: \"ShellScript\"\n              timeout: \"<+input>\"\n",
+    "modules": ["cd", "pms"],
+    "hasInputSets": false
+  },
+  "metaData": null,
+  "correlationId": "a2c830f9-5d0d-434c-bdcb-20ac29d47c15"
+}

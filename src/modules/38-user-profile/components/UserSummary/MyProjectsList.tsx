@@ -6,17 +6,19 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import { Text, Layout, Card, Icon, Container, Tag, PageError } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useGetUserProjectInfo } from 'services/cd-ng'
+import routes from '@common/RouteDefinitions'
 import css from './UserSummary.module.scss'
 
 const MyProjectsList: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
+  const history = useHistory()
 
   const {
     data: projects,
@@ -43,7 +45,20 @@ const MyProjectsList: React.FC = () => {
         <Container className={css.cardContainer}>
           {projects.data.content.map(project => {
             return (
-              <Card key={`${project.identifier}-${project.orgIdentifier}`} className={css.card}>
+              <Card
+                key={`${project.identifier}-${project.orgIdentifier}`}
+                className={css.card}
+                interactive
+                onClick={() => {
+                  history.push(
+                    routes.toProjectDetails({
+                      accountId,
+                      orgIdentifier: project.orgIdentifier || 'default',
+                      projectIdentifier: project.identifier
+                    })
+                  )
+                }}
+              >
                 <Layout.Vertical flex={{ align: 'center-center' }}>
                   <Icon
                     name="nav-project"
@@ -67,9 +82,11 @@ const MyProjectsList: React.FC = () => {
           })}
           {Number(projects.data.totalItems) > Number(projects.data.content.length) && (
             <Text flex={{ alignItems: 'center' }}>
-              {getString('more', {
-                number: Number(projects.data.totalItems) - Number(projects.data.content.length)
-              })}
+              <Link to={routes.toProjects({ accountId })}>
+                {getString('more', {
+                  number: Number(projects.data.totalItems) - Number(projects.data.content.length)
+                })}
+              </Link>
             </Text>
           )}
         </Container>

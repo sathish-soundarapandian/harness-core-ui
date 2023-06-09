@@ -737,8 +737,9 @@ export const resolvedPipelineWithVariables = {
           {
             name: 'v1',
             type: 'String',
-            description: '',
-            value: '<+input>'
+            description: 'stage variable',
+            value: '<+input>',
+            required: false
           }
         ]
       }
@@ -748,8 +749,9 @@ export const resolvedPipelineWithVariables = {
     {
       name: 'pipVar',
       type: 'String',
-      description: '',
-      value: '<+input>'
+      description: 'pipeline variable',
+      value: '<+input>',
+      required: true
     }
   ]
 }
@@ -782,6 +784,11 @@ export const stageWithVariables = {
       name: 'v1',
       type: 'String',
       value: ''
+    },
+    {
+      name: 'v2',
+      type: 'String',
+      value: ''
     }
   ]
 }
@@ -812,6 +819,11 @@ export const templateStageWithVariables = {
   variables: [
     {
       name: 'v1',
+      type: 'String',
+      value: '<+input>'
+    },
+    {
+      name: 'v2',
       type: 'String',
       value: '<+input>'
     }
@@ -854,8 +866,16 @@ export const originalStageWithVariables = {
     {
       name: 'v1',
       type: 'String',
-      description: '',
-      value: '<+input>'
+      description: 'stage variable 1',
+      value: '<+input>',
+      required: true
+    },
+    {
+      name: 'v2',
+      type: 'String',
+      description: 'stage variable 2',
+      value: '<+input>',
+      required: true
     }
   ]
 }

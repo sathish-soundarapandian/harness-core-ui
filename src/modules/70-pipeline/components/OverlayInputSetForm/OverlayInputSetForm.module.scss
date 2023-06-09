@@ -11,6 +11,12 @@
   width: fit-content;
 }
 
+.overlayInputSetDialog {
+  :global(.bp3-dialog-header .bp3-popover-target) {
+    display: inline-block !important;
+  }
+}
+
 .rowBtns {
   display: flex;
   justify-content: space-between;
@@ -50,4 +56,12 @@
 
 .selectedInputSetsContainer {
   width: 600px;
+}
+
+.divider {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.exisitingInputSetsHeader {
+  margin-bottom: 0px !important;
 }

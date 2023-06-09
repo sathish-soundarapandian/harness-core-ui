@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent, queryByText } from '@testing-library/react'
+import { render, waitFor, fireEvent, queryByText, findByTestId } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
@@ -154,7 +154,7 @@ const TEST_INPUT_SET_FORM_PATH = routes.toInputSetForm({
 describe('OverlayInputSetForm Tests', () => {
   describe('Edit OverlayInputSet - ', () => {
     test('render Edit Overlay Input Set Form with GitSync', async () => {
-      const { getByTestId, getByText } = render(
+      const { getByText } = render(
         <GitSyncTestWrapper
           path={TEST_INPUT_SET_FORM_PATH}
           pathParams={{
@@ -178,13 +178,15 @@ describe('OverlayInputSetForm Tests', () => {
       // Click on Save button in the form and check if Save to Git dialog opens properly
       const saveBtn = getByText('save').parentElement
       expect(saveBtn).toBeInTheDocument()
-      fireEvent.click(getByTestId('asd'))
       fireEvent.click(saveBtn!)
       await waitFor(() => expect(document.getElementsByClassName('bp3-portal')[1] as HTMLElement).toBeTruthy())
       const portalDiv = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+      const overlayDialog = findDialogContainer() as HTMLElement
       expect(portalDiv).toMatchSnapshot()
       const savePipelinesToGitHeader = queryByText(portalDiv, 'common.git.saveResourceLabel')
       expect(savePipelinesToGitHeader).toBeInTheDocument()
+      const inputSetId = await findByTestId(overlayDialog, '0-asd')
+      expect(inputSetId).toBeInTheDocument()
 
       // Click on Save button in the Save to Git dialog to save
       const saveToGitSaveBtn = queryByText(portalDiv, 'save')?.parentElement as HTMLElement
@@ -194,7 +196,7 @@ describe('OverlayInputSetForm Tests', () => {
   })
   describe('Create OverlayInputSet - ', () => {
     test('render create Overlay Input Set Form with GitSync with error', async () => {
-      const { getByTestId, getByText } = render(
+      const { getByText } = render(
         <GitSyncTestWrapper
           path={TEST_INPUT_SET_FORM_PATH}
           pathParams={{
@@ -218,13 +220,15 @@ describe('OverlayInputSetForm Tests', () => {
       // Click on Save button in the form and check if Save to Git dialog opens properly
       const saveBtn = getByText('save').parentElement
       expect(saveBtn).toBeInTheDocument()
-      fireEvent.click(getByTestId('asd'))
       fireEvent.click(saveBtn!)
       await waitFor(() => expect(document.getElementsByClassName('bp3-portal')[1] as HTMLElement).toBeTruthy())
       const portalDiv = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+      const overlayDialog = findDialogContainer() as HTMLElement
       expect(portalDiv).toMatchSnapshot()
       const savePipelinesToGitHeader = queryByText(portalDiv, 'common.git.saveResourceLabel')
       expect(savePipelinesToGitHeader).toBeInTheDocument()
+      const inputSetId = await findByTestId(overlayDialog, '0-asd')
+      expect(inputSetId).toBeInTheDocument()
 
       // Click on Save button in the Save to Git dialog to save
       const saveToGitSaveBtn = queryByText(portalDiv, 'save')?.parentElement as HTMLElement

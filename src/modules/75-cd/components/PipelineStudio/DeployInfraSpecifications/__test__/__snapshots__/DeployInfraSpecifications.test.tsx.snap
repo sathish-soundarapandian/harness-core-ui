@@ -219,6 +219,153 @@ exports[`Deploy infra specifications test Should match snapshot 1`] = `
                       value="KubernetesAzure"
                     />
                   </label>
+                  <label
+                    class="Thumbnail--squareCardContainer"
+                  >
+                    <div
+                      class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                      tabindex="0"
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="eks"
+                      >
+                        <svg
+                          height="26"
+                          viewBox="0 0 24 24"
+                          width="26"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <mask
+                            height="8"
+                            id="eks_svg__a"
+                            maskUnits="userSpaceOnUse"
+                            style="mask-type: luminance;"
+                            width="7"
+                            x="9"
+                            y="8"
+                          >
+                            <path
+                              d="M9.724 8.238h.986v2.907l2.837-2.907h1.301l-3.113 3.203 3.31 3.695h-1.261l-3.074-3.449v3.449h-.986V8.238z"
+                              fill="#fff"
+                            />
+                          </mask>
+                          <g
+                            mask="url(#eks_svg__a)"
+                          >
+                            <path
+                              d="M9.724 8.238h.986v2.907l2.837-2.907h1.301l-3.113 3.203 3.31 3.695h-1.261l-3.074-3.449v3.449h-.986V8.238z"
+                              fill="url(#eks_svg__b)"
+                            />
+                          </g>
+                          <mask
+                            height="17"
+                            id="eks_svg__b"
+                            maskUnits="userSpaceOnUse"
+                            style="mask-type: luminance;"
+                            width="11"
+                            x="12"
+                            y="0"
+                          >
+                            <path
+                              d="M12.811 5.501l4.853 2.802a.268.268 0 01.134.232v5.604c0 .095.051.184.134.231l4.33 2.5a.268.268 0 00.402-.231V5.725a.268.268 0 00-.134-.232L13.08.036a.268.268 0 00-.402.232V5.27c0 .096.051.184.134.232z"
+                              fill="#fff"
+                            />
+                          </mask>
+                          <g
+                            mask="url(#eks_svg__b)"
+                          >
+                            <path
+                              d="M12.811 5.501l4.853 2.802a.268.268 0 01.134.232v5.604c0 .095.051.184.134.231l4.33 2.5a.268.268 0 00.402-.231V5.725a.268.268 0 00-.134-.232L13.08.036a.268.268 0 00-.402.232V5.27c0 .096.051.184.134.232z"
+                              fill="url(#eks_svg__d)"
+                            />
+                          </g>
+                          <mask
+                            height="24"
+                            id="eks_svg__c"
+                            maskUnits="userSpaceOnUse"
+                            style="mask-type: luminance;"
+                            width="21"
+                            x="1"
+                            y="0"
+                          >
+                            <path
+                              d="M16.987 15.543l-4.853 2.802a.267.267 0 01-.268 0l-5.53-3.193a.269.269 0 01-.134-.232V8.534c0-.095.051-.183.134-.231L11.189 5.5a.268.268 0 00.134-.232v-5a.268.268 0 00-.402-.233L1.47 5.493a.268.268 0 00-.134.232V17.73c0 .095.05.184.134.232l10.396 6.002a.267.267 0 00.268 0l9.451-5.457a.268.268 0 000-.463l-4.33-2.5a.267.267 0 00-.268 0z"
+                              fill="#fff"
+                            />
+                          </mask>
+                          <g
+                            mask="url(#eks_svg__c)"
+                          >
+                            <path
+                              d="M16.987 15.543l-4.853 2.802a.267.267 0 01-.268 0l-5.53-3.193a.269.269 0 01-.134-.232V8.534c0-.095.051-.183.134-.231L11.189 5.5a.268.268 0 00.134-.232v-5a.268.268 0 00-.402-.233L1.47 5.493a.268.268 0 00-.134.232V17.73c0 .095.05.184.134.232l10.396 6.002a.267.267 0 00.268 0l9.451-5.457a.268.268 0 000-.463l-4.33-2.5a.267.267 0 00-.268 0z"
+                              fill="url(#eks_svg__f)"
+                            />
+                          </g>
+                          <defs>
+                            <lineargradient
+                              gradientUnits="userSpaceOnUse"
+                              id="eks_svg__b"
+                              x1="14.272"
+                              x2="10.039"
+                              y1="14.958"
+                              y2="7.983"
+                            >
+                              <stop
+                                stop-color="#4F66B9"
+                              />
+                              <stop
+                                offset="1"
+                                stop-color="#484FAB"
+                              />
+                            </lineargradient>
+                            <lineargradient
+                              gradientUnits="userSpaceOnUse"
+                              id="eks_svg__d"
+                              x1="23.72"
+                              x2="14.124"
+                              y1="15.94"
+                              y2="-0.582"
+                            >
+                              <stop
+                                stop-color="#4F66B9"
+                              />
+                              <stop
+                                offset="1"
+                                stop-color="#484FAB"
+                              />
+                            </lineargradient>
+                            <lineargradient
+                              gradientUnits="userSpaceOnUse"
+                              id="eks_svg__f"
+                              x1="14.182"
+                              x2="3.72"
+                              y1="22.689"
+                              y2="4.217"
+                            >
+                              <stop
+                                stop-color="#4C68BB"
+                              />
+                              <stop
+                                offset="1"
+                                stop-color="#5180C9"
+                              />
+                            </lineargradient>
+                          </defs>
+                        </svg>
+                      </span>
+                    </div>
+                    <p
+                      class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+                    >
+                      cd.steps.eks.eks
+                    </p>
+                    <input
+                      name="deploymentType"
+                      type="checkbox"
+                      value="KubernetesAws"
+                    />
+                  </label>
                 </div>
               </div>
             </div>

@@ -18,6 +18,7 @@ export interface ArtifactSourceRenderProps extends KubernetesArtifactsProps {
   repoIdentifier?: string
   branch?: string
   useArtifactV1Data?: boolean
+  shouldUtilizeFullWidth?: boolean
 }
 
 export abstract class ArtifactSourceBase<T> {

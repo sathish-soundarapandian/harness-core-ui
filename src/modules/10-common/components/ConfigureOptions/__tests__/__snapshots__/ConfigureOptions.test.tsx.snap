@@ -372,7 +372,7 @@ exports[`Test ConfigureOptions runtime execution input 1`] = `
                 class="bp3-form-content"
               >
                 <label
-                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox StyledProps--main StyledProps--inline"
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox Checkbox--checked StyledProps--main StyledProps--inline"
                 >
                   <input
                     checked=""
@@ -1238,7 +1238,7 @@ exports[`Test ConfigureOptions test allowed values 1`] = `
                 class="bp3-form-content"
               >
                 <label
-                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox StyledProps--main StyledProps--inline"
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox Checkbox--checked StyledProps--main StyledProps--inline"
                 >
                   <input
                     checked=""

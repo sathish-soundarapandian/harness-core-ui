@@ -249,6 +249,7 @@ const EnvironmentsPage: React.FC = () => {
             refetch({ queryParams: { ...queryParams, page: index } })
           }}
           showPagination
+          hidePageNumbers={(envData?.data?.totalPages || 0) > 1000}
         />
       }
       error={error}

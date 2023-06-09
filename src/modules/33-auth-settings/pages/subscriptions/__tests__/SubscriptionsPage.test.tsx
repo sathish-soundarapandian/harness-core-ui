@@ -133,7 +133,6 @@ moment.now = jest.fn(() => 1482363367071)
 const featureFlags = {
   BUILD_CREDITS_VIEW: true,
   CVNG_ENABLED: true,
-  CING_ENABLED: true,
   CENG_ENABLED: true,
   CET_ENABLED: true
 }
@@ -939,7 +938,6 @@ describe('Subscriptions Page', () => {
               {
                 edition: Editions.ENTERPRISE,
                 totalChaosExperimentRuns: 10000,
-                totalChaosInfrastructures: 1000,
                 moduleType: 'CHAOS'
               }
             ],
@@ -968,7 +966,6 @@ describe('Subscriptions Page', () => {
       )
 
       expect(getByText('common.subscriptions.chaos.experiments')).toBeInTheDocument()
-      expect(getByText('common.subscriptions.chaos.infrastructures')).toBeInTheDocument()
     })
 
     test('should render CET details', () => {

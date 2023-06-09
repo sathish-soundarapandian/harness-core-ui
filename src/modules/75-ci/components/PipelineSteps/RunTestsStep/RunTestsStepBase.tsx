@@ -38,6 +38,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
@@ -258,7 +259,9 @@ export const RunTestsStepBase = (
       selectionState: { selectedStageId }
     }
   } = usePipelineContext()
-  const { TI_DOTNET, CVNG_ENABLED, CI_PYTHON_TI } = useFeatureFlags()
+  const { TI_DOTNET, CI_PYTHON_TI } = useFeatureFlags()
+  const { licenseInformation } = useLicenseStore()
+  const isErrorTrackingEnabled = licenseInformation['CET']?.status === 'ACTIVE'
   // temporary enable in QA for docs
   const isQAEnvironment = window.location.origin === qaLocation
   const [mavenSetupQuestionAnswer, setMavenSetupQuestionAnswer] = React.useState('yes')
@@ -588,7 +591,7 @@ export const RunTestsStepBase = (
                 allowableTypes: [MultiTypeInputType.FIXED]
               })}
             </Container>
-            {CVNG_ENABLED && selectedLanguageValue === Language.Java && (
+            {isErrorTrackingEnabled && selectedLanguageValue === Language.Java && (
               <Container className={css.bottomMargin5}>
                 <Text
                   tooltipProps={{ dataTooltipId: 'runTestErrorTracking' }}

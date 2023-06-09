@@ -9,10 +9,21 @@ import React, { Dispatch, SetStateAction } from 'react'
 import { clone, isEmpty, isNil } from 'lodash-es'
 import cx from 'classnames'
 
-import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Layout,
+  Text,
+  MultiTypeInputType,
+  ExpressionAndRuntimeType,
+  getMultiTypeFromValue,
+  PageSpinner
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { getIconByType, InputSetValue, onDragEnd, onDragLeave, onDragOver, onDragStart } from './utils'
+import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
+import { SelectedInputSetList } from './SelectedInputSetList'
+import { getInputSetExpressionValue, InputSetValue } from './utils'
 import css from './InputSetSelector.module.scss'
 
 export function RenderValue({
@@ -20,6 +31,7 @@ export function RenderValue({
   onChange,
   setSelectedInputSets,
   setOpenInputSetsList,
+  openInputSetsList,
   selectedValueClass,
   showNewInputSet,
   onNewInputSetClick,
@@ -30,39 +42,32 @@ export function RenderValue({
   onChange?: (value?: InputSetValue[]) => void
   setSelectedInputSets: Dispatch<SetStateAction<InputSetValue[]>>
   setOpenInputSetsList: Dispatch<SetStateAction<boolean>>
+  openInputSetsList?: boolean
   selectedValueClass?: string
   showNewInputSet?: boolean
   onNewInputSetClick?: () => void
   invalidInputSetReferences?: string[]
   loadingMergeInputSets?: boolean
 }): JSX.Element {
-  const onDrop = React.useCallback(
-    (event: React.DragEvent<HTMLLIElement>, droppedLocation: InputSetValue) => {
-      if (event.preventDefault) {
-        event.preventDefault()
-      }
-      const data = event.dataTransfer.getData('data')
-      if (data) {
-        try {
-          const dropInputSet: InputSetValue = JSON.parse(data)
-          const selected = clone(value)
-          const droppedItem = selected.filter(item => item.value === dropInputSet.value)[0]
-          if (droppedItem) {
-            const droppedItemIndex = selected.indexOf(droppedItem)
-            const droppedLocationIndex = selected.indexOf(droppedLocation)
-            selected.splice(droppedItemIndex, 1)
-            selected.splice(droppedLocationIndex, 0, droppedItem)
-            onChange?.(selected)
-          }
-          // eslint-disable-next-line no-empty
-        } catch {}
-      }
-      event.currentTarget.classList.remove(css.dragOver)
-    },
-    [value]
-  )
-
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
+  const [expressionVal, setExpressionVal] = React.useState<string>('')
+  const [multiType, setMultiType] = React.useState<MultiTypeInputType>(getMultiTypeFromValue(value))
+
+  const toggleMultiType = (): void => {
+    setMultiType(MultiTypeInputType.FIXED)
+    setExpressionVal('')
+  }
+
+  const addExpressionValue = (): void => {
+    const clonedInputSets = clone(value)
+    const inputSetExpressionValue = getInputSetExpressionValue(expressionVal)
+    clonedInputSets.push(inputSetExpressionValue)
+    setSelectedInputSets(clonedInputSets)
+    onChange?.(clonedInputSets)
+    toggleMultiType()
+  }
+
   return (
     <>
       {showNewInputSet && (
@@ -92,80 +97,75 @@ export function RenderValue({
           </Button>
         </Layout.Horizontal>
       )}
-
-      <div className={cx(css.renderSelectedValue, selectedValueClass)}>
-        {(isEmpty(invalidInputSetReferences) || isNil(invalidInputSetReferences)) &&
-          !loadingMergeInputSets &&
-          value?.map((item, index) => (
-            <li
-              key={index + item.label}
-              data-testid={item.value}
-              className={css.selectedInputSetLi}
-              draggable={true}
-              onDragStart={event => {
-                onDragStart(event, item)
-              }}
-              onDragEnd={onDragEnd}
-              onDragOver={onDragOver}
-              onDragLeave={onDragLeave}
-              onDrop={event => onDrop(event, item)}
-            >
+      {!showNewInputSet && (
+        <div className={css.inputSetSelectorWrapper}>
+          <ExpressionAndRuntimeType
+            name={''}
+            value={expressionVal}
+            expressions={expressions}
+            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+            onChange={(val, _valueType, typeVal) => {
+              if (typeVal === MultiTypeInputType.EXPRESSION && !isNil(val)) setExpressionVal(val as string)
+              else if (typeVal === MultiTypeInputType.FIXED) setExpressionVal('')
+            }}
+            disabled={false}
+            onTypeChange={setMultiType}
+            multitypeInputValue={multiType}
+            fixedTypeComponent={() => (
               <Button
-                data-testid={`button-${item.label}`}
-                round={true}
-                rightIcon="cross"
-                iconProps={{
-                  onClick: event => {
-                    event.stopPropagation()
-                    const valuesAfterRemoval = value.filter(inputset => inputset.value !== item.value)
-                    setSelectedInputSets(valuesAfterRemoval)
-                    onChange?.(valuesAfterRemoval)
-                  },
-                  style: {
-                    cursor: 'pointer'
-                  }
-                }}
-                text={
-                  <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="small">
-                    <Button
-                      round={true}
-                      withoutBoxShadow={true}
-                      font={{ weight: 'semi-bold' }}
-                      width={20}
-                      height={20}
-                      className={css.selectedInputSetOrder}
-                    >
-                      {index + 1}
-                    </Button>
-                    <Text
-                      color={Color.PRIMARY_8}
-                      icon={getIconByType(item.type)}
-                      className={css.selectedInputSetLabel}
-                      iconProps={{ className: css.selectedInputSetTypeIcon }}
-                    >
-                      {item.label}
-                    </Text>
-                  </Layout.Horizontal>
-                }
-                margin={{ top: 'small', bottom: 'small', left: 0, right: 'small' }}
-                className={css.selectedInputSetCard}
-                color={Color.PRIMARY_7}
+                minimal
+                className={css.inputSetSelectorBtn}
+                style={{ width: '300px' }}
+                withoutCurrentColor={true}
+                rightIcon="chevron-down"
+                iconProps={{ size: 16 }}
+                onClick={() => setOpenInputSetsList(true)}
+              >
+                <span className={css.placeholder}>{getString('pipeline.inputSets.selectPlaceholder')}</span>
+              </Button>
+            )}
+          />
+          {multiType === MultiTypeInputType.EXPRESSION && (
+            <>
+              <Button
+                disabled={isEmpty(expressionVal)}
+                onClick={addExpressionValue}
+                variation={ButtonVariation.SECONDARY}
+                className={css.addExpressionBtn}
+                text={getString('add')}
               />
-            </li>
-          ))}
-        {!showNewInputSet && (
-          <Button
-            icon="small-plus"
-            className={css.addInputSetButton}
-            onClick={() => setOpenInputSetsList(true)}
-            color={Color.PRIMARY_7}
-            minimal
-            variation={ButtonVariation.LINK}
-          >
-            {getString('pipeline.inputSets.selectPlaceholder')}
-          </Button>
-        )}
-      </div>
+              <Button
+                text={getString('cancel')}
+                onClick={toggleMultiType}
+                variation={ButtonVariation.LINK}
+                className={css.removeExpressionBtn}
+              />
+            </>
+          )}
+        </div>
+      )}
+      {(isEmpty(invalidInputSetReferences) || isNil(invalidInputSetReferences)) && (
+        <div className={cx(css.renderSelectedValue, selectedValueClass)}>
+          <SelectedInputSetList value={value} setSelectedInputSets={setSelectedInputSets} onChange={onChange} />
+        </div>
+      )}
+      {value && value.length > 1 && (
+        <Layout.Horizontal
+          spacing="small"
+          flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+          margin={{ bottom: 'medium' }}
+        >
+          <Text>{getString('pipeline.inputSets.lastApplied')}</Text>
+          <Text font={{ weight: 'bold' }} color={Color.GREY_500}>
+            {value.slice(-1)[0].value}
+          </Text>
+        </Layout.Horizontal>
+      )}
+      {loadingMergeInputSets && !openInputSetsList && (
+        <div className={css.selectedInputSetSpinnerContainer}>
+          <PageSpinner className={css.selectedInputSetSpinner} />
+        </div>
+      )}
     </>
   )
 }

@@ -24,6 +24,19 @@
   grid-area: header;
 }
 
+.headerText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 600px;
+}
+
+.idText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
 .toolbar {
   grid-area: toolbar;
 }

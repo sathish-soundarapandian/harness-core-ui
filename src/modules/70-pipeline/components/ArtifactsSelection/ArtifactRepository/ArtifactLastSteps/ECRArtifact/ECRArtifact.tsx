@@ -56,9 +56,11 @@ import type {
   ImagePathTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
+import { EcrArtifactDigestField } from './EcrDigestField'
 import css from '../../ArtifactConnector.module.scss'
 
 export function ECRArtifact({
@@ -80,6 +82,7 @@ export function ECRArtifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getRBACErrorMessage } = useRBACError()
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const [tagList, setTagList] = React.useState([])
   const [lastQueryData, setLastQueryData] = React.useState<{ imagePath: string; region: any }>({
@@ -264,7 +267,7 @@ export function ECRArtifact({
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
     const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
 
-    merge(artifactObj.spec, { region: formData?.region })
+    merge(artifactObj.spec, { region: formData?.region, digest: formData?.digest })
     handleSubmit(artifactObj)
   }
 
@@ -273,7 +276,8 @@ export function ECRArtifact({
       submitFormData({
         ...modifiedPrevStepData,
         ...formData,
-        connectorId: getConnectorIdValue(modifiedPrevStepData)
+        connectorId: getConnectorIdValue(modifiedPrevStepData),
+        digest: defaultTo(formData?.digest?.value, formData?.digest)
       })
     }
   }
@@ -315,7 +319,8 @@ export function ECRArtifact({
           submitFormData({
             ...modifiedPrevStepData,
             ...formData,
-            connectorId: getConnectorIdValue(modifiedPrevStepData)
+            connectorId: getConnectorIdValue(modifiedPrevStepData),
+            digest: defaultTo(formData?.digest?.value, formData?.digest)
           })
         }}
         enableReinitialize={!isArtifactTemplate}
@@ -441,6 +446,16 @@ export function ECRArtifact({
                 isImagePath={false}
                 isArtifactPath={false}
               />
+              {CD_NG_DOCKER_ARTIFACT_DIGEST && (
+                <EcrArtifactDigestField
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  isReadonly={isReadonly}
+                  connectorRefValue={getConnectorRefQueryData()}
+                  isVersionDetailsLoading={ecrBuildDetailsLoading}
+                />
+              )}
             </div>
 
             {!hideHeaderAndNavBtns && (

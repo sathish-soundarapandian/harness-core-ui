@@ -23,7 +23,7 @@ function WithFFProvider({ featureFlagsToken, children, config, fallback }: WithF
   const onError = (): void => {
     setHasError(true)
   }
-  return hasError ? (
+  return hasError || !featureFlagsToken ? (
     fallback
   ) : featureFlagsToken ? (
     <FFContextProvider

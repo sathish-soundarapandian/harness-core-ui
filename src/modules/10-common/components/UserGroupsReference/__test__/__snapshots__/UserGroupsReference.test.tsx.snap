@@ -1313,7 +1313,7 @@ exports[`Test full flow should render rows with checkbox and return selected dat
               class="Layout--horizontal StyledProps--main listItem selectedItem StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
             >
               <label
-                class="bp3-control bp3-checkbox bp3-large StyledProps--font Checkbox--checkbox checkbox StyledProps--main"
+                class="bp3-control bp3-checkbox bp3-large StyledProps--font Checkbox--checkbox checkbox Checkbox--checked StyledProps--main"
               >
                 <input
                   data-testid="Checkbox-ug1"

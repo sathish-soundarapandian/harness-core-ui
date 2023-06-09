@@ -731,7 +731,9 @@ function BootstrapDeployInfraDefinition(
                 templateLinkConfig={customDeploymentMetaData?.templateMetaData}
                 addOrUpdateTemplate={isEmpty(stageCustomDeploymentData) ? addOrUpdateTemplate : undefined}
               />
-              {selectedDeploymentType && <DeployInfraDefinition key={deployInfraRemountCount} />}
+              {selectedDeploymentType && (
+                <DeployInfraDefinition key={deployInfraRemountCount} selectedInfrastructure={selectedInfrastructure} />
+              )}
             </>
           ) : (
             <div className={css.yamlBuilder}>

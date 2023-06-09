@@ -8,6 +8,9 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly body: string
+  readonly drawer: string
+  readonly notesIcon: string
+  readonly statusMessage: string
   readonly table: string
 }
 export default styles

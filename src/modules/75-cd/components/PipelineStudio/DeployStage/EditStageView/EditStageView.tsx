@@ -69,8 +69,7 @@ import {
   hasStageData,
   ServiceDeploymentType
 } from '@pipeline/utils/stageHelpers'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { errorCheck } from '@common/utils/formikHelpers'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { getGoogleCloudFunctionsEnvOptions } from '@cd/components/PipelineSteps/GoogleCloudFunction/utils/utils'
@@ -87,7 +86,8 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   onChange,
   isReadonly,
   children,
-  updateDeploymentType
+  updateDeploymentType,
+  customRef
 }): JSX.Element => {
   const { getString } = useStrings()
   const newStageData: Item[] = [
@@ -129,12 +129,13 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     updateStage
   } = usePipelineContext()
   const { variablesPipeline, metadataMap } = usePipelineVariables()
-  const scrollRef = React.useRef<HTMLDivElement | null>(null)
+  const domRef = React.useRef<HTMLDivElement | null>(null)
+  const scrollRef = customRef || domRef
   const allNGVariables = (data?.stage?.variables || []) as AllNGVariables[]
   const { errorMap } = useValidationErrors()
   const { subscribeForm, unSubscribeForm, submitFormsForTab } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
-  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { NG_SVC_ENV_REDESIGN = false, CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
   const getDeploymentType = (): ServiceDeploymentType => {
     return get(data, 'stage.spec.deploymentType')
   }
@@ -380,11 +381,11 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   const shouldRenderDeploymentType = (): boolean => {
     if (context) {
       return !!(
-        isNewServiceEnvEntity(isSvcEnvEntityEnabled, data?.stage as DeploymentStageElementConfig) &&
+        isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, data?.stage as DeploymentStageElementConfig) &&
         !isEmpty(selectedDeploymentType)
       )
     }
-    return !!isNewServiceEnvEntity(isSvcEnvEntityEnabled, data?.stage as DeploymentStageElementConfig)
+    return !!isNewServiceEnvEntity(NG_SVC_ENV_REDESIGN, data?.stage as DeploymentStageElementConfig)
   }
 
   const isStageCreationDisabled = (): boolean => {
@@ -393,9 +394,17 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
 
   return (
     <div className={stageCss.deployStage}>
-      <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+      {!CDS_PIPELINE_STUDIO_UPGRADES && (
+        <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+      )}
       <div
-        className={context ? cx(stageCss.contentSection, stageCss.paddedSection) : css.contentSection}
+        className={
+          context
+            ? cx(stageCss.contentSection, stageCss.paddedSection, {
+                [stageCss.paddedSectionNew]: CDS_PIPELINE_STUDIO_UPGRADES
+              })
+            : css.contentSection
+        }
         ref={scrollRef}
       >
         {context ? (

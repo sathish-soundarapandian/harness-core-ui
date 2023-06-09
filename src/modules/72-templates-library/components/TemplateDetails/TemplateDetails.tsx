@@ -417,7 +417,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       resolvedPipelineFetchParams: {
         resolvedPipelineResponse,
         loadingResolvedPipeline
-      }
+      },
+      shouldUtilizeFullWidth: true
     })
   ) : (
     <PageBody className={css.yamlLoader} loading />

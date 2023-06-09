@@ -1,0 +1,8 @@
+.star {
+  &:hover {
+    svg path {
+      fill: var(--yellow-900) !important;
+      transition: 100ms linear ease-out;
+    }
+  }
+}

@@ -9,7 +9,7 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { Text, Layout, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { get, defaultTo, isEqual, set, isUndefined } from 'lodash-es'
+import { get, defaultTo, isEqual, set, isUndefined, isEmpty } from 'lodash-es'
 import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -17,6 +17,7 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import { useGetTasOrganizations, useGetTasSpaces, useGetTasSpacesV2 } from 'services/cd-ng'
 import { getSelectedConnectorValue, SelectedConnectorType } from '@cd/utils/connectorUtils'
 import { TASInfrastructureSpecEditableProps, organizationLabel, spaceGroupLabel } from './TASInfrastructureInterface'
@@ -33,7 +34,8 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
   path,
   onUpdate,
   allowableTypes,
-  allValues
+  allValues,
+  provisioner
 }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -48,7 +50,7 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
     defaultTo(initialValues.organization, allValues?.organization)
   )
   const [spaceValue, setSpaceValue] = useState<string | undefined>(defaultTo(initialValues.space, allValues?.space))
-
+  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
   const environmentRef = useMemo(
     () => defaultTo(initialValues.environmentRef, allValues?.environmentRef),
     [initialValues.environmentRef, allValues?.environmentRef]
@@ -177,6 +179,11 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
 
   return (
     <Layout.Vertical spacing="small">
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField name={provisionerName} path={path} provisioners={provisioner} />
+        </div>
+      )}
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
           <FormMultiTypeConnectorField

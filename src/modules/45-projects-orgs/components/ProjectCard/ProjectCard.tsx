@@ -144,7 +144,12 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
             {getString('idLabel', { id: data.identifier })}
           </Text>
           {data.description ? (
-            <Text font={{ variation: FontVariation.SMALL }} lineClamp={2} color={Color.GREY_400}>
+            <Text
+              className={css.breakWord}
+              font={{ variation: FontVariation.SMALL }}
+              lineClamp={2}
+              color={Color.GREY_400}
+            >
               {data.description}
             </Text>
           ) : null}

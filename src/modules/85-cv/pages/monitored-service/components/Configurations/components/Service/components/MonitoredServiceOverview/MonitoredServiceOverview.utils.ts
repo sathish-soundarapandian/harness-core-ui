@@ -44,7 +44,7 @@ export function updatedMonitoredServiceNameForEnv(
   )
   formik.setValues({
     ...values,
-    environmentRef: Array.isArray(environment) ? environment.map(env => env.value) : environment?.value,
+    environmentRef: Array.isArray(environment) ? environment : environment?.value,
     name: monitoredServiceName,
     identifier: monitoredServiceName
   })

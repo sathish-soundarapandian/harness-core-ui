@@ -34,6 +34,7 @@ import { Connectors } from '@connectors/constants'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -215,6 +216,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
             ...value,
             connectorRef: undefined,
             allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value?.provisioner || undefined,
             subscriptionId:
               getValue(value.subscriptionId) === ''
                 ? /* istanbul ignore next */ undefined
@@ -243,6 +245,9 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                   {isSvcEnvEnabled ? getString('cd.steps.azureWebAppInfra.webAppInfraheader') : ''}
                 </Text>
               </Layout.Vertical>
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <ProvisionerField name="provisioner" isReadonly />
+              </Layout.Horizontal>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

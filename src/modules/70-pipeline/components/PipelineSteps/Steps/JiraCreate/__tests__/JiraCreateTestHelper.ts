@@ -64,7 +64,16 @@ export const getJiraCreateEditModePropsWithConnectorId = (): JiraCreateStepModeP
       connectorRef: 'cid',
       projectKey: '',
       issueType: '',
-      fields: []
+      fields: [
+        {
+          name: 'keyValueField1',
+          value: 'test1'
+        },
+        {
+          name: 'keyValueField2',
+          value: 'test2'
+        }
+      ]
     }
   },
   unprocessedInitialValues: {
@@ -76,7 +85,16 @@ export const getJiraCreateEditModePropsWithConnectorId = (): JiraCreateStepModeP
       connectorRef: 'cid',
       projectKey: '',
       issueType: '',
-      fields: []
+      fields: [
+        {
+          name: 'keyValueField1',
+          value: 'test1'
+        },
+        {
+          name: 'keyValueField2',
+          value: 'test2'
+        }
+      ]
     }
   },
   onUpdate: jest.fn(),

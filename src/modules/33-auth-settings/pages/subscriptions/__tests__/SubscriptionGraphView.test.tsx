@@ -14,7 +14,6 @@ import SubscriptionGraphView from '../overview/SubscriptionGraphVIew'
 
 const featureFlags = {
   CVNG_ENABLED: true,
-  CING_ENABLED: true,
   CENG_ENABLED: true
 }
 

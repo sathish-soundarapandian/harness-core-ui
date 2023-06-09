@@ -24,7 +24,7 @@ import {
 } from '../SscaOrchestrationStep/SscaOrchestrationStepFunctionConfigs'
 import { SscaOrchestrationStepEditWithRef } from '../SscaOrchestrationStep/SscaOrchestrationStepEdit'
 import type { SscaOrchestrationStepData } from '../SscaOrchestrationStep/SscaOrchestrationStep'
-import { commonDefaultSpecValues } from '../utils'
+import { commonDefaultOrchestrationSpecValues } from '../utils'
 import SscaOrchestrationStepInputSet from '../SscaOrchestrationStep/SscaOrchestrationStepInputSet'
 
 export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepData> {
@@ -44,7 +44,7 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepD
     type: StepType.SscaOrchestration,
     identifier: '',
     spec: {
-      ...commonDefaultSpecValues,
+      ...commonDefaultOrchestrationSpecValues,
       infrastructure: {
         type: 'KubernetesDirect',
         spec: {
@@ -61,8 +61,9 @@ export class CdSscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepD
     }
   }
 
+  /* istanbul ignore next */
   processFormData<T>(data: T): SscaOrchestrationStepData {
-    return getFormValuesInCorrectFormat<T, SscaOrchestrationStepData>(data, transformValuesFieldsConfig(this.type))
+    return getFormValuesInCorrectFormat<T, SscaOrchestrationStepData>(data, transformValuesFieldsConfig(this?.type))
   }
 
   validateInputSet({

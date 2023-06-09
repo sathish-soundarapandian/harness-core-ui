@@ -27,7 +27,7 @@ import type { FormikContextType, FormikProps } from 'formik'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
 import { Status } from '@common/utils/Constants'
 import {
-  setupGithubFormData,
+  setupGitlabFormData,
   GitConnectionType,
   saveCurrentStepData
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -91,6 +91,7 @@ interface GitlabFormInterface {
   apiAccessToken: SecretReferenceInterface | void
   enableAPIAccess: boolean
   apiAuthType: string
+  apiUrl: string
 }
 
 const defaultInitialFormData: GitlabFormInterface = {
@@ -106,7 +107,8 @@ const defaultInitialFormData: GitlabFormInterface = {
   apiAccessToken: undefined,
   kerberosKey: undefined,
   enableAPIAccess: false,
-  apiAuthType: GitAPIAuthTypes.TOKEN
+  apiAuthType: GitAPIAuthTypes.TOKEN,
+  apiUrl: ''
 }
 
 const RenderGitlabAuthForm: React.FC<{
@@ -157,11 +159,17 @@ const RenderAPIAccessForm: React.FC<FormikProps<GitlabFormInterface> & ScopedObj
     switch (props.values.apiAuthType) {
       case GitAPIAuthTypes.TOKEN:
         return (
-          <SecretInput
-            name="apiAccessToken"
-            label={getString('personalAccessToken')}
-            scope={props.isEditMode ? { projectIdentifier, orgIdentifier } : undefined}
-          />
+          <Container>
+            <SecretInput
+              name="apiAccessToken"
+              label={getString('personalAccessToken')}
+              scope={props.isEditMode ? { projectIdentifier, orgIdentifier } : undefined}
+            />
+            <FormInput.Text
+              name="apiUrl"
+              label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('UrlLabel')}</Text>}
+            />
+          </Container>
         )
       default:
         return null
@@ -313,7 +321,7 @@ const StepGitlabAuthentication: React.FC<StepProps<StepGitlabAuthenticationProps
       if (loadingConnectorSecrets) {
         if (props.isEditMode) {
           if (props.connectorInfo) {
-            setupGithubFormData(props.connectorInfo, accountId).then(data => {
+            setupGitlabFormData(props.connectorInfo, accountId).then(data => {
               setInitialValues(data as GitlabFormInterface)
               setLoadingConnectorSecrets(false)
             })
@@ -375,10 +383,7 @@ const StepGitlabAuthentication: React.FC<StepProps<StepGitlabAuthenticationProps
         }
       />
     ) : (
-      <Layout.Vertical
-        width="60%"
-        className={cx(css.secondStep, commonCss.connectorModalMinHeight, commonCss.stepContainer)}
-      >
+      <Layout.Vertical className={cx(css.secondStep, commonCss.connectorModalMinHeight, commonCss.stepContainer)}>
         <Text font={{ variation: FontVariation.H3 }}>{getString('credentials')}</Text>
 
         <Formik

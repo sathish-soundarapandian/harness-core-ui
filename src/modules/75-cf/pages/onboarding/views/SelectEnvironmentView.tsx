@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { ButtonVariation, Container, Icon, Layout, Text } from '@harness/uicore'
+import React, { useMemo, useState } from 'react'
+import { Button, ButtonVariation, Container, Icon, Layout, Text, TextInput } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
+import { useParams } from 'react-router-dom'
 import { useStrings, String } from 'framework/strings'
 import EnvironmentDialog from '@cf/components/CreateEnvironmentDialog/EnvironmentDialog'
 import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
@@ -16,7 +17,7 @@ import { useToaster } from '@common/exports'
 import AddKeyDialog from '@cf/components/AddKeyDialog/AddKeyDialog'
 import { IdentifierText } from '@cf/components/IdentifierText/IdentifierText'
 import type { ApiKey } from 'services/cf'
-import type { EnvironmentResponseDTO } from 'services/cd-ng'
+import { EnvironmentResponseDTO, useGetEnvironmentListForProject } from 'services/cd-ng'
 import { PlatformEntry, PlatformEntryType } from '@cf/components/LanguageSelection/LanguageSelection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
@@ -42,6 +43,8 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
   const [environmentCreated, setEnvironmentCreated] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [createEnvName, setCreateEnvName] = useState<string>('')
+  const [newEnvName, setNewEnvName] = useState<string>('')
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
 
   const { EnvironmentSelect, loading, error, refetch } = useEnvironmentSelectV2({
     selectedEnvironmentIdentifier: selectedEnvironment?.identifier,
@@ -68,6 +71,14 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
     showError(getErrorMessage(error), 0, 'cf.get.env.list.error')
   }
 
+  const { data: environmentList } = useGetEnvironmentListForProject({
+    queryParams: { accountId, orgIdentifier, projectIdentifier }
+  })
+
+  const noExistingEnvs = useMemo<boolean>(
+    () => environmentList?.data?.totalItems === 0 && !selectedEnvironment,
+    [environmentList?.data?.totalItems, selectedEnvironment]
+  )
   const serverSide = language.type === PlatformEntryType.SERVER
 
   const onCloseEnvDialog = (): void => {
@@ -77,6 +88,7 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
 
   return (
     <>
+      {loading && <Icon name="spinner" size={16} color="blue500" />}
       <Layout.Vertical className={css.gridDisplay} padding={{ top: 'xsmall' }}>
         <Text font={{ variation: FontVariation.BODY1 }} color={Color.GREY_800} padding={{ bottom: 'medium' }}>
           {getString('cf.onboarding.selectOrCreateEnvironment')}
@@ -84,16 +96,40 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
         <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} padding={{ bottom: 'medium' }}>
           {getString('cf.onboarding.environmentDescription')}
         </Text>
-        <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} padding={{ bottom: 'xsmall' }}>
-          {getString('cf.onboarding.selectOrTypeEnv')}
-        </Text>
       </Layout.Vertical>
-      {loading && <Icon name="spinner" size={16} color="blue500" />}
       {!loading && (
         <>
-          <Container width={400}>
-            <EnvironmentSelect />
-          </Container>
+          {noExistingEnvs ? (
+            <>
+              <Layout.Horizontal spacing="small">
+                <TextInput
+                  wrapperClassName={css.newEnvInput}
+                  intent="primary"
+                  aria-label={getString('cf.onboarding.typeNewEnvName')}
+                  placeholder={getString('cf.onboarding.typeNewEnvName')}
+                  value={newEnvName}
+                  onChange={e => setNewEnvName((e?.target as HTMLInputElement)?.value)}
+                />
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  text={getString('cf.onboarding.createEnv')}
+                  onClick={() => {
+                    setCreateEnvName(newEnvName)
+                    setDialogOpen(true)
+                  }}
+                />
+              </Layout.Horizontal>
+            </>
+          ) : (
+            <>
+              <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600} padding={{ bottom: 'xsmall' }}>
+                {getString('cf.onboarding.selectOrTypeEnv')}
+              </Text>
+              <Container width={400}>
+                <EnvironmentSelect />
+              </Container>
+            </>
+          )}
           {createEnvName && dialogOpen && (
             <EnvironmentDialog
               createEnvFromInput={true}
@@ -114,6 +150,7 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = ({
           {environmentCreated && (
             <Text
               margin={{ top: 'medium' }}
+              padding={{ top: 'small', bottom: 'small' }}
               icon="tick-circle"
               color={Color.GREEN_700}
               iconProps={{ color: Color.GREEN_700, size: 16 }}

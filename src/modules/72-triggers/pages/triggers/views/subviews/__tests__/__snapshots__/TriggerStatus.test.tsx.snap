@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test case for trigger status rendering and behavior should render without crash if data is not provided 1`] = `
+<div>
+  <div>
+    <span
+      class="bp3-popover-wrapper tooltipWrapper"
+    >
+      <span
+        class="bp3-popover-target Text--targetClass"
+      >
+        <span
+          class="StyledProps--font StyledProps--main StyledProps--inline"
+          tabindex="0"
+        >
+          
+        </span>
+      </span>
+    </span>
+  </div>
+</div>
+`;

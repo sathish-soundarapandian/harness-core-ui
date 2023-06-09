@@ -1,0 +1,1011 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "jobDetails": [
+      {
+        "jobName": "alex-freestyle-test",
+        "url": "https://jenkins.dev.harness.io/job/alex-freestyle-test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "alex-pipeline-test",
+        "url": "https://jenkins.dev.harness.io/job/alex-pipeline-test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ArvindOrgFolder",
+        "url": "https://jenkins.dev.harness.io/job/ArvindOrgFolder/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "automationNew",
+        "url": "https://jenkins.dev.harness.io/job/automationNew/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "AutomationQA",
+        "url": "https://jenkins.dev.harness.io/job/AutomationQA/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "build-commons-levelops",
+        "url": "https://jenkins.dev.harness.io/job/build-commons-levelops/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "build-description-setter",
+        "url": "https://jenkins.dev.harness.io/job/build-description-setter/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "build-descriptor-setter-with-params",
+        "url": "https://jenkins.dev.harness.io/job/build-descriptor-setter-with-params/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "build-descriptor-todolist",
+        "url": "https://jenkins.dev.harness.io/job/build-descriptor-todolist/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "buildautomation",
+        "url": "https://jenkins.dev.harness.io/job/buildautomation/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDC-Artifact-Verification-Project",
+        "url": "https://jenkins.dev.harness.io/job/CDC-Artifact-Verification-Project/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDP-Automation-TARArtifacts",
+        "url": "https://jenkins.dev.harness.io/job/CDP-Automation-TARArtifacts/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "cdp-test",
+        "url": "https://jenkins.dev.harness.io/job/cdp-test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDP-Test-Artifacts",
+        "url": "https://jenkins.dev.harness.io/job/CDP-Test-Artifacts/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDS-68313",
+        "url": "https://jenkins.dev.harness.io/job/CDS-68313/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "CDTest",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "CE Backend Automation",
+        "url": "https://jenkins.dev.harness.io/job/CE%20Backend%20Automation/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "cengage_jobparams",
+        "url": "https://jenkins.dev.harness.io/job/cengage_jobparams/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Child",
+        "url": "https://jenkins.dev.harness.io/job/Child/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ciui-cert-renew",
+        "url": "https://jenkins.dev.harness.io/job/ciui-cert-renew/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "combined-coverage",
+        "url": "https://jenkins.dev.harness.io/job/combined-coverage/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "delegateci",
+        "url": "https://jenkins.dev.harness.io/job/delegateci/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "deploy-ci-watcher",
+        "url": "https://jenkins.dev.harness.io/job/deploy-ci-watcher/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "deploy-prod-delegate",
+        "url": "https://jenkins.dev.harness.io/job/deploy-prod-delegate/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "deploy-prod-watcher",
+        "url": "https://jenkins.dev.harness.io/job/deploy-prod-watcher/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "deploy-qa-delegate",
+        "url": "https://jenkins.dev.harness.io/job/deploy-qa-delegate/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "deploy-qa-delegate-experimental",
+        "url": "https://jenkins.dev.harness.io/job/deploy-qa-delegate-experimental/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "deploy-qa-watcher",
+        "url": "https://jenkins.dev.harness.io/job/deploy-qa-watcher/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "devtest",
+        "url": "https://jenkins.dev.harness.io/job/devtest/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "elk_stress_test",
+        "url": "https://jenkins.dev.harness.io/job/elk_stress_test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "exampleFreeStyle",
+        "url": "https://jenkins.dev.harness.io/job/exampleFreeStyle/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "exampleMavenProject",
+        "url": "https://jenkins.dev.harness.io/job/exampleMavenProject/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "exit2",
+        "url": "https://jenkins.dev.harness.io/job/exit2/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ExternalJob_Jar_venkat",
+        "url": "https://jenkins.dev.harness.io/job/ExternalJob_Jar_venkat/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "fernandod-1",
+        "url": "https://jenkins.dev.harness.io/job/fernandod-1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "flora-multibranch",
+        "url": "https://jenkins.dev.harness.io/job/flora-multibranch/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "florajob",
+        "url": "https://jenkins.dev.harness.io/job/florajob/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "florajob2",
+        "url": "https://jenkins.dev.harness.io/job/florajob2/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "FloraPipe",
+        "url": "https://jenkins.dev.harness.io/job/FloraPipe/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "folder1",
+        "url": "https://jenkins.dev.harness.io/job/folder1/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "freesty",
+        "url": "https://jenkins.dev.harness.io/job/freesty/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "freestype",
+        "url": "https://jenkins.dev.harness.io/job/freestype/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "freestype3232",
+        "url": "https://jenkins.dev.harness.io/job/freestype3232/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "garvit-test",
+        "url": "https://jenkins.dev.harness.io/job/garvit-test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "generate-load-pcf",
+        "url": "https://jenkins.dev.harness.io/job/generate-load-pcf/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "githubRepo_venkat",
+        "url": "https://jenkins.dev.harness.io/job/githubRepo_venkat/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "harness-samples",
+        "url": "https://jenkins.dev.harness.io/job/harness-samples/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "harnesspoc",
+        "url": "https://jenkins.dev.harness.io/job/harnesspoc/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "HarshJenkins",
+        "url": "https://jenkins.dev.harness.io/job/HarshJenkins/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "HelloJs",
+        "url": "https://jenkins.dev.harness.io/job/HelloJs/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "helloworld-api",
+        "url": "https://jenkins.dev.harness.io/job/helloworld-api/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "HemanthTest",
+        "url": "https://jenkins.dev.harness.io/job/HemanthTest/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "hinger-artifact-test",
+        "url": "https://jenkins.dev.harness.io/job/hinger-artifact-test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "hinger-jenkins-pipeline",
+        "url": "https://jenkins.dev.harness.io/job/hinger-jenkins-pipeline/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "jenkins_git_test",
+        "url": "https://jenkins.dev.harness.io/job/jenkins_git_test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "JenkinsVenkat",
+        "url": "https://jenkins.dev.harness.io/job/JenkinsVenkat/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "JenkinsVenkatJarJob",
+        "url": "https://jenkins.dev.harness.io/job/JenkinsVenkatJarJob/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Job1",
+        "url": "https://jenkins.dev.harness.io/job/Job1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "job_clone_venkat",
+        "url": "https://jenkins.dev.harness.io/job/job_clone_venkat/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "k",
+        "url": "https://jenkins.dev.harness.io/job/k/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Ken Test",
+        "url": "https://jenkins.dev.harness.io/job/Ken%20Test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ken_exit2",
+        "url": "https://jenkins.dev.harness.io/job/ken_exit2/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ken_pipeline_test",
+        "url": "https://jenkins.dev.harness.io/job/ken_pipeline_test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "kenPL",
+        "url": "https://jenkins.dev.harness.io/job/kenPL/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "kenPL2",
+        "url": "https://jenkins.dev.harness.io/job/kenPL2/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "KenTest",
+        "url": "https://jenkins.dev.harness.io/job/KenTest/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "kentest_param",
+        "url": "https://jenkins.dev.harness.io/job/kentest_param/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "KenTestLevel1",
+        "url": "https://jenkins.dev.harness.io/job/KenTestLevel1/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "kentestsimple",
+        "url": "https://jenkins.dev.harness.io/job/kentestsimple/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "learning-engine-feature",
+        "url": "https://jenkins.dev.harness.io/job/learning-engine-feature/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Lots-of-logs",
+        "url": "https://jenkins.dev.harness.io/job/Lots-of-logs/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "lucas",
+        "url": "https://jenkins.dev.harness.io/job/lucas/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "mavenExample",
+        "url": "https://jenkins.dev.harness.io/job/mavenExample/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "mavenProject",
+        "url": "https://jenkins.dev.harness.io/job/mavenProject/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "milos-test",
+        "url": "https://jenkins.dev.harness.io/job/milos-test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Mobile CI-CD Trial 1",
+        "url": "https://jenkins.dev.harness.io/job/Mobile%20CI-CD%20Trial%201/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Mobile CI-CD Trial 2",
+        "url": "https://jenkins.dev.harness.io/job/Mobile%20CI-CD%20Trial%202/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "monitor-ci-server-up",
+        "url": "https://jenkins.dev.harness.io/job/monitor-ci-server-up/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "MP",
+        "url": "https://jenkins.dev.harness.io/job/MP/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "MultiBranch",
+        "url": "https://jenkins.dev.harness.io/job/MultiBranch/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "multibranch-test",
+        "url": "https://jenkins.dev.harness.io/job/multibranch-test/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "multibranchVenkat",
+        "url": "https://jenkins.dev.harness.io/job/multibranchVenkat/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "MultiPipelineJob",
+        "url": "https://jenkins.dev.harness.io/job/MultiPipelineJob/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "MVtest",
+        "url": "https://jenkins.dev.harness.io/job/MVtest/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "nv2-11aug",
+        "url": "https://jenkins.dev.harness.io/job/nv2-11aug/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "nv3-11aug",
+        "url": "https://jenkins.dev.harness.io/job/nv3-11aug/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "nv4-11aug",
+        "url": "https://jenkins.dev.harness.io/job/nv4-11aug/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "nv5-11aug",
+        "url": "https://jenkins.dev.harness.io/job/nv5-11aug/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "pcf-load-checkout",
+        "url": "https://jenkins.dev.harness.io/job/pcf-load-checkout/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ping-check1",
+        "url": "https://jenkins.dev.harness.io/job/ping-check1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ping-findbugs1",
+        "url": "https://jenkins.dev.harness.io/job/ping-findbugs1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ping-integ1",
+        "url": "https://jenkins.dev.harness.io/job/ping-integ1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ping-ui-slave1",
+        "url": "https://jenkins.dev.harness.io/job/ping-ui-slave1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ping-unit1",
+        "url": "https://jenkins.dev.harness.io/job/ping-unit1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "pipeline_env_test",
+        "url": "https://jenkins.dev.harness.io/job/pipeline_env_test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Pipeline_Jar_file",
+        "url": "https://jenkins.dev.harness.io/job/Pipeline_Jar_file/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "portal",
+        "url": "https://jenkins.dev.harness.io/job/portal/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "portal-clone",
+        "url": "https://jenkins.dev.harness.io/job/portal-clone/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "portal-coverage",
+        "url": "https://jenkins.dev.harness.io/job/portal-coverage/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "portal-docker-freestyle",
+        "url": "https://jenkins.dev.harness.io/job/portal-docker-freestyle/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "portal-fame",
+        "url": "https://jenkins.dev.harness.io/job/portal-fame/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "portal-feature",
+        "url": "https://jenkins.dev.harness.io/job/portal-feature/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "pr-portal-author-check",
+        "url": "https://jenkins.dev.harness.io/job/pr-portal-author-check/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "pr-portal-checkstyle",
+        "url": "https://jenkins.dev.harness.io/job/pr-portal-checkstyle/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "pr-portal-coverage-toli",
+        "url": "https://jenkins.dev.harness.io/job/pr-portal-coverage-toli/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "pr-portal-findbugs",
+        "url": "https://jenkins.dev.harness.io/job/pr-portal-findbugs/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "pr-portal-format-check",
+        "url": "https://jenkins.dev.harness.io/job/pr-portal-format-check/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "pr-portal-integration-test-check",
+        "url": "https://jenkins.dev.harness.io/job/pr-portal-integration-test-check/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "pr-portal-ml-unit-test",
+        "url": "https://jenkins.dev.harness.io/job/pr-portal-ml-unit-test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "pr-portal-pmd",
+        "url": "https://jenkins.dev.harness.io/job/pr-portal-pmd/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "pr-portal-unit-test-check",
+        "url": "https://jenkins.dev.harness.io/job/pr-portal-unit-test-check/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "pr-wingsui-unit-test-check",
+        "url": "https://jenkins.dev.harness.io/job/pr-wingsui-unit-test-check/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "project",
+        "url": "https://jenkins.dev.harness.io/job/project/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "Puthraya",
+        "url": "https://jenkins.dev.harness.io/job/Puthraya/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "python-build",
+        "url": "https://jenkins.dev.harness.io/job/python-build/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "python-load-forever",
+        "url": "https://jenkins.dev.harness.io/job/python-load-forever/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "python-todolist-load",
+        "url": "https://jenkins.dev.harness.io/job/python-todolist-load/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "qa-integration-test-1",
+        "url": "https://jenkins.dev.harness.io/job/qa-integration-test-1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "qa-integration-test-2",
+        "url": "https://jenkins.dev.harness.io/job/qa-integration-test-2/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "qanew",
+        "url": "https://jenkins.dev.harness.io/job/qanew/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "qatest",
+        "url": "https://jenkins.dev.harness.io/job/qatest/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "sassasa",
+        "url": "https://jenkins.dev.harness.io/job/sassasa/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "save-metadata-in-job-config",
+        "url": "https://jenkins.dev.harness.io/job/save-metadata-in-job-config/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Selenium test",
+        "url": "https://jenkins.dev.harness.io/job/Selenium%20test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "server-data-gen",
+        "url": "https://jenkins.dev.harness.io/job/server-data-gen/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "server-db-cleanup",
+        "url": "https://jenkins.dev.harness.io/job/server-db-cleanup/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "server-integration-test",
+        "url": "https://jenkins.dev.harness.io/job/server-integration-test/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "server-integration-test-prod",
+        "url": "https://jenkins.dev.harness.io/job/server-integration-test-prod/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ssd",
+        "url": "https://jenkins.dev.harness.io/job/ssd/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "steve_jenkins",
+        "url": "https://jenkins.dev.harness.io/job/steve_jenkins/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Teams",
+        "url": "https://jenkins.dev.harness.io/job/Teams/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "temp_pipeline",
+        "url": "https://jenkins.dev.harness.io/job/temp_pipeline/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "testdev",
+        "url": "https://jenkins.dev.harness.io/job/testdev/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "testdu",
+        "url": "https://jenkins.dev.harness.io/job/testdu/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "testingKen",
+        "url": "https://jenkins.dev.harness.io/job/testingKen/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "testingKenw3",
+        "url": "https://jenkins.dev.harness.io/job/testingKenw3/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "testken",
+        "url": "https://jenkins.dev.harness.io/job/testken/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "testKen4",
+        "url": "https://jenkins.dev.harness.io/job/testKen4/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "testken_multibranchpipeline",
+        "url": "https://jenkins.dev.harness.io/job/testken_multibranchpipeline/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "testnew",
+        "url": "https://jenkins.dev.harness.io/job/testnew/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "testnew1",
+        "url": "https://jenkins.dev.harness.io/job/testnew1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "TestSri",
+        "url": "https://jenkins.dev.harness.io/job/TestSri/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist",
+        "url": "https://jenkins.dev.harness.io/job/todolist/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "todolist-ami",
+        "url": "https://jenkins.dev.harness.io/job/todolist-ami/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist-buggy",
+        "url": "https://jenkins.dev.harness.io/job/todolist-buggy/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist-cv-stress",
+        "url": "https://jenkins.dev.harness.io/job/todolist-cv-stress/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist-cv-stress-logs",
+        "url": "https://jenkins.dev.harness.io/job/todolist-cv-stress-logs/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist-python-load",
+        "url": "https://jenkins.dev.harness.io/job/todolist-python-load/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist-synthetic-load-sriram",
+        "url": "https://jenkins.dev.harness.io/job/todolist-synthetic-load-sriram/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist-war",
+        "url": "https://jenkins.dev.harness.io/job/todolist-war/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist_docker",
+        "url": "https://jenkins.dev.harness.io/job/todolist_docker/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist_promot",
+        "url": "https://jenkins.dev.harness.io/job/todolist_promot/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist_promote",
+        "url": "https://jenkins.dev.harness.io/job/todolist_promote/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist_rk",
+        "url": "https://jenkins.dev.harness.io/job/todolist_rk/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist_synthetic_load",
+        "url": "https://jenkins.dev.harness.io/job/todolist_synthetic_load/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "todolist_war_copy2-do-not-delete",
+        "url": "https://jenkins.dev.harness.io/job/todolist_war_copy2-do-not-delete/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ui-dev",
+        "url": "https://jenkins.dev.harness.io/job/ui-dev/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ui-integration-test-dev",
+        "url": "https://jenkins.dev.harness.io/job/ui-integration-test-dev/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "ui-master",
+        "url": "https://jenkins.dev.harness.io/job/ui-master/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Venkat",
+        "url": "https://jenkins.dev.harness.io/job/Venkat/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "venkat JAR jenkins New Job",
+        "url": "https://jenkins.dev.harness.io/job/venkat%20JAR%20jenkins%20New%20Job/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Venkat-JAR",
+        "url": "https://jenkins.dev.harness.io/job/Venkat-JAR/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "Venkat-JAR-pipeline",
+        "url": "https://jenkins.dev.harness.io/job/Venkat-JAR-pipeline/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "venkat_folder",
+        "url": "https://jenkins.dev.harness.io/job/venkat_folder/",
+        "parameters": [],
+        "folder": true
+      },
+      {
+        "jobName": "VenkatJenkinsJob",
+        "url": "https://jenkins.dev.harness.io/job/VenkatJenkinsJob/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "versioned_artifact",
+        "url": "https://jenkins.dev.harness.io/job/versioned_artifact/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "vljob",
+        "url": "https://jenkins.dev.harness.io/job/vljob/",
+        "parameters": [],
+        "folder": false
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "931c4472-de95-464c-b3ae-3c4c4397dba8"
+}

@@ -71,7 +71,7 @@
   }
 }
 .content-section {
-  padding: 48px;
+  padding: 36px 48px;
   height: 100%;
 }
 .edit-stage-grid {
@@ -122,10 +122,10 @@
 }
 .divider {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  margin-top: var(--spacing-4);
+  margin-bottom: var(--spacing-large);
 }
 .inputSetFormRunPipeline {
-  padding-top: var(--spacing-xxlarge) !important;
+  padding-top: var(--spacing-large) !important;
 }
 .noPipelineInputSetForm {
   padding-top: var(--spacing-medium);

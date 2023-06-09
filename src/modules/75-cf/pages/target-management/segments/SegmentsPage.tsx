@@ -159,7 +159,9 @@ export const SegmentsPage: React.FC = () => {
                 margin={{ right: 'small' }}
               />
               <Container>
-                <Text color={Color.GREY_900}>{cell.row.original.name}</Text>
+                <Text color={Color.GREY_900} lineClamp={1}>
+                  {cell.row.original.name}
+                </Text>
                 {description && <Text>{description}</Text>}
               </Container>
             </Layout.Horizontal>
@@ -172,7 +174,11 @@ export const SegmentsPage: React.FC = () => {
         accessor: 'identifier',
         width: '35%',
         Cell: function IdCell(cell: Cell<Segment>) {
-          return <Text>{cell.row.original.identifier}</Text>
+          return (
+            <Layout.Horizontal spacing="xsmall">
+              <Text lineClamp={1}>{cell.row.original.identifier}</Text>
+            </Layout.Horizontal>
+          )
         }
       },
       {
@@ -301,6 +307,7 @@ export const SegmentsPage: React.FC = () => {
             pageIndex={pageNumber}
             gotoPage={setPageNumber}
             showPagination
+            hidePageNumbers={segmentsData?.pageCount > 1000}
           />
         )
       }

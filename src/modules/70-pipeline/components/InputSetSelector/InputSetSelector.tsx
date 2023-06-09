@@ -6,11 +6,21 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Layout, Popover, Text, TextInput, ButtonVariation, PageSpinner, Container, Button } from '@harness/uicore'
+import {
+  Layout,
+  Popover,
+  Text,
+  TextInput,
+  ButtonVariation,
+  PageSpinner,
+  Container,
+  Button,
+  Pagination
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { clone, defaultTo, isEmpty, includes, isNil } from 'lodash-es'
 import cx from 'classnames'
-import { Classes, Position } from '@blueprintjs/core'
+import { Classes, PopoverPosition } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import {
   EntityGitDetails,
@@ -23,11 +33,17 @@ import { useToaster } from '@common/exports'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
+import { isValueExpression } from '@common/utils/utils'
 import { usePipelineVariables } from '../PipelineVariablesContext/PipelineVariablesContext'
-import type { ChildPipelineStageProps, InputSetValue } from './utils'
+import {
+  ChildPipelineStageProps,
+  INPUT_SET_SELECTOR_PAGE_SIZE,
+  getInputSetExpressionValue,
+  InputSetValue
+} from './utils'
 import { MultipleInputSetList } from './MultipleInputSetList'
 import { RenderValue } from './RenderValue'
-import SelectedMultipleList from './SelectedMultipleList'
+import { SelectedInputSetList } from './SelectedInputSetList'
 import css from './InputSetSelector.module.scss'
 
 export interface InputSetSelectorProps {
@@ -49,6 +65,7 @@ export interface InputSetSelectorProps {
   onReconcile?: (identifier: string) => void
   reRunInputSetYaml?: string
   childPipelineProps?: ChildPipelineStageProps
+  isSimplifiedYAML?: boolean
 }
 
 export function InputSetSelector({
@@ -68,9 +85,11 @@ export function InputSetSelector({
   isRetryPipelineForm,
   onReconcile,
   reRunInputSetYaml,
-  childPipelineProps
+  childPipelineProps,
+  isSimplifiedYAML
 }: InputSetSelectorProps): React.ReactElement {
-  const [searchParam, setSearchParam] = React.useState('')
+  const [searchTerm, setSearchTerm] = React.useState('')
+  const [pageIndex, setPageIndex] = useState(0)
   const [selectedInputSets, setSelectedInputSets] = React.useState<InputSetValue[]>(value || [])
   const [openInputSetsList, setOpenInputSetsList] = useState(false)
   const { getString } = useStrings()
@@ -116,6 +135,9 @@ export function InputSetSelector({
       projectIdentifier: childPipelineProps?.childProjectIdentifier ?? projectIdentifier,
       pipelineIdentifier,
       inputSetType: isOverlayInputSet ? 'INPUT_SET' : undefined,
+      pageSize: INPUT_SET_SELECTOR_PAGE_SIZE,
+      pageIndex,
+      searchTerm: searchTerm.trim(),
       ...getGitQueryParams()
     },
     debounce: 300,
@@ -130,27 +152,32 @@ export function InputSetSelector({
       childPipelineProps?.inputSetReferences?.length > 0 &&
       isEmpty(value)
     ) {
-      const savedInputSets = childPipelineProps.inputSetReferences?.map(inputSetRef => {
+      const savedInputSets = childPipelineProps.inputSetReferences?.reduce((accum, inputSetRef) => {
         const currentInputSet = inputSetResponse?.data?.content?.find(
           currInputSet => currInputSet.identifier === inputSetRef
         )
-        return {
-          ...currentInputSet,
-          label: defaultTo(currentInputSet?.name, ''),
-          value: defaultTo(currentInputSet?.identifier, ''),
-          type: currentInputSet?.inputSetType,
-          gitDetails: defaultTo(currentInputSet?.gitDetails, {}),
-          inputSetErrorDetails: currentInputSet?.inputSetErrorDetails,
-          overlaySetErrorDetails: currentInputSet?.overlaySetErrorDetails
-        }
-      })
+        if (!currentInputSet && isValueExpression(inputSetRef)) {
+          const inputSetExpressionValue = getInputSetExpressionValue(inputSetRef)
+          accum.push(inputSetExpressionValue)
+        } else if (currentInputSet)
+          accum.push({
+            ...currentInputSet,
+            label: defaultTo(currentInputSet?.name, ''),
+            value: defaultTo(currentInputSet?.identifier, ''),
+            type: currentInputSet?.inputSetType,
+            gitDetails: defaultTo(currentInputSet?.gitDetails, {}),
+            inputSetErrorDetails: currentInputSet?.inputSetErrorDetails,
+            overlaySetErrorDetails: currentInputSet?.overlaySetErrorDetails
+          })
+        return accum
+      }, [] as InputSetValue[])
       onChange?.(savedInputSets as InputSetValue[])
     }
   }, [inputSetResponse?.data?.content, childPipelineProps?.inputSetReferences])
 
   React.useEffect(() => {
     refetch()
-  }, [repoIdentifier, branch, selectedRepo, selectedBranch, refetch])
+  }, [repoIdentifier, branch, selectedRepo, selectedBranch, refetch, pageIndex, searchTerm])
 
   React.useEffect(() => {
     if ((isEmpty(invalidInputSetReferences) || isNil(invalidInputSetReferences)) && openInputSetsList) {
@@ -161,35 +188,32 @@ export function InputSetSelector({
     }
   }, [invalidInputSetReferences])
 
-  const onCheckBoxHandler = React.useCallback(
-    (
-      checked: boolean,
-      label: string,
-      val: string,
-      type: InputSetSummaryResponse['inputSetType'],
-      inputSetGitDetails: EntityGitDetails | null,
-      inputSetErrorDetails?: InputSetErrorWrapper,
-      overlaySetErrorDetails?: { [key: string]: string }
-    ) => {
-      const selected = clone(selectedInputSets)
-      const removedItem = selected.filter(set => set.value === val)[0]
-      if (checked && !removedItem) {
-        selected.push({
-          label,
-          value: val,
-          type,
-          gitDetails: defaultTo(inputSetGitDetails, {}),
-          inputSetErrorDetails,
-          overlaySetErrorDetails
-        })
-      } else if (removedItem) {
-        selected.splice(selected.indexOf(removedItem), 1)
-      }
-      setSelectedInputSets(selected)
-      setSelectedInputSetsContext?.(selected)
-    },
-    [selectedInputSets]
-  )
+  const onCheckBoxHandler = (
+    checked: boolean,
+    label: string,
+    val: string,
+    type: InputSetSummaryResponse['inputSetType'],
+    inputSetGitDetails: EntityGitDetails | null,
+    inputSetErrorDetails?: InputSetErrorWrapper,
+    overlaySetErrorDetails?: { [key: string]: string }
+  ): void => {
+    const selected = clone(selectedInputSets)
+    const removedItem = selected.filter(set => set.value === val)[0]
+    if (checked && !removedItem) {
+      selected.push({
+        label,
+        value: val,
+        type,
+        gitDetails: defaultTo(inputSetGitDetails, {}),
+        inputSetErrorDetails,
+        overlaySetErrorDetails
+      })
+    } else if (removedItem) {
+      selected.splice(selected.indexOf(removedItem), 1)
+    }
+    setSelectedInputSets(selected)
+    setSelectedInputSetsContext?.(selected)
+  }
 
   if (error) {
     showError(getRBACErrorMessage(error), undefined, 'pipeline.get.inputsetlist')
@@ -199,22 +223,20 @@ export function InputSetSelector({
 
   const multipleInputSetList =
     inputSets &&
-    inputSets
-      .filter(set => {
-        let filter = true
-        selectedInputSets.forEach(selectedSet => {
-          if (selectedSet.value === set.identifier) {
-            filter = false
-          }
-        })
-        return filter
-      })
-      .filter(set => defaultTo(set.identifier, '').toLowerCase().indexOf(searchParam.toLowerCase()) > -1)
-      .map(inputSet => (
+    inputSets.map((inputSet, index) => {
+      let isInputSetSelected = false
+      for (const selectedSet of selectedInputSets) {
+        if (selectedSet.value === inputSet.identifier) {
+          isInputSetSelected = true
+        }
+        if (isInputSetSelected) break
+      }
+      return (
         <MultipleInputSetList
-          key={inputSet.identifier}
+          key={`${index}-${inputSet.identifier as string}`}
           inputSet={inputSet}
           onCheckBoxHandler={onCheckBoxHandler}
+          checked={isInputSetSelected}
           pipelineGitDetails={pipelineGitDetails}
           refetch={refetch}
           hideInputSetButton={hideInputSetButton}
@@ -228,12 +250,13 @@ export function InputSetSelector({
           onReconcile={onReconcile}
           reRunInputSetYaml={reRunInputSetYaml}
         />
-      ))
+      )
+    })
 
   return (
     <Popover
-      position={Position.BOTTOM}
-      usePortal={!!childPipelineProps?.usePortal}
+      position={PopoverPosition.TOP}
+      usePortal
       isOpen={openInputSetsList}
       minimal={true}
       className={css.isPopoverParent}
@@ -255,11 +278,12 @@ export function InputSetSelector({
         onChange={onChange}
         setSelectedInputSets={setSelectedInputSets}
         setOpenInputSetsList={setOpenInputSetsList}
+        openInputSetsList={openInputSetsList}
         selectedValueClass={selectedValueClass}
         showNewInputSet={showNewInputSet}
         onNewInputSetClick={onNewInputSetClick}
         invalidInputSetReferences={invalidInputSetReferences}
-        loadingMergeInputSets={loadingMergeInputSets}
+        loadingMergeInputSets={!isOverlayInputSet && loadingMergeInputSets}
       />
       {openInputSetsList ? (
         <Layout.Vertical spacing="small" className={css.popoverContainer}>
@@ -268,14 +292,18 @@ export function InputSetSelector({
               placeholder={getString('search')}
               rightElement="chevron-down"
               className={css.search}
-              value={searchParam}
+              value={searchTerm}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setSearchParam(e.target.value.trim())
+                setSearchTerm(e.target.value)
+                setPageIndex(0)
               }}
             />
           </div>
           <Container className={css.overlayIsHelperTextContainer} border={{ bottom: true }}>
             <Text className={css.overlayIsHelperText}>{getString('pipeline.inputSets.overlayISHelperText')}</Text>
+            <div className={cx(css.renderSelectedValue, css.renderPopoverSelectedValue, selectedValueClass)}>
+              <SelectedInputSetList value={selectedInputSets} setSelectedInputSets={setSelectedInputSets} />
+            </div>
           </Container>
           {!inputSets ? (
             <PageSpinner className={css.spinner} />
@@ -285,15 +313,18 @@ export function InputSetSelector({
               {inputSets && inputSets.length > 0 ? (
                 <>
                   <ul className={cx(Classes.MENU, css.list, { [css.multiple]: inputSets.length > 0 })}>
-                    <>
-                      <SelectedMultipleList
-                        selectedInputSets={selectedInputSets}
-                        onCheckBoxHandler={onCheckBoxHandler}
-                        setSelectedInputSets={setSelectedInputSets}
-                      />
-                      {multipleInputSetList}
-                    </>
+                    {multipleInputSetList}
                   </ul>
+                  <Layout.Vertical padding={{ right: 'medium', left: 'medium' }}>
+                    <Pagination
+                      itemCount={inputSetResponse?.data?.totalItems || 0}
+                      pageSize={inputSetResponse?.data?.pageSize || INPUT_SET_SELECTOR_PAGE_SIZE}
+                      pageCount={inputSetResponse?.data?.totalPages || 0}
+                      pageIndex={inputSetResponse?.data?.pageIndex || 0}
+                      gotoPage={setPageIndex}
+                      hidePageNumbers
+                    />
+                  </Layout.Vertical>
                   <Button
                     margin="small"
                     text={
@@ -305,7 +336,7 @@ export function InputSetSelector({
                     disabled={!selectedInputSets?.length}
                     onClick={() => {
                       onChange?.(selectedInputSets)
-                      if (reRunInputSetYaml) setOpenInputSetsList(false)
+                      if (reRunInputSetYaml || isSimplifiedYAML) setOpenInputSetsList(false)
                     }}
                   />
                 </>

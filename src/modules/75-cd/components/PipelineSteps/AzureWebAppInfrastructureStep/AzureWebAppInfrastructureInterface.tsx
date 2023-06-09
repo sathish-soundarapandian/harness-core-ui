@@ -9,7 +9,7 @@ import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import { isEmpty } from 'lodash-es'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { AzureWebAppInfrastructure } from 'services/cd-ng' // add new type here
+import type { AzureWebAppInfrastructure, ExecutionElementConfig } from 'services/cd-ng' // add new type here
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { getConnectorSchema } from '../PipelineStepsUtil' // define new schema validations
@@ -71,4 +71,5 @@ export interface AzureWebAppInfrastructureSpecEditableProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: AzureWebAppInfrastructure
   allowableTypes: AllowedTypes
+  provisioner?: ExecutionElementConfig['steps']
 }

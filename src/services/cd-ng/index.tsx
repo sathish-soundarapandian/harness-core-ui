@@ -557,6 +557,12 @@ export interface AccountLevelOverrideMigrationResponseDTO {
   totalServiceOverridesCount?: number
 }
 
+export interface AccountLevelOverrideV2SettingsUpdateResponseDTO {
+  accountId?: string
+  settingResponseDTO?: SettingResponseDTO[]
+  settingsUpdateSuccessFul?: boolean
+}
+
 export interface AccountLicenseDTO {
   accountId?: string
   allModuleLicenses?: {
@@ -2413,6 +2419,10 @@ export type CIModuleLicenseDTO = ModuleLicenseDTO & {
   numberOfCommitters?: number
 }
 
+export interface CIVolume {
+  type?: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
 export type CVLicenseSummaryDTO = LicensesWithSummaryDTO & {
   totalServices?: number
 }
@@ -2425,6 +2435,11 @@ export interface CacheResponseMetadata {
   cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
   lastUpdatedAt: number
   ttlLeft: number
+}
+
+export interface Capabilities {
+  add?: string[]
+  drop?: string[]
 }
 
 export interface Capacity {
@@ -2789,6 +2804,7 @@ export interface ConnectorCatalogueItem {
     | 'TerraformCloud'
     | 'SignalFX'
     | 'Harness'
+    | 'Rancher'
   )[]
 }
 
@@ -2876,6 +2892,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'TerraformCloud'
     | 'SignalFX'
     | 'Harness'
+    | 'Rancher'
   )[]
 }
 
@@ -2939,6 +2956,7 @@ export interface ConnectorInfoDTO {
     | 'TerraformCloud'
     | 'SignalFX'
     | 'Harness'
+    | 'Rancher'
 }
 
 export interface ConnectorResponse {
@@ -2949,6 +2967,7 @@ export interface ConnectorResponse {
   gitDetails?: EntityGitDetails
   governanceMetadata?: GovernanceMetadata
   harnessManaged?: boolean
+  isFavorite?: boolean
   lastModifiedAt?: number
   status?: ConnectorConnectivityDetails
 }
@@ -3019,6 +3038,7 @@ export interface ConnectorTypeStatistics {
     | 'TerraformCloud'
     | 'SignalFX'
     | 'Harness'
+    | 'Rancher'
 }
 
 export interface ConnectorValidationResult {
@@ -3026,7 +3046,34 @@ export interface ConnectorValidationResult {
   errorSummary?: string
   errors?: ErrorDetail[]
   status?: 'SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN'
+  taskId?: string
   testedAt?: number
+}
+
+export interface ContainerInfraYamlSpec {
+  annotations?: {
+    [key: string]: string
+  }
+  automountServiceAccountToken?: boolean
+  connectorRef: string
+  containerSecurityContext?: SecurityContext
+  harnessImageConnectorRef?: string
+  hostNames?: string[]
+  initTimeout?: string
+  labels?: {
+    [key: string]: string
+  }
+  namespace: string
+  nodeSelector?: {
+    [key: string]: string
+  }
+  os?: 'Linux' | 'MacOS' | 'Windows'
+  priorityClassName?: string
+  resources?: ContainerResource
+  runAsUser?: number
+  serviceAccountName?: string
+  tolerations?: Toleration[]
+  volumes?: CIVolume[]
 }
 
 export interface ContainerResource {
@@ -3151,6 +3198,19 @@ export type CreatePRStepUpdateConfigScriptInlineSource = CreatePRStepUpdateConfi
 export interface CreatePRStepUpdateConfigScriptWrapper {
   spec: CreatePRStepUpdateConfigScriptBaseSource
   type: string
+}
+
+export interface CreditCardDTO {
+  accountIdentifier: string
+  creditCardIdentifier: string
+  customerIdentifier: string
+  fingerprint: string
+}
+
+export interface CreditCardResponse {
+  createdAt?: number
+  creditCardDTO: CreditCardDTO
+  lastUpdatedAt?: number
 }
 
 export interface CreditDTO {
@@ -3529,6 +3589,10 @@ export interface DelegateGroupTags {
   tags?: string[]
 }
 
+export type DelegateInfra = StepGroupInfra & {
+  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
+}
+
 export interface DelegateInner {
   activelyConnected?: boolean
   connections?: DelegateConnectionDetails[]
@@ -3731,6 +3795,7 @@ export interface DeploymentMetaData {
 
 export interface DeploymentReleaseDetails {
   deploymentDetails?: DeploymentDetails[]
+  deploymentType?: string
   taskInfoId?: string
 }
 
@@ -4040,6 +4105,7 @@ export type EcsBlueGreenRollbackStepInfo = StepSpecType & {
 export type EcsBlueGreenSwapTargetGroupsStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   doNotDownsizeOldService?: boolean
+  downsizeOldServiceDelayInSecs?: number
 }
 
 export type EcsCanaryDeleteStepInfo = StepSpecType & {
@@ -4254,7 +4320,19 @@ export interface EmbeddedUserDetailsDTO {
   name?: string
 }
 
+export type EmptyDirYaml = CIVolume & {
+  mountPath: string
+  spec: EmptyDirYamlSpec
+  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
+export interface EmptyDirYamlSpec {
+  medium?: string
+  size?: string
+}
+
 export interface EntityDetail {
+  entityGitMetadata?: EntityGitMetadata
   entityRef?: EntityReference
   name?: string
   type?:
@@ -4471,6 +4549,8 @@ export interface EntityDetail {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4489,6 +4569,11 @@ export interface EntityGitDetails {
   repoName?: string
   repoUrl?: string
   rootFolder?: string
+}
+
+export interface EntityGitMetadata {
+  branch?: string
+  repo?: string
 }
 
 export interface EntityReference {
@@ -5995,6 +6080,7 @@ export interface FailureStrategyActionConfig {
     | 'ManualIntervention'
     | 'ProceedWithDefaultValues'
     | 'MarkAsFailure'
+    | 'RetryStepGroup'
 }
 
 export interface FailureStrategyConfig {
@@ -6019,6 +6105,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'MULTIPLE_USER_GROUPS'
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
+    | 'MULTIPLE_CONNECTORS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -6111,6 +6198,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'MULTIPLE_USER_GROUPS'
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
+    | 'MULTIPLE_CONNECTORS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -6221,6 +6309,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'MULTIPLE_USER_GROUPS'
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
+    | 'MULTIPLE_CONNECTORS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -6339,6 +6428,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'MULTIPLE_USER_GROUPS'
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
+    | 'MULTIPLE_CONNECTORS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -7150,6 +7240,8 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   )[]
   moduleType?:
     | 'CD'
@@ -7386,6 +7478,8 @@ export interface GitEntityFilterProperties {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7699,6 +7793,8 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -7927,6 +8023,8 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -8276,6 +8374,8 @@ export interface GitSyncEntityDTO {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -8498,6 +8598,8 @@ export interface GitSyncEntityListDTO {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -8737,6 +8839,8 @@ export interface GitSyncErrorDTO {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9240,6 +9344,7 @@ export interface HelmChartResponseDTO {
 export type HelmDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   ignoreReleaseHistFailStatus?: boolean
+  skipSteadyStateCheck?: ParameterFieldBoolean
 }
 
 export interface HelmManifestCommandFlag {
@@ -9268,6 +9373,7 @@ export type HelmRepoOverrideManifest = ManifestAttributes & {
 
 export type HelmRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  skipSteadyStateCheck?: ParameterFieldBoolean
 }
 
 export type HostAttributesFilter = HostFilterSpec & {
@@ -9299,6 +9405,17 @@ export interface HostFilterSpec {
 
 export type HostNamesFilter = HostFilterSpec & {
   value?: string[]
+}
+
+export type HostPathYaml = CIVolume & {
+  mountPath: string
+  spec: HostPathYamlSpec
+  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
+export interface HostPathYamlSpec {
+  path: string
+  type?: string
 }
 
 export interface HostValidationDTO {
@@ -9729,6 +9846,37 @@ export interface InstanceDetailGroupedByPipelineExecution {
   lastDeployedAt?: number
   pipelineId: string
   planExecutionId: string
+  rollbackStatus?: 'UNAVAILABLE' | 'NOT_STARTED' | 'STARTED' | 'SUCCESS' | 'FAILURE'
+  stageNodeExecutionId?: string
+  stageSetupId?: string
+  stageStatus?:
+    | 'NO_OP'
+    | 'RUNNING'
+    | 'INTERVENTION_WAITING'
+    | 'TIMED_WAITING'
+    | 'ASYNC_WAITING'
+    | 'TASK_WAITING'
+    | 'DISCONTINUING'
+    | 'PAUSING'
+    | 'QUEUED'
+    | 'SKIPPED'
+    | 'PAUSED'
+    | 'ABORTED'
+    | 'ERRORED'
+    | 'FAILED'
+    | 'EXPIRED'
+    | 'SUSPENDED'
+    | 'SUCCEEDED'
+    | 'IGNORE_FAILED'
+    | 'APPROVAL_WAITING'
+    | 'RESOURCE_WAITING'
+    | 'APPROVAL_REJECTED'
+    | 'INPUT_WAITING'
+    | 'WAIT_STEP_RUNNING'
+    | 'FREEZE_FAILED'
+    | 'QUEUED_LICENSE_LIMIT_REACHED'
+    | 'QUEUED_EXECUTION_CONCURRENCY_REACHED'
+    | 'UNRECOGNIZED'
 }
 
 export interface InstanceDetailGroupedByPipelineExecutionList {
@@ -9747,7 +9895,9 @@ export interface InstanceDetailsDTO {
   deployedById?: string
   deployedByName?: string
   infrastructureDetails?: InfrastructureDetails
+  infrastructureMappingId?: string
   instanceInfoDTO?: InstanceInfoDTO
+  instanceKey?: string
   pipelineExecutionName?: string
   podName?: string
   terraformInstance?: string
@@ -9887,7 +10037,7 @@ export interface InstanceSyncResponseV2 {
 }
 
 export interface InstanceSyncTaskDetails {
-  details?: DeploymentReleaseDetails[]
+  details?: PageDeploymentReleaseDetails
   responseBatchConfig?: ResponseBatchConfig
 }
 
@@ -10212,6 +10362,11 @@ export type K8sDeploymentReleaseDetails = DeploymentDetails & {
   k8sCloudClusterConfig?: KubernetesCloudClusterConfig
   namespaces?: string[]
   releaseName?: string
+}
+
+export type K8sDirectInfra = StepGroupInfra & {
+  spec: ContainerInfraYamlSpec
+  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export type K8sDryRunManifestStepInfo = StepSpecType & {
@@ -11309,6 +11464,13 @@ export interface OrgLevelOverrideMigrationResponseDTO {
   totalServiceOverridesCount?: number
 }
 
+export interface OrgLevelOverrideV2SettingsUpdateResponseDTO {
+  accountId?: string
+  orgIdentifier?: string
+  settingResponseDTO?: SettingResponseDTO[]
+  settingsUpdateSuccessFul?: boolean
+}
+
 export interface OrgProjectIdentifier {
   orgIdentifier?: string
   projectIdentifier?: string
@@ -11367,6 +11529,14 @@ export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
   invalidReferences?: {
     [key: string]: string
   }
+}
+
+export interface OverrideV2SettingsUpdateResponseDTO {
+  accountId?: string
+  accountLevelUpdateInfo?: AccountLevelOverrideV2SettingsUpdateResponseDTO
+  orgLevelUpdateInfo?: OrgLevelOverrideV2SettingsUpdateResponseDTO[]
+  projectLevelUpdateInfo?: ProjectLevelOverrideV2SettingsUpdateResponseDTO[]
+  successful?: boolean
 }
 
 export type PRBuildSpec = BuildSpec & {
@@ -11472,6 +11642,17 @@ export interface PageClusterResponse {
 
 export interface PageConnectorResponse {
   content?: ConnectorResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageDeploymentReleaseDetails {
+  content?: DeploymentReleaseDetails[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -12095,6 +12276,17 @@ export interface PermissionCheck {
   resourceType?: string
 }
 
+export type PersistentVolumeClaimYaml = CIVolume & {
+  mountPath: string
+  spec: PersistentVolumeClaimYamlSpec
+  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
+}
+
+export interface PersistentVolumeClaimYamlSpec {
+  claimName: string
+  readOnly?: boolean
+}
+
 export type PhysicalDataCenterConnectorDTO = ConnectorConfigDTO & {
   delegateSelectors?: string[]
   hosts?: HostDTO[]
@@ -12308,6 +12500,14 @@ export interface ProjectLevelOverrideMigrationResponseDTO {
   totalServiceOverridesCount?: number
 }
 
+export interface ProjectLevelOverrideV2SettingsUpdateResponseDTO {
+  accountId?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  settingResponseDTO?: SettingResponseDTO[]
+  settingsUpdateSuccessFul?: boolean
+}
+
 export interface ProjectRequest {
   project: Project
 }
@@ -12328,6 +12528,34 @@ export type PrometheusConnectorDTO = ConnectorConfigDTO & {
   passwordRef?: string
   url: string
   username?: string
+}
+
+export type RancherConnectorBearerTokenAuthenticationDTO = RancherConnectorConfigAuthenticationSpecDTO & {
+  passwordRef: string
+}
+
+export interface RancherConnectorConfigAuthCredentialsDTO {
+  spec?: RancherConnectorConfigAuthenticationSpecDTO
+  type: 'BearerToken'
+}
+
+export interface RancherConnectorConfigAuthDTO {
+  auth: RancherConnectorConfigAuthCredentialsDTO
+  rancherUrl: string
+}
+
+export interface RancherConnectorConfigAuthenticationSpecDTO {
+  [key: string]: any
+}
+
+export interface RancherConnectorConfigDTO {
+  spec?: RancherConnectorConfigAuthDTO
+  type: 'ManualConfig'
+}
+
+export type RancherConnectorDTO = ConnectorConfigDTO & {
+  credential?: RancherConnectorConfigDTO
+  delegateSelectors?: string[]
 }
 
 export interface RateLimitProtection {
@@ -12612,6 +12840,8 @@ export interface ReferencedByDTO {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
 }
 
 export interface RefreshResponse {
@@ -12719,6 +12949,7 @@ export interface ResourceDTO {
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
     | 'IP_ALLOWLIST_CONFIG'
+    | 'NETWORK_MAP'
 }
 
 export interface ResourceGroup {
@@ -13071,6 +13302,13 @@ export interface ResponseCreatePRDTO {
 export interface ResponseCreatePRResponse {
   correlationId?: string
   data?: CreatePRResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseCreditCardResponse {
+  correlationId?: string
+  data?: CreditCardResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -14007,6 +14245,8 @@ export interface ResponseListEntityType {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -14813,6 +15053,13 @@ export interface ResponseOrganizationResponse {
 export interface ResponseOrganizationsDTO {
   correlationId?: string
   data?: OrganizationsDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseOverrideV2SettingsUpdateResponseDTO {
+  correlationId?: string
+  data?: OverrideV2SettingsUpdateResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -15959,6 +16206,11 @@ export interface RetryFailureSpecConfig {
   retryIntervals: string[]
 }
 
+export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
+  spec: RetryFailureSpecConfig
+  type: 'RetryStepGroup'
+}
+
 export interface Role {
   allowedScopeLevels?: ('ACCOUNT' | 'ORGANIZATION' | 'PROJECT')[]
   description?: string
@@ -16123,6 +16375,9 @@ export type SAMLSettings = NGAuthSettings & {
   friendlySamlName?: string
   groupMembershipAttr?: string
   identifier: string
+  jitEnabled?: boolean
+  jitValidationKey?: string
+  jitValidationValue?: string
   logoutUrl?: string
   origin: string
   samlProviderType?: string
@@ -16231,6 +16486,9 @@ export type SamlSettings = SSOSettings & {
   entityIdentifier?: string
   friendlySamlName?: string
   groupMembershipAttr?: string
+  jitEnabled?: boolean
+  jitValidationKey?: string
+  jitValidationValue?: string
   logoutUrl?: string
   origin: string
   samlProviderType?: 'AZURE' | 'OKTA' | 'ONELOGIN' | 'OTHER'
@@ -16670,6 +16928,17 @@ export interface SecretValidationResultDTO {
   success?: boolean
 }
 
+export interface SecurityContext {
+  allowPrivilegeEscalation?: boolean
+  capabilities?: Capabilities
+  privileged?: boolean
+  procMount?: string
+  readOnlyRootFilesystem?: boolean
+  runAsGroup?: number
+  runAsNonRoot?: boolean
+  runAsUser?: number
+}
+
 export type SecurityStepInfo = StepSpecType & {
   baseImageConnectorRefs?: ParameterFieldListString
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
@@ -17032,6 +17301,7 @@ export interface ServiceOverrideMigrationResponseDTO {
   accountId?: string
   accountLevelMigrationInfo?: AccountLevelOverrideMigrationResponseDTO
   orgLevelMigrationInfo?: OrgLevelOverrideMigrationResponseDTO[]
+  overrideV2SettingsUpdateResponseDTO?: OverrideV2SettingsUpdateResponseDTO
   projectLevelMigrationInfo?: ProjectLevelOverrideMigrationResponseDTO[]
   successful?: boolean
 }
@@ -17054,10 +17324,10 @@ export interface ServiceOverrideRequestDTOV2 {
   serviceRef?: string
   spec: ServiceOverridesSpec
   type:
-    | 'INFRA_GLOBAL_OVERRIDE'
-    | 'INFRA_SERVICE_OVERRIDE'
     | 'ENV_GLOBAL_OVERRIDE'
     | 'ENV_SERVICE_OVERRIDE'
+    | 'INFRA_GLOBAL_OVERRIDE'
+    | 'INFRA_SERVICE_OVERRIDE'
     | 'CLUSTER_GLOBAL_OVERRIDE'
     | 'CLUSTER_SERVICE_OVERRIDE'
 }
@@ -17089,15 +17359,16 @@ export interface ServiceOverridesResponseDTOV2 {
   environmentRef?: string
   identifier?: string
   infraIdentifier?: string
+  newlyCreated?: boolean
   orgIdentifier?: string
   projectIdentifier?: string
   serviceRef?: string
   spec?: ServiceOverridesSpec
   type?:
-    | 'INFRA_GLOBAL_OVERRIDE'
-    | 'INFRA_SERVICE_OVERRIDE'
     | 'ENV_GLOBAL_OVERRIDE'
     | 'ENV_SERVICE_OVERRIDE'
+    | 'INFRA_GLOBAL_OVERRIDE'
+    | 'INFRA_SERVICE_OVERRIDE'
     | 'CLUSTER_GLOBAL_OVERRIDE'
     | 'CLUSTER_SERVICE_OVERRIDE'
 }
@@ -17383,9 +17654,11 @@ export type SignalFXConnectorDTO = ConnectorConfigDTO & {
 
 export interface SignupDTO {
   billingFrequency?: 'MONTHLY' | 'YEARLY'
+  companyName?: string
   edition?: 'COMMUNITY' | 'FREE' | 'TEAM' | 'ENTERPRISE'
   email?: string
   intent?: string
+  name?: string
   password?: string
   signupAction?: 'REGULAR' | 'TRIAL' | 'SUBSCRIBE'
   utmInfo?: UtmInfo
@@ -17422,6 +17695,7 @@ export interface SlackNotificationSetting {
 }
 
 export interface SmtpConfigDTO {
+  delegateSelectors?: string[]
   fromAddress?: string
   host: string
   password?: string[]
@@ -17718,6 +17992,7 @@ export interface StepData {
     | 'RouteMapping'
     | 'DeployCloudFunctionGenOne'
     | 'RollbackCloudFunctionGenOne'
+    | 'K8sBlueGreenStageScaleDown'
 }
 
 export interface StepElementConfig {
@@ -17738,6 +18013,8 @@ export interface StepGroupElementConfig {
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
+  sharedPaths?: ParameterFieldListString
+  stepGroupInfra?: StepGroupInfra
   steps?: ExecutionWrapperConfig[]
   strategy?: StrategyConfig
   template?: TemplateLinkConfig
@@ -17746,6 +18023,10 @@ export interface StepGroupElementConfig {
 
 export type StepGroupFailureActionConfig = FailureStrategyActionConfig & {
   type: 'StepGroupRollback'
+}
+
+export interface StepGroupInfra {
+  type?: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export interface StepSpecType {
@@ -18239,6 +18520,7 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 }
 
 export interface TemplateLinkConfig {
+  gitBranch?: string
   templateInputs?: JsonNode
   templateRef: string
   templateVariables?: JsonNode
@@ -18721,6 +19003,14 @@ export interface TokenDTO {
   validTo?: number
 }
 
+export interface Toleration {
+  effect?: string
+  key?: string
+  operator?: string
+  tolerationSeconds?: number
+  value?: string
+}
+
 export interface TotalDeploymentInfo {
   count?: number
   countList?: DeploymentDateAndCount[]
@@ -18870,7 +19160,7 @@ export interface User {
 
 export interface UserAccountLevelData {
   sourceOfProvisioning?: {
-    [key: string]: 'MANUAL' | 'LDAP' | 'SCIM'
+    [key: string]: 'MANUAL' | 'LDAP' | 'SCIM' | 'JIT'
   }
   userProvisionedTo?: ('CG' | 'NG')[]
 }
@@ -19551,15 +19841,15 @@ export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type DeleteManyFreezesBodyRequestBody = string[]
-
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
 
-export type UpdateWhitelistedDomainsBodyRequestBody = string[]
+export type UpdateFreezeStatusBodyRequestBody = string[]
 
-export type UploadSamlMetaDataRequestBody = void
+export type UpdateSamlMetaDataForSamlSSOIdRequestBody = void
+
+export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
 export interface GetAccountSettingQueryParams {
   accountIdentifier: string
@@ -20398,6 +20688,8 @@ export interface ListActivitiesQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -20612,6 +20904,8 @@ export interface ListActivitiesQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -20930,6 +21224,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -21144,6 +21440,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -24420,7 +24718,7 @@ export interface ListFeedsForAzureArtifactsQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  org: string
+  org?: string
   project?: string
   branch?: string
   repoIdentifier?: string
@@ -24487,7 +24785,7 @@ export interface ListPackagesForAzureArtifactsQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  org: string
+  org?: string
   project?: string
   packageType: string
   feed: string
@@ -24556,7 +24854,7 @@ export interface ListProjectsForAzureArtifactsQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  org: string
+  org?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -25101,7 +25399,7 @@ export interface GetVersionFromPackageQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  org: string
+  org?: string
   project?: string
   package: string
   packageType: string
@@ -25168,7 +25466,7 @@ export interface ListVersionsFromPackageQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  org: string
+  org?: string
   project?: string
   package: string
   packageType: string
@@ -27490,8 +27788,8 @@ export interface ValidateArtifactForGcrQueryParams {
   registryHostname: string
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type ValidateArtifactForGcrProps = Omit<
@@ -30251,7 +30549,13 @@ export interface UploadSamlMetaDataQueryParams {
 }
 
 export type UploadSamlMetaDataProps = Omit<
-  MutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
+  MutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -30259,7 +30563,13 @@ export type UploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
-  <Mutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>
+  <Mutate<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >
     verb="POST"
     path={`/authentication-settings/saml-metadata-upload`}
     base={getConfig('ng/api')}
@@ -30268,7 +30578,13 @@ export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
 )
 
 export type UseUploadSamlMetaDataProps = Omit<
-  UseMutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
+  UseMutateProps<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -30276,11 +30592,13 @@ export type UseUploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const useUploadSamlMetaData = (props: UseUploadSamlMetaDataProps) =>
-  useMutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
-    'POST',
-    `/authentication-settings/saml-metadata-upload`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >('POST', `/authentication-settings/saml-metadata-upload`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Create SAML Config
@@ -30290,18 +30608,18 @@ export const uploadSamlMetaDataPromise = (
     RestResponseSSOConfig,
     unknown,
     UploadSamlMetaDataQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
-    'POST',
-    getConfig('ng/api'),
-    `/authentication-settings/saml-metadata-upload`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    RestResponseSSOConfig,
+    unknown,
+    UploadSamlMetaDataQueryParams,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload`, props, signal)
 
 export interface UpdateSamlMetaDataQueryParams {
   accountId: string
@@ -30367,7 +30685,7 @@ export type UpdateSamlMetaDataForSamlSSOIdProps = Omit<
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >,
   'path' | 'verb'
@@ -30382,7 +30700,7 @@ export const UpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UpdateSa
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >
     verb="PUT"
@@ -30397,7 +30715,7 @@ export type UseUpdateSamlMetaDataForSamlSSOIdProps = Omit<
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >,
   'path' | 'verb'
@@ -30412,7 +30730,7 @@ export const useUpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UseUp
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >(
     'PUT',
@@ -30432,7 +30750,7 @@ export const updateSamlMetaDataForSamlSSOIdPromise = (
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   > & { samlSSOId: string },
   signal?: RequestInit['signal']
@@ -30441,7 +30759,7 @@ export const updateSamlMetaDataForSamlSSOIdPromise = (
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UploadSamlMetaDataRequestBody,
+    UpdateSamlMetaDataForSamlSSOIdRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >('PUT', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload/${samlSSOId}`, props, signal)
 
@@ -30959,8 +31277,8 @@ export const updateWhitelistedDomainsPromise = (
 export interface AutoScalingGroupsQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region: string
 }
 
@@ -31276,8 +31594,8 @@ export const getEKSClusterNamesPromise = (
 export interface ElasticLoadBalancersQueryParams {
   awsConnectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region?: string
   envId?: string
   infraDefinitionId?: string
@@ -31330,8 +31648,8 @@ export const elasticLoadBalancersPromise = (
 export interface FilterHostsQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type FilterHostsProps = Omit<GetProps<ResponseListString, Failure | Error, FilterHostsQueryParams, void>, 'path'>
@@ -31430,8 +31748,8 @@ export const getIamRolesForAwsPromise = (
 export interface ListenerRulesQueryParams {
   awsConnectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region?: string
   elasticLoadBalancer: string
   listenerArn: string
@@ -31486,8 +31804,8 @@ export const listenerRulesPromise = (
 export interface ListenersQueryParams {
   awsConnectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region?: string
   elasticLoadBalancer: string
   envId?: string
@@ -31541,8 +31859,8 @@ export const listenersPromise = (
 export interface LoadBalancersQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region: string
 }
 
@@ -31677,8 +31995,8 @@ export const tagsPromise = (
 export interface TagsV2QueryParams {
   awsConnectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   region?: string
   envId?: string
   infraDefinitionId?: string
@@ -31772,8 +32090,8 @@ export interface GetLocationsBySubscriptionQueryParams {
   connectorRef: string
   subscriptionId?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetLocationsBySubscriptionProps = Omit<
@@ -31823,8 +32141,8 @@ export const getLocationsBySubscriptionPromise = (
 export interface GetManagementGroupsQueryParams {
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export type GetManagementGroupsProps = Omit<
@@ -32019,8 +32337,8 @@ export const getAzureResourceGroupsBySubscriptionPromise = (
 export interface GetAzureWebAppNamesQueryParams {
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface GetAzureWebAppNamesPathParams {
@@ -32097,8 +32415,8 @@ export const getAzureWebAppNamesPromise = (
 export interface GetAzureWebAppDeploymentSlotsQueryParams {
   connectorRef: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface GetAzureWebAppDeploymentSlotsPathParams {
@@ -32438,8 +32756,8 @@ export const getSubscriptionTagsPromise = (
 export interface GetAzureWebAppNamesV2QueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   resourceGroup?: string
   envId?: string
@@ -32493,8 +32811,8 @@ export const getAzureWebAppNamesV2Promise = (
 export interface GetAzureWebAppDeploymentSlotsV2QueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   resourceGroup?: string
   envId?: string
@@ -32583,8 +32901,8 @@ export const getAzureWebAppDeploymentSlotsV2Promise = (
 export interface GetAzureClustersV2QueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   resourceGroup?: string
   envId?: string
@@ -32638,8 +32956,8 @@ export const getAzureClustersV2Promise = (
 export interface GetAzureResourceGroupsV2QueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   envId?: string
   infraDefinitionId?: string
@@ -32692,8 +33010,8 @@ export const getAzureResourceGroupsV2Promise = (
 export interface GetSubscriptionTagsV2QueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   subscriptionId?: string
   envId?: string
   infraDefinitionId?: string
@@ -32746,8 +33064,8 @@ export const getSubscriptionTagsV2Promise = (
 export interface GetGCSBucketListQueryParams {
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   fqnPath?: string
   serviceId?: string
 }
@@ -32800,8 +33118,8 @@ export interface GetBucketListForS3QueryParams {
   region?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   fqnPath?: string
   serviceId?: string
 }
@@ -32960,8 +33278,8 @@ export interface ListBucketsWithServiceV2QueryParams {
   region?: string
   connectorRef?: string
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   pipelineIdentifier?: string
   fqnPath: string
   serviceId?: string
@@ -33332,6 +33650,7 @@ export interface GetConnectorListQueryParams {
     | 'TerraformCloud'
     | 'SignalFX'
     | 'Harness'
+    | 'Rancher'
   category?:
     | 'CLOUD_PROVIDER'
     | 'SECRET_MANAGER'
@@ -33740,6 +34059,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'TerraformCloud'
     | 'SignalFX'
     | 'Harness'
+    | 'Rancher'
 }
 
 export type GetAllAllowedFieldValuesProps = Omit<
@@ -33856,6 +34176,8 @@ export interface GetConnectorListV2QueryParams {
   parentEntityProjectIdentifier?: string
   repoName?: string
   getDistinctFromBranches?: boolean
+  version?: string
+  isFavorite?: boolean
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -34515,6 +34837,57 @@ export const getConnectorPromise = (
   getUsingFetch<ResponseConnectorResponse, Failure | Error, GetConnectorQueryParams, GetConnectorPathParams>(
     getConfig('ng/api'),
     `/connectors/${identifier}`,
+    props,
+    signal
+  )
+
+export interface SaveCardQueryParams {
+  accountIdentifier: string
+}
+
+export type SaveCardProps = Omit<
+  MutateProps<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Saves non-sensitive credit card information
+ */
+export const SaveCard = (props: SaveCardProps) => (
+  <Mutate<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>
+    verb="POST"
+    path={`/credit-cards`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseSaveCardProps = Omit<
+  UseMutateProps<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Saves non-sensitive credit card information
+ */
+export const useSaveCard = (props: UseSaveCardProps) =>
+  useMutate<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>(
+    'POST',
+    `/credit-cards`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Saves non-sensitive credit card information
+ */
+export const saveCardPromise = (
+  props: MutateUsingFetchProps<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseCreditCardResponse, Failure | Error, SaveCardQueryParams, CreditCardDTO, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/credit-cards`,
     props,
     signal
   )
@@ -35379,8 +35752,8 @@ export const getDeploymentHealthV2Promise = (
 
 export interface GetActiveInstanceGroupedByArtifactQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   environmentIdentifier?: string
   envGroupIdentifier?: string
@@ -35444,8 +35817,8 @@ export const getActiveInstanceGroupedByArtifactPromise = (
 
 export interface GetActiveInstanceGroupedByEnvironmentQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   environmentIdentifier?: string
   envGroupIdentifier?: string
@@ -35575,8 +35948,8 @@ export const getActiveServiceDeploymentsPromise = (
 
 export interface GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   envId: string
   environmentType?: 'PreProduction' | 'Production'
@@ -35714,8 +36087,8 @@ export const getActiveServiceInstanceSummaryPromise = (
 
 export interface GetActiveServiceInstanceSummaryV2QueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   timestamp: number
 }
@@ -35832,8 +36205,8 @@ export const getActiveServiceInstancesPromise = (
 
 export interface GetArtifactInstanceDetailsQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
 }
 
@@ -36106,8 +36479,8 @@ export const getEnvBuildInstanceCountPromise = (
 
 export interface GetEnvironmentInstanceDetailsQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
 }
 
@@ -36186,8 +36559,8 @@ export const getEnvironmentInstanceDetailsPromise = (
 
 export interface GetActiveServiceInstanceCountBreakdownQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string[]
 }
 
@@ -36317,8 +36690,8 @@ export const getInstanceCountHistoryPromise = (
 
 export interface GetInstanceGrowthTrendQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   startTime: number
   endTime: number
@@ -36508,8 +36881,8 @@ export const getInstancesDetailsPromise = (
 
 export interface GetOpenTasksQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   serviceId: string
   startTime: number
 }
@@ -36577,7 +36950,7 @@ export type GetPipelineExecutionCountProps = Omit<
 >
 
 /**
- * Get pipeline execution count for a service grouped on artifact and status
+ * Get pipeline execution count info
  */
 export const GetPipelineExecutionCount = (props: GetPipelineExecutionCountProps) => (
   <Get<ResponsePipelineExecutionCountInfo, Failure | Error, GetPipelineExecutionCountQueryParams, void>
@@ -36593,7 +36966,7 @@ export type UseGetPipelineExecutionCountProps = Omit<
 >
 
 /**
- * Get pipeline execution count for a service grouped on artifact and status
+ * Get pipeline execution count info
  */
 export const useGetPipelineExecutionCount = (props: UseGetPipelineExecutionCountProps) =>
   useGet<ResponsePipelineExecutionCountInfo, Failure | Error, GetPipelineExecutionCountQueryParams, void>(
@@ -36602,7 +36975,7 @@ export const useGetPipelineExecutionCount = (props: UseGetPipelineExecutionCount
   )
 
 /**
- * Get pipeline execution count for a service grouped on artifact and status
+ * Get pipeline execution count info
  */
 export const getPipelineExecutionCountPromise = (
   props: GetUsingFetchProps<
@@ -36837,8 +37210,8 @@ export const getWorkloadsV2Promise = (
 
 export interface GetServiceDeploymentsQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   startTime: number
   endTime: number
   serviceId?: string
@@ -37062,8 +37435,8 @@ export const getServiceDetailsPromise = (
 
 export interface GetServiceDetailsV2QueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   startTime: number
   endTime: number
   sort?: string[]
@@ -39138,6 +39511,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'MULTIPLE_USER_GROUPS'
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
+    | 'MULTIPLE_CONNECTORS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -39300,6 +39674,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'MULTIPLE_USER_GROUPS'
       | 'MULTIPLE_SERVICE_ACCOUNTS'
       | 'MULTIPLE_VARIABLES'
+      | 'MULTIPLE_CONNECTORS'
       | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
       | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
       | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -39602,6 +39977,8 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -39877,6 +40254,8 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   searchTerm?: string
 }
 
@@ -41157,8 +41536,8 @@ export const getEnvironmentsInputYamlAndServiceOverridesPromise = (
 
 export interface GetActiveServiceInstancesForEnvironmentQueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   environmentIdentifier: string
   serviceIdentifier?: string
   buildId?: string
@@ -43363,6 +43742,8 @@ export interface GetReferencedByQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   searchTerm?: string
 }
 
@@ -43819,7 +44200,7 @@ export type DeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -43833,7 +44214,7 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -43848,7 +44229,7 @@ export type UseDeleteManyFreezesProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -43862,7 +44243,7 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -43874,7 +44255,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -43883,7 +44264,7 @@ export const deleteManyFreezesPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
 
@@ -44446,7 +44827,7 @@ export type UpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -44460,7 +44841,7 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >
     verb="POST"
@@ -44475,7 +44856,7 @@ export type UseUpdateFreezeStatusProps = Omit<
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -44489,7 +44870,7 @@ export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
@@ -44501,7 +44882,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -44510,7 +44891,7 @@ export const updateFreezeStatusPromise = (
     ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     UpdateFreezeStatusQueryParams,
-    DeleteManyFreezesBodyRequestBody,
+    UpdateFreezeStatusBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
@@ -46052,6 +46433,8 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -46334,6 +46717,8 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AwsSamBuild'
       | 'Semgrep'
       | 'SscaEnforcement'
+      | 'IdpConnector'
+      | 'CdSscaEnforcement'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -49148,8 +49533,8 @@ export const deleteGitOpsInstancesPromise = (
 
 export interface ProcessGitOpsInstancesQueryParams {
   accountIdentifier?: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   agentIdentifier?: string
 }
 
@@ -49305,6 +49690,8 @@ export const getInstanceSyncPerpetualTaskResponsePromise = (
   >('POST', getConfig('ng/api'), `/instancesync/response`, props, signal)
 
 export interface FetchTaskDetailsQueryParams {
+  page?: number
+  page_size?: number
   accountIdentifier: string
 }
 
@@ -52851,6 +53238,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   yamlGroup?: string
 }
 
@@ -53193,6 +53582,8 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -56774,10 +57165,10 @@ export interface GetServiceOverrideListV2QueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   type?:
-    | 'INFRA_GLOBAL_OVERRIDE'
-    | 'INFRA_SERVICE_OVERRIDE'
     | 'ENV_GLOBAL_OVERRIDE'
     | 'ENV_SERVICE_OVERRIDE'
+    | 'INFRA_GLOBAL_OVERRIDE'
+    | 'INFRA_SERVICE_OVERRIDE'
     | 'CLUSTER_GLOBAL_OVERRIDE'
     | 'CLUSTER_SERVICE_OVERRIDE'
 }
@@ -56982,6 +57373,321 @@ export const migrateServiceOverrideScopedPromise = (
     void,
     void
   >('POST', getConfig('ng/api'), `/serviceOverrides/migrateScope`, props, signal)
+
+export interface RevertMigrationServiceOverrideQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type RevertMigrationServiceOverrideProps = Omit<
+  MutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration
+ */
+export const RevertMigrationServiceOverride = (props: RevertMigrationServiceOverrideProps) => (
+  <Mutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/serviceOverrides/revertMigration`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseRevertMigrationServiceOverrideProps = Omit<
+  UseMutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration
+ */
+export const useRevertMigrationServiceOverride = (props: UseRevertMigrationServiceOverrideProps) =>
+  useMutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >('POST', `/serviceOverrides/revertMigration`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Revert ServiceOverride V2 Migration
+ */
+export const revertMigrationServiceOverridePromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideQueryParams,
+    void,
+    void
+  >('POST', getConfig('ng/api'), `/serviceOverrides/revertMigration`, props, signal)
+
+export interface RevertMigrationServiceOverrideScopedQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type RevertMigrationServiceOverrideScopedProps = Omit<
+  MutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration at one scope
+ */
+export const RevertMigrationServiceOverrideScoped = (props: RevertMigrationServiceOverrideScopedProps) => (
+  <Mutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/serviceOverrides/revertMigrationScope`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseRevertMigrationServiceOverrideScopedProps = Omit<
+  UseMutateProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Revert ServiceOverride V2 Migration at one scope
+ */
+export const useRevertMigrationServiceOverrideScoped = (props: UseRevertMigrationServiceOverrideScopedProps) =>
+  useMutate<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >('POST', `/serviceOverrides/revertMigrationScope`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Revert ServiceOverride V2 Migration at one scope
+ */
+export const revertMigrationServiceOverrideScopedPromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceOverrideMigrationResponseDTO,
+    Failure | Error,
+    RevertMigrationServiceOverrideScopedQueryParams,
+    void,
+    void
+  >('POST', getConfig('ng/api'), `/serviceOverrides/revertMigrationScope`, props, signal)
+
+export interface SettingsUpdateServiceOverrideQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  updateChildren?: boolean
+}
+
+export type SettingsUpdateServiceOverrideProps = Omit<
+  MutateProps<
+    ResponseOverrideV2SettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Update Settings to ServiceOverride V2
+ */
+export const SettingsUpdateServiceOverride = (props: SettingsUpdateServiceOverrideProps) => (
+  <Mutate<
+    ResponseOverrideV2SettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >
+    verb="POST"
+    path={`/serviceOverrides/settingsUpdate`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseSettingsUpdateServiceOverrideProps = Omit<
+  UseMutateProps<
+    ResponseOverrideV2SettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Update Settings to ServiceOverride V2
+ */
+export const useSettingsUpdateServiceOverride = (props: UseSettingsUpdateServiceOverrideProps) =>
+  useMutate<
+    ResponseOverrideV2SettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >('POST', `/serviceOverrides/settingsUpdate`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Update Settings to ServiceOverride V2
+ */
+export const settingsUpdateServiceOverridePromise = (
+  props: MutateUsingFetchProps<
+    ResponseOverrideV2SettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseOverrideV2SettingsUpdateResponseDTO,
+    Failure | Error,
+    SettingsUpdateServiceOverrideQueryParams,
+    void,
+    void
+  >('POST', getConfig('ng/api'), `/serviceOverrides/settingsUpdate`, props, signal)
+
+export interface UpsertServiceOverrideV2QueryParams {
+  accountIdentifier: string
+}
+
+export type UpsertServiceOverrideV2Props = Omit<
+  MutateProps<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Upsert an ServiceOverride Entity
+ */
+export const UpsertServiceOverrideV2 = (props: UpsertServiceOverrideV2Props) => (
+  <Mutate<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >
+    verb="POST"
+    path={`/serviceOverrides/upsert`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpsertServiceOverrideV2Props = Omit<
+  UseMutateProps<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Upsert an ServiceOverride Entity
+ */
+export const useUpsertServiceOverrideV2 = (props: UseUpsertServiceOverrideV2Props) =>
+  useMutate<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >('POST', `/serviceOverrides/upsert`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Upsert an ServiceOverride Entity
+ */
+export const upsertServiceOverrideV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceOverridesResponseDTOV2,
+    Failure | Error,
+    UpsertServiceOverrideV2QueryParams,
+    ServiceOverrideRequestDTOV2RequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/serviceOverrides/upsert`, props, signal)
 
 export interface DeleteServiceOverrideV2QueryParams {
   accountIdentifier: string
@@ -60426,6 +61132,55 @@ export const completeSignupInvitePromise = (
     CompleteSignupInvitePathParams
   >('PUT', getConfig('ng/api'), `/signup/complete/${token}`, props, signal)
 
+export interface MarketplaceSignupQueryParams {
+  inviteId?: string
+  marketPlaceToken?: string
+}
+
+export type MarketplaceSignupProps = Omit<
+  MutateProps<RestResponseUserInfo, Failure | Error, MarketplaceSignupQueryParams, SignupDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+export const MarketplaceSignup = (props: MarketplaceSignupProps) => (
+  <Mutate<RestResponseUserInfo, Failure | Error, MarketplaceSignupQueryParams, SignupDTORequestBody, void>
+    verb="POST"
+    path={`/signup/marketplace`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseMarketplaceSignupProps = Omit<
+  UseMutateProps<RestResponseUserInfo, Failure | Error, MarketplaceSignupQueryParams, SignupDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+export const useMarketplaceSignup = (props: UseMarketplaceSignupProps) =>
+  useMutate<RestResponseUserInfo, Failure | Error, MarketplaceSignupQueryParams, SignupDTORequestBody, void>(
+    'POST',
+    `/signup/marketplace`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+export const marketplaceSignupPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseUserInfo,
+    Failure | Error,
+    MarketplaceSignupQueryParams,
+    SignupDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseUserInfo, Failure | Error, MarketplaceSignupQueryParams, SignupDTORequestBody, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/signup/marketplace`,
+    props,
+    signal
+  )
+
 export type SignupOAuthProps = Omit<
   MutateProps<RestResponseUserInfo, Failure | Error, void, OAuthSignupDTO, void>,
   'path' | 'verb'
@@ -62260,8 +63015,8 @@ export const getTasSpacesPromise = (
 
 export interface GetTasSpacesV2QueryParams {
   accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   organization?: string
   envId: string
   infraDefinitionId: string
@@ -68702,6 +69457,8 @@ export interface GetYamlSchemaQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   subtype?:
     | 'K8sCluster'
     | 'Git'
@@ -68752,6 +69509,7 @@ export interface GetYamlSchemaQueryParams {
     | 'TerraformCloud'
     | 'SignalFX'
     | 'Harness'
+    | 'Rancher'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'

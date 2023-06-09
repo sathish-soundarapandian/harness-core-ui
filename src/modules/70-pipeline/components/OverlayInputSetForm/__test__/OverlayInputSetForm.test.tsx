@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent, createEvent, act, findByRole } from '@testing-library/react'
+import { render, waitFor, fireEvent, createEvent, act, findByRole, findByTestId } from '@testing-library/react'
 import { noop } from 'lodash-es'
 
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
@@ -159,7 +159,7 @@ describe('OverlayInputSetForm Tests', () => {
           pathParams={{
             accountId: 'testAcc',
             orgIdentifier: 'testOrg',
-            projectIdentifier: 'test',
+            projectIdentifier: 'testProject',
             pipelineIdentifier: 'pipeline',
             module: 'cd'
           }}
@@ -196,7 +196,7 @@ describe('OverlayInputSetForm Tests', () => {
           pathParams={{
             accountId: 'testAcc',
             orgIdentifier: 'testOrg',
-            projectIdentifier: 'test',
+            projectIdentifier: 'testProject',
             pipelineIdentifier: 'pipeline',
             module: 'cd'
           }}
@@ -212,8 +212,8 @@ describe('OverlayInputSetForm Tests', () => {
         </TestWrapper>
       )
       jest.runOnlyPendingTimers()
-      const container = findDialogContainer()
-      await waitFor(() => getByText('test'))
+      const container = findDialogContainer() as HTMLElement
+      await findByTestId(container, '0-asd')
       expect(container).toMatchSnapshot()
       fireEvent.click(getByText('save'))
       // Switch Mode
@@ -231,13 +231,13 @@ describe('OverlayInputSetForm Tests', () => {
     })
 
     test('render Edit Overlay Input Set Form and test drag drop', async () => {
-      const { getByTestId, getByText } = render(
+      const { getByText } = render(
         <TestWrapper
           path={TEST_INPUT_SET_PATH}
           pathParams={{
             accountId: 'testAcc',
             orgIdentifier: 'testOrg',
-            projectIdentifier: 'test',
+            projectIdentifier: 'testProject',
             pipelineIdentifier: 'pipeline',
             module: 'cd'
           }}
@@ -253,14 +253,13 @@ describe('OverlayInputSetForm Tests', () => {
         </TestWrapper>
       )
       jest.runOnlyPendingTimers()
-      await waitFor(() => getByText('asd'))
+      const overlayDialog = findDialogContainer() as HTMLElement
+      const container = await findByTestId(overlayDialog, '0-asd')
+      const container2 = await findByTestId(overlayDialog, '1-test')
 
       act(() => {
         fireEvent.click(getByText('pipeline.inputSets.selectPlaceholder'))
       })
-
-      const container = getByTestId('asd')
-      const container2 = getByTestId('test')
       act(() => {
         const dragStartEvent = Object.assign(createEvent.dragStart(container), eventData)
 
@@ -288,7 +287,7 @@ describe('OverlayInputSetForm Tests', () => {
           pathParams={{
             accountId: 'testAcc',
             orgIdentifier: 'testOrg',
-            projectIdentifier: 'test',
+            projectIdentifier: 'testProject',
             pipelineIdentifier: 'pipeline',
             module: 'cd'
           }}
@@ -325,7 +324,7 @@ describe('OverlayInputSetForm Tests', () => {
           pathParams={{
             accountId: 'testAcc',
             orgIdentifier: 'testOrg',
-            projectIdentifier: 'test',
+            projectIdentifier: 'testProject',
             pipelineIdentifier: 'pipeline',
             module: 'cd'
           }}
@@ -363,7 +362,7 @@ describe('OverlayInputSetForm Tests', () => {
         pathParams={{
           accountId: 'testAcc',
           orgIdentifier: 'testOrg',
-          projectIdentifier: 'test',
+          projectIdentifier: 'testProject',
           pipelineIdentifier: 'pipeline',
           module: 'cd'
         }}

@@ -6,9 +6,10 @@
  */
 
 import React, { useMemo } from 'react'
+import cx from 'classnames'
 import { defaultTo, get, isNull, isUndefined, omit, omitBy, remove, set } from 'lodash-es'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
-import { Callout, Classes, Dialog, IDialogProps, Menu, Position } from '@blueprintjs/core'
+import { Callout, Classes, Dialog, IDialogProps, Menu, PopoverPosition, Position } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import {
   Button,
@@ -24,6 +25,7 @@ import {
   Container,
   Popover
 } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
@@ -81,6 +83,7 @@ import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetai
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { isValueExpression } from '@common/utils/utils'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import {
@@ -89,7 +92,7 @@ import {
   getCreateUpdateRequestBodyOptions,
   getInputSetReference
 } from './OverlayInputSetUtils'
-
+import { getInputSetExpressionValue, InputSetValue } from '../InputSetSelector/utils'
 import css from './OverlayInputSetForm.module.scss'
 
 export interface OverlayInputSetDTO extends Omit<OverlayInputSetResponse, 'identifier'> {
@@ -136,7 +139,8 @@ const dialogProps: Omit<IDialogProps, 'isOpen'> = {
   canEscapeKeyClose: true,
   canOutsideClickClose: true,
   enforceFocus: false,
-  style: { minWidth: 700 }
+  style: { minWidth: 700 },
+  className: css.overlayInputSetDialog
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -412,18 +416,23 @@ export function OverlayInputSetForm({
   }
 
   React.useEffect(() => {
-    const inputSetsToSelect = inputSet.inputSetReferences?.map(inputSetRef => {
+    const inputSetsToSelect = inputSet.inputSetReferences?.reduce((accum, inputSetRef) => {
       const foundInputSet = inputSetList?.data?.content?.find(currInputSet => currInputSet.identifier === inputSetRef)
-      return {
-        ...foundInputSet,
-        label: defaultTo(foundInputSet?.name, ''),
-        value: defaultTo(foundInputSet?.identifier, ''),
-        type: foundInputSet?.inputSetType,
-        gitDetails: defaultTo(foundInputSet?.gitDetails, {}),
-        inputSetErrorDetails: foundInputSet?.inputSetErrorDetails,
-        overlaySetErrorDetails: foundInputSet?.overlaySetErrorDetails
-      }
-    })
+      if (!foundInputSet && isValueExpression(inputSetRef)) {
+        const inputSetExpressionValue = getInputSetExpressionValue(inputSetRef)
+        accum.push(inputSetExpressionValue)
+      } else if (foundInputSet)
+        accum.push({
+          ...foundInputSet,
+          label: defaultTo(foundInputSet?.name, ''),
+          value: defaultTo(foundInputSet?.identifier, ''),
+          type: foundInputSet?.inputSetType,
+          gitDetails: defaultTo(foundInputSet?.gitDetails, {}),
+          inputSetErrorDetails: foundInputSet?.inputSetErrorDetails,
+          overlaySetErrorDetails: foundInputSet?.overlaySetErrorDetails
+        })
+      return accum
+    }, [] as InputSetValue[])
     setSelectedInputSets(inputSetsToSelect)
   }, [inputSetList?.data?.content, inputSet.inputSetReferences])
 
@@ -698,11 +707,30 @@ export function OverlayInputSetForm({
   return (
     <Dialog
       title={
-        hasRemoteFetchFailed
-          ? ''
-          : isEdit
-          ? getString('inputSets.editOverlayTitle', { name: inputSet.name })
-          : getString('inputSets.newOverlayInputSet')
+        hasRemoteFetchFailed ? (
+          ''
+        ) : (
+          <Text
+            tooltipProps={{
+              position: PopoverPosition.RIGHT_TOP,
+              isDark: true
+            }}
+            tooltip={
+              <Text padding="medium" width={350} color={Color.GREY_200}>
+                {getString('inputSets.selectInputSetsHelp')}
+              </Text>
+            }
+            data-testid="overlay-input-set-description-tooltip"
+            rightIcon="info-sign"
+            rightIconProps={{
+              color: Color.PRIMARY_7,
+              margin: { left: 'xsmall' }
+            }}
+            font={{ weight: 'semi-bold', variation: FontVariation.H4 }}
+          >
+            {isEdit ? getString('inputSets.editOverlayTitle') : getString('inputSets.newOverlayInputSet')}
+          </Text>
+        )
       }
       onClose={() => closeForm()}
       isOpen={isOpen}
@@ -872,36 +900,35 @@ export function OverlayInputSetForm({
                                 ></GitSyncForm>
                               </Container>
                             )}
-                            <Layout.Vertical padding={{ top: 'large', bottom: 'xxxlarge' }} spacing="small">
-                              <Heading level={5}>{getString('inputSets.selectInputSets')}</Heading>
-                              <Text
-                                icon="info-sign"
-                                iconProps={{ intent: 'primary', size: 16, padding: { left: 0, right: 'small' } }}
-                              >
-                                {getString('inputSets.selectInputSetsHelp')}
-                              </Text>
-                              {inputSet && (
-                                <GitSyncStoreProvider>
-                                  <InputSetSelector
-                                    pipelineIdentifier={pipelineIdentifier}
-                                    onChange={inputsets => {
-                                      setSelectedInputSets(inputsets)
-                                      setInvokeMergeInp(true)
-                                    }}
-                                    value={selectedInputSets}
-                                    selectedRepo={selectedRepo}
-                                    selectedBranch={selectedBranch}
-                                    isOverlayInputSet={true}
-                                    selectedValueClass={css.selectedInputSetsContainer}
-                                    pipelineGitDetails={get(pipeline, 'data.gitDetails')}
-                                    hideInputSetButton={true}
-                                    invalidInputSetReferences={invalidInputSetIds}
-                                    loadingMergeInputSets={loadingMergeInputSets}
-                                    onReconcile={onReconcile}
-                                  />
-                                </GitSyncStoreProvider>
-                              )}
-                            </Layout.Vertical>
+                            {inputSet && (
+                              <>
+                                <div className={cx(css.divider, css.inputSetName)} />
+                                <Layout.Vertical padding={{ top: 'large', bottom: 'xxlarge' }} spacing="small">
+                                  <Heading level={6} className={css.exisitingInputSetsHeader}>
+                                    {getString('pipeline.pipelineInputPanel.useExisitingInputSets')}
+                                  </Heading>
+                                  <GitSyncStoreProvider>
+                                    <InputSetSelector
+                                      pipelineIdentifier={pipelineIdentifier}
+                                      onChange={inputsets => {
+                                        setSelectedInputSets(inputsets)
+                                        setInvokeMergeInp(true)
+                                      }}
+                                      value={selectedInputSets}
+                                      selectedRepo={selectedRepo}
+                                      selectedBranch={selectedBranch}
+                                      isOverlayInputSet={true}
+                                      selectedValueClass={css.selectedInputSetsContainer}
+                                      pipelineGitDetails={get(pipeline, 'data.gitDetails')}
+                                      hideInputSetButton={true}
+                                      invalidInputSetReferences={invalidInputSetIds}
+                                      loadingMergeInputSets={loadingMergeInputSets}
+                                      onReconcile={onReconcile}
+                                    />
+                                  </GitSyncStoreProvider>
+                                </Layout.Vertical>
+                              </>
+                            )}
                           </div>
                           <Layout.Horizontal padding={{ top: 'medium' }}>
                             <Button

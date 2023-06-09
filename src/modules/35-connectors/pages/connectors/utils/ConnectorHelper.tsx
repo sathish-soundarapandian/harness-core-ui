@@ -22,7 +22,8 @@ export const AuthTypes = {
   BEARER_TOKEN: 'Bearer Token(HTTP Header)',
   PERSONAL_ACCESS_TOKEN: 'PersonalAccessToken',
   ADFS: 'AdfsClientCredentialsWithCertificate',
-  API_TOKEN: 'ApiToken'
+  API_TOKEN: 'ApiToken',
+  BEARER_TOKEN_RANCHER: 'BearerToken'
 }
 
 export enum GitAuthTypes {
@@ -78,6 +79,8 @@ export const getHeadingIdByType = (type: string): StringKeys => {
       return 'connectors.splunkConnectorDetails'
     case Connectors.ELK:
       return 'connectors.elk.elkConnectorDetails'
+    case Connectors.Rancher:
+      return 'connectors.rancherConnectorDetails'
     case 'Gcr':
       return 'connectors.gcrConnectorDetails'
     default:
@@ -183,6 +186,9 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.tas'
     case Connectors.TERRAFORM_CLOUD:
       return 'connectors.title.terraform'
+    case Connectors.Rancher:
+      return 'connectors.title.rancherCluster'
+
     default:
       return 'connector'
   }
@@ -193,6 +199,8 @@ export const getConnectorIconByType = (type: string): IconName => {
     case Connectors.KUBERNETES_CLUSTER:
     case Connectors.CE_KUBERNETES:
       return 'app-kubernetes'
+    case Connectors.Rancher:
+      return 'rancher-inverse' as IconName
     case Connectors.GIT:
       return 'service-github'
     case Connectors.HttpHelmRepo:
@@ -324,6 +332,8 @@ export const getLabelForAuthType = (type: string) => {
       return 'OIDC Token'
     case AuthTypes.CLIENT_KEY_CERT:
       return 'Client Key Certificate'
+    case AuthTypes.BEARER_TOKEN_RANCHER:
+      return 'Bearer Token'
     default:
       return ''
   }

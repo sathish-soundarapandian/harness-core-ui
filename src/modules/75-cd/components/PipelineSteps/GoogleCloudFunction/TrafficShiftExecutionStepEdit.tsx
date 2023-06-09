@@ -8,13 +8,11 @@
 import React from 'react'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { toString } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { AllowedTypes, Formik, FormikForm, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, Formik, FormikForm, FormInput } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { CloudFunctionTrafficShiftExecutionStepInitialValues } from '@pipeline/utils/types'
@@ -99,19 +97,6 @@ const TrafficShiftExecutionStepEdit = (
                     type: 'number'
                   }}
                 />
-                {getMultiTypeFromValue(formik.values.spec?.trafficPercent) === MultiTypeInputType.RUNTIME && !readonly && (
-                  <ConfigureOptions
-                    value={toString(formik.values.spec?.trafficPercent)}
-                    type="Number"
-                    variableName="spec.trafficPercent"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    onChange={value => {
-                      formik.setFieldValue('spec.trafficPercent', value)
-                    }}
-                    isReadonly={readonly}
-                  />
-                )}
               </div>
             </FormikForm>
           )

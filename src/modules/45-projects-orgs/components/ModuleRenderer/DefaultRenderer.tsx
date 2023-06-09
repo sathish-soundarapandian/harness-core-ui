@@ -18,7 +18,7 @@ import css from './ModuleRenderer.module.scss'
 
 const DefaultRenderer: React.FC = () => {
   const { getString } = useStrings()
-  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CET_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CENG_ENABLED, CET_ENABLED } = useFeatureFlags()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
 
@@ -29,7 +29,7 @@ const DefaultRenderer: React.FC = () => {
       </Text>
       <Layout.Horizontal spacing="small">
         {shouldVisible ? <Icon name="cd-main" size={20} /> : null}
-        {CING_ENABLED ? <Icon name="ci-main" size={20} /> : null}
+        <Icon name="ci-main" size={20} />
         {FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE ? <Icon name="cf-main" size={20} /> : null}
         {CENG_ENABLED ? <Icon name="ce-main" size={20} /> : null}
         {CVNG_ENABLED ? <Icon name="cv-main" size={20} /> : null}

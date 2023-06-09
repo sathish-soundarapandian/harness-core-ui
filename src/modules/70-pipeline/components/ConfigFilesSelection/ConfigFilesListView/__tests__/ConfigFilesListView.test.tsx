@@ -6,14 +6,7 @@
  */
 
 import React from 'react'
-import {
-  render,
-  fireEvent,
-  findByText as findElementByText,
-  getByText as getElementByText,
-  waitFor,
-  RenderResult
-} from '@testing-library/react'
+import { render, fireEvent, getByText as getElementByText, waitFor, RenderResult } from '@testing-library/react'
 import type { AllowedTypesWithRunTime } from '@harness/uicore'
 
 import type { ServiceDefinition, StoreConfigWrapper } from 'services/cd-ng'
@@ -114,14 +107,9 @@ describe('Define Config Files list view', () => {
     fireEvent.click(editBtn)
     const dialog = document.body.querySelector('.bp3-dialog') as HTMLElement
 
-    // // Ensure that file store step is rendered and Harness store is selected
+    // Ensure that file store step is NOT rendered because last step should be shown on edit click
     const harnessStoreTile = dialog.querySelector('input[value="Harness"]')
-    expect(harnessStoreTile).toBeInTheDocument()
-    expect(harnessStoreTile).toBeChecked()
-
-    // Click Continue
-    const continueBtn = await (await findElementByText(dialog, 'continue')).parentElement
-    fireEvent.click(continueBtn!)
+    expect(harnessStoreTile).toBeNull()
 
     // Identifier
     await waitFor(() => expect(getElementByText(dialog, 'pipeline.configFiles.identifierLabel')).toBeInTheDocument())
@@ -136,8 +124,8 @@ describe('Define Config Files list view', () => {
     expect(fileNameInput).toBeInTheDocument()
   })
 
-  test('should show last step directly while editing when CDS_SERVICE_CONFIG_LAST_STEP is true', async () => {
-    const { container } = renderComponent({ CDS_SERVICE_CONFIG_LAST_STEP: true })
+  test('should show last step directly while editing', async () => {
+    const { container } = renderComponent({})
 
     // Click on edit button
     const editBtn = container.querySelector('.bp3-button') as HTMLElement
@@ -161,7 +149,7 @@ describe('Define Config Files list view', () => {
     expect(fileNameInput).toBeInTheDocument()
   })
 
-  test('should show last step directly while editing for Github store when CDS_SERVICE_CONFIG_LAST_STEP, CDS_GIT_CONFIG_FILES are true', async () => {
+  test('should show last step directly while editing for Github store when CDS_GIT_CONFIG_FILES are true', async () => {
     const gitConfigFileStage: StageElementWrapper<DeploymentStageElementConfig> = {
       stage: {
         name: 'Stage 1',
@@ -201,10 +189,7 @@ describe('Define Config Files list view', () => {
     }
     defaultProps.stage = gitConfigFileStage as any
 
-    const { container } = renderComponent(
-      { CDS_SERVICE_CONFIG_LAST_STEP: true, CDS_GIT_CONFIG_FILES: true },
-      defaultProps as any
-    )
+    const { container } = renderComponent({ CDS_GIT_CONFIG_FILES: true }, defaultProps as any)
 
     // Click on edit button
     const editBtn = container.querySelector('.bp3-button') as HTMLElement

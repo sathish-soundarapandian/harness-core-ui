@@ -63,7 +63,9 @@ jest.mock('services/pipeline-ng', () => ({
   putPipelinePromise: jest.fn(),
   createPipelineV2Promise: jest.fn(),
   useGetInputsetYaml: () => jest.fn(),
-  useGetTemplateFromPipeline: jest.fn()
+  useGetTemplateFromPipeline: jest.fn(),
+  useGetPipelineValidateResult: jest.fn(() => ({})),
+  useValidatePipelineAsync: jest.fn(() => ({}))
 }))
 
 jest.mock('services/pipeline-rq', () => ({

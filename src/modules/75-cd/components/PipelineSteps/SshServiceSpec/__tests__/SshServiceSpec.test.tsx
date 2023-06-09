@@ -26,7 +26,6 @@ import {
   mockBuildList,
   mockManifestConnector,
   secretMockdata,
-  connectorListJSON,
   PipelineMock,
   TemplateMock,
   mockProps
@@ -70,7 +69,6 @@ jest.mock('services/cd-ng', () => ({
     jest.fn().mockImplementation(() => {
       return { data: { data: { buildDetailsList: [] } }, refetch: jest.fn(), error: null }
     }),
-  getConnectorListPromise: () => Promise.resolve(connectorListJSON),
   getConnectorListV2Promise: () => Promise.resolve(mockManifestConnector),
   getBuildDetailsForDockerPromise: () => Promise.resolve(mockBuildList),
   getBuildDetailsForGcrPromise: () => Promise.resolve(mockBuildList),

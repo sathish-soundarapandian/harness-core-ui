@@ -15,7 +15,7 @@ import * as MultiTypeServiceField from '@pipeline/components/FormMultiTypeServic
 import * as MultiTypeEnvironmentField from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
 import OrgAccountLevelServiceEnvField from '../OrgAccountLevelServiceEnvField'
 import { DefaultShowServiceEnvironment } from '../OrgAccountLevelServiceEnvField.constants'
-import { shouldShowServiceEnvironmentField } from '../OrgAccountLevelServiceEnvField.utils'
+import { shouldShowServiceEnvironmentField, onValueChange } from '../OrgAccountLevelServiceEnvField.utils'
 import type { OrgAccountLevelServiceEnvFieldProps } from '../OrgAccountLevelServiceEnvField.types'
 
 const serviceOnSelect = jest.fn()
@@ -323,6 +323,16 @@ describe('OrgAccountLevelServiceEnvField', () => {
       label: 'Environment1',
       value: 'Environment1'
     })
+  })
+
+  test('should validate multiSelect environment', () => {
+    const onSuccess = jest.fn()
+    const multiSelectEnv = [
+      { label: 'env1', value: 'env1' },
+      { label: 'env2', value: 'env2' }
+    ]
+    expect(onValueChange({ isTemplate: false, onSuccess, value: multiSelectEnv }))
+    expect(onSuccess).toHaveBeenCalledWith(multiSelectEnv)
   })
 
   describe('shouldShowServiceEnvironmentField', () => {

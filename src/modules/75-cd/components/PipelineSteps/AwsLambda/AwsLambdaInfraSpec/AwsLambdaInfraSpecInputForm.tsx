@@ -12,7 +12,7 @@ import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Layout, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes, SelectOption, Text } from '@harness/uicore'
 
-import type { AwsLambdaInfrastructure } from 'services/cd-ng'
+import type { AwsLambdaInfrastructure, ExecutionElementConfig } from 'services/cd-ng'
 import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -22,6 +22,7 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { connectorTypes } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface AwsLambdaInfraSpecInputFormProps {
@@ -29,13 +30,15 @@ export interface AwsLambdaInfraSpecInputFormProps {
   template?: AwsLambdaInfrastructure
   allowableTypes: AllowedTypes
   path: string
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 const AwsLambdaInfraSpecInputForm = ({
   template,
   readonly = false,
   path,
-  allowableTypes
+  allowableTypes,
+  provisioner
 }: AwsLambdaInfraSpecInputFormProps) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -57,9 +60,15 @@ const AwsLambdaInfraSpecInputForm = ({
 
   const connectorFieldName = isEmpty(path) ? 'connectorRef' : `${path}.connectorRef`
   const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
+  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
 
   return (
     <Layout.Vertical spacing="small">
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField name={provisionerName} path={path} provisioners={provisioner} />
+        </div>
+      )}
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

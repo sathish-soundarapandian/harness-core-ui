@@ -16,11 +16,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
-import {
-  getSelectedDeploymentType,
-  getVariablesHeaderTooltipId,
-  isOnlyOneManifestAllowedForDeploymentType
-} from '@pipeline/utils/stageHelpers'
+import { getSelectedDeploymentType, getVariablesHeaderTooltipId } from '@pipeline/utils/stageHelpers'
 import {
   allowedManifestTypes,
   getManifestsHeaderTooltipId
@@ -79,24 +75,19 @@ export const AwsSamServiceSpecEditable: React.FC<AwsSamServiceSpecEditableProps>
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
         <>
-          <Card className={css.sectionCard} data-testid={'aws-sam-directory-card'}>
+          <Card className={css.sectionCard} data-testid={'aws-sam-manifest-card'}>
             <div
               className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
-              data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_awsSamDirectory`}
-              data-testid={'function-definition-header-container'}
+              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
             >
-              {getString('pipeline.manifestTypeLabels.AwsSamDirectory')}
-              <HarnessDocTooltip
-                tooltipId={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_awsSamDirectory`}
-                useStandAlone={true}
-              />
+              {getString('pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests')}
+              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
             </div>
             <ManifestSelection
               isPropagating={isPropagating}
               deploymentType={selectedDeploymentType}
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={!!readonly}
-              allowOnlyOneManifest={isOnlyOneManifestAllowedForDeploymentType(selectedDeploymentType)}
               availableManifestTypes={allowedManifestTypes[selectedDeploymentType]}
             />
           </Card>

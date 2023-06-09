@@ -461,7 +461,7 @@ exports[`Resource Groups Page render data 1`] = `
                   class="Layout--horizontal StyledProps--main resourceSubList StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
                 >
                   <label
-                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
                   >
                     <input
                       checked=""

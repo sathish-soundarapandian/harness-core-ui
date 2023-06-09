@@ -287,7 +287,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 test
@@ -529,6 +529,42 @@ exports[`ProjectSelector render list view 1`] = `
                   </span>
                   <span
                     class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
                     data-icon="cf-main"
                   >
                     <svg
@@ -607,7 +643,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 UI for the Payment
@@ -849,6 +885,42 @@ exports[`ProjectSelector render list view 1`] = `
                   </span>
                   <span
                     class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
                     data-icon="cf-main"
                   >
                     <svg
@@ -927,7 +999,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Online users
@@ -1162,6 +1234,42 @@ exports[`ProjectSelector render list view 1`] = `
                           <stop
                             offset="1"
                             stop-color="#45BD35"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
                           />
                         </lineargradient>
                       </defs>
@@ -1447,6 +1555,42 @@ exports[`ProjectSelector render list view 1`] = `
                   </span>
                   <span
                     class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
                     data-icon="cf-main"
                   >
                     <svg
@@ -1525,7 +1669,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Demo project
@@ -1767,6 +1911,42 @@ exports[`ProjectSelector render list view 1`] = `
                   </span>
                   <span
                     class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
                     data-icon="cf-main"
                   >
                     <svg
@@ -1845,7 +2025,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Drone
@@ -2087,6 +2267,42 @@ exports[`ProjectSelector render list view 1`] = `
                   </span>
                   <span
                     class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
                     data-icon="cf-main"
                   >
                     <svg
@@ -2165,7 +2381,7 @@ exports[`ProjectSelector render list view 1`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Swagger 2.0
@@ -2400,6 +2616,42 @@ exports[`ProjectSelector render list view 1`] = `
                           <stop
                             offset="1"
                             stop-color="#45BD35"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
                           />
                         </lineargradient>
                       </defs>
@@ -2809,7 +3061,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 test
@@ -3051,6 +3303,42 @@ exports[`ProjectSelector render with projects 2`] = `
                   </span>
                   <span
                     class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
                     data-icon="cf-main"
                   >
                     <svg
@@ -3129,7 +3417,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 UI for the Payment
@@ -3371,6 +3659,42 @@ exports[`ProjectSelector render with projects 2`] = `
                   </span>
                   <span
                     class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
                     data-icon="cf-main"
                   >
                     <svg
@@ -3449,7 +3773,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Online users
@@ -3684,6 +4008,42 @@ exports[`ProjectSelector render with projects 2`] = `
                           <stop
                             offset="1"
                             stop-color="#45BD35"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
                           />
                         </lineargradient>
                       </defs>
@@ -3969,6 +4329,42 @@ exports[`ProjectSelector render with projects 2`] = `
                   </span>
                   <span
                     class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
                     data-icon="cf-main"
                   >
                     <svg
@@ -4047,7 +4443,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Demo project
@@ -4289,6 +4685,42 @@ exports[`ProjectSelector render with projects 2`] = `
                   </span>
                   <span
                     class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
                     data-icon="cf-main"
                   >
                     <svg
@@ -4367,7 +4799,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Drone
@@ -4609,6 +5041,42 @@ exports[`ProjectSelector render with projects 2`] = `
                   </span>
                   <span
                     class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
                     data-icon="cf-main"
                   >
                     <svg
@@ -4687,7 +5155,7 @@ exports[`ProjectSelector render with projects 2`] = `
                 idLabel
               </p>
               <p
-                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                 style="--text-line-clamp: 2;"
               >
                 Swagger 2.0
@@ -4922,6 +5390,42 @@ exports[`ProjectSelector render with projects 2`] = `
                           <stop
                             offset="1"
                             stop-color="#45BD35"
+                          />
+                        </lineargradient>
+                      </defs>
+                    </svg>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="ci-main"
+                  >
+                    <svg
+                      height="20"
+                      viewBox="0 0 32 32"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M29 16a13.02 13.02 0 01-.854 4.6.387.387 0 01-.637.13l-3.99-3.94a.534.534 0 01-.085-.628c.432-.827.649-1.773.649-2.762.056-3.222-2.6-5.878-5.879-5.878-1.04 0-1.994.26-2.823.706a.53.53 0 01-.623-.08l-3.551-3.504a.48.48 0 01.154-.794A12.79 12.79 0 0116 3c7.178 0 13 5.822 13 13zM8.476 5.42a.582.582 0 01.746.072l4.035 4.035c.179.178.194.46.054.67a5.829 5.829 0 00-.985 3.26 5.934 5.934 0 005.935 5.934 5.829 5.829 0 003.26-.985.531.531 0 01.67.054l4.367 4.368a.582.582 0 01.065.756C24.225 26.86 20.4 29 16 29 8.822 29 3 23.178 3 16c0-4.403 2.144-8.231 5.476-10.58zm9.785 11.71a3.932 3.932 0 003.956-3.956 3.932 3.932 0 00-3.956-3.957 3.932 3.932 0 00-3.957 3.957 3.932 3.932 0 003.957 3.956z"
+                        fill="url(#ci-main_svg__a)"
+                        fill-rule="evenodd"
+                      />
+                      <defs>
+                        <lineargradient
+                          gradientUnits="userSpaceOnUse"
+                          id="ci-main_svg__a"
+                          x1="-5.398"
+                          x2="11.398"
+                          y1="11.398"
+                          y2="37.398"
+                        >
+                          <stop
+                            stop-color="#73DFE7"
+                          />
+                          <stop
+                            offset="1"
+                            stop-color="#0095F7"
                           />
                         </lineargradient>
                       </defs>

@@ -387,7 +387,8 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       envName: defaultTo(tableData[0].envName, ''),
       clusterIdentifier: tableData[0].clusterId,
       infraIdentifier: tableData[0].infrastructureId,
-      infraName: tableData[0].infrastructureName
+      infraName: tableData[0].infrastructureName,
+      isEnvView: true
     })
     setSelectedRow(`${tableData[0].envId}-${0}`)
   }
@@ -434,7 +435,8 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
           envName: defaultTo(row.envName, ''),
           clusterIdentifier: row.clusterId,
           infraIdentifier: row.infrastructureId,
-          infraName: row.infrastructureName
+          infraName: row.infrastructureName,
+          isEnvView: true
         })
         setSelectedRow(`${row.envId}-${idx}`)
       }}

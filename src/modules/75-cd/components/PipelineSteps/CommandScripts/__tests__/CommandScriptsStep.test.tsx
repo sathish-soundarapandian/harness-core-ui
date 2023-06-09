@@ -166,7 +166,10 @@ describe('Command Scripts step', () => {
         template={{
           identifier: getIdentifierFromName(name),
           type: StepType.Command,
-          timeout: RUNTIME_INPUT_VALUE
+          timeout: RUNTIME_INPUT_VALUE,
+          spec: {
+            onDelegate: RUNTIME_INPUT_VALUE
+          }
         }}
         type={StepType.Command}
         stepViewType={StepViewType.InputSet}
@@ -174,6 +177,7 @@ describe('Command Scripts step', () => {
     )
 
     expect(queryByNameAttribute('timeout', container)).toBeVisible()
+    expect(queryByNameAttribute('spec.onDelegate', container)).toBeVisible()
     expect(getByTestId('command-scripts-input-set-form')).toBeVisible()
   })
 
@@ -305,6 +309,7 @@ describe('Command Scripts step', () => {
           type: StepType.Command,
           timeout: RUNTIME_INPUT_VALUE,
           spec: {
+            onDelegate: RUNTIME_INPUT_VALUE,
             outputVariables: [
               {
                 name: 'ov',

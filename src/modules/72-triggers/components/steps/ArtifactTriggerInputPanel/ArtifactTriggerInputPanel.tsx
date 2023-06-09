@@ -33,7 +33,7 @@ import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import { useDeepCompareEffect, useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
@@ -53,7 +53,10 @@ import {
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import { getPipelineWithInjectedWithCloneCodebase } from '@triggers/components/Triggers/WebhookTrigger/utils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import {
+  PipelineVariablesContextProvider,
+  usePipelineVariables
+} from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import css from '@triggers/pages/triggers/views/WebhookPipelineInputPanel.module.scss'
 
 interface ArtifactTriggerInputPanelFormProps {
@@ -81,6 +84,7 @@ function ArtifactTriggerInputPanelForm({
   )
   const [mergingInputSets, setMergingInputSets] = useState<boolean>(false)
   const [invalidInputSetIds, setInvalidInputSetIds] = useState<Array<string>>([])
+  const { setPipeline: updatePipelineInVariablesContext } = usePipelineVariables()
 
   const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier } = useParams<{
     projectIdentifier: string
@@ -100,7 +104,8 @@ function ArtifactTriggerInputPanelForm({
     },
     body: {
       stageIdentifiers: formikProps.values?.stagesToExecute ?? []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
@@ -124,7 +129,8 @@ function ArtifactTriggerInputPanelForm({
       branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   useEffect(() => {
@@ -411,16 +417,18 @@ function ArtifactTriggerInputPanelForm({
     setInputSetError(formikProps?.errors?.inputSetRefs)
   }, [setInputSetError, formikProps?.errors?.inputSetRefs])
 
+  useDeepCompareEffect(() => {
+    if (resolvedPipeline) {
+      updatePipelineInVariablesContext(resolvedPipeline)
+    }
+  }, [resolvedPipeline])
+
   // Don't show spinner when fetching is triggered by typing from
   // Pipeline Reference. Giving users a better experience
   const isPipelineBranchNameInFocus = (): boolean =>
     !!isNewGitSyncRemotePipeline &&
     !!document.activeElement &&
     document.activeElement === document.querySelector('input[name="pipelineBranchName"]')
-
-  const {
-    state: { storeMetadata }
-  } = usePipelineContext()
 
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
@@ -437,7 +445,6 @@ function ArtifactTriggerInputPanelForm({
                   {getString('triggers.pipelineInputLabel')}
                   <HarnessDocTooltip tooltipId="pipelineInputLabel" useStandAlone={true} />
                 </Text>
-
                 <GitSyncStoreProvider>
                   <InputSetSelector
                     pipelineIdentifier={pipelineIdentifier}
@@ -500,26 +507,20 @@ function ArtifactTriggerInputPanelForm({
               template?.data?.inputSetTemplateYaml &&
               !mergingInputSets &&
               isEmpty(invalidInputSetIds) && (
-                <PipelineVariablesContextProvider
-                  pipeline={resolvedPipeline}
-                  enablePipelineTemplatesResolution={true}
-                  storeMetadata={storeMetadata}
-                >
-                  <PipelineInputSetForm
-                    originalPipeline={resolvedPipeline}
-                    template={defaultTo(
-                      memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
-                      {} as PipelineInfoConfig
-                    )}
-                    path="pipeline"
-                    viewType={StepViewType.InputSet}
-                    maybeContainerClass={css.pipelineInputSetForm}
-                    viewTypeMetadata={{ isTrigger: true }}
-                    readonly={isNewGitSyncRemotePipeline || !isEmpty(selectedInputSets)}
-                    gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
-                    disableRuntimeInputConfigureOptions
-                  />
-                </PipelineVariablesContextProvider>
+                <PipelineInputSetForm
+                  originalPipeline={resolvedPipeline}
+                  template={defaultTo(
+                    memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
+                    {} as PipelineInfoConfig
+                  )}
+                  path="pipeline"
+                  viewType={StepViewType.InputSet}
+                  maybeContainerClass={css.pipelineInputSetForm}
+                  viewTypeMetadata={{ isTrigger: true }}
+                  readonly={isNewGitSyncRemotePipeline || !isEmpty(selectedInputSets)}
+                  gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
+                  disableRuntimeInputConfigureOptions
+                />
               )}
           </div>
         </div>
@@ -538,9 +539,15 @@ function ArtifactTriggerInputPanelForm({
 }
 
 const ArtifactTriggerInputPanel: React.FC<ArtifactTriggerInputPanelFormProps> = props => {
+  const {
+    state: { storeMetadata }
+  } = usePipelineContext()
+
   return (
     <NestedAccordionProvider>
-      <ArtifactTriggerInputPanelForm {...props} />
+      <PipelineVariablesContextProvider enablePipelineTemplatesResolution={true} storeMetadata={storeMetadata}>
+        <ArtifactTriggerInputPanelForm {...props} />
+      </PipelineVariablesContextProvider>
     </NestedAccordionProvider>
   )
 }

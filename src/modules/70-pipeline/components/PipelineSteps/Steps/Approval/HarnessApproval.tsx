@@ -12,6 +12,7 @@ import { CompletionItemKind } from 'vscode-languageserver-types'
 import { connect, FormikErrors, yupToFormErrors } from 'formik'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import moment from 'moment'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getUserGroupListPromise } from 'services/cd-ng'
@@ -21,6 +22,7 @@ import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProp
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { StringsMap } from 'stringTypes'
+import { DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
 import { PipelineStep } from '../../PipelineStep'
 import { StepType } from '../../PipelineStepInterface'
 import { getSanitizedflatObjectForVariablesView } from '../Common/ApprovalCommons'
@@ -72,7 +74,15 @@ export class HarnessApproval extends PipelineStep<HarnessApprovalData> {
           name: '',
           defaultValue: ''
         }
-      ]
+      ],
+      autoApproval: {
+        action: 'REJECT',
+        scheduledDeadline: {
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          time: moment().format(DATE_PARSE_FORMAT)
+        },
+        comments: 'Auto approved by Harness via Harness Approval step'
+      }
     }
   }
 

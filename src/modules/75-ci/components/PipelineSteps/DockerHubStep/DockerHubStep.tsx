@@ -51,6 +51,7 @@ export interface DockerHubStepSpec {
   // pull?: MultiTypePullOption
   resources?: Resources
   runAsUser?: string
+  caching?: boolean
 }
 
 export interface DockerHubStepData {

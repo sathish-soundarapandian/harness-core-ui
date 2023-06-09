@@ -10,7 +10,6 @@ import { set } from 'lodash-es'
 import { ModalDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import ExecutionGraph, {
   ExecutionGraphAddStepEvent,
@@ -58,7 +57,6 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
 
   const { getString } = useStrings()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
-  const { CING_ENABLED } = useFeatureFlags()
   const selectedStage = getStageFromPipeline(selectedStageId).stage
   const originalStage = getStageFromPipeline(selectedStageId, originalPipeline).stage
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
@@ -70,8 +68,7 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
     const tempStages: PipelineStageProps[] = []
     tempStages.push(stagesCollection.getStage(StageType.DEPLOY, shouldVisible, getString)?.props as PipelineStageProps)
     tempStages.push(
-      stagesCollection.getStage(StageType.BUILD, !!licenseInformation['CI'] && !!CING_ENABLED, getString)
-        ?.props as PipelineStageProps
+      stagesCollection.getStage(StageType.BUILD, !!licenseInformation['CI'], getString)?.props as PipelineStageProps
     )
 
     tempStages.push(

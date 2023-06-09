@@ -38,6 +38,8 @@ import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interf
 import { NameIdDescriptionTags, PageSpinner } from '@common/components'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
+
 import { flexStart } from './DeployServiceUtils'
 import type { NewEditServiceModalProps } from './DeployServiceInterface'
 import css from './DeployServiceStep.module.scss'
@@ -64,7 +66,12 @@ const cleanData = (values: ServiceRequestDTO): ServiceRequestDTO => {
     orgIdentifier: values.orgIdentifier,
     projectIdentifier: values.projectIdentifier,
     description: newDescription,
-    tags: values.tags
+    tags: values.tags,
+    yaml: yamlStringify({
+      service: {
+        ...values
+      }
+    })
   }
 }
 

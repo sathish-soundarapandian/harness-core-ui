@@ -1,0 +1,196 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 6,
+    "pageItemCount": 6,
+    "pageSize": 100,
+    "content": [
+      {
+        "name": "Multi GCR",
+        "identifier": "Multi_GCR",
+        "type": "MultiArtifact",
+        "triggerStatus": {
+          "pollingSubscriptionStatus": null,
+          "validationStatus": {
+            "statusResult": "SUCCESS",
+            "detailedMessage": null
+          },
+          "webhookAutoRegistrationStatus": null,
+          "webhookInfo": null,
+          "status": "SUCCESS",
+          "detailMessages": []
+        },
+        "tags": {},
+        "executions": [0, 0, 0, 0, 0, 0, 0],
+        "yaml": "trigger:\n  name: Multi GCR\n  identifier: Multi_GCR\n  enabled: false\n  tags: {}\n  orgIdentifier: default\n  projectIdentifier: Pankaj\n  pipelineIdentifier: Triggers_2\n  stagesToExecute: []\n  source:\n    type: MultiArtifact\n    spec:\n      type: Gcr\n      sources:\n        - type: Gcr\n          connectorRef: tttt\n          imagePath: a\n          registryHostname: gcr.io\n        - type: Gcr\n          connectorRef: test\n          imagePath: b\n          registryHostname: gcr.io\n      metaDataConditions: []\n      eventConditions: []\n  inputSetRefs:\n    - testinput\n",
+        "webhookUrl": "",
+        "webhookCurlCommand": "",
+        "enabled": false,
+        "pipelineInputOutdated": false
+      },
+      {
+        "name": "Webhook Custom",
+        "identifier": "Webhook_Custom",
+        "description": "",
+        "type": "Webhook",
+        "triggerStatus": {
+          "pollingSubscriptionStatus": null,
+          "validationStatus": {
+            "statusResult": "SUCCESS",
+            "detailedMessage": null
+          },
+          "webhookAutoRegistrationStatus": null,
+          "webhookInfo": null,
+          "status": "SUCCESS",
+          "detailMessages": []
+        },
+        "webhookDetails": {
+          "webhookSecret": null,
+          "webhookSourceRepo": "CUSTOM"
+        },
+        "tags": {},
+        "executions": [0, 0, 0, 0, 0, 0, 0],
+        "yaml": "trigger:\n  name: Webhook Custom\n  identifier: Webhook_Custom\n  enabled: false\n  description: \"\"\n  tags: {}\n  stagesToExecute: []\n  orgIdentifier: default\n  projectIdentifier: Pankaj\n  pipelineIdentifier: Triggers_2\n  source:\n    type: Webhook\n    spec:\n      type: Custom\n      spec:\n        payloadConditions: []\n        headerConditions: []\n  inputSetRefs:\n    - testinput\n",
+        "webhookUrl": "https://qa.harness.io/gateway/pipeline/api/webhook/custom/v2?accountIdentifier=px7xd_BFRCi-pfWPYXVjvw&orgIdentifier=default&projectIdentifier=Pankaj&pipelineIdentifier=Triggers_2&triggerIdentifier=Webhook_Custom",
+        "webhookCurlCommand": "curl -X POST -H 'content-type: application/json' -H 'X-Api-Key: sample_api_key' --url 'https://qa.harness.io/gateway/pipeline/api/webhook/custom/v2?accountIdentifier=px7xd_BFRCi-pfWPYXVjvw&orgIdentifier=default&projectIdentifier=Pankaj&pipelineIdentifier=Triggers_2&triggerIdentifier=Webhook_Custom' -d '{\"sample_key\": \"sample_value\"}'",
+        "registrationStatus": "UNAVAILABLE",
+        "enabled": false,
+        "pipelineInputOutdated": false
+      },
+      {
+        "name": "GAR",
+        "identifier": "GAR",
+        "type": "Artifact",
+        "triggerStatus": {
+          "pollingSubscriptionStatus": {
+            "statusResult": "SUCCESS",
+            "detailedMessage": null
+          },
+          "validationStatus": {
+            "statusResult": "SUCCESS",
+            "detailedMessage": null
+          },
+          "webhookAutoRegistrationStatus": null,
+          "webhookInfo": null,
+          "status": "SUCCESS",
+          "detailMessages": []
+        },
+        "buildDetails": {
+          "buildType": "GoogleArtifactRegistry"
+        },
+        "tags": {},
+        "executions": [0, 0, 0, 0, 0, 0, 0],
+        "yaml": "trigger:\n  name: GAR\n  identifier: GAR\n  enabled: false\n  tags: {}\n  orgIdentifier: default\n  projectIdentifier: Pankaj\n  pipelineIdentifier: Triggers_2\n  stagesToExecute: []\n  source:\n    type: Artifact\n    spec:\n      type: GoogleArtifactRegistry\n      spec:\n        type: GoogleArtifactRegistry\n        connectorRef: tttt\n        package: a\n        project: a2\n        region: asia\n        repositoryName: a\n        version: <+trigger.artifact.build>\n        metaDataConditions: []\n        eventConditions: []\n  inputSetRefs:\n    - inputSet3\n",
+        "webhookUrl": "",
+        "webhookCurlCommand": "",
+        "enabled": false,
+        "pipelineInputOutdated": false
+      },
+      {
+        "name": "Nexus3-Trigger",
+        "identifier": "Nexus3Trigger",
+        "type": "Artifact",
+        "triggerStatus": {
+          "pollingSubscriptionStatus": {
+            "statusResult": "SUCCESS",
+            "detailedMessage": null
+          },
+          "validationStatus": {
+            "statusResult": "SUCCESS",
+            "detailedMessage": null
+          },
+          "webhookAutoRegistrationStatus": null,
+          "webhookInfo": null,
+          "status": "SUCCESS",
+          "detailMessages": []
+        },
+        "buildDetails": {
+          "buildType": "Nexus3Registry"
+        },
+        "tags": {},
+        "executions": [0, 0, 0, 0, 0, 0, 0],
+        "yaml": "trigger:\n  name: Nexus3-Trigger\n  identifier: Nexus3Trigger\n  enabled: false\n  tags: {}\n  orgIdentifier: default\n  projectIdentifier: Pankaj\n  pipelineIdentifier: Triggers_2\n  source:\n    type: Artifact\n    spec:\n      type: Nexus3Registry\n      spec:\n        connectorRef: Nexus3Connector\n        eventConditions: []\n        imagePath: \"\"\n        repositoryFormat: maven\n        repository: maven-releases\n        repositoryPortorRepositoryURL: repositoryUrl\n        tag: <+trigger.artifact.build>\n        repositoryUrl: \"\"\n        artifactPath: \"\"\n        groupId: test\n        artifactId: test\n        extension: test\n        classifier: test\n  inputYaml: |\n    pipeline:\n      identifier: Triggers_2\n      stages:\n        - stage:\n            identifier: dev1\n            type: Deployment\n            spec:\n              execution:\n                steps:\n                  - step:\n                      identifier: Step_1\n                      type: ShellScript\n                      timeout: 10m\n      variables:\n        - name: test2\n          type: String\n          value: test\n      properties:\n        ci:\n          codebase:\n            build:\n              type: branch\n              spec:\n                branch: main\n",
+        "webhookUrl": "",
+        "webhookCurlCommand": "",
+        "enabled": false,
+        "pipelineInputOutdated": false
+      },
+      {
+        "name": "test-manifest",
+        "identifier": "testmanifest",
+        "type": "Manifest",
+        "triggerStatus": {
+          "pollingSubscriptionStatus": {
+            "statusResult": "SUCCESS",
+            "detailedMessage": null
+          },
+          "validationStatus": {
+            "statusResult": "SUCCESS",
+            "detailedMessage": null
+          },
+          "webhookAutoRegistrationStatus": null,
+          "webhookInfo": null,
+          "status": "SUCCESS",
+          "detailMessages": []
+        },
+        "buildDetails": {
+          "buildType": "HelmChart"
+        },
+        "tags": {},
+        "executions": [0, 0, 0, 0, 0, 0, 0],
+        "yaml": "trigger:\n  name: test-manifest\n  identifier: testmanifest\n  enabled: false\n  tags: {}\n  orgIdentifier: default\n  projectIdentifier: Pankaj\n  pipelineIdentifier: Triggers_2\n  source:\n    type: Manifest\n    spec:\n      type: HelmChart\n      spec:\n        store:\n          type: Http\n          spec:\n            connectorRef: org.vikyathHelmRepo\n        helmVersion: V3\n        chartName: test\n        eventConditions: []\n  inputYaml: |\n    pipeline:\n      identifier: Triggers_2\n      stages:\n        - stage:\n            identifier: dev1\n            type: Deployment\n            spec:\n              execution:\n                steps:\n                  - step:\n                      identifier: Step_1\n                      type: ShellScript\n                      timeout: 10m\n      variables:\n        - name: test2\n          type: String\n          value: \"1\"\n      properties:\n        ci:\n          codebase:\n            build:\n              type: branch\n              spec:\n                branch: <+trigger.branch>\n",
+        "webhookUrl": "",
+        "webhookCurlCommand": "",
+        "enabled": false,
+        "pipelineInputOutdated": false
+      },
+      {
+        "name": "test-github-webhook",
+        "identifier": "testgithubwebhook",
+        "description": "Testing for the polling interval for github webhook trigger",
+        "type": "Webhook",
+        "triggerStatus": {
+          "pollingSubscriptionStatus": {
+            "statusResult": "SUCCESS",
+            "detailedMessage": null
+          },
+          "validationStatus": {
+            "statusResult": "SUCCESS",
+            "detailedMessage": null
+          },
+          "webhookAutoRegistrationStatus": {
+            "registrationResult": "SUCCESS",
+            "detailedMessage": null
+          },
+          "webhookInfo": {
+            "webhookId": "407180902"
+          },
+          "status": "SUCCESS",
+          "detailMessages": []
+        },
+        "webhookDetails": {
+          "webhookSecret": null,
+          "webhookSourceRepo": "GITHUB"
+        },
+        "tags": {
+          "Trigger": "1",
+          "GitHub": "2",
+          "Webhook": "3"
+        },
+        "executions": [0, 0, 0, 0, 0, 0, 0],
+        "yaml": "trigger:\n  name: test-github-webhook\n  identifier: testgithubwebhook\n  enabled: false\n  description: Testing for the polling interval for github webhook trigger\n  tags:\n    Trigger: \"1\"\n    GitHub: \"2\"\n    Webhook: \"3\"\n  encryptedWebhookSecretIdentifier: account.hithissecret\n  orgIdentifier: default\n  projectIdentifier: Pankaj\n  pipelineIdentifier: Triggers_2\n  source:\n    type: Webhook\n    pollInterval: 5m\n    spec:\n      type: Github\n      spec:\n        type: PullRequest\n        spec:\n          connectorRef: account.React_API_client\n          autoAbortPreviousExecutions: false\n          payloadConditions: []\n          headerConditions: []\n          actions:\n            - Close\n  inputYaml: |\n    pipeline:\n      identifier: Triggers_2\n      stages:\n        - stage:\n            identifier: dev1\n            type: Deployment\n            spec:\n              execution:\n                steps:\n                  - step:\n                      identifier: Step_1\n                      type: ShellScript\n                      timeout: 10m\n      variables:\n        - name: test2\n          type: String\n          value: test\n      properties:\n        ci:\n          codebase:\n            build:\n              type: branch\n              spec:\n                branch: main\n",
+        "webhookUrl": "https://qa.harness.io/gateway/ng/api/webhook?accountIdentifier=px7xd_BFRCi-pfWPYXVjvw",
+        "webhookCurlCommand": "",
+        "registrationStatus": "UNAVAILABLE",
+        "enabled": false,
+        "pipelineInputOutdated": false
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false,
+    "pageToken": null
+  },
+  "metaData": null,
+  "correlationId": "d3ce6858-8d84-421b-b3ae-dc6aa083a814"
+}

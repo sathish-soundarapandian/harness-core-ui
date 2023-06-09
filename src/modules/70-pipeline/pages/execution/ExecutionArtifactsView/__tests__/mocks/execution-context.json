@@ -1,0 +1,1420 @@
+{
+  "pipelineExecutionDetail": {
+    "pipelineExecutionSummary": {
+      "pipelineIdentifier": "SSCA_steps_demo",
+      "orgIdentifier": "default",
+      "projectIdentifier": "SSCA",
+      "planExecutionId": "ZVfmivyjS5KiLZ3CPutjJw",
+      "name": "SSCA steps demo",
+      "status": "Success",
+      "tags": [],
+      "executionTriggerInfo": {
+        "triggerType": "MANUAL",
+        "triggeredBy": {
+          "uuid": "ghdlLESKRJalOlNjSJ6GTg",
+          "identifier": "kapil.digani@harness.io",
+          "extraInfo": {
+            "email": "kapil.digani@harness.io"
+          },
+          "triggerIdentifier": ""
+        },
+        "isRerun": false
+      },
+      "governanceMetadata": {
+        "id": "",
+        "deny": false,
+        "details": [],
+        "message": "",
+        "timestamp": "0",
+        "status": "",
+        "accountId": "",
+        "orgId": "",
+        "projectId": "",
+        "entity": "",
+        "type": "",
+        "action": "",
+        "created": "0"
+      },
+      "moduleInfo": {
+        "ci": {
+          "__recast": "io.harness.ci.plan.creator.execution.CIPipelineModuleInfo",
+          "ciEditionType": "ENTERPRISE",
+          "ciLicenseType": "PAID",
+          "imageDetailsList": [],
+          "infraDetailsList": [
+            {
+              "__recast": "io.harness.ci.pipeline.executions.beans.CIInfraDetails",
+              "infraType": "KubernetesDirect",
+              "infraOSType": "Linux",
+              "infraHostType": "Self Hosted",
+              "infraArchType": "Amd64"
+            }
+          ],
+          "isPrivateRepo": true,
+          "scmDetailsList": [],
+          "tiBuildDetailsList": []
+        }
+      },
+      "layoutNodeMap": {
+        "WPOxTd5GR7CMhQOYoJfE3Q": {
+          "nodeType": "PipelineRollback",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "prb-FwZtmBPNSleQkt5vWxNR8g",
+          "name": "Pipeline Rollback",
+          "nodeUuid": "WPOxTd5GR7CMhQOYoJfE3Q",
+          "status": "NotStarted",
+          "module": "pms",
+          "moduleInfo": {
+            "pms": {}
+          },
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "isRollbackStageNode": false
+        },
+        "7YR3vUpJR62OLk6TbaxavQ": {
+          "nodeType": "CI",
+          "nodeGroup": "STAGE",
+          "nodeIdentifier": "build",
+          "name": "build",
+          "nodeUuid": "7YR3vUpJR62OLk6TbaxavQ",
+          "status": "Success",
+          "module": "ci",
+          "moduleInfo": {
+            "ci": {
+              "__recast": "io.harness.ci.plan.creator.execution.CIStageModuleInfo"
+            }
+          },
+          "startTs": 1685638628201,
+          "endTs": 1685638735350,
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          },
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "failureInfo": {
+            "message": ""
+          },
+          "failureInfoDTO": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "nodeExecutionId": "ysZaYjCNRF-nnt7K3u8f5Q",
+          "executionInputConfigured": false,
+          "isRollbackStageNode": false
+        }
+      },
+      "modules": ["pms", "ci"],
+      "startingNodeId": "7YR3vUpJR62OLk6TbaxavQ",
+      "startTs": 1685638627797,
+      "endTs": 1685638735697,
+      "createdAt": 1685638627844,
+      "canRetry": true,
+      "showRetryHistory": false,
+      "runSequence": 11,
+      "successfulStagesCount": 1,
+      "runningStagesCount": 0,
+      "failedStagesCount": 0,
+      "totalStagesCount": 1,
+      "storeType": "INLINE",
+      "executionInputConfigured": false,
+      "parentStageInfo": {
+        "hasparentpipeline": false,
+        "stagenodeid": "",
+        "executionid": "",
+        "identifier": "",
+        "projectid": "",
+        "orgid": "",
+        "runsequence": 0
+      },
+      "allowStageExecutions": false,
+      "executionMode": "NORMAL",
+      "stagesExecution": false
+    },
+    "executionGraph": {
+      "rootNodeId": "ysZaYjCNRF-nnt7K3u8f5Q",
+      "nodeMap": {
+        "ysZaYjCNRF-nnt7K3u8f5Q": {
+          "uuid": "ysZaYjCNRF-nnt7K3u8f5Q",
+          "setupId": "7YR3vUpJR62OLk6TbaxavQ",
+          "name": "build",
+          "identifier": "build",
+          "baseFqn": "pipeline.stages.build",
+          "outcomes": {
+            "integrationStageOutcome": {
+              "imageArtifacts": [],
+              "fileArtifacts": [],
+              "sbomArtifacts": [
+                {
+                  "id": "4a4e49db-55bf-43b6-8be2-e743106f8c30",
+                  "url": "uday4vunnam/alpine:latest",
+                  "imageName": "uday4vunnam/alpine:latest",
+                  "sbomName": "uday4vunnam/alpine:latest",
+                  "sbomUrl": "https://stress.harness.io/gateway/ssca/api/v1/artifacts/4a4e49db-55bf-43b6-8be2-e743106f8c30/stepExecutions/t4p8Wra2TdWTW9O_QZJycA/sbom/uday4vunnam_repo_abc_sbom_t4p8Wra2TdWTW9O_QZJycA.json?accountIdentifier=px7xd_BFRCi-pfWPYXVjvw&orgIdentifier=default&projectIdentifier=SSCA",
+                  "stepExecutionId": "t4p8Wra2TdWTW9O_QZJycA",
+                  "isSbomAttested": true,
+                  "allowListViolationCount": 0,
+                  "denyListViolationCount": 0
+                },
+                {
+                  "id": "4a4e49db-55bf-43b6-8be2-e743106f8c30",
+                  "url": "uday4vunnam/alpine:latest",
+                  "imageName": "uday4vunnam/alpine:latest",
+                  "stepExecutionId": "KaVYBdKZTFW9NM4scBh7gQ",
+                  "isSbomAttested": false,
+                  "allowListViolationCount": 2,
+                  "denyListViolationCount": 3
+                }
+              ]
+            }
+          },
+          "stepParameters": {
+            "identifier": "build",
+            "name": "build",
+            "description": "",
+            "variables": {},
+            "tags": {},
+            "type": "CI",
+            "specConfig": {
+              "infrastructure": {
+                "type": "KUBERNETES_DIRECT",
+                "spec": {
+                  "connectorRef": "ssck8",
+                  "namespace": "pre-qa",
+                  "nodeSelector": {
+                    "__uuid": "ojAh9Z8YRx2teldIOX3lWA"
+                  },
+                  "automountServiceAccountToken": true,
+                  "os": "Linux"
+                }
+              },
+              "enableCloneRepo": false,
+              "stepIdentifiers": ["SscaOrchestration", "SscaEnforcement"],
+              "childNodeID": "S9lppZJ3Sk2HfclkdnK6qg",
+              "triggerPayload": {},
+              "cloneManually": false
+            }
+          },
+          "startTs": 1685638628201,
+          "endTs": 1685638735350,
+          "stepType": "IntegrationStageStepPMS",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "<+OnPipelineSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnPipelineSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "child": {
+                "childNodeId": "S9lppZJ3Sk2HfclkdnK6qg",
+                "logKeys": [],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null,
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        },
+        "o4SO9fzuRB6a9_IkhszJJQ": {
+          "uuid": "o4SO9fzuRB6a9_IkhszJJQ",
+          "setupId": "hfW7H_fKSRSayGmfk7K4uA",
+          "name": "Execution",
+          "identifier": "execution",
+          "baseFqn": "pipeline.stages.build.spec.execution",
+          "outcomes": {},
+          "stepParameters": {
+            "childNodeId": "hfW7H_fKSRSayGmfk7K4uAsteps",
+            "logMessage": "Execution Element"
+          },
+          "startTs": 1685638628350,
+          "endTs": 1685638735137,
+          "stepType": "NG_EXECUTION",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": null,
+          "executableResponses": [
+            {
+              "child": {
+                "childNodeId": "hfW7H_fKSRSayGmfk7K4uAsteps",
+                "logKeys": [],
+                "units": []
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null,
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        },
+        "t4p8Wra2TdWTW9O_QZJycA": {
+          "uuid": "t4p8Wra2TdWTW9O_QZJycA",
+          "setupId": "eRLFLIx_S4aRpgSsdy4Iew",
+          "name": "SscaOrchestration",
+          "identifier": "SscaOrchestration",
+          "baseFqn": "pipeline.stages.build.spec.execution.steps.SscaOrchestration",
+          "outcomes": {
+            "output": {},
+            "artifact_SscaOrchestration": {
+              "stepArtifacts": {
+                "publishedFileArtifacts": [],
+                "publishedImageArtifacts": [],
+                "publishedSbomArtifacts": [
+                  {
+                    "id": "4a4e49db-55bf-43b6-8be2-e743106f8c30",
+                    "url": "uday4vunnam/alpine:latest",
+                    "imageName": "uday4vunnam/alpine:latest",
+                    "sbomName": "uday4vunnam/alpine:latest",
+                    "sbomUrl": "https://stress.harness.io/gateway/ssca/api/v1/artifacts/4a4e49db-55bf-43b6-8be2-e743106f8c30/stepExecutions/t4p8Wra2TdWTW9O_QZJycA/sbom/uday4vunnam_repo_abc_sbom_t4p8Wra2TdWTW9O_QZJycA.json?accountIdentifier=px7xd_BFRCi-pfWPYXVjvw&orgIdentifier=default&projectIdentifier=SSCA",
+                    "stepExecutionId": "t4p8Wra2TdWTW9O_QZJycA",
+                    "isSbomAttested": true,
+                    "allowListViolationCount": 0,
+                    "denyListViolationCount": 0
+                  }
+                ]
+              }
+            }
+          },
+          "stepParameters": {
+            "identifier": "SscaOrchestration",
+            "name": "SscaOrchestration",
+            "timeout": "10h",
+            "type": "SscaOrchestration",
+            "spec": {
+              "tool": {
+                "type": "SYFT",
+                "sbomOrchestrationSpec": {
+                  "format": "SPDX_JSON"
+                }
+              },
+              "source": {
+                "type": "IMAGE",
+                "sbomSourceSpec": {
+                  "connector": "reetika_dockerhub",
+                  "image": "uday4vunnam/alpine:latest"
+                }
+              },
+              "attestation": {
+                "type": "COSIGN",
+                "attestationSpec": {
+                  "privateKey": "cosign_key",
+                  "password": "cosign_pass"
+                }
+              }
+            }
+          },
+          "startTs": 1685638639911,
+          "endTs": 1685638664904,
+          "stepType": "SscaOrchestration",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "<+OnStageSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnStageSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "async": {
+                "callbackIds": ["_364kvdDQ7-8SNwdWsllbA-DEL", "2PvJRODrSoGw7Ibtxm4_hQ-DEL"],
+                "logKeys": [
+                  "accountId:px7xd_BFRCi-pfWPYXVjvw/orgId:default/projectId:SSCA/pipelineId:SSCA_steps_demo/runSequence:11/level0:pipeline/level1:stages/level2:build/level3:spec/level4:execution/level5:steps/level6:SscaOrchestration"
+                ],
+                "units": [],
+                "timeout": 0,
+                "status": "NO_OP"
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null,
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        },
+        "JFfJ0N55Tw6S2HpodsgLAg": {
+          "uuid": "JFfJ0N55Tw6S2HpodsgLAg",
+          "setupId": "HAzUootwQrS5Blg37tmD7Q",
+          "name": "Initialize",
+          "identifier": "liteEngineTask",
+          "baseFqn": "pipeline.stages.build.spec.execution.steps.liteEngineTask",
+          "outcomes": {
+            "podDetailsOutcome": {
+              "ipAddress": "10.40.0.192",
+              "namespace": "pre-qa"
+            },
+            "dependencies": {
+              "serviceDependencyList": []
+            }
+          },
+          "stepParameters": {
+            "identifier": "liteEngineTask",
+            "name": "liteEngineTask",
+            "timeout": "10m",
+            "type": "liteEngineTask",
+            "spec": {
+              "timeout": 0,
+              "retry": 0,
+              "executionElementConfig": {
+                "steps": [
+                  {
+                    "uuid": "mQf5nrsLQBmMDrXBqtU15A",
+                    "step": {
+                      "identifier": "SscaOrchestration",
+                      "type": "SscaOrchestration",
+                      "name": "SscaOrchestration",
+                      "spec": {
+                        "tool": {
+                          "type": "Syft",
+                          "spec": {
+                            "format": "spdx-json",
+                            "__uuid": "yikbPH8USr6cdA83sUDd4A"
+                          },
+                          "__uuid": "WHwFh8xoRE2pnLOnqHig1g"
+                        },
+                        "attestation": {
+                          "type": "cosign",
+                          "spec": {
+                            "privateKey": "cosign_key",
+                            "password": "cosign_pass",
+                            "__uuid": "m6o-oS8eRi2w-HUdgtYsjA"
+                          },
+                          "__uuid": "OIfuo-45TGqgjDeekGHkFQ"
+                        },
+                        "source": {
+                          "type": "image",
+                          "spec": {
+                            "connector": "reetika_dockerhub",
+                            "image": "uday4vunnam/alpine:latest",
+                            "__uuid": "43uj_OTzSB64ar0T-LzRcA"
+                          },
+                          "__uuid": "oM00YLQbRXyv-jwfBYfLlw"
+                        },
+                        "__uuid": "w2F4TBgLTyyTZqyRPCZ3Ew"
+                      },
+                      "__uuid": "eRLFLIx_S4aRpgSsdy4Iew"
+                    },
+                    "parallel": {},
+                    "stepGroup": {}
+                  },
+                  {
+                    "uuid": "AYnRRWK2Smq7zVkEaHecjw",
+                    "step": {
+                      "identifier": "SscaEnforcement",
+                      "type": "SscaEnforcement",
+                      "name": "SscaEnforcement",
+                      "spec": {
+                        "policy": {
+                          "store": {
+                            "type": "harness",
+                            "spec": {
+                              "file": "/enforcement_list",
+                              "__uuid": "LDux5JvSR4iLrahFeraLFw"
+                            },
+                            "__uuid": "TtzbQeT2Q5OQLZojtQWPcg"
+                          },
+                          "__uuid": "tohNh5rHS7edJ4WuQ8Wo3g"
+                        },
+                        "verifyAttestation": {
+                          "type": "cosign",
+                          "spec": {
+                            "publicKey": "cosign_pub_key",
+                            "__uuid": "KiJ14BGMQPetyvaLPO9DXw"
+                          },
+                          "__uuid": "amLf7DFqRKK3Z38FUOymGg"
+                        },
+                        "source": {
+                          "type": "image",
+                          "spec": {
+                            "connector": "reetika_dockerhub",
+                            "image": "uday4vunnam/alpine:latest",
+                            "__uuid": "Y8DKO9oXSwql0WgkR875gw"
+                          },
+                          "__uuid": "ROFd091VR66EVbebJRuWFw"
+                        },
+                        "__uuid": "oNlU8pymTGaNC3sdoBlfgg"
+                      },
+                      "timeout": "10m",
+                      "__uuid": "-3Ie_szGRWqw73ch5WHmQQ"
+                    },
+                    "parallel": {},
+                    "stepGroup": {}
+                  }
+                ]
+              },
+              "stageIdentifier": "build",
+              "stageElementConfig": {
+                "execution": {
+                  "steps": [
+                    {
+                      "uuid": "mQf5nrsLQBmMDrXBqtU15A",
+                      "step": {
+                        "identifier": "SscaOrchestration",
+                        "type": "SscaOrchestration",
+                        "name": "SscaOrchestration",
+                        "spec": {
+                          "tool": {
+                            "type": "Syft",
+                            "spec": {
+                              "format": "spdx-json",
+                              "__uuid": "yikbPH8USr6cdA83sUDd4A"
+                            },
+                            "__uuid": "WHwFh8xoRE2pnLOnqHig1g"
+                          },
+                          "attestation": {
+                            "type": "cosign",
+                            "spec": {
+                              "privateKey": "cosign_key",
+                              "password": "cosign_pass",
+                              "__uuid": "m6o-oS8eRi2w-HUdgtYsjA"
+                            },
+                            "__uuid": "OIfuo-45TGqgjDeekGHkFQ"
+                          },
+                          "source": {
+                            "type": "image",
+                            "spec": {
+                              "connector": "reetika_dockerhub",
+                              "image": "uday4vunnam/alpine:latest",
+                              "__uuid": "43uj_OTzSB64ar0T-LzRcA"
+                            },
+                            "__uuid": "oM00YLQbRXyv-jwfBYfLlw"
+                          },
+                          "__uuid": "w2F4TBgLTyyTZqyRPCZ3Ew"
+                        },
+                        "__uuid": "eRLFLIx_S4aRpgSsdy4Iew"
+                      },
+                      "parallel": {},
+                      "stepGroup": {}
+                    },
+                    {
+                      "uuid": "AYnRRWK2Smq7zVkEaHecjw",
+                      "step": {
+                        "identifier": "SscaEnforcement",
+                        "type": "SscaEnforcement",
+                        "name": "SscaEnforcement",
+                        "spec": {
+                          "policy": {
+                            "store": {
+                              "type": "harness",
+                              "spec": {
+                                "file": "/enforcement_list",
+                                "__uuid": "LDux5JvSR4iLrahFeraLFw"
+                              },
+                              "__uuid": "TtzbQeT2Q5OQLZojtQWPcg"
+                            },
+                            "__uuid": "tohNh5rHS7edJ4WuQ8Wo3g"
+                          },
+                          "verifyAttestation": {
+                            "type": "cosign",
+                            "spec": {
+                              "publicKey": "cosign_pub_key",
+                              "__uuid": "KiJ14BGMQPetyvaLPO9DXw"
+                            },
+                            "__uuid": "amLf7DFqRKK3Z38FUOymGg"
+                          },
+                          "source": {
+                            "type": "image",
+                            "spec": {
+                              "connector": "reetika_dockerhub",
+                              "image": "uday4vunnam/alpine:latest",
+                              "__uuid": "Y8DKO9oXSwql0WgkR875gw"
+                            },
+                            "__uuid": "ROFd091VR66EVbebJRuWFw"
+                          },
+                          "__uuid": "oNlU8pymTGaNC3sdoBlfgg"
+                        },
+                        "timeout": "10m",
+                        "__uuid": "-3Ie_szGRWqw73ch5WHmQQ"
+                      },
+                      "parallel": {},
+                      "stepGroup": {}
+                    }
+                  ]
+                },
+                "infrastructure": {
+                  "type": "KUBERNETES_DIRECT",
+                  "spec": {
+                    "connectorRef": "ssck8",
+                    "namespace": "pre-qa",
+                    "nodeSelector": {
+                      "__uuid": "ojAh9Z8YRx2teldIOX3lWA"
+                    },
+                    "automountServiceAccountToken": true,
+                    "os": "Linux"
+                  }
+                },
+                "cloneCodebase": false
+              },
+              "skipGitClone": true,
+              "infrastructure": {
+                "type": "KUBERNETES_DIRECT",
+                "spec": {
+                  "connectorRef": "ssck8",
+                  "namespace": "pre-qa",
+                  "nodeSelector": {
+                    "__uuid": "ojAh9Z8YRx2teldIOX3lWA"
+                  },
+                  "automountServiceAccountToken": true,
+                  "os": "Linux"
+                }
+              }
+            }
+          },
+          "startTs": 1685638628611,
+          "endTs": 1685638639828,
+          "stepType": "liteEngineTask",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "<+OnStageSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnStageSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "async": {
+                "callbackIds": ["Tzo3RFykS8-jl_M8Pbfm2g-DEL"],
+                "logKeys": [
+                  "accountId:px7xd_BFRCi-pfWPYXVjvw/orgId:default/projectId:SSCA/pipelineId:SSCA_steps_demo/runSequence:11/level0:pipeline/level1:stages/level2:build/level3:spec/level4:execution/level5:steps/level6:liteEngineTask"
+                ],
+                "units": [],
+                "timeout": 0,
+                "status": "NO_OP"
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": {
+            "initStepV2DelegateTaskInfo": {
+              "taskID": "Tzo3RFykS8-jl_M8Pbfm2g-DEL",
+              "taskName": "INITIALIZATION_PHASE"
+            }
+          },
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        },
+        "KaVYBdKZTFW9NM4scBh7gQ": {
+          "uuid": "KaVYBdKZTFW9NM4scBh7gQ",
+          "setupId": "-3Ie_szGRWqw73ch5WHmQQ",
+          "name": "SscaEnforcement",
+          "identifier": "SscaEnforcement",
+          "baseFqn": "pipeline.stages.build.spec.execution.steps.SscaEnforcement",
+          "outcomes": {
+            "output": {},
+            "artifact_SscaEnforcement": {
+              "stepArtifacts": {
+                "publishedFileArtifacts": [],
+                "publishedImageArtifacts": [],
+                "publishedSbomArtifacts": [
+                  {
+                    "id": "4a4e49db-55bf-43b6-8be2-e743106f8c30",
+                    "url": "uday4vunnam/alpine:latest",
+                    "imageName": "uday4vunnam/alpine:latest",
+                    "stepExecutionId": "KaVYBdKZTFW9NM4scBh7gQ",
+                    "isSbomAttested": false,
+                    "allowListViolationCount": 2,
+                    "denyListViolationCount": 3
+                  }
+                ]
+              }
+            }
+          },
+          "stepParameters": {
+            "identifier": "SscaEnforcement",
+            "name": "SscaEnforcement",
+            "timeout": "10m",
+            "type": "SscaEnforcement",
+            "spec": {
+              "source": {
+                "type": "IMAGE",
+                "sbomSourceSpec": {
+                  "connector": "reetika_dockerhub",
+                  "image": "uday4vunnam/alpine:latest"
+                }
+              },
+              "verifyAttestation": {
+                "type": "COSIGN",
+                "verifyAttestationSpec": {
+                  "publicKey": "cosign_pub_key"
+                }
+              },
+              "policy": {
+                "store": {
+                  "type": "HARNESS",
+                  "storeSpec": {
+                    "file": "/enforcement_list"
+                  }
+                }
+              }
+            }
+          },
+          "startTs": 1685638664981,
+          "endTs": 1685638734943,
+          "stepType": "SscaEnforcement",
+          "status": "Success",
+          "failureInfo": {
+            "message": "",
+            "failureTypeList": [],
+            "responseMessages": []
+          },
+          "skipInfo": null,
+          "nodeRunInfo": {
+            "whenCondition": "<+OnStageSuccess>",
+            "evaluatedCondition": true,
+            "expressions": [
+              {
+                "expression": "OnStageSuccess",
+                "expressionValue": "true",
+                "count": 1
+              }
+            ]
+          },
+          "executableResponses": [
+            {
+              "async": {
+                "callbackIds": ["I4JfF1pPT7Gy0NJrODpSVA-DEL", "E_lJJl_RQHC_0cBLBMj15A-DEL"],
+                "logKeys": [
+                  "accountId:px7xd_BFRCi-pfWPYXVjvw/orgId:default/projectId:SSCA/pipelineId:SSCA_steps_demo/runSequence:11/level0:pipeline/level1:stages/level2:build/level3:spec/level4:execution/level5:steps/level6:SscaEnforcement"
+                ],
+                "units": [],
+                "timeout": 0,
+                "status": "NO_OP"
+              }
+            }
+          ],
+          "unitProgresses": [],
+          "progressData": null,
+          "delegateInfoList": [],
+          "interruptHistories": [],
+          "stepDetails": null,
+          "strategyMetadata": null,
+          "executionInputConfigured": false
+        }
+      },
+      "nodeAdjacencyListMap": {
+        "ysZaYjCNRF-nnt7K3u8f5Q": {
+          "children": ["o4SO9fzuRB6a9_IkhszJJQ"],
+          "nextIds": []
+        },
+        "o4SO9fzuRB6a9_IkhszJJQ": {
+          "children": ["JFfJ0N55Tw6S2HpodsgLAg"],
+          "nextIds": []
+        },
+        "t4p8Wra2TdWTW9O_QZJycA": {
+          "children": [],
+          "nextIds": ["KaVYBdKZTFW9NM4scBh7gQ"]
+        },
+        "JFfJ0N55Tw6S2HpodsgLAg": {
+          "children": [],
+          "nextIds": ["t4p8Wra2TdWTW9O_QZJycA"]
+        },
+        "KaVYBdKZTFW9NM4scBh7gQ": {
+          "children": [],
+          "nextIds": []
+        }
+      },
+      "executionMetadata": {
+        "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+        "pipelineIdentifier": "SSCA_steps_demo",
+        "orgIdentifier": "default",
+        "projectIdentifier": "SSCA",
+        "planExecutionId": "ZVfmivyjS5KiLZ3CPutjJw"
+      },
+      "representationStrategy": "camelCase"
+    }
+  },
+  "allNodeMap": {
+    "ysZaYjCNRF-nnt7K3u8f5Q": {
+      "uuid": "ysZaYjCNRF-nnt7K3u8f5Q",
+      "setupId": "7YR3vUpJR62OLk6TbaxavQ",
+      "name": "build",
+      "identifier": "build",
+      "baseFqn": "pipeline.stages.build",
+      "outcomes": {
+        "integrationStageOutcome": {
+          "imageArtifacts": [],
+          "fileArtifacts": [],
+          "sbomArtifacts": [
+            {
+              "id": "4a4e49db-55bf-43b6-8be2-e743106f8c30",
+              "url": "uday4vunnam/alpine:latest",
+              "imageName": "uday4vunnam/alpine:latest",
+              "sbomName": "uday4vunnam/alpine:latest",
+              "sbomUrl": "https://stress.harness.io/gateway/ssca/api/v1/artifacts/4a4e49db-55bf-43b6-8be2-e743106f8c30/stepExecutions/t4p8Wra2TdWTW9O_QZJycA/sbom/uday4vunnam_repo_abc_sbom_t4p8Wra2TdWTW9O_QZJycA.json?accountIdentifier=px7xd_BFRCi-pfWPYXVjvw&orgIdentifier=default&projectIdentifier=SSCA",
+              "stepExecutionId": "t4p8Wra2TdWTW9O_QZJycA",
+              "isSbomAttested": true,
+              "allowListViolationCount": 0,
+              "denyListViolationCount": 0
+            },
+            {
+              "id": "4a4e49db-55bf-43b6-8be2-e743106f8c30",
+              "url": "uday4vunnam/alpine:latest",
+              "imageName": "uday4vunnam/alpine:latest",
+              "stepExecutionId": "KaVYBdKZTFW9NM4scBh7gQ",
+              "isSbomAttested": false,
+              "allowListViolationCount": 2,
+              "denyListViolationCount": 3
+            }
+          ]
+        }
+      },
+      "stepParameters": {
+        "identifier": "build",
+        "name": "build",
+        "description": "",
+        "variables": {},
+        "tags": {},
+        "type": "CI",
+        "specConfig": {
+          "infrastructure": {
+            "type": "KUBERNETES_DIRECT",
+            "spec": {
+              "connectorRef": "ssck8",
+              "namespace": "pre-qa",
+              "nodeSelector": {
+                "__uuid": "ojAh9Z8YRx2teldIOX3lWA"
+              },
+              "automountServiceAccountToken": true,
+              "os": "Linux"
+            }
+          },
+          "enableCloneRepo": false,
+          "stepIdentifiers": ["SscaOrchestration", "SscaEnforcement"],
+          "childNodeID": "S9lppZJ3Sk2HfclkdnK6qg",
+          "triggerPayload": {},
+          "cloneManually": false
+        }
+      },
+      "startTs": 1685638628201,
+      "endTs": 1685638735350,
+      "stepType": "IntegrationStageStepPMS",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": {
+        "whenCondition": "<+OnPipelineSuccess>",
+        "evaluatedCondition": true,
+        "expressions": [
+          {
+            "expression": "OnPipelineSuccess",
+            "expressionValue": "true",
+            "count": 1
+          }
+        ]
+      },
+      "executableResponses": [
+        {
+          "child": {
+            "childNodeId": "S9lppZJ3Sk2HfclkdnK6qg",
+            "logKeys": [],
+            "units": []
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [],
+      "interruptHistories": [],
+      "stepDetails": null,
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    },
+    "o4SO9fzuRB6a9_IkhszJJQ": {
+      "uuid": "o4SO9fzuRB6a9_IkhszJJQ",
+      "setupId": "hfW7H_fKSRSayGmfk7K4uA",
+      "name": "Execution",
+      "identifier": "execution",
+      "baseFqn": "pipeline.stages.build.spec.execution",
+      "outcomes": {},
+      "stepParameters": {
+        "childNodeId": "hfW7H_fKSRSayGmfk7K4uAsteps",
+        "logMessage": "Execution Element"
+      },
+      "startTs": 1685638628350,
+      "endTs": 1685638735137,
+      "stepType": "NG_EXECUTION",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": null,
+      "executableResponses": [
+        {
+          "child": {
+            "childNodeId": "hfW7H_fKSRSayGmfk7K4uAsteps",
+            "logKeys": [],
+            "units": []
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [],
+      "interruptHistories": [],
+      "stepDetails": null,
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    },
+    "t4p8Wra2TdWTW9O_QZJycA": {
+      "uuid": "t4p8Wra2TdWTW9O_QZJycA",
+      "setupId": "eRLFLIx_S4aRpgSsdy4Iew",
+      "name": "SscaOrchestration",
+      "identifier": "SscaOrchestration",
+      "baseFqn": "pipeline.stages.build.spec.execution.steps.SscaOrchestration",
+      "outcomes": {
+        "output": {},
+        "artifact_SscaOrchestration": {
+          "stepArtifacts": {
+            "publishedFileArtifacts": [],
+            "publishedImageArtifacts": [],
+            "publishedSbomArtifacts": [
+              {
+                "id": "4a4e49db-55bf-43b6-8be2-e743106f8c30",
+                "url": "uday4vunnam/alpine:latest",
+                "imageName": "uday4vunnam/alpine:latest",
+                "sbomName": "uday4vunnam/alpine:latest",
+                "sbomUrl": "https://stress.harness.io/gateway/ssca/api/v1/artifacts/4a4e49db-55bf-43b6-8be2-e743106f8c30/stepExecutions/t4p8Wra2TdWTW9O_QZJycA/sbom/uday4vunnam_repo_abc_sbom_t4p8Wra2TdWTW9O_QZJycA.json?accountIdentifier=px7xd_BFRCi-pfWPYXVjvw&orgIdentifier=default&projectIdentifier=SSCA",
+                "stepExecutionId": "t4p8Wra2TdWTW9O_QZJycA",
+                "isSbomAttested": true,
+                "allowListViolationCount": 0,
+                "denyListViolationCount": 0
+              }
+            ]
+          }
+        }
+      },
+      "stepParameters": {
+        "identifier": "SscaOrchestration",
+        "name": "SscaOrchestration",
+        "timeout": "10h",
+        "type": "SscaOrchestration",
+        "spec": {
+          "tool": {
+            "type": "SYFT",
+            "sbomOrchestrationSpec": {
+              "format": "SPDX_JSON"
+            }
+          },
+          "source": {
+            "type": "IMAGE",
+            "sbomSourceSpec": {
+              "connector": "reetika_dockerhub",
+              "image": "uday4vunnam/alpine:latest"
+            }
+          },
+          "attestation": {
+            "type": "COSIGN",
+            "attestationSpec": {
+              "privateKey": "cosign_key",
+              "password": "cosign_pass"
+            }
+          }
+        }
+      },
+      "startTs": 1685638639911,
+      "endTs": 1685638664904,
+      "stepType": "SscaOrchestration",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": {
+        "whenCondition": "<+OnStageSuccess>",
+        "evaluatedCondition": true,
+        "expressions": [
+          {
+            "expression": "OnStageSuccess",
+            "expressionValue": "true",
+            "count": 1
+          }
+        ]
+      },
+      "executableResponses": [
+        {
+          "async": {
+            "callbackIds": ["_364kvdDQ7-8SNwdWsllbA-DEL", "2PvJRODrSoGw7Ibtxm4_hQ-DEL"],
+            "logKeys": [
+              "accountId:px7xd_BFRCi-pfWPYXVjvw/orgId:default/projectId:SSCA/pipelineId:SSCA_steps_demo/runSequence:11/level0:pipeline/level1:stages/level2:build/level3:spec/level4:execution/level5:steps/level6:SscaOrchestration"
+            ],
+            "units": [],
+            "timeout": 0,
+            "status": "NO_OP"
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [],
+      "interruptHistories": [],
+      "stepDetails": null,
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    },
+    "JFfJ0N55Tw6S2HpodsgLAg": {
+      "uuid": "JFfJ0N55Tw6S2HpodsgLAg",
+      "setupId": "HAzUootwQrS5Blg37tmD7Q",
+      "name": "Initialize",
+      "identifier": "liteEngineTask",
+      "baseFqn": "pipeline.stages.build.spec.execution.steps.liteEngineTask",
+      "outcomes": {
+        "podDetailsOutcome": {
+          "ipAddress": "10.40.0.192",
+          "namespace": "pre-qa"
+        },
+        "dependencies": {
+          "serviceDependencyList": []
+        }
+      },
+      "stepParameters": {
+        "identifier": "liteEngineTask",
+        "name": "liteEngineTask",
+        "timeout": "10m",
+        "type": "liteEngineTask",
+        "spec": {
+          "timeout": 0,
+          "retry": 0,
+          "executionElementConfig": {
+            "steps": [
+              {
+                "uuid": "mQf5nrsLQBmMDrXBqtU15A",
+                "step": {
+                  "identifier": "SscaOrchestration",
+                  "type": "SscaOrchestration",
+                  "name": "SscaOrchestration",
+                  "spec": {
+                    "tool": {
+                      "type": "Syft",
+                      "spec": {
+                        "format": "spdx-json",
+                        "__uuid": "yikbPH8USr6cdA83sUDd4A"
+                      },
+                      "__uuid": "WHwFh8xoRE2pnLOnqHig1g"
+                    },
+                    "attestation": {
+                      "type": "cosign",
+                      "spec": {
+                        "privateKey": "cosign_key",
+                        "password": "cosign_pass",
+                        "__uuid": "m6o-oS8eRi2w-HUdgtYsjA"
+                      },
+                      "__uuid": "OIfuo-45TGqgjDeekGHkFQ"
+                    },
+                    "source": {
+                      "type": "image",
+                      "spec": {
+                        "connector": "reetika_dockerhub",
+                        "image": "uday4vunnam/alpine:latest",
+                        "__uuid": "43uj_OTzSB64ar0T-LzRcA"
+                      },
+                      "__uuid": "oM00YLQbRXyv-jwfBYfLlw"
+                    },
+                    "__uuid": "w2F4TBgLTyyTZqyRPCZ3Ew"
+                  },
+                  "__uuid": "eRLFLIx_S4aRpgSsdy4Iew"
+                },
+                "parallel": {},
+                "stepGroup": {}
+              },
+              {
+                "uuid": "AYnRRWK2Smq7zVkEaHecjw",
+                "step": {
+                  "identifier": "SscaEnforcement",
+                  "type": "SscaEnforcement",
+                  "name": "SscaEnforcement",
+                  "spec": {
+                    "policy": {
+                      "store": {
+                        "type": "harness",
+                        "spec": {
+                          "file": "/enforcement_list",
+                          "__uuid": "LDux5JvSR4iLrahFeraLFw"
+                        },
+                        "__uuid": "TtzbQeT2Q5OQLZojtQWPcg"
+                      },
+                      "__uuid": "tohNh5rHS7edJ4WuQ8Wo3g"
+                    },
+                    "verifyAttestation": {
+                      "type": "cosign",
+                      "spec": {
+                        "publicKey": "cosign_pub_key",
+                        "__uuid": "KiJ14BGMQPetyvaLPO9DXw"
+                      },
+                      "__uuid": "amLf7DFqRKK3Z38FUOymGg"
+                    },
+                    "source": {
+                      "type": "image",
+                      "spec": {
+                        "connector": "reetika_dockerhub",
+                        "image": "uday4vunnam/alpine:latest",
+                        "__uuid": "Y8DKO9oXSwql0WgkR875gw"
+                      },
+                      "__uuid": "ROFd091VR66EVbebJRuWFw"
+                    },
+                    "__uuid": "oNlU8pymTGaNC3sdoBlfgg"
+                  },
+                  "timeout": "10m",
+                  "__uuid": "-3Ie_szGRWqw73ch5WHmQQ"
+                },
+                "parallel": {},
+                "stepGroup": {}
+              }
+            ]
+          },
+          "stageIdentifier": "build",
+          "stageElementConfig": {
+            "execution": {
+              "steps": [
+                {
+                  "uuid": "mQf5nrsLQBmMDrXBqtU15A",
+                  "step": {
+                    "identifier": "SscaOrchestration",
+                    "type": "SscaOrchestration",
+                    "name": "SscaOrchestration",
+                    "spec": {
+                      "tool": {
+                        "type": "Syft",
+                        "spec": {
+                          "format": "spdx-json",
+                          "__uuid": "yikbPH8USr6cdA83sUDd4A"
+                        },
+                        "__uuid": "WHwFh8xoRE2pnLOnqHig1g"
+                      },
+                      "attestation": {
+                        "type": "cosign",
+                        "spec": {
+                          "privateKey": "cosign_key",
+                          "password": "cosign_pass",
+                          "__uuid": "m6o-oS8eRi2w-HUdgtYsjA"
+                        },
+                        "__uuid": "OIfuo-45TGqgjDeekGHkFQ"
+                      },
+                      "source": {
+                        "type": "image",
+                        "spec": {
+                          "connector": "reetika_dockerhub",
+                          "image": "uday4vunnam/alpine:latest",
+                          "__uuid": "43uj_OTzSB64ar0T-LzRcA"
+                        },
+                        "__uuid": "oM00YLQbRXyv-jwfBYfLlw"
+                      },
+                      "__uuid": "w2F4TBgLTyyTZqyRPCZ3Ew"
+                    },
+                    "__uuid": "eRLFLIx_S4aRpgSsdy4Iew"
+                  },
+                  "parallel": {},
+                  "stepGroup": {}
+                },
+                {
+                  "uuid": "AYnRRWK2Smq7zVkEaHecjw",
+                  "step": {
+                    "identifier": "SscaEnforcement",
+                    "type": "SscaEnforcement",
+                    "name": "SscaEnforcement",
+                    "spec": {
+                      "policy": {
+                        "store": {
+                          "type": "harness",
+                          "spec": {
+                            "file": "/enforcement_list",
+                            "__uuid": "LDux5JvSR4iLrahFeraLFw"
+                          },
+                          "__uuid": "TtzbQeT2Q5OQLZojtQWPcg"
+                        },
+                        "__uuid": "tohNh5rHS7edJ4WuQ8Wo3g"
+                      },
+                      "verifyAttestation": {
+                        "type": "cosign",
+                        "spec": {
+                          "publicKey": "cosign_pub_key",
+                          "__uuid": "KiJ14BGMQPetyvaLPO9DXw"
+                        },
+                        "__uuid": "amLf7DFqRKK3Z38FUOymGg"
+                      },
+                      "source": {
+                        "type": "image",
+                        "spec": {
+                          "connector": "reetika_dockerhub",
+                          "image": "uday4vunnam/alpine:latest",
+                          "__uuid": "Y8DKO9oXSwql0WgkR875gw"
+                        },
+                        "__uuid": "ROFd091VR66EVbebJRuWFw"
+                      },
+                      "__uuid": "oNlU8pymTGaNC3sdoBlfgg"
+                    },
+                    "timeout": "10m",
+                    "__uuid": "-3Ie_szGRWqw73ch5WHmQQ"
+                  },
+                  "parallel": {},
+                  "stepGroup": {}
+                }
+              ]
+            },
+            "infrastructure": {
+              "type": "KUBERNETES_DIRECT",
+              "spec": {
+                "connectorRef": "ssck8",
+                "namespace": "pre-qa",
+                "nodeSelector": {
+                  "__uuid": "ojAh9Z8YRx2teldIOX3lWA"
+                },
+                "automountServiceAccountToken": true,
+                "os": "Linux"
+              }
+            },
+            "cloneCodebase": false
+          },
+          "skipGitClone": true,
+          "infrastructure": {
+            "type": "KUBERNETES_DIRECT",
+            "spec": {
+              "connectorRef": "ssck8",
+              "namespace": "pre-qa",
+              "nodeSelector": {
+                "__uuid": "ojAh9Z8YRx2teldIOX3lWA"
+              },
+              "automountServiceAccountToken": true,
+              "os": "Linux"
+            }
+          }
+        }
+      },
+      "startTs": 1685638628611,
+      "endTs": 1685638639828,
+      "stepType": "liteEngineTask",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": {
+        "whenCondition": "<+OnStageSuccess>",
+        "evaluatedCondition": true,
+        "expressions": [
+          {
+            "expression": "OnStageSuccess",
+            "expressionValue": "true",
+            "count": 1
+          }
+        ]
+      },
+      "executableResponses": [
+        {
+          "async": {
+            "callbackIds": ["Tzo3RFykS8-jl_M8Pbfm2g-DEL"],
+            "logKeys": [
+              "accountId:px7xd_BFRCi-pfWPYXVjvw/orgId:default/projectId:SSCA/pipelineId:SSCA_steps_demo/runSequence:11/level0:pipeline/level1:stages/level2:build/level3:spec/level4:execution/level5:steps/level6:liteEngineTask"
+            ],
+            "units": [],
+            "timeout": 0,
+            "status": "NO_OP"
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [],
+      "interruptHistories": [],
+      "stepDetails": {
+        "initStepV2DelegateTaskInfo": {
+          "taskID": "Tzo3RFykS8-jl_M8Pbfm2g-DEL",
+          "taskName": "INITIALIZATION_PHASE"
+        }
+      },
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    },
+    "KaVYBdKZTFW9NM4scBh7gQ": {
+      "uuid": "KaVYBdKZTFW9NM4scBh7gQ",
+      "setupId": "-3Ie_szGRWqw73ch5WHmQQ",
+      "name": "SscaEnforcement",
+      "identifier": "SscaEnforcement",
+      "baseFqn": "pipeline.stages.build.spec.execution.steps.SscaEnforcement",
+      "outcomes": {
+        "output": {},
+        "artifact_SscaEnforcement": {
+          "stepArtifacts": {
+            "publishedFileArtifacts": [],
+            "publishedImageArtifacts": [],
+            "publishedSbomArtifacts": [
+              {
+                "id": "4a4e49db-55bf-43b6-8be2-e743106f8c30",
+                "url": "uday4vunnam/alpine:latest",
+                "imageName": "uday4vunnam/alpine:latest",
+                "stepExecutionId": "KaVYBdKZTFW9NM4scBh7gQ",
+                "isSbomAttested": false,
+                "allowListViolationCount": 2,
+                "denyListViolationCount": 3
+              }
+            ]
+          }
+        }
+      },
+      "stepParameters": {
+        "identifier": "SscaEnforcement",
+        "name": "SscaEnforcement",
+        "timeout": "10m",
+        "type": "SscaEnforcement",
+        "spec": {
+          "source": {
+            "type": "IMAGE",
+            "sbomSourceSpec": {
+              "connector": "reetika_dockerhub",
+              "image": "uday4vunnam/alpine:latest"
+            }
+          },
+          "verifyAttestation": {
+            "type": "COSIGN",
+            "verifyAttestationSpec": {
+              "publicKey": "cosign_pub_key"
+            }
+          },
+          "policy": {
+            "store": {
+              "type": "HARNESS",
+              "storeSpec": {
+                "file": "/enforcement_list"
+              }
+            }
+          }
+        }
+      },
+      "startTs": 1685638664981,
+      "endTs": 1685638734943,
+      "stepType": "SscaEnforcement",
+      "status": "Success",
+      "failureInfo": {
+        "message": "",
+        "failureTypeList": [],
+        "responseMessages": []
+      },
+      "skipInfo": null,
+      "nodeRunInfo": {
+        "whenCondition": "<+OnStageSuccess>",
+        "evaluatedCondition": true,
+        "expressions": [
+          {
+            "expression": "OnStageSuccess",
+            "expressionValue": "true",
+            "count": 1
+          }
+        ]
+      },
+      "executableResponses": [
+        {
+          "async": {
+            "callbackIds": ["I4JfF1pPT7Gy0NJrODpSVA-DEL", "E_lJJl_RQHC_0cBLBMj15A-DEL"],
+            "logKeys": [
+              "accountId:px7xd_BFRCi-pfWPYXVjvw/orgId:default/projectId:SSCA/pipelineId:SSCA_steps_demo/runSequence:11/level0:pipeline/level1:stages/level2:build/level3:spec/level4:execution/level5:steps/level6:SscaEnforcement"
+            ],
+            "units": [],
+            "timeout": 0,
+            "status": "NO_OP"
+          }
+        }
+      ],
+      "unitProgresses": [],
+      "progressData": null,
+      "delegateInfoList": [],
+      "interruptHistories": [],
+      "stepDetails": null,
+      "strategyMetadata": null,
+      "executionInputConfigured": false
+    }
+  },
+  "pipelineStagesMap": {},
+  "childPipelineStagesMap": {},
+  "rollbackPipelineStagesMap": {},
+  "allStagesMap": {},
+  "isPipelineInvalid": false,
+  "selectedStageId": "7YR3vUpJR62OLk6TbaxavQ",
+  "selectedChildStageId": "",
+  "selectedStepId": "KaVYBdKZTFW9NM4scBh7gQ",
+  "selectedStageExecutionId": "",
+  "selectedCollapsedNodeId": "",
+  "loading": false,
+  "isDataLoadedForSelectedStage": true,
+  "queryParams": {
+    "storeType": "INLINE",
+    "stage": "7YR3vUpJR62OLk6TbaxavQ"
+  },
+  "logsToken": "",
+  "retriedHistoryInfo": {
+    "retriedStages": []
+  }
+}

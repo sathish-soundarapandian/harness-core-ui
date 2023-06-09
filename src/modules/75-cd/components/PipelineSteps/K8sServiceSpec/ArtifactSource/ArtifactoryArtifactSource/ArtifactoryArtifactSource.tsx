@@ -312,15 +312,6 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     lazy: true,
     debounce: 300
   })
-  const getTagRegexFieldName = (): string => {
-    if (isGenericArtifactory) {
-      return `artifacts.${artifactPath}.spec.artifactPathFilter`
-    }
-    return `artifacts.${artifactPath}.spec.tagRegex`
-  }
-
-  const getFQNFieldName = (): string =>
-    isGenericArtifactory ? 'artifactPath' : isFieldRuntime(getTagRegexFieldName(), template) ? 'tagRegex' : 'tag'
 
   const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
 
@@ -354,7 +345,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             : artifactPath,
           ''
         ),
-        getFQNFieldName(),
+        'artifactPath',
         serviceIdentifier as string,
         isMultiService
       )

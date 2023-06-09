@@ -14,6 +14,7 @@ declare const styles: {
   readonly crossIcon: string
   readonly disabledStageDropdown: string
   readonly divider: string
+  readonly dividerWrapper: string
   readonly editor: string
   readonly error: string
   readonly expressionsTooltip: string
@@ -22,7 +23,6 @@ declare const styles: {
   readonly form: string
   readonly gitRemoteDetailsWrapper: string
   readonly helpIcon: string
-  readonly helpSection: string
   readonly iconInfo: string
   readonly infoStrip: string
   readonly inputSetFormRunPipeline: string
@@ -33,7 +33,6 @@ declare const styles: {
   readonly multiSelectDropDownSelected: string
   readonly multiSelectDropDownWithBorder: string
   readonly noDisplay: string
-  readonly noInputSetSelectionRunPipeline: string
   readonly noPipelineInputSetForm: string
   readonly noRuntimeInput: string
   readonly optionBtns: string
@@ -52,13 +51,12 @@ declare const styles: {
   readonly runPipelineBranchDetails: string
   readonly runPipelineDialog: string
   readonly secondaryButton: string
-  readonly selectedValueProvider: string
   readonly stageName: string
   readonly stageSelectionItem: string
   readonly stageWarning: string
   readonly stagesDropdown: string
   readonly templateErrorView: string
+  readonly toggleExisitingProvide: string
   readonly underlineText: string
-  readonly valueProviderRadio: string
 }
 export default styles

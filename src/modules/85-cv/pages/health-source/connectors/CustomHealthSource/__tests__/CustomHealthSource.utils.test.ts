@@ -15,6 +15,7 @@ import {
   mappedValue,
   mockedHealthSourcePayload,
   noErrorValidatation,
+  transformHealthSourcePayload,
   transformedSetupSource
 } from './CustomHealthSource.mock'
 
@@ -27,31 +28,14 @@ describe('Validate utils', () => {
   })
 
   test('verify transformCustomSetupSourceToHealthSource', () => {
+    expect(transformCustomSetupSourceToHealthSource(transformHealthSourcePayload)).toEqual(mockedHealthSourcePayload)
+  })
+
+  test('verify transformCustomSetupSourceToHealthSource pass correct connector value for templates', () => {
     expect(
       transformCustomSetupSourceToHealthSource({
-        isEdit: true,
-        connectorRef: 'customhealth',
-        healthSourceIdentifier: 'New_Custom',
-        healthSourceName: 'New Custom',
-        mappedServicesAndEnvs: transformHealthSourceMap,
-        ignoreThresholds: [
-          {
-            criteria: { spec: { greaterThan: 15, lessThan: 122 }, type: 'Absolute' },
-            metricName: 'Prometheus Metric',
-            metricType: 'Custom',
-            spec: { action: 'Ignore' },
-            type: 'IgnoreThreshold'
-          }
-        ],
-        failFastThresholds: [
-          {
-            criteria: { spec: { greaterThan: 1222 }, type: 'Percentage' },
-            metricName: 'Prometheus Metric',
-            metricType: 'Custom',
-            spec: { action: 'FailAfterOccurrence', spec: { count: 12 } },
-            type: 'FailImmediately'
-          }
-        ]
+        ...transformHealthSourcePayload,
+        connectorRef: { value: 'customhealth' }
       })
     ).toEqual(mockedHealthSourcePayload)
   })

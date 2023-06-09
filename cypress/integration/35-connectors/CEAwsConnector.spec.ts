@@ -1,4 +1,5 @@
 import {
+  accountConnectorsListAPI,
   accountConnectorTestConnection,
   accountResourceConnectors,
   ceAWSConnectionData,
@@ -19,6 +20,10 @@ describe('CE AWS Connector', () => {
     cy.intercept('GET', connectorsCatalogueAPI, { fixture: 'ng/api/connectors/catalogue.json' }).as(
       'connectorsCatalogue'
     )
+    cy.intercept('POST', accountConnectorsListAPI, { fixture: '/ng/api/connectors/emptyConnectors.json' }).as(
+      'connectorlist'
+    )
+
     cy.intercept('POST', ceConnectorOverviewSave, { fixture: '/ng/api/connectors/CEConnectors/connectorList.json' }).as(
       'connectorsList'
     )

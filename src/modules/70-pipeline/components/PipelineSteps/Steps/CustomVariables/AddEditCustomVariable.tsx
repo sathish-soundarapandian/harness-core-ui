@@ -21,6 +21,7 @@ import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { CustomDeploymentNGVariable } from 'services/cd-ng'
 import { getVaribaleTypeOptions, VariableType } from './CustomVariableUtils'
+import css from './CustomVariables.module.scss'
 
 const MAX_LENGTH = 128
 
@@ -169,11 +170,20 @@ export default function AddEditCustomVariable(props: AddEditCustomVariableProps)
                 data-testid="variables-test"
               />
             )}
+            <FormInput.CheckBox
+              name="required"
+              label={getString('pipeline.required')}
+              className={css.requiredCheckboxLabel}
+            />
             <FormInput.TextArea
               name="description"
               isOptional={true}
               placeholder={getString('common.descriptionPlaceholder')}
               label={getString('description')}
+              className={css.variableDescription}
+              textArea={{
+                growVertically: true
+              }}
             />
             <div className="buttons-container">
               <Button

@@ -160,6 +160,17 @@ export const NotificationsCard: React.FC<NotificationsCardProps> = ({ timeRange 
   const response = data?.data?.response
 
   const renderBadges = () => {
+    if (error) {
+      return (
+        <ErrorCard
+          size={ErrorCardSize.MEDIUM}
+          onRetry={() => {
+            refetch()
+          }}
+        />
+      )
+    }
+
     if (response?.deploymentsOverview && showBadgesCard(response?.deploymentsOverview)) {
       const badgesArr = Object.keys(response?.deploymentsOverview)
       return badgesArr.map((key, index) =>
@@ -176,31 +187,22 @@ export const NotificationsCard: React.FC<NotificationsCardProps> = ({ timeRange 
 
   return (
     <Layout.Vertical className={css.container}>
-      {error ? (
-        <ErrorCard
-          size={ErrorCardSize.MEDIUM}
-          onRetry={() => {
-            refetch()
-          }}
-        />
-      ) : (
-        <>
-          <Container className={css.header}>
-            <Text color={Color.GREY_800} font={{ variation: FontVariation.CARD_TITLE }}>
-              {getString('common.notification')}
-            </Text>
-          </Container>
-          <Container className={css.badgesContainer}>
-            {loading && !pollingStarted ? (
-              <Container flex={{ justifyContent: 'center' }} className={css.loadingContainer}>
-                <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
-              </Container>
-            ) : (
-              renderBadges()
-            )}
-          </Container>
-        </>
-      )}
+      <>
+        <Container className={css.header}>
+          <Text color={Color.GREY_800} font={{ variation: FontVariation.CARD_TITLE }}>
+            {getString('common.notification')}
+          </Text>
+        </Container>
+        <Container className={css.badgesContainer}>
+          {loading && !pollingStarted ? (
+            <Container flex={{ justifyContent: 'center' }} className={css.loadingContainer}>
+              <Icon name="spinner" size={24} color={Color.PRIMARY_7} />
+            </Container>
+          ) : (
+            renderBadges()
+          )}
+        </Container>
+      </>
     </Layout.Vertical>
   )
 }

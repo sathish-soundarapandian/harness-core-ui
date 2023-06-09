@@ -42,8 +42,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
               </svg>
             </span>
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-              style="flex-grow: 1;"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+              style="--text-line-clamp: 1;"
             >
               Using Template: Demo Template  (1)
             </p>
@@ -1557,8 +1557,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
               </svg>
             </span>
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-              style="flex-grow: 1;"
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+              style="--text-line-clamp: 1;"
             >
               Using Template: Demo Template  (1)
             </p>
@@ -2538,8 +2538,8 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
               </svg>
             </span>
             <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-              style="flex-grow: 1;"
+              class="StyledProps--font Text--lineclamp StyledProps--main inlineText StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+              style="--text-line-clamp: 1;"
             >
               Using Template: gco logs runtime (1)
             </p>

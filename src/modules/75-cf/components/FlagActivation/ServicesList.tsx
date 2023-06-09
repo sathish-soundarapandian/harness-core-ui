@@ -8,7 +8,7 @@
 import React, { FC, useCallback, useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import {
-  Button,
+  ButtonVariation,
   Checkbox,
   Container,
   ExpandingSearchInput,
@@ -29,13 +29,17 @@ import { clone } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
 import routes from '@common/RouteDefinitions'
 import type { Failure, ServiceResponseDTO } from 'services/cd-ng'
-import { getErrorMessage, CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
+import { useGetServiceList } from 'services/cd-ng'
+import { CF_DEFAULT_PAGE_SIZE, getErrorMessage } from '@cf/utils/CFUtils'
 import useResponseError from '@cf/hooks/useResponseError'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useStrings } from 'framework/strings'
-import { useGetServiceList } from 'services/cd-ng'
-import { usePatchFeature } from 'services/cf'
 import type { Feature } from 'services/cf'
+import { usePatchFeature } from 'services/cf'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { NoData } from '../NoData/NoData'
 import ServicesFooter from './ServicesFooter'
 import NoServices from './images/NoServices.svg'
@@ -205,6 +209,7 @@ export interface ServicesListProps {
 const ServicesList: React.FC<ServicesListProps> = props => {
   const { featureFlag, refetchFlag } = props
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
+  const { activeEnvironment } = useActiveEnvironment()
 
   const { handleResponseError } = useResponseError()
   const { showSuccess } = useToaster()
@@ -398,7 +403,18 @@ const ServicesList: React.FC<ServicesListProps> = props => {
         </Layout.Vertical>
 
         <FlexExpander />
-        <Button minimal icon="Edit" onClick={() => setShowModal(true)} aria-label="edit-services" />
+        <RbacButton
+          variation={ButtonVariation.ICON}
+          icon="Edit"
+          onClick={() => setShowModal(true)}
+          aria-label="edit-services"
+          permission={{
+            permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
+            resource: activeEnvironment
+              ? { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment }
+              : { resourceType: ResourceType.FEATUREFLAG }
+          }}
+        />
         {showModal && (
           <EditServicesModal
             closeModal={() => {

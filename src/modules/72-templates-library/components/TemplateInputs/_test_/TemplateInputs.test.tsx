@@ -8,6 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { parse } from 'yaml'
+import type { GetDataError } from 'restful-react'
+import type { Failure } from 'services/cd-ng'
 import { TemplateInputs } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import { mockTemplates } from '@templates-library/TemplatesTestHelper'
 import { mockTemplatesInputYaml } from '@pipeline/components/PipelineStudio/PipelineStudioTestHelper'
@@ -43,7 +45,72 @@ jest.mock('services/template-ng', () => ({
 }))
 
 describe('<TemplateInputs /> tests', () => {
-  test('snapshot test', async () => {
+  test('snapshot test for loading', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <TemplateInputs
+          template={baseTemplate}
+          templateInputSetFetchParams={{
+            data: {},
+            refetch: jest.fn(),
+            error: null,
+            loading: true,
+            absolutePath: '',
+            cancel: jest.fn(),
+            response: null
+          }}
+        />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('snapshot test for error', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <TemplateInputs
+          template={baseTemplate}
+          templateInputSetFetchParams={{
+            data: {},
+            refetch: jest.fn(),
+            error: {
+              data: {
+                status: 'ERROR'
+              },
+              message: 'ERROR 500: Failed to fetch'
+            } as GetDataError<Failure>,
+            loading: false,
+            absolutePath: '',
+            cancel: jest.fn(),
+            response: null
+          }}
+        />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('snapshot test for no results', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <TemplateInputs
+          template={baseTemplate}
+          templateInputSetFetchParams={{
+            data: {},
+            refetch: jest.fn(),
+            error: null,
+            loading: false,
+            absolutePath: '',
+            cancel: jest.fn(),
+            response: null
+          }}
+        />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('snapshot test for step template', async () => {
     const { container } = render(
       <TestWrapper>
         <TemplateInputs

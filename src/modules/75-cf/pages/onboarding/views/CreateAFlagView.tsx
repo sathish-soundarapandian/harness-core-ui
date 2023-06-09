@@ -60,8 +60,8 @@ export const CreateAFlagView: React.FC<CreateAFlagViewProps> = ({ selectedFlag, 
   })
 
   const noExistingFlags = useMemo<boolean>(
-    () => allFeatureFlags?.itemCount === 0 && !selectedFlag,
-    [allFeatureFlags?.itemCount, selectedFlag]
+    () => allFeatureFlags?.itemCount === 0 && !selectedFlag && !searchTerm && !isLoadingCreateFeatureFlag,
+    [allFeatureFlags?.itemCount, selectedFlag, searchTerm, isLoadingCreateFeatureFlag]
   )
 
   useEffect(() => {

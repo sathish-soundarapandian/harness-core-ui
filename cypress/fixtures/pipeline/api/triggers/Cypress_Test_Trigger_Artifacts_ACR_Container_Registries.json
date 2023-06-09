@@ -1,0 +1,33 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "registries": [
+      {
+        "registry": "sridhartest"
+      },
+      {
+        "registry": "viniciusTest"
+      },
+      {
+        "registry": "automationci"
+      },
+      {
+        "registry": "gabscselabs"
+      },
+      {
+        "registry": "puthraya"
+      },
+      {
+        "registry": "docexamples"
+      },
+      {
+        "registry": "blablablabla"
+      },
+      {
+        "registry": "gabsresourcegroupacr"
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "ec94f82a-a15c-4d53-a5b0-756075beec9f"
+}

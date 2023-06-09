@@ -78,7 +78,7 @@ export interface HelmDeployVariableStepProps {
 const withUpdatedPayload = (values: HelmDeployData) => ({ ...values, spec: { ...values.spec, skipDryRun: false } })
 
 function HelmDeployWidget(props: HelmDeployProps, formikRef: StepFormikFowardRef<HelmDeployData>): React.ReactElement {
-  const { initialValues, onUpdate, onChange, allowableTypes, isNewStep = true, stepViewType } = props
+  const { initialValues, onUpdate, onChange, allowableTypes, isNewStep = true, stepViewType, isReadonly } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   return (
@@ -127,6 +127,15 @@ function HelmDeployWidget(props: HelmDeployProps, formikRef: StepFormikFowardRef
                     setToFalseWhenEmpty={true}
                   />
                 </div>
+                <div style={{ width: '51%' }}>
+                  <FormMultiTypeCheckboxField
+                    name="spec.skipSteadyStateCheck"
+                    label={getString('pipelineSteps.skipSteadyStateCheck')}
+                    multiTypeTextbox={{ expressions, disabled: isReadonly, allowableTypes }}
+                    disabled={isReadonly}
+                    setToFalseWhenEmpty={true}
+                  />
+                </div>
               </Layout.Vertical>
             </>
           )
@@ -169,6 +178,17 @@ const HelmDeployInputStep: React.FC<HelmDeployProps> = ({ inputSetData, allowabl
             }}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.ignoreReleaseHistFailStatus`}
             label={getString('cd.ignoreReleaseHistFailStatus')}
+            disabled={inputSetData?.readonly}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.skipSteadyStateCheck) === MultiTypeInputType.RUNTIME && (
+        <div style={{ width: '50%' }}>
+          <FormMultiTypeCheckboxField
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipSteadyStateCheck`}
+            label={getString('pipelineSteps.skipSteadyStateCheck')}
+            multiTypeTextbox={{ expressions, disabled: inputSetData?.readonly, allowableTypes }}
             disabled={inputSetData?.readonly}
             setToFalseWhenEmpty={true}
           />

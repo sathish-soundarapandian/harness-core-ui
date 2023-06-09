@@ -7,7 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly common: string
   readonly dash: string
   readonly draggableParent: string
   readonly graphMain: string
@@ -21,5 +20,6 @@ declare const styles: {
   readonly parallel: string
   readonly pathExecute: string
   readonly svgArrow: string
+  readonly svgPaths: string
 }
 export default styles

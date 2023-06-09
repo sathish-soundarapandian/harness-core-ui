@@ -27,6 +27,7 @@ interface CreateNodeStepProps {
   node?: CreateNodeStepProps & { isSelected?: boolean }
   titleClassName?: string
   className?: string
+  wrapperClassname?: string
   hidden?: boolean
 }
 
@@ -41,7 +42,7 @@ function CreateNodeStep(props: CreateNodeStepProps): React.ReactElement {
       onMouseLeave={() => {
         props.onMouseLeave?.()
       }}
-      className={cssDefault.defaultNode}
+      className={cx(cssDefault.defaultNode, props.wrapperClassname)}
       onDragOver={event => {
         event.preventDefault()
         event.stopPropagation()

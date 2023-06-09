@@ -35,6 +35,11 @@ declare module 'code/Branches' {
   export default ChildApp
 }
 
+declare module 'code/Tags' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'code/Settings' {
   const ChildApp: ChildAppComponent
   export default ChildApp

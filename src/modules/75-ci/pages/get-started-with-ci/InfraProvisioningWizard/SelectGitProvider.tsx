@@ -109,7 +109,7 @@ export interface SelectGitProviderInterface {
   gitProvider?: GitProvider
 }
 
-export const SupportedGitProvidersForCIOnboarding = [Connectors.GITHUB, Connectors.BITBUCKET]
+export const SupportedGitProvidersForCIOnboarding = [Connectors.GITHUB, Connectors.BITBUCKET, Connectors.GITLAB]
 
 const SelectGitProviderRef = (
   props: SelectGitProviderProps,

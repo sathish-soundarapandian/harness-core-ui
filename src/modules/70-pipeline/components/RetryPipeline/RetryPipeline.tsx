@@ -727,7 +727,8 @@ function RetryPipeline({
     }
   }
   const onExistingProvideRadioChange = (ev: FormEvent<HTMLInputElement>): void => {
-    setExistingProvide((ev.target as HTMLInputElement).value)
+    const existingProvideValue = ev.currentTarget.checked ? 'existing' : 'provide'
+    setExistingProvide(existingProvideValue)
   }
   const getRetryPipelineDisabledState = (): boolean => {
     return getErrorsList(formErrors).errorCount > 0 || !selectedStage
@@ -775,6 +776,16 @@ function RetryPipeline({
     )
   }, [isParallelStage, isAllStage, selectedStage])
 
+  const showInputSetSelector = (): boolean => {
+    return !!(
+      pipeline &&
+      currentPipeline &&
+      inputSetTemplateYaml &&
+      existingProvide === 'existing' &&
+      !!inputSets?.length
+    )
+  }
+
   const renderPipelineInputSetForm = (): React.ReactElement | undefined => {
     if (loadingUpdate || loadingSingleInputSet) {
       return (
@@ -792,7 +803,9 @@ function RetryPipeline({
     if (currentPipeline?.pipeline && resolvedMergedPipeline && templateSource) {
       return (
         <>
-          {existingProvide === 'existing' ? <div className={css.divider} /> : null}
+          <div className={css.dividerWrapper}>
+            <div className={css.divider} />
+          </div>
           <PipelineInputSetForm
             originalPipeline={resolvedMergedPipeline}
             template={parse<Pipeline>(templateSource)?.pipeline}
@@ -800,7 +813,7 @@ function RetryPipeline({
             path=""
             viewType={StepViewType.DeploymentForm}
             isRunPipelineForm
-            maybeContainerClass={existingProvide === 'provide' ? css.inputSetFormRunPipeline : ''}
+            maybeContainerClass={css.inputSetFormRunPipeline}
             listOfSelectedStages={listOfSelectedStages}
             isRetryFormStageSelected={selectedStage !== null}
             disableRuntimeInputConfigureOptions
@@ -933,35 +946,33 @@ function RetryPipeline({
                       <Text>{noRuntimeInputs}</Text>
                     </Layout.Horizontal>
                   ) : (
-                    !!inputSets?.length && (
-                      <Layout.Vertical
-                        className={css.pipelineHeader}
-                        padding={{ top: 'xlarge', left: 'xlarge', right: 'xlarge' }}
-                      >
-                        <SelectExistingInputsOrProvideNew
-                          existingProvide={existingProvide}
-                          onExistingProvideRadioChange={onExistingProvideRadioChange}
-                        />
-                        {pipeline && currentPipeline && inputSetTemplateYaml && existingProvide === 'existing' && (
-                          <GitSyncStoreProvider>
-                            <InputSetSelector
-                              pipelineIdentifier={pipelineId}
-                              onChange={inputsets => {
-                                setSelectedInputSets(inputsets)
-                              }}
-                              value={selectedInputSets}
-                              pipelineGitDetails={get(pipelineResponse, 'data.gitDetails')}
-                              invalidInputSetReferences={invalidInputSetIds}
-                              loadingMergeInputSets={loadingUpdate || loadingSingleInputSet}
-                              isRetryPipelineForm={true}
-                              onReconcile={onReconcile}
-                            />
-                          </GitSyncStoreProvider>
-                        )}
-                      </Layout.Vertical>
-                    )
+                    <Layout.Vertical
+                      className={css.pipelineHeader}
+                      padding={{ top: 'xlarge', left: 'xlarge', right: 'xlarge' }}
+                    >
+                      <SelectExistingInputsOrProvideNew
+                        existingProvide={existingProvide}
+                        onExistingProvideRadioChange={onExistingProvideRadioChange}
+                        hasInputSets={!!inputSets?.length}
+                      />
+                      {showInputSetSelector() && (
+                        <GitSyncStoreProvider>
+                          <InputSetSelector
+                            pipelineIdentifier={pipelineId}
+                            onChange={inputsets => {
+                              setSelectedInputSets(inputsets)
+                            }}
+                            value={selectedInputSets}
+                            pipelineGitDetails={get(pipelineResponse, 'data.gitDetails')}
+                            invalidInputSetReferences={invalidInputSetIds}
+                            loadingMergeInputSets={loadingUpdate || loadingSingleInputSet}
+                            isRetryPipelineForm={true}
+                            onReconcile={onReconcile}
+                          />
+                        </GitSyncStoreProvider>
+                      )}
+                    </Layout.Vertical>
                   )}
-
                   {renderPipelineInputSetForm()}
                   {existingProvide === 'existing' && selectedInputSets && selectedInputSets?.length > 0 && (
                     <div className={css.noPipelineInputSetForm} />

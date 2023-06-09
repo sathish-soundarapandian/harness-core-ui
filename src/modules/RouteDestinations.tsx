@@ -26,7 +26,7 @@ import '@pipeline/RouteDestinations'
 import CDRoutes from '@cd/RouteDestinations'
 import CIRoutes from '@ci/RouteDestinations'
 import SSCARoutes from '@ssca/RouteDestinations'
-import CVRoutes from '@cv/RouteDestinations'
+import { SRMRoutes, SRMMFERoutes } from '@cv/RouteDestinations'
 import CFRoutes from '@cf/RouteDestinations'
 import CERoutes from '@ce/RouteDestinations'
 import STORoutes from '@sto/RouteDestinations'
@@ -42,7 +42,7 @@ import DefaultSettingsRoutes from '@default-settings/RouteDestinations'
 import CODERouteDestinations from '@code/RouteDestinations'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
-import ETRoutes from '@et/RouteDestinations'
+import ETRoutes from '@cet/RouteDestinations'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 
 export const AccountSideNavProps: SidebarContext = {
@@ -54,7 +54,6 @@ export const AccountSideNavProps: SidebarContext = {
 export default function RouteDestinations(): React.ReactElement {
   const {
     CVNG_ENABLED,
-    CING_ENABLED,
     CENG_ENABLED,
     CODE_ENABLED,
     IACM_ENABLED,
@@ -69,8 +68,6 @@ export default function RouteDestinations(): React.ReactElement {
     licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE ||
     licenseInformation[ModuleName.CD]?.status === LICENSE_STATE_VALUES.ACTIVE ||
     CVNG_ENABLED
-
-  const isFFEnabled = licenseInformation[ModuleName.CF]?.status === LICENSE_STATE_VALUES.ACTIVE
 
   return (
     <Switch>
@@ -90,9 +87,14 @@ export default function RouteDestinations(): React.ReactElement {
       {freezeWindowRoutes.props.children}
       {userProfileRoutes.props.children}
       {ChaosRoutes().props.children}
-      {CING_ENABLED ? CIRoutes.props.children : null}
+      {CIRoutes.props.children}
       {CDRoutes.props.children}
-      {isCVModuleEnabled ? CVRoutes.props.children : null}
+      {isCVModuleEnabled ? SRMRoutes.props.children : null}
+      {isCVModuleEnabled ? (
+        <Route path="/account/:accountId/:module(cv)">
+          <SRMMFERoutes />
+        </Route>
+      ) : null}
       {GitOpsRoutes.props.children}
       {IDP_ENABLED ? IDPRoutes().props.children : null}
       <Route path="/account/:accountId/:module(sto)">
@@ -107,7 +109,7 @@ export default function RouteDestinations(): React.ReactElement {
         </Route>
       ) : null}
       {CDB_MFE_ENABLED ? CdbMfeRoutes.props.children : CdbNonMfeRoutes.props.children}
-      {isFFEnabled ? CFRoutes({})?.props.children : null}
+      {CFRoutes({})?.props.children}
       {IACM_ENABLED ? IACMRoutes().props.children : null}
       {SSCA_ENABLED ? SSCARoutes.props.children : null}
       {CET_ENABLED ? ETRoutes({})?.props.children : null}

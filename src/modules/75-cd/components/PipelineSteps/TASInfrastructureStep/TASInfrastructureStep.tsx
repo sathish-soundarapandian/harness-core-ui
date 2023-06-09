@@ -78,7 +78,8 @@ export class TASInfrastructureSpec extends PipelineStep<TASInfrastructureSpecSte
   protected defaultValues: TanzuApplicationServiceInfrastructure = {
     connectorRef: '',
     organization: '',
-    space: ''
+    space: '',
+    provisioner: ''
   }
 
   protected stepIcon: IconName = 'tas'

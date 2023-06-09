@@ -1,0 +1,93 @@
+.secondStep {
+  height: 100%;
+  > div:last-child {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .headingStepTwo {
+    font-size: var(--font-size-medium);
+    letter-spacing: 0;
+    color: var(--grey-800);
+  }
+
+  .clusterWrapper {
+    padding: var(--spacing-xsmall) !important;
+    overflow: auto;
+
+    .cardRow {
+      display: flex;
+      margin-bottom: var(--spacing-large);
+      .card {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        height: 80px;
+        border-radius: inherit;
+
+        .textInfo {
+          margin: var(--spacing-small) var(--spacing-small) var(--spacing-small) var(--spacing-large);
+        }
+      }
+
+      .selectedCard {
+        background-color: rgb(220, 238, 255);
+      }
+
+      :global {
+        .bp3-card {
+          width: 42%;
+          display: flex;
+          justify-content: space-between;
+          padding: 0;
+          margin-right: 4%;
+          border-radius: 8px;
+          background-color: var(--white);
+        }
+      }
+    }
+
+    :global {
+      .bp3-input,
+      .bp3-button,
+      .bp3-checkbox {
+        height: 36px;
+      }
+    }
+
+    .authHeaderRow {
+      width: 42%;
+      display: flex;
+      justify-content: space-between;
+
+      .authTitle {
+        font-size: var(font-size-normal);
+        color: var(--black-600);
+      }
+    }
+
+    .formRow {
+      display: flex;
+      :global {
+        .bp3-form-group {
+          width: 46%;
+          .bp3-input,
+          .bp3-button {
+            width: 92%;
+          }
+        }
+      }
+    }
+
+    .delegateCard {
+      :global(.Thumbnail--squareCard) {
+        padding-left: var(--spacing-medium) !important;
+      }
+    }
+  }
+}
+
+.formFieldWidth {
+  width: 42%;
+}

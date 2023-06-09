@@ -43,7 +43,7 @@ export enum StepType {
   KubernetesDirect = 'KubernetesDirect',
   K8sServiceSpec = 'K8sServiceSpec',
   K8sRollingDeploy = 'K8sRollingDeploy',
-  K8sBlueGreenStageScaleDownStep = 'K8sBlueGreenStageScaleDownStep',
+  K8sBlueGreenStageScaleDown = 'K8sBlueGreenStageScaleDown',
   CustomVariable = 'CustomVariable',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessGCP = 'ServerlessGCP',
@@ -113,6 +113,7 @@ export enum StepType {
   AzureWebAppsRollback = 'AzureWebAppRollback',
   AzureSlotDeployment = 'AzureSlotDeployment',
   JenkinsBuild = 'JenkinsBuild',
+  JenkinsBuildV2 = 'JenkinsBuildV2',
   BambooBuild = 'BambooBuild',
   AzureTrafficShift = 'AzureTrafficShift',
   AzureSwapSlot = 'AzureSwapSlot',
@@ -196,6 +197,7 @@ export enum StepType {
   SscaOrchestration = 'SscaOrchestration',
   CdSscaOrchestration = 'CdSscaOrchestration',
   SscaEnforcement = 'SscaEnforcement',
+  CdSscaEnforcement = 'CdSscaEnforcement',
   CustomIngest = 'CustomIngest',
   AWSSecurityHub = 'AWSSecurityHub',
   AWSECR = 'AWSECR',
@@ -206,10 +208,15 @@ export enum StepType {
   Sniper = 'Sniper',
   Metasploit = 'Metasploit',
   Brakeman = 'Brakeman',
+  AwsSamDeploy = 'AwsSamDeploy',
+  AwsSamBuild = 'AwsSamBuild',
   Fossa = 'Fossa',
   Semgrep = 'Semgrep',
   KubernetesAws = 'KubernetesAws',
-  AwsSam = 'AWS_SAM'
+  AwsSamService = 'AwsSamService',
+  AwsSamInfra = 'AwsSamInfra',
+  DownloadManifests = 'DownloadManifests',
+  IACMTerraformPlugin = 'IACMTerraformPlugin'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

@@ -516,7 +516,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
 
-      if (ctrlKey && code === KEY_CODE_FOR_SPACE) {
+      const suggestWidgetState = editor.getContribution('editor.contrib.suggestController')?.model?.state
+      const isSuggestWidgetClosed = suggestWidgetState === 0
+
+      // dispose previous suggestions when opening suggest widget using ^space
+      if (ctrlKey && code === KEY_CODE_FOR_SPACE && isSuggestWidgetClosed) {
         disposePreviousSuggestions()
       }
 

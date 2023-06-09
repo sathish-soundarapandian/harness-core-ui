@@ -18,10 +18,10 @@ rules:
             - modules/72-triggers/*
             - modules/75-cd/*
             - modules/75-ce/*
+            - modules/75-cet/*
             - modules/75-cf/*
             - modules/75-chaos/*
             - modules/75-ci/*
-            - modules/75-et/*
             - modules/75-idp/*
             - modules/75-ssca/*
             - modules/85-cv/*
@@ -34,10 +34,10 @@ rules:
             - '@triggers/*'
             - '@cd/*'
             - '@ce/*'
+            - '@cet/*'
             - '@cf/*'
             - '@chaos/*'
             - '@ci/*'
-            - '@et/*'
             - '@idp/*'
             - '@ssca/*'
             - '@cv/*'

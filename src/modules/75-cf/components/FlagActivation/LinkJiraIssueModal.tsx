@@ -116,8 +116,10 @@ const LinkJiraIssueModal: FC<LinkJiraIssueModalProps> = ({ featureIdentifier, re
           text={getString('cf.featureFlags.jira.newJiraIssueButton')}
           onClick={() => openModal()}
           permission={{
-            resource: { resourceType: ResourceType.FEATUREFLAG },
-            permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG
+            permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
+            resource: activeEnvironment
+              ? { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment }
+              : { resourceType: ResourceType.FEATUREFLAG }
           }}
           featuresProps={{
             featuresRequest: {

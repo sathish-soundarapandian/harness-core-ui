@@ -63,6 +63,9 @@ jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null }
   }),
+  useGetBuildDetailsForDocker: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  }),
   useGetBuildDetailsForArtifactoryArtifact: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   }),
@@ -412,11 +415,11 @@ describe('ArtifactsSelection tests', () => {
     expect(remove).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for Kubernetes for activated CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all applicable types for Kubernetes', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { CUSTOM_ARTIFACT_NG: true }
+          featureFlags: {}
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
@@ -440,11 +443,11 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for NativeHelm for activated CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all applicable types for NativeHelm', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { CUSTOM_ARTIFACT_NG: true }
+          featureFlags: {}
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
@@ -468,11 +471,11 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for NativeHelm for activated CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all applicable types for NativeHelm', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { CUSTOM_ARTIFACT_NG: true }
+          featureFlags: {}
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
@@ -494,7 +497,7 @@ describe('ArtifactsSelection tests', () => {
     expect(acr).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for ServerlessAwsLambda for activated CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all applicable types for ServerlessAwsLambda', async () => {
     const context = {
       ...pipelineContextWithoutArtifactsMock,
       getStageFromPipeline: jest.fn(() => {
@@ -505,7 +508,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { CUSTOM_ARTIFACT_NG: true }
+          featureFlags: {}
         }}
       >
         <PipelineContext.Provider value={context}>
@@ -536,7 +539,7 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeNull()
   })
 
-  test('clicking on Add Sidecar should show all types for ServerlessAwsLambda when CUSTOM_ARTIFACT_NG is ON', async () => {
+  test('clicking on Add Sidecar should show all applicable types for ServerlessAwsLambda', async () => {
     const context = {
       ...pipelineContextWithoutArtifactsMock,
       getStageFromPipeline: jest.fn(() => {
@@ -547,7 +550,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { CUSTOM_ARTIFACT_NG: true }
+          featureFlags: {}
         }}
       >
         <PipelineContext.Provider value={context}>
@@ -589,7 +592,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { CUSTOM_ARTIFACT_NG: true }
+          featureFlags: {}
         }}
       >
         <PipelineContext.Provider value={context}>
@@ -633,7 +636,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_SVC_ENV_REDESIGN: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_SVC_ENV_REDESIGN: true }
         }}
       >
         <PipelineContext.Provider value={context}>
@@ -663,7 +666,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_SVC_ENV_REDESIGN: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_SVC_ENV_REDESIGN: true }
         }}
       >
         <PipelineContext.Provider value={context}>
@@ -728,7 +731,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_SVC_ENV_REDESIGN: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { NG_SVC_ENV_REDESIGN: true }
         }}
       >
         <PipelineContext.Provider value={context}>

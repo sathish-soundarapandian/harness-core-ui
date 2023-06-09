@@ -129,6 +129,87 @@ describe('SelectEnvironmentView', () => {
     })
   })
 
+  test('It should show a text input if there are no existing environments and allow the user to create a new environment', async () => {
+    const noEnvironmentData = {
+      status: 'SUCCESS',
+      data: {
+        totalPages: 1,
+        totalItems: 0,
+        pageItemCount: 15,
+        pageSize: 15,
+        content: [],
+        pageIndex: 0,
+        empty: false
+      }
+    }
+
+    mockImport('services/cd-ng', {
+      useGetEnvironmentListForProject: () => ({
+        error: null,
+        loading: false,
+        refetch: jest.fn(),
+        data: noEnvironmentData
+      })
+    })
+
+    const createEnvironment = jest.fn().mockResolvedValue({
+      status: 'SUCCESS',
+      data: {
+        accountId: 'dummy',
+        orgIdentifier: 'dummy',
+        projectIdentifier: 'dummy',
+        identifier: 'new_env_name',
+        name: 'new env name',
+        description: '',
+        color: '#0063F7',
+        type: 'PreProduction',
+        deleted: false,
+        tags: {},
+        yaml: 'environment:\n  orgIdentifier: "dummy"\n  projectIdentifier: "dummy"\n  identifier: "new_env_name"\n  tags: {}\n  name: "new env name"\n  description: ""\n  type: "PreProduction"\n'
+      },
+      metaData: null,
+      correlationId: '224f1243-c1d1-4544-8505-877e4bcaa982'
+    })
+
+    jest.spyOn(cdngServices, 'useCreateEnvironment').mockReturnValue({
+      mutate: createEnvironment,
+      loading: false,
+      cancel: jest.fn(),
+      error: null
+    })
+
+    renderComponent({
+      language: {
+        name: 'javascript',
+        icon: 'javascripticon',
+        type: PlatformEntryType.CLIENT,
+        readmeStringId: 'cf.onboarding.readme.javascript'
+      }
+    })
+
+    const createNewEnvTextbox = screen.getByRole('textbox', { name: 'cf.onboarding.typeNewEnvName' })
+
+    expect(createNewEnvTextbox).toBeInTheDocument()
+
+    await userEvent.type(createNewEnvTextbox, 'new env name', { allAtOnce: true })
+    userEvent.click(screen.getByRole('button', { name: 'cf.onboarding.createEnv' }))
+
+    // modal should be open
+    expect(await screen.findByText('cf.environments.create.title')).toBeVisible()
+
+    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+
+    await waitFor(() => {
+      expect(createEnvironment).toHaveBeenCalled()
+      expect(setApiKey).toHaveBeenCalled()
+      expect(setSelectedEnvironment).toHaveBeenCalled()
+      // modal should be closed & confirmation msg visible
+      expect(screen.queryByText('cf.environments.create.title')).not.toBeInTheDocument()
+      expect(createNewEnvTextbox).toHaveValue('new env name')
+      expect(screen.getByText('cf.onboarding.envCreated')).toBeVisible()
+    })
+  })
+
   test('It should create an environment', async () => {
     const createEnvironment = jest.fn().mockResolvedValue({
       status: 'SUCCESS',

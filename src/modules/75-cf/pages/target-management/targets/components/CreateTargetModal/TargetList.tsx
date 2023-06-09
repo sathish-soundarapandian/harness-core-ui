@@ -44,12 +44,14 @@ const TargetList: FC<TargetListProps> = ({ targets, onAdd, onRemove, onChange })
         return (
           <Fragment key={index}>
             <TextInput
+              maxLength={255}
               placeholder={getString('cf.targets.enterName')}
               value={target.name}
               onChange={handleChange(index, 'name')}
               wrapperClassName={css.col1}
             />
             <TextInput
+              maxLength={128}
               placeholder={getString('cf.targets.enterValue')}
               value={target.identifier}
               onChange={handleChange(index, 'identifier')}

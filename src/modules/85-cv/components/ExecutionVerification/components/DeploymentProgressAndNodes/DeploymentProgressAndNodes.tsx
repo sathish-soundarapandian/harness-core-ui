@@ -12,11 +12,15 @@ import cx from 'classnames'
 import type { AnalysedNodeOverview, VerificationOverview } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { VerificationJobType } from '@cv/constants'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import CVProgressBar from './components/CVProgressBar/CVProgressBar'
 import { PrimaryAndCanaryNodes } from '../ExecutionVerificationSummary/components/PrimaryandCanaryNodes/PrimaryAndCanaryNodes'
 import VerificationStatusCard from './components/VerificationStatusCard/VerificationStatusCard'
 import { DurationView } from './components/DurationView/DurationView'
 import TestsSummaryView from './components/TestSummaryView/TestsSummaryView'
+import PinBaslineButton from './components/PinBaslineButton/PinBaslineButton'
+import { canShowPinBaselineButton } from './DeploymentProgressAndNodes.utils'
 import css from './DeploymentProgressAndNodes.module.scss'
 
 export interface DeploymentProgressAndNodesProps {
@@ -24,10 +28,16 @@ export interface DeploymentProgressAndNodesProps {
   onSelectNode?: (node?: AnalysedNodeOverview) => void
   className?: string
   isConsoleView?: boolean
+  activityId?: string
 }
 
 export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProps): JSX.Element {
-  const { onSelectNode, className, isConsoleView, data } = props
+  const { onSelectNode, className, isConsoleView, data, activityId } = props
+
+  const isBaselineEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_BASELINE_BASED_VERIFICATION)
+
+  const baselineData = data?.baselineOverview
+
   const { metricsAnalysis, verificationStartTimestamp, spec } = data || {}
   const { getString } = useStrings()
 
@@ -84,7 +94,9 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
     }
 
     if (baselineSummaryData) {
-      return <TestsSummaryView {...baselineSummaryData} />
+      return (
+        <TestsSummaryView {...baselineSummaryData} isConsoleView={isConsoleView} data={data} activityId={activityId} />
+      )
     }
   }
 
@@ -102,6 +114,11 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
               data-name={getString('pipeline.startedOn')}
               margin={{ top: 'xsmall', bottom: 'xsmall' }}
             >
+              {canShowPinBaselineButton({
+                applicableForBaseline: baselineData?.applicableForBaseline,
+                isConsoleView,
+                isBaselineEnabled
+              }) && <PinBaslineButton data={data} activityId={activityId} />}
               {getString('pipeline.startedOn')}: {moment(verificationStartTimestamp).format('MMM D, YYYY h:mm A')}
             </Text>
             <DurationView durationMs={(data?.spec?.durationInMinutes ? data?.spec?.durationInMinutes : 0) * 60000} />

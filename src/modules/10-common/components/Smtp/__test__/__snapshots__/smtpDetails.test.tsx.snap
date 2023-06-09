@@ -268,7 +268,7 @@ exports[`smtp details render smtp details 1`] = `
               class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-black"
             >
               <label
-                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
               >
                 <input
                   checked=""

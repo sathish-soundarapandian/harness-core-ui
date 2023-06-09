@@ -1,0 +1,9 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "mergedPipelineYaml": "pipeline:\n  name: GCR Trigger\n  identifier: GCR_Trigger\n  projectIdentifier: Pankaj\n  orgIdentifier: default\n  tags: {}\n  stages:\n    - stage:\n        name: S1\n        identifier: S1\n        description: \"\"\n        type: Deployment\n        spec:\n          deploymentType: Kubernetes\n          service:\n            serviceRef: GCR_Trigger\n          environment:\n            environmentRef: Nexus2\n            deployToAll: false\n            infrastructureDefinitions:\n              - identifier: Nexus2\n          execution:\n            steps:\n              - step:\n                  type: ShellScript\n                  name: ShellScript_1\n                  identifier: ShellScript_1\n                  timeout: <+input>\n                  spec:\n                    shell: Bash\n                    onDelegate: true\n                    source:\n                      type: Inline\n                      spec:\n                        script: echo \"Hello World\"\n                    environmentVariables: []\n                    outputVariables: []\n            rollbackSteps: []\n        tags: {}\n        failureStrategies:\n          - onFailure:\n              errors:\n                - AllErrors\n              action:\n                type: StageRollback\n  variables:\n    - name: GcrRegistryHostName\n      type: String\n      description: \"\"\n      value: gcr.io\n    - name: GcrImagePath\n      type: String\n      description: \"\"\n      value: test-image-path\n    - name: GcrTag\n      type: String\n      description: \"\"\n      value: test-tag\n",
+    "templateReferenceSummaries": []
+  },
+  "metaData": null,
+  "correlationId": "70b70d1f-6342-44dc-a335-92d49c05c6e1"
+}

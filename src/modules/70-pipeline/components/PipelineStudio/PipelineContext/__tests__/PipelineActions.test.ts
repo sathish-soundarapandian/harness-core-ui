@@ -178,8 +178,12 @@ describe('Helpers test', () => {
     returned = getStagePathFromPipeline('parallelStage1', 'pipeline', localPipeline)
     expect(returned).toStrictEqual('pipeline.1.parallel.0')
 
-    localPipeline.stages = []
+    localPipeline.stages = [] // Empty stages array
+
+    returned = getStagePathFromPipeline('testCdStage1', 'pipeline', localPipeline)
+    expect(returned).toStrictEqual('pipeline') // No matching stage
+
     returned = getStagePathFromPipeline('parallelStage1', 'pipeline', localPipeline)
-    expect(returned).toStrictEqual('pipeline')
+    expect(returned).toStrictEqual('pipeline') // No matching stage
   })
 })

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ActiveServiceInstancePopover } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancePopover'
 import * as cdngServices from 'services/cd-ng'
@@ -60,7 +60,25 @@ describe('ActiveServiceInstancePopover', () => {
       </TestWrapper>
     )
 
-    expect(getByText('Cd.servicedashboard.function:')).toBeDefined()
+    expect(getByText('Cd.servicedashboard.function:')).toBeInTheDocument()
+  })
+
+  test('should display function (not pod) as label when deployment type is AWS_SAM', () => {
+    render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={4} />
+      </TestWrapper>
+    )
+
+    // Function
+    expect(screen.getByText('Cd.servicedashboard.function:')).toBeInTheDocument()
+    expect(screen.getByText('release-893b57260532de1e28c01603f3ec71620b7eadfb-todolist-llk7p')).toBeInTheDocument()
+    // Region
+    expect(screen.getByText('Region:')).toBeInTheDocument()
+    expect(screen.getByText('us-east-1')).toBeInTheDocument()
   })
 
   test('should display cluster when clusterIdentifier field is present', () => {

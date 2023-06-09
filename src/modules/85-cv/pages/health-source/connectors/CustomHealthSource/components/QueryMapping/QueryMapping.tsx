@@ -7,7 +7,16 @@
 
 import React, { useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, FormInput, Layout, Text, Utils, Icon } from '@harness/uicore'
+import {
+  Container,
+  FormInput,
+  Layout,
+  Text,
+  Utils,
+  Icon,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { QueryViewer } from '@cv/components/QueryViewer/QueryViewer'
 import { Records } from '@cv/components/Records/Records'
@@ -15,6 +24,7 @@ import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { HealthSourceQueryType } from '@cv/pages/health-source/common/HealthSourceQueryType/HealthSourceQueryType'
 import Button from '@rbac/components/Button/Button'
 import { useStrings } from 'framework/strings'
+import { getConnectorRef } from '@cv/pages/health-source/common/utils/HealthSource.utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { HTTPRequestMethodOption } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthValidationPath/components/HTTPRequestMethod/HTTPRequestMethod'
 import { useFetchSampleData } from 'services/cv'
@@ -40,11 +50,22 @@ export default function QueryMapping({
   const sampleDataTracingId = useMemo(() => Utils.randomId(), [])
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
 
-  const connectorPayload = useMemo(
-    () => connectorParams(connectorIdentifier, { projectIdentifier, orgIdentifier, accountId }),
-    [connectorIdentifier, projectIdentifier, orgIdentifier, accountId]
-  )
-  const { data: connectorData, loading: connectorLoading, error: connectorError } = useGetConnector(connectorPayload)
+  const connectorRefValue = getConnectorRef(connectorIdentifier)
+
+  const canShowBaselineField = useMemo(() => {
+    return getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED
+  }, [connectorRefValue])
+
+  const connectorPayload = useMemo(() => {
+    const connectorValue = typeof connectorIdentifier === 'string' ? connectorIdentifier : connectorIdentifier?.value
+    return connectorParams(connectorValue, { projectIdentifier, orgIdentifier, accountId })
+  }, [connectorIdentifier, projectIdentifier, orgIdentifier, accountId])
+
+  const {
+    data: connectorData,
+    loading: connectorLoading,
+    error: connectorError
+  } = useGetConnector({ ...connectorPayload, lazy: !canShowBaselineField })
 
   const {
     mutate: getSampleData,
@@ -53,7 +74,7 @@ export default function QueryMapping({
   } = useFetchSampleData({
     queryParams: {
       accountId,
-      connectorIdentifier,
+      connectorIdentifier: connectorRefValue as string,
       orgIdentifier,
       projectIdentifier,
       tracingId: sampleDataTracingId
@@ -107,22 +128,23 @@ export default function QueryMapping({
         )}
       </Container>
 
-      <Container padding={{ top: 'medium', bottom: 'medium' }}>
-        {connectorError ? (
-          <Text padding={{ bottom: 'medium' }} font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}>
-            {getErrorMessage(connectorError)}
-          </Text>
-        ) : connectorLoading ? (
-          <Icon name="spinner" margin={{ bottom: 'medium' }} size={24} />
-        ) : (
-          <FormInput.Text
-            label={getString('connectors.baseURL')}
-            name={CustomHealthSourceFieldNames.BASE_URL}
-            disabled
-          />
-        )}
-      </Container>
-
+      {canShowBaselineField && (
+        <Container data-testid="baseURL" padding={{ top: 'medium', bottom: 'medium' }}>
+          {connectorError ? (
+            <Text padding={{ bottom: 'medium' }} font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}>
+              {getErrorMessage(connectorError)}
+            </Text>
+          ) : connectorLoading ? (
+            <Icon name="spinner" margin={{ bottom: 'medium' }} size={24} />
+          ) : (
+            <FormInput.Text
+              label={getString('connectors.baseURL')}
+              name={CustomHealthSourceFieldNames.BASE_URL}
+              disabled
+            />
+          )}
+        </Container>
+      )}
       <HTTPRequestMethodOption value={formValue.requestMethod} />
 
       <FormInput.Text

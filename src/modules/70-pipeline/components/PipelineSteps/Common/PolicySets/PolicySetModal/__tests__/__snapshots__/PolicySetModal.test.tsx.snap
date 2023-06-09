@@ -13,20 +13,20 @@ exports[`Test Policy Set Modal snapshot test and modal is navigable 1`] = `
         tabindex="0"
       >
         <span
-          class="bp3-icon bp3-icon-error"
-          icon="error"
+          class="bp3-icon bp3-icon-warning-sign"
+          icon="warning-sign"
         >
           <svg
-            data-icon="error"
+            data-icon="warning-sign"
             height="16"
             viewBox="0 0 16 16"
             width="16"
           >
             <desc>
-              error
+              warning-sign
             </desc>
             <path
-              d="M7.99-.01c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 13h-2v-2h2v2zm0-3h-2v-7h2v7z"
+              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
               fill-rule="evenodd"
             />
           </svg>
@@ -68,20 +68,20 @@ exports[`Test Policy Set Modal snapshot test and modal is navigable 1`] = `
         tabindex="0"
       >
         <span
-          class="bp3-icon bp3-icon-error"
-          icon="error"
+          class="bp3-icon bp3-icon-warning-sign"
+          icon="warning-sign"
         >
           <svg
-            data-icon="error"
+            data-icon="warning-sign"
             height="16"
             viewBox="0 0 16 16"
             width="16"
           >
             <desc>
-              error
+              warning-sign
             </desc>
             <path
-              d="M7.99-.01c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 13h-2v-2h2v2zm0-3h-2v-7h2v7z"
+              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
               fill-rule="evenodd"
             />
           </svg>
@@ -123,20 +123,20 @@ exports[`Test Policy Set Modal snapshot test and modal is navigable 1`] = `
         tabindex="0"
       >
         <span
-          class="bp3-icon bp3-icon-error"
-          icon="error"
+          class="bp3-icon bp3-icon-warning-sign"
+          icon="warning-sign"
         >
           <svg
-            data-icon="error"
+            data-icon="warning-sign"
             height="16"
             viewBox="0 0 16 16"
             width="16"
           >
             <desc>
-              error
+              warning-sign
             </desc>
             <path
-              d="M7.99-.01c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 13h-2v-2h2v2zm0-3h-2v-7h2v7z"
+              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
               fill-rule="evenodd"
             />
           </svg>

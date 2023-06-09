@@ -33,7 +33,8 @@ import {
   getConnectorIdValue,
   getArtifactFormData,
   amiFilters,
-  shouldHideHeaderAndNavBtns
+  shouldHideHeaderAndNavBtns,
+  resetFieldValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   AmazonMachineImageInitialValuesType,
@@ -300,6 +301,11 @@ function FormComponent({
             radioGroup={{ inline: true }}
             items={tagOptions}
             className={css.radioGroup}
+            onChange={() => {
+              // to clearValues when version is changed
+              resetFieldValue(formik, 'spec.version')
+              resetFieldValue(formik, 'spec.versionRegex')
+            }}
           />
         </div>
         {formik.values.versionType === 'value' ? (

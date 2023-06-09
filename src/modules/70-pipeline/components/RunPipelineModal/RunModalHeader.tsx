@@ -18,6 +18,7 @@ import { Color } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 
 import type { FormikErrors } from 'formik'
+import type { GetDataError } from 'restful-react'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -25,7 +26,9 @@ import type {
   CacheResponseMetadata,
   ResponseInputSetTemplateWithReplacedExpressionsResponse,
   ResponseListStageExecutionResponse,
-  ResponsePMSPipelineResponseDTO
+  ResponsePMSPipelineResponseDTO,
+  Error,
+  Failure
 } from 'services/pipeline-ng'
 import {
   ALL_STAGE_VALUE,
@@ -38,6 +41,7 @@ import {
 import type { InputSetDTO } from '@pipeline/utils/types'
 
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import GitPopover from '../GitPopover/GitPopover'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 
@@ -53,6 +57,7 @@ export interface RunModalHeaderProps {
   handleModeSwitch(view: SelectedView): void
   runClicked: boolean
   executionView?: boolean
+  connectorRef?: string
   pipelineResponse: ResponsePMSPipelineResponseDTO | null
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
   formRefDom: React.MutableRefObject<HTMLElement | undefined>
@@ -62,6 +67,9 @@ export interface RunModalHeaderProps {
   runModalHeaderTitle: string
   refetchPipeline: any
   refetchTemplate: any
+  selectedBranch?: string
+  onGitBranchChange(selectedFilter: GitFilterScope, defaultSelected?: boolean): void
+  remoteFetchError?: GetDataError<Failure | Error> | null
 }
 
 export default function RunModalHeader(props: RunModalHeaderProps): React.ReactElement | null {
@@ -74,6 +82,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
     runClicked,
     executionView,
     selectedView,
+    connectorRef,
     pipelineResponse,
     template,
     formRefDom,
@@ -82,7 +91,10 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
     executionStageList,
     runModalHeaderTitle,
     refetchPipeline,
-    refetchTemplate
+    refetchTemplate,
+    selectedBranch,
+    remoteFetchError,
+    onGitBranchChange
   } = props
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -177,43 +189,46 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
           </GitSyncStoreProvider>
         )}
 
-        <div data-tooltip-id={stageExecutionDisabledTooltip}>
-          <MultiSelectDropDown
-            popoverClassName={css.disabledStageDropdown}
-            hideItemCount={localSelectedStagesData.allStagesSelected}
-            disabled={isStageExecutionDisabled()}
-            buttonTestId={'stage-select'}
-            onChange={onStageSelect}
-            onPopoverClose={() => setSelectedStageData(localSelectedStagesData)}
-            value={localSelectedStagesData.selectedStageItems}
-            items={executionStageList}
-            minWidth={150}
-            usePortal={true}
-            placeholder={
-              localSelectedStagesData.allStagesSelected ? getString('pipeline.allStages') : getString('stages')
-            }
-            className={css.stagesDropdown}
-          />
-          <HarnessDocTooltip tooltipId={stageExecutionDisabledTooltip} useStandAlone={true} />
-        </div>
-
-        <div className={css.optionBtns}>
-          <VisualYamlToggle
-            selectedView={selectedView}
-            onChange={handleModeSwitch}
-            disableToggle={!template?.data?.inputSetTemplateYaml}
-          />
-        </div>
+        {remoteFetchError ? null : (
+          <>
+            <div data-tooltip-id={stageExecutionDisabledTooltip}>
+              <MultiSelectDropDown
+                popoverClassName={css.disabledStageDropdown}
+                hideItemCount={localSelectedStagesData.allStagesSelected}
+                disabled={isStageExecutionDisabled()}
+                buttonTestId={'stage-select'}
+                onChange={onStageSelect}
+                onPopoverClose={() => setSelectedStageData(localSelectedStagesData)}
+                value={localSelectedStagesData.selectedStageItems}
+                items={executionStageList}
+                minWidth={150}
+                usePortal={true}
+                placeholder={
+                  localSelectedStagesData.allStagesSelected ? getString('pipeline.allStages') : getString('stages')
+                }
+                className={css.stagesDropdown}
+              />
+              <HarnessDocTooltip tooltipId={stageExecutionDisabledTooltip} useStandAlone={true} />
+            </div>
+            <div className={css.optionBtns}>
+              <VisualYamlToggle
+                selectedView={selectedView}
+                onChange={handleModeSwitch}
+                disableToggle={!template?.data?.inputSetTemplateYaml}
+              />
+            </div>
+          </>
+        )}
       </div>
       {isPipelineRemote && (
         <div className={css.gitRemoteDetailsWrapper}>
           <GitRemoteDetails
+            connectorRef={connectorRef}
             repoName={pipelineResponse?.data?.gitDetails?.repoName}
-            branch={pipelineResponse?.data?.gitDetails?.branch}
+            branch={pipelineResponse?.data?.gitDetails?.branch || selectedBranch}
             filePath={pipelineResponse?.data?.gitDetails?.filePath}
             fileUrl={pipelineResponse?.data?.gitDetails?.fileUrl}
-            flags={{ readOnly: true }}
-            branchCustomClassName={css.runPipelineBranchDetails}
+            onBranchChange={onGitBranchChange}
           />
           {!isEmpty(pipelineResponse?.data?.cacheResponse) && (
             <EntityCachedCopy

@@ -27,7 +27,10 @@ import type {
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { EXPANDABLE_INPUT_SUPPORTED_FIELDS } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
+import {
+  EXPANDABLE_INPUT_SUPPORTED_FIELDS,
+  TEXT_INPUT_SUPPORTED_FIELD_TYPES
+} from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
 import type {
   ServiceNowCreateDeploymentModeFormContentInterface,
   ServiceNowCreateDeploymentModeProps
@@ -376,9 +379,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
               } else if (
                 isNull(customFields[fieldIndex].schema) ||
                 isUndefined(customFields[fieldIndex].schema) ||
-                customFields[fieldIndex].schema.type === 'string' ||
-                customFields[fieldIndex].schema.type === 'glide_date_time' ||
-                customFields[fieldIndex].schema.type === 'integer' ||
+                TEXT_INPUT_SUPPORTED_FIELD_TYPES.has(customFields[fieldIndex].schema.type) ||
                 (isEmpty(customFields[fieldIndex].allowedValues) &&
                   customFields[fieldIndex].schema.type === 'option' &&
                   customFields[fieldIndex].schema.array)

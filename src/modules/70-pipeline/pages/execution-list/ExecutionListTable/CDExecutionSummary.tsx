@@ -48,7 +48,8 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
               accountId,
               ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
               ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
-              serviceId: getIdentifierFromScopedRef(stageInfo.serviceInfo?.identifier || '')
+              serviceId: getIdentifierFromScopedRef(stageInfo.serviceInfo?.identifier || ''),
+              accountRoutePlacement: 'settings'
             })}
             target="_blank"
             rel="noreferrer noopener"
@@ -69,7 +70,8 @@ export function CDExecutionSummary(props: CDExecutionSummaryProps): React.ReactE
               ...(infrastructureScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
               ...(infrastructureScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
               environmentIdentifier: getIdentifierFromScopedRef(stageInfo.infraExecutionSummary?.identifier || ''),
-              sectionId: 'INFRASTRUCTURE'
+              sectionId: 'INFRASTRUCTURE',
+              accountRoutePlacement: 'settings'
             })}
             target="_blank"
             rel="noreferrer noopener"

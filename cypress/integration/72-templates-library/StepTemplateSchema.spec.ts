@@ -61,7 +61,7 @@ describe('Template Schema Validation', () => {
     cy.clickSubmit()
     cy.contains('span', 'Template Name is required').should('be.visible')
     cy.contains('span', 'Version Label is required').should('be.visible')
-    cy.get('input[name="name"]').type('testStep_Cypress')
+    cy.get('input[name="name"]').clear().type('testStep_Cypress')
     cy.get('input[name="versionLabel"]').type('1122')
     cy.clickSubmit()
 

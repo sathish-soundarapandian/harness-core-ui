@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addExpressionBtn: string
   readonly addInputSetButton: string
   readonly checkbox: string
   readonly clearButton: string
@@ -17,8 +18,11 @@ declare const styles: {
   readonly inputSetButton: string
   readonly inputSetDots: string
   readonly inputSetGitDetails: string
+  readonly inputSetGitDetailsWrapper: string
   readonly inputSetName: string
   readonly inputSetNumber: string
+  readonly inputSetSelectorBtn: string
+  readonly inputSetSelectorWrapper: string
   readonly invalidEntity: string
   readonly isPopoverParent: string
   readonly item: string
@@ -33,6 +37,8 @@ declare const styles: {
   readonly placeholder: string
   readonly placeholderIcon: string
   readonly popoverContainer: string
+  readonly removeExpressionBtn: string
+  readonly renderPopoverSelectedValue: string
   readonly renderSelectedValue: string
   readonly search: string
   readonly searchContainer: string
@@ -40,6 +46,8 @@ declare const styles: {
   readonly selectedInputSetLabel: string
   readonly selectedInputSetLi: string
   readonly selectedInputSetOrder: string
+  readonly selectedInputSetSpinner: string
+  readonly selectedInputSetSpinnerContainer: string
   readonly selectedInputSetTypeIcon: string
   readonly spinner: string
   readonly tag: string

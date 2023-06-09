@@ -55,7 +55,7 @@ export function useSaveAsTemplate({
   const { showSuccess, showError, clear } = useToaster()
   const { getString } = useStrings()
   const templateConfigDialogHandler = useRef<TemplateConfigModalHandle>(null)
-  const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.TEMPLATE })
+  const { openTemplateReconcileErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.TEMPLATE })
   const { getRBACErrorMessage } = useRBACError()
 
   const [showConfigModal, hideConfigModal] = useModalHook(
@@ -92,7 +92,7 @@ export function useSaveAsTemplate({
 
   const onFailure = (error: any, latestTemplate: NGTemplateInfoConfig) => {
     if (!isEmpty((error as any)?.metadata?.errorNodeSummary)) {
-      openTemplateErrorsModal({
+      openTemplateReconcileErrorsModal({
         error: (error as any)?.metadata?.errorNodeSummary,
         originalYaml: yamlStringify(
           sanitize(

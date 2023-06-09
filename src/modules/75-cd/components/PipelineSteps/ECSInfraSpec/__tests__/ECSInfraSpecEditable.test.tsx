@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act, getByText as getElementByText, waitFor, findByText } from '@testing-library/react'
+import {
+  render,
+  fireEvent,
+  act,
+  getByText as getElementByText,
+  waitFor,
+  findByText,
+  within
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
@@ -27,7 +35,7 @@ const fetchConnector = jest.fn().mockReturnValue({ data: awsConnectorListRespons
 const fetchClusters = jest.fn().mockReturnValue(awsClusters)
 
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(awsConnectorListResponse)),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(awsConnectorListResponse)),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: { data: awsConnectorListResponse.data?.content?.[1] }, refetch: fetchConnector, loading: false }
   }),
@@ -126,6 +134,39 @@ describe('ECSInfraSpecEditable tests', () => {
     userEvent.click(connnectorRefInput!)
     await testConnectorRefChange()
 
+    await waitFor(() => expect(clusterInput.value).toBe(''))
+  })
+
+  test('making region as Expression input should clear cluster value', async () => {
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
+        <ECSInfraSpecEditable
+          initialValues={existingInitialValues}
+          allowableTypes={allowableTypes}
+          readonly={false}
+          onUpdate={updateStage}
+        />
+      </TestWrapper>
+    )
+
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs).toHaveLength(0)
+
+    // Region
+    const regionInput = queryByNameAttribute('region', container) as HTMLInputElement
+    expect(regionInput.value).toBe('GovCloud (US-East)')
+
+    const regionField = regionInput.parentElement?.parentElement?.parentElement?.parentElement as HTMLElement
+    const regionMultiTypeBtn = within(regionField).getByTestId('multi-type-button')
+    fireEvent.click(regionMultiTypeBtn)
+    await waitFor(() => expect(portalDivs).toHaveLength(2))
+    const portalDiv = portalDivs[0] as HTMLElement
+    const expressionOption = within(portalDiv).getByText('Expression')
+    fireEvent.click(expressionOption)
+
+    // Cluster
+    const clusterInput = queryByNameAttribute('cluster', container) as HTMLInputElement
+    expect(clusterInput).toBeInTheDocument()
     await waitFor(() => expect(clusterInput.value).toBe(''))
   })
 

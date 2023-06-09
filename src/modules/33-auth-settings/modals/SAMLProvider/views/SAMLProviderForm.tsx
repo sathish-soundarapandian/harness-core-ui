@@ -32,6 +32,7 @@ import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToas
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/components'
 import { CopyText } from '@common/components/CopyText/CopyText'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useUploadSamlMetaData, useUpdateSamlMetaData, SAMLSettings } from 'services/cd-ng'
 import { getSamlEndpoint } from '@auth-settings/constants/utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -68,13 +69,17 @@ const defaultInitialData = {
   enableClientIdAndSecret: false,
   clientSecret: undefined,
   clientId: '',
-  samlProviderType: undefined
+  samlProviderType: undefined,
+  jitEnabled: false,
+  jitValidationKey: '',
+  jitValidationValue: ''
 }
 const SAMLProviderForm: React.FC<Props> = ({ onSubmit, onCancel, samlProvider }) => {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
   const { accountId } = useParams<AccountPathProps>()
+  const { PL_ENABLE_JIT_USER_PROVISION } = useFeatureFlags()
   const [initialValues, setInitialValues] = React.useState<FormValues>(defaultInitialData)
   const [initialLoading, setIntitalLoading] = React.useState<boolean>(!!samlProvider)
   const [selected, setSelected] = React.useState<SAMLProviderType>()
@@ -92,7 +97,14 @@ const SAMLProviderForm: React.FC<Props> = ({ onSubmit, onCancel, samlProvider })
       clientSecret: defaultTo(samlProvider?.clientSecret, ''),
       clientId: defaultTo(samlProvider?.clientId, ''),
       samlProviderType:
-        samlProvider && samlProvider?.samlProviderType ? (samlProvider?.samlProviderType as Providers) : undefined
+        samlProvider && samlProvider?.samlProviderType ? (samlProvider?.samlProviderType as Providers) : undefined,
+      ...(PL_ENABLE_JIT_USER_PROVISION
+        ? {
+            jitEnabled: samlProvider ? !!samlProvider?.jitEnabled : false,
+            jitValidationKey: defaultTo(samlProvider?.jitValidationKey, ''),
+            jitValidationValue: defaultTo(samlProvider?.jitValidationValue, '')
+          }
+        : {})
     }
   }
   useEffect(() => {
@@ -254,59 +266,86 @@ const SAMLProviderForm: React.FC<Props> = ({ onSubmit, onCancel, samlProvider })
                       />
                       <FormInput.Text name="logoutUrl" label={getString('authSettings.logoutUrl')} />
                     </Container>
-                    <Container>
-                      <Checkbox
-                        name="authorization"
-                        label={getString('authSettings.enableAuthorization')}
-                        font={{ weight: 'semi-bold' }}
-                        color={Color.GREY_600}
-                        checked={values.authorizationEnabled}
-                        onChange={e => setFieldValue('authorizationEnabled', e.currentTarget.checked)}
-                      />
-                      {values.authorizationEnabled && (
-                        <Container width={300} margin={{ top: 'medium' }}>
-                          <FormInput.Text
-                            name="groupMembershipAttr"
-                            label={getString('authSettings.groupAttributeName')}
-                          />
-                          {Providers.AZURE === values?.samlProviderType && (
-                            <>
-                              <Checkbox
-                                name="clientIdAndSecret"
-                                label={getString('authSettings.enableClientIdAndSecret')}
-                                font={{ weight: 'semi-bold' }}
-                                color={Color.GREY_600}
-                                checked={values.enableClientIdAndSecret}
-                                onChange={e => setFieldValue('enableClientIdAndSecret', e.currentTarget.checked)}
-                              />
+                    <Container className={css.additionalFieldsContainer}>
+                      <Container>
+                        <Checkbox
+                          name="authorization"
+                          label={getString('authSettings.enableAuthorization')}
+                          font={{ weight: 'semi-bold' }}
+                          color={Color.GREY_600}
+                          checked={values.authorizationEnabled}
+                          onChange={e => setFieldValue('authorizationEnabled', e.currentTarget.checked)}
+                        />
+                        {values.authorizationEnabled && (
+                          <Container width={300} margin={{ top: 'medium' }}>
+                            <FormInput.Text
+                              name="groupMembershipAttr"
+                              label={getString('authSettings.groupAttributeName')}
+                            />
+                            {Providers.AZURE === values?.samlProviderType && (
+                              <>
+                                <Checkbox
+                                  name="clientIdAndSecret"
+                                  label={getString('authSettings.enableClientIdAndSecret')}
+                                  font={{ weight: 'semi-bold' }}
+                                  color={Color.GREY_600}
+                                  checked={values.enableClientIdAndSecret}
+                                  onChange={e => setFieldValue('enableClientIdAndSecret', e.currentTarget.checked)}
+                                />
 
-                              {Providers.AZURE === values?.samlProviderType && values.enableClientIdAndSecret && (
-                                <Container width={300} margin={{ top: 'medium' }}>
-                                  <FormInput.Text name="clientId" label={getString('common.clientId')} />
-                                  <FormInput.Text
-                                    name="clientSecret"
-                                    inputGroup={{ type: 'password' }}
-                                    label={getString('common.clientSecret')}
-                                  />
-                                </Container>
-                              )}
-                            </>
+                                {Providers.AZURE === values?.samlProviderType && values.enableClientIdAndSecret && (
+                                  <Container width={300} margin={{ top: 'medium' }}>
+                                    <FormInput.Text name="clientId" label={getString('common.clientId')} />
+                                    <FormInput.Text
+                                      name="clientSecret"
+                                      inputGroup={{ type: 'password' }}
+                                      label={getString('common.clientSecret')}
+                                    />
+                                  </Container>
+                                )}
+                              </>
+                            )}
+                          </Container>
+                        )}
+                      </Container>
+                      <Container margin={{ top: 'large' }}>
+                        <Checkbox
+                          name="enableEntityId"
+                          label={getString('authSettings.enableEntityIdLabel')}
+                          font={{ variation: FontVariation.FORM_LABEL }}
+                          color={Color.GREY_600}
+                          checked={values.entityIdEnabled}
+                          onChange={e => setFieldValue('entityIdEnabled', e.currentTarget.checked)}
+                        />
+                        {values.entityIdEnabled && (
+                          <Container width={300} margin={{ top: 'medium' }}>
+                            <FormInput.Text name="entityIdentifier" label={getString('authSettings.entityIdLabel')} />
+                          </Container>
+                        )}
+                      </Container>
+                      {PL_ENABLE_JIT_USER_PROVISION && (
+                        <Container margin={{ top: 'large' }}>
+                          <FormInput.CheckBox
+                            tooltipProps={{ dataTooltipId: 'enableJITProvisioning' }}
+                            name="jitEnabled"
+                            label={`${getString('enable')} ${getString('authSettings.jitProvisioning')}`}
+                            font={{ variation: FontVariation.FORM_LABEL }}
+                            color={Color.GREY_600}
+                          />
+                          {values.jitEnabled && (
+                            <Container width={300} margin={{ top: 'medium' }}>
+                              <FormInput.Text
+                                name="jitValidationKey"
+                                label={getString('authSettings.jitValidationKey')}
+                                tooltipProps={{ dataTooltipId: 'jitProvisioningKey' }}
+                              />
+                              <FormInput.Text
+                                name="jitValidationValue"
+                                label={getString('authSettings.jitValidationValue')}
+                                tooltipProps={{ dataTooltipId: 'jitProvisioningValue' }}
+                              />
+                            </Container>
                           )}
-                        </Container>
-                      )}
-                    </Container>
-                    <Container margin={{ top: 'large' }}>
-                      <Checkbox
-                        name="enableEntityId"
-                        label={getString('authSettings.enableEntityIdLabel')}
-                        font={{ variation: FontVariation.FORM_LABEL }}
-                        color={Color.GREY_600}
-                        checked={values.entityIdEnabled}
-                        onChange={e => setFieldValue('entityIdEnabled', e.currentTarget.checked)}
-                      />
-                      {values.entityIdEnabled && (
-                        <Container width={300} margin={{ top: 'medium' }}>
-                          <FormInput.Text name="entityIdentifier" label={getString('authSettings.entityIdLabel')} />
                         </Container>
                       )}
                     </Container>

@@ -29,7 +29,7 @@ exports[`<ExecutionMetadata.test /> tests Branch type 1`] = `
         </svg>
       </span>
       <a
-        href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/triggers/trigger"
+        href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/triggers/trigger/detail"
       >
         trigger
       </a>
@@ -74,7 +74,7 @@ exports[`<ExecutionMetadata.test /> tests Pull Request type 1`] = `
         </svg>
       </span>
       <a
-        href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/triggers/trigger"
+        href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/triggers/trigger/detail"
       >
         trigger
       </a>

@@ -43,7 +43,7 @@ globalFreeze:
   enableFreezeFailure: Failed to enable global deployment freeze
 
 freezeNotifications:
-  windowEnabled: Freeze window is enabled
+  windowEnabled: Freeze window is enabled and active
   rejectedDeployments: Deployments are rejected due to freeze window
   customizedMessagePlaceholder: A custom message can be provided here which will be available as part of the notification message.
   customMessageTitle: Freeze Notification Message
@@ -63,6 +63,5 @@ recurrenceConfig:
   doesNotRepeat: Does not repeat
   recurrence: Recurrence
   endTime: 'End Time'
-  Timezone: Timezone
   nMonthsValidationLessThan: 'Monthly value should be less than 12 months'
   nMonthsValidationMoreThan: 'Monthly value should be more than 1 month'

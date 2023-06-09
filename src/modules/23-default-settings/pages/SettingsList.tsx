@@ -23,8 +23,6 @@ import { SettingDTO, SettingRequestDTO, useUpdateSettingValue } from 'services/c
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { usePermission } from '@rbac/hooks/usePermission'
-import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import type { SettingType } from '@common/constants/Utils'
 import type { SettingCategory, SettingYupValidation } from '../interfaces/SettingType.types'
@@ -33,12 +31,6 @@ import css from './SettingsList.module.scss'
 
 const SettingsList = () => {
   const { getString } = useStrings()
-  const [hasRBACViewPermission] = usePermission({
-    permissions: [PermissionIdentifier.VIEW_CORE_SETTING],
-    resource: {
-      resourceType: ResourceType.SETTING
-    }
-  })
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps & ModulePathParams>()
   let defaultSettingsCategory: SettingCategory[] = DefaultSettingsFactory.getCategoryNamesList()
   const [changedSettings, updateChangedSettings] = useState<Map<SettingType, SettingRequestDTO>>(new Map())
@@ -122,7 +114,7 @@ const SettingsList = () => {
           history.push(newPath)
         }}
       />
-      {hasRBACViewPermission ? (
+      {
         <Formik
           formName="defaultSettingsForm"
           initialValues={{}}
@@ -183,9 +175,7 @@ const SettingsList = () => {
             )
           }}
         </Formik>
-      ) : (
-        <RBACTooltip permission={PermissionIdentifier.VIEW_CORE_SETTING} resourceType={ResourceType.SETTING} />
-      )}
+      }
     </>
   )
 }

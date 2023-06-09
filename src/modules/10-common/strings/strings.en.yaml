@@ -108,8 +108,8 @@ ID: Id
 org: Org
 askUs: ask us
 variables: Variables
-copyVariableName: Copy variable name
-copyFqn: Copy fully qualified name
+usedWithinStage: Used within its stage
+usedWithinPipeline: Used anywhere within pipeline
 selectType: Select Type
 timeframe: Timeframe
 selectTimeFrame: Select Timeframe
@@ -193,6 +193,7 @@ datePickerShortcuts:
 validation:
   connectorRef: Connector is a required field
   namePatternIsNotValid: 'Name can only contain alphanumerics, . _ and -'
+  invalidUsername: 'Invalid name. Special characters not allowed'
   provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier must start with a letter or _ and can then be followed by alphanumerics, _, or $'
   provisionerIdentifierIsRequired: 'Provisioner Identifier is required'
   harnessFolderNamePatternIsNotValid: 'Harness Folder name can only contain alphanumerics, underscore, hyphen or a whitespace'
@@ -272,6 +273,7 @@ purpose:
   selectAModule: Select a module below to get started
   changeSelection: Change Selection
   cd:
+    fullText: Continuous Deployment
     introductionText: Introduction to Continuous Deployment
     introductionConcepts: Introduction to Continuous Deployment concepts
     delivery: Delivery
@@ -539,8 +541,9 @@ subscriptions:
     developers: '{{ developers }} Developers'
   cet:
     agents: '{{ agents }} Agents'
+    whatIsActiveAgent: What is an Active Agent?
   chaos:
-    experiments: '{{ experiments }} Experiments per month'
+    experiments: '{{ experiments }} Experiment Runs per month'
     infrastructures: '{{ infrastructures }} Chaos Infrastructures'
   expiryCountdown: expires in {{ days }} days
   expired: expired {{ days }} days ago
@@ -583,6 +586,8 @@ subscriptions:
     ccmTooltip: Cloud Spend refers to the total spend (dollars) managed and optimized by Harness Cloud Cost Management.
     cetAgents: Active Agents
     cetAgentToolTip: An agent is an independent unit of software that you install on a host or in a container that tracks for errors continuously and sends the error tracking data to the Harness Platform.
+    chaosExperimentRuns: Experiment Runs
+    chaosExperimentRunsTooltip: Experiment Runs refer to the number of chaos experiment instances which ran on a connected chaos infrastructure.
 current: Current
 banners:
   email:
@@ -696,7 +701,6 @@ account:
     description: to add and manage your subscriptions
 valuePlaceholder: Enter Value(s)
 namePlaceholder: Enter Name
-friendlyNamePlaceholder: Enter Friendly Name
 descriptionPlaceholder: Enter Description
 seconds: Seconds
 move: Move
@@ -1498,12 +1502,34 @@ entitlement: ENTITLEMENT
 noCreditInfoData: No Credit Information Found
 readOnlyConnectorWarning: Read-only Vault connector is not allowed for Terraform/Terragrunt Plan steps.
 enabledFlags: ENABLED FLAGS
+enterPlaceholder: Enter {{name}}
+annotations: Annotations
+hostNames: Host Names
 expiresOn: Expires on
-friendlyName: Friendly Name
 serviceOverrides:
   labelText: Service Overrides
   globalEnvironment: Global Environment
   environmentServiceSpecific: Service Specific
   globalInfra: Infrastructure Specific
   infrastructureServiceSpecific: Service & Infrastructure Specific
+  newOverride: New Override
+  overrideType: Override Type
+  overrideInfo: Override Info
+  noOverrides:
+    globalEnvironment: You have no global Environment Overrides
+    environmentServiceSpecific: You have no Environment Service specific Overrides
+    globalInfrastructure: You have no global Infrastructure Overrides
+    infrastructureServiceSpecific: You have no Infrastructure Service specific Overrides
 cloudSpends: Cloud Spends
+variableType: Variable Type
+displayName: Display Name
+displayNamePlaceHolder: Enter Display Name
+advancedSettings: Advanced Settings
+timezone: Timezone
+errorFavorite: Oops! Something went wrong while marking this entity as a favorite.
+errorUnFavorite: Oops! Something went wrong while removing this entity from your favorites.
+previousActionInProgress: Please wait, your previous action is being processed.
+learnMoreAboutGCR: Learn more about GCR with Harness
+learnMoreAboutECR: Learn more about ECR with Harness
+unknown: Unknown
+viewErrorDetails: Click to view error details

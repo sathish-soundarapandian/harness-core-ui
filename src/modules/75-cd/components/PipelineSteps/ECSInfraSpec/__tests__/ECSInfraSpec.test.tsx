@@ -28,7 +28,6 @@ const fetchClusters = jest.fn().mockReturnValue(awsClusters)
 
 jest.mock('services/cd-ng', () => ({
   getConnectorListV2Promise: () => Promise.resolve(awsConnectorListResponse),
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(awsConnectorListResponse)),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: { data: awsConnectorListResponse.data?.content?.[1] }, refetch: fetchConnector, loading: false }
   }),

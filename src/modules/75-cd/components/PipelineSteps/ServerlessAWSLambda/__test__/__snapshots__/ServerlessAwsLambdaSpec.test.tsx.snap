@@ -288,6 +288,9 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with empt
         <div>
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
             <div
               class="connectorLabel connectorRef"
@@ -632,6 +635,9 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with runt
         class="FormikForm--main"
       >
         <div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
@@ -1018,6 +1024,9 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with valu
         class="FormikForm--main"
       >
         <div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >

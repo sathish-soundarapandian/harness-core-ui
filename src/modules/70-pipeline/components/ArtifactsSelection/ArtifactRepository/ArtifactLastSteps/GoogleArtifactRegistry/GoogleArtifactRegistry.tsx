@@ -332,6 +332,9 @@ function FormComponent(
             className={css.radioGroup}
             onChange={() => {
               resetFieldValue(formik, 'spec.digest')
+              // to clearValues when version is changed
+              resetFieldValue(formik, 'spec.version')
+              resetFieldValue(formik, 'spec.versionRegex')
             }}
           />
         </div>

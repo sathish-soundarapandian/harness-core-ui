@@ -246,7 +246,8 @@ exports[`User Profile Page User Profile 1`] = `
               class="StyledProps--font StyledProps--main cardContainer"
             >
               <div
-                class="bp3-card bp3-elevation-0 Card--card card"
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card card Card--interactive"
+                tabindex="0"
               >
                 <div
                   class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
@@ -279,7 +280,8 @@ exports[`User Profile Page User Profile 1`] = `
                 </div>
               </div>
               <div
-                class="bp3-card bp3-elevation-0 Card--card card"
+                class="bp3-card bp3-interactive bp3-elevation-0 Card--card card Card--interactive"
+                tabindex="0"
               >
                 <div
                   class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"

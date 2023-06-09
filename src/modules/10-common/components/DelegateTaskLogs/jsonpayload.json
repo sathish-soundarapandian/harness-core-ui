@@ -8,7 +8,7 @@
     "content": [
       {
         "severity": "INFO",
-        "taskId": "KJOruTLPQfq35VaR_j5yBw",
+        "taskId": "KJOruTLPQfq35VaR_j5abc",
         "logger": "io.harness.shell.ScriptProcessExecutor",
         "thread": "task-exec-0",
         "message": "Done setting file permissions for script /tmp/harness-YHWo3eoOS0OkZzD7dPhKxg.sh",
@@ -23,7 +23,7 @@
       },
       {
         "severity": "ERROR",
-        "taskId": "KJOruTLPQfq35VaR_j5yBw",
+        "taskId": "KJOruTLPQfq35VaR_j5def",
         "logger": "io.harness.shell.ScriptProcessExecutor",
         "thread": "task-exec-0",
         "message": "Dummy error in shell script",
@@ -34,11 +34,11 @@
         "processId": "1",
         "version": "23.02.78306-000",
         "managerHost": "del.pr.harness.io/del-1002",
-        "isotime": "2023-02-07T22:09:46Z"
+        "isotime": "2023-02-08T22:09:46Z"
       },
       {
         "severity": "INFO",
-        "taskId": "KJOruTLPQfq35VaR_j5yBw",
+        "taskId": "KJOruTLPQfq35VaR_j5ghi",
         "logger": "io.harness.shell.ScriptProcessExecutor",
         "thread": "task-exec-0",
         "message": "Shell script task parameters: accountId - kmpySmUISimoRrJL6NL73w, appId - null, workingDir - /tmp, activityId - YHWo3eoOS0OkZzD7dPhKxg",
@@ -49,7 +49,7 @@
         "processId": "1",
         "version": "23.02.78306-000",
         "managerHost": "del.pr.harness.io/del-1002",
-        "isotime": "2023-02-07T22:09:46Z"
+        "isotime": "2023-02-09T22:09:46Z"
       }
     ],
     "pageIndex": 0,

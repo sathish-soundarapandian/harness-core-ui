@@ -92,7 +92,7 @@ export const TemplateListCardContextMenu: React.FC<ContextMenuProps> = (props): 
       {
         icon: 'git-merge',
         label: getString('common.moveToGit'),
-        disabled: !canEdit,
+        disabled: !canEdit || template.templateEntityType === 'SecretManager', // TODO: Temp hotfix for https://harness.slack.com/archives/C05BGPBNXNG/p1686162048913289
         onClick: () => {
           onOpenMoveResource(template)
         }

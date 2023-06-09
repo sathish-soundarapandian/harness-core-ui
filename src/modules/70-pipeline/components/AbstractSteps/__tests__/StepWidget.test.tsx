@@ -35,9 +35,35 @@ class StepTwo extends Step<Record<string, any>> {
   protected type = 'step-two' as StepType
   protected stepName = 'stepTwo'
   protected referenceId = 'stepTwo'
+  protected description = 'step two description'
   protected stepIcon: IconName = 'cross'
+  protected stepIconColor?: string | undefined = 'red'
+  protected stepIconSize?: number | undefined = 20
+  protected isHarnessSpecific = false
+  protected isStepNonDeletable = true
+
   validateInputSet(): Record<string, any> {
     return {}
+  }
+
+  getDescription(): any {
+    return this.description
+  }
+
+  getIconColor(): string | undefined {
+    return this.stepIconColor
+  }
+
+  getIconSize(): number | undefined {
+    return this.stepIconSize
+  }
+
+  getIsHarnessSpecific(): boolean {
+    return this.isHarnessSpecific
+  }
+
+  getIsNonDeletable(): boolean {
+    return this.isStepNonDeletable
   }
 
   protected defaultValues = { b: 'b' }
@@ -89,5 +115,89 @@ describe('StepWidget tests', () => {
     )
     fireEvent.click(container.children[0])
     expect(onSubmit).toBeCalled()
+  })
+})
+
+describe('Abstract Factory Tests', () => {
+  test('factory getType function returns the correct factory type', () => {
+    expect(factory.getType()).toBe('test-factory')
+  })
+
+  test('getDescription function returns the correct description', () => {
+    // case 1 when getDescription is defined as public method in the step
+    expect(factory.getStepDescription('step-two')).toBe('step two description')
+    // case 2 when getDescription is not defined as public method in the step
+    expect(factory.getStepDescription('step-three')).toBe(undefined)
+  })
+
+  test('getName function returns the correct name', () => {
+    expect(factory.getStepName('step-two')).toBe('stepTwo')
+    expect(factory.getStepName('step-three')).toBe(undefined)
+  })
+
+  test('getAdditonalInfo function returns the correct additional info', () => {
+    // If no additional data is defined return undefined
+    expect(factory.getStepAdditionalInfo('step-two')).toBe(undefined)
+    expect(factory.getStepAdditionalInfo('step-three')).toBe(undefined)
+  })
+
+  test('getStepIcon function returns the correct icon', () => {
+    expect(factory.getStepIcon('step-two')).toBe('cross')
+    expect(factory.getStepIcon('step-three')).toBe('disable')
+  })
+
+  test('getStepReferenceId function returns the correct reference id ', () => {
+    expect(factory.getStepReferenceId('step-two')).toBe('stepTwo')
+    expect(factory.getStepReferenceId('step-three')).toBe(undefined)
+  })
+
+  test('getStepIconColor function returns the correct icon color ', () => {
+    expect(factory.getStepIconColor('step-two')).toBe('red')
+    expect(factory.getStepIconColor('step-three')).toBe(undefined)
+  })
+
+  test('getStepIconSize function returns the correct icon size ', () => {
+    expect(factory.getStepIconSize('step-two')).toBe(20)
+    expect(factory.getStepIconSize('step-three')).toBe(undefined)
+  })
+
+  test('getStepIsHarnessSpecific function returns the correct boolean ', () => {
+    expect(factory.getStepIsHarnessSpecific('step-two')).toBe(false)
+    expect(factory.getStepIsHarnessSpecific('step-three')).toBe(false)
+  })
+
+  test('getIsStepNonDeletable function returns the correct boolean ', () => {
+    expect(factory.getIsStepNonDeletable('step-two')).toBe(true)
+    expect(factory.getIsStepNonDeletable('step-thrre')).toBe(undefined)
+  })
+
+  test('getStepData function returns the correct step data ', () => {
+    expect(factory.getStepData('step-two')).toStrictEqual({
+      icon: 'cross',
+      name: 'stepTwo',
+      referenceId: 'stepTwo',
+      type: 'step-two',
+      visible: true
+    })
+  })
+
+  test('getAllStepsDataList function returns the correct stepsData List', () => {
+    expect(factory.getAllStepsDataList()).toStrictEqual([
+      { icon: 'cross', name: 'stepOne', referenceId: 'stepOne', type: 'step-one', visible: true },
+      { icon: 'cross', name: 'stepTwo', referenceId: 'stepTwo', type: 'step-two', visible: true }
+    ])
+  })
+
+  test('deregister step function removes the step from step bank', () => {
+    /***  deregister the step and check if the step is present inside the step bank
+     * Do not lexically move this test as other tests depend on this step to be
+     * present
+     */
+    factory.deregisterStep('step-two')
+
+    expect(factory.getStep('step-two')).toBe(undefined)
+
+    // this is to handle the optional param type of getType factory method
+    expect(factory.getStep()).toBe(undefined)
   })
 })

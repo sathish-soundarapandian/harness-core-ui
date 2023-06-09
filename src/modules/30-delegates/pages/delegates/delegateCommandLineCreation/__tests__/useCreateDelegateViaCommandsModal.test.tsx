@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, getByText, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import useCreateDelegateViaCommandsModal from '../components/useCreateDelegateViaCommandsModal'
 jest.mock('@delegates/constants', () => {
@@ -59,9 +59,15 @@ jest.mock('services/portal', () => ({
   })
 }))
 let delegateClosed = false
+let oldDelegateOpen = false
 const Wrapped = ({ noInputs = false }): React.ReactElement => {
   const inputs = !noInputs
     ? {
+        oldDelegateCreation: noInputs
+          ? undefined
+          : () => {
+              oldDelegateOpen = true
+            },
         onClose: noInputs
           ? undefined
           : () => {
@@ -133,5 +139,33 @@ describe('useDelegateCreateViacommands Test', () => {
     })
 
     await waitFor(() => expect(delegateClosed).toBeFalsy())
+  })
+
+  test('should open old delegate way', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <Wrapped />
+      </TestWrapper>
+    )
+
+    const createDelegate = container.querySelector('.createdelegate')
+    await act(async () => {
+      fireEvent.click(createDelegate!)
+    })
+
+    //Confirm the dialog is open and matches snapshot
+    await waitFor(() => expect(document.body.querySelector(`.bp3-drawer`)).not.toBeNull())
+    const drawerArr = document.getElementsByClassName('bp3-drawer')
+    expect(drawerArr).toHaveLength(1)
+
+    expect(drawerArr).toMatchSnapshot()
+    const drawer = drawerArr[0] as HTMLElement
+    await waitFor(async () =>
+      expect(getByText(drawer, 'delegates.commandLineCreation.oldWayToCreateDelegate')).toBeDefined()
+    )
+    await act(async () => {
+      fireEvent.click(getByText(drawer, 'delegates.commandLineCreation.oldWayToCreateDelegate')!)
+    })
+    await waitFor(() => expect(oldDelegateOpen).toBeTruthy())
   })
 })

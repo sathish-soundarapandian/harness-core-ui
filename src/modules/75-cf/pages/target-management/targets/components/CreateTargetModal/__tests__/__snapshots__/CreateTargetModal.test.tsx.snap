@@ -66,6 +66,7 @@ exports[`CreateTargetModal it should render initial state correctly 1`] = `
                 >
                   <input
                     class="bp3-input"
+                    maxlength="255"
                     placeholder="cf.targets.enterName"
                     type="text"
                     value=""
@@ -80,6 +81,7 @@ exports[`CreateTargetModal it should render initial state correctly 1`] = `
                 >
                   <input
                     class="bp3-input"
+                    maxlength="128"
                     placeholder="cf.targets.enterValue"
                     type="text"
                     value=""

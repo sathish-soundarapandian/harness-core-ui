@@ -67,11 +67,11 @@ export const getModuleLink = ({ accountId, orgIdentifier, projectIdentifier, mod
         module: 'chaos'
       })
     case ModuleName.CET:
-      return routes.toETMonitoredServices({
+      return routes.toCETMonitoredServices({
         orgIdentifier,
         projectIdentifier,
         accountId,
-        module: 'et'
+        module: 'cet'
       })
   }
   return ''

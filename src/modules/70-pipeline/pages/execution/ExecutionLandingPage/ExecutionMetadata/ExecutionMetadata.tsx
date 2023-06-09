@@ -53,15 +53,15 @@ function ExecutionMetadataTrigger(): React.ReactElement {
     {} as PipelineStageInfo
   )
   const triggerType = pipelineExecutionSummary?.executionTriggerInfo?.triggerType as ExecutorInfoDTO['triggerType']
-  const triggerIdentifier = pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.identifier
+  const triggeredBy = pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy
+  const triggerIdentifier = triggeredBy?.triggerIdentifier ?? triggeredBy?.identifier
 
-  const triggersWizardPageLinkUrl = routes.toTriggersWizardPage({
+  const triggersWizardPageLinkUrl = routes.toTriggersDetailPage({
     accountId,
     orgIdentifier,
     projectIdentifier,
     pipelineIdentifier,
     triggerIdentifier,
-    triggerType,
     module,
     repoIdentifier,
     branch,
@@ -127,12 +127,8 @@ function ExecutionMetadataTrigger(): React.ReactElement {
           </Link>
         ) : (
           <UserLabel
-            name={
-              pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.identifier ||
-              pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email ||
-              ''
-            }
-            email={pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email}
+            name={triggeredBy?.identifier || triggeredBy?.extraInfo?.email || ''}
+            email={triggeredBy?.extraInfo?.email}
             iconProps={{ size: 16 }}
           />
         )}
@@ -151,7 +147,8 @@ export default function ExecutionMetadata(): React.ReactElement {
   const cdData = factory.getSummary(StageType.DEPLOY)
 
   const renderSingleStageExecutionInfo = (): React.ReactElement | null => {
-    const countLen = defaultTo(pipelineExecutionSummary?.stagesExecuted?.length, 0)
+    const stagesExecutedCount = defaultTo(pipelineExecutionSummary?.stagesExecuted?.length, 0)
+    const shouldShowPopover = stagesExecutedCount > LIMIT
 
     const popoverTable = (
       <HTMLTable small style={{ fontSize: 'small' }}>
@@ -159,15 +156,17 @@ export default function ExecutionMetadata(): React.ReactElement {
           <th>{getString('pipeline.selectiveStageExecution').toLocaleUpperCase()}</th>
         </thead>
         <tbody>
-          {!!pipelineExecutionSummary?.stagesExecutedNames &&
-            Object.values(pipelineExecutionSummary.stagesExecutedNames).map(
-              (value, i) =>
-                i >= 3 && (
-                  <tr key={i}>
-                    <td>{value}</td>
-                  </tr>
-                )
-            )}
+          <div className={css.overflowScroll}>
+            {!!pipelineExecutionSummary?.stagesExecutedNames &&
+              Object.values(pipelineExecutionSummary.stagesExecutedNames).map(
+                (value, i) =>
+                  i >= 3 && (
+                    <tr key={i}>
+                      <td>{value}</td>
+                    </tr>
+                  )
+              )}
+          </div>
         </tbody>
       </HTMLTable>
     )
@@ -183,18 +182,18 @@ export default function ExecutionMetadata(): React.ReactElement {
           tagName="div"
           style={{ paddingLeft: 'var(--spacing-3)' }}
           stringID={'common.plusNumberNoSpace'}
-          vars={{ number: Math.abs(countLen - LIMIT) }}
+          vars={{ number: stagesExecutedCount - LIMIT }}
         />
         {popoverTable}
       </Popover>
     )
-    const visible = countLen ? (
+    const visible = stagesExecutedCount ? (
       <Tag className={css.singleExecutionTag}>
         {`${getString('pipeline.singleStageExecution')}   ${
           !!pipelineExecutionSummary?.stagesExecutedNames &&
           Object.values(pipelineExecutionSummary.stagesExecutedNames).slice(0, LIMIT).join(', ')
         }`}
-        {popover}
+        {shouldShowPopover ? popover : null}
       </Tag>
     ) : null
     return visible

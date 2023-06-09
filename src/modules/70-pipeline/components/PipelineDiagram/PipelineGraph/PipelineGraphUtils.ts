@@ -25,6 +25,7 @@ import { getConditionalExecutionFlag } from '@pipeline/components/ExecutionStage
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import type { TemplateIcons } from '@pipeline/utils/types'
 import { NodeType, PipelineGraphState, SVGPathRecord, PipelineGraphType, KVPair } from '../types'
+import { NodeWrapperEntity, getEntityIdentifierBasedFqnPath } from '../Nodes/utils'
 
 const INITIAL_ZOOM_LEVEL = 1
 const ZOOM_INC_DEC_LEVEL = 0.1
@@ -636,6 +637,7 @@ const transformStepsData = ({
 
   steps.forEach((step: ExecutionWrapperConfig, index: number) => {
     if (step?.step) {
+      const identifier = step.step?.identifier as string
       const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
 
       const hasErrors =
@@ -649,7 +651,7 @@ const transformStepsData = ({
       const isExecutionView = get(step, 'step.status', false)
       finalData.push({
         id: getuniqueIdForStep(step),
-        identifier: step.step.identifier as string,
+        identifier: identifier,
         name: step.step.name as string,
         type,
         nodeType: nodeType as string,
@@ -658,6 +660,7 @@ const transformStepsData = ({
         data: {
           graphType,
           ...step,
+          fqnPath: getEntityIdentifierBasedFqnPath({ baseFqn: updatedStagetPath, identifier }),
           isInComplete: isCustomGeneratedString(step.step.identifier) || hasErrors,
           loopingStrategyEnabled: !!step.step?.strategy,
           conditionalExecutionEnabled: getConditionalExecutionEnabled(step, isExecutionView),
@@ -671,7 +674,7 @@ const transformStepsData = ({
               templateTypes,
               templateIcons,
               errorMap,
-              parentPath: updatedStagetPath,
+              parentPath: parentPath,
               offsetIndex: 1
             })
           : []
@@ -685,17 +688,23 @@ const transformStepsData = ({
 
       const [first, ...rest] = step.parallel
       if (first.stepGroup) {
+        const identifier = first.stepGroup?.identifier as string
         const { iconName } = getNodeInfo('', graphType)
         const isExecutionView = get(first, 'stepGroup.status', false)
         finalData.push({
           id: getuniqueIdForStep(first),
-          identifier: first.stepGroup?.identifier as string,
+          identifier: identifier,
           name: first.stepGroup?.name as string,
           type: 'StepGroup',
           nodeType: 'StepGroup',
           icon: iconName,
           data: {
             ...first,
+            fqnPath: getEntityIdentifierBasedFqnPath({
+              baseFqn: currentStagetPath,
+              entityType: NodeWrapperEntity.stepGroup,
+              identifier
+            }),
             isNestedGroup,
             isInComplete: isCustomGeneratedString(first.stepGroup?.identifier) || hasErrors,
             loopingStrategyEnabled: !!first.stepGroup?.strategy,
@@ -719,9 +728,10 @@ const transformStepsData = ({
         const { nodeType, iconName } = getNodeInfo(defaultTo(type, ''), graphType)
         const stepIcon = get(step, 'data.icon') || iconName
         const isExecutionView = get(first, 'step.status', false)
+        const identifier = first?.step?.identifier as string
         finalData.push({
           id: getuniqueIdForStep(first),
-          identifier: first?.step?.identifier as string,
+          identifier: identifier,
           name: first?.step?.name as string,
           type,
           nodeType: nodeType as string,
@@ -729,7 +739,8 @@ const transformStepsData = ({
           iconUrl,
           data: {
             ...first,
-            isInComplete: isCustomGeneratedString(first?.step?.identifier as string) || hasErrors,
+            fqnPath: getEntityIdentifierBasedFqnPath({ baseFqn: currentStagetPath, identifier }),
+            isInComplete: isCustomGeneratedString(identifier) || hasErrors,
             loopingStrategyEnabled: !!first.step?.strategy,
             conditionalExecutionEnabled: getConditionalExecutionEnabled(first, isExecutionView),
             isTemplateNode: Boolean(templateRef),
@@ -750,20 +761,26 @@ const transformStepsData = ({
     } else {
       const type = (step as any)?.type as string
       const { iconName } = getNodeInfo(defaultTo(type, ''), graphType)
-      const updatedStagetPath = `${parentPath}.${index}.stepGroup.steps`
+      const updatedStagetPath = `${parentPath}.${index + offsetIndex}`
       const hasErrors =
         errorMap && [...errorMap.keys()].some(key => updatedStagetPath && key.startsWith(updatedStagetPath))
       if (step?.stepGroup) {
+        const identifier = step.stepGroup?.identifier as string
         const isExecutionView = get(step, 'stepGroup.status', false)
         finalData.push({
           id: getuniqueIdForStep(step),
-          identifier: step.stepGroup?.identifier as string,
+          identifier: identifier,
           name: step.stepGroup?.name as string,
           type: 'StepGroup',
           nodeType: 'StepGroup',
           icon: iconName,
           data: {
             ...step,
+            fqnPath: getEntityIdentifierBasedFqnPath({
+              baseFqn: updatedStagetPath,
+              entityType: NodeWrapperEntity.stepGroup,
+              identifier
+            }),
             isNestedGroup,
             type: 'StepGroup',
             nodeType: 'StepGroup',
@@ -771,7 +788,7 @@ const transformStepsData = ({
             loopingStrategyEnabled: !!(step.stepGroup as any)?.strategy,
             conditionalExecutionEnabled: getConditionalExecutionEnabled(step, isExecutionView, true),
             graphType,
-            isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors,
+            isInComplete: isCustomGeneratedString(identifier) || hasErrors,
             isTemplateNode: !!step?.stepGroup?.template?.templateRef
           }
         })
@@ -779,15 +796,17 @@ const transformStepsData = ({
         const stepData = step as StepElementConfig
         const isExecutionView = get(step, 'status', false)
         const stepIcon = get(step, 'data.icon') || iconName
+        const identifier = stepData?.identifier as string
         finalData.push({
           id: getuniqueIdForStep({ step } as any),
-          identifier: stepData?.identifier as string,
+          identifier: identifier,
           name: stepData?.name as string,
           type: stepData?.type as string,
           nodeType: stepData?.type as string,
           icon: stepIcon,
           status: get(stepData, 'status', ''),
           data: {
+            fqnPath: getEntityIdentifierBasedFqnPath({ baseFqn: updatedStagetPath, identifier }),
             step: {
               ...get(stepData, 'data.step', stepData)
             },
@@ -800,7 +819,7 @@ const transformStepsData = ({
               getConditionalExecutionEnabled({ step: stepData }, isExecutionView),
             graphType,
             isNestedGroup,
-            isInComplete: isCustomGeneratedString(stepData?.identifier as string) || hasErrors
+            isInComplete: isCustomGeneratedString(identifier) || hasErrors
           }
         })
       }

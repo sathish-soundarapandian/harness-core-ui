@@ -26,7 +26,7 @@ import {
   transformValuesFieldsConfig
 } from './SscaOrchestrationStepFunctionConfigs'
 import SscaOrchestrationStepInputSet from './SscaOrchestrationStepInputSet'
-import { commonDefaultSpecValues } from '../utils'
+import { commonDefaultOrchestrationSpecValues } from '../utils'
 
 export interface SscaOrchestrationStepSpec {
   tool: {
@@ -103,11 +103,11 @@ export class SscaOrchestrationStep extends PipelineStep<SscaOrchestrationStepDat
   protected defaultValues: SscaOrchestrationStepData = {
     type: StepType.SscaOrchestration,
     identifier: '',
-    spec: commonDefaultSpecValues
+    spec: commonDefaultOrchestrationSpecValues
   }
 
   processFormData<T>(data: T): SscaOrchestrationStepData {
-    return getFormValuesInCorrectFormat<T, SscaOrchestrationStepData>(data, transformValuesFieldsConfig(this.type))
+    return getFormValuesInCorrectFormat<T, SscaOrchestrationStepData>(data, transformValuesFieldsConfig(this?.type))
   }
 
   validateInputSet({

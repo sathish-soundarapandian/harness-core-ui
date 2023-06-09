@@ -185,6 +185,12 @@ describe('Unit tests for customhealthsourcelogutils', () => {
     )
   })
 
+  test('should check correct connector is passed during templates', async () => {
+    expect(
+      transformSetupSourceToHealthSource(setupSource, { value: 'account.appd' }, 'customAppd', 'customLog')
+    ).toEqual(setupSourceToHealthSourceMock)
+  })
+
   test('ensure submitForm works correctly', async () => {
     const onSubmitMockFn = jest.fn()
     await waitFor(() =>

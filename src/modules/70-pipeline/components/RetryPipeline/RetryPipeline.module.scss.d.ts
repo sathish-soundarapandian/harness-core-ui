@@ -10,6 +10,7 @@ declare const styles: {
   readonly actionButtons: string
   readonly content: string
   readonly divider: string
+  readonly dividerWrapper: string
   readonly editor: string
   readonly footer: string
   readonly footerCheckbox: string

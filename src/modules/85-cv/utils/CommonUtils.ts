@@ -366,3 +366,8 @@ export const getMonitoredServiceIdentifierProp = (
   }
   return {}
 }
+
+export const nearestMinutes = (interval: number, someMoment: moment.Moment) => {
+  const roundedMinutes = Math.ceil(someMoment.clone().minute() / interval) * interval
+  return someMoment.clone().minute(roundedMinutes).second(0)
+}

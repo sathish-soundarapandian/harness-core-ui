@@ -12,6 +12,7 @@ import { tokenize } from 'linkifyjs'
 
 import { getAnserClasses } from '@common/components/LogViewer/LogLine'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { sanitizeHTML } from '@common/utils/StringUtils'
 import { getRegexForSearch } from '../../LogsState/utils'
 import type { LogLineData } from '../../LogsState/types'
 import css from './MultiLogLine.module.scss'
@@ -31,14 +32,15 @@ export interface TextWithSearchMarkersProps {
 export function TextWithSearchMarkers(props: TextWithSearchMarkersProps): React.ReactElement {
   const { searchText, txt, searchIndices, currentSearchIndex, className } = props
   if (!searchText) {
-    return <span className={className}>{defaultTo(txt, '')}</span>
+    const text = txt?.replace(/&lt;/g, '<').replace(/&amp;/g, '&')
+    return <span className={className}>{defaultTo(text, '')}</span>
   }
 
   if (!txt) {
     return <span className={className} />
   }
 
-  const searchRegex = getRegexForSearch(searchText)
+  const searchRegex = getRegexForSearch(sanitizeHTML(searchText))
 
   let match: RegExpExecArray | null
   const chunks: Array<{ start: number; end: number }> = []

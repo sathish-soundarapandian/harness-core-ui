@@ -74,6 +74,7 @@ export interface KubernetesArtifactsProps {
   isSidecar?: boolean
   artifactPath?: string
   childPipelineMetadata?: ChildPipelineMetadataType
+  viewTypeMetadata?: Record<string, boolean>
 }
 
 export interface KubernetesManifestsProps {

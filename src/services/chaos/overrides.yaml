@@ -1,0 +1,4 @@
+allowpaths:
+  - /usage
+
+operationIdOverrides: {}

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { ErrorTracking } from '@et/ErrorTrackingApp'
+import { ErrorTracking } from '@cet/ErrorTrackingApp'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'

@@ -116,10 +116,10 @@ describe('AppDIgnoreThresholdTabContent', () => {
     }
     validateCommonFieldsForMetricThreshold('ignoreThresholds', errors, [testValue], key => key, true)
     expect(errors).toEqual({
-      'ignoreThresholds.0.criteria.type': 'cv.required',
-      'ignoreThresholds.0.groupName': 'cv.required',
-      'ignoreThresholds.0.metricName': 'cv.required',
-      'ignoreThresholds.0.metricType': 'cv.required'
+      'ignoreThresholds.0.criteria.type': 'pipeline.required',
+      'ignoreThresholds.0.groupName': 'pipeline.required',
+      'ignoreThresholds.0.metricName': 'pipeline.required',
+      'ignoreThresholds.0.metricType': 'pipeline.required'
     })
   })
 
@@ -141,9 +141,9 @@ describe('AppDIgnoreThresholdTabContent', () => {
     }
     validateCommonFieldsForMetricThreshold('ignoreThresholds', errors, [testValue], key => key, false)
     expect(errors).toEqual({
-      'ignoreThresholds.0.criteria.type': 'cv.required',
-      'ignoreThresholds.0.metricName': 'cv.required',
-      'ignoreThresholds.0.metricType': 'cv.required'
+      'ignoreThresholds.0.criteria.type': 'pipeline.required',
+      'ignoreThresholds.0.metricName': 'pipeline.required',
+      'ignoreThresholds.0.metricType': 'pipeline.required'
     })
   })
   test('should check validateCommonFieldsForMetricThreshold for greater than and less than', () => {
@@ -164,8 +164,8 @@ describe('AppDIgnoreThresholdTabContent', () => {
     }
     validateCommonFieldsForMetricThreshold('ignoreThresholds', errors, [testValue], key => key, true)
     expect(errors).toEqual({
-      'ignoreThresholds.0.criteria.spec.greaterThan': 'cv.required',
-      'ignoreThresholds.0.criteria.spec.lessThan': 'cv.required'
+      'ignoreThresholds.0.criteria.spec.greaterThan': 'pipeline.required',
+      'ignoreThresholds.0.criteria.spec.lessThan': 'pipeline.required'
     })
   })
 
@@ -230,7 +230,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
       }
     }
     validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
-    expect(errors).toEqual({ 'failFastThresholds.0.criteria.spec.greaterThan': 'cv.required' })
+    expect(errors).toEqual({ 'failFastThresholds.0.criteria.spec.greaterThan': 'pipeline.required' })
   })
 
   test('should check validateCommonFieldsForMetricThreshold for percentage criteria', () => {
@@ -274,7 +274,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
       }
     }
     validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
-    expect(errors).toEqual({ 'failFastThresholds.0.spec.spec.count': 'cv.required' })
+    expect(errors).toEqual({ 'failFastThresholds.0.spec.spec.count': 'pipeline.required' })
   })
 
   test('should check validateCommonFieldsForMetricThreshold for less count', () => {
@@ -344,7 +344,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
     }
     validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
     expect(errors).toEqual({
-      'failFastThresholds.0.criteria.spec.greaterThan': 'cv.required'
+      'failFastThresholds.0.criteria.spec.greaterThan': 'pipeline.required'
     })
   })
 

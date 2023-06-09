@@ -283,7 +283,8 @@ export default function TriggerDetailPage(): JSX.Element {
       projectIdentifier,
       repoIdentifier,
       branch
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
@@ -318,15 +319,17 @@ export default function TriggerDetailPage(): JSX.Element {
       <Layout.Horizontal className={css.panel}>
         <Layout.Vertical spacing="medium" className={css.information}>
           <Layout.Horizontal flex={{ distribution: 'space-between' }}>
-            <VisualYamlToggle
-              selectedView={selectedView}
-              disableToggle={isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)}
-              onChange={
-                /* istanbul ignore next */ nextMode => {
-                  setSelectedView(nextMode)
+            {!isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) ? (
+              <VisualYamlToggle
+                selectedView={selectedView}
+                disableToggle={isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)}
+                onChange={
+                  /* istanbul ignore next */ nextMode => {
+                    setSelectedView(nextMode)
+                  }
                 }
-              }
-            />
+              />
+            ) : null}
             <Button
               variation={ButtonVariation.SECONDARY}
               icon="edit"

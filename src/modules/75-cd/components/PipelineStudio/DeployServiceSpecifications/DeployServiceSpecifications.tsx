@@ -61,20 +61,23 @@ import {
 import type { StageElementConfig } from 'services/pipeline-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeployServiceData } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export interface DeployServiceSpecificationsProps {
   setDefaultServiceSchema: () => Promise<void>
   children: React.ReactNode
+  customRef?: React.Ref<HTMLDivElement>
 }
 
 export default function DeployServiceSpecifications({
   setDefaultServiceSchema,
+  customRef,
   children
 }: DeployServiceSpecificationsProps): JSX.Element {
   const { getString } = useStrings()
   const queryParams = useParams<ProjectPathProps & ServicePathProps>()
-
+  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
   const {
     state: {
       pipeline,
@@ -89,7 +92,9 @@ export default function DeployServiceSpecifications({
     updateStage
   } = usePipelineContext()
 
-  const scrollRef = React.useRef<HTMLDivElement | null>(null)
+  const domRef = React.useRef<HTMLDivElement | null>(null)
+  const scrollRef = customRef || domRef
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
     debounce(
@@ -407,8 +412,14 @@ export default function DeployServiceSpecifications({
 
   return (
     <div className={stageCss.deployStage} ref={scrollRef}>
-      <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={cx(stageCss.contentSection, stageCss.paddedSection)}>
+      {!CDS_PIPELINE_STUDIO_UPGRADES && (
+        <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+      )}
+      <div
+        className={cx(stageCss.contentSection, stageCss.paddedSection, {
+          [stageCss.paddedSectionNew]: CDS_PIPELINE_STUDIO_UPGRADES
+        })}
+      >
         {previousStageList.length > 0 && (
           <Container margin={{ bottom: 'xlarge', left: 'xlarge' }}>
             <PropagateWidget

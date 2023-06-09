@@ -12,7 +12,7 @@ import { isEmpty, get, defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { AsgInfrastructure, getConnectorListV2Promise } from 'services/cd-ng'
+import { AsgInfrastructure, getConnectorListV2Promise, ExecutionElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -48,6 +48,7 @@ export interface AsgInfraSpecCustomStepProps {
   serviceRef?: string
   environmentRef?: string
   infrastructureRef?: string
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 const AwsConnectorRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
@@ -55,7 +56,7 @@ const AwsConnectorRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinit
 export class AsgInfraSpec extends PipelineStep<AsgInfrastructureStep> {
   lastFetched: number
   protected type = StepType.AsgInfraSpec
-  protected defaultValues: AsgInfrastructure = { connectorRef: '', region: '' }
+  protected defaultValues: AsgInfrastructure = { connectorRef: '', region: '', provisioner: '' }
   protected referenceId = 'AsgInfrastructure'
   protected stepIcon: IconName = 'aws-asg'
   protected stepName = 'Specify your AWS connector'

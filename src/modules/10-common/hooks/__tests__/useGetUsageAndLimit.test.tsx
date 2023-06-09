@@ -15,6 +15,7 @@ import {
 } from 'services/cd-ng'
 import { useGetLicenseUsage as useGetCETUsage } from 'services/cet/cetComponents'
 import { useGetLicenseUsage } from 'services/cf'
+import { useGetChaosLicenseUsage } from 'services/chaos'
 import { useGetUsage } from 'services/ci'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -135,6 +136,20 @@ useGetCETUsageMock.mockImplementation(() => {
   }
 })
 
+jest.mock('services/chaos')
+const useGetChaosLicenseUsageMock = useGetChaosLicenseUsage as jest.MockedFunction<any>
+useGetChaosLicenseUsageMock.mockImplementation(() => {
+  return {
+    data: {
+      experimentRunsPerMonth: {
+        count: 31,
+        displayName: 'Last 30 Days'
+      }
+    },
+    status: 'SUCCESS'
+  }
+})
+
 describe('useGetUsageAndLimit', () => {
   test('should fetch CI usage and limit when module is CI', () => {
     useGetLicensesAndSummaryMock.mockImplementation(() => {
@@ -234,8 +249,7 @@ describe('useGetUsageAndLimit', () => {
       return {
         data: {
           data: {
-            totalChaosExperimentRuns: 10000,
-            totalChaosInfrastructures: 1000
+            totalChaosExperimentRuns: 10000
           },
           status: 'SUCCESS'
         }
@@ -246,7 +260,10 @@ describe('useGetUsageAndLimit', () => {
     )
     const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CHAOS), { wrapper })
     expect(result.current.limitData.limit?.ci).toBeUndefined()
+    expect(result.current.limitData.limit?.ff).toBeUndefined()
     expect(result.current.limitData.limit?.chaos?.totalChaosExperimentRuns).toBe(10000)
-    expect(result.current.limitData.limit?.chaos?.totalChaosInfrastructures).toBe(1000)
+    expect(result.current.usageData.usage?.ci).toBeUndefined()
+    expect(result.current.usageData.usage?.ff).toBeUndefined()
+    expect(result.current.usageData.usage?.chaos?.experimentRunsPerMonth?.count).toBe(31)
   })
 })

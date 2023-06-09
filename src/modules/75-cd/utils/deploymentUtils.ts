@@ -48,7 +48,6 @@ export interface DeploymentTypeItem {
 
 export interface GetNgSupportedDeploymentTypesProps {
   NG_SVC_ENV_REDESIGN?: boolean
-  SPOT_ELASTIGROUP_NG?: boolean
   CDS_TAS_NG?: boolean
   CDS_ASG_NG?: boolean
   CDS_GOOGLE_CLOUD_FUNCTION?: boolean
@@ -57,14 +56,7 @@ export interface GetNgSupportedDeploymentTypesProps {
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const {
-    NG_SVC_ENV_REDESIGN,
-    SPOT_ELASTIGROUP_NG,
-    CDS_TAS_NG,
-    CDS_GOOGLE_CLOUD_FUNCTION,
-    CDS_AWS_NATIVE_LAMBDA,
-    CDP_AWS_SAM
-  } = props
+  const { NG_SVC_ENV_REDESIGN, CDS_TAS_NG, CDS_GOOGLE_CLOUD_FUNCTION, CDS_AWS_NATIVE_LAMBDA, CDP_AWS_SAM } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -96,6 +88,11 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.asg',
       icon: deploymentIconMap[ServiceDeploymentType.Asg],
       value: ServiceDeploymentType.Asg
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.spotElastigroup',
+      icon: deploymentIconMap[ServiceDeploymentType.Elastigroup],
+      value: ServiceDeploymentType.Elastigroup
     }
   ]
 
@@ -137,13 +134,6 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       value: ServiceDeploymentType.AzureWebApp
     })
   }
-  if (SPOT_ELASTIGROUP_NG) {
-    baseTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.spotElastigroup',
-      icon: deploymentIconMap[ServiceDeploymentType.Elastigroup],
-      value: ServiceDeploymentType.Elastigroup
-    })
-  }
   if (CDS_TAS_NG) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.tas',
@@ -157,7 +147,6 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
 
 export interface GetCgSupportedDeploymentTypesProps {
   NG_SVC_ENV_REDESIGN?: boolean
-  SPOT_ELASTIGROUP_NG?: boolean
 }
 
 export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTypesProps): DeploymentTypeItem[] {

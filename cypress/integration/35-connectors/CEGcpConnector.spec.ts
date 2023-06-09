@@ -3,7 +3,8 @@ import {
   accountResourceConnectors,
   ceConnectorOverviewSave,
   connectorsCatalogueAPI,
-  getGcpPermissions
+  getGcpPermissions,
+  accountConnectorsListAPI
 } from '../../support/35-connectors/constants'
 import { featureFlagsCall, pageHeaderClassName } from '../../support/70-pipeline/constants'
 
@@ -41,6 +42,9 @@ describe('CE GCP Connector', () => {
 
   it('Create CE GCP connector', () => {
     cy.intercept('GET', connectorsCatalogueAPI, { fixture: 'ng/api/connectors/catalogue.json' }).as(
+      'connectorsCatalogue'
+    )
+    cy.intercept('POST', accountConnectorsListAPI, { fixture: 'ng/api/connectors/emptyConnectors.json' }).as(
       'connectorsCatalogue'
     )
     cy.intercept('POST', ceConnectorOverviewSave, { fixture: '/ng/api/connectors/CEConnectors/connectorList.json' }).as(

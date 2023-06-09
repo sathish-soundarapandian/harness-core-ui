@@ -1,0 +1,145 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "bucketName": "cdp-aws-qa-verification-delete-me-if-seen-1669206454816"
+    },
+    {
+      "bucketName": "tas-qa-setup-pcf-packages-bucket"
+    },
+    {
+      "bucketName": "venky-artifacts-bucket"
+    },
+    {
+      "bucketName": "harnesscie-upload-testingui-arm"
+    },
+    {
+      "bucketName": "codedeploy-quickstart-sample"
+    },
+    {
+      "bucketName": "harnessdocsbackups"
+    },
+    {
+      "bucketName": "may12020"
+    },
+    {
+      "bucketName": "versiontestfunc-dev-serverlessdeploymentbucket-150ime7az3n2y"
+    },
+    {
+      "bucketName": "aws-nodejs-new-1-testing-serverlessdeploymentbuck-121mrb4jizfcj"
+    },
+    {
+      "bucketName": "cdp-cloud-formation-test-data"
+    },
+    {
+      "bucketName": "tas-qa-setup-pcf-buildpacks-bucket"
+    },
+    {
+      "bucketName": "cdng-terraform-state"
+    },
+    {
+      "bucketName": "tas-qa-setup-pcf-droplets-bucket"
+    },
+    {
+      "bucketName": "s3-manifest-trigger"
+    },
+    {
+      "bucketName": "serverless-automation-serverlessdeploymentbucket-19kem0ie2dpt1"
+    },
+    {
+      "bucketName": "servicenwnew-automationp-serverlessdeploymentbuck-1dul7c9k3nkp4"
+    },
+    {
+      "bucketName": "cdp-cloud-formation-templates"
+    },
+    {
+      "bucketName": "serviceroll-automationph-serverlessdeploymentbuck-1pv7kfin0q29u"
+    },
+    {
+      "bucketName": "harnesscie-vm-cache-tar"
+    },
+    {
+      "bucketName": "servicenwnew-auto-test-serverlessdeploymentbucket-wg2f407nwpy1"
+    },
+    {
+      "bucketName": "cdp-automation"
+    },
+    {
+      "bucketName": "aws-sam-cli-managed-default-samclisourcebucket-1lmluvgpjp783"
+    },
+    {
+      "bucketName": "harnesscie-vm-cache-plain"
+    },
+    {
+      "bucketName": "s3-trigger-automation"
+    },
+    {
+      "bucketName": "cdp-aws-qa-verification-delete-me-if-seen213"
+    },
+    {
+      "bucketName": "serverlessevent-automati-serverlessdeploymentbuck-17rm5s5w6bjpr"
+    },
+    {
+      "bucketName": "serverless-svc-auto-serverlessdeploymentbucket-1bi6q013mdgk9"
+    },
+    {
+      "bucketName": "donot-delete-ecs-auto"
+    },
+    {
+      "bucketName": "lambda-manju"
+    },
+    {
+      "bucketName": "harnesscie-upload-prod1"
+    },
+    {
+      "bucketName": "terraform-test-bucket-cdp-qe"
+    },
+    {
+      "bucketName": "harnessstack-xv8zjff76r-23nka-s3bucket-1atqddv63xjnc"
+    },
+    {
+      "bucketName": "pipeline-ng-automation-qasetup"
+    },
+    {
+      "bucketName": "cdp-serverless"
+    },
+    {
+      "bucketName": "iis-test-donotdelete"
+    },
+    {
+      "bucketName": "tas-qa-setup-pcf-ops-manager-bucket"
+    },
+    {
+      "bucketName": "servicenwnew-auto2-serverlessdeploymentbucket-1s89rb3rypa4s"
+    },
+    {
+      "bucketName": "cloudformationautomationng"
+    },
+    {
+      "bucketName": "servicenwnew-automation-serverlessdeploymentbucke-3nf38gn9lie6"
+    },
+    {
+      "bucketName": "harnesscie-upload-testingui-window-amd"
+    },
+    {
+      "bucketName": "s3-test-auto3-serverlessdeploymentbucket-1gkqgn42q9jkv"
+    },
+    {
+      "bucketName": "aws-nodejs-new-1-testing-serverlessdeploymentbuck-2eywdo7vulgu"
+    },
+    {
+      "bucketName": "harnesscie-upload-testingui3"
+    },
+    {
+      "bucketName": "harnesscie-vm-cache-gzip"
+    },
+    {
+      "bucketName": "servicenwnew-auto-serverlessdeploymentbucket-kkwbd646vvrh"
+    },
+    {
+      "bucketName": "tas-qa-setup-pcf-resources-bucket"
+    }
+  ],
+  "metaData": null,
+  "correlationId": "8fe0de0e-b04e-4b38-a82b-238915e54b51"
+}

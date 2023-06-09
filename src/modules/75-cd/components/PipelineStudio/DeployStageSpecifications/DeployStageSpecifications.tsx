@@ -15,7 +15,9 @@ import { deleteStageInfo, ServiceDeploymentType } from '@pipeline/utils/stageHel
 import { EditStageView } from '../DeployStage/EditStageView/EditStageView'
 import type { EditStageFormikType } from '../DeployStage/EditStageViewInterface'
 
-export default function DeployStageSpecifications(props: React.PropsWithChildren<unknown>): JSX.Element {
+export default function DeployStageSpecifications(
+  props: React.PropsWithChildren<{ customRef?: React.Ref<HTMLDivElement> }>
+): JSX.Element {
   const {
     state: {
       selectionState: { selectedStageId = '' }
@@ -78,6 +80,7 @@ export default function DeployStageSpecifications(props: React.PropsWithChildren
       context={'setup'}
       onChange={handleChange}
       updateDeploymentType={updateDeploymentType}
+      customRef={props?.customRef}
     >
       {props.children}
     </EditStageView>

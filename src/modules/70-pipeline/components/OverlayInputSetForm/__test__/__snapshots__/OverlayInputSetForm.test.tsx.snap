@@ -4,7 +4,7 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  no data 1`] = `<div
 
 exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overlay Input Set Yaml view save with error 1`] = `
 <div
-  class="bp3-dialog"
+  class="bp3-dialog overlayInputSetDialog"
   style="min-width: 700px;"
 >
   <div
@@ -13,7 +13,41 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
     <h4
       class="bp3-heading"
     >
-      inputSets.newOverlayInputSet
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target Text--targetClass"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-variation-h4"
+            data-testid="overlay-input-set-description-tooltip"
+            style="display: flex; align-items: center;"
+            tabindex="0"
+          >
+            inputSets.newOverlayInputSet
+            <span
+              class="bp3-icon bp3-icon-info-sign StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7 StyledProps--margin-left-xsmall"
+              icon="info-sign"
+            >
+              <svg
+                data-icon="info-sign"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  info-sign
+                </desc>
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM7 3h2v2H7V3zm3 10H6v-1h1V7H6V6h3v6h1v1z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </p>
+        </span>
+      </span>
     </h4>
     <button
       aria-label="Close"
@@ -304,39 +338,17 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
                 </div>
               </div>
               <div
-                class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large StyledProps--padding-bottom-xxxlarge"
+                class="divider inputSetName"
+              />
+              <div
+                class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large StyledProps--padding-bottom-xxlarge"
               >
-                <h5
-                  class="StyledProps--font StyledProps--font-h5 StyledProps--main"
-                  level="5"
+                <h6
+                  class="StyledProps--font StyledProps--font-h6 StyledProps--main exisitingInputSetsHeader"
+                  level="6"
                 >
-                  inputSets.selectInputSets
-                </h5>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                  style="display: flex; align-items: center;"
-                >
-                  <span
-                    class="bp3-icon bp3-icon-info-sign StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--intent-primary"
-                    icon="info-sign"
-                  >
-                    <svg
-                      data-icon="info-sign"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      width="16"
-                    >
-                      <desc>
-                        info-sign
-                      </desc>
-                      <path
-                        d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM7 3h2v2H7V3zm3 10H6v-1h1V7H6V6h3v6h1v1z"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  inputSets.selectInputSetsHelp
-                </p>
+                  pipeline.pipelineInputPanel.useExisitingInputSets
+                </h6>
                 <span
                   class="bp3-popover-wrapper isPopoverParent"
                 >
@@ -344,11 +356,82 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
                     class="bp3-popover-target"
                   >
                     <div
+                      class="inputSetSelectorWrapper"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      >
+                        <button
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main inputSetSelectorBtn Button--iconOnly Button--without-shadow Button--withRightIcon"
+                          style="width: 300px;"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-button-text"
+                          >
+                            <span
+                              class="placeholder"
+                            >
+                              pipeline.inputSets.selectPlaceholder
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                            icon="chevron-down"
+                          >
+                            <svg
+                              data-icon="chevron-down"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              width="16"
+                            >
+                              <desc>
+                                chevron-down
+                              </desc>
+                              <path
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div
                       class="renderSelectedValue selectedInputSetsContainer"
                     >
                       <li
                         class="selectedInputSetLi"
-                        data-testid="asd"
+                        data-testid="0-asd"
                         draggable="true"
                       >
                         <button
@@ -362,20 +445,28 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
                             <div
                               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                             >
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main selectedInputSetOrder StyledProps--font StyledProps--font-weight-semi-bold Button--with-current-color Button--round Button--iconOnly Button--without-shadow"
-                                style="width: 20px; height: 20px;"
-                                type="button"
+                              <span
+                                class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main drag"
+                                icon="drag-handle-vertical"
                               >
-                                <span
-                                  class="bp3-button-text"
+                                <svg
+                                  data-icon="drag-handle-vertical"
+                                  height="14"
+                                  viewBox="0 0 16 16"
+                                  width="14"
                                 >
-                                  1
-                                </span>
-                              </button>
+                                  <desc>
+                                    drag-handle-vertical
+                                  </desc>
+                                  <path
+                                    d="M6 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4-6c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zM6 13c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
                               <p
-                                class="StyledProps--font StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
-                                style="display: flex; align-items: center;"
+                                class="StyledProps--font Text--lineclamp StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
+                                style="--text-line-clamp: 1; display: flex; align-items: center;"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main selectedInputSetTypeIcon StyledProps--padding-right-xsmall"
@@ -427,7 +518,7 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
                       </li>
                       <li
                         class="selectedInputSetLi"
-                        data-testid="test"
+                        data-testid="1-test"
                         draggable="true"
                       >
                         <button
@@ -441,20 +532,28 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
                             <div
                               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                             >
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main selectedInputSetOrder StyledProps--font StyledProps--font-weight-semi-bold Button--with-current-color Button--round Button--iconOnly Button--without-shadow"
-                                style="width: 20px; height: 20px;"
-                                type="button"
+                              <span
+                                class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main drag"
+                                icon="drag-handle-vertical"
                               >
-                                <span
-                                  class="bp3-button-text"
+                                <svg
+                                  data-icon="drag-handle-vertical"
+                                  height="14"
+                                  viewBox="0 0 16 16"
+                                  width="14"
                                 >
-                                  2
-                                </span>
-                              </button>
+                                  <desc>
+                                    drag-handle-vertical
+                                  </desc>
+                                  <path
+                                    d="M6 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4-6c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zM6 13c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
                               <p
-                                class="StyledProps--font StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
-                                style="display: flex; align-items: center;"
+                                class="StyledProps--font Text--lineclamp StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
+                                style="--text-line-clamp: 1; display: flex; align-items: center;"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main selectedInputSetTypeIcon StyledProps--padding-right-xsmall"
@@ -504,35 +603,20 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
                           </span>
                         </button>
                       </li>
-                      <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addInputSetButton StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-link"
-                        type="button"
+                    </div>
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-medium"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-small-plus StyledProps--main"
-                          icon="small-plus"
-                        >
-                          <svg
-                            data-icon="small-plus"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            width="16"
-                          >
-                            <desc>
-                              small-plus
-                            </desc>
-                            <path
-                              d="M11 7H9V5c0-.55-.45-1-1-1s-1 .45-1 1v2H5c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1V9h2c.55 0 1-.45 1-1s-.45-1-1-1z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        <span
-                          class="bp3-button-text"
-                        >
-                          pipeline.inputSets.selectPlaceholder
-                        </span>
-                      </button>
+                        pipeline.inputSets.lastApplied
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey500"
+                      >
+                        test
+                      </p>
                     </div>
                   </span>
                 </span>
@@ -576,7 +660,7 @@ exports[`OverlayInputSetForm Tests Create OverlayInputSet -  render create Overl
 exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay Input Set Form and test drag drop 1`] = `
 <li
   class="selectedInputSetLi dragging"
-  data-testid="asd"
+  data-testid="0-asd"
   draggable="true"
 >
   <button
@@ -590,20 +674,28 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
       <div
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
       >
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main selectedInputSetOrder StyledProps--font StyledProps--font-weight-semi-bold Button--with-current-color Button--round Button--iconOnly Button--without-shadow"
-          style="width: 20px; height: 20px;"
-          type="button"
+        <span
+          class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main drag"
+          icon="drag-handle-vertical"
         >
-          <span
-            class="bp3-button-text"
+          <svg
+            data-icon="drag-handle-vertical"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
           >
-            1
-          </span>
-        </button>
+            <desc>
+              drag-handle-vertical
+            </desc>
+            <path
+              d="M6 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4-6c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zM6 13c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
         <p
-          class="StyledProps--font StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
-          style="display: flex; align-items: center;"
+          class="StyledProps--font Text--lineclamp StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
+          style="--text-line-clamp: 1; display: flex; align-items: center;"
         >
           <span
             class="bp3-icon StyledProps--main selectedInputSetTypeIcon StyledProps--padding-right-xsmall"
@@ -658,7 +750,7 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
 exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay Input Set Form and test drag drop 2`] = `
 <li
   class="selectedInputSetLi"
-  data-testid="asd"
+  data-testid="0-asd"
   draggable="true"
 >
   <button
@@ -672,20 +764,28 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
       <div
         class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
       >
-        <button
-          class="bp3-button Button--button StyledProps--font StyledProps--main selectedInputSetOrder StyledProps--font StyledProps--font-weight-semi-bold Button--with-current-color Button--round Button--iconOnly Button--without-shadow"
-          style="width: 20px; height: 20px;"
-          type="button"
+        <span
+          class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main drag"
+          icon="drag-handle-vertical"
         >
-          <span
-            class="bp3-button-text"
+          <svg
+            data-icon="drag-handle-vertical"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
           >
-            1
-          </span>
-        </button>
+            <desc>
+              drag-handle-vertical
+            </desc>
+            <path
+              d="M6 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4-6c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zM6 13c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
         <p
-          class="StyledProps--font StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
-          style="display: flex; align-items: center;"
+          class="StyledProps--font Text--lineclamp StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
+          style="--text-line-clamp: 1; display: flex; align-items: center;"
         >
           <span
             class="bp3-icon StyledProps--main selectedInputSetTypeIcon StyledProps--padding-right-xsmall"
@@ -739,7 +839,7 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
 
 exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay Input Set Form view 1`] = `
 <div
-  class="bp3-dialog"
+  class="bp3-dialog overlayInputSetDialog"
   style="min-width: 700px;"
 >
   <div
@@ -748,7 +848,41 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
     <h4
       class="bp3-heading"
     >
-      inputSets.editOverlayTitle
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target Text--targetClass"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-variation-h4"
+            data-testid="overlay-input-set-description-tooltip"
+            style="display: flex; align-items: center;"
+            tabindex="0"
+          >
+            inputSets.editOverlayTitle
+            <span
+              class="bp3-icon bp3-icon-info-sign StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7 StyledProps--margin-left-xsmall"
+              icon="info-sign"
+            >
+              <svg
+                data-icon="info-sign"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  info-sign
+                </desc>
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM7 3h2v2H7V3zm3 10H6v-1h1V7H6V6h3v6h1v1z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </p>
+        </span>
+      </span>
     </h4>
     <button
       aria-label="Close"
@@ -1093,39 +1227,17 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
                 </div>
               </div>
               <div
-                class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large StyledProps--padding-bottom-xxxlarge"
+                class="divider inputSetName"
+              />
+              <div
+                class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large StyledProps--padding-bottom-xxlarge"
               >
-                <h5
-                  class="StyledProps--font StyledProps--font-h5 StyledProps--main"
-                  level="5"
+                <h6
+                  class="StyledProps--font StyledProps--font-h6 StyledProps--main exisitingInputSetsHeader"
+                  level="6"
                 >
-                  inputSets.selectInputSets
-                </h5>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                  style="display: flex; align-items: center;"
-                >
-                  <span
-                    class="bp3-icon bp3-icon-info-sign StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--intent-primary"
-                    icon="info-sign"
-                  >
-                    <svg
-                      data-icon="info-sign"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      width="16"
-                    >
-                      <desc>
-                        info-sign
-                      </desc>
-                      <path
-                        d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM7 3h2v2H7V3zm3 10H6v-1h1V7H6V6h3v6h1v1z"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  inputSets.selectInputSetsHelp
-                </p>
+                  pipeline.pipelineInputPanel.useExisitingInputSets
+                </h6>
                 <span
                   class="bp3-popover-wrapper isPopoverParent"
                 >
@@ -1133,11 +1245,82 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
                     class="bp3-popover-target"
                   >
                     <div
+                      class="inputSetSelectorWrapper"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      >
+                        <button
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main inputSetSelectorBtn Button--iconOnly Button--without-shadow Button--withRightIcon"
+                          style="width: 300px;"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-button-text"
+                          >
+                            <span
+                              class="placeholder"
+                            >
+                              pipeline.inputSets.selectPlaceholder
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                            icon="chevron-down"
+                          >
+                            <svg
+                              data-icon="chevron-down"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              width="16"
+                            >
+                              <desc>
+                                chevron-down
+                              </desc>
+                              <path
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div
                       class="renderSelectedValue selectedInputSetsContainer"
                     >
                       <li
                         class="selectedInputSetLi"
-                        data-testid="asd"
+                        data-testid="0-asd"
                         draggable="true"
                       >
                         <button
@@ -1151,20 +1334,28 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
                             <div
                               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                             >
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main selectedInputSetOrder StyledProps--font StyledProps--font-weight-semi-bold Button--with-current-color Button--round Button--iconOnly Button--without-shadow"
-                                style="width: 20px; height: 20px;"
-                                type="button"
+                              <span
+                                class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main drag"
+                                icon="drag-handle-vertical"
                               >
-                                <span
-                                  class="bp3-button-text"
+                                <svg
+                                  data-icon="drag-handle-vertical"
+                                  height="14"
+                                  viewBox="0 0 16 16"
+                                  width="14"
                                 >
-                                  1
-                                </span>
-                              </button>
+                                  <desc>
+                                    drag-handle-vertical
+                                  </desc>
+                                  <path
+                                    d="M6 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4-6c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zM6 13c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
                               <p
-                                class="StyledProps--font StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
-                                style="display: flex; align-items: center;"
+                                class="StyledProps--font Text--lineclamp StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
+                                style="--text-line-clamp: 1; display: flex; align-items: center;"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main selectedInputSetTypeIcon StyledProps--padding-right-xsmall"
@@ -1216,7 +1407,7 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
                       </li>
                       <li
                         class="selectedInputSetLi"
-                        data-testid="test"
+                        data-testid="1-test"
                         draggable="true"
                       >
                         <button
@@ -1230,20 +1421,28 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
                             <div
                               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                             >
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main selectedInputSetOrder StyledProps--font StyledProps--font-weight-semi-bold Button--with-current-color Button--round Button--iconOnly Button--without-shadow"
-                                style="width: 20px; height: 20px;"
-                                type="button"
+                              <span
+                                class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main drag"
+                                icon="drag-handle-vertical"
                               >
-                                <span
-                                  class="bp3-button-text"
+                                <svg
+                                  data-icon="drag-handle-vertical"
+                                  height="14"
+                                  viewBox="0 0 16 16"
+                                  width="14"
                                 >
-                                  2
-                                </span>
-                              </button>
+                                  <desc>
+                                    drag-handle-vertical
+                                  </desc>
+                                  <path
+                                    d="M6 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4-6c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zM6 13c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
                               <p
-                                class="StyledProps--font StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
-                                style="display: flex; align-items: center;"
+                                class="StyledProps--font Text--lineclamp StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
+                                style="--text-line-clamp: 1; display: flex; align-items: center;"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main selectedInputSetTypeIcon StyledProps--padding-right-xsmall"
@@ -1293,35 +1492,20 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
                           </span>
                         </button>
                       </li>
-                      <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main addInputSetButton StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-link"
-                        type="button"
+                    </div>
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-medium"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-small-plus StyledProps--main"
-                          icon="small-plus"
-                        >
-                          <svg
-                            data-icon="small-plus"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            width="16"
-                          >
-                            <desc>
-                              small-plus
-                            </desc>
-                            <path
-                              d="M11 7H9V5c0-.55-.45-1-1-1s-1 .45-1 1v2H5c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1V9h2c.55 0 1-.45 1-1s-.45-1-1-1z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        <span
-                          class="bp3-button-text"
-                        >
-                          pipeline.inputSets.selectPlaceholder
-                        </span>
-                      </button>
+                        pipeline.inputSets.lastApplied
+                      </p>
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey500"
+                      >
+                        test
+                      </p>
                     </div>
                   </span>
                 </span>
@@ -1364,7 +1548,7 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Edit Overlay I
 
 exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Overlay Input Set Form view 1`] = `
 <div
-  class="bp3-dialog"
+  class="bp3-dialog overlayInputSetDialog"
   style="min-width: 700px;"
 >
   <div
@@ -1373,7 +1557,41 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Overlay Input 
     <h4
       class="bp3-heading"
     >
-      inputSets.newOverlayInputSet
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target Text--targetClass"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-variation-h4"
+            data-testid="overlay-input-set-description-tooltip"
+            style="display: flex; align-items: center;"
+            tabindex="0"
+          >
+            inputSets.newOverlayInputSet
+            <span
+              class="bp3-icon bp3-icon-info-sign StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7 StyledProps--margin-left-xsmall"
+              icon="info-sign"
+            >
+              <svg
+                data-icon="info-sign"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  info-sign
+                </desc>
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM7 3h2v2H7V3zm3 10H6v-1h1V7H6V6h3v6h1v1z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </p>
+        </span>
+      </span>
     </h4>
     <button
       aria-label="Close"
@@ -1664,39 +1882,17 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Overlay Input 
                 </div>
               </div>
               <div
-                class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large StyledProps--padding-bottom-xxxlarge"
+                class="divider inputSetName"
+              />
+              <div
+                class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large StyledProps--padding-bottom-xxlarge"
               >
-                <h5
-                  class="StyledProps--font StyledProps--font-h5 StyledProps--main"
-                  level="5"
+                <h6
+                  class="StyledProps--font StyledProps--font-h6 StyledProps--main exisitingInputSetsHeader"
+                  level="6"
                 >
-                  inputSets.selectInputSets
-                </h5>
-                <p
-                  class="StyledProps--font StyledProps--main"
-                  style="display: flex; align-items: center;"
-                >
-                  <span
-                    class="bp3-icon bp3-icon-info-sign StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--intent-primary"
-                    icon="info-sign"
-                  >
-                    <svg
-                      data-icon="info-sign"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      width="16"
-                    >
-                      <desc>
-                        info-sign
-                      </desc>
-                      <path
-                        d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM7 3h2v2H7V3zm3 10H6v-1h1V7H6V6h3v6h1v1z"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                  inputSets.selectInputSetsHelp
-                </p>
+                  pipeline.pipelineInputPanel.useExisitingInputSets
+                </h6>
                 <span
                   class="bp3-popover-wrapper isPopoverParent"
                 >
@@ -1704,11 +1900,82 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Overlay Input 
                     class="bp3-popover-target bp3-popover-open"
                   >
                     <div
+                      class="inputSetSelectorWrapper"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      >
+                        <button
+                          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main inputSetSelectorBtn Button--iconOnly Button--without-shadow Button--withRightIcon"
+                          style="width: 300px;"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-button-text"
+                          >
+                            <span
+                              class="placeholder"
+                            >
+                              pipeline.inputSets.selectPlaceholder
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                            icon="chevron-down"
+                          >
+                            <svg
+                              data-icon="chevron-down"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              width="16"
+                            >
+                              <desc>
+                                chevron-down
+                              </desc>
+                              <path
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                              data-testid="multi-type-button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="fixed-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 9 9"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div
                       class="renderSelectedValue selectedInputSetsContainer"
                     >
                       <li
                         class="selectedInputSetLi"
-                        data-testid="asd"
+                        data-testid="0-asd"
                         draggable="true"
                       >
                         <button
@@ -1722,20 +1989,28 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Overlay Input 
                             <div
                               class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                             >
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main selectedInputSetOrder StyledProps--font StyledProps--font-weight-semi-bold Button--with-current-color Button--round Button--iconOnly Button--without-shadow"
-                                style="width: 20px; height: 20px;"
-                                type="button"
+                              <span
+                                class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main drag"
+                                icon="drag-handle-vertical"
                               >
-                                <span
-                                  class="bp3-button-text"
+                                <svg
+                                  data-icon="drag-handle-vertical"
+                                  height="14"
+                                  viewBox="0 0 16 16"
+                                  width="14"
                                 >
-                                  1
-                                </span>
-                              </button>
+                                  <desc>
+                                    drag-handle-vertical
+                                  </desc>
+                                  <path
+                                    d="M6 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4-6c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zM6 13c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
                               <p
-                                class="StyledProps--font StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
-                                style="display: flex; align-items: center;"
+                                class="StyledProps--font Text--lineclamp StyledProps--main selectedInputSetLabel StyledProps--color StyledProps--color-primary8"
+                                style="--text-line-clamp: 1; display: flex; align-items: center;"
                               >
                                 <span
                                   class="bp3-icon StyledProps--main selectedInputSetTypeIcon StyledProps--padding-right-xsmall"
@@ -1785,313 +2060,8 @@ exports[`OverlayInputSetForm Tests Edit OverlayInputSet -  render Overlay Input 
                           </span>
                         </button>
                       </li>
-                      <button
-                        class="bp3-button bp3-disabled bp3-loading bp3-minimal Button--button StyledProps--font StyledProps--main addInputSetButton StyledProps--color StyledProps--color-primary7 Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-link"
-                        disabled=""
-                        tabindex="-1"
-                        type="button"
-                      >
-                        <div
-                          class="bp3-spinner bp3-button-spinner"
-                        >
-                          <div
-                            class="bp3-spinner-animation"
-                          >
-                            <svg
-                              height="20"
-                              stroke-width="16.00"
-                              viewBox="-3.00 -3.00 106.00 106.00"
-                              width="20"
-                            >
-                              <path
-                                class="bp3-spinner-track"
-                                d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
-                              />
-                              <path
-                                class="bp3-spinner-head"
-                                d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
-                                pathLength="280"
-                                stroke-dasharray="280 280"
-                                stroke-dashoffset="210"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                        <span
-                          class="bp3-icon bp3-icon-small-plus StyledProps--main"
-                          icon="small-plus"
-                        >
-                          <svg
-                            data-icon="small-plus"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            width="16"
-                          >
-                            <desc>
-                              small-plus
-                            </desc>
-                            <path
-                              d="M11 7H9V5c0-.55-.45-1-1-1s-1 .45-1 1v2H5c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1V9h2c.55 0 1-.45 1-1s-.45-1-1-1z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        <span
-                          class="bp3-button-text"
-                        >
-                          pipeline.inputSets.selectPlaceholder
-                        </span>
-                      </button>
                     </div>
                   </span>
-                  <div
-                    class="bp3-overlay bp3-overlay-open bp3-overlay-inline"
-                  >
-                    <div
-                      class="bp3-transition-container bp3-popover-appear bp3-popover-appear-active"
-                      style="position: absolute; top: 0px; left: 0px; opacity: 0; pointer-events: none;"
-                    >
-                      <div
-                        class="bp3-popover bp3-minimal"
-                      >
-                        <div
-                          class="bp3-popover-content"
-                        >
-                          <div
-                            class="Layout--vertical Layout--layout-spacing-small StyledProps--main popoverContainer"
-                          >
-                            <div
-                              class="searchContainer"
-                            >
-                              <div
-                                class="TextInput--main"
-                              >
-                                <div
-                                  class="bp3-input-group search"
-                                >
-                                  <input
-                                    class="bp3-input"
-                                    placeholder="search"
-                                    style="padding-right: 0px;"
-                                    type="text"
-                                    value=""
-                                  />
-                                  <span
-                                    class="bp3-input-action"
-                                  >
-                                    <span
-                                      class="bp3-icon bp3-icon-chevron-down StyledProps--main"
-                                      icon="chevron-down"
-                                    >
-                                      <svg
-                                        data-icon="chevron-down"
-                                        height="12"
-                                        viewBox="0 0 16 16"
-                                        width="12"
-                                      >
-                                        <desc>
-                                          chevron-down
-                                        </desc>
-                                        <path
-                                          d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                          fill-rule="evenodd"
-                                        />
-                                      </svg>
-                                    </span>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                            <div
-                              class="StyledProps--font StyledProps--main overlayIsHelperTextContainer StyledProps--border StyledProps--border-bottom"
-                            >
-                              <p
-                                class="StyledProps--font StyledProps--main overlayIsHelperText"
-                              >
-                                pipeline.inputSets.overlayISHelperText
-                              </p>
-                            </div>
-                            <div
-                              class="Layout--vertical StyledProps--main StyledProps--padding-bottom-medium"
-                            >
-                              <ul
-                                class="bp3-menu list multiple"
-                              >
-                                <li
-                                  class="item"
-                                  data-testid="0-asd"
-                                  draggable="true"
-                                >
-                                  <div
-                                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between"
-                                  >
-                                    <label
-                                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox StyledProps--main"
-                                    >
-                                      <input
-                                        checked=""
-                                        type="checkbox"
-                                      />
-                                      <span
-                                        class="bp3-control-indicator"
-                                      />
-                                      <div
-                                        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-right-xxlarge"
-                                        style="width: 100%;"
-                                      >
-                                        <span
-                                          class="bp3-icon StyledProps--main"
-                                          data-icon="yaml-builder-input-sets"
-                                        >
-                                          <svg
-                                            height="16"
-                                            viewBox="0 0 18 16"
-                                            width="16"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <g
-                                              fill="#22272d"
-                                            >
-                                              <path
-                                                d="M12.946 5.347a.49.49 0 00-.492-.486H4.581a.49.49 0 00-.492.486c0 .269.22.486.492.486h7.873a.49.49 0 00.492-.486zM4.581 8.264c-.272 0-.492.218-.492.486s.22.486.492.486H9.01c.271 0 .492-.218.492-.486s-.22-.486-.492-.486H4.58zm7.92 5.833H3.644a.55.55 0 01-.538-.56V2.018a.55.55 0 01.538-.56h9.748a.55.55 0 01.54.56v5.325c0 .269.22.486.491.486a.49.49 0 00.492-.486V2.02c0-.844-.679-1.533-1.523-1.533H3.643c-.844 0-1.523.69-1.523 1.533v11.517c0 .844.68 1.533 1.523 1.533h8.859a.49.49 0 00.492-.486.49.49 0 00-.492-.486z"
-                                              />
-                                              <path
-                                                d="M15.676 10.418h-1.005V9.413a.524.524 0 10-1.048 0v1.004H12.28a.524.524 0 000 1.049h1.343v1.343a.524.524 0 101.048 0v-1.343h1.005a.524.524 0 000-1.048z"
-                                              />
-                                            </g>
-                                          </svg>
-                                        </span>
-                                        <div
-                                          class="StyledProps--font StyledProps--main nameIdContainer"
-                                        >
-                                          <p
-                                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey800"
-                                            style="--text-line-clamp: 1;"
-                                          >
-                                            asd
-                                          </p>
-                                          <p
-                                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey450"
-                                            style="--text-line-clamp: 1;"
-                                          >
-                                            idLabel
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </label>
-                                  </div>
-                                  <span
-                                    class="order"
-                                  >
-                                    <p
-                                      class="StyledProps--font StyledProps--main orderText"
-                                    >
-                                      1
-                                    </p>
-                                    <span
-                                      class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main drag"
-                                      icon="drag-handle-vertical"
-                                    >
-                                      <svg
-                                        data-icon="drag-handle-vertical"
-                                        height="16"
-                                        viewBox="0 0 16 16"
-                                        width="16"
-                                      >
-                                        <desc>
-                                          drag-handle-vertical
-                                        </desc>
-                                        <path
-                                          d="M6 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4-6c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zM6 13c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
-                                          fill-rule="evenodd"
-                                        />
-                                      </svg>
-                                    </span>
-                                  </span>
-                                </li>
-                                <li
-                                  class="item"
-                                >
-                                  <div
-                                    class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-distribution-space-between"
-                                  >
-                                    <div
-                                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
-                                    >
-                                      <label
-                                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkbox StyledProps--main"
-                                      >
-                                        <input
-                                          type="checkbox"
-                                        />
-                                        <span
-                                          class="bp3-control-indicator"
-                                        />
-                                        <div
-                                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
-                                        >
-                                          <span
-                                            class="bp3-icon StyledProps--main"
-                                            data-icon="yaml-builder-input-sets"
-                                          >
-                                            <svg
-                                              height="16"
-                                              viewBox="0 0 18 16"
-                                              width="16"
-                                              xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                              <g
-                                                fill="#22272d"
-                                              >
-                                                <path
-                                                  d="M12.946 5.347a.49.49 0 00-.492-.486H4.581a.49.49 0 00-.492.486c0 .269.22.486.492.486h7.873a.49.49 0 00.492-.486zM4.581 8.264c-.272 0-.492.218-.492.486s.22.486.492.486H9.01c.271 0 .492-.218.492-.486s-.22-.486-.492-.486H4.58zm7.92 5.833H3.644a.55.55 0 01-.538-.56V2.018a.55.55 0 01.538-.56h9.748a.55.55 0 01.54.56v5.325c0 .269.22.486.491.486a.49.49 0 00.492-.486V2.02c0-.844-.679-1.533-1.523-1.533H3.643c-.844 0-1.523.69-1.523 1.533v11.517c0 .844.68 1.533 1.523 1.533h8.859a.49.49 0 00.492-.486.49.49 0 00-.492-.486z"
-                                                />
-                                                <path
-                                                  d="M15.676 10.418h-1.005V9.413a.524.524 0 10-1.048 0v1.004H12.28a.524.524 0 000 1.049h1.343v1.343a.524.524 0 101.048 0v-1.343h1.005a.524.524 0 000-1.048z"
-                                                />
-                                              </g>
-                                            </svg>
-                                          </span>
-                                          <div
-                                            class="StyledProps--font StyledProps--main nameIdContainer"
-                                          >
-                                            <p
-                                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey800"
-                                              data-testid="popover-test"
-                                              style="--text-line-clamp: 1;"
-                                            >
-                                              test
-                                            </p>
-                                            <p
-                                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-small StyledProps--margin-top-xsmall StyledProps--color StyledProps--color-grey450"
-                                              style="--text-line-clamp: 1;"
-                                            >
-                                              idLabel
-                                            </p>
-                                          </div>
-                                        </div>
-                                      </label>
-                                    </div>
-                                  </div>
-                                </li>
-                              </ul>
-                              <button
-                                aria-label="pipeline.inputSets.applyInputSet"
-                                class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-small Button--with-current-color Button--variation Button--variation-primary"
-                                type="button"
-                              >
-                                <span
-                                  class="bp3-button-text"
-                                >
-                                  pipeline.inputSets.applyInputSet
-                                </span>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </span>
               </div>
             </div>

@@ -17,7 +17,7 @@ import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import { useUpdateQueryParams } from '@common/hooks'
 import type { ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetExecutionNode } from 'services/pipeline-ng'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import factory from '@pipeline/factories/ExecutionFactory'
 import { isCDStage, isCIStage, StageType } from '@pipeline/utils/stageHelpers'
 import { isExecutionCompletedWithBadState, isExecutionRunning, isExecutionSuccess } from '@pipeline/utils/statusHelpers'
@@ -129,7 +129,7 @@ export default function ExecutionStepDetails(): React.ReactElement {
     <div className={css.main}>
       <div className={css.header}>
         <div className={css.title} data-name={selectedStep.name}>
-          {getString(isStage ? 'common.stageName' : 'common.stepName', selectedStep)}
+          <String stringID={isStage ? 'common.stageName' : 'common.stepName'} vars={selectedStep} useRichText />
         </div>
         <div className={css.actions}>
           {interruptHistories.length > 0 ? (

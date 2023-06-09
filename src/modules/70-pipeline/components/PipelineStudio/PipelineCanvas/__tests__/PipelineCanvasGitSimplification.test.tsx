@@ -69,7 +69,9 @@ jest.mock('services/pipeline-ng', () => ({
   useGetInputsetYaml: () => jest.fn(),
   useGetTemplateFromPipeline: jest.fn(),
   useCreateVariablesV2: jest.fn(() => ({ refetch: jest.fn().mockResolvedValue({ data: null }) })),
-  useGetYamlWithTemplateRefsResolved: jest.fn(() => ({ refetch: jest.fn().mockResolvedValue({ data: null }) }))
+  useGetYamlWithTemplateRefsResolved: jest.fn(() => ({ refetch: jest.fn().mockResolvedValue({ data: null }) })),
+  useGetPipelineValidateResult: jest.fn(() => ({})),
+  useValidatePipelineAsync: jest.fn(() => ({}))
 }))
 
 jest.mock('services/pipeline-rq', () => ({

@@ -260,6 +260,45 @@ export class GoogleCloudFunctionServiceSpec extends Step<ServiceSpec> {
       )
     }
     if (
+      isEmpty(get(data, `${dataPathToField}.branch`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.branch`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `${dataPathToField}.branch`,
+        getString?.('fieldRequired', {
+          field: getString('pipelineSteps.deploy.inputSet.branch')
+        })
+      )
+    }
+    if (
+      isEmpty(get(data, `${dataPathToField}.commitId`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.commitId`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `${dataPathToField}.commitId`,
+        getString?.('fieldRequired', {
+          field: getString('pipeline.artifacts.googleCloudSourceRepositories.commitId')
+        })
+      )
+    }
+    if (
+      isEmpty(get(data, `${dataPathToField}.tag`)) &&
+      isRequired &&
+      getMultiTypeFromValue(get(template, `${templatePathToField}.tag`)) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        `${dataPathToField}.tag`,
+        getString?.('fieldRequired', {
+          field: getString('tagLabel')
+        })
+      )
+    }
+    if (
       isEmpty(get(data, `${dataPathToField}.sourceDirectory`)) &&
       isRequired &&
       getMultiTypeFromValue(get(template, `${templatePathToField}.sourceDirectory`)) === MultiTypeInputType.RUNTIME
@@ -386,8 +425,17 @@ export class GoogleCloudFunctionServiceSpec extends Step<ServiceSpec> {
   }
 
   renderStep(props: StepProps<K8SDirectServiceStep>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, inputSetData, factory, customStepProps, readonly, allowableTypes } =
-      props
+    const {
+      initialValues,
+      onUpdate,
+      stepViewType,
+      inputSetData,
+      factory,
+      customStepProps,
+      readonly,
+      allowableTypes,
+      viewTypeMetadata
+    } = props
 
     if (stepViewType === StepViewType.InputVariable) {
       return (
@@ -413,6 +461,7 @@ export class GoogleCloudFunctionServiceSpec extends Step<ServiceSpec> {
           readonly={inputSetData?.readonly || readonly}
           factory={factory}
           allowableTypes={allowableTypes}
+          viewTypeMetadata={viewTypeMetadata}
         />
       )
     }

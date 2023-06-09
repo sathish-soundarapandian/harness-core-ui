@@ -111,7 +111,8 @@ const TriggerLandingPage: React.FC = ({ children }) => {
       projectIdentifier,
       repoIdentifier,
       branch
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
   useDocumentTitle([
     get(pipeline, 'data.name') || getString('pipelines'),

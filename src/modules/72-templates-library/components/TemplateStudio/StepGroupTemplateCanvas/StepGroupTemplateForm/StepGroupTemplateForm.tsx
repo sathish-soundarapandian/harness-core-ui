@@ -54,12 +54,7 @@ const StepGroupTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX
   }))
 
   const onSubmitStep = async (item: Partial<Values>): Promise<void> => {
-    const processNode: any = getStepDataFromValues(item, template.spec as StepGroupElementConfig)
-    if (!isEmpty(processNode?.spec?.delegateSelectors)) {
-      processNode.delegateSelectors = processNode?.spec?.delegateSelectors
-    } else {
-      delete processNode.delegateSelectors
-    }
+    const processNode: any = getStepDataFromValues(item, template.spec as StepGroupElementConfig, true)
 
     if (!isEqual(template.spec, processNode) || !isEqual(item.delegateSelectors, template?.spec?.delegateSelectors)) {
       delete processNode.spec
@@ -92,7 +87,6 @@ const StepGroupTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX
                 stepsFactory={factory}
                 allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
                 onChange={debounceSubmit}
-                onUpdate={debounceSubmit}
                 isStepGroup={true}
                 ref={advancedConfRef}
                 stepType={StepType.StepGroup}

@@ -20,6 +20,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   gcrUrlList,
@@ -35,6 +36,8 @@ import {
   getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
+import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
+import { useGetDigestDetailsForGcrArtifact } from './useGetDigestDetailsForGcr'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface GCRRenderContent extends ArtifactSourceRenderProps {
@@ -68,6 +71,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     useArtifactV1Data = false
   } = props
 
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
   const { getString } = useStrings()
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const { expressions } = useVariablesExpression()
@@ -80,6 +84,10 @@ const Content = (props: GCRRenderContent): JSX.Element => {
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
+  const tagValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tag`, ''), artifact?.spec?.tag),
+    get(initialValues?.artifacts, `${artifactPath}.spec.tag`, '')
   )
   const registryHostnameValue = getDefaultQueryParam(
     getValidInitialValuePath(
@@ -110,7 +118,36 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     lazy: true
   })
 
+  const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
   const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
+
+  const {
+    fetchDigest,
+    fetchingDigest,
+    fetchDigestError: digestError,
+    gcrDigestData: digestData
+  } = useGetDigestDetailsForGcrArtifact({
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    imagePath: getFinalQueryParamValue(imagePathValue),
+    registryHostname: getFinalQueryParamValue(registryHostnameValue),
+    tag: getFinalQueryParamValue(tagValue),
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    useArtifactV1Data,
+    formik,
+    path,
+    initialValues,
+    isPropagatedStage,
+    serviceId,
+    isSidecar,
+    artifactPath,
+    stageIdentifier,
+    pipelineIdentifier,
+    stepViewType
+  })
 
   const {
     data: gcrTagsV2Data,
@@ -312,6 +349,21 @@ const Content = (props: GCRRenderContent): JSX.Element => {
               template={template}
             />
           )}
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <div className={css.inputFieldLayout}>
+                <DigestField
+                  {...props}
+                  fetchingDigest={fetchingDigest}
+                  fetchDigestError={digestError}
+                  fetchDigest={fetchDigest}
+                  expressions={expressions}
+                  stageIdentifier={stageIdentifier}
+                  digestData={digestData}
+                />
+              </div>
+            )}
         </Layout.Vertical>
       )}
     </>

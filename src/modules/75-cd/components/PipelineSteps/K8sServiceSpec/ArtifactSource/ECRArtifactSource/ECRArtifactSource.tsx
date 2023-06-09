@@ -52,6 +52,8 @@ import {
   getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
+import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
+import { useGetDigestDetailsForEcrArtifact } from './useGetDigestDetailsForEcrArtifact'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface ECRRenderContent extends ArtifactSourceRenderProps {
@@ -95,8 +97,9 @@ const Content = (props: ECRRenderContent): JSX.Element => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
-  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
+  const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const imagePathValue = getImagePath(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.imagePath`, ''), artifact?.spec?.imagePath),
@@ -109,6 +112,11 @@ const Content = (props: ECRRenderContent): JSX.Element => {
   const regionValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.region`, ''), artifact?.spec?.region),
     get(initialValues?.artifacts, `${artifactPath}.spec.region`, '')
+  )
+
+  const tagValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tag`, ''), artifact?.spec?.tag),
+    get(initialValues?.artifacts, `${artifactPath}.spec.tag`, '')
   )
 
   const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
@@ -308,6 +316,33 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     )
   }
 
+  const {
+    fetchDigest,
+    fetchingDigest,
+    fetchDigestError: digestError,
+    ecrDigestData: digestData
+  } = useGetDigestDetailsForEcrArtifact({
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    imagePath: getFinalQueryParamValue(imagePathValue),
+    region: getFinalQueryParamValue(regionValue),
+    tag: getFinalQueryParamValue(tagValue),
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    useArtifactV1Data,
+    formik,
+    path,
+    initialValues,
+    isPropagatedStage,
+    serviceId,
+    isSidecar,
+    artifactPath,
+    stageIdentifier,
+    pipelineIdentifier,
+    stepViewType
+  })
   const isFieldDisabled = (fieldName: string, isTag = false): boolean => {
     /* instanbul ignore else */
     if (
@@ -508,6 +543,23 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               }}
             />
           )}
+
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <div className={css.inputFieldLayout}>
+                <DigestField
+                  {...props}
+                  fetchingDigest={fetchingDigest}
+                  fetchDigestError={digestError}
+                  fetchDigest={fetchDigest}
+                  expressions={expressions}
+                  stageIdentifier={stageIdentifier}
+                  digestData={digestData}
+                  disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                />
+              </div>
+            )}
         </Layout.Vertical>
       )}
     </>

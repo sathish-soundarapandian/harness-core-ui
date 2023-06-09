@@ -6,7 +6,14 @@ export default defineConfig({
     specPattern: 'integration/**/*.spec.{ts,tsx}',
     supportFile: 'support/index.ts',
     fixturesFolder: 'fixtures',
-    videoUploadOnPasses: false
+    videoUploadOnPasses: false,
+    reporter: 'cypress-multi-reporters',
+    reporterOptions: {
+      reporterEnabled: 'spec, mocha-junit-reporter',
+      mochaJunitReporterReporterOptions: {
+        mochaFile: 'cypress-junit-[hash].xml'
+      }
+    }
   },
   projectId: 'if5p69',
   viewportWidth: 1500,

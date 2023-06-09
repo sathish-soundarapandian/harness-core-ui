@@ -53,7 +53,8 @@ describe('Test K8sBlueGreenDeployStep', () => {
           name: 'Test A',
           timeout: RUNTIME_INPUT_VALUE,
           spec: {
-            skipDryRun: RUNTIME_INPUT_VALUE
+            skipDryRun: RUNTIME_INPUT_VALUE,
+            skipSteadyStateCheck: RUNTIME_INPUT_VALUE
           }
         }}
         type={StepType.HelmRollback}
@@ -73,7 +74,8 @@ describe('Test K8sBlueGreenDeployStep', () => {
           name: 'Test A',
           timeout: '10m',
           spec: {
-            skipDryRun: true
+            skipDryRun: true,
+            skipSteadyStateCheck: true
           }
         }}
         type={StepType.HelmRollback}
@@ -114,7 +116,8 @@ describe('Test K8sBlueGreenDeployStep', () => {
           type: StepType.HelmRollback,
           spec: {
             skipDryRun: false,
-            timeout: '10m'
+            timeout: '10m',
+            skipSteadyStateCheck: false
           }
         }}
         type={StepType.HelmRollback}
@@ -137,7 +140,8 @@ describe('Test K8sBlueGreenDeployStep', () => {
       type: StepType.HelmRollback,
       spec: {
         skipDryRun: false,
-        timeout: '10m'
+        timeout: '10m',
+        skipSteadyStateCheck: false
       }
     })
 
@@ -169,7 +173,8 @@ describe('Test K8sBlueGreenDeployStep', () => {
         timeout: '5s',
         type: StepType.HelmRollback,
         spec: {
-          skipDryRun: false
+          skipDryRun: false,
+          skipSteadyStateCheck: false
         }
       },
       template: {
@@ -179,7 +184,8 @@ describe('Test K8sBlueGreenDeployStep', () => {
         type: StepType.HelmRollback,
         spec: {
           timeout: '1s',
-          skipDryRun: false
+          skipDryRun: false,
+          skipSteadyStateCheck: false
         }
       },
       viewType: StepViewType.TriggerForm

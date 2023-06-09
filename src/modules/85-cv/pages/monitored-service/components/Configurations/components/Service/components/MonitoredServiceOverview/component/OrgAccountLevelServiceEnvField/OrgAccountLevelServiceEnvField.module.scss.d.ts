@@ -9,5 +9,6 @@
 declare const styles: {
   readonly editEnvDialog: string
   readonly editServiceDialog: string
+  readonly multiSelectEnvDropdown: string
 }
 export default styles

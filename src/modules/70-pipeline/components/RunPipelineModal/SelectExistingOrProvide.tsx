@@ -6,68 +6,58 @@
  */
 
 import React, { FormEvent } from 'react'
-import { PopoverPosition, Radio, RadioGroup } from '@blueprintjs/core'
-import { Icon, Layout, Text } from '@harness/uicore'
-import cx from 'classnames'
+import { PopoverPosition, Switch } from '@blueprintjs/core'
+import { Text, Layout } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import css from './RunPipelineForm.module.scss'
 
 interface SelectExistingInputsOrProvideNewProps {
   existingProvide: string
   onExistingProvideRadioChange: (e: FormEvent<HTMLInputElement>) => void
+  hasInputSets: boolean
 }
 
 function SelectExistingInputsOrProvideNew({
   existingProvide,
-  onExistingProvideRadioChange
+  onExistingProvideRadioChange,
+  hasInputSets
 }: SelectExistingInputsOrProvideNewProps): React.ReactElement {
   const { getString } = useStrings()
   return (
-    <div>
-      <Layout.Horizontal className={css.runModalSubHeading} id="use-input-set">
-        <RadioGroup
-          name="existingProvideRadio"
-          label={getString('pipeline.pipelineInputPanel.selectedExisitingOrProvide')}
-          inline
-          selectedValue={existingProvide}
-          onChange={onExistingProvideRadioChange}
-        >
-          <Radio
-            label={getString('pipeline.pipelineInputPanel.provide')}
-            value="provide"
-            className={cx(css.valueProviderRadio, existingProvide === 'provide' ? css.selectedValueProvider : '')}
-          />
-          <Radio
-            label={getString('pipeline.pipelineInputPanel.existing')}
-            value="existing"
-            className={cx(css.valueProviderRadio, existingProvide === 'existing' ? css.selectedValueProvider : '')}
-          />
-        </RadioGroup>
-        <span className={css.helpSection}>
-          <Icon name="question" className={css.helpIcon} intent="primary" />
-          <Text
-            data-testid="input-set-description-tooltip"
-            tooltipProps={{
-              position: PopoverPosition.BOTTOM
-            }}
-            tooltip={
-              <Text padding="medium" width={400}>
-                {getString('pipeline.inputSets.aboutInputSets')}
-                <a
-                  href="https://docs.harness.io/article/3fqwa8et3d-input-sets"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {getString('learnMore')}
-                </a>
-              </Text>
-            }
-          >
-            {getString('pipeline.pipelineInputPanel.whatAreInputsets')}
+    <Layout.Horizontal margin={{ bottom: 'small' }}>
+      <Text
+        data-testid="input-set-description-tooltip"
+        tooltipProps={{
+          position: PopoverPosition.RIGHT_TOP,
+          isDark: true
+        }}
+        tooltip={
+          <Text padding="medium" width={400} color={Color.GREY_200}>
+            {getString('pipeline.inputSets.aboutInputSets')}
+            <a href="https://docs.harness.io/article/3fqwa8et3d-input-sets" target="_blank" rel="noopener noreferrer">
+              {getString('learnMore')}
+            </a>
           </Text>
-        </span>
-      </Layout.Horizontal>
-    </div>
+        }
+        rightIcon="question"
+        rightIconProps={{
+          color: Color.PRIMARY_7,
+          className: css.helpIcon
+        }}
+        font={{ weight: 'semi-bold', variation: FontVariation.H6 }}
+      >
+        {getString('pipeline.pipelineInputPanel.useExisitingInputSets')}
+      </Text>
+      <Switch
+        disabled={!hasInputSets}
+        checked={existingProvide === 'existing'}
+        onChange={onExistingProvideRadioChange}
+        alignIndicator={'right'}
+        className={css.toggleExisitingProvide}
+        data-testid={'selectExistingOrProvide'}
+      />
+    </Layout.Horizontal>
   )
 }
 

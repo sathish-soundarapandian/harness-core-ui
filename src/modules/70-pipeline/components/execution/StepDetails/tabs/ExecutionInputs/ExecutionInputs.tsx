@@ -126,6 +126,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
         template: parsedStage.stage,
         viewType: StepViewType.DeploymentForm,
         originalStage: fieldYaml.stage,
+        resolvedStage: fieldYaml.stage,
         getString
       })
 

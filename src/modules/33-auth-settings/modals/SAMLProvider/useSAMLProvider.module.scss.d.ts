@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly additionalFieldsContainer: string
   readonly container: string
   readonly copy: string
   readonly crossIcon: string

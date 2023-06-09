@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import moment from 'moment'
 import { Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { StringKeys } from 'framework/strings'
@@ -23,7 +24,8 @@ import {
   getRiskLabelStringId,
   getMonitoredServiceIdentifiers,
   getEnvironmentOptions,
-  getMonitoredServiceIdentifierProp
+  getMonitoredServiceIdentifierProp,
+  nearestMinutes
 } from '../CommonUtils'
 import {
   monitoredServiceDetails,
@@ -244,5 +246,9 @@ describe('Test for getMonitoredServiceIdentifiers', () => {
 
     const compositeAccountLevelSLO = getMonitoredServiceIdentifierProp(true, true, ['ms1'], '')
     expect(compositeAccountLevelSLO).toEqual({ scopedMonitoredServiceIdentifiers: ['ms1'] })
+  })
+  test('should round the minutes to the nearest interval', () => {
+    const result = nearestMinutes(5, moment(1630863300338))
+    expect(result.valueOf()).toEqual(1630863300338)
   })
 })

@@ -1,0 +1,23 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "githubPackageResponse": [
+      {
+        "packageId": "4556276",
+        "packageName": "alpine",
+        "packageType": "container",
+        "visibility": "private",
+        "packageUrl": "https://github.com/users/autouser3-gitsync/packages/container/package/alpine"
+      },
+      {
+        "packageId": "4696242",
+        "packageName": "nginx",
+        "packageType": "container",
+        "visibility": "private",
+        "packageUrl": "https://github.com/users/autouser3-gitsync/packages/container/package/nginx"
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "e752a9b5-d6cd-4b4c-9452-fb1077ff4064"
+}

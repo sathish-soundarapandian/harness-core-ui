@@ -42,6 +42,7 @@ export class ElastigroupInfrastructureSpec extends PipelineStep<ElastigroupInfra
   protected type = StepType.Elastigroup
   protected defaultValues: ElastigroupInfrastructure = {
     connectorRef: '',
+    provisioner: '',
     configuration: {
       store: {
         type: 'Harness',
@@ -149,6 +150,7 @@ export class ElastigroupInfrastructureSpec extends PipelineStep<ElastigroupInfra
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <ElastigroupInfraSpecInputSetMode
+          {...(customStepProps as ElastigroupInfraSpecEditableProps)}
           initialValues={initialValues}
           onUpdate={onUpdate}
           readonly={inputSetData?.readonly}

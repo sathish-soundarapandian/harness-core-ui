@@ -32,7 +32,7 @@ import {
   MetricTypeValues
 } from '../../common/MetricThresholds/MetricThresholds.constants'
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
-import { createPayloadForAssignComponentV2 } from '../../common/utils/HealthSource.utils'
+import { createPayloadForAssignComponentV2, getConnectorRef } from '../../common/utils/HealthSource.utils'
 
 const validateMetricThresholds = (
   errors: Record<string, string>,
@@ -324,7 +324,7 @@ export function transformCustomSetupSourceToHealthSource(
   setupSource: CustomHealthSourceSetupSource
 ): UpdatedHealthSource {
   const spec: CustomHealthSourceMetricSpec & { metricPacks: TimeSeriesMetricPackDTO[] } = {
-    connectorRef: setupSource?.connectorRef,
+    connectorRef: getConnectorRef(setupSource?.connectorRef),
     metricDefinitions: [],
     metricPacks: []
   }

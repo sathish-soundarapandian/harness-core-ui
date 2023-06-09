@@ -14,6 +14,7 @@ import * as useFeaturesMock from '@common/hooks/useFeatures'
 import type { ResponseTemplateResponse } from 'services/template-ng'
 import * as templateServices from 'services/template-ng'
 import { TemplateBar, TemplateBarProps } from '../TemplateBar'
+import { stageTemplate } from './mock'
 
 export const stepTemplate: ResponseTemplateResponse = {
   status: 'SUCCESS',
@@ -221,5 +222,18 @@ describe('<TemplateBar /> tests', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('should render repo and branch name if template linked is remote', async () => {
+    useGetTemplate.mockImplementation(
+      () => ({ data: stageTemplate, refetch: jest.fn(), error: null, loading: false } as any)
+    )
+    const { getByText: getByTxt } = render(
+      <TestWrapper>
+        <TemplateBar {...baseProps} />
+      </TestWrapper>
+    )
+    expect(getByTxt('Ramya-test')).toBeInTheDocument()
+    expect(getByTxt('master')).toBeInTheDocument()
   })
 })

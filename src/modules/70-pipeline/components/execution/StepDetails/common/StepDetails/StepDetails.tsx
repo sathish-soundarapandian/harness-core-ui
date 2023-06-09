@@ -29,6 +29,10 @@ import { encodeURIWithReservedChars } from './utils'
 
 import css from './StepDetails.module.scss'
 
+interface Task {
+  taskId: string
+  taskName: string
+}
 export interface StepLabels {
   label: string
   value: React.ReactNode
@@ -61,7 +65,22 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
   const { openDelegateSelectionLogsModal } = useDelegateSelectionLogsModal()
 
   React.useEffect(() => {
-    const tasks = step.executableResponses?.map(item => item.taskChain || item.task).filter(item => item !== undefined)
+    let tasks: Task[] = defaultTo(
+      step.executableResponses?.map(item => item.taskChain || item.task).filter(item => item !== undefined),
+      []
+    )
+    if (step?.stepDetails && !isEmpty(step?.stepDetails) && isEmpty(tasks)) {
+      tasks = []
+      const stepDetailsKeys = Object.keys(step?.stepDetails)
+      stepDetailsKeys.forEach(stepDetailsKey => {
+        const stepDelegateInfos = step.stepDetails?.[stepDetailsKey]?.stepDelegateInfos?.filter(
+          (item: Task) => item !== undefined
+        )
+        stepDelegateInfos?.forEach((stepDelegateInfo: Task) => {
+          tasks.push(stepDelegateInfo)
+        })
+      })
+    }
     if (tasks) {
       setTaskList(tasks)
     }
@@ -79,7 +98,11 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
     return !!delegateList?.find((item: DelegateInfo) => item.taskId === taskId)
   }
 
-  const delegateLogsAvailable = step.startTs !== undefined && step.delegateInfoList && step.delegateInfoList.length > 0
+  const delegateLogsAvailable =
+    (step.startTs !== undefined && step.delegateInfoList && step.delegateInfoList.length > 0) ||
+    (step.startTs !== undefined && step.stepDetails && Object.keys(step.stepDetails).length > 0)
+
+  const delegateInfoList = !isEmpty(step.delegateInfoList) ? step.delegateInfoList : taskList
 
   return (
     <table className={css.detailsTable}>
@@ -141,9 +164,9 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
             </th>
             <td>
               <Layout.Vertical spacing="small">
-                {step.delegateInfoList &&
-                  step.delegateInfoList.length > 0 &&
-                  step.delegateInfoList.map((item, index) => (
+                {delegateInfoList &&
+                  delegateInfoList.length > 0 &&
+                  delegateInfoList.map((item, index) => (
                     <div key={`${item.id}-${index}`}>
                       <Text font={{ size: 'small', weight: 'bold' }}>
                         <String
@@ -199,7 +222,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                 {taskList &&
                   taskList.length > 0 &&
                   taskList.map((item, index) =>
-                    delegateListContainsTask(step.delegateInfoList, item.taskId) ? null : (
+                    delegateListContainsTask(delegateInfoList, item.taskId) ? null : (
                       <div key={`${item.taskId}-${index}`}>
                         {isExecutionComplete(step.status) ? (
                           <Text font={{ size: 'small', weight: 'bold' }} color={Color.ORANGE_500}>
@@ -279,6 +302,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                       isOpen={isOpen}
                       close={closeDelegateTaskLogsModal}
                       step={step}
+                      taskList={taskList as Task[]}
                       telemetry={{
                         taskContext: TaskContext.PipelineStep,
                         hasError: isExecutionCompletedWithBadState(step.status)

@@ -38,6 +38,7 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { connectorTypes, EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { isFixedNonEmptyValue } from '@pipeline/utils/stageHelpers'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getGoogleCloudFunctionInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
@@ -164,7 +165,8 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
             connectorRef: undefined,
             project: value.project === '' ? undefined : value.project,
             region: value.region === '' ? undefined : value.region,
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value?.provisioner || undefined
           }
           if (value.connectorRef) {
             data.connectorRef = getConnectorRefValue(value.connectorRef as ConnectorRefFormValueType)
@@ -179,6 +181,9 @@ export const GoogleCloudFunctionInfraSpecEditable: React.FC<GoogleCloudFunctionI
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <ProvisionerField name="provisioner" isReadonly />
+              </Layout.Horizontal>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

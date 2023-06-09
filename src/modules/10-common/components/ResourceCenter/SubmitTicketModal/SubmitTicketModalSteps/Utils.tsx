@@ -1,74 +1,9 @@
-import { ModuleName } from 'framework/types/ModuleName'
-
-export const getComponentsFromModule = (module: string): Array<{ label: string; value: string }> => {
-  switch (module) {
-    case ModuleName.CD:
-      return [
-        { label: 'Azure Web App', value: 'Azure Web App' },
-        { label: 'ECS', value: 'ECS' },
-        { label: 'EC2/AMI', value: 'EC2/AMI' },
-        { label: 'GCP', value: 'GCP' },
-        { label: 'GitOps', value: 'GitOps' },
-        { label: 'Kubernetes/Helm', value: 'Kubernetes/Helm' },
-        { label: 'Other', value: 'Other' },
-        { label: 'Serverless', value: 'Serverless' },
-        { label: 'Tanzu/PCF', value: 'Tanzu/PCF' },
-        { label: 'WinRM/SSH', value: 'WinRM/SSH' }
-      ]
-    case ModuleName.CI:
-      return [
-        { label: 'Artifact upload', value: 'Artifact upload' },
-        { label: 'Build', value: 'Build' },
-        { label: 'Plugins', value: 'Plugins' },
-        { label: 'Queue Intelligence', value: 'Queue Intelligence' },
-        { label: 'Tests and test autoamtion', value: 'Tests and test autoamtion' },
-        { label: 'Test intelligence', value: 'Test intelligence' }
-      ]
-    case ModuleName.CE:
-      return [
-        { label: 'Autostopping', value: 'Autostopping' },
-        { label: 'Build', value: 'Build' },
-        { label: 'Cost Governence', value: 'Cost Governence' },
-        { label: 'Cost Optimization', value: 'Cost Optimization' },
-        { label: 'Dashboard', value: 'Dashboard' }
-      ]
-    case ModuleName.STO:
-      return [
-        { label: 'Pipeline', value: 'Pipeline' },
-        { label: 'Plugins and engines', value: 'Plugins and engines' },
-        { label: 'Scan results and rules', value: 'Scan results and rules' }
-      ]
-    case ModuleName.CHAOS:
-      return [
-        { label: 'Experiment', value: 'Experiment' },
-        { label: 'Hub', value: 'Hub' },
-        { label: 'Infrastracture', value: 'Infrastracture' },
-        { label: 'Probes', value: 'Probes' }
-      ]
-    case ModuleName.CF:
-      return [
-        { label: 'Integration and pipeline', value: 'Integration and pipeline' },
-        { label: 'Relay Proxy', value: 'Relay Proxy' },
-        { label: 'SDK', value: 'SDK' }
-      ]
-    case 'platform':
-      return [
-        { label: 'API', value: 'API' },
-        { label: 'Authentication/SSO', value: 'Authentication/SSO' },
-        { label: 'Connector', value: 'Connector' },
-        { label: 'Delegate', value: 'Delegate' },
-        { label: 'Git Experience', value: 'Git Experience' },
-        { label: 'Policy as code (OPA)', value: 'Policy as code (OPA)' },
-        { label: 'RBAC', value: 'RBAC' },
-        { label: 'Secrets and secret engines', value: 'Secrets and secret engines' },
-        { label: 'Security', value: 'Security' },
-        { label: 'Triggers', value: 'Triggers' },
-        { label: 'Templates', value: 'Templates' }
-      ]
-    default:
-      return [{ label: 'Miscellaneous', value: 'Miscellaneous' }]
-  }
-}
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
 
 export enum IssueType {
   QUESTION = 'QUESTION',
@@ -90,7 +25,6 @@ export interface SubmitTicket {
   priority: PriorityType
   ticketDetails: string
   module: string
-  component: string
   fileData: any
 }
 

@@ -78,7 +78,9 @@ export function GCRImagePath({
             <div className={css.imagePathContainer}>
               <FormInput.MultiTypeInput
                 label={getString('connectors.GCR.registryHostname')}
-                placeholder={getString('common.validation.urlIsRequired')}
+                placeholder={getString('common.enterPlaceholder', {
+                  name: getString('connectors.GCR.registryHostname')
+                })}
                 name="registryHostname"
                 selectItems={gcrUrlList}
                 useValue

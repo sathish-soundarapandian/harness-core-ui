@@ -101,23 +101,27 @@ export const getInfrastructureDefaultValue = (
       const connectorRef = infrastructure?.spec?.connectorRef
       const region = infrastructure?.spec?.region
       const infraStage = infrastructure?.spec?.stage
+      const provisioner = infrastructure?.spec?.provisioner
 
       return {
         connectorRef,
         region,
         stage: infraStage,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.ServerlessAzureFunctions:
     case InfraDeploymentType.ServerlessGoogleFunctions: {
       const connectorRef = infrastructure?.spec?.connectorRef
       const infraStage = infrastructure?.spec?.stage
+      const provisioner = infrastructure?.spec?.provisioner
 
       return {
         connectorRef,
         stage: infraStage,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.KubernetesAzure: {
@@ -144,12 +148,14 @@ export const getInfrastructureDefaultValue = (
       const connectorRef = infrastructure?.spec?.connectorRef
       const subscriptionId = infrastructure?.spec?.subscriptionId
       const resourceGroup = infrastructure?.spec?.resourceGroup
+      const provisioner = infrastructure?.spec?.provisioner
 
       return {
         connectorRef,
         subscriptionId,
         resourceGroup,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.CustomDeployment: {
@@ -229,35 +235,47 @@ export const getInfrastructureDefaultValue = (
     }
     case InfraDeploymentType.Asg:
     case InfraDeploymentType.AwsLambda: {
-      const { connectorRef, region } = infrastructure?.spec || {}
+      const { connectorRef, region, provisioner } = infrastructure?.spec || {}
       return {
         connectorRef,
         region,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.Elastigroup: {
-      const { connectorRef, configuration } = infrastructure?.spec || {}
+      const { connectorRef, configuration, provisioner } = infrastructure?.spec || {}
       return {
         connectorRef,
         configuration,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.TAS: {
-      const { connectorRef, organization, space } = infrastructure?.spec || {}
+      const { connectorRef, organization, space, provisioner } = infrastructure?.spec || {}
       return {
         connectorRef,
         organization,
         space,
-        allowSimultaneousDeployments
+        allowSimultaneousDeployments,
+        provisioner
       }
     }
     case InfraDeploymentType.GoogleCloudFunctions: {
-      const { connectorRef, project, region } = infrastructure?.spec || {}
+      const { connectorRef, project, region, provisioner } = infrastructure?.spec || {}
       return {
         connectorRef,
         project,
+        region,
+        allowSimultaneousDeployments,
+        provisioner
+      }
+    }
+    case InfraDeploymentType.AwsSam: {
+      const { connectorRef, region } = infrastructure?.spec || {}
+      return {
+        connectorRef,
         region,
         allowSimultaneousDeployments
       }
@@ -282,8 +300,7 @@ export interface InfrastructureGroup {
 export const getInfraGroups = (
   deploymentType: ServiceDefinition['type'],
   getString: UseStringsReturn['getString'],
-  isSvcEnvEntityEnabled: boolean,
-  NG_CDS_NATIVE_EKS_SUPPORT?: boolean
+  isSvcEnvEntityEnabled: boolean
 ): InfrastructureGroup[] => {
   const serverlessInfraGroups: InfrastructureGroup[] = [
     {
@@ -398,6 +415,19 @@ export const getInfraGroups = (
     }
   ]
 
+  const awsSamInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('common.aws'),
+          icon: 'service-aws',
+          value: InfraDeploymentType.AwsSam
+        }
+      ]
+    }
+  ]
+
   const kuberntesInfraGroups: InfrastructureGroup[] = [
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
@@ -406,11 +436,7 @@ export const getInfraGroups = (
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.viaCloudProvider'),
       items: getInfraGroupItems(
-        [
-          InfraDeploymentType.KubernetesGcp,
-          InfraDeploymentType.KubernetesAzure,
-          ...(NG_CDS_NATIVE_EKS_SUPPORT ? [InfraDeploymentType.KubernetesAws] : [])
-        ],
+        [InfraDeploymentType.KubernetesGcp, InfraDeploymentType.KubernetesAzure, InfraDeploymentType.KubernetesAws],
         getString
       )
     }
@@ -419,6 +445,8 @@ export const getInfraGroups = (
   switch (true) {
     case deploymentType === ServiceDeploymentType.AwsLambda:
       return awsLambdaInfraGroups
+    case deploymentType === ServiceDeploymentType.AwsSam:
+      return awsSamInfraGroups
     case isServerlessDeploymentType(deploymentType):
       return serverlessInfraGroups
     case isAzureWebAppDeploymentType(deploymentType):

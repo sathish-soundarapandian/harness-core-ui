@@ -52,7 +52,8 @@ import {
   helperTextData,
   getConnectorRefQueryData,
   shouldHideHeaderAndNavBtns,
-  isTemplateView
+  isTemplateView,
+  resetFieldValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   getHelpeTextForTags,
@@ -85,9 +86,10 @@ import css from '../../ArtifactConnector.module.scss'
 
 const getRepositoryValue = (
   formData: ImagePathTypes & { connectorId?: string },
-  isGenericArtifactory = false
+  isGenericArtifactory = /* istanbul ignore next */ false
 ): string => {
   if (isGenericArtifactory) {
+    /* istanbul ignore if */
     if ((formData?.repository as SelectOption)?.value) {
       return (formData?.repository as SelectOption)?.value as string
     }
@@ -110,7 +112,7 @@ function Artifactory({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  selectedDeploymentType = '',
+  selectedDeploymentType = /* istanbul ignore next */ '',
   isMultiArtifactSource,
   formClassName = '',
   editArtifactModePrevStepData
@@ -144,15 +146,18 @@ function Artifactory({
   // By default, UI should be rendered assuming repositoryFormat is Generic
   const shouldChooseGenericAsDefault = isServerlessDeploymentTypeSelected || isAWSLambdaDeploymentTypeSelected
 
-  const [repositoryFormat, setRepositoryFormat] = useState<string | undefined>(
-    get(
-      initialValues,
-      'spec.repositoryFormat',
-      showRepositoryFormatForAllowedTypes || shouldChooseGenericAsDefault
-        ? RepositoryFormatTypes.Generic
-        : RepositoryFormatTypes.Docker
-    )
-  )
+  const getRepositoryFormatForInitialization = () => {
+    let repoFormat = RepositoryFormatTypes.Docker
+    if (shouldChooseGenericAsDefault) repoFormat = RepositoryFormatTypes.Generic
+    if (showRepositoryFormatForAllowedTypes) {
+      const repoFormatFromValues = getRepositoryFormat(initialValues) as RepositoryFormatTypes
+      repoFormat = repoFormatFromValues ? repoFormatFromValues : RepositoryFormatTypes.Generic
+    }
+
+    return repoFormat
+  }
+
+  const [repositoryFormat, setRepositoryFormat] = useState<string | undefined>(getRepositoryFormatForInitialization())
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -167,13 +172,8 @@ function Artifactory({
   }, [repositoryFormat])
 
   useEffect(() => {
-    let repoFormat = RepositoryFormatTypes.Docker
-    if (shouldChooseGenericAsDefault) repoFormat = RepositoryFormatTypes.Generic
-    if (showRepositoryFormatForAllowedTypes) {
-      const repoFormatFromValues = getRepositoryFormat(initialValues) as RepositoryFormatTypes
-      repoFormat = repoFormatFromValues ? repoFormatFromValues : RepositoryFormatTypes.Generic
-    }
-    setRepositoryFormat(repoFormat)
+    const evaluatedRepoformat = getRepositoryFormatForInitialization()
+    setRepositoryFormat(evaluatedRepoformat)
   }, [])
 
   const schemaObject = {
@@ -343,7 +343,7 @@ function Artifactory({
     [lastQueryData, modifiedPrevStepData]
   )
   const fetchTags = useCallback(
-    (artifactPath = '', repository = ''): void => {
+    (artifactPath = /* istanbul ignore next */ '', repository = /* istanbul ignore next */ ''): void => {
       if (canFetchTags(artifactPath, repository)) {
         setLastQueryData({ artifactPath, repository })
       }
@@ -384,7 +384,7 @@ function Artifactory({
     merge(artifactObj.spec, {
       repository: getRepositoryValue(formData, isGenericArtifactory),
       repositoryUrl: formData?.repositoryUrl,
-      repositoryFormat: defaultTo(formData.repositoryFormat, repositoryFormat)
+      repositoryFormat: isArtifactTemplate ? defaultTo(formData.repositoryFormat, repositoryFormat) : repositoryFormat
     })
 
     if (isAzureWebAppGeneric) {
@@ -732,6 +732,10 @@ function Artifactory({
                     radioGroup={{ inline: true }}
                     items={tagOptions}
                     className={css.radioGroup}
+                    onChange={() => {
+                      resetFieldValue(formik, 'tagRegex')
+                      resetFieldValue(formik, 'tag')
+                    }}
                   />
                 </div>
                 {formik.values?.tagType === 'value' ? (

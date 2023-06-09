@@ -29,6 +29,14 @@ export interface HarnessApprovalData extends StepElementConfig {
       disallowPipelineExecutor: string | boolean
     }
     approverInputs: string | ApproverInputsSubmitCallInterface[]
+    autoApproval?: {
+      action: 'APPROVE' | 'REJECT'
+      scheduledDeadline: {
+        timeZone: string
+        time: string
+      }
+      comments?: string
+    }
   }
   userGroupExpression?: string
 }

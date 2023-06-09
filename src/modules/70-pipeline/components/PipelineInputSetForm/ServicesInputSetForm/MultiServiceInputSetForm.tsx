@@ -35,7 +35,8 @@ export default function MultiServiceInputSetForm({
   readonly,
   viewType,
   stageIdentifier,
-  allowableTypes
+  allowableTypes,
+  viewTypeMetadata
 }: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement | null {
   const { getString } = useStrings()
   const formik = useFormikContext<DeploymentStageConfig>()
@@ -76,6 +77,7 @@ export default function MultiServiceInputSetForm({
               customDeploymentData: deploymentStage?.customDeploymentRef
             }}
             onUpdate={data => formik?.setFieldValue(`${path}.services`, get(data, 'services'))}
+            viewTypeMetadata={viewTypeMetadata}
           />
         ) : null}
 
@@ -110,6 +112,7 @@ export default function MultiServiceInputSetForm({
                         serviceIdentifier: defaultTo(service.serviceRef, ''),
                         allValues: service.serviceInputs?.serviceDefinition?.spec
                       }}
+                      viewTypeMetadata={viewTypeMetadata}
                     />
                   </React.Fragment>
                 )

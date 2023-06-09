@@ -303,27 +303,17 @@ export const getEnabledStatusTriggerValues = ({
     return { error: getString('triggers.cannotParseTriggersData') }
   }
 }
-const TriggerStatus = {
-  FAILED: 'FAILED',
-  UNKNOWN: 'UNKNOWN',
-  ERROR: 'ERROR',
-  TIMEOUT: 'TIMEOUT',
-  UNAVAILABLE: 'UNAVAILABLE',
-  SUCCESS: 'SUCCESS'
-}
 
-export const errorStatusList = [
-  TriggerStatus.FAILED,
-  TriggerStatus.UNKNOWN,
-  TriggerStatus.ERROR,
-  TriggerStatus.TIMEOUT,
-  TriggerStatus.UNAVAILABLE
-]
+export enum TriggerStatusEnum {
+  FAILED = 'FAILED',
+  UNKNOWN = 'UNKNOWN',
+  SUCCESS = 'SUCCESS'
+}
 
 const TriggerCategoryToLabelMap: Record<Required<TriggerCatalogItem>['category'], StringKeys> = {
   Webhook: 'execution.triggerType.WEBHOOK',
   Artifact: 'pipeline.artifactTriggerConfigPanel.artifact',
-  MultiArtifact: 'pipeline.artifactTriggerConfigPanel.artifact',
+  MultiRegionArtifact: 'pipeline.artifactTriggerConfigPanel.artifact',
   Manifest: 'manifestsText',
   Scheduled: 'triggers.scheduledLabel'
 }

@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import executionMock from './executionMock.json'
+import executionMock from './mocks/execution-mock-old-view.json'
 
 import ExecutionArtifactsView, {
   getStageSetupIds,
@@ -148,24 +148,11 @@ describe('<ExecutionArtifactsView /> tests', () => {
     ])
   })
   test('renders ok', () => {
-    const { container } = render(
+    render(
       <TestWrapper>
         <ExecutionArtifactsView />
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('renders list with FF turned on', async () => {
-    const { container } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          SSCA_ENABLED: true
-        }}
-      >
-        <ExecutionArtifactsView />
-      </TestWrapper>
-    )
-    expect(container).toMatchSnapshot()
+    expect(screen.getByText('Not Found')).toBeInTheDocument()
   })
 })

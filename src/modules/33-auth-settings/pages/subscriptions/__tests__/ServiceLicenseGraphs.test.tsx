@@ -24,6 +24,8 @@ jest.mock('@common/hooks', () => ({
 
 describe('Service License Visualisation Graph test cases', () => {
   test('it renders the subscriptions page with SI graph', async () => {
+    jest.useFakeTimers('modern')
+    jest.setSystemTime(new Date('2023-05-19'))
     const { container } = render(
       <TestWrapper>
         <ServiceLicenseGraphs accountId={'accountId'} licenseType={CDLicenseType.SERVICE_INSTANCES} />
@@ -226,6 +228,8 @@ describe('Service License Visualisation Graph test cases', () => {
 })
 
 describe('Service License Visualisation Graph test cases for api data still loading', () => {
+  jest.useFakeTimers('modern')
+  jest.setSystemTime(new Date('2023-05-19'))
   test('checking if spinner loads on loading as true from api ', async () => {
     ;(useMutateAsGet as any).mockImplementation(() => {
       return { data: [], refetch: jest.fn(), error: null, loading: true }

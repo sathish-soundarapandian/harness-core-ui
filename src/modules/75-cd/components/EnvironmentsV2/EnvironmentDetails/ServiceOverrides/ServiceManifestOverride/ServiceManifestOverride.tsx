@@ -26,7 +26,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ManifestWizard } from '@pipeline/components/ManifestSelection/ManifestWizard/ManifestWizard'
-import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
 import {
   getBuildPayload,
   isGitTypeManifestStore,
@@ -138,7 +138,7 @@ function ServiceManifestOverride({
   >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const { CDS_TAS_NG, CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
+  const { CDS_TAS_NG } = useFeatureFlags()
 
   useEffect(() => {
     setIsManifestEditMode(manifestIndex < manifestOverrides.length)
@@ -276,7 +276,7 @@ function ServiceManifestOverride({
   }, [getInitialValues, selectedConnector])
 
   const shouldPassPrevStepData = (): boolean => {
-    return isManifestEditMode && !!selectedConnector && !!CDS_SERVICE_CONFIG_LAST_STEP
+    return isManifestEditMode && !!selectedConnector
   }
 
   const getLastSteps = useCallback((): Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> => {
@@ -347,6 +347,7 @@ function ServiceManifestOverride({
             <K8sValuesManifest
               {...lastStepProps()}
               {...((shouldPassPrevStepData() ? prevStepProps() : {}) as CommonManifestLastStepPrevStepData)}
+              selectedDeploymentType={serviceType as ServiceDefinition['type']}
             />
           )
           break
@@ -382,6 +383,7 @@ function ServiceManifestOverride({
             <CommonManifestDetails
               {...lastStepProps()}
               {...((shouldPassPrevStepData() ? prevStepProps() : {}) as CommonManifestLastStepPrevStepData)}
+              selectedDeploymentType={serviceType as ServiceDefinition['type']}
             />
           )
           break
@@ -397,7 +399,8 @@ function ServiceManifestOverride({
     prevStepProps,
     selectedConnector,
     isManifestEditMode,
-    fetchingConnector
+    fetchingConnector,
+    serviceType
   ])
 
   const getLabels = (): { firstStepName: string; secondStepName: string } => {

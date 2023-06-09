@@ -9,7 +9,7 @@ import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import { isEmpty } from 'lodash-es'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { TanzuApplicationServiceInfrastructure } from 'services/cd-ng'
+import type { TanzuApplicationServiceInfrastructure, ExecutionElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { getConnectorSchema } from '../PipelineStepsUtil'
@@ -71,4 +71,5 @@ export interface TASInfrastructureSpecEditableProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: TanzuApplicationServiceInfrastructure
   allowableTypes: AllowedTypes
+  provisioner?: ExecutionElementConfig['steps']
 }

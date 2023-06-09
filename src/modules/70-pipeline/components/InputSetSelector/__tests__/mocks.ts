@@ -39,9 +39,6 @@ export const multipleSelectedInputSetsWithGitDetails: InputSetValue[] = [
     gitDetails: {
       repoIdentifier: 'gitSyncRepo',
       branch: 'feature'
-    },
-    entityValidityDetails: {
-      valid: false
     }
   }
 ]
@@ -132,9 +129,6 @@ export const mockInputSetsListWithGitDetails: UseGetMockDataWithMutateAndRefetch
             gitDetails: {
               repoIdentifier: 'gitSyncRepo',
               branch: 'feature'
-            },
-            entityValidityDetails: {
-              valid: false
             }
           },
           {
@@ -151,3 +145,83 @@ export const mockInputSetsListWithGitDetails: UseGetMockDataWithMutateAndRefetch
       }
     }
   }
+
+export const paginatedInputSetsResponse: ResponsePageInputSetSummaryResponse = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 5,
+    totalItems: 23,
+    pageItemCount: 5,
+    pageSize: 5,
+    content: [
+      {
+        identifier: 'inputSet23',
+        name: 'inputSet23',
+        pipelineIdentifier: 'Triggers_2',
+        inputSetType: 'INPUT_SET',
+        tags: {},
+        createdAt: 1685717843503,
+        lastUpdatedAt: 1685717843503,
+        entityValidityDetails: {
+          valid: true
+        },
+        storeType: 'INLINE'
+      },
+      {
+        identifier: 'inputSet22',
+        name: 'inputSet22',
+        pipelineIdentifier: 'Triggers_2',
+        inputSetType: 'INPUT_SET',
+        tags: {},
+        createdAt: 1685717831418,
+        lastUpdatedAt: 1685717831418,
+        entityValidityDetails: {
+          valid: true
+        },
+        storeType: 'INLINE'
+      },
+      {
+        identifier: 'inputSet21',
+        name: 'inputSet21',
+        pipelineIdentifier: 'Triggers_2',
+        inputSetType: 'INPUT_SET',
+        tags: {},
+        createdAt: 1685717794214,
+        lastUpdatedAt: 1685717794214,
+        entityValidityDetails: {
+          valid: true
+        },
+        storeType: 'INLINE'
+      },
+      {
+        identifier: 'inputSet20',
+        name: 'inputSet20',
+        pipelineIdentifier: 'Triggers_2',
+        inputSetType: 'INPUT_SET',
+        tags: {},
+        createdAt: 1685717772083,
+        lastUpdatedAt: 1685717772083,
+        entityValidityDetails: {
+          valid: true
+        },
+        storeType: 'INLINE'
+      },
+      {
+        identifier: 'inputSet19',
+        name: 'inputSet19',
+        pipelineIdentifier: 'Triggers_2',
+        inputSetType: 'INPUT_SET',
+        tags: {},
+        createdAt: 1685717756591,
+        lastUpdatedAt: 1685717756591,
+        entityValidityDetails: {
+          valid: true
+        },
+        storeType: 'INLINE'
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  correlationId: 'correlationId'
+}

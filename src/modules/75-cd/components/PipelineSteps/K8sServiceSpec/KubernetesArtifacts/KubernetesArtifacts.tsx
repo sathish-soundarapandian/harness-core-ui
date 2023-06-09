@@ -33,7 +33,7 @@ export const KubernetesArtifacts: React.FC<KubernetesArtifactsProps> = props => 
       {props.type ? (
         <KubernetesPrimaryArtifacts type={props.type} {...commonProps} />
       ) : (
-        <PrimaryArtifactSource {...commonProps} />
+        <PrimaryArtifactSource {...commonProps} viewTypeMetadata={props.viewTypeMetadata} />
       )}
       <KubernetesSidecarArtifacts {...commonProps} />
     </>

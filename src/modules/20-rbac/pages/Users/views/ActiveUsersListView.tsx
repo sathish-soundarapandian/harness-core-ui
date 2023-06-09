@@ -26,9 +26,9 @@ import {
   SortMethod,
   sortByEmail
 } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Color } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
-import { Classes, Position, Menu, Intent, PopoverInteractionKind, MenuItem } from '@blueprintjs/core'
+import { Classes, Position, Menu, Intent } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, noop } from 'lodash-es'
 import {
@@ -188,7 +188,9 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
 
   const getContentText = (): string => {
     if (!isLastAdmin) {
-      return getString('rbac.usersPage.deleteConfirmation', { name })
+      return data.externallyManaged
+        ? getString('rbac.usersPage.deleteExternallyManagedUserConfirmation', { name })
+        : getString('rbac.usersPage.deleteConfirmation', { name })
     }
     switch (scope) {
       case Scope.PROJECT:
@@ -204,10 +206,11 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
   const { openDialog: openDeleteDialog } = useConfirmationDialog({
     contentText: getContentText(),
     titleText: getString('rbac.usersPage.deleteTitle'),
-    confirmButtonText: getString('delete'),
+    confirmButtonText: data.externallyManaged ? getString('rbac.deleteAnyway') : getString('delete'),
     cancelButtonText: getString('cancel'),
     intent: Intent.DANGER,
     buttonIntent: Intent.DANGER,
+    className: css.wordbreak,
     onCloseDialog: async didConfirm => {
       if (didConfirm && data) {
         try {
@@ -374,45 +377,16 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
               permission={permissionRequest}
             />
           ) : null}
-          {data.externallyManaged && scope === Scope.ACCOUNT ? (
-            <Popover
-              position={Position.TOP}
-              fill
-              usePortal
-              inheritDarkTheme={false}
-              interactionKind={PopoverInteractionKind.HOVER}
-              hoverCloseDelay={50}
-              content={
-                <div className={css.popover}>
-                  <Text font={{ variation: FontVariation.SMALL }}>
-                    {getString('rbac.manageSCIMText', {
-                      action: getString('delete').toLowerCase(),
-                      target: getString('common.userLabel').toLowerCase()
-                    })}
-                  </Text>
-                </div>
-              }
-            >
-              <div
-                onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-                  event.stopPropagation()
-                }}
-              >
-                <MenuItem icon="trash" text={getString('delete')} disabled />
-              </div>
-            </Popover>
-          ) : (
-            <RbacMenuItem
-              icon="trash"
-              text={getString('delete')}
-              onClick={e => {
-                e.stopPropagation()
-                setMenuOpen(false)
-                handleDelete()
-              }}
-              permission={permissionRequest}
-            />
-          )}
+          <RbacMenuItem
+            icon="trash"
+            text={getString('delete')}
+            onClick={e => {
+              e.stopPropagation()
+              setMenuOpen(false)
+              handleDelete()
+            }}
+            permission={permissionRequest}
+          />
         </Menu>
       </Popover>
     </Layout.Horizontal>

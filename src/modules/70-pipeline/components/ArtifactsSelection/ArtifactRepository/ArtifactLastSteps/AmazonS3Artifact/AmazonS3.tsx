@@ -636,6 +636,9 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                       } else {
                         formik.setFieldValue('filePath', defaultTo(formik.values.filePath, ''))
                       }
+                      // to clearValues when tagType is changed
+                      resetFieldValue(formik, 'filePathRegex')
+                      resetFieldValue(formik, 'filePath')
                     }
                   }}
                 />

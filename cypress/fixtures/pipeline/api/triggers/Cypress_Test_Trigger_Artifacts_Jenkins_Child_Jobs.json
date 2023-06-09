@@ -1,0 +1,87 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "jobDetails": [
+      {
+        "jobName": "CDTest/folder2/Redis_Job",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/folder2/job/Redis_Job/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/folder1/Redis_Job",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/folder1/job/Redis_Job/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/folder2/sub1/job1",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/folder2/job/sub1/job/job1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/folder1/sub1/job1",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/folder1/job/sub1/job/job1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/folder1/sub2/job2",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/folder1/job/sub2/job/job2/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/folder1/sub2/job1",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/folder1/job/sub2/job/job1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/CDTest/folder2/Redis_Job",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/CDTest/job/folder2/job/Redis_Job/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/CDTest/folder1/Redis_Job",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/CDTest/job/folder1/job/Redis_Job/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/CDTest/CDTest/folder23",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/CDTest/job/CDTest/job/folder23/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/CDTest/folder2/sub1/job1",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/CDTest/job/folder2/job/sub1/job/job1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/CDTest/folder1/sub1/job1",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/CDTest/job/folder1/job/sub1/job/job1/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/CDTest/folder1/sub2/job2",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/CDTest/job/folder1/job/sub2/job/job2/",
+        "parameters": [],
+        "folder": false
+      },
+      {
+        "jobName": "CDTest/CDTest/folder1/sub2/job1",
+        "url": "https://jenkins.dev.harness.io/job/CDTest/job/CDTest/job/folder1/job/sub2/job/job1/",
+        "parameters": [],
+        "folder": false
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "ec50f6db-a491-4ccc-bfbc-ecce647578b5"
+}

@@ -966,6 +966,28 @@ const getServiceNowSchema = (connector: ConnectorInfoDTO): Array<ActivityDetails
   ]
 }
 
+const getRancherSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectionMode',
+      value: connector?.spec?.credential?.type
+    },
+    {
+      label: 'connectors.rancher.rancherUrlLabel',
+      value: connector?.spec?.credential?.spec?.rancherUrl
+    },
+    {
+      label: 'credType',
+      value: getLabelForAuthType(connector?.spec?.credential?.spec?.auth?.type)
+    },
+
+    {
+      label: 'password',
+      value: connector?.spec?.credential?.spec?.auth?.spec?.passwordRef
+    }
+  ]
+}
+
 const getSchemaByType = (
   connector: ConnectorInfoDTO,
   type: string,
@@ -974,6 +996,8 @@ const getSchemaByType = (
   switch (type) {
     case Connectors.KUBERNETES_CLUSTER:
       return getKubernetesSchema(connector)
+    case Connectors.Rancher:
+      return getRancherSchema(connector)
     case Connectors.GIT:
       return getGitSchema(connector)
     case Connectors.Jira:

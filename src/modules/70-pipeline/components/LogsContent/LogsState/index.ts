@@ -16,6 +16,7 @@ import { resetSearch } from './resetSearch'
 import { goToNextSearchResult } from './goToNextSearchResult'
 import { goToPrevSearchResult } from './goToPrevSearchResult'
 import { ActionType, Action, State } from './types'
+import { updateManuallyToggled } from './updateManuallyToggled'
 
 export function reducer<T extends ActionType>(state: State, action: Action<T>): State {
   switch (action.type) {
@@ -37,6 +38,9 @@ export function reducer<T extends ActionType>(state: State, action: Action<T>): 
     // Action for toggling a section
     case ActionType.ToggleSection:
       return toggleSection(state, action as Action<ActionType.ToggleSection>)
+    // Action for toggling the manually toggled section state
+    case ActionType.UpdateManuallyToggled:
+      return updateManuallyToggled(state, action as Action<ActionType.UpdateManuallyToggled>)
     case ActionType.Search:
       return search(state, action as Action<ActionType.Search>)
     case ActionType.ResetSearch:

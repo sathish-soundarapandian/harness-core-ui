@@ -7,12 +7,13 @@
 
 import React, { useMemo } from 'react'
 import cx from 'classnames'
-import { Layout, Text, Icon, IconName, Container } from '@harness/uicore'
+import { Layout, Text, Icon, IconName, Container, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { ResponseMessage as ResponseMessageCDNG } from 'services/cd-ng'
 import type { ResponseMessage as ResponseMessagePipeline } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
+
 import css from '@common/components/ErrorHandler/ErrorHandler.module.scss'
 
 export type ResponseMessage = ResponseMessageCDNG | ResponseMessagePipeline
@@ -23,6 +24,8 @@ export interface ErrorHandlerProps {
   height?: number | string
   skipUrlsInErrorHeader?: boolean
   className?: string
+  url?: string
+  connectorType?: string
   errorHintsRenderer?: (item: ResponseMessage[]) => React.ReactElement
 }
 
@@ -91,6 +94,8 @@ export const ErrorHandler: React.FC<ErrorHandlerProps> = props => {
   const errorObjects = useMemo(() => extractInfo(responseMessages), [responseMessages])
   const { getString } = useStrings()
 
+  const isGcr = props?.url?.includes('gcr.io')
+  const isAWS = props?.url?.includes('amazonaws')
   return (
     <Layout.Vertical
       background={Color.RED_100}
@@ -130,6 +135,20 @@ export const ErrorHandler: React.FC<ErrorHandlerProps> = props => {
             </Layout.Vertical>
           )
         })}
+        {isGcr && props.connectorType === 'DockerRegistry' ? (
+          <Button variation={ButtonVariation.LINK}>
+            <a href="https://developer.harness.io/docs/continuous-delivery/x-platform-cd-features/services/artifact-sources/#google-container-registry-gcr">
+              {getString('common.learnMoreAboutGCR')}
+            </a>
+          </Button>
+        ) : null}
+        {isAWS && props.connectorType === 'DockerRegistry' ? (
+          <Button variation={ButtonVariation.LINK}>
+            <a href="https://developer.harness.io/docs/continuous-delivery/x-platform-cd-features/services/artifact-sources/#amazon-elastic-container-registry-ecr">
+              {getString('common.learnMoreAboutECR')}
+            </a>
+          </Button>
+        ) : null}
       </Container>
     </Layout.Vertical>
   )

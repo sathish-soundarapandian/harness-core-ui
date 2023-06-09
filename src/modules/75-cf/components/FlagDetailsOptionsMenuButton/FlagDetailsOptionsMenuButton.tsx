@@ -21,9 +21,9 @@ import type {
   PatchFeatureQueryParams
 } from 'services/cf'
 import type { UseGitSync } from '@cf/hooks/useGitSync'
+import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { useQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import useDeleteFlagModal from '../FlagActivation/hooks/useDeleteFlagModal'
 import useEditFlagDetailsModal from '../FlagActivation/hooks/useEditFlagDetailsModal'
@@ -52,15 +52,16 @@ const FlagDetailsOptionsMenuButton = (props: FlagDetailsOptionsMenuButtonProps):
 
   const { getString } = useStrings()
   const history = useHistory()
-  const urlQuery: Record<string, string> = useQueryParams()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
+  const { withActiveEnvironment, activeEnvironment } = useActiveEnvironment()
 
-  const featureFlagListURL =
+  const featureFlagListURL = withActiveEnvironment(
     routes.toCFFeatureFlags({
       projectIdentifier: projectIdentifier,
       orgIdentifier: orgIdentifier,
       accountId
-    }) + `${urlQuery?.activeEnvironment ? `?activeEnvironment=${urlQuery.activeEnvironment}` : ''}`
+    })
+  )
 
   const { confirmDeleteFlag } = useDeleteFlagModal({
     featureFlag,
@@ -98,8 +99,10 @@ const FlagDetailsOptionsMenuButton = (props: FlagDetailsOptionsMenuButtonProps):
           text: getString('edit'),
           onClick: openEditDetailsModal,
           permission: {
-            resource: { resourceType: ResourceType.FEATUREFLAG },
-            permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG
+            permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG,
+            resource: activeEnvironment
+              ? { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: activeEnvironment }
+              : { resourceType: ResourceType.FEATUREFLAG }
           },
           ...planEnforcementProps
         },

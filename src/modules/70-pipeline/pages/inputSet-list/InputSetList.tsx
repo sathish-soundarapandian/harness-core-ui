@@ -72,6 +72,7 @@ function InputSetList(): React.ReactElement {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { getString } = useStrings()
   const [inputSetToDelete, setInputSetToDelete] = useState<InputSetSummaryResponse>()
+  const [pipelineInputs, setPipelineInputs] = useState<InputsResponseBody>({})
 
   const {
     data: inputSet,
@@ -125,7 +126,7 @@ function InputSetList(): React.ReactElement {
   })
 
   const { CI_YAML_VERSIONING } = useFeatureFlags()
-  let pipelineInputs: InputsResponseBody, inputsError: { data: Error }
+  let inputsError: { data: Error }
 
   useEffect(() => {
     if (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)) {
@@ -141,7 +142,7 @@ function InputSetList(): React.ReactElement {
         }
       })
         .then(response => {
-          pipelineInputs = response.content
+          setPipelineInputs(response.content)
         })
         .catch(err => (inputsError = err))
         .finally(() => setIsLoading(false))
@@ -184,15 +185,14 @@ function InputSetList(): React.ReactElement {
   // These flags will be used to disable the Add Input set buttons in the page.
   const [pipelineHasRuntimeInputs, setPipelineHasRuntimeInputs] = useState(true)
   useEffect(() => {
-    if (
-      !template?.data?.inputSetTemplateYaml ||
-      (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) && !isEmpty(pipelineInputs?.inputs))
-    ) {
-      setPipelineHasRuntimeInputs(false)
-    } else {
-      setPipelineHasRuntimeInputs(true)
-    }
-  }, [template])
+    const pipelineHasNoRuntimeInputs =
+      (!isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) && !template?.data?.inputSetTemplateYaml) ||
+      (isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING) &&
+        isEmpty(pipelineInputs?.inputs) &&
+        isEmpty(pipelineInputs.options?.clone))
+
+    setPipelineHasRuntimeInputs(!pipelineHasNoRuntimeInputs)
+  }, [template, pipelineInputs])
 
   const [selectedInputSet, setSelectedInputSet] = React.useState<{
     identifier?: string

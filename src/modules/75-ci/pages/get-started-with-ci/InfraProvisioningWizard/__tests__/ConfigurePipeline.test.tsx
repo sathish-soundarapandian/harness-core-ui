@@ -127,7 +127,7 @@ describe('Test ConfigurePipeline component', () => {
     expect(yamlPathValidationError).toBeInTheDocument()
   })
 
-  test('Configure Pipeline view for GitLab connector - Advanced section should not be visible', async () => {
+  test('Configure Pipeline view for GitLab connector - Advanced section should be visible', async () => {
     render(
       <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
         <ConfigurePipeline
@@ -138,6 +138,6 @@ describe('Test ConfigurePipeline component', () => {
         />
       </TestWrapper>
     )
-    expect(screen.queryByText('common.seeAdvancedOptions')).toBeNull()
+    expect(screen.queryByText('common.seeAdvancedOptions')).not.toBeNull()
   })
 })

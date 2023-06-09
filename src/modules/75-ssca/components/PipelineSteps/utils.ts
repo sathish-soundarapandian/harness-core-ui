@@ -1,5 +1,6 @@
 import { AllowedTypesWithExecutionTime, AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import type { SscaOrchestrationStepData } from './SscaOrchestrationStep/SscaOrchestrationStep'
+import type { SscaEnforcementStepData } from './SscaEnforcementStep/SscaEnforcementStep'
 
 export const AllMultiTypeInputTypesForStep: AllowedTypesWithRunTime[] = [
   MultiTypeInputType.FIXED,
@@ -12,7 +13,7 @@ export const AllMultiTypeInputTypesForInputSet: AllowedTypesWithExecutionTime[] 
   MultiTypeInputType.EXPRESSION
 ]
 
-export const commonDefaultSpecValues: SscaOrchestrationStepData['spec'] = {
+export const commonDefaultOrchestrationSpecValues: SscaOrchestrationStepData['spec'] = {
   tool: {
     type: 'Syft',
     spec: {
@@ -31,6 +32,30 @@ export const commonDefaultSpecValues: SscaOrchestrationStepData['spec'] = {
     spec: {
       privateKey: '',
       password: ''
+    }
+  }
+}
+
+export const commonDefaultEnforcementSpecValues: SscaEnforcementStepData['spec'] = {
+  source: {
+    type: 'image',
+    spec: {
+      connector: '',
+      image: ''
+    }
+  },
+  verifyAttestation: {
+    type: 'cosign',
+    spec: {
+      publicKey: ''
+    }
+  },
+  policy: {
+    store: {
+      type: 'Harness',
+      spec: {
+        file: ''
+      }
     }
   }
 }

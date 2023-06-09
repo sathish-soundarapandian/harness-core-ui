@@ -22,6 +22,7 @@ import {
 import { getRuntimeInputKeys } from '../../utils/step-utils'
 import templatesData from '../../fixtures/ci/api/runStep/inputSetTemplateResponse.json'
 import { getTriggerListAPI } from '../72-triggers/constansts'
+import { addTemplate, selectStepInStepLibrary } from '../../support/75-ci/CIpipeline.utils'
 // Data from QA, CI Automation Account
 // https://qa.harness.io/ng/#/account/h61p38AZSV6MzEkpWWBtew/ci/orgs/default/projects/mtran/pipelines/CI_Pipeline1/pipeline-studio/
 
@@ -258,6 +259,20 @@ describe('Templates', () => {
     runtimeInputLabels.forEach(fieldName => {
       cy.get('form label').contains(fieldName)
     })
+
+    runtimeInputParagraphLabels.forEach(fieldName => {
+      cy.get('form p').contains(fieldName)
+    })
+  })
+
+  it('TEMPLATES: Sanity test to verify Run Tests step has ConnectorRef and Image as additional configuration', () => {
+    addTemplate('Run Tests step')
+    selectStepInStepLibrary('Run Tests')
+
+    cy.get('[class*="SplitPane"]').scrollTo('0%', '50%', { ensureScrollable: false })
+
+    cy.contains('div', 'Additional Configuration').should('be.visible')
+    cy.contains('div', 'Additional Configuration').click()
 
     runtimeInputParagraphLabels.forEach(fieldName => {
       cy.get('form p').contains(fieldName)

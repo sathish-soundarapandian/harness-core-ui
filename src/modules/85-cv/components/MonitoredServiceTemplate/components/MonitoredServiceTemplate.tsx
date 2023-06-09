@@ -15,6 +15,7 @@ import MonitoredServiceInputSetsTemplate from '@cv/pages/monitored-service/Monit
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { MonitoredTemplateCanvasWithRef } from './MonitoredServiceTemplateCanvas'
+import { getMonitoredServiceTemplateScope } from './MonitoredServiceTemplateCanvas.utils'
 
 export class MonitoredServiceTemplate extends Template {
   protected label = 'Monitored Service'
@@ -39,7 +40,9 @@ export class MonitoredServiceTemplate extends Template {
     }
   ): JSX.Element {
     const { template, accountId } = props
-    const { identifier = '', orgIdentifier = '', projectIdentifier = '', versionLabel = '', templateScope } = template
+    const { identifier = '', orgIdentifier = '', projectIdentifier = '', versionLabel = '' } = template
+
+    const templateScope = getMonitoredServiceTemplateScope(accountId, template)
 
     const templateData = {
       accountId,

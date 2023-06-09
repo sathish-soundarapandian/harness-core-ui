@@ -12,12 +12,13 @@ import { MultiLogLine } from '@pipeline/components/LogsContent/components/MultiL
 
 export interface LogsSectionProps {
   data: LogLineData[]
+  className?: string
 }
 
 export default function LogsSection(props: LogsSectionProps): React.ReactElement {
-  const { data } = props
+  const { data, className } = props
   return (
-    <div>
+    <div className={className}>
       {data.map((line, i) => (
         <MultiLogLine key={i} lineNumber={i} {...line} limit={data.length} />
       ))}

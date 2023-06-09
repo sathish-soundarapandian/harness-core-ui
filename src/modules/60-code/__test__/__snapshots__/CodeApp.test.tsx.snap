@@ -327,6 +327,33 @@ exports[`CodeApp Exports should work properly 1`] = `
         </p>
       </div>
     </div>
+    <div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--padding-large"
+      >
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          Something went wrong...
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          This error has been reported and we are looking into it with high priority.
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main"
+        >
+          Please 
+          <a
+            href="#"
+          >
+            refresh
+          </a>
+           your browser to continue.
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 `;

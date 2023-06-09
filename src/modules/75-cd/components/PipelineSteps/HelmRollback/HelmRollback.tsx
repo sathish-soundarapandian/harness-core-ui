@@ -21,6 +21,8 @@ import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 
 import { isEmpty } from 'lodash-es'
 
+import { FormMultiTypeCheckboxField } from '@common/components'
+
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
@@ -76,7 +78,7 @@ function HelmRollbackWidget(
   props: HelmRollbackProps,
   formikRef: StepFormikFowardRef<StepElementConfig>
 ): React.ReactElement {
-  const { initialValues, onUpdate, onChange, allowableTypes, isNewStep = true, stepViewType } = props
+  const { initialValues, onUpdate, onChange, allowableTypes, isNewStep = true, stepViewType, isReadonly } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   return (
@@ -117,6 +119,15 @@ function HelmRollbackWidget(
                     multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                   />
                 </div>
+                <div style={{ width: '51%' }}>
+                  <FormMultiTypeCheckboxField
+                    name="spec.skipSteadyStateCheck"
+                    label={getString('pipelineSteps.skipSteadyStateCheck')}
+                    multiTypeTextbox={{ expressions, disabled: isReadonly, allowableTypes }}
+                    disabled={isReadonly}
+                    setToFalseWhenEmpty={true}
+                  />
+                </div>
               </Layout.Vertical>
             </>
           )
@@ -149,6 +160,17 @@ const HelmRollbackInputStep: React.FC<HelmRollbackProps> = ({ inputSetData, allo
           fieldPath={'timeout'}
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.skipSteadyStateCheck) === MultiTypeInputType.RUNTIME && (
+        <div style={{ width: '50%' }}>
+          <FormMultiTypeCheckboxField
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipSteadyStateCheck`}
+            label={getString('pipelineSteps.skipSteadyStateCheck')}
+            multiTypeTextbox={{ expressions, disabled: inputSetData?.readonly, allowableTypes }}
+            disabled={inputSetData?.readonly}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
       )}
     </>
   )

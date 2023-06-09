@@ -79,6 +79,48 @@ export const STEP = {
 }
 export const StepIndex = new Map([[STEP.TEST_CONNECTION, 1]])
 
+const getValue = (props: StepProps<VerifyOutOfClusterStepProps> & RenderUrlInfo): string => {
+  switch (props.type) {
+    case Connectors.KUBERNETES_CLUSTER:
+      return props.prevStepData?.masterUrl
+    case Connectors.HttpHelmRepo:
+      return props.prevStepData?.helmRepoUrl
+    case Connectors.OciHelmRepo:
+      return props.prevStepData?.helmRepoUrl
+    case Connectors.DOCKER:
+      return props.prevStepData?.dockerRegistryUrl
+    case Connectors.JENKINS:
+      return props.prevStepData?.jenkinsUrl
+    case Connectors.AZURE_ARTIFACTS:
+      return props.prevStepData?.azureArtifactsUrl
+    case Connectors.NEXUS:
+      return props.prevStepData?.nexusServerUrl
+
+    case Connectors.ARTIFACTORY:
+      return props.prevStepData?.artifactoryServerUrl
+
+    case Connectors.APP_DYNAMICS:
+      return props.prevStepData?.spec?.controllerUrl
+
+    case Connectors.SPLUNK:
+      return props.prevStepData?.splunkUrl
+
+    case Connectors.VAULT:
+      return props.prevStepData?.spec?.vaultUrl
+    case Connectors.BITBUCKET:
+    case Connectors.AZURE_REPO:
+    case Connectors.GITLAB:
+    case Connectors.GITHUB:
+    case Connectors.GIT:
+      return props.prevStepData?.validationRepo
+        ? props.prevStepData?.url + '/' + props.prevStepData?.validationRepo
+        : props.prevStepData?.url
+
+    default:
+      return ''
+  }
+}
+
 const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrlInfo> = props => {
   const { getString } = useStrings()
 
@@ -119,49 +161,8 @@ const RenderUrlInfo: React.FC<StepProps<VerifyOutOfClusterStepProps> & RenderUrl
         return ''
     }
   }
-  const getValue = () => {
-    switch (props.type) {
-      case Connectors.KUBERNETES_CLUSTER:
-        return props.prevStepData?.masterUrl
-      case Connectors.HttpHelmRepo:
-        return props.prevStepData?.helmRepoUrl
-      case Connectors.OciHelmRepo:
-        return props.prevStepData?.helmRepoUrl
-      case Connectors.DOCKER:
-        return props.prevStepData?.dockerRegistryUrl
-      case Connectors.JENKINS:
-        return props.prevStepData?.jenkinsUrl
-      case Connectors.AZURE_ARTIFACTS:
-        return props.prevStepData?.azureArtifactsUrl
-      case Connectors.NEXUS:
-        return props.prevStepData?.nexusServerUrl
 
-      case Connectors.ARTIFACTORY:
-        return props.prevStepData?.artifactoryServerUrl
-
-      case Connectors.APP_DYNAMICS:
-        return props.prevStepData?.spec?.controllerUrl
-
-      case Connectors.SPLUNK:
-        return props.prevStepData?.splunkUrl
-
-      case Connectors.VAULT:
-        return props.prevStepData?.spec?.vaultUrl
-      case Connectors.BITBUCKET:
-      case Connectors.AZURE_REPO:
-      case Connectors.GITLAB:
-      case Connectors.GITHUB:
-      case Connectors.GIT:
-        return props.prevStepData?.validationRepo
-          ? props.prevStepData?.url + '/' + props.prevStepData?.validationRepo
-          : props.prevStepData?.url
-
-      default:
-        return ''
-    }
-  }
-
-  const value = props.url || getValue()
+  const value = props.url || getValue(props)
   return value ? (
     <Layout.Horizontal padding={{ top: 'xsmall' }} spacing="xsmall">
       <Text color={Color.GREY_400} font={{ size: 'small' }} style={{ whiteSpace: 'nowrap' }}>
@@ -342,12 +343,15 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
         </Layout.Vertical>
       )
       const permissionLink = getPermissionsLink()
+      const value = props.url || getValue(props)
       return (
         <Layout.Vertical className={css.stepError}>
           {responseMessages ? (
             <ErrorHandler
               responseMessages={responseMessages}
               className={css.errorHandler}
+              url={value}
+              connectorType={props.type}
               errorHintsRenderer={
                 showCustomErrorHints
                   ? hints => (

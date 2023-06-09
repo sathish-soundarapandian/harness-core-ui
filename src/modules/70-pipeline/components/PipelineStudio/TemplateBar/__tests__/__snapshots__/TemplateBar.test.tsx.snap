@@ -34,7 +34,6 @@ exports[`<TemplateBar /> tests should match snapshot in loading 1`] = `
       </span>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
-        style="flex-grow: 1;"
       >
         loading
       </p>

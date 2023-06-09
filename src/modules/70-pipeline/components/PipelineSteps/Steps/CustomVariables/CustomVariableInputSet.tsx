@@ -6,14 +6,7 @@
  */
 
 import React from 'react'
-import {
-  Text,
-  MultiTypeInputType,
-  getMultiTypeFromValue,
-  AllowedTypes,
-  Layout,
-  MultiSelectOption
-} from '@harness/uicore'
+import { Text, MultiTypeInputType, getMultiTypeFromValue, AllowedTypes, MultiSelectOption } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { cloneDeep, defaultTo, get, isEmpty } from 'lodash-es'
@@ -38,7 +31,7 @@ import {
   concatValuesWithQuotes,
   isFixedInput
 } from './MultiSelectVariableAllowedValues/MultiSelectVariableAllowedValues'
-import { VariableType } from './CustomVariableUtils'
+import { NameTypeColumn, NameTypeRequiredColumn, VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
 export interface CustomVariablesData {
   variables: AllNGVariables[]
@@ -146,10 +139,11 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
         if (getMultiTypeFromValue(value as string) !== MultiTypeInputType.RUNTIME) {
           return
         }
-        const description = defaultTo(
-          get(allValues, 'variables', []).find((fVar: AllNGVariables) => variable.name === fVar.name)?.description,
-          ''
+        const variableFromAllValues = get(allValues, 'variables', []).find(
+          (fVar: AllNGVariables) => variable.name === fVar.name
         )
+        const description = defaultTo(variableFromAllValues?.description, '')
+        const isRequiredVariable = !!variableFromAllValues?.required
         const allowMultiSelectAllowedValues =
           multiSelectSupportForAllowedValues &&
           variable.type === 'String' &&
@@ -157,20 +151,17 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
           isFixedInput(formik, `${basePath}[${index}].value`)
         return (
           <div key={`${variable.name}${index}`} className={css.variableListTable}>
-            <Layout.Vertical>
-              <Text
-                font={{ variation: FontVariation.SMALL_BOLD, size: 'normal' }}
-                color={Color.BLACK}
-                lineClamp={1}
-              >{`${variableNamePrefix}${variable.name}`}</Text>
-              <Text font={{ size: 'small' }} color={Color.GREY_600}>
-                {variable.type}
-              </Text>
-            </Layout.Vertical>
-            <Text color={Color.GREY_500} lineClamp={3} font={{ variation: FontVariation.BODY }}>
+            {isRequiredVariable ? (
+              <NameTypeRequiredColumn>
+                <NameTypeColumn name={`${variableNamePrefix}${variable.name}`} type={variable.type as string} />
+              </NameTypeRequiredColumn>
+            ) : (
+              <NameTypeColumn name={`${variableNamePrefix}${variable.name}`} type={variable.type as string} />
+            )}
+            <Text color={Color.GREY_500} font={{ variation: FontVariation.BODY }}>
               {isEmpty(description) ? '-' : description}
             </Text>
-            <div className={css.valueRow}>
+            <div className={css.inputSetValueRow}>
               {(variable.type as CustomDeploymentNGVariable['type']) === VariableType.Connector ? (
                 <FormMultiTypeConnectorField
                   name={`${basePath}[${index}].value`}

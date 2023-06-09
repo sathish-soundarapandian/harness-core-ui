@@ -145,11 +145,12 @@ export enum PAGE_NAME {
   CODEFileEdit = 'CODEFileEdit',
   CODECommits = 'CODECommits',
   CODEBranches = 'CODEBranches',
+  CODETags = 'CODETags',
   ExecutionList = 'ExecutionList',
   CFConfigurePath = 'CFConfigurePath',
   SSCAHomePage = 'SSCAHomePage',
   SSCAOverviewPage = 'SSCAOverviewPage',
   IDPAdminPage = 'IDPAdminPage',
-  ETHomePage = 'ETHomePage',
-  ETTrialPage = 'ETTrialPage'
+  CETHomePage = 'CETHomePage',
+  CETTrialPage = 'CETTrialPage'
 }

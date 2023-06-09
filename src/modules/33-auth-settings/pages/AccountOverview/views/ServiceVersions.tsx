@@ -65,11 +65,6 @@ const versionAPIs = [
     id: 'cv'
   },
   {
-    label: 'Light Wing',
-    url: 'lw/api',
-    id: 'lw'
-  },
-  {
     label: 'Custom Dashboards',
     url: 'dashboard/version',
     id: 'ng_custom_dashboards'

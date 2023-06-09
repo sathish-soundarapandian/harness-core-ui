@@ -624,8 +624,17 @@ export class ASGServiceSpec extends Step<ServiceSpec> {
   }
 
   renderStep(props: StepProps<K8SDirectServiceStep>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, inputSetData, factory, customStepProps, readonly, allowableTypes } =
-      props
+    const {
+      initialValues,
+      onUpdate,
+      stepViewType,
+      inputSetData,
+      factory,
+      customStepProps,
+      readonly,
+      allowableTypes,
+      viewTypeMetadata
+    } = props
 
     this.inputSetData = inputSetData
 
@@ -653,6 +662,7 @@ export class ASGServiceSpec extends Step<ServiceSpec> {
           readonly={inputSetData?.readonly || readonly}
           factory={factory}
           allowableTypes={allowableTypes}
+          viewTypeMetadata={viewTypeMetadata}
         />
       )
     }

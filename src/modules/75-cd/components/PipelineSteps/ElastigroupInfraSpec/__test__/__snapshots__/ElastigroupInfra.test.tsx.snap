@@ -282,6 +282,9 @@ exports[`ElastigroupInfraSpec tests render elastigroupInfra with empty initial v
         <div>
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
             <div
               class="connectorLabel connectorRef"

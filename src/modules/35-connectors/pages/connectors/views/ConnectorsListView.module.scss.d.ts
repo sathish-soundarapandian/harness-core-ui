@@ -9,6 +9,8 @@
 declare const styles: {
   readonly confirmText: string
   readonly connectorTabs: string
+  readonly favorite: string
+  readonly favoriteStar: string
   readonly flex: string
   readonly identifier: string
   readonly invalidConnector: string
@@ -16,6 +18,7 @@ declare const styles: {
   readonly link: string
   readonly listingGitBranch: string
   readonly name: string
+  readonly row: string
   readonly table: string
   readonly testBtn: string
   readonly testConnectionPop: string

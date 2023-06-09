@@ -159,7 +159,7 @@ export const allowedManifestTypes: Record<ServiceDefinition['type'], Array<Manif
   Elastigroup: [],
   GoogleCloudFunctions: [ManifestDataType.GoogleCloudFunctionDefinition],
   AwsLambda: [ManifestDataType.AwsLambdaFunctionDefinition, ManifestDataType.AwsLambdaFunctionAliasDefinition],
-  AWS_SAM: [ManifestDataType.AwsSamDirectory]
+  AWS_SAM: [ManifestDataType.AwsSamDirectory, ManifestDataType.Values]
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [

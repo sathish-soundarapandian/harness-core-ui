@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly beErrorModal: string
   readonly bp3DialogHeader: string
   readonly branchDetails: string
   readonly branchName: string

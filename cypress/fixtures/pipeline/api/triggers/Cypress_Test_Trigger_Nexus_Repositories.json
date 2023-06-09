@@ -1,0 +1,63 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "repositoryName": "docker-group",
+      "repositoryId": "docker-group"
+    },
+    {
+      "repositoryName": "usheerdocker",
+      "repositoryId": "usheerdocker"
+    },
+    {
+      "repositoryName": "ken-test-docker",
+      "repositoryId": "ken-test-docker"
+    },
+    {
+      "repositoryName": "zee-repo",
+      "repositoryId": "zee-repo"
+    },
+    {
+      "repositoryName": "cdp-qa-automation-2",
+      "repositoryId": "cdp-qa-automation-2"
+    },
+    {
+      "repositoryName": "cdp-qa-automation-1",
+      "repositoryId": "cdp-qa-automation-1"
+    },
+    {
+      "repositoryName": "francisco-swat",
+      "repositoryId": "francisco-swat"
+    },
+    {
+      "repositoryName": "todolist",
+      "repositoryId": "todolist"
+    },
+    {
+      "repositoryName": "aleksadocker",
+      "repositoryId": "aleksadocker"
+    },
+    {
+      "repositoryName": "cdp-test-group1",
+      "repositoryId": "cdp-test-group1"
+    },
+    {
+      "repositoryName": "cdp-test-group2",
+      "repositoryId": "cdp-test-group2"
+    },
+    {
+      "repositoryName": "cdp-test-group3",
+      "repositoryId": "cdp-test-group3"
+    },
+    {
+      "repositoryName": "docker-private",
+      "repositoryId": "docker-private"
+    },
+    {
+      "repositoryName": "lukicm-test",
+      "repositoryId": "lukicm-test"
+    }
+  ],
+  "metaData": null,
+  "correlationId": "fb29da4a-e251-49ee-8b11-05e6da12bef1"
+}

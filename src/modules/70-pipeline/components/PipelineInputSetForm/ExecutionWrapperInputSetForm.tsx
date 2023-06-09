@@ -13,7 +13,10 @@ import { StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageConfig, ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '../AbstractSteps/Step'
+import { StepWidget } from '../AbstractSteps/StepWidget'
 import { CollapseForm } from './CollapseForm'
 import type { StageInputSetFormProps } from './StageInputSetForm'
 import { StepForm } from './StepInputSetForm'
@@ -163,12 +166,61 @@ export function ExecutionWrapperInputSetForm(props: {
                 ? isValueRuntimeInput(nodep.stepGroup?.template?.templateInputs?.failureStrategies as unknown as string)
                 : isValueRuntimeInput(nodep.stepGroup?.failureStrategies as unknown as string)
               return (
-                <Layout.Vertical spacing="medium" padding={{ top: 'medium' }}>
+                <Layout.Vertical spacing="medium" padding={{ top: 'medium' }} key={nodep.stepGroup.identifier || index}>
                   <Label>
                     <Icon padding={{ right: 'small' }} name={'step-group'} />
                     {getString('pipeline.execution.stepGroupTitlePrefix')}
                     {getString('pipeline.stepLabel', stepGroup?.stepGroup)}
                   </Label>
+
+                  <StepWidget<Partial<StepElementConfig>>
+                    factory={factory}
+                    readonly={readonly}
+                    path={`${path}[${index}].stepGroup`}
+                    allowableTypes={allowableTypes}
+                    template={item.stepGroup as Partial<StepElementConfig>}
+                    initialValues={initialValues?.stepGroup || {}}
+                    allValues={stepGroup?.stepGroup || {}}
+                    type={StepType.StepGroup}
+                    onUpdate={data => {
+                      if (initialValues) {
+                        if (!initialValues.stepGroup) {
+                          initialValues.stepGroup = {
+                            identifier: stepGroup?.stepGroup?.identifier || '',
+                            name: stepGroup?.stepGroup?.name || ''
+                          }
+                        }
+                        const execObj = {
+                          ...data
+                        }
+                        if (data.stepGroupInfra) {
+                          execObj['stepGroupInfra'] = {
+                            ...pickBy(data.stepGroupInfra, identity)
+                          }
+                        }
+                        initialValues.stepGroup = {
+                          ...execObj,
+                          identifier: stepGroup?.stepGroup?.identifier || '',
+                          name: stepGroup?.stepGroup?.name || ''
+                        }
+                        formik?.setValues(set(formik?.values, `${path}[${index}].stepGroup`, initialValues.stepGroup))
+                      }
+                    }}
+                    stepViewType={viewType}
+                    customStepProps={
+                      customStepProps
+                        ? {
+                            ...customStepProps,
+                            selectedStage: {
+                              stage: {
+                                spec: customStepProps?.selectedStage
+                              }
+                            }
+                          }
+                        : null
+                    }
+                  />
+
                   {isStepGroupFailureStrategyRuntime && (
                     <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
                       <FailureStrategiesInputSetForm
@@ -229,12 +281,61 @@ export function ExecutionWrapperInputSetForm(props: {
             ? isValueRuntimeInput(item?.stepGroup?.template?.templateInputs?.failureStrategies as unknown as string)
             : isValueRuntimeInput(item?.stepGroup?.failureStrategies as unknown as string)
           return (
-            <Layout.Vertical spacing="medium" padding={{ top: 'medium' }}>
+            <Layout.Vertical spacing="medium" padding={{ top: 'medium' }} key={item.stepGroup.identifier || index}>
               <Label>
                 <Icon padding={{ right: 'small' }} name={'step-group'} />
                 {getString('pipeline.execution.stepGroupTitlePrefix')}
                 {getString('pipeline.stepLabel', stepGroup?.stepGroup)}
               </Label>
+
+              <StepWidget<Partial<StepElementConfig>>
+                factory={factory}
+                readonly={readonly}
+                path={`${path}[${index}].stepGroup`}
+                allowableTypes={allowableTypes}
+                template={item.stepGroup as Partial<StepElementConfig>}
+                initialValues={initialValues?.stepGroup || {}}
+                allValues={stepGroup?.stepGroup || {}}
+                type={StepType.StepGroup}
+                onUpdate={data => {
+                  if (initialValues) {
+                    if (!initialValues.stepGroup) {
+                      initialValues.stepGroup = {
+                        identifier: stepGroup?.stepGroup?.identifier || '',
+                        name: stepGroup?.stepGroup?.name || ''
+                      }
+                    }
+                    const execObj = {
+                      ...data
+                    }
+                    if (data.stepGroupInfra) {
+                      execObj['stepGroupInfra'] = {
+                        ...pickBy(data.stepGroupInfra, identity)
+                      }
+                    }
+                    initialValues.stepGroup = {
+                      ...execObj,
+                      identifier: stepGroup?.stepGroup?.identifier || '',
+                      name: stepGroup?.stepGroup?.name || ''
+                    }
+                    formik?.setValues(set(formik?.values, `${path}[${index}].stepGroup`, initialValues.stepGroup))
+                  }
+                }}
+                stepViewType={viewType}
+                customStepProps={
+                  customStepProps
+                    ? {
+                        ...customStepProps,
+                        selectedStage: {
+                          stage: {
+                            spec: customStepProps?.selectedStage
+                          }
+                        }
+                      }
+                    : null
+                }
+              />
+
               {isStepGroupFailureStrategyRuntime && (
                 <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
                   <FailureStrategiesInputSetForm

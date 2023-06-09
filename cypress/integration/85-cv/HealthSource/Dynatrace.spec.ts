@@ -129,7 +129,7 @@ describe('Create empty monitored service', () => {
     cy.findByText('Monitored Service created').should('be.visible')
   })
 
-  describe('NewRelic metric thresholds', () => {
+  describe('Dynatrace metric thresholds', () => {
     beforeEach(() => {
       cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
         cy.intercept('GET', featureFlagsCall, {

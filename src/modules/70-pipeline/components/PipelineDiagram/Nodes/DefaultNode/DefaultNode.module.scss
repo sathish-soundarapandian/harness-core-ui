@@ -159,7 +159,7 @@
     padding: 1px !important;
   }
 
-  .inComplete {
+  .incomplete {
     position: absolute;
     top: 2px;
     right: 2px;
@@ -224,6 +224,11 @@
     }
   }
 }
+
+.floatingAddNodeWrapper {
+  position: absolute;
+}
+
 .addNode {
   visibility: hidden;
   &.visible {

@@ -143,7 +143,7 @@ export default function FullPageLogView(): React.ReactElement {
   if (logsData.length === 1) {
     return (
       <div className={css.main} data-testid="single-section">
-        <LogsSection data={logsData[0].data} />
+        <LogsSection data={logsData[0].data} className={css.logsSection} />
       </div>
     )
   }
@@ -154,7 +154,7 @@ export default function FullPageLogView(): React.ReactElement {
         return (
           <details key={i} open>
             <summary>{section.name}</summary>
-            <LogsSection data={section.data} />
+            <LogsSection data={section.data} className={css.logsSection} />
           </details>
         )
       })}

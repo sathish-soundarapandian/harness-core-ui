@@ -56,8 +56,6 @@ import {
   TemplateServiceDataType
 } from '@pipeline/utils/templateUtils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { Pipeline, TemplateIcons } from '@pipeline/utils/types'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
@@ -117,12 +115,12 @@ export const getPipelineByIdentifier = (
         accountIdentifier: params.accountIdentifier,
         orgIdentifier: params.orgIdentifier,
         projectIdentifier: params.projectIdentifier,
+        validateAsync: params.validateAsync,
         ...(params.branch ? { branch: params.branch } : {}),
         ...(params.repoIdentifier ? { repoIdentifier: params.repoIdentifier } : {}),
         parentEntityConnectorRef: params.connectorRef,
         parentEntityRepoName: params.repoName,
-        ...(params?.storeType === StoreType.REMOTE && !params.branch ? { loadFromFallbackBranch: true } : {}),
-        ...(params.validateAsync && { validateAsync: true })
+        ...(params?.storeType === StoreType.REMOTE && !params.branch ? { loadFromFallbackBranch: true } : {})
       },
       requestOptions: {
         headers: {
@@ -344,7 +342,6 @@ export interface FetchPipelineBoundProps {
   gitDetails: EntityGitDetails
   storeMetadata?: StoreMetadata
   supportingTemplatesGitx?: boolean
-  isAsyncValidationEnabled?: boolean
 }
 
 export interface FetchPipelineUnboundProps {
@@ -426,8 +423,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     pipelineIdentifier: identifier,
     gitDetails,
     supportingTemplatesGitx,
-    storeMetadata,
-    isAsyncValidationEnabled = false
+    storeMetadata
   } = props
   const {
     forceFetch = false,
@@ -462,9 +458,9 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     const pipelineByIdPromise = getPipelineByIdentifier(
       {
         ...queryParams,
+        validateAsync: true,
         ...(repoIdentifier ? { repoIdentifier } : {}),
-        ...(branch ? { branch } : {}),
-        ...(isAsyncValidationEnabled && { validateAsync: true })
+        ...(branch ? { branch } : {})
       },
       pipelineId,
       loadFromCache,
@@ -1091,7 +1087,6 @@ export function PipelineProvider({
   const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const { supportingTemplatesGitx } = useAppStore()
-  const isAsyncValidationEnabled = useFeatureFlag(FeatureFlag.PIE_ASYNC_VALIDATION)
   const isMounted = React.useRef(false)
   const [state, dispatch] = React.useReducer(
     PipelineReducer,
@@ -1124,8 +1119,7 @@ export function PipelineProvider({
       branch
     },
     storeMetadata: state.storeMetadata,
-    supportingTemplatesGitx,
-    isAsyncValidationEnabled
+    supportingTemplatesGitx
   })
 
   const updatePipelineStoreMetadata = _updateStoreMetadata.bind(null, {

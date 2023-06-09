@@ -16,13 +16,15 @@ import {
   getMultiTypeFromValue,
   ButtonSize,
   ButtonVariation,
-  Text
+  Text,
+  Layout
 } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import * as Yup from 'yup'
 
 import { useParams } from 'react-router-dom'
+import { Position } from '@blueprintjs/core'
 import { String, useStrings } from 'framework/strings'
 import type { UseStringsReturn } from 'framework/strings'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
@@ -95,7 +97,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
 
   function addNew(): void {
     setSelectedVariable({
-      variable: { name: '', type: 'String', value: '', description: '' },
+      variable: { name: '', type: 'String', value: '', description: '', required: false },
       index: -1
     })
   }
@@ -181,11 +183,22 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                           localName={yamlData.localName}
                           fullName={yamlData.fqn}
                         />
-                        <String
-                          className={css.valueString}
-                          stringID={labelStringMap[variable.type as VariableType]}
-                          data-testid={`variables[${index}].type`}
-                        />
+                        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+                          <String
+                            className={css.valueString}
+                            stringID={labelStringMap[variable.type as VariableType]}
+                            data-testid={`variables[${index}].type`}
+                          />
+                          {!!variable?.required && (
+                            <Text
+                              icon="asterisk"
+                              iconProps={{ size: 12, color: Color.RED_500 }}
+                              padding={{ left: 'small' }}
+                              tooltip={getString('pipeline.required')}
+                              tooltipProps={{ position: Position.BOTTOM, isDark: true }}
+                            />
+                          )}
+                        </Layout.Horizontal>
                         <Text lineClamp={1}>{isEmpty(variable?.description) ? '-' : variable?.description}</Text>
                         <div className={css.valueColumn} data-type={getMultiTypeFromValue(variable.value as string)}>
                           {(variable.type as CustomDeploymentNGVariable['type']) === VariableType.Connector ? (

@@ -27,7 +27,8 @@ export function PipelineInputParametersV1Internal(props: PipelineInputParameters
   const formattedPath = isEmpty(path) ? '' : `${path}`
 
   const handleChange = (key: string, newValue: string) => {
-    formik?.setFieldValue(`${formattedPath}.inputs.${key}`, newValue)
+    const pathToSet = formattedPath ? `${formattedPath}.inputs.${key}` : `inputs.${key}`
+    formik?.setFieldValue(pathToSet, newValue)
   }
 
   return (

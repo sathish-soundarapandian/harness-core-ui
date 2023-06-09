@@ -32,6 +32,7 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { PermissionRequest } from '@auth-settings/pages/Configuration/Authentication'
 import { useFeature } from '@common/hooks/useFeatures'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -63,7 +64,7 @@ const SAMLProvider: React.FC<Props> = ({
   const samlSettings = authSettings.ngAuthSettings?.find(
     settings => settings.settingsType === AuthenticationMechanisms.SAML
   ) as SAMLSettings | undefined
-
+  const { PL_ENABLE_JIT_USER_PROVISION } = useFeatureFlags()
   const { enabled: featureEnabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.SAML_SUPPORT
@@ -227,10 +228,10 @@ const SAMLProvider: React.FC<Props> = ({
         >
           <Container padding={{ bottom: 'large' }}>
             <Card className={css.card}>
-              <Text color={Color.GREY_800} font={{ weight: 'bold' }} width="30%">
+              <Text color={Color.GREY_800} font={{ weight: 'bold' }} width="25%">
                 {samlSettings.displayName}
               </Text>
-              <Text color={Color.GREY_800} width="70%">
+              <Text color={Color.GREY_800} width="45%">
                 {samlSettings.authorizationEnabled ? (
                   <span>
                     {getString('authSettings.authorizationEnabledFor')}
@@ -240,6 +241,16 @@ const SAMLProvider: React.FC<Props> = ({
                   </span>
                 ) : (
                   getString('authSettings.authorizationNotEnabled')
+                )}
+              </Text>
+              <Text color={Color.GREY_800} width="30%">
+                {PL_ENABLE_JIT_USER_PROVISION && (
+                  <>
+                    {`${getString('authSettings.jitProvisioning')}: `}
+                    <Text font={{ weight: 'semi-bold' }} color={Color.GREY_800} inline>
+                      {samlSettings.jitEnabled ? getString('enabledLabel') : getString('common.disabled')}
+                    </Text>
+                  </>
                 )}
               </Text>
               <Button

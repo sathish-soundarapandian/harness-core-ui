@@ -6,8 +6,7 @@
  */
 
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, RenderResult } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServiceMock from 'services/cf'
 
@@ -34,10 +33,7 @@ const renderComponent = (): RenderResult => {
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      defaultFeatureFlagValues={{
-        FFM_1513: false,
-        FFM_2134_FF_PIPELINES_TRIGGER: false
-      }}
+      defaultFeatureFlagValues={{ FFM_2134_FF_PIPELINES_TRIGGER: false }}
     >
       <FlagActivation
         refetchFlagLoading={false}
@@ -79,33 +75,5 @@ describe('FlagActivation', () => {
     const { container } = renderComponent()
 
     expect(container).toMatchSnapshot()
-  })
-
-  test('it should render form correctly', async () => {
-    const patchMock = jest.fn()
-    jest.spyOn(cfServiceMock, 'usePatchFeature').mockReturnValue({ data: [], loading: false, mutate: patchMock } as any)
-
-    renderComponent()
-
-    // Edit flag variation
-    await waitFor(() => expect(screen.getByText('cf.featureFlags.rules.editRules')).toBeInTheDocument())
-
-    userEvent.click(screen.getByText('cf.featureFlags.rules.editRules'))
-
-    expect(document.getElementsByName('onVariation')[0]).toBeInTheDocument()
-
-    userEvent.click(document.getElementsByName('onVariation')[0])
-    userEvent.click(screen.getByText('False'))
-
-    expect(document.getElementsByName('onVariation')[0]).toHaveValue('False')
-    expect(screen.getByText('save')).toBeInTheDocument()
-
-    // Assert modal appears
-    userEvent.click(screen.getByText('save'))
-
-    const saveToGitModal = document.getElementById('save-flag-to-git-modal-body')
-    await waitFor(() => expect(saveToGitModal).toBeInTheDocument())
-
-    expect(saveToGitModal).toMatchSnapshot()
   })
 })

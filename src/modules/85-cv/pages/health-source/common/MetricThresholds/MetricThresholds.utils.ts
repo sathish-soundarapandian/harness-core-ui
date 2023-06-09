@@ -220,18 +220,18 @@ export function validateCommonFieldsForMetricThreshold(
   if (Array.isArray(thresholdValues) && thresholdValues.length) {
     thresholdValues.forEach((value: MetricThresholdType, index: number) => {
       if (!value.metricType) {
-        errors[`${thresholdName}.${index}.metricType`] = getString('cv.required')
+        errors[`${thresholdName}.${index}.metricType`] = getString('pipeline.required')
       }
       if (!value.metricName) {
-        errors[`${thresholdName}.${index}.metricName`] = getString('cv.required')
+        errors[`${thresholdName}.${index}.metricName`] = getString('pipeline.required')
       }
 
       if (isValidateGroup && !value.groupName) {
-        errors[`${thresholdName}.${index}.groupName`] = getString('cv.required')
+        errors[`${thresholdName}.${index}.groupName`] = getString('pipeline.required')
       }
 
       if (!value.criteria?.type) {
-        errors[`${thresholdName}.${index}.criteria.type`] = getString('cv.required')
+        errors[`${thresholdName}.${index}.criteria.type`] = getString('pipeline.required')
       }
 
       // For absolute type, greaterThan or lessThan any one of the field is mandatory.
@@ -240,16 +240,16 @@ export function validateCommonFieldsForMetricThreshold(
         !value.criteria?.spec?.greaterThan &&
         !value.criteria?.spec?.lessThan
       ) {
-        errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('cv.required')
-        errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('cv.required')
+        errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('pipeline.required')
+        errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('pipeline.required')
       }
 
       if (getIsAbsoluteValueIsZero(value?.criteria?.type, value?.criteria?.spec?.greaterThan)) {
-        errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('cv.required')
+        errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('pipeline.required')
       }
 
       if (getIsAbsoluteValueIsZero(value?.criteria?.type, value?.criteria?.spec?.lessThan)) {
-        errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('cv.required')
+        errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('pipeline.required')
       }
 
       // Percentage value is required for selected criteria percentage type
@@ -259,7 +259,7 @@ export function validateCommonFieldsForMetricThreshold(
         thresholdName === MetricThresholdPropertyName.FailFastThresholds &&
         !(value?.criteria?.spec?.greaterThan as number)
       ) {
-        errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('cv.required')
+        errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('pipeline.required')
       }
 
       if (
@@ -268,7 +268,7 @@ export function validateCommonFieldsForMetricThreshold(
         thresholdName === MetricThresholdPropertyName.IgnoreThreshold &&
         !(value?.criteria?.spec?.lessThan as number)
       ) {
-        errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('cv.required')
+        errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('pipeline.required')
       }
 
       // Percentage value must not be greater than 100
@@ -296,7 +296,7 @@ export function validateCommonFieldsForMetricThreshold(
 
       if (thresholdName === MetricThresholdPropertyName.FailFastThresholds) {
         if (value.spec.action !== FailFastActionValues.FailImmediately && !value.spec.spec?.count) {
-          errors[`${thresholdName}.${index}.spec.spec.count`] = getString('cv.required')
+          errors[`${thresholdName}.${index}.spec.spec.count`] = getString('pipeline.required')
         }
 
         if (value.spec.action !== FailFastActionValues.FailImmediately && (value.spec?.spec?.count as number) <= 1) {

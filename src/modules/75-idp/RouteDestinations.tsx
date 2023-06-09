@@ -61,7 +61,7 @@ function RedirectToIDPDefaultPath(): React.ReactElement {
     if (onboardingStatus === 'COMPLETED') {
       return <Redirect to={routes.toIDP(params)} />
     }
-    return <Redirect to={routes.toIDPAdmin(params)} />
+    return <Redirect to={routes.toGetStartedWithIDP(params)} />
   }
   return <></>
 }

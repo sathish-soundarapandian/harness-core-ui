@@ -37,6 +37,9 @@ export const DockerHubStepInputSetBasic: React.FC<DockerHubStepProps> = ({
           }),
           ...(getMultiTypeFromValue(template?.spec?.repo) === MultiTypeInputType.RUNTIME && {
             'spec.repo': {}
+          }),
+          ...(getMultiTypeFromValue(template?.spec?.caching) === MultiTypeInputType.RUNTIME && {
+            'spec.caching': {}
           })
         }}
         path={path || ''}

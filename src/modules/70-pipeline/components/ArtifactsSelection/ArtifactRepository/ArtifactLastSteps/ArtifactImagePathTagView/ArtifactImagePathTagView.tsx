@@ -149,6 +149,10 @@ function ArtifactImagePathTagView({
       resetFieldValue(formik, 'digest')
     }
   }
+  const resetTagTypeValues = () => {
+    resetFieldValue(formik, 'tag')
+    resetFieldValue(formik, 'tagRegex')
+  }
   return (
     <>
       {isServerlessDeploymentTypeSelected ? null : isArtifactPath ? (
@@ -220,6 +224,7 @@ function ArtifactImagePathTagView({
           className={css.radioGroup}
           onChange={() => {
             resetDigestValue()
+            resetTagTypeValues()
           }}
         />
       </div>

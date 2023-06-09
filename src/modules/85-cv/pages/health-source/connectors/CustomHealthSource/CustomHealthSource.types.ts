@@ -21,7 +21,7 @@ export interface CustomHealthSourceSetupSource {
   mappedServicesAndEnvs: Map<string, MapCustomHealthToService> // metricName to MapCustomHealthToService
   healthSourceIdentifier: string
   healthSourceName: string
-  connectorRef?: string
+  connectorRef?: string | { value: string }
   ignoreThresholds: MetricThresholdType[]
   failFastThresholds: MetricThresholdType[]
 }

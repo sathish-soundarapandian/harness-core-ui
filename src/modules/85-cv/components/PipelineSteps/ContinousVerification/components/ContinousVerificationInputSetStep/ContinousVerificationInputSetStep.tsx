@@ -29,7 +29,7 @@ import {
   isTemplatisedMonitoredService
 } from '../../utils'
 import type { ContinousVerificationProps } from './types'
-import { baseLineOptions, trafficSplitPercentageOptions, VerificationSensitivityOptions } from '../../constants'
+import { trafficSplitPercentageOptions, VerificationSensitivityOptions } from '../../constants'
 import RunTimeMonitoredService from './components/RunTimeMonitoredService/RunTimeMonitoredService'
 import {
   getInfraAndServiceData,
@@ -39,6 +39,7 @@ import {
 import ConfiguredRunTimeMonitoredService from './components/ConfiguredRunTimeMonitoredService/ConfiguredRunTimeMonitoredService'
 import TemplatisedRunTimeMonitoredService from './components/TemplatisedRunTimeMonitoredService/TemplatisedRunTimeMonitoredService'
 import { MONITORED_SERVICE_TYPE } from '../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
+import { getDefaultBaselineOptions } from '../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields'
 import css from './ContinousVerificationInputSetStep.module.scss'
 
 export function ContinousVerificationInputSetStep(
@@ -48,6 +49,9 @@ export function ContinousVerificationInputSetStep(
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
+
+  const SRM_ENABLE_BASELINE_BASED_VERIFICATION = useFeatureFlag(FeatureFlag.SRM_ENABLE_BASELINE_BASED_VERIFICATION)
+
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [pipeline, setPipeline] = useState<{ pipeline: PipelineInfoConfig } | undefined>()
@@ -168,7 +172,7 @@ export function ContinousVerificationInputSetStep(
             <FormInput.MultiTypeInput
               label={getString('connectors.cdng.baseline')}
               name={`${prefix}spec.spec.baseline`}
-              selectItems={baseLineOptions}
+              selectItems={getDefaultBaselineOptions(getString, SRM_ENABLE_BASELINE_BASED_VERIFICATION)}
               useValue
               multiTypeInputProps={{
                 expressions,

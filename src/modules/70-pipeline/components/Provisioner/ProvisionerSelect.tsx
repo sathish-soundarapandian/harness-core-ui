@@ -6,8 +6,10 @@
  */
 
 import React, { useState } from 'react'
-import { FormInput, SelectOption } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { SelectOption, MultiTypeInputType, Text } from '@harness/uicore'
 import { connect } from 'formik'
+import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 
 import { useStrings } from 'framework/strings'
 import type { ExecutionWrapperConfig } from 'services/cd-ng'
@@ -23,7 +25,7 @@ interface ProvisionerSelectFieldProps {
 }
 
 function ProvisionerSelectField(props: ProvisionerSelectFieldProps): React.ReactElement {
-  const { name, formik, isReadonly = false, provisioners } = props
+  const { name, isReadonly = false, provisioners } = props
   const { CD_NG_DYNAMIC_PROVISIONING_ENV_V2 } = useFeatureFlags()
 
   const [options, setOptions] = useState<SelectOption[]>([])
@@ -69,15 +71,24 @@ function ProvisionerSelectField(props: ProvisionerSelectFieldProps): React.React
   return (
     <>
       {CD_NG_DYNAMIC_PROVISIONING_ENV_V2 && (
-        <FormInput.Select
-          disabled={isReadonly}
-          label={getString('common.provisioner')}
+        <MultiTypeSelectField
+          label={
+            <Text color={Color.GREY_600} font={{ size: 'small', weight: 'semi-bold' }} margin={{ bottom: 'xsmall' }}>
+              {getString('common.provisioner')}
+            </Text>
+          }
           name={name}
-          items={options}
+          useValue
           data-testid="provisioner-select"
-          onChange={option => {
-            formik.setFieldValue(name, option.value)
+          enableConfigureOptions={false}
+          multiTypeInputProps={{
+            selectItems: options,
+            placeholder: getString('select'),
+            multiTypeInputProps: {
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+            }
           }}
+          disabled={isReadonly}
         />
       )}
     </>

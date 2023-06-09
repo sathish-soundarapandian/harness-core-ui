@@ -2147,7 +2147,7 @@ exports[`Create AWS connector Wizard Should render form for edit 2`] = `
                   class="bp3-form-content"
                 >
                   <label
-                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--inline"
                   >
                     <input
                       checked=""
@@ -3189,7 +3189,7 @@ exports[`Create AWS connector Wizard Should render form for edit for hosted 2`] 
                   class="bp3-form-content"
                 >
                   <label
-                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--inline"
                   >
                     <input
                       checked=""

@@ -26,12 +26,15 @@ import {
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { addStepOrGroup } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
-import { StepCategory, useGetStepsV2 } from 'services/pipeline-ng'
+import { useGetStepsV2 } from 'services/pipeline-ng'
+import { getStepTypesFromCategories } from '@pipeline/hooks/useAddStepTemplate'
 import { createStepNodeFromTemplate } from '@pipeline/utils/templateUtils'
 import { useMutateAsGet } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getFlattenedStages } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
+import { StageType } from '@pipeline/utils/stageHelpers'
+import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import useChooseProvisioner from './ChooseProvisioner'
 import type { InfraProvisioningData, InfraProvisioningDataUI, InfraProvisioningProps } from './InfraProvisioning'
@@ -84,7 +87,7 @@ export const InfraProvisioningBase = (
     body: {
       stepPalleteModuleInfos: getStepPaletteModuleInfosFromStage(
         selectedStage?.stage?.type,
-        undefined,
+        selectedStage?.stage,
         'Provisioner',
         getFlattenedStages(pipeline).stages
       )
@@ -98,29 +101,17 @@ export const InfraProvisioningBase = (
     }
   }, [initialValues.provisionerEnabled])
 
-  const getStepTypesFromCategories = (stepCategories: StepCategory[]): string[] => {
-    const validStepTypes: string[] = []
-    stepCategories.forEach(category => {
-      if (category.stepCategories?.length) {
-        validStepTypes.push(...getStepTypesFromCategories(category.stepCategories))
-      } else if (category.stepsData?.length) {
-        category.stepsData.forEach(stepData => {
-          if (stepData.type) {
-            validStepTypes.push(stepData.type)
-          }
-        })
-      }
-    })
-    return validStepTypes
-  }
-
   React.useEffect(() => {
     if (stepsData?.data?.stepCategories) {
-      setAllChildTypes(getStepTypesFromCategories(stepsData.data.stepCategories))
+      const types = getStepTypesFromCategories(stepsData.data.stepCategories)
+      if (selectedStage?.stage?.type === StageType.DEPLOY) {
+        types.push(StageType.DEPLOY)
+      }
+      setAllChildTypes(types)
     }
-  }, [stepsData?.data?.stepCategories])
+  }, [stepsData?.data?.stepCategories, selectedStage])
 
-  const addTemplate = async (event: ExecutionGraphAddStepEvent) => {
+  const addTemplate = async (event: ExecutionGraphAddStepEvent): Promise<void> => {
     try {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
@@ -130,9 +121,12 @@ export const InfraProvisioningBase = (
         gitDetails,
         storeMetadata
       })
-      const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
+      const stepType = template.templateEntityType === PipelineStepType.StepGroup ? 'stepGroup' : 'step'
+      const newStepData = { [stepType]: createStepNodeFromTemplate(template, isCopied) }
+
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId || ''))
-      executionRef.current?.stepGroupUpdated?.(newStepData.step)
+
+      executionRef.current?.stepGroupUpdated?.(newStepData[stepType])
       if (pipelineStage && !get(pipelineStage?.stage, 'spec.environment.provisioner')) {
         set(pipelineStage, 'stage.spec.environment.provisioner', {
           steps: [],
@@ -159,10 +153,10 @@ export const InfraProvisioningBase = (
           type: DrawerTypes.ProvisionerStepConfig,
           data: {
             stepConfig: {
-              node: newStepData.step,
+              node: newStepData[stepType],
               stepsMap: event.stepsMap,
               onUpdate: executionRef.current?.stepGroupUpdated,
-              isStepGroup: false,
+              isStepGroup: template?.templateEntityType === PipelineStepType.StepGroup,
               addOrEdit: 'edit',
               hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
             }

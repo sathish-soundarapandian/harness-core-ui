@@ -162,7 +162,8 @@ module.exports = {
     target: process.env.ERROR_TRACKING_URL || 'http://localhost:9191'
   },
   '/audit/api': {
-    target: targetLocalHost ? 'http://localhost:9005' : baseUrl
+    target: targetLocalHost ? 'http://localhost:9005' : baseUrl,
+    pathRewrite: targetLocalHost ? { '^/audit': '' } : {}
   },
   '/auth': {
     pathRewrite: { '^/auth': '' },
@@ -171,6 +172,10 @@ module.exports = {
   '/ccmui': {
     pathRewrite: { '^/ccmui': '' },
     target: process.env.CCM_UI_URL || 'https://localhost:8183'
+  },
+  '/srmui': {
+    pathRewrite: { '^/srmui': '' },
+    target: 'https://localhost:8189'
   },
   '/cdbui': {
     pathRewrite: { '^/cdbui': '' },
@@ -188,12 +193,11 @@ module.exports = {
     pathRewrite: { '^/iacm': '' },
     target: process.env.IAC_UI_URL || 'https://localhost:8185'
   },
+  '/ssca/api': {
+    target: process.env.SSCA_API_URL || 'https://localhost:8186'
+  },
   '/ssca': {
     pathRewrite: { '^/ssca': '' },
-    target: process.env.SSCA_UI_URL || 'https://localhost:8186'
-  },
-  '/ssca/api': {
-    pathRewrite: { '^/ssca/api': '/api' },
-    target: process.env.SSCA_API_URL || 'https://localhost:8186'
+    target: 'http://localhost:8186'
   }
 }

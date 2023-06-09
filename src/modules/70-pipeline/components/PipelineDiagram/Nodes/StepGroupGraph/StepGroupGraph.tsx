@@ -10,7 +10,6 @@ import cx from 'classnames'
 import { defaultTo } from 'lodash-es'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { useDeepCompareEffect } from '@common/hooks'
 import { stageGroupTypes, StageType } from '@pipeline/utils/stageHelpers'
 import { SVGComponent } from '../../PipelineGraph/PipelineGraph'
 import { PipelineGraphRecursive } from '../../PipelineGraph/PipelineGraphNode'
@@ -22,8 +21,6 @@ import {
 import type { GetNodeMethod, NodeDetails, NodeIds, PipelineGraphState, SVGPathRecord } from '../../types'
 import { NodeType } from '../../types'
 import GraphConfigStore from '../../PipelineGraph/GraphConfigStore'
-import { Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
-import { getSGDimensions, LayoutStyles } from '../utils'
 import { DiagramType, Event } from '../../Constants'
 import css from './StepGroupGraph.module.scss'
 
@@ -48,81 +45,12 @@ interface StepGroupGraphProps {
   setVisibilityOfAdd: React.Dispatch<React.SetStateAction<boolean>>
   isParentMatrix?: boolean
   type?: string
-}
-
-const getCalculatedStyles = (
-  data: PipelineGraphState[],
-  childrenDimensions: Dimensions,
-  type?: string
-): LayoutStyles => {
-  let width = 0
-  let height = 0
-  let maxChildLength = 0
-  let finalHeight = 0
-  data.forEach(node => {
-    const currentNodeId = node.id
-    const childrenNodesId = defaultTo(node?.children, []).map(o => o.id) // list of all parallel nodes of current node
-    const childNodesId = [currentNodeId, ...childrenNodesId] // node + all parallel nodes id list
-
-    if (childrenDimensions[currentNodeId]) {
-      // stepGroup child dimension from context
-      let nodeHeight = 0
-      let nodeWidth = 0
-      childNodesId.forEach((childNode, index) => {
-        // check all parallel nodes
-        const dimensionMetaData = childrenDimensions[childNode]
-
-        let hh = dimensionMetaData?.height + (dimensionMetaData?.isNodeCollapsed ? 0 : 60) // padding for StepGroupNode
-        let ww = dimensionMetaData?.width + (dimensionMetaData?.isNodeCollapsed ? 0 : 80) // padding for StepGroupNode
-
-        if (dimensionMetaData?.type === 'matrix') {
-          hh += 45
-          ww -= 25
-        }
-        nodeHeight += hh || 0 // height added for all child (68 -> padding of StepGroupNode)
-        nodeWidth = Math.max(nodeWidth, ww || 0) // width is max of all child nodes
-
-        nodeHeight += index > 0 ? 120 : 32 //nodeGap for parallel nodes
-      })
-      if (node.children?.length && data.length > 0) {
-        width += 40 // for parallel node -> parallel link joint
-      }
-
-      height = Math.max(height, nodeHeight) //+ 40 //(each node)
-      width = width + nodeWidth + 80 //+ 40 // gap
-      finalHeight = Math.max(finalHeight, height)
-    } else {
-      let nodeHeight = 0
-      let nodeWidth = 0
-      childNodesId.forEach((childNode, index) => {
-        const dimensionMetaData = childrenDimensions[childNode]
-        const sgDimension = dimensionMetaData?.height ? getSGDimensions(dimensionMetaData, index) : undefined
-        const hh = defaultTo(sgDimension?.height, 118) // 118 (node+text)
-        let ww = defaultTo(sgDimension?.width, 134)
-        nodeHeight += hh
-        if (index > 0) {
-          ww += 20
-          nodeHeight += 26 //26(padding beteween the text and next node)
-        }
-        nodeWidth = Math.max(nodeWidth, ww)
-      })
-      width += nodeWidth + 20
-
-      maxChildLength = Math.max(maxChildLength, node?.children?.length || 0)
-      finalHeight = Math.max(finalHeight, nodeHeight)
-    }
-  })
-
-  return {
-    height: finalHeight,
-    width: width - (stageGroupTypes.includes(type as StageType) ? 40 : 80)
-  } // 80 is link gap that we dont need for last stepgroup node
+  baseFqn?: string
 }
 
 function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   const [svgPath, setSvgPath] = useState<SVGPathRecord[]>([])
   const [treeRectangle, setTreeRectangle] = useState<DOMRect | void>()
-  const [layoutStyles, setLayoutStyles] = useState<LayoutStyles>({ height: 100, width: 64 })
   const [state, setState] = useState<PipelineGraphState[]>([])
   const graphRef = useRef<HTMLDivElement>(null)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
@@ -133,14 +61,12 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
     setTreeRectangle(rectBoundary)
   }
 
-  const { updateDimensions, childrenDimensions } = useNodeDimensionContext()
   const { errorMap } = useValidationErrors()
   const {
-    state: { templateTypes, templateIcons },
-    getStagePathFromPipeline
+    state: { templateTypes, templateIcons }
   } = usePipelineContext()
 
-  const stagePath = getStagePathFromPipeline(props?.identifier || '', 'pipeline.stages')
+  const baseFQN = `${props?.baseFqn}.steps`
   useLayoutEffect(() => {
     if (stageGroupTypes.includes(props?.type as StageType)) setState(props.data as PipelineGraphState[])
     else if (props?.data?.length) {
@@ -151,39 +77,19 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
           templateIcons,
           serviceDependencies: undefined,
           errorMap: errorMap,
-          parentPath: `${stagePath}.stage.spec.execution.steps.stepGroup.steps`, //index after step missing - getStepPathFromPipeline??
+          parentPath: baseFQN,
           isNestedGroup: true
         })
       )
     }
-  }, [treeRectangle, props.data, templateTypes, templateIcons])
+  }, [treeRectangle, props.data, templateTypes, templateIcons, baseFQN])
 
   useLayoutEffect(() => {
     if (state?.length) {
       setSVGLinks()
-      setLayoutStyles(getCalculatedStyles(state, childrenDimensions, props?.type))
     }
+    updateGraphLinks()
   }, [state, props?.isNodeCollapsed])
-
-  useDeepCompareEffect(() => {
-    if (state?.length) {
-      updateGraphLinks()
-      setLayoutStyles(getCalculatedStyles(state, childrenDimensions, props?.type))
-    }
-  }, [childrenDimensions])
-
-  useLayoutEffect(() => {
-    if (state?.length) {
-      props?.updateGraphLinks?.()
-      updateDimensions?.({
-        [props?.id as string]: {
-          ...layoutStyles,
-          type: 'STEP_GROUP',
-          isNodeCollapsed: props?.isNodeCollapsed
-        }
-      })
-    }
-  }, [layoutStyles])
 
   const updateGraphLinks = (): void => {
     setSVGLinks()
@@ -227,7 +133,6 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   return (
     <div
       className={css.main}
-      style={layoutStyles}
       data-stepGroup-name={props?.identifier}
       data-stepGroup-id={props?.id}
       ref={graphRef}

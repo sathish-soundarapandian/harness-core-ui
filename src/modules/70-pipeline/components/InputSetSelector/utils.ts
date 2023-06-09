@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName, SelectOption } from '@harness/uicore'
+import { IconName, SelectOption, MultiTypeInputType } from '@harness/uicore'
 import type { EntityGitDetails, InputSetSummaryResponse } from 'services/pipeline-ng'
 import css from './InputSetSelector.module.scss'
 
@@ -13,11 +13,11 @@ type InputSetLocal = InputSetSummaryResponse & SelectOption
 export interface InputSetValue extends InputSetLocal {
   type: InputSetSummaryResponse['inputSetType']
   gitDetails?: EntityGitDetails
+  idType?: MultiTypeInputType
 }
 export interface ChildPipelineStageProps {
   childOrgIdentifier: string
   childProjectIdentifier: string
-  usePortal?: boolean
   inputSetReferences?: string[]
 }
 
@@ -45,3 +45,21 @@ export const onDragOver = (event: React.DragEvent<HTMLLIElement>): void => {
   event.currentTarget.classList.add(css.dragOver)
   event.dataTransfer.dropEffect = 'move'
 }
+
+export const getInputSetExpressionValue = (expressionVal: string): InputSetValue => {
+  const expressionArr = expressionVal.split('.')
+  let expressionLabel = expressionVal
+  //  Only show 1st and last 2 name of expression
+  //  -> (pipeline.execution.Stage.StageA.name = pipeline.....StageA.name)
+  if (expressionArr.length > 3) {
+    expressionLabel = expressionArr[0] + '...' + expressionArr.slice(expressionArr.length - 2).join('.')
+  }
+  return {
+    type: 'INPUT_SET',
+    label: expressionLabel,
+    value: expressionVal,
+    idType: MultiTypeInputType.EXPRESSION
+  }
+}
+
+export const INPUT_SET_SELECTOR_PAGE_SIZE = 100

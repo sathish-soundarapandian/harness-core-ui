@@ -101,6 +101,24 @@ export default function CODESideNav(): React.ReactElement {
 
           {repoName && (
             <SidebarLink
+              data-code-repo-section="tags"
+              className={css.subNav}
+              icon="code-tag"
+              textProps={{
+                iconProps: {
+                  size: 18,
+                  className: css.tagIcon
+                }
+              }}
+              label={getString('tagsLabel')}
+              to={routes.toCODETags({
+                repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
+              })}
+            />
+          )}
+
+          {repoName && (
+            <SidebarLink
               data-code-repo-section="pull-requests"
               className={css.subNav}
               icon="git-pull"

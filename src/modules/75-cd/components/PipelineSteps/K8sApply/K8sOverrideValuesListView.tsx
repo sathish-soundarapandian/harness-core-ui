@@ -232,7 +232,12 @@ function K8sOverrideValuesListView({
         manifestDetailStep = <KustomizePatchDetails {...lastStepProps()} />
         break
       case selectedManifest === K8sManifestDataType.Values && isGitTypeStores:
-        manifestDetailStep = <K8sValuesManifest {...lastStepProps()} />
+        manifestDetailStep = (
+          <K8sValuesManifest
+            {...lastStepProps()}
+            selectedDeploymentType={deploymentType as ServiceDefinition['type']}
+          />
+        )
         break
       case manifestStore === K8sManifestStoreMap.Harness:
         manifestDetailStep = <HarnessFileStore {...lastStepProps()} />

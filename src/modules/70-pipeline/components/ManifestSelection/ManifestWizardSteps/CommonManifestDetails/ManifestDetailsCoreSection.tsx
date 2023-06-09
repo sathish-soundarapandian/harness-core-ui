@@ -12,7 +12,7 @@ import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { Layout, FormInput, getMultiTypeFromValue, MultiTypeInputType, StepProps, AllowedTypes } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ServiceDefinition } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { CommonManifestDataType, ManifestTypes } from '../../ManifestInterface'
 import { gitFetchTypeList, GitFetchTypes, GitRepoName, ManifestDataType, ManifestStoreMap } from '../../Manifesthelper'
@@ -27,6 +27,7 @@ interface ManifestDetailsCoreSectionProps {
   expressions: string[]
   allowableTypes: AllowedTypes
   selectedManifest: ManifestTypes | null
+  selectedDeploymentType?: ServiceDefinition['type']
   isReadonly?: boolean
   showIdentifierField?: boolean
   filePathFieldWidth?: number
@@ -39,6 +40,7 @@ const getAccountUrl = (prevStepData?: ConnectorConfigDTO): string => {
 export function ManifestDetailsCoreSection({
   formik,
   selectedManifest,
+  selectedDeploymentType,
   expressions,
   allowableTypes,
   prevStepData,
@@ -166,7 +168,9 @@ export function ManifestDetailsCoreSection({
           }
           defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
           dragDropFieldWidth={filePathFieldWidth}
-          allowOnlyOneFilePath={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
+          allowOnlyOneFilePath={
+            selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest, selectedDeploymentType) : false
+          }
         />
         {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions

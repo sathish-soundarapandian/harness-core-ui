@@ -37,7 +37,8 @@ import {
   CustomDeploymentInfrastructure,
   ElastigroupInfrastructure,
   TanzuApplicationServiceInfrastructure,
-  AsgInfrastructure
+  AsgInfrastructure,
+  ServiceDefinition
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -105,20 +106,12 @@ import {
 } from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
 
-export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
+export const deploymentTypeInfraTypeMap: Record<ServiceDefinition['type'], InfraDeploymentType> = {
   Kubernetes: InfraDeploymentType.KubernetesDirect,
   NativeHelm: InfraDeploymentType.KubernetesDirect,
-  amazonEcs: InfraDeploymentType.KubernetesDirect,
-  amazonAmi: InfraDeploymentType.KubernetesDirect,
-  awsCodeDeploy: InfraDeploymentType.KubernetesDirect,
   WinRm: InfraDeploymentType.KubernetesDirect,
-  awsLambda: InfraDeploymentType.KubernetesDirect,
   Ssh: InfraDeploymentType.KubernetesDirect,
   ServerlessAwsLambda: InfraDeploymentType.ServerlessAwsLambda,
-  ServerlessAzureFunctions: InfraDeploymentType.ServerlessAzureFunctions,
-  ServerlessGoogleFunctions: InfraDeploymentType.ServerlessGoogleFunctions,
-  AmazonSAM: InfraDeploymentType.AmazonSAM,
-  AzureFunctions: InfraDeploymentType.AzureFunctions,
   AzureWebApp: InfraDeploymentType.AzureWebApp,
   ECS: InfraDeploymentType.ECS,
   Asg: InfraDeploymentType.Asg,
@@ -126,7 +119,12 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   Elastigroup: InfraDeploymentType.Elastigroup,
   TAS: InfraDeploymentType.TAS,
   GoogleCloudFunctions: InfraDeploymentType.GoogleCloudFunctions,
-  AwsLambda: InfraDeploymentType.AwsLambda
+  AwsLambda: InfraDeploymentType.AwsLambda,
+  AWS_SAM: InfraDeploymentType.AwsSam
+}
+
+export interface DeployInfraDefinitionProps {
+  selectedInfrastructure?: string
 }
 
 type InfraTypes =
@@ -144,7 +142,7 @@ type InfraTypes =
   | AsgInfrastructure
   | GoogleCloudFunctionInfrastructure
 
-export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
+export default function DeployInfraDefinition(props: React.PropsWithChildren<DeployInfraDefinitionProps>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
     React.useState<Infrastructure>({})
 
@@ -173,7 +171,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
     [updateStage]
   )
 
-  const { NG_CDS_NATIVE_EKS_SUPPORT, NG_SVC_ENV_REDESIGN: isSvcEnvEnabled } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN: isSvcEnvEnabled } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const { accountId } = useParams<{
@@ -189,7 +187,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   )
 
   const [infraGroups, setInfraGroups] = React.useState<InfrastructureGroup[]>(
-    getInfraGroups(selectedDeploymentType, getString, !!isSvcEnvEnabled, NG_CDS_NATIVE_EKS_SUPPORT)
+    getInfraGroups(selectedDeploymentType, getString, !!isSvcEnvEnabled)
   )
 
   useEffect(() => {
@@ -263,12 +261,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       infraReset = true
     }
 
-    const initialInfraGroups = getInfraGroups(
-      newDeploymentType,
-      getString,
-      !!isSvcEnvEnabled,
-      NG_CDS_NATIVE_EKS_SUPPORT
-    )
+    const initialInfraGroups = getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled)
 
     const filteredInfraGroups = initialInfraGroups.map(group => ({
       ...group,
@@ -282,7 +275,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
         : deploymentTypeInfraTypeMap[newDeploymentType])
 
     setSelectedInfrastructureType(infrastructureType)
-    setInfraGroups(getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled, NG_CDS_NATIVE_EKS_SUPPORT))
+    setInfraGroups(getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled))
 
     const initialInfraDefValues = getInfrastructureDefaultValue(stage, infrastructureType)
     setInitialInfrastructureDefinitionValues(initialInfraDefValues)
@@ -525,7 +518,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   connectorRef: value.connectorRef,
                   subscriptionId: value.subscriptionId,
                   resourceGroup: value.resourceGroup,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.AzureWebApp
               )
@@ -549,7 +543,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   connectorRef: value.connectorRef,
                   stage: value.stage,
                   region: value.region,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.ServerlessAwsLambda
               )
@@ -573,7 +568,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                 {
                   connectorRef: value.connectorRef,
                   stage: value.stage,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.ServerlessGoogleFunctions
               )
@@ -597,7 +593,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                 {
                   connectorRef: value.connectorRef,
                   stage: value.stage,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.ServerlessAzureFunctions
               )
@@ -730,7 +727,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                 {
                   connectorRef: value.connectorRef,
                   region: value.region,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.Asg
               )
@@ -776,7 +774,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                 {
                   connectorRef: value.connectorRef,
                   configuration: value.configuration,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.Elastigroup
               )
@@ -800,7 +799,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   connectorRef: value.connectorRef,
                   organization: value.organization,
                   space: value.space,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.TAS
               )
@@ -824,7 +824,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   connectorRef: value.connectorRef,
                   project: value.project,
                   region: value.region,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.GoogleCloudFunctions
               )
@@ -847,9 +848,33 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                 {
                   connectorRef: value.connectorRef,
                   region: value.region,
-                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner
                 },
                 InfraDeploymentType.AwsLambda
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.AwsSam: {
+        return (
+          <StepWidget<AwsLambdaInfraSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as AwsLambdaInfraSpec}
+            type={StepType.AwsSamInfra}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  region: value.region,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.AwsSam
               )
             }
           />
@@ -939,7 +964,11 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           )}
           <SelectInfrastructureType
             infraGroups={infraGroups}
-            isReadonly={isReadonly || (!selectedDeploymentType && selectedInfrastructureType)}
+            isReadonly={
+              isReadonly ||
+              !isEmpty(props?.selectedInfrastructure) ||
+              (!selectedDeploymentType && selectedInfrastructureType)
+            }
             selectedInfrastructureType={selectedInfrastructureType}
             onChange={deploymentType => {
               setSelectedInfrastructureType(deploymentType)

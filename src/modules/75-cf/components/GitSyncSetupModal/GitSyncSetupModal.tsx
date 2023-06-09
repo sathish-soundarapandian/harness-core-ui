@@ -92,6 +92,7 @@ export const GitSyncSetupModal: FC<GitSyncSetupModalProps> = ({ hideModal }) => 
           isOpen
           enforceFocus={false}
           title={getString('cf.gitSync.setUpGitConnection')}
+          width={800}
           footer={
             <Layout.Horizontal spacing="small">
               <Button
@@ -105,7 +106,7 @@ export const GitSyncSetupModal: FC<GitSyncSetupModalProps> = ({ hideModal }) => 
           }
           onClose={hideModal}
         >
-          <FormikForm>
+          <FormikForm style={{ overflowX: 'hidden' }}>
             <GitSyncForm
               formikProps={formikProps}
               isEdit={false}

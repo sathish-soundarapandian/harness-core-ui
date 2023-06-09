@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Accordion, AccordionHandle, Icon } from '@harness/uicore'
+import { Accordion, AccordionHandle, Icon, Text } from '@harness/uicore'
 import { Divider, Spinner } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 
@@ -255,7 +255,7 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
                         size={23}
                       />
                     )}
-                    <span>{stage.name}</span>
+                    <Text lineClamp={1}>{stage.name}</Text>
                   </div>
                   {shouldShowExecutionInputs ? (
                     <button
@@ -299,7 +299,7 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
                               <div className={css.stageName}>
                                 <div>
                                   <StatusIcon className={css.icon} status={childStage.status as ExecutionStatus} />
-                                  <span>{childStage.name}</span>
+                                  <Text lineClamp={1}>{childStage.name}</Text>
                                 </div>
                               </div>
                             }

@@ -18,12 +18,17 @@ import {
   FormikTooltipContext,
   useToaster,
   ButtonVariation,
-  SelectOption
+  SelectOption,
+  sortByLastModified,
+  sortByCreated,
+  sortByName,
+  SortMethod
 } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
 import { get, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import useCreateConnectorMultiTypeModal from '@connectors/modals/ConnectorModal/useCreateConnectorMultiTypeModal'
@@ -130,9 +135,9 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     mini,
     isDrawerMode = false,
     templateProps,
-    version,
     isRecordDisabled,
     renderRecordDisabledWarning,
+    version,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -165,6 +170,8 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
   const [multiType, setMultiType] = React.useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
   const [connectorStatusCheckInProgress, setConnectorStatusCheckInProgress] = React.useState(false)
   const [connectorStatus, setConnectorStatus] = React.useState(typeof selected !== 'string' && selected?.live)
+  const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-select-connector`)
 
   const [isConnectorEdited, setIsConnectorEdited] = useState(false)
   const { showError } = useToaster()
@@ -424,12 +431,12 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         types: Array.isArray(type) ? type : [type]
       }
     }),
-    version,
     getString,
     openConnectorModal,
     setPagedConnectorData,
     isRecordDisabled,
-    renderRecordDisabledWarning
+    renderRecordDisabledWarning,
+    version
   })
   const component = (
     <FormGroup {...rest} labelFor={name} helperText={helperText} intent={intent} style={{ marginBottom: 0 }}>
@@ -442,12 +449,20 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
           // Other connectors will need to onboard this and add details in collapsed view.
           // Please update the details in RenderConnectorDetails inside ConnectorReferenceField.
           disableCollapse: !(type === 'Github'),
+          showAllTab: true,
           pagination: {
             itemCount: pagedConnectorData?.data?.totalItems || 0,
             pageSize: pagedConnectorData?.data?.pageSize || 10,
             pageCount: pagedConnectorData?.data?.totalPages || -1,
             pageIndex: page || 0,
             gotoPage: pageIndex => setPage(pageIndex)
+          },
+          sortProps: {
+            selectedSortMethod: sortPreference,
+            onSortMethodChange: option => {
+              setSortPreference(option.value as SortMethod)
+            },
+            sortOptions: [...sortByLastModified, ...sortByCreated, ...sortByName]
           },
           isNewConnectorLabelVisible: canUpdate && isNewConnectorLabelVisible,
           selectedRenderer: getSelectedRenderer(selectedValue, !!connectorStatus, connectorStatusCheckInProgress),

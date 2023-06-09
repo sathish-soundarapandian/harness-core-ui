@@ -39,6 +39,10 @@ import {
 
 import SessionToken from 'framework/utils/SessionToken'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
+import { useQueryParams } from '@common/hooks'
+import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import RbacButton from '@rbac/components/Button/Button'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -48,7 +52,10 @@ import useCreateIPAllowlistModal from '@auth-settings/modals/IPAllowlistModal/us
 import useCheckIPModal from '@auth-settings/modals/CheckIPModal/useCheckIPModal'
 import type { UseCreateIPAllowlistModalReturn } from '@auth-settings/modals/IPAllowlistModal/useCreateIPAllowlistModal'
 import { mapIPAllowlistConfigDTOToFormData } from '@auth-settings/components/CreateIPAllowlist/CreateIPAllowlistWizard'
-import { RenderColumnName } from '@auth-settings/components/IPAllowlistTableColumns/IPAllowlistTableColumns'
+import {
+  RenderColumnName,
+  RenderColumnApplicableFor
+} from '@auth-settings/components/IPAllowlistTableColumns/IPAllowlistTableColumns'
 import { fetchCurrentIp } from '@auth-settings/services/ipAddressService'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -84,6 +91,15 @@ export const EnableIPAllowlistButtons: React.FC<EnableIPAllowlistButtonsProps> =
         />
         <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={() => onCancel?.()} />
       </Layout.Horizontal>
+    </Layout.Vertical>
+  )
+}
+
+export const RenderColumnDescription: Renderer<CellProps<IpAllowlistConfigResponse>> = ({ row }) => {
+  const ipAllowlistConfig = row.original.ip_allowlist_config
+  return (
+    <Layout.Vertical padding={{ right: 'large' }}>
+      <Text lineClamp={2} className={css.breakWord}>{`${ipAllowlistConfig.description ?? '-'}`}</Text>
     </Layout.Vertical>
   )
 }
@@ -220,17 +236,6 @@ const RenderColumnEnabled: Renderer<CellProps<IpAllowlistConfigResponse>> = ({ v
       label={!value ? getString('common.disabled') : getString('enabledLabel')}
       disabled={!canEdit}
     />
-  )
-}
-
-const RenderColumnApplicableFor: Renderer<CellProps<IpAllowlistConfigResponse>> = ({ row }) => {
-  const { getString } = useStrings()
-  const allowSourceType = defaultTo(row.original.ip_allowlist_config.allowed_source_type, [])
-  const applicableFor = allowSourceType.length > 0 ? allowSourceType.join(', ') : getString('na')
-  return (
-    <Layout.Horizontal padding={{ right: 'xlarge' }}>
-      <Text>{applicableFor}</Text>
-    </Layout.Horizontal>
   )
 }
 
@@ -385,6 +390,8 @@ const Allowlist: React.FC = () => {
   const [currentIP, setCurrentIP] = useState<string | undefined>(undefined)
   const [validatedResponse, setValidatedResponse] = useState<IpAllowlistConfigValidateResponse>({})
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { page, size } = useQueryParams<CommonPaginationQueryParams>()
+
   const { openIPAllowlistModal } = useCreateIPAllowlistModal({
     onClose: () => {
       refetchListingPageAPIs()
@@ -392,7 +399,7 @@ const Allowlist: React.FC = () => {
   })
   const { openCheckIPModal } = useCheckIPModal()
 
-  const { data, isFetching, refetch } = useGetIpAllowlistConfigsQuery({ queryParams: {} })
+  const { data, isFetching, refetch } = useGetIpAllowlistConfigsQuery({ queryParams: { page: page, limit: size } })
 
   const refetchListingPageAPIs = useCallback((): void => {
     refetch()
@@ -439,7 +446,7 @@ const Allowlist: React.FC = () => {
         Header: getString('status'),
         id: 'enabled',
         accessor: row => row.ip_allowlist_config.enabled,
-        width: '15%',
+        width: '10%',
         Cell: RenderColumnEnabled,
         refetchListingPageAPIs,
         currentIP
@@ -452,6 +459,13 @@ const Allowlist: React.FC = () => {
         Cell: RenderColumnName
       },
       {
+        Header: getString('description'),
+        id: 'description',
+        accessor: row => row.ip_allowlist_config.name,
+        width: '25%',
+        Cell: RenderColumnDescription
+      },
+      {
         Header: getString('authSettings.ipAddress.ipAddressCIDR'),
         id: 'ipAddress',
         accessor: row => row.ip_allowlist_config.ip_address,
@@ -462,12 +476,12 @@ const Allowlist: React.FC = () => {
       {
         Header: getString('authSettings.ipAddress.applicableFor'),
         id: 'applicableFor',
-        width: '25%',
+        width: '15%',
         Cell: RenderColumnApplicableFor
       },
       {
         id: 'menu',
-        width: '20%',
+        width: '10%',
         Cell: RenderColumnMenu,
         refetchListingPageAPIs,
         openIPAllowlistModal
@@ -506,11 +520,22 @@ const Allowlist: React.FC = () => {
     },
     []
   )
+  const total = defaultTo(data?.pagination?.total, 0)
+  const pageSize = defaultTo(data?.pagination?.pageSize, COMMON_DEFAULT_PAGE_SIZE)
+  const pageCount = defaultTo(data?.pagination?.pageCount, Math.ceil(total / pageSize))
+  const pageNumber = defaultTo(data?.pagination?.pageNumber, 0)
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: total,
+    pageSize: pageSize,
+    pageCount: pageCount,
+    pageIndex: pageNumber
+  })
 
   return (
     <>
       {!canEdit && (
-        <Callout icon={null} className={cssConfiguration.callout}>
+        <Callout className={cssConfiguration.callout}>
           <RBACTooltip
             permission={PermissionIdentifier.EDIT_AUTHSETTING}
             resourceType={permissionRequest.resource.resourceType}
@@ -528,6 +553,9 @@ const Allowlist: React.FC = () => {
               ? getString('authSettings.ipAddress.yourIpAddressIs', { ipAddress: currentIP })
               : getString('authSettings.ipAddress.unableToDetermineIp')}
           </Text>
+          <Callout className={cssConfiguration.callout}>
+            {getString('authSettings.ipAddress.changesMayTake5Minutes')}
+          </Callout>
           {rowsExist ? (
             <Layout.Horizontal margin="large" spacing="large">
               <RbacButton
@@ -579,7 +607,14 @@ const Allowlist: React.FC = () => {
           {isFetching ? (
             <PageSpinner />
           ) : (
-            <TableV2 className={css.paddingTable} data={allowlistData} columns={columns} />
+            rowsExist && (
+              <TableV2
+                className={css.paddingTable}
+                data={allowlistData}
+                columns={columns}
+                pagination={paginationProps}
+              />
+            )
           )}
         </Layout.Vertical>
       </Container>

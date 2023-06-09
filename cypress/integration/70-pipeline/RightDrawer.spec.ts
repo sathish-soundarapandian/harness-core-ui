@@ -98,7 +98,7 @@ describe('RightDrawer test', () => {
       cy.get('button[aria-label="Save as Template"]').click()
     })
     cy.get('.bp3-dialog').within(() => {
-      cy.get('input[name="name"]').type('K8sDelete_2')
+      cy.get('input[name="name"]').clear().type('K8sDelete_2')
       cy.get('input[name="versionLabel"]').type('v1')
       cy.findByRole('button', { name: 'Save' }).click()
     })

@@ -32,7 +32,6 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { PipelineStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { PipelineStageTabs } from '../utils'
 import { MAX_LENGTH } from './utils'
 import css from './PipelineStageOutputSection.module.scss'
@@ -48,7 +47,6 @@ export function VariableOutputPanel(): React.ReactElement {
     getStageFromPipeline
   } = usePipelineContext()
   const { metadataMap, variablesPipeline } = usePipelineVariables()
-  const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
 
   const tabName = PipelineStageTabs.OUTPUTS
@@ -210,7 +208,6 @@ export function VariableOutputPanel(): React.ReactElement {
                                 type: 'text'
                               },
                               allowableTypes,
-                              expressions,
                               multitypeInputValue: outputTypeRef.current[index]
                             }}
                             onChange={(_value, _valueType, multiType) => {

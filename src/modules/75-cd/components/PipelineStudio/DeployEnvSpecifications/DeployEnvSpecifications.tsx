@@ -5,7 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MutableRefObject, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import React, {
+  MutableRefObject,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  Ref,
+  useRef
+} from 'react'
 import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
@@ -29,18 +38,24 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { getAllowableTypesWithoutFixedValue } from '@pipeline/utils/runPipelineUtils'
 
 import ErrorsStripBinded from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
-import { getAllFixedServices } from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
+import {
+  DeployServiceEntityData,
+  getAllFixedServices
+} from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
 import type { DeployEnvironmentEntityConfig } from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/types'
 
 import { isContextTypeTemplateType } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
-export default function DeployEnvSpecifications(props: PropsWithChildren<unknown>): JSX.Element {
-  const scrollRef = useRef<HTMLDivElement | null>(null)
+export default function DeployEnvSpecifications(
+  props: PropsWithChildren<{ customRef?: Ref<HTMLDivElement> }>
+): JSX.Element {
+  const domRef = useRef<HTMLDivElement | null>(null)
+  const scrollRef = props?.customRef || domRef
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
 
-  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
 
   useEffect(() => {
     if (errorMap.size > 0) {
@@ -139,10 +154,26 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     [scope, CDS_OrgAccountLevelServiceEnvEnvGroup, allowableTypes]
   )
 
+  const getStageSpec = (): DeployServiceEntityData => {
+    const propagatedStageId = stage?.stage?.spec?.service?.useFromStage?.stage
+    if (propagatedStageId) {
+      const { stage: propagatedStage } = getStageFromPipeline<DeploymentStageElementConfig>(propagatedStageId || '')
+      if (propagatedStage) return defaultTo(propagatedStage?.stage?.spec, {})
+    }
+    return defaultTo(stage?.stage?.spec, {})
+  }
+
   return (
     <div className={stageCss.deployStage} key="1">
-      <ErrorsStripBinded domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
-      <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
+      {!CDS_PIPELINE_STUDIO_UPGRADES && (
+        <ErrorsStripBinded domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
+      )}
+      <div
+        className={cx(stageCss.contentSection, stageCss.paddedSection, {
+          [stageCss.paddedSectionNew]: CDS_PIPELINE_STUDIO_UPGRADES
+        })}
+        ref={scrollRef}
+      >
         <StepWidget<DeployEnvironmentEntityConfig>
           type={StepType.DeployEnvironmentEntity}
           readonly={isReadonly}
@@ -152,7 +183,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
           factory={factory}
           stepViewType={StepViewType.Edit}
           customStepProps={{
-            serviceIdentifiers: getAllFixedServices(defaultTo(stage?.stage?.spec, {})),
+            serviceIdentifiers: getAllFixedServices(getStageSpec()),
             stageIdentifier: defaultTo(stage?.stage?.identifier, ''),
             deploymentType: stage?.stage?.spec?.deploymentType,
             gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false),

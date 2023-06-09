@@ -23,7 +23,7 @@ import { testTaskDefinitionLastStep, testTaskDefinitionSecondStep } from './Task
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 const fetchBuckets = jest.fn().mockReturnValue(bucketNameList)
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: { data: connectorsData.data.content[1] }, refetch: fetchConnectors, loading: false }

@@ -5,14 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { connectorsListNewestSort } from '../../support/35-connectors/constants'
+
 describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
   const gitSyncCall =
     '/ng/api/git-sync/git-sync-enabled?accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
   const stepsCall = '/pipeline/api/pipelines/v2/steps?routingId=accountId&accountId=accountId'
   const serviceNowYamlSnippetCall =
     '/pipeline/api/approvals/stage-yaml-snippet?routingId=accountId&approvalType=SERVICENOW_APPROVAL'
-  const serviceNowConnectorsCall =
-    '/ng/api/connectors?accountIdentifier=accountId&type=ServiceNow&searchTerm=&pageIndex=0&pageSize=10&projectIdentifier=project1&orgIdentifier=default'
 
   const serviceNowTicketTypesCall =
     'ng/api/servicenow/ticketTypes?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=service_now_connector'
@@ -66,7 +66,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(1000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Create').click()
+      cy.contains('p', 'ServiceNow Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Apply Changes').click({ force: true })
       cy.contains('span', 'Step Name is required').should('be.visible').should('have.class', 'FormError--error')
@@ -80,14 +80,14 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form after filling details - Configure Fields', () => {
-      cy.intercept('GET', serviceNowConnectorsCall, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Create').click()
+      cy.contains('p', 'ServiceNow Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Create')
       cy.contains('span', 'Select').click({ force: true })
@@ -105,14 +105,14 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form required field check - Create From Template', () => {
-      cy.intercept('GET', serviceNowConnectorsCall, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Create').click()
+      cy.contains('p', 'ServiceNow Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Create')
       cy.contains('span', 'Select').click({ force: true })
@@ -129,7 +129,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form after filling fields  - Create From Template', () => {
-      cy.intercept('GET', serviceNowConnectorsCall, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
@@ -137,7 +137,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Create').click()
+      cy.contains('p', 'ServiceNow Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Create')
       cy.contains('span', 'Select').click({ force: true })
@@ -162,7 +162,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(1000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Approval').click()
+      cy.contains('p', 'ServiceNow Approval').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Apply Changes').click({ force: true })
       cy.contains('span', 'Step Name is required').should('be.visible').should('have.class', 'FormError--error')
@@ -175,13 +175,13 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('GET', serviceNowConnectorsCall, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Approval').click()
+      cy.contains('p', 'ServiceNow Approval').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Approval')
       cy.contains('span', 'Select').click({ force: true })
@@ -208,7 +208,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(1000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Update').click()
+      cy.contains('p', 'ServiceNow Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Apply Changes').click({ force: true })
       cy.contains('span', 'Step Name is required').should('be.visible').should('have.class', 'FormError--error')
@@ -223,14 +223,14 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('GET', serviceNowConnectorsCall, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Update').click()
+      cy.contains('p', 'ServiceNow Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Update')
       cy.contains('span', 'Select').click({ force: true })
@@ -250,14 +250,14 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit empty form Validations - Create From Template', () => {
-      cy.intercept('GET', serviceNowConnectorsCall, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Update').click()
+      cy.contains('p', 'ServiceNow Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Update')
       cy.contains('span', 'Select').click({ force: true })
@@ -276,7 +276,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     })
 
     it('Submit form after filling details - Create From Template', () => {
-      cy.intercept('GET', serviceNowConnectorsCall, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/serviceNow/serviceNowConnectors' })
       cy.intercept('GET', serviceNowTicketTypesCall, { fixture: 'ng/api/serviceNow/serviceNowTicketTypes' })
       cy.intercept('GET', serviceNowMetadataCall, { fixture: 'ng/api/serviceNow/serviceNowMetadata' })
       cy.intercept('GET', serviceNowTemplateCall, { fixture: 'ng/api/serviceNow/serviceNowTemplate' })
@@ -284,7 +284,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'ServiceNow Update').click()
+      cy.contains('p', 'ServiceNow Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.get('input[placeholder="Enter Step Name"]').type('Service Now Update')
       cy.contains('span', 'Select').click({ force: true })

@@ -43,7 +43,6 @@ import type { PipelineContextInterface } from '@pipeline/components/PipelineStud
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { getPipelineStages } from '@pipeline/components/PipelineStudio/PipelineStagesUtils'
 import type { PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useStrings } from 'framework/strings'
@@ -872,7 +871,6 @@ export const TemplateProvider: React.FC<{
   const { repoIdentifier, branch } = queryParams
   const { supportingTemplatesGitx } = useAppStore()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
-  const { CING_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
@@ -1003,7 +1001,7 @@ export const TemplateProvider: React.FC<{
       args,
       getString,
       module,
-      isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
+      isCIEnabled: licenseInformation['CI']?.status === LICENSE_STATE_VALUES.ACTIVE,
       isCDEnabled: shouldVisible,
       isCFEnabled: licenseInformation['CF'] && FF_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE,
       isSTOEnabled: licenseInformation['STO']?.status === LICENSE_STATE_VALUES.ACTIVE,

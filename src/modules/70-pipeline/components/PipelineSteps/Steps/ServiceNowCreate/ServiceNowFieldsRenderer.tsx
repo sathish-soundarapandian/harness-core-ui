@@ -33,14 +33,14 @@ interface MappedComponentInterface {
 // TODO: Going forward this should be governed by metadata returned by BE API once it's available
 export const EXPANDABLE_INPUT_SUPPORTED_FIELDS = new Set(['work_notes', 'work_notes_list'])
 
+export const TEXT_INPUT_SUPPORTED_FIELD_TYPES = new Set(['string', 'glide_date_time', 'integer', 'boolean', 'unknown'])
+
 function GetMappedFieldComponent({ selectedField, props, expressions, index }: MappedComponentInterface) {
   const showTextField = useCallback(() => {
     if (
       isNull(selectedField.schema) ||
       isUndefined(selectedField.schema) ||
-      selectedField.schema.type === 'string' ||
-      selectedField.schema.type === 'glide_date_time' ||
-      selectedField.schema.type === 'integer'
+      TEXT_INPUT_SUPPORTED_FIELD_TYPES.has(selectedField.schema.type)
     ) {
       return true
     }

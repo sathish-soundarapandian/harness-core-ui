@@ -69,7 +69,7 @@ describe('Signup Page', () => {
         bubbles: true
       })
       fireEvent.click(getByText('signUp.signUp'))
-      await waitFor(() => expect(getByText('error')).toBeDefined())
+      await waitFor(() => expect(getByText('warning-sign')).toBeDefined())
       expect(container).toMatchSnapshot()
     })
   })

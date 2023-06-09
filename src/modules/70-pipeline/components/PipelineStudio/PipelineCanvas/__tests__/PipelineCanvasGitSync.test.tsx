@@ -43,7 +43,9 @@ jest.mock('services/pipeline-ng', () => ({
     mutate: jest.fn(() => Promise.resolve({ data: { yaml: '' } })),
     loading: false,
     cancel: jest.fn()
-  }))
+  })),
+  useGetPipelineValidateResult: jest.fn(() => ({})),
+  useValidatePipelineAsync: jest.fn(() => ({}))
 }))
 
 jest.mock('services/pipeline-rq', () => ({

@@ -41,7 +41,6 @@ describe('<AdvancedSteps /> tests', () => {
               getStep: jest.fn(() => ({ hasDelegateSelectionVisible: true, hasCommandFlagSelectionVisible: true }))
             } as any
           }
-          onUpdate={jest.fn()}
         />
       </TestWrapper>
     )

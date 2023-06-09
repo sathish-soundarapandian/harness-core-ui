@@ -34,7 +34,7 @@ export interface PipelineInputSetFormV1Props {
   originalPipeline?: PipelineV1InfoConfig
   connectorRef?: string
   repoIdentifier?: string
-  formik: any
+  formik?: any
   path?: string
 }
 

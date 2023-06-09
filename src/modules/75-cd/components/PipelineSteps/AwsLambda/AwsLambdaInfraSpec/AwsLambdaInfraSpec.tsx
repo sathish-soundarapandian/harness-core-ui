@@ -12,7 +12,7 @@ import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import { AwsLambdaInfrastructure, getConnectorListV2Promise } from 'services/cd-ng'
+import { AwsLambdaInfrastructure, getConnectorListV2Promise, ExecutionElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -40,6 +40,7 @@ export interface AwsLambdaInfraSpecCustomStepProps {
   serviceRef?: string
   environmentRef?: string
   infrastructureRef?: string
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 const connectorRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
@@ -47,7 +48,7 @@ const connectorRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition
 export class AwsLambdaInfraSpec extends PipelineStep<AwsLambdaInfrastructureStep> {
   lastFetched: number
   protected type = StepType.AwsLambdaInfra
-  protected defaultValues: AwsLambdaInfrastructure = { connectorRef: '', region: '' }
+  protected defaultValues: AwsLambdaInfrastructure = { connectorRef: '', region: '', provisioner: '' }
 
   protected stepIcon: IconName = 'service-aws-lamda'
   protected stepName = 'Specify your AWS connector'
@@ -136,6 +137,7 @@ export class AwsLambdaInfraSpec extends PipelineStep<AwsLambdaInfrastructureStep
           readonly={inputSetData?.readonly}
           template={inputSetData?.template}
           path={inputSetData?.path || ''}
+          {...(customStepProps as AwsLambdaInfraSpecEditableProps)}
           allowableTypes={allowableTypes}
         />
       )

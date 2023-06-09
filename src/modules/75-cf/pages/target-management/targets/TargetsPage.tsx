@@ -180,7 +180,9 @@ export const TargetsPage: React.FC = () => {
                 backgroundColor={() => TARGET_PRIMARY_COLOR}
                 margin={{ right: 'small' }}
               />
-              <Text color={Color.GREY_900}>{cell.row.original.name}</Text>
+              <Text color={Color.GREY_900} lineClamp={1}>
+                {cell.row.original.name}
+              </Text>
             </Layout.Horizontal>
           )
         }
@@ -191,7 +193,11 @@ export const TargetsPage: React.FC = () => {
         accessor: 'identifier',
         width: '25%',
         Cell: function IdCell(cell: Cell<Target>) {
-          return <Text>{cell.row.original.identifier}</Text>
+          return (
+            <Layout.Horizontal spacing="xsmall">
+              <Text lineClamp={1}>{cell.row.original.identifier}</Text>
+            </Layout.Horizontal>
+          )
         }
       },
       {
@@ -357,6 +363,7 @@ export const TargetsPage: React.FC = () => {
             pageIndex={pageNumber}
             gotoPage={setPageNumber}
             showPagination
+            hidePageNumbers={targetsData?.pageCount > 1000}
           />
         )
       }

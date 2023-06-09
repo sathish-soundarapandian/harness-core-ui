@@ -20,6 +20,9 @@ export interface FormValues {
   clientId?: string
   samlProviderType?: Providers
   enableClientIdAndSecret: boolean
+  jitEnabled?: boolean
+  jitValidationKey?: string
+  jitValidationValue?: string
 }
 
 export enum Providers {
@@ -64,6 +67,15 @@ export const createFormData = (data: FormValues): FormData => {
   }
   if (data.entityIdEnabled && data.entityIdentifier) {
     formData.set('entityIdentifier', data.entityIdentifier)
+  }
+
+  if (data.jitEnabled) {
+    formData.set('jitEnabled', data.jitEnabled.toString())
+    // jit validation key & value are optional
+    if (data.jitValidationKey && data.jitValidationValue) {
+      formData.set('jitValidationKey', data.jitValidationKey)
+      formData.set('jitValidationValue', data.jitValidationValue)
+    }
   }
 
   const file = (data as any)?.files?.[0]

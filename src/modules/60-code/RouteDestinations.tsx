@@ -30,7 +30,8 @@ import {
   Compare,
   Webhooks,
   WebhookNew,
-  WebhookDetails
+  WebhookDetails,
+  Tags
 } from './CodeApp'
 import routes, { CODEPathProps } from './RouteDefinitions'
 import CODEHomePage from './pages/home/CODEHomePage'
@@ -48,6 +49,7 @@ const codePathProps: Required<CODEPathProps> = {
   resourcePath: ':resourcePath*',
   commitRef: ':commitRef*',
   branch: ':branch*',
+  tag: ':tag*',
   diffRefs: ':diffRefs*',
   pullRequestId: ':pullRequestId',
   pullRequestSection: ':pullRequestSection',
@@ -218,6 +220,14 @@ export default function CODERouteDestinations(): React.ReactElement {
         exact
       >
         <Branches />
+      </RouteWithLayout>
+      <RouteWithLayout
+        path={routes.toCODETags({ repoPath })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.CODETags}
+        exact
+      >
+        <Tags />
       </RouteWithLayout>
       <RouteWithLayout
         path={routes.toCODEFileEdit({

@@ -16,11 +16,12 @@ import type { Failure, Error } from 'services/pipeline-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import css from './RunPipelineForm.module.scss'
 
-interface PipelineInvalidRequestContentProps {
+export interface PipelineInvalidRequestContentProps {
   onClose?: () => void
   getTemplateError: GetDataError<Failure | Error> | null
   branch?: string
   repoName?: string
+  code?: string
 }
 
 interface GetErrorTitleAndTextOption {
@@ -32,9 +33,11 @@ export function PipelineInvalidRequestContent({
   getTemplateError,
   onClose,
   branch,
-  repoName
+  repoName,
+  code
 }: PipelineInvalidRequestContentProps): React.ReactElement {
   const { getString } = useStrings()
+  const remoteFetchError = code === 'ENTITY_NOT_FOUND'
   const getErrorMessageTitleAndText = (): GetErrorTitleAndTextOption => {
     const errorMessage: string[] = defaultTo((getTemplateError?.data as Error)?.message, '').split(':')
     return errorMessage.length > 1
@@ -53,16 +56,18 @@ export function PipelineInvalidRequestContent({
 
   return (
     <Layout.Vertical margin={{ top: 'xxlarge', bottom: 'xxlarge', right: 'xxlarge', left: 'xxlarge' }}>
-      <Layout.Horizontal margin={{ top: 'large' }}>
-        <Icon name="warning-sign" size={25} color={Color.RED_600}></Icon>
-        <Text
-          padding={{ left: 'medium' }}
-          font={{ variation: FontVariation.H4 }}
-          style={{ textTransform: 'capitalize' }}
-        >
-          {getErrorMessageTitleAndText().title}
-        </Text>
-      </Layout.Horizontal>
+      {remoteFetchError ? null : (
+        <Layout.Horizontal margin={{ top: 'large' }}>
+          <Icon name="warning-sign" size={25} color={Color.RED_600}></Icon>
+          <Text
+            padding={{ left: 'medium' }}
+            font={{ variation: FontVariation.H4 }}
+            style={{ textTransform: 'capitalize' }}
+          >
+            {getErrorMessageTitleAndText().title}
+          </Text>
+        </Layout.Horizontal>
+      )}
 
       {!isEmpty((getTemplateError?.data as Error)?.responseMessages) ? (
         <Container padding={{ top: 'xlarge', bottom: 'xlarge' }}>

@@ -344,7 +344,8 @@ function ArtifactSourceTemplateDetails(
                             path: 'template.templateInputs',
                             formik: formRef.current,
                             serviceIdentifier,
-                            useArtifactV1Data: true
+                            useArtifactV1Data: true,
+                            shouldUtilizeFullWidth: true
                           })}
                       </Layout.Vertical>
                     )}

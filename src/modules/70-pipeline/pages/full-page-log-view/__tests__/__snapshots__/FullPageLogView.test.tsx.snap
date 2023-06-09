@@ -47,7 +47,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
       <summary>
         Initialize
       </summary>
-      <div>
+      <div
+        class="logsSection"
+      >
         <div
           class="logLine"
           style="grid-template-columns: 3ch 1fr;"
@@ -161,7 +163,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
       <summary>
         Scale
       </summary>
-      <div>
+      <div
+        class="logsSection"
+      >
         <div
           class="logLine"
           style="grid-template-columns: 3ch 1fr;"
@@ -275,7 +279,9 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
       <summary>
         Wrap Up
       </summary>
-      <div>
+      <div
+        class="logsSection"
+      >
         <div
           class="logLine"
           style="grid-template-columns: 3ch 1fr;"
@@ -393,7 +399,9 @@ exports[`<FullPageLogView /> tests retry node 1`] = `
     class="main"
     data-testid="single-section"
   >
-    <div>
+    <div
+      class="logsSection"
+    >
       <div
         class="logLine"
         style="grid-template-columns: 3ch 1fr;"
@@ -510,7 +518,9 @@ exports[`<FullPageLogView /> tests single section data 1`] = `
     class="main"
     data-testid="single-section"
   >
-    <div>
+    <div
+      class="logsSection"
+    >
       <div
         class="logLine"
         style="grid-template-columns: 3ch 1fr;"

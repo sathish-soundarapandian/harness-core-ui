@@ -33,6 +33,7 @@ import type { ElastigroupConfiguration, ElastigroupInfrastructure, StoreConfigWr
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -165,7 +166,8 @@ const ElastigroupInfraSpecEditable: React.FC<ElastigroupInfraSpecEditableProps> 
     const specField = data.store.spec
     const currentValues = formikRef.current?.values as ElastigroupInfrastructure
     const newData: ElastigroupInfrastructure = {
-      ...currentValues
+      ...currentValues,
+      provisioner: currentValues?.provisioner || undefined
     }
     if (specField.files) {
       newData.configuration.store.spec = {
@@ -192,7 +194,8 @@ const ElastigroupInfraSpecEditable: React.FC<ElastigroupInfraSpecEditableProps> 
             ...value,
             configuration: value.configuration,
             connectorRef: undefined,
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value?.provisioner || undefined
           }
           /* istanbul ignore else */ if (value.connectorRef) {
             data.connectorRef = getConnectorRefValue(value.connectorRef as ConnectorRefFormValueType)
@@ -212,6 +215,9 @@ const ElastigroupInfraSpecEditable: React.FC<ElastigroupInfraSpecEditableProps> 
               !isElastigroupConfigAdded()) as boolean
           return (
             <FormikForm>
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <ProvisionerField name="provisioner" isReadonly />
+              </Layout.Horizontal>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

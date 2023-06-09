@@ -56,8 +56,6 @@ import { useValidateTemplateInputsQuery } from 'services/pipeline-rq'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { useQueryParams } from '@common/hooks'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import StudioGitPopover from '../StudioGitPopover'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
@@ -107,7 +105,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     setSelectedStageId,
     setSelectedSectionId
   } = usePipelineContext()
-  const isAsyncValidationEnabled = useFeatureFlag(FeatureFlag.PIE_ASYNC_VALIDATION)
   const { showError, showSuccess, clear } = useToaster()
   const {
     pipeline,
@@ -134,7 +131,8 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const {
     data: reconcileErrorData,
     refetch: reconcilePipeline,
-    error: reconcileError
+    error: reconcileError,
+    isFetching: isFetchingReconcileData
   } = useValidateTemplateInputsQuery(
     {
       queryParams: {
@@ -147,7 +145,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     },
     {
       enabled: false,
-      staleTime: 5_000,
       onSuccess(data) {
         if (data?.data?.validYaml === false && data?.data.errorNodeSummary) {
           // This is handled by <PipelineOutOfSyncErrorStrip/>
@@ -266,9 +263,9 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     runTooltip = getString('pipeline.cannotRunUnsavedPipeline')
   }
 
-  function handleReconcileClick(): void {
+  function handleReconcile(showToast: boolean): void {
     reconcilePipeline()
-    showSuccess(getString('pipeline.outOfSyncErrorStrip.reconcileStarted'))
+    showToast && showSuccess(getString('pipeline.outOfSyncErrorStrip.reconcileStarted'))
     setShouldShowOutOfSyncError(true)
   }
 
@@ -323,7 +320,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
             icon="refresh"
             text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
             disabled={isCommunity}
-            onClick={handleReconcileClick}
+            onClick={() => handleReconcile(true)}
             permission={{
               resourceScope: {
                 accountIdentifier: accountId,
@@ -428,7 +425,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
               <div className={css.savePublishContainer}>
                 {isUpdated && !isReadonly && (
                   <Button
-                    variation={ButtonVariation.TERTIARY}
+                    variation={ButtonVariation.LINK}
                     padding={'small'}
                     className={css.unsavedChanges}
                     onClick={openDiffModal}
@@ -436,7 +433,9 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     {getString('unsavedChanges')}
                   </Button>
                 )}
-                {isAsyncValidationEnabled && !isNewPipeline && <ValidationBadge className={css.validationContainer} />}
+                {!isNewPipeline && (
+                  <ValidationBadge className={css.validationContainer} onReconcile={() => handleReconcile(false)} />
+                )}
                 <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
                 {renderDiscardUnsavedChangeButton()}
                 <RbacButton
@@ -472,7 +471,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
           )}
         </div>
       )}
-      {shouldShowOutOfSyncError ? (
+      {shouldShowOutOfSyncError && !isFetchingReconcileData ? (
         <PipelineOutOfSyncErrorStrip
           updateRootEntity={updateEntity}
           errorData={reconcileErrorData}

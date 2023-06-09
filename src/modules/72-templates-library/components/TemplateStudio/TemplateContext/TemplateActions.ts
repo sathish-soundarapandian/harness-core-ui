@@ -37,7 +37,7 @@ export enum DrawerTypes {
 }
 
 export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
-  [DrawerTypes.TemplateVariables]: 876,
+  [DrawerTypes.TemplateVariables]: 1147,
   [DrawerTypes.TemplateInputs]: 876
 }
 

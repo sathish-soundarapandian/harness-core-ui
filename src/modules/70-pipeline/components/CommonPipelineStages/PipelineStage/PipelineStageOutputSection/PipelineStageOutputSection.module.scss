@@ -12,7 +12,7 @@
     display: grid;
     grid-template-columns: 3fr 3fr 1fr;
     column-gap: var(--spacing-8);
-    margin-bottom: var(--spacing-medium);
+    margin-bottom: var(--spacing-large);
     align-items: baseline;
 
     & :global(.bp3-form-group) {
@@ -23,6 +23,9 @@
       display: grid;
       &[data-type='RUNTIME'] {
         grid-template-columns: 3fr 45px;
+      }
+      :global(.TextInput--main) {
+        margin-bottom: 0 !important;
       }
     }
 

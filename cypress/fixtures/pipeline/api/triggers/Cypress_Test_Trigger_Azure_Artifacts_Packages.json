@@ -1,0 +1,22 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "id": "2fa75139-e455-4e2b-93b5-164f7c41fefa",
+      "name": "com.bugsnag:bugsnag",
+      "protocolType": "maven"
+    },
+    {
+      "id": "beabf355-f9e9-48d0-865c-d0f43a6a8efe",
+      "name": "com.mycompany.app:todolist",
+      "protocolType": "maven"
+    },
+    {
+      "id": "1d6000d6-9b7d-4209-a03e-f503233ff850",
+      "name": "org.springframework.boot:spring-boot-hello",
+      "protocolType": "maven"
+    }
+  ],
+  "metaData": null,
+  "correlationId": "387488d9-8a6f-4ea4-a0ad-cde8278e6ceb"
+}

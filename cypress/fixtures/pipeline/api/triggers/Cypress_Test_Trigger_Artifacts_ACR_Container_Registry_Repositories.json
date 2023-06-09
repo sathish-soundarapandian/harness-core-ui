@@ -1,0 +1,30 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "repositories": [
+      {
+        "repository": "automation"
+      },
+      {
+        "repository": "automation/basic"
+      },
+      {
+        "repository": "automation/basic1"
+      },
+      {
+        "repository": "automation/single"
+      },
+      {
+        "repository": "server/nginx"
+      },
+      {
+        "repository": "server/nginx/abc"
+      },
+      {
+        "repository": "twitter"
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "e07db6d4-b84f-440f-a3f2-fa7f935d58c1"
+}

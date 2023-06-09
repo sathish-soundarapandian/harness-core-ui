@@ -310,6 +310,7 @@ billingInfo:
 allowlist: Allowlist
 ipAllowlist: IP Allowlist
 ipAddress:
+  changesMayTake5Minutes: Changes to IP Allowlist configuration may take upto 5 minutes to reflect
   determiningCurrentIp: 'Determining your IP Address...'
   yourIpAddressIs: 'Your IP Address is: {{ipAddress}}'
   unableToDetermineIp: 'Unable to determine your IP Address'
@@ -336,6 +337,7 @@ ipAddress:
   ipRequired: IP Address is required
   ipInvalid: IP Address must be a valid IP (v4 or v6)
   invalid: IP Address must be a valid IP (v4 or v6) in CIDR notation
+  invalidApplicableFor: Please select at least one of UI or API
   applicableFor: 'Applicable For'
   defineRange: Define Range
   testIP: Test IP
@@ -356,5 +358,7 @@ selectProvider: Select Provider
 urlIdentityProvider: URL and Identity Provider
 newSamlProvider: New SAML Provider
 identityProviderLabel: Identity Provider
-additionalFunctions: Additional Functions
 yesIamSure: Yes, I am very sure
+jitProvisioning: JIT Provisioning
+jitValidationKey: JIT Validation Key
+jitValidationValue: JIT Validation Value

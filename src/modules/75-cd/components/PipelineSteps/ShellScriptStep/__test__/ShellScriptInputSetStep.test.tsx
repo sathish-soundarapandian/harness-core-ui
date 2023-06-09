@@ -113,7 +113,7 @@ describe('ShellScriptInputSetStep tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('renders input sets', () => {
+  test.only('renders input sets', () => {
     const onUpdate = jest.fn()
     const initialValues = {
       identifier: 'SSH',
@@ -138,7 +138,7 @@ describe('ShellScriptInputSetStep tests', () => {
           {
             name: 'testInput2',
             type: 'String',
-            value: 'Test_B'
+            value: RUNTIME_INPUT_VALUE
           }
         ],
         outputVariables: [
@@ -150,7 +150,38 @@ describe('ShellScriptInputSetStep tests', () => {
           {
             name: 'testOutput2',
             type: 'String',
-            value: 'Test_D'
+            value: RUNTIME_INPUT_VALUE
+          }
+        ]
+      },
+      timeout: RUNTIME_INPUT_VALUE
+    }
+    const template = {
+      identifier: 'SSH',
+      name: 'SSH',
+      spec: {
+        source: {
+          spec: {
+            script: RUNTIME_INPUT_VALUE
+          }
+        },
+        executionTarget: {
+          host: RUNTIME_INPUT_VALUE,
+          connectorRef: RUNTIME_INPUT_VALUE,
+          workingDirectory: RUNTIME_INPUT_VALUE
+        },
+        environmentVariables: [
+          {
+            name: 'testInput2',
+            type: 'String',
+            value: RUNTIME_INPUT_VALUE
+          }
+        ],
+        outputVariables: [
+          {
+            name: 'testOutput2',
+            type: 'String',
+            value: RUNTIME_INPUT_VALUE
           }
         ]
       },
@@ -158,8 +189,8 @@ describe('ShellScriptInputSetStep tests', () => {
     }
     const { container } = render(
       <TestStepWidget
-        initialValues={{}}
-        template={initialValues}
+        initialValues={initialValues}
+        template={template}
         type={StepType.SHELLSCRIPT}
         stepViewType={StepViewType.InputSet}
         onUpdate={onUpdate}

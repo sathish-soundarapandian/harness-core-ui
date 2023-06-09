@@ -180,7 +180,7 @@ const ECSInfraSpecInputForm = ({
             onChange={selectedConnector => {
               if (
                 formik &&
-                (get(formik?.values, connectorFieldName) as ConnectorRefFormValueType).value !==
+                (get(formik?.values, connectorFieldName) as ConnectorRefFormValueType)?.value !==
                   (selectedConnector as unknown as EntityReferenceResponse<ConnectorReferenceDTO>)?.record?.identifier
               ) {
                 resetFieldValue(formik, clusterFieldName)
@@ -207,7 +207,7 @@ const ECSInfraSpecInputForm = ({
             onChange: selectedRegion => {
               if (
                 formik &&
-                get(formik?.values, regionFieldName) !== ((selectedRegion as SelectOption).value as string)
+                get(formik?.values, regionFieldName) !== ((selectedRegion as SelectOption)?.value as string)
               ) {
                 resetFieldValue(formik, clusterFieldName)
               }

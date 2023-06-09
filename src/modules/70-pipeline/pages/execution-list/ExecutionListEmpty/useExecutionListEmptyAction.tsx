@@ -20,6 +20,7 @@ import { useStrings } from 'framework/strings'
 import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/GetStartedWithCDButton'
 import { useGetFreeOrCommunityCD } from '@common/utils/utils'
 import { useExecutionListQueryParams } from '../utils/executionListUtil'
+import css from './ExecutionListEmpty.module.scss'
 
 export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPipeline: () => void) {
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier } =
@@ -54,7 +55,7 @@ export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPip
   // eslint-disable-next-line react/function-component-definition
   const EmptyAction = (): JSX.Element => (
     <>
-      {isFreeOrCommunityCD && <GetStartedWithCDButton />}
+      {isFreeOrCommunityCD && <GetStartedWithCDButton className={css.getStartedBtnWrapper} />}
       <RbacButton
         loading={loading}
         {...(isFreeOrCommunityCD ? { variation: ButtonVariation.LINK } : { intent: Intent.PRIMARY })}

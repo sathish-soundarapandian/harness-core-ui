@@ -42,10 +42,12 @@
 }
 
 .popover {
-  :global {
-    .bp3-popover-content {
-      max-height: 400px;
-      overflow: scroll;
+  .overflowScroll {
+    max-height: 370px;
+    max-width: 500px;
+    overflow: auto;
+    tr > td {
+      min-width: 220px;
     }
   }
 }

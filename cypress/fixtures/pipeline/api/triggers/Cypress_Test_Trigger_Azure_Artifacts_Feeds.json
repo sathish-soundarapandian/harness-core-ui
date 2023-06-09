@@ -1,0 +1,31 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "id": "289d0890-546e-481b-92aa-02385a8c62fc",
+      "name": "automation-cdc",
+      "fullyQualifiedName": "automation-cdc",
+      "project": null
+    },
+    {
+      "id": "6434318d-7904-4b76-a503-332951acb8a2",
+      "name": "feedproject",
+      "fullyQualifiedName": "feedproject",
+      "project": {
+        "id": "e3bbfdf8-b1df-4ff0-9755-c67b163328b3",
+        "name": "automation-cdc"
+      }
+    },
+    {
+      "id": "c293854b-49ce-4fb9-b10c-cbecfbe04f7d",
+      "name": "Nuget-cdc",
+      "fullyQualifiedName": "Nuget-cdc",
+      "project": {
+        "id": "e3bbfdf8-b1df-4ff0-9755-c67b163328b3",
+        "name": "automation-cdc"
+      }
+    }
+  ],
+  "metaData": null,
+  "correlationId": "e597796c-9d9e-40c8-ae4a-e3aa45719ec3"
+}

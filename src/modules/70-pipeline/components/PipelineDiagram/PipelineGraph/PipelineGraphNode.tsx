@@ -68,7 +68,7 @@ export function PipelineGraphRecursive({
   const EndNode: React.FC<BaseReactComponentProps> | undefined = getNode(NodeType.EndNode)?.component
   const PipelineNodeComponent = optimizeRender ? PipelineGraphNodeObserved : PipelineGraphNodeBasic
   return (
-    <div id="tree-container" className={classNames(css.graphTree, css.common)}>
+    <div id="tree-container" className={classNames(css.graphTree)}>
       {StartNode && startEndNodeNeeded && (
         <StartNode id={uniqueNodeIds?.startNode as string} className={classNames(css.graphNode)} />
       )}

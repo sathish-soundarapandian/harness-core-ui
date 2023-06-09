@@ -26,7 +26,8 @@ describe('TargetManagementHeader', () => {
   test('it should render the section toggle and environment switcher', async () => {
     renderComponent()
 
-    expect(screen.getByTestId('CFSectionToggle')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'cf.shared.targets' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'cf.shared.segments' })).toBeInTheDocument()
     expect(screen.getByTestId(envSelectId)).toBeInTheDocument()
   })
 

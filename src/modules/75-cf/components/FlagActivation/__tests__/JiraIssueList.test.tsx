@@ -166,7 +166,7 @@ describe('JiraIssueList', () => {
 
     // submit form
     userEvent.click(screen.getByRole('button', { name: 'add' }))
-    await waitFor(() => expect(screen.getByText('error')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('warning-sign')).toBeInTheDocument())
   })
 
   test('it should show correct error message if issue not found', async () => {

@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Layout, Text, PageError } from '@harness/uicore'
+import { Container, Text, PageError } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
@@ -172,9 +172,7 @@ export const TabEvaluations: React.FC<TabEvaluationsProps> = ({ flagData, startD
                   return (
                     <tr key={entry.variationIdentifier}>
                       <td style={{ paddingLeft: 'var(--spacing-large)' }}>
-                        <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }}>
-                          <VariationWithIcon variation={flagData.variations[index]} index={index} />
-                        </Layout.Horizontal>
+                        <VariationWithIcon variation={flagData.variations[index]} index={index} />
                       </td>
                       <td>
                         {formatNumber(entry.count || 0, true)}{' '}

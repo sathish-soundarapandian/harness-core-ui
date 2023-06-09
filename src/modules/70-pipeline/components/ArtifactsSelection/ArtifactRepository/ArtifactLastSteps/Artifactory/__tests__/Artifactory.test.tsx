@@ -30,6 +30,7 @@ import {
 } from './mock'
 
 jest.mock('services/cd-ng', () => ({
+  __esModule: true,
   ...jest.requireActual('services/cd-ng'),
   useGetBuildDetailsForArtifactoryArtifact: jest.fn().mockImplementation(() => {
     return {
@@ -283,6 +284,62 @@ describe('Serverless artifact', () => {
       return {
         loading: false,
         refetch: jest.fn()
+      }
+    })
+
+    const { container } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={runtimeInitialValues as any} {...serverlessDeploymentTypeProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`Should display artifactory details correctly while fetching image paths`, () => {
+    jest.spyOn(pipelineng, 'useGetImagePathsForArtifactory').mockImplementation((): any => {
+      return {
+        loading: true,
+        refetch: jest.fn()
+      }
+    })
+
+    const { container } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={runtimeInitialValues as any} {...serverlessDeploymentTypeProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`Should display artifactory details correctly when fetching image paths results in error`, () => {
+    const imagePathsErrorMock = { data: { status: 'ERROR', message: 'error occurred' } }
+
+    jest.spyOn(pipelineng, 'useGetImagePathsForArtifactory').mockImplementation((): any => {
+      return {
+        loading: false,
+        refetch: jest.fn(),
+        error: imagePathsErrorMock
+      }
+    })
+
+    const { container } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={runtimeInitialValues as any} {...serverlessDeploymentTypeProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`Should display artifactory details correctly when fetching image paths results in failure`, () => {
+    const imagePathsFailureMock = {
+      data: { status: 'FAILURE', errors: [{ fieldId: 'someField', error: 'failure occurred' }] }
+    }
+
+    jest.spyOn(pipelineng, 'useGetImagePathsForArtifactory').mockImplementation((): any => {
+      return {
+        loading: false,
+        refetch: jest.fn(),
+        error: imagePathsFailureMock
       }
     })
 

@@ -28,7 +28,7 @@ import { get, set, isEmpty, defaultTo } from 'lodash-es'
 
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
 import type { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { shouldHideHeaderAndNavBtns } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { CommonManifestDataType, CommonManifestLastStepPrevStepData, ManifestTypes } from '../../ManifestInterface'
@@ -51,6 +51,7 @@ interface K8sValuesManifestPropType {
   allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   selectedManifest: ManifestTypes | null
+  selectedDeploymentType?: ServiceDefinition['type']
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
@@ -65,6 +66,7 @@ const showAdvancedSection = (selectedManifest: ManifestTypes | null): boolean =>
 function K8sValuesManifest({
   stepName,
   selectedManifest,
+  selectedDeploymentType,
   expressions,
   allowableTypes,
   initialValues,
@@ -264,6 +266,7 @@ function K8sValuesManifest({
                   <ManifestDetailsCoreSection
                     formik={formik}
                     selectedManifest={selectedManifest}
+                    selectedDeploymentType={selectedDeploymentType}
                     expressions={expressions}
                     allowableTypes={allowableTypes}
                     prevStepData={modifiedPrevStepData}

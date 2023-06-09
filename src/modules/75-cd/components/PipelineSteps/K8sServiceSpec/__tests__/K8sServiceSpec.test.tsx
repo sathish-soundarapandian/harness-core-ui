@@ -22,7 +22,6 @@ import { pipelineContextKubernetes } from '@pipeline/components/PipelineStudio/P
 import { GenericServiceSpec } from '../K8sServiceSpec'
 import PipelineMock from './mock.json'
 import TemplateMock from './template.mock.json'
-import connectorListJSON from './connectorList.json'
 import secretMockdata from './secretMockdata.json'
 import { PipelineResponse } from './pipelineMock'
 import type { K8SDirectServiceStep } from '../K8sServiceSpecInterface'
@@ -326,7 +325,6 @@ jest.mock('services/cd-ng', () => ({
     jest.fn().mockImplementation(() => {
       return { data: { data: { buildDetailsList: [] } }, refetch: jest.fn(), error: null }
     }),
-  getConnectorListPromise: () => Promise.resolve(connectorListJSON),
   getConnectorListV2Promise: () => Promise.resolve(mockManifestConnector),
   getBuildDetailsForDockerPromise: () => Promise.resolve(mockBuildList),
   getBuildDetailsForGcrPromise: () => Promise.resolve(mockBuildList),

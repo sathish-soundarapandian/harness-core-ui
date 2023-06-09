@@ -121,6 +121,7 @@ const EnvironmentDetails: React.FC = () => {
                   setPage(index)
                 }}
                 showPagination
+                hidePageNumbers={keys?.pageCount > 1000}
               />
             )
           }

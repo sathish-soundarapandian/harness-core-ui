@@ -38,11 +38,13 @@ import {
   nodeNamesFilterAPI,
   overviewCall,
   overviewCallResponse,
+  overviewCallResponseWithBaseline,
   pipelinesFetchCall,
   pipelinesSummaryFetchCall,
   pipelinesYamlFetchCall,
   sourceCodeManagerCall,
-  transactionsFilterAPI
+  transactionsFilterAPI,
+  updateBaselineCall
 } from '../../../support/85-cv/verifyStep/constants'
 
 describe('Verify step', () => {
@@ -61,6 +63,12 @@ describe('Verify step', () => {
           {
             uuid: null,
             name: 'SRM_ENABLE_JIRA_INTEGRATION',
+            enabled: true,
+            lastUpdatedAt: 0
+          },
+          {
+            uuid: null,
+            name: 'SRM_ENABLE_BASELINE_BASED_VERIFICATION',
             enabled: true,
             lastUpdatedAt: 0
           }
@@ -467,5 +475,84 @@ describe('Verify step', () => {
     cy.findByText(/A new ticket/).should('be.visible')
     cy.findByText(/This is the very long ticket description.../).should('be.visible')
     cy.findByText(/John Doe/).should('be.visible')
+  })
+
+  it('should verify baseline based verification', () => {
+    cy.intercept('GET', logsListCall, logsListCallResponseWithTicket).as('logsListCall')
+    cy.intercept('GET', logsRadarChartDataCall, logsRadarChartDataCallResponse).as('logsRadarChartDataCall')
+    cy.intercept('GET', logsListNodeFilterCall, logsListCallResponse).as('logsListNodeFilterCall')
+    cy.intercept('GET', logsRadarChartDataNodeFilterCall, logsRadarChartDataCallResponse).as(
+      'logsRadarChartDataNodeFilterCall'
+    )
+
+    cy.intercept('GET', logsListCLusterFilterCall, logsListCallResponse).as('logsListCLusterFilterCall')
+    cy.intercept('GET', logsRadarChartDataCLusterFilterCall, logsRadarChartDataCallResponse).as(
+      'logsRadarChartDataCLusterFilterCall'
+    )
+    cy.intercept('GET', logsListMinSliderFilterCall, logsListCallResponse).as('logsListMinSliderFilterCall')
+    cy.intercept('GET', feedbackHistory, feedbackHistoryResponse).as('feedbackHistory')
+
+    cy.intercept('GET', jiraProjectsCall, jiraProjectsMock).as('jiraProjectsCall')
+    cy.intercept('GET', jiraPrioritiesCall, jiraPrioritiesMock).as('jiraPrioritiesCall')
+    cy.intercept('GET', jiraIssueTypesCall, jiraIssueTypeMock).as('jiraIssueTypesCall')
+    cy.intercept('GET', jiraTicketDetailsCall, jiraTicketGetResponse).as('jiraTicketDetailsCall')
+    cy.intercept('POST', jiraCreatePostCall).as('jiraCreatePostCall')
+
+    cy.intercept('GET', overviewCall, overviewCallResponseWithBaseline).as('overviewCallForBaseline')
+
+    cy.intercept('POST', updateBaselineCall, {}).as('updateBaselineCall')
+
+    cy.findByText('NG Docker Image').click()
+
+    cy.wait('@sourceCodeManagerCall')
+    cy.wait('@gitSyncCall')
+    cy.wait('@pipelinesYamlFetchCall')
+
+    cy.wait('@pipelineSummary')
+    cy.wait('@pipelineDetails')
+
+    cy.url().should('include', '/pipelines/NG_Docker_Image/pipeline-studio')
+
+    cy.findByRole('link', { name: /Execution History/i }).click()
+
+    cy.wait('@pipelineExecutionSumary')
+    cy.wait('@pipelineSummary')
+
+    cy.findByText(/(Execution Id: 5)/i)
+      .scrollIntoView()
+      .click()
+
+    cy.wait('@pipelineExecution')
+    cy.wait('@pipelineExecutionForNode')
+
+    cy.url().should('include', '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline')
+
+    cy.url().should('include', '/pipelines/NG_Docker_Image/executions/')
+
+    cy.findByTestId(/Logs/i).click()
+
+    cy.wait('@overviewCallForBaseline')
+    cy.wait('@logsListCall')
+    cy.wait('@logsRadarChartDataCall')
+
+    cy.findByTestId(/pinBaselineButton/)
+      .should('exist')
+      .should('contain.text', 'Pin baseline')
+
+    cy.findByTestId(/pinBaselineButton/)
+      .scrollIntoView()
+      .click()
+
+    cy.findByTestId(/pinBaslineButton_confirmationButton/).should('exist')
+
+    cy.findByTestId(/pinBaslineButton_confirmationButton/)
+      .scrollIntoView()
+      .click()
+
+    cy.wait('@updateBaselineCall')
+
+    cy.findByTestId(/pinBaselineButton/)
+      .should('exist')
+      .should('contain.text', 'Unpin baseline')
   })
 })

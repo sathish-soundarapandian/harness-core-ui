@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { defaultTo } from 'lodash-es'
 import {
   Button,
   ButtonVariation,
@@ -28,6 +29,7 @@ import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { SAMLSettings, useUpdateSamlMetaDataForSamlSSOId, useUploadSamlMetaData } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { createFormData, FormValues, Providers } from '../utils'
 import css from '../useSAMLProvider.module.scss'
@@ -39,6 +41,9 @@ interface AdditionalFunctionsForm {
   enableClientIdAndSecret: boolean
   entityIdEnabled: boolean
   entityIdentifier: string
+  jitEnabled?: boolean
+  jitValidationKey?: string
+  jitValidationValue?: string
 }
 
 const handleSuccess = (
@@ -55,6 +60,7 @@ const AdditionalFunctions: React.FC<StepProps<FormValues> & { onSubmit: () => vo
     const samlProviderType = props.prevStepData?.samlProviderType
     const { getString } = useStrings()
     const { accountId } = useParams<AccountPathProps>()
+    const { PL_ENABLE_JIT_USER_PROVISION } = useFeatureFlags()
     const [modalErrorHandler, setModalErrorHandler] = React.useState<ModalErrorHandlerBinding>()
     const { getRBACErrorMessage } = useRBACError()
     const { showSuccess } = useToaster()
@@ -106,7 +112,14 @@ const AdditionalFunctions: React.FC<StepProps<FormValues> & { onSubmit: () => vo
           {
             ...props.prevStepData,
             entityIdEnabled: samlProvider ? !!samlProvider?.entityIdentifier : false,
-            enableClientIdAndSecret: samlProvider ? !!samlProvider?.clientSecret || !!samlProvider?.clientId : false
+            enableClientIdAndSecret: samlProvider ? !!samlProvider?.clientSecret || !!samlProvider?.clientId : false,
+            ...(PL_ENABLE_JIT_USER_PROVISION
+              ? {
+                  jitEnabled: samlProvider ? !!samlProvider?.jitEnabled : false,
+                  jitValidationKey: defaultTo(samlProvider?.jitValidationKey, ''),
+                  jitValidationValue: defaultTo(samlProvider?.jitValidationValue, '')
+                }
+              : {})
           } as AdditionalFunctionsForm
         }
         onSubmit={async values => {
@@ -132,16 +145,16 @@ const AdditionalFunctions: React.FC<StepProps<FormValues> & { onSubmit: () => vo
         })}
       >
         {formik => (
-          <FormikForm className={css.form}>
+          <FormikForm className={css.form} style={{ minHeight: 810 }}>
             <Layout.Vertical>
               <Text margin={{ bottom: 'large' }} font={{ variation: FontVariation.H3 }}>
-                {getString('authSettings.additionalFunctions')}
+                {getString('common.advancedSettings')}
               </Text>
               <Layout.Vertical
                 className={css.flex}
                 flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}
               >
-                <Layout.Vertical>
+                <Layout.Vertical spacing={'large'}>
                   <ModalErrorHandler bind={setModalErrorHandler} />
                   <Container>
                     <Checkbox
@@ -149,7 +162,6 @@ const AdditionalFunctions: React.FC<StepProps<FormValues> & { onSubmit: () => vo
                       label={getString('authSettings.enableAuthorization')}
                       font={{ weight: 'semi-bold' }}
                       color={Color.GREY_600}
-                      margin={{ top: 'medium' }}
                       checked={formik.values.authorizationEnabled}
                       onChange={e => formik.setFieldValue('authorizationEnabled', e.currentTarget.checked)}
                     />
@@ -186,10 +198,9 @@ const AdditionalFunctions: React.FC<StepProps<FormValues> & { onSubmit: () => vo
                       </Container>
                     )}
                   </Container>
-                  <Container margin={{ top: 'large' }}>
+                  <Container>
                     <Checkbox
                       name="enableEntityId"
-                      margin={{ top: 'medium' }}
                       label={getString('authSettings.enableEntityIdLabel')}
                       font={{ variation: FontVariation.FORM_LABEL }}
                       color={Color.GREY_600}
@@ -202,6 +213,31 @@ const AdditionalFunctions: React.FC<StepProps<FormValues> & { onSubmit: () => vo
                       </Container>
                     )}
                   </Container>
+                  {PL_ENABLE_JIT_USER_PROVISION && (
+                    <Container>
+                      <FormInput.CheckBox
+                        tooltipProps={{ dataTooltipId: 'enableJITProvisioning' }}
+                        name="jitEnabled"
+                        label={`${getString('enable')} ${getString('authSettings.jitProvisioning')}`}
+                        font={{ variation: FontVariation.FORM_LABEL }}
+                        color={Color.GREY_600}
+                      />
+                      {formik.values.jitEnabled && (
+                        <Container width={300} margin={{ top: 'medium' }}>
+                          <FormInput.Text
+                            name="jitValidationKey"
+                            label={getString('authSettings.jitValidationKey')}
+                            tooltipProps={{ dataTooltipId: 'jitProvisioningKey' }}
+                          />
+                          <FormInput.Text
+                            name="jitValidationValue"
+                            label={getString('authSettings.jitValidationValue')}
+                            tooltipProps={{ dataTooltipId: 'jitProvisioningValue' }}
+                          />
+                        </Container>
+                      )}
+                    </Container>
+                  )}
                 </Layout.Vertical>
 
                 <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">

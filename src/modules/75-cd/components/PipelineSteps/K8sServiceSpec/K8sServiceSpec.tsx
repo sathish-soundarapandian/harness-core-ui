@@ -686,7 +686,7 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
     errors
   }: ValidateInputSetFieldArgs): void {
     this.validateArtifactInputSetFields({
-      artifactType: data.artifacts?.primary?.type,
+      artifactType: data?.artifacts?.primary?.type,
       data,
       dataPathToField: 'artifacts.primary.spec',
       template,
@@ -791,8 +791,17 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
   }
 
   renderStep(props: StepProps<K8SDirectServiceStep>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, inputSetData, factory, customStepProps, readonly, allowableTypes } =
-      props
+    const {
+      initialValues,
+      onUpdate,
+      stepViewType,
+      inputSetData,
+      factory,
+      customStepProps,
+      readonly,
+      allowableTypes,
+      viewTypeMetadata
+    } = props
     if (stepViewType === StepViewType.InputVariable) {
       return (
         <GenericServiceSpecVariablesForm
@@ -818,6 +827,7 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
           readonly={inputSetData?.readonly || readonly}
           factory={factory}
           allowableTypes={allowableTypes}
+          viewTypeMetadata={viewTypeMetadata}
         />
       )
     }

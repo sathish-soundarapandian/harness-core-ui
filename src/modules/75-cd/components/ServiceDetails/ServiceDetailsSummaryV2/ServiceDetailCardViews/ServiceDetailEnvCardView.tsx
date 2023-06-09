@@ -13,16 +13,9 @@ import { Card, Container, Icon, Text } from '@harness/uicore'
 import { Popover, Position } from '@blueprintjs/core'
 import ReactTimeago from 'react-timeago'
 import { String, useStrings } from 'framework/strings'
-import { useServiceContext } from '@cd/context/ServiceContext'
-import { yamlParse } from '@common/utils/YamlHelperMethods'
-import type { NGServiceConfig } from 'services/cd-ng'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
-import { supportedDeploymentTypesForPostProdRollback } from '../PostProdRollback/PostProdRollbackUtil'
 import { EnvCardComponentProps, getLatestTimeAndArtifact } from '../ServiceDetailUtils'
 import ServiceDetailDriftTable from '../ServiceDetailDriftTable'
-import PostProdRollbackDrawer from '../PostProdRollback/ServiceDetailPostProdRollback'
 
 import css from '../ServiceDetailsSummaryV2.module.scss'
 
@@ -39,21 +32,6 @@ export function EnvCard({
   const envId = env?.id
   const artifactDeploymentDetails = env?.artifactDeploymentDetails
   const { lastDeployedAt: latestTime, artifact: artifactName } = getLatestTimeAndArtifact(artifactDeploymentDetails)
-  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false)
-
-  //serviceType
-  const { serviceResponse } = useServiceContext()
-  const serviceDataParse = React.useMemo(
-    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, '')),
-    [serviceResponse?.yaml]
-  )
-  const serviceType = serviceDataParse?.service?.serviceDefinition?.type
-
-  // Allow rollback action or not
-  const showRollbackAction =
-    useFeatureFlag(FeatureFlag.POST_PROD_ROLLBACK) &&
-    serviceType &&
-    supportedDeploymentTypesForPostProdRollback.includes(serviceType)
 
   const deploymentText = env?.isRollback
     ? getString('cd.serviceDashboard.rollbacked')
@@ -138,9 +116,7 @@ export function EnvCard({
                 e.stopPropagation()
                 setEnvFilter({
                   envId: env.id,
-                  isEnvGroup: !!env.isEnvGroup,
-                  envName: env.name,
-                  isRollbackAllowed: showRollbackAction
+                  isEnvGroup: !!env.isEnvGroup
                 })
                 setIsDetailsDialogOpen(true)
               }}
@@ -173,30 +149,8 @@ export function EnvCard({
               </Text>
             </Container>
           </Popover>
-          {showRollbackAction ? (
-            <Container className={css.rollbackActionIcon}>
-              <Icon
-                name="rollback-service"
-                color={Color.GREY_700}
-                size={14}
-                onClick={e => {
-                  e.stopPropagation()
-                  setDrawerOpen(true)
-                }}
-              />
-            </Container>
-          ) : null}
         </Container>
       </Card>
-      {drawerOpen && envId ? (
-        <PostProdRollbackDrawer
-          drawerOpen={drawerOpen}
-          isEnvGroup={!!isEnvGroup}
-          setDrawerOpen={setDrawerOpen}
-          entityId={envId}
-          entityName={envName}
-        />
-      ) : null}
     </>
   )
 }

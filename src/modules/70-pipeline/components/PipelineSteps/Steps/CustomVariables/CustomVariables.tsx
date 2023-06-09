@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { get, set, isEmpty, isNil } from 'lodash-es'
+import { get, set, isEmpty, isNil, defaultTo } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { FormikErrors } from 'formik'
 import { parse } from '@common/utils/YamlHelperMethods'
@@ -96,19 +96,25 @@ export class CustomVariables extends Step<CustomVariablesData> {
     data,
     template,
     getString,
-    viewType
+    viewType,
+    allValues
   }: ValidateInputSetProps<CustomVariablesData>): FormikErrors<CustomVariablesData> {
     const errors: FormikErrors<CustomVariablesData> = { variables: [] }
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     data?.variables?.forEach((variable: AllNGVariables, index: number) => {
-      const currentVariableTemplate = get(template, `variables[${index}].value`, '')
+      let isRequiredVariable = defaultTo(
+        get(allValues, 'variables', []).find((fVar: AllNGVariables) => variable.name === fVar.name)?.required,
+        false
+      )
+      isRequiredVariable &&= isRequired
 
+      const currentVariableTemplate = get(template, `variables[${index}].value`, '')
       const variableValidation =
         (getMultiTypeFromValue(variable.value) === MultiTypeInputType.FIXED && isNaN(variable.value as number)) ||
         (typeof variable.value === 'string' && isEmpty(variable.value))
 
       if (
-        isRequired &&
+        isRequiredVariable &&
         ((isEmpty(variable.value) && variable.type !== 'Number') ||
           (variable.type === 'Number' && variableValidation)) &&
         getMultiTypeFromValue(currentVariableTemplate) === MultiTypeInputType.RUNTIME
@@ -194,6 +200,7 @@ export class CustomVariables extends Step<CustomVariablesData> {
           ? { default: row.type === 'Number' ? parseFloat(row.default as unknown as string) : row.default }
           : {}),
         ...(!isNil(row.description) ? { description: row.description } : {}),
+        ...(!isNil(row.required) ? { required: row.required } : {}),
         value:
           row.type === 'Number' &&
           getMultiTypeFromValue(row.value as unknown as string) === MultiTypeInputType.FIXED &&

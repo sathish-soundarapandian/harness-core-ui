@@ -39,6 +39,7 @@ const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
 const enableIACM = process.env.ENABLE_IACM !== 'false'
 const enableSSCA = process.env.ENABLE_SSCA === 'true'
 const enableIDP = process.env.ENABLE_IDP === 'true'
+const enableSRMUI = process.env.ENABLE_SRM_UI === 'true'
 
 console.log('Common build flags')
 console.table({
@@ -54,7 +55,8 @@ console.table({
   enableFFUI,
   enableIACM,
   enableSSCA,
-  enableIDP
+  enableIDP,
+  enableSRMUI
 })
 
 const config = {
@@ -215,7 +217,8 @@ const config = {
         enableFFUI,
         enableIACM,
         enableSSCA,
-        enableIDP
+        enableIDP,
+        enableSRMUI
       })
     ),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
@@ -251,6 +254,11 @@ if (!enableCDBUI) {
 if (!enableCIUI) {
   // render a mock app when CI MF is disabled
   config.resolve.alias['ciui/MicroFrontendApp'] = ChildAppError
+}
+
+if (!enableSRMUI) {
+  // render a mock app when SRM MF is disabled
+  config.resolve.alias['srmui/MicroFrontendApp'] = ChildAppError
 }
 
 if (!enableTIUI) {

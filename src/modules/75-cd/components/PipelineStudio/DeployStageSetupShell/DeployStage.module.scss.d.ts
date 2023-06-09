@@ -17,6 +17,7 @@ declare const styles: {
   readonly info: string
   readonly multiTypeBtn: string
   readonly paddedSection: string
+  readonly paddedSectionNew: string
   readonly sectionCard: string
   readonly stageView: string
   readonly tabHeading: string

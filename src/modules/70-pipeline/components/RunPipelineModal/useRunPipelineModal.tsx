@@ -23,11 +23,10 @@ export interface RunPipelineModalParams {
   executionId?: string
   inputSetSelected?: InputSetSelectorProps['value']
   stagesExecuted?: string[]
-  isDebugMode?: boolean
 }
 
 export interface UseRunPipelineModalReturn {
-  openRunPipelineModal: () => void
+  openRunPipelineModal: (debugMode?: boolean) => void
   closeRunPipelineModal: () => void
 }
 
@@ -42,8 +41,7 @@ export const useRunPipelineModal = (
     connectorRef,
     storeType,
     executionId,
-    stagesExecuted,
-    isDebugMode
+    stagesExecuted
   } = runPipelineModaParams
   const {
     projectIdentifier,
@@ -59,6 +57,8 @@ export const useRunPipelineModal = (
     repoName: repoIdentifier,
     branch
   }
+
+  const [isDebugMode, setIsDebugMode] = useState(false)
 
   const planExecutionId: string | undefined = executionIdentifier ?? executionId
 
@@ -170,15 +170,19 @@ export const useRunPipelineModal = (
     ]
   )
 
-  const open = useCallback(() => {
-    if (planExecutionId) {
-      fetchExecutionData()
-    }
-    showRunPipelineModal()
-  }, [showRunPipelineModal, planExecutionId, fetchExecutionData])
+  const open = useCallback(
+    (debugMode?: boolean) => {
+      if (planExecutionId) {
+        fetchExecutionData()
+      }
+      setIsDebugMode(!!debugMode)
+      showRunPipelineModal()
+    },
+    [showRunPipelineModal, planExecutionId, fetchExecutionData]
+  )
 
   return {
-    openRunPipelineModal: () => open(),
+    openRunPipelineModal: (debugMode?: boolean) => open(debugMode),
     closeRunPipelineModal: hideRunPipelineModal
   }
 }

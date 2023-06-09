@@ -163,8 +163,9 @@ export const onSubmit = async ({
     type
   }
   if (Array.isArray(environmentRef)) {
-    payload.environmentRef = environmentRef?.[0]
-    payload.environmentRefList = environmentRef
+    const isSelectionOption = environmentRef.some(item => Boolean(item.label) && Boolean(item.value))
+    payload.environmentRef = isSelectionOption ? environmentRef?.[0]?.value : environmentRef?.[0]
+    payload.environmentRefList = isSelectionOption ? environmentRef.map(item => item.value) : environmentRef
   }
   if (identifier) {
     await updateMonitoredService(payload)

@@ -101,14 +101,15 @@
 .placeholder-icon {
   margin: 0 !important;
   background-color: var(--primary) !important;
-  color: white !important;
+  color: var(--white) !important;
   border-radius: var(--spacing-1) !important;
   margin-right: var(--spacing-small) !important;
 }
 
 .popover-container {
-  width: 530px !important;
-  max-height: 450px;
+  min-width: 530px !important;
+  max-width: 700px !important;
+  max-height: 650px;
 }
 
 .search {
@@ -147,7 +148,6 @@
 }
 
 .checkbox {
-  padding-left: var(--spacing-large) !important;
   font-size: var(--font-size-small) !important;
   color: var(--black) !important;
   :global(.bp3-control-indicator) {
@@ -156,7 +156,7 @@
 }
 
 .inputSetGitDetails {
-  width: 100px !important;
+  width: 100% !important;
   text-overflow: ellipsis !important;
   overflow: hidden;
 }
@@ -173,7 +173,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--spacing-small) var(--spacing-large);
       height: var(--spacing-11);
       :global(.bp3-checkbox) {
         display: flex !important;
@@ -189,8 +188,25 @@
       }
 
       > div {
-        height: 32px;
-        width: 380px;
+        height: 100%;
+        width: 100% !important;
+        > div:first-child {
+          flex: 1;
+          height: 100%;
+          label {
+            padding: var(--spacing-medium) 0px var(--spacing-medium) var(--spacing-xxlarge) !important;
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+
+      .inputSetGitDetailsWrapper {
+        width: 25%;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: var(--spacing-medium) var(--spacing-large) var(--spacing-medium) 0px !important;
       }
 
       .order {
@@ -249,8 +265,9 @@
 .renderSelectedValue {
   display: flex;
   flex-wrap: wrap;
-  width: 800px;
+  width: 916px;
   align-items: center;
+  padding: var(--spacing-small) 0;
 }
 
 .drag {
@@ -268,5 +285,90 @@
     font-size: 12px !important;
     font-weight: normal;
     color: var(--grey-600) !important;
+  }
+}
+
+.inputSetSelectorBtn {
+  height: 40px !important;
+  box-shadow: none !important;
+  border: 1px solid var(--bp3-intent-color, var(--grey-200)) !important;
+  color: var(--grey-800) !important;
+  position: relative;
+  padding: var(--spacing-xsmall) var(--spacing-small) !important;
+  background-color: var(--white) !important;
+  display: flex;
+  justify-content: space-between;
+  border-radius: var(--spacing-2);
+  &:hover {
+    border-color: var(--primary-6);
+  }
+
+  &:focus {
+    border-color: var(--primary-7);
+  }
+
+  :global(.bp3-button-text) {
+    width: 100%;
+  }
+
+  :global(.bp3-icon-chevron-down) {
+    position: absolute;
+    right: 30px;
+    opacity: 0.5;
+    padding: var(--spacing-small) !important;
+  }
+
+  .placeholder {
+    color: var(--grey-350);
+  }
+}
+
+.inputSetSelectorWrapper {
+  display: flex;
+  align-items: center;
+
+  :global {
+    .bp3-popover-target {
+      display: inline-block;
+    }
+    .bp3-input {
+      width: 300px;
+    }
+  }
+}
+
+.addExpressionBtn {
+  margin-left: var(--spacing-xxlarge) !important;
+  width: 90px;
+}
+
+.removeExpressionBtn {
+  margin-left: var(--spacing-large) !important;
+  width: 60px;
+}
+
+.renderPopoverSelectedValue {
+  width: 95% !important;
+}
+
+.selectedInputSetSpinnerContainer {
+  position: relative;
+  width: 100%;
+  height: 100px;
+}
+
+.selectedInputSetSpinner {
+  flex-direction: row !important;
+  justify-content: center;
+  align-items: center !important;
+
+  > * + * {
+    --layout-spacing: 0px;
+    margin-left: var(--spacing-3) !important;
+    font-size: var(--font-size-normal) !important;
+  }
+
+  svg {
+    width: 20px;
   }
 }

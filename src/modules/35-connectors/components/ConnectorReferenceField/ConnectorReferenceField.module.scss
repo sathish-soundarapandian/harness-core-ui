@@ -38,12 +38,22 @@
     }
   }
 
+  .favoriteStar {
+    visibility: hidden;
+    &.favoriteActive {
+      visibility: visible;
+    }
+  }
+
   &:hover {
     .edit-btn {
       color: var(--grey-600) !important;
       visibility: visible;
     }
     .iconCheck {
+      visibility: visible;
+    }
+    .favoriteStar {
       visibility: visible;
     }
   }

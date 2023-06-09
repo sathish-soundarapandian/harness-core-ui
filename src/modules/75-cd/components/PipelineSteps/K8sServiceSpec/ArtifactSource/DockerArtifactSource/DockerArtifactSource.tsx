@@ -12,12 +12,7 @@ import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@h
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import {
-  SidecarArtifact,
-  useGetBuildDetailsForDocker,
-  useGetBuildDetailsForDockerWithYaml,
-  useGetLastSuccessfulBuildForDockerWithYaml
-} from 'services/cd-ng'
+import { SidecarArtifact, useGetBuildDetailsForDocker, useGetBuildDetailsForDockerWithYaml } from 'services/cd-ng'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
@@ -42,6 +37,7 @@ import {
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
+import { useGetDigestDetailsForDocker } from './useGetDigestDetailsForDocker'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface DockerRenderContent extends ArtifactSourceRenderProps {
@@ -75,6 +71,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     useArtifactV1Data = false
   } = props
 
+  const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -88,8 +85,10 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
   )
 
-  const tagValue = get(initialValues, `artifacts.${artifactPath}.spec.tag`, '')
-
+  const tagValue = getImagePath(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tag`, ''), artifact?.spec?.tag),
+    get(initialValues, `artifacts.${artifactPath}.spec.tag`, '')
+  )
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
@@ -113,7 +112,6 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
       isMultiService
     )
   const tagFqnPath = getFqnPathForEntity('tag')
-  const digestFqnPath = getFqnPathForEntity('digest')
   const queryParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -169,25 +167,30 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   })
 
   const {
-    data: digestData,
-    loading: fetchingDigest,
-    refetch: fetchDigest,
-    error: digestError
-  } = useMutateAsGet(useGetLastSuccessfulBuildForDockerWithYaml, {
-    body: {
-      tag: tagValue,
-      runtimeInputYaml: pipelineRuntimeYaml
-    },
-    requestOptions: {
-      headers: {
-        'content-type': 'application/json'
-      }
-    },
-    queryParams: {
-      ...queryParams,
-      fqnPath: digestFqnPath
-    },
-    lazy: true
+    fetchDigest,
+    fetchingDigest,
+    fetchDigestError: digestError,
+    dockerDigestData: digestData
+  } = useGetDigestDetailsForDocker({
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    imagePath: getFinalQueryParamValue(imagePathValue),
+    tag: getFinalQueryParamValue(tagValue),
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    useArtifactV1Data,
+    formik,
+    path,
+    initialValues,
+    isPropagatedStage,
+    serviceId,
+    isSidecar,
+    artifactPath,
+    stageIdentifier,
+    pipelineIdentifier,
+    stepViewType
   })
 
   const { fetchTags, fetchingTags, fetchTagsError, dockerdata } = useArtifactV1Data

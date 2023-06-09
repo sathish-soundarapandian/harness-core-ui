@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly bp3Icon: string
   readonly cardCard: string
   readonly divider: string
   readonly errorHeader: string
@@ -14,6 +15,7 @@ declare const styles: {
   readonly formContentTitle: string
   readonly halfWidth: string
   readonly heading: string
+  readonly infoBar: string
   readonly inputSetContent: string
   readonly inputSetSelectedValue: string
   readonly inputSetcard: string

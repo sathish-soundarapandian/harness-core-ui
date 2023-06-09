@@ -32,6 +32,7 @@ import {
   GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
   InstanceDetailGroupedByPipelineExecution,
   InstanceDetailsDTO,
+  NGServiceConfig,
   useGetActiveServiceInstanceDetailsGroupedByPipelineExecution
 } from 'services/cd-ng'
 import type {
@@ -44,8 +45,15 @@ import type {
 import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/EnvironmentDetailsUtils'
 import routes from '@common/RouteDefinitions'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
+import { useServiceContext } from '@cd/context/ServiceContext'
 import { commonActiveInstanceData } from '../ActiveServiceInstances/ActiveServiceInstancePopover'
 
+import PostProdRollbackBtn from './PostProdRollback/PostProdRollbackButton'
+import type { PipelineExecInfoProps } from './ServiceDetailUtils'
+import { supportedDeploymentTypesForPostProdRollback } from './PostProdRollback/PostProdRollbackUtil'
 import css from './ServiceDetailsSummaryV2.module.scss'
 
 export interface ServiceDetailInstanceViewProps {
@@ -56,13 +64,9 @@ export interface ServiceDetailInstanceViewProps {
   infraName?: string
   clusterIdentifier?: string
   artifact?: string
-}
-
-interface PipelineExecInfoProps {
-  pipelineId: string
-  planExecutionId: string
-  lastDeployedAt: number
-  count: number
+  closeDailog?: () => void
+  isEnvView: boolean
+  setRollbacking?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface ActiveInstanceInfoProp {
@@ -72,6 +76,11 @@ interface ActiveInstanceInfoProp {
 
 interface InstanceViewProp {
   instanceData: InstanceDetailGroupedByPipelineExecution[] | undefined
+  artifactName: string
+  infraName: string
+  closeDailog?: () => void
+  isEnvView: boolean
+  setRollbacking?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ActiveInstanceInfo = (prop: ActiveInstanceInfoProp): React.ReactElement => {
@@ -124,13 +133,18 @@ const ActiveInstanceInfo = (prop: ActiveInstanceInfoProp): React.ReactElement =>
 function InstanceView(prop: InstanceViewProp): React.ReactElement {
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const { instanceData } = prop
+  const { instanceData, artifactName, infraName, closeDailog, isEnvView, setRollbacking } = prop
   const pipelineDetailList: PipelineExecInfoProps[] = (instanceData || []).map(pipelineInfo => {
     return {
       pipelineId: pipelineInfo.pipelineId,
       planExecutionId: pipelineInfo.planExecutionId,
       lastDeployedAt: defaultTo(pipelineInfo.lastDeployedAt, 0),
-      count: pipelineInfo.instances.length
+      count: pipelineInfo.instances.length,
+      infrastructureMappingId: pipelineInfo.instances[0].infrastructureMappingId,
+      instanceKey: pipelineInfo.instances[0].instanceKey,
+      rollbackStatus: pipelineInfo.rollbackStatus,
+      stageNodeExecutionId: pipelineInfo.stageNodeExecutionId,
+      stageSetupId: pipelineInfo.stageSetupId
     }
   })
   const { orgIdentifier, projectIdentifier, accountId, module, pipelineIdentifier } =
@@ -143,6 +157,21 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
   }
 
   const [pipelineExecKey, setPipelineExecKey] = useState<PipelineExecInfoProps | undefined>()
+
+  //serviceType
+  const { serviceResponse } = useServiceContext()
+  const serviceDataParse = React.useMemo(
+    () => yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, '')),
+    [serviceResponse?.yaml]
+  )
+  const serviceType = serviceDataParse?.service?.serviceDefinition?.type
+
+  // Allow rollback action or not
+  const showRollbackAction =
+    useFeatureFlag(FeatureFlag.POST_PROD_ROLLBACK) &&
+    serviceType &&
+    supportedDeploymentTypesForPostProdRollback.includes(serviceType) &&
+    isEnvView
 
   if (!instanceData?.length) {
     return <></>
@@ -161,7 +190,12 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
       pipelineId: pipelineDetailList[0].pipelineId,
       planExecutionId: pipelineDetailList[0].planExecutionId,
       lastDeployedAt: defaultTo(pipelineDetailList[0].lastDeployedAt, 0),
-      count: pipelineDetailList[0].count
+      count: pipelineDetailList[0].count,
+      infrastructureMappingId: pipelineDetailList[0].infrastructureMappingId,
+      instanceKey: pipelineDetailList[0].instanceKey,
+      rollbackStatus: pipelineDetailList[0].rollbackStatus,
+      stageNodeExecutionId: pipelineDetailList[0].stageNodeExecutionId,
+      stageSetupId: pipelineDetailList[0].stageSetupId
     })
   }
 
@@ -219,15 +253,26 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
         ))}
       </Layout.Vertical>
       <Layout.Vertical padding={4}>
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          size={ButtonSize.SMALL}
-          text={getString('cd.openExecution')}
-          className={css.openExecBtn}
-          icon="launch"
-          onClick={() => handleClick(pipelineExecKey?.pipelineId, pipelineExecKey?.planExecutionId)}
-          iconProps={{ size: 12, color: Color.PRIMARY_7 }}
-        />
+        <Layout.Horizontal spacing="small">
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            size={ButtonSize.SMALL}
+            text={getString('cd.openExecution')}
+            className={css.openExecBtn}
+            icon="launch"
+            onClick={() => handleClick(pipelineExecKey?.pipelineId, pipelineExecKey?.planExecutionId)}
+            iconProps={{ size: 12, color: Color.PRIMARY_7 }}
+          />
+          {showRollbackAction ? (
+            <PostProdRollbackBtn
+              artifactName={artifactName}
+              infraName={infraName}
+              closeDailog={closeDailog}
+              setRollbacking={setRollbacking}
+              {...pipelineExecKey}
+            />
+          ) : null}
+        </Layout.Horizontal>
         <div className={cx('separator', css.separatorStyle, css.marginBottom12)} />
         <Text font={{ variation: FontVariation.TABLE_HEADERS }} className={css.marginBottom12}>
           {getString('pipeline.execution.instances')}
@@ -254,7 +299,18 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
 }
 
 export default function ServiceDetailInstanceView(props: ServiceDetailInstanceViewProps): React.ReactElement {
-  const { artifact, envName, envId, environmentType, clusterIdentifier, infraIdentifier, infraName } = props
+  const {
+    artifact,
+    envName,
+    envId,
+    environmentType,
+    clusterIdentifier,
+    infraIdentifier,
+    infraName,
+    closeDailog,
+    isEnvView,
+    setRollbacking
+  } = props
   const { getString } = useStrings()
   const [searchTermInstance, setSearchTermInstance] = useState('')
   const searchInstanceRef = useRef({} as ExpandingSearchInputHandle)
@@ -371,7 +427,14 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
               {artifact ? artifact : '-'}
             </Text>
           </Layout.Horizontal>
-          <InstanceView instanceData={filteredInstanceData} />
+          <InstanceView
+            instanceData={filteredInstanceData}
+            artifactName={defaultTo(artifact, '-')}
+            infraName={defaultTo(infraName, '-')}
+            closeDailog={closeDailog}
+            isEnvView={isEnvView}
+            setRollbacking={setRollbacking}
+          />
         </>
       )}
     </Container>

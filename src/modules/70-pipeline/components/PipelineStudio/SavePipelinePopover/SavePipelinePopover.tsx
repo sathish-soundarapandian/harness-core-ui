@@ -104,7 +104,7 @@ function SavePipelinePopover(
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const isYaml = view === SelectedView.YAML
-  const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.PIPELINE })
+  const { openTemplateReconcileErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.PIPELINE })
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const isPipelineInline = supportingGitSimplification && storeType === StoreType.INLINE
@@ -289,7 +289,7 @@ function SavePipelinePopover(
         if (isGitSyncEnabled || currStoreMetadata?.storeType === StoreType.REMOTE) {
           throw response
         } else if (!isEmpty((response as any)?.metadata?.errorNodeSummary)) {
-          openTemplateErrorsModal({
+          openTemplateReconcileErrorsModal({
             error: (response as any)?.metadata?.errorNodeSummary,
             originalYaml: yamlStringify(
               sanitize(

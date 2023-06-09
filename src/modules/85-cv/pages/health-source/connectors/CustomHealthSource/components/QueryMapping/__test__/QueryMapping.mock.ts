@@ -29,3 +29,35 @@ export const formikValue = {
   startTime: { placeholder: 'start_time', timestampFormat: 'MILLISECONDS', customTimestampFormat: '' },
   endTime: { placeholder: 'end_time', timestampFormat: 'MILLISECONDS', customTimestampFormat: '' }
 }
+
+export const connectorIdentifierMock = {
+  label: 'custom-ELK',
+  value: 'account.customELK',
+  scope: 'account',
+  live: true,
+  connector: {
+    name: 'custom-ELK',
+    identifier: 'customELK',
+    description: null,
+    orgIdentifier: null,
+    projectIdentifier: null,
+    tags: {},
+    type: 'CustomHealth',
+    spec: {
+      baseURL: 'http://elk6.dev.harness.io:9200/',
+      headers: [
+        {
+          key: 'content-type',
+          encryptedValueRef: null,
+          value: 'application/json',
+          valueEncrypted: false
+        }
+      ],
+      params: [],
+      method: 'GET',
+      validationBody: null,
+      validationPath: '*/_search',
+      delegateSelectors: ['qa-automation-cv-chiplay']
+    }
+  }
+}

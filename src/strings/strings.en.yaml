@@ -465,7 +465,7 @@ order: Order
 inputSets:
   inputSetLabel: Input Set
   editTitle: 'Edit Input Set: {{name}}'
-  editOverlayTitle: 'Edit Overlay Input Set: {{name}}'
+  editOverlayTitle: 'Edit Overlay Input Set'
   newInputSet: + New Input Set
   addInputSetPlus: + Add Input Set
   newOverlayInputSet: New Overlay Input Set

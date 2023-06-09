@@ -167,10 +167,12 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'TerraformCloud'
     | 'SignalFX'
     | 'Harness'
+    | 'Rancher'
   )[]
 }
 
 export interface EntityDetail {
+  entityGitMetadata?: EntityGitMetadata
   entityRef?: EntityReference
   name?: string
   type?:
@@ -386,6 +388,9 @@ export interface EntityDetail {
     | 'K8sBlueGreenStageScaleDown'
     | 'AwsSamBuild'
     | 'Semgrep'
+    | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
 }
 
 export interface EntityDetailProtoDTO {
@@ -404,6 +409,11 @@ export interface EntityGitDetails {
   repoName?: string
   repoUrl?: string
   rootFolder?: string
+}
+
+export interface EntityGitMetadata {
+  branch?: string
+  repo?: string
 }
 
 export interface EntityReference {
@@ -1626,6 +1636,10 @@ export type GitErrorMetadataDTO = ErrorMetadataDTO & {
   branch?: string
 }
 
+export interface GovernanceMetadata {
+  [key: string]: any
+}
+
 export type IdentifierRef = EntityReference & {
   fullyQualifiedScopeIdentifier?: string
   isDefault?: boolean
@@ -1887,6 +1901,7 @@ export interface ResourceDTO {
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
     | 'IP_ALLOWLIST_CONFIG'
+    | 'NETWORK_MAP'
 }
 
 export interface ResourceScopeDTO {
@@ -2755,6 +2770,7 @@ export interface TemplateWithInputsResponse {
 }
 
 export interface TemplateWrapperResponse {
+  governanceMetadata?: GovernanceMetadata
   templateResponseDTO?: TemplateResponse
   valid?: boolean
 }

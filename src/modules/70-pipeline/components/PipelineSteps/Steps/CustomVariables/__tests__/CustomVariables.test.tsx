@@ -166,15 +166,26 @@ describe('Custom Variables', () => {
     const response = new CustomVariables().validateInputSet({
       data: {
         variables: [
-          { name: 'myVar1', type: 'Number', value: NaN },
-          { name: 'myVar1', type: 'String', value: 'myVar1Value' },
-          { name: 'myVar1', type: 'Secret', value: '<+input>' }
+          { name: 'myVar3', type: 'Secret', value: '' },
+          { name: 'myVar4', type: 'String', value: '' },
+          { name: 'myVar5', type: 'String', value: '' },
+          { name: 'myVar6', type: 'String', value: 'myVar6Value' }
         ]
       },
       template: {
-        variables: [{ value: '<+input>' }]
+        variables: [{ value: '<+input>' }, { value: '<+input>' }, { value: '<+input>' }, { value: '<+input>' }]
       },
-      viewType: StepViewType.DeploymentForm
+      viewType: StepViewType.DeploymentForm,
+      allValues: {
+        variables: [
+          { name: 'myVar1', type: 'Number', value: NaN },
+          { name: 'myVar2', type: 'String', value: 'myVar2Value' },
+          { name: 'myVar3', type: 'Secret', value: '<+input>', required: true },
+          { name: 'myVar4', type: 'String', value: '<+input>' },
+          { name: 'myVar5', type: 'String', value: '<+input>', required: true },
+          { name: 'myVar6', type: 'String', value: '<+input>', required: true }
+        ]
+      }
     })
     expect(response).toMatchSnapshot()
   })

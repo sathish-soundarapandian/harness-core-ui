@@ -6,11 +6,10 @@
  */
 
 import React from 'react'
-import { defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { Accordion, AllowedTypes, Checkbox, Formik, FormInput, Text } from '@harness/uicore'
+import { Accordion, AllowedTypes, Formik, FormInput, Text } from '@harness/uicore'
 
 import { Color } from '@harness/design-system'
 
@@ -22,6 +21,7 @@ import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/compo
 import { useStrings } from 'framework/strings'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import type { CommandScriptsData, CommandScriptsFormData } from './CommandScriptsTypes'
 import { CommandList } from './CommandList'
 import { VariableList } from './VariableList'
@@ -143,14 +143,15 @@ function CommandScriptsEditWidget(
                       readonly={readonly}
                     />
                     <div className={stepCss.formGroup}>
-                      <Checkbox
+                      <FormMultiTypeCheckboxField
                         name={'spec.onDelegate'}
                         label={getString('cd.steps.commands.runOnDelegate')}
-                        data-testid={`runOnDelegate`}
-                        defaultChecked={defaultTo(formik.values.spec.onDelegate, false)}
-                        onChange={(event: React.FormEvent<HTMLInputElement>) =>
-                          formik.setFieldValue('spec.onDelegate', event.currentTarget.checked)
-                        }
+                        style={{ flex: 1, width: '300px' }}
+                        disabled={readonly}
+                        multiTypeTextbox={{
+                          expressions,
+                          allowableTypes
+                        }}
                       />
                     </div>
                   </div>

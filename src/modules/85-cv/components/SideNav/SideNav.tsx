@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import { Container, Layout, Tabs, Text } from '@harness/uicore'
 import { compile } from 'path-to-regexp'
@@ -35,6 +35,9 @@ export default function CVSideNav(): React.ReactElement {
     AccountTab = 'AccountTab',
     ProjectTab = 'ProjectTab'
   }
+
+  const defaultSelectedTabId = isAccountLevel ? CVSideNavTabIds.AccountTab : CVSideNavTabIds.ProjectTab
+  const [selectedTabId, setSelectedTabId] = useState<CVSideNavTabIds>(defaultSelectedTabId)
 
   const ProjectPanel = (
     <Layout.Vertical spacing="small">
@@ -103,15 +106,17 @@ export default function CVSideNav(): React.ReactElement {
     <Container className={css.cvtab}>
       <Tabs
         id={'cvSideNav'}
+        selectedTabId={selectedTabId}
         defaultSelectedTabId={isAccountLevel ? CVSideNavTabIds.AccountTab : CVSideNavTabIds.ProjectTab}
         onChange={tabId => {
           if (tabId === CVSideNavTabIds.AccountTab) {
             updateAppStore({ selectedProject: undefined })
             history.push(routes.toAccountCVSLOs({ accountId }))
-          } else {
+          } else if (!projectIdentifier && !orgIdentifier) {
             updateAppStore({ selectedProject: undefined })
             history.push(routes.toCVHome({ accountId }))
           }
+          setSelectedTabId(tabId as CVSideNavTabIds)
         }}
         tabList={[
           {

@@ -2832,7 +2832,7 @@ exports[`Create Github connector Wizard should form for edit http and authtype u
                     class="bp3-form-content"
                   >
                     <label
-                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
+                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
                     >
                       <input
                         checked=""
@@ -3621,7 +3621,7 @@ exports[`Create Github connector Wizard should form for edit http and authtype u
                     class="bp3-form-content"
                   >
                     <label
-                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
+                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
                     >
                       <input
                         checked=""
@@ -4410,7 +4410,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                     class="bp3-form-content"
                   >
                     <label
-                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
+                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
                     >
                       <input
                         checked=""
@@ -5369,7 +5369,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                     class="bp3-form-content"
                   >
                     <label
-                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
+                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--padding-left-xxlarge StyledProps--inline"
                     >
                       <input
                         checked=""

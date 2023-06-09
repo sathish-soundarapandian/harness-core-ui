@@ -12,7 +12,7 @@ import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import { getConnectorListV2Promise, Infrastructure } from 'services/cd-ng'
+import { getConnectorListV2Promise, Infrastructure, ExecutionElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -48,6 +48,7 @@ export interface GoogleCloudFunctionInfraSpecCustomStepProps {
   serviceRef?: string
   environmentRef?: string
   infrastructureRef?: string
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 const connectorRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
@@ -55,7 +56,12 @@ const connectorRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition
 export class GoogleCloudFunctionInfraSpec extends PipelineStep<GoogleCloudFunctionInfrastructureStep> {
   lastFetched: number
   protected type = StepType.GoogleCloudFunctionsInfra
-  protected defaultValues: GoogleCloudFunctionInfrastructure = { connectorRef: '', project: '', region: '' }
+  protected defaultValues: GoogleCloudFunctionInfrastructure = {
+    connectorRef: '',
+    project: '',
+    region: '',
+    provisioner: ''
+  }
 
   protected stepIcon: IconName = 'service-google-functions'
   protected stepName = 'Specify your GCP connector'
@@ -90,7 +96,7 @@ export class GoogleCloudFunctionInfraSpec extends PipelineStep<GoogleCloudFuncti
     }
     if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.connectorRef', ''))
-      if (obj?.type === ServiceDeploymentType.ECS) {
+      if (obj?.type === ServiceDeploymentType.GoogleCloudFunctions) {
         return getConnectorListV2Promise({
           queryParams: {
             accountIdentifier: accountId,

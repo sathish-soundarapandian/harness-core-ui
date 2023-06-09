@@ -10,7 +10,7 @@ import { Text, Layout, SelectOption, getMultiTypeFromValue, MultiTypeInputType }
 
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { get, defaultTo, isEqual, set, isUndefined } from 'lodash-es'
+import { get, defaultTo, isEqual, set, isUndefined, isEmpty } from 'lodash-es'
 import {
   AzureSubscriptionDTO,
   useGetAzureResourceGroupsBySubscription,
@@ -21,7 +21,7 @@ import {
 import { Connectors } from '@connectors/constants'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
@@ -45,7 +45,7 @@ const errorMessage = 'data.message'
 
 export const AzureWebAppInfrastructureSpecInputForm: React.FC<
   AzureWebAppInfrastructureSpecEditableProps & { path: string }
-> = ({ template, initialValues, readonly = false, path, onUpdate, allowableTypes, allValues }) => {
+> = ({ template, initialValues, readonly = false, path, onUpdate, allowableTypes, allValues, provisioner }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -195,6 +195,15 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
 
   return (
     <Layout.Vertical spacing="small">
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField
+            name={isEmpty(path) ? 'provisioner' : `${path}.provisioner`}
+            path={path}
+            provisioners={provisioner}
+          />
+        </div>
+      )}
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
           <FormMultiTypeConnectorField

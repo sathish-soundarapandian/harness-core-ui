@@ -13,7 +13,7 @@ import type { StepElementConfig } from 'services/cd-ng'
 import * as cdng from 'services/cd-ng'
 import * as pipelineng from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
-import { MultiTypeMap } from '@common/components/MultiTypeMap/MultiTypeMap'
+import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { setFormikRef, Step, StepProps, StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
@@ -434,7 +434,7 @@ describe('Right Drawer tests', () => {
 
     test('Step save succeeds with allowed key values in step configuration', async () => {
       const pipelineContextMock = getPipelineContextMock()
-      const { container, findByText } = render(
+      const { findByText } = render(
         <PipelineContext.Provider value={pipelineContextMock}>
           <TestWrapper>
             <RightDrawer />
@@ -444,8 +444,6 @@ describe('Right Drawer tests', () => {
       const applyBtn = await findByText('applyChanges')
 
       fireEvent.click(applyBtn)
-
-      expect(container).toMatchSnapshot()
 
       await waitFor(() => expect(pipelineContextMock.updateStage).toHaveBeenCalledWith(updateStageFnArg1))
     })

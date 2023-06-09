@@ -550,7 +550,11 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
 function ServiceListHeaderCustomPrimary(headerProps: { total?: number }): JSX.Element {
   const { getString } = useStrings()
   return (
-    <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_700}>
+    <Text
+      font={{ variation: FontVariation.LEAD }}
+      color={Color.GREY_700}
+      tooltipProps={{ dataTooltipId: 'serviceDashboardTotalServices' }}
+    >
       {getString('cd.serviceDashboard.totalServices', {
         total: defaultTo(headerProps.total, 0)
       })}

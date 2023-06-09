@@ -152,6 +152,7 @@ describe('CreateIPAllowlistWizard Create Flow', () => {
       }
     ])
 
+    // de-selecting both checkboxes
     const checkboxUI = getByRole('checkbox', { name: 'UI' })
     await userEvent.click(checkboxUI!)
     const checkboxAPI = getByRole('checkbox', { name: 'API' })
@@ -161,6 +162,13 @@ describe('CreateIPAllowlistWizard Create Flow', () => {
       clickSubmit(container)
     })
 
+    expect(screen.queryByText('authSettings.ipAddress.invalidApplicableFor')).toBeInTheDocument()
+
+    // Re-selecting ApplicableFor "UI" checkbox
+    await userEvent.click(checkboxUI!)
+    await act(async () => {
+      clickSubmit(container)
+    })
     await waitFor(() => expect(mockCreateIpAllowlistPromise).toBeCalledTimes(1))
 
     // STEP 3 StepTestIP

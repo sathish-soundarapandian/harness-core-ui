@@ -100,34 +100,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Aborted" status: Menu 1`] = 
       </div>
     </a>
   </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.pausePipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.resumePipeline
-      </div>
-    </a>
-  </li>
 </ul>
 `;
 
@@ -228,34 +200,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Expired" status: Menu 1`] = 
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
         pipeline.execution.actions.abortPipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.pausePipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.resumePipeline
       </div>
     </a>
   </li>
@@ -362,34 +306,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Failed" status: Menu 1`] = `
       </div>
     </a>
   </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.pausePipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.resumePipeline
-      </div>
-    </a>
-  </li>
 </ul>
 `;
 
@@ -493,33 +409,6 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: Menu 1`]
       </div>
     </a>
   </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.pausePipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.resumePipeline
-      </div>
-    </a>
-  </li>
 </ul>
 `;
 
@@ -528,40 +417,6 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: containe
   <div
     class="Layout--horizontal StyledProps--main"
   >
-    <span
-      class="bp3-popover-wrapper"
-    >
-      <span
-        class="bp3-popover-target"
-      >
-        <button
-          aria-label="pipeline.execution.actions.pausePipeline"
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-pause StyledProps--main"
-            icon="pause"
-          >
-            <svg
-              data-icon="pause"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                pause
-              </desc>
-              <path
-                d="M6 3H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h2c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm6 0h-2c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h2c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
-      </span>
-    </span>
     <span
       class="bp3-popover-wrapper"
     >
@@ -691,33 +546,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: Menu 1`] = `
       </div>
     </a>
   </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.pausePipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.resumePipeline
-      </div>
-    </a>
-  </li>
 </ul>
 `;
 
@@ -726,40 +554,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: container 1`
   <div
     class="Layout--horizontal StyledProps--main"
   >
-    <span
-      class="bp3-popover-wrapper"
-    >
-      <span
-        class="bp3-popover-target"
-      >
-        <button
-          aria-label="pipeline.execution.actions.resumePipeline"
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-play StyledProps--main"
-            icon="play"
-          >
-            <svg
-              data-icon="play"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                play
-              </desc>
-              <path
-                d="M12 8c0-.35-.19-.64-.46-.82l.01-.02-6-4-.01.02A.969.969 0 005 3c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1 .21 0 .39-.08.54-.18l.01.02 6-4-.01-.02c.27-.18.46-.47.46-.82z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
-      </span>
-    </span>
     <span
       class="bp3-popover-wrapper"
     >
@@ -889,33 +683,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: Menu 1`] = `
       </div>
     </a>
   </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.pausePipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.resumePipeline
-      </div>
-    </a>
-  </li>
 </ul>
 `;
 
@@ -924,40 +691,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: container 1`
   <div
     class="Layout--horizontal StyledProps--main"
   >
-    <span
-      class="bp3-popover-wrapper"
-    >
-      <span
-        class="bp3-popover-target"
-      >
-        <button
-          aria-label="pipeline.execution.actions.pausePipeline"
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-pause StyledProps--main"
-            icon="pause"
-          >
-            <svg
-              data-icon="pause"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                pause
-              </desc>
-              <path
-                d="M6 3H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h2c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm6 0h-2c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h2c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
-      </span>
-    </span>
     <span
       class="bp3-popover-wrapper"
     >
@@ -1087,33 +820,6 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: Men
       </div>
     </a>
   </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.pausePipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.resumePipeline
-      </div>
-    </a>
-  </li>
 </ul>
 `;
 
@@ -1122,40 +828,6 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: con
   <div
     class="Layout--horizontal StyledProps--main"
   >
-    <span
-      class="bp3-popover-wrapper"
-    >
-      <span
-        class="bp3-popover-target"
-      >
-        <button
-          aria-label="pipeline.execution.actions.pausePipeline"
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-pause StyledProps--main"
-            icon="pause"
-          >
-            <svg
-              data-icon="pause"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                pause
-              </desc>
-              <path
-                d="M6 3H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h2c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm6 0h-2c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h2c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
-      </span>
-    </span>
     <span
       class="bp3-popover-wrapper"
     >
@@ -1285,33 +957,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: Menu 1`] = 
       </div>
     </a>
   </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.pausePipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.resumePipeline
-      </div>
-    </a>
-  </li>
 </ul>
 `;
 
@@ -1320,40 +965,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: container 1
   <div
     class="Layout--horizontal StyledProps--main"
   >
-    <span
-      class="bp3-popover-wrapper"
-    >
-      <span
-        class="bp3-popover-target"
-      >
-        <button
-          aria-label="pipeline.execution.actions.pausePipeline"
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-pause StyledProps--main"
-            icon="pause"
-          >
-            <svg
-              data-icon="pause"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                pause
-              </desc>
-              <path
-                d="M6 3H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h2c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm6 0h-2c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h2c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
-      </span>
-    </span>
     <span
       class="bp3-popover-wrapper"
     >
@@ -1483,34 +1094,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Success" status: Menu 1`] = 
       </div>
     </a>
   </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.pausePipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.resumePipeline
-      </div>
-    </a>
-  </li>
 </ul>
 `;
 
@@ -1611,34 +1194,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Suspended" status: Menu 1`] 
         class="bp3-text-overflow-ellipsis bp3-fill"
       >
         pipeline.execution.actions.abortPipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.pausePipeline
-      </div>
-    </a>
-  </li>
-  <li
-    class=""
-  >
-    <a
-      class="bp3-menu-item bp3-disabled"
-      tabindex="-1"
-    >
-      <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
-      >
-        pipeline.execution.actions.resumePipeline
       </div>
     </a>
   </li>

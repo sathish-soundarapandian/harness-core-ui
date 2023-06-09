@@ -52,7 +52,7 @@ export interface MultiTypeListProps {
   restrictToSingleEntry?: boolean
 }
 
-export const MultiTypeList = (props: MultiTypeListProps & ConnectorReferenceProps): React.ReactElement => {
+const MultiTypeList = (props: MultiTypeListProps & ConnectorReferenceProps): React.ReactElement => {
   const {
     name,
     placeholder,

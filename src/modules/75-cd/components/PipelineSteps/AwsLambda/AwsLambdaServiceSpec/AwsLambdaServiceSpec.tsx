@@ -491,8 +491,17 @@ export class AwsLambdaServiceSpec extends Step<ServiceSpec> {
   }
 
   renderStep(props: StepProps<K8SDirectServiceStep>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, inputSetData, factory, customStepProps, readonly, allowableTypes } =
-      props
+    const {
+      initialValues,
+      onUpdate,
+      stepViewType,
+      inputSetData,
+      factory,
+      customStepProps,
+      readonly,
+      allowableTypes,
+      viewTypeMetadata
+    } = props
 
     if (stepViewType === StepViewType.InputVariable) {
       return (
@@ -518,6 +527,7 @@ export class AwsLambdaServiceSpec extends Step<ServiceSpec> {
           readonly={inputSetData?.readonly || readonly}
           factory={factory}
           allowableTypes={allowableTypes}
+          viewTypeMetadata={viewTypeMetadata}
         />
       )
     }

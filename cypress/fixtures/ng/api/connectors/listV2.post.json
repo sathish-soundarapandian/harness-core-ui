@@ -1,0 +1,579 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 4,
+    "pageItemCount": 4,
+    "pageSize": 100,
+    "content": [
+      {
+        "connector": {
+          "name": "dynatrace",
+          "identifier": "dynatrace",
+          "description": null,
+          "orgIdentifier": "CVNG",
+          "projectIdentifier": null,
+          "tags": {},
+          "type": "Dynatrace",
+          "spec": {
+            "url": "https://qva35651.live.dynatrace.com/",
+            "apiTokenRef": "org.dynatrace",
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1646186996478,
+        "lastModifiedAt": 1646203306079,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1646623973765,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1646623973765
+        },
+        "activityDetails": {
+          "lastActivityTime": 1646203306167
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
+      },
+      {
+        "connector": {
+          "name": "testAWS",
+          "identifier": "testAWS",
+          "description": "",
+          "orgIdentifier": "cvng",
+          "projectIdentifier": "srmmetricthreshold",
+          "tags": {},
+          "type": "Aws",
+          "spec": {
+            "credential": {
+              "crossAccountAccess": null,
+              "type": "ManualConfig",
+              "spec": {
+                "accessKey": "AKIAYDOQJSKIWFJNEWWB",
+                "accessKeyRef": null,
+                "secretKeyRef": "testAWSSecret"
+              },
+              "region": "us-east-1"
+            },
+            "delegateSelectors": [],
+            "executeOnDelegate": true
+          }
+        },
+        "createdAt": 1663150618597,
+        "lastModifiedAt": 1663150618594,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1663417632551,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1663417632551
+        },
+        "activityDetails": {
+          "lastActivityTime": 1663150618617
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "governanceMetadata": null
+      },
+      {
+        "connector": {
+          "name": "customconnector",
+          "identifier": "customconnector",
+          "description": null,
+          "orgIdentifier": null,
+          "projectIdentifier": null,
+          "tags": {},
+          "type": "CustomHealth",
+          "spec": {
+            "baseURL": "https://app.datadoghq.com/api/v1/",
+            "headers": [],
+            "params": [
+              {
+                "key": "application_key",
+                "encryptedValueRef": null,
+                "value": "37d4030504ef3302049868a43d38c7f42da6b028",
+                "valueEncrypted": false
+              },
+              {
+                "key": "api_key",
+                "encryptedValueRef": "account.ddapikeysecret",
+                "value": null,
+                "valueEncrypted": true
+              }
+            ],
+            "method": "GET",
+            "validationBody": "{\"query\":\"*exception*\",\"time\":{\"from\":\"1637095592175\",\"to\":\"1637181955327\"}}",
+            "validationPath": "logs-queries/list?",
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1639595462540,
+        "lastModifiedAt": 1642058731415,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1645452869662,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1645452869662
+        },
+        "activityDetails": {
+          "lastActivityTime": 1642058731736
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
+      },
+      {
+        "connector": {
+          "name": "test1111",
+          "identifier": "test1111",
+          "description": "",
+          "orgIdentifier": "default",
+          "projectIdentifier": "Kapil",
+          "tags": {},
+          "type": "K8sCluster",
+          "spec": {
+            "credential": {
+              "type": "InheritFromDelegate",
+              "spec": null
+            },
+            "delegateSelectors": ["harness-dev-account"]
+          }
+        },
+        "createdAt": 1641035275853,
+        "lastModifiedAt": 1641035275847,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1642923646468,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1642923646468
+        },
+        "activityDetails": {
+          "lastActivityTime": 1641035275869
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
+      },
+      {
+        "connector": {
+          "name": "appdtest",
+          "identifier": "appdtest",
+          "description": "",
+          "orgIdentifier": "orgId",
+          "projectIdentifier": "projectId",
+          "tags": {},
+          "type": "AppDynamics",
+          "spec": {
+            "username": "uitest@harness.io",
+            "accountname": "harness-test",
+            "controllerUrl": "https://harness-test.saas.appdynamics.com/controller/",
+            "delegateSelectors": [],
+            "passwordRef": "appdtest1",
+            "clientSecretRef": null,
+            "clientId": null,
+            "authType": "UsernamePassword"
+          }
+        },
+        "createdAt": 1625044700423,
+        "lastModifiedAt": 1625044862819,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1643784541375,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1643784541375
+        },
+        "activityDetails": {
+          "lastActivityTime": 1625044862835
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
+      },
+      {
+        "connector": {
+          "name": "NewRelicConn",
+          "identifier": "newrelic",
+          "description": null,
+          "orgIdentifier": "orgId",
+          "projectIdentifier": "projectId",
+          "tags": {},
+          "type": "NewRelic",
+          "spec": {
+            "newRelicAccountId": "1805869",
+            "url": "https://insights-api.newrelic.com/",
+            "apiKeyRef": "account.newrelic",
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1618373036836,
+        "lastModifiedAt": 1620292957622,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1637143140788,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1637143140788
+        },
+        "activityDetails": {
+          "lastActivityTime": 1620292957627
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
+      },
+      {
+        "connector": {
+          "name": "datadog",
+          "identifier": "datadog",
+          "description": "",
+          "orgIdentifier": "CV",
+          "projectIdentifier": "Harshil",
+          "tags": {},
+          "type": "Datadog",
+          "spec": {
+            "url": "ww.google.com",
+            "applicationKeyRef": "Renu_Bhaskaran",
+            "apiKeyRef": "Renu_Bhaskaran",
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1641279386408,
+        "lastModifiedAt": 1641279386216,
+        "status": {
+          "status": "FAILURE",
+          "errorSummary": "Error Encountered (Task has expired. It wasn't picked up by any delegate or delegate did not have enough time to finish the execution.                                   )",
+          "errors": [
+            {
+              "reason": "Unexpected Error",
+              "message": "Task has expired. It wasn't picked up by any delegate or delegate did not have enough time to finish the execution.                                   ",
+              "code": 450
+            }
+          ],
+          "testedAt": 1641279962315,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 0
+        },
+        "activityDetails": { "lastActivityTime": 1641279386502 },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": { "valid": true, "invalidYaml": null }
+      },
+      {
+        "connector": {
+          "name": "gcp-qa-target",
+          "identifier": "gcpqatarget",
+          "description": "",
+          "orgIdentifier": "orgId",
+          "projectIdentifier": "projectId",
+          "tags": {},
+          "type": "Gcp",
+          "spec": {
+            "credential": {
+              "type": "ManualConfig",
+              "spec": {
+                "secretKeyRef": "account.gcpqatarget"
+              }
+            },
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1622562142082,
+        "lastModifiedAt": 1622562142082,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1622573508245,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1622573508245
+        },
+        "activityDetails": {
+          "lastActivityTime": 1622562142089
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
+      },
+      {
+        "connector": {
+          "name": "elastic-search-api",
+          "identifier": "elasticSearchApi",
+          "description": "",
+          "orgIdentifier": "orgId",
+          "projectIdentifier": "projectId",
+          "tags": {},
+          "type": "ElasticSearch",
+          "spec": {
+            "credential": {
+              "type": "ManualConfig",
+              "spec": {
+                "secretKeyRef": "account.elasticSearchApi"
+              }
+            },
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1622562142082,
+        "lastModifiedAt": 1622562142082,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1622573508245,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1622573508245
+        },
+        "activityDetails": {
+          "lastActivityTime": 1622562142089
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
+      },
+      {
+        "connector": {
+          "name": "prometheus-sale",
+          "identifier": "prometheussale",
+          "description": null,
+          "orgIdentifier": "orgId",
+          "projectIdentifier": "projectI",
+          "tags": {},
+          "type": "Prometheus",
+          "spec": {
+            "url": "http://35.214.81.102:9090/",
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1643109076417,
+        "lastModifiedAt": 1643598093267,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1644925678956,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1644925678956
+        },
+        "activityDetails": {
+          "lastActivityTime": 1643598093310
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
+      },
+      {
+        "connector": {
+          "name": "NewGitTestConn1",
+          "identifier": "NewGitTestConn1",
+          "description": null,
+          "orgIdentifier": "default",
+          "projectIdentifier": "Kapil",
+          "tags": {},
+          "type": "Git",
+          "spec": {
+            "url": "https://repo",
+            "validationRepo": null,
+            "branchName": null,
+            "delegateSelectors": [],
+            "executeOnDelegate": true,
+            "type": "Http",
+            "connectionType": "Repo"
+          }
+        },
+        "createdAt": 1657099672072,
+        "lastModifiedAt": 1657099672068,
+        "status": {
+          "status": "FAILURE",
+          "errorSummary": "Error Encountered (Task has expired. It wasn't picked up by any delegate or delegate did not have enough time to finish the execution.)",
+          "errors": [
+            {
+              "reason": "Unexpected Error",
+              "message": "Task has expired. It wasn't picked up by any delegate or delegate did not have enough time to finish the execution.",
+              "code": 450
+            }
+          ],
+          "testedAt": 1657099913619,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 0
+        },
+        "activityDetails": {
+          "lastActivityTime": 1657099672106
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "governanceMetadata": null
+      },
+      {
+        "connector": {
+          "name": "azureConnector",
+          "identifier": "connector",
+          "description": null,
+          "orgIdentifier": "CVNG",
+          "projectIdentifier": null,
+          "tags": {},
+          "type": "Azure",
+          "spec": {
+            "url": "https://qva35651.azureARM.com/",
+            "apiTokenRef": "org.harness",
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1646186996478,
+        "lastModifiedAt": 1646203306079,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1646623973765,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1646623973765
+        },
+        "activityDetails": {
+          "lastActivityTime": 1646203306167
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "223cb69a-19c7-457f-bcd1-a373c85f50c1"
+}

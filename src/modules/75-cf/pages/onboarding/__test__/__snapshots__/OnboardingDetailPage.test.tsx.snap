@@ -2,25 +2,6 @@
 
 exports[`OnboardingDetailPage SelectEnvironmentView should render data correctly 1`] = `
 <div>
-  <div
-    class="Layout--vertical StyledProps--main gridDisplay StyledProps--padding-top-xsmall"
-  >
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-body1 StyledProps--color StyledProps--color-grey800 StyledProps--padding-bottom-medium"
-    >
-      cf.onboarding.selectOrCreateEnvironment
-    </p>
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-medium"
-    >
-      cf.onboarding.environmentDescription
-    </p>
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-xsmall"
-    >
-      cf.onboarding.selectOrTypeEnv
-    </p>
-  </div>
   <span
     class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
     data-icon="spinner"
@@ -42,30 +23,25 @@ exports[`OnboardingDetailPage SelectEnvironmentView should render data correctly
       />
     </svg>
   </span>
+  <div
+    class="Layout--vertical StyledProps--main gridDisplay StyledProps--padding-top-xsmall"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body1 StyledProps--color StyledProps--color-grey800 StyledProps--padding-bottom-medium"
+    >
+      cf.onboarding.selectOrCreateEnvironment
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-medium"
+    >
+      cf.onboarding.environmentDescription
+    </p>
+  </div>
 </div>
 `;
 
 exports[`OnboardingDetailPage SelectEnvironmentView should render loading correctly 1`] = `
 <div>
-  <div
-    class="Layout--vertical StyledProps--main gridDisplay StyledProps--padding-top-xsmall"
-  >
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-body1 StyledProps--color StyledProps--color-grey800 StyledProps--padding-bottom-medium"
-    >
-      cf.onboarding.selectOrCreateEnvironment
-    </p>
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-medium"
-    >
-      cf.onboarding.environmentDescription
-    </p>
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-xsmall"
-    >
-      cf.onboarding.selectOrTypeEnv
-    </p>
-  </div>
   <span
     class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
     data-icon="spinner"
@@ -87,5 +63,19 @@ exports[`OnboardingDetailPage SelectEnvironmentView should render loading correc
       />
     </svg>
   </span>
+  <div
+    class="Layout--vertical StyledProps--main gridDisplay StyledProps--padding-top-xsmall"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body1 StyledProps--color StyledProps--color-grey800 StyledProps--padding-bottom-medium"
+    >
+      cf.onboarding.selectOrCreateEnvironment
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600 StyledProps--padding-bottom-medium"
+    >
+      cf.onboarding.environmentDescription
+    </p>
+  </div>
 </div>
 `;

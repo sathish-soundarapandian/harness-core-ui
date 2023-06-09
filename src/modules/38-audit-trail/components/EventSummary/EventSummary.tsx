@@ -83,7 +83,6 @@ const EventSummary: React.FC<EventSummaryProps> = ({ onClose, auditEvent }) => {
     timestamp,
     httpRequestInfo: { requestMethod } = {},
     requestMetadata: { clientIP } = {},
-    resource,
     auditEventData
   } = auditEvent
 
@@ -151,9 +150,7 @@ const EventSummary: React.FC<EventSummaryProps> = ({ onClose, auditEvent }) => {
           columns={columns}
           getRowClassName={() => css.tableRow}
         />
-        {auditId && accountIdentifier && resource?.type !== 'PIPELINE_EXECUTION' && (
-          <YamlDiffButton auditId={auditId} accountIdentifier={accountIdentifier} />
-        )}
+        {auditId && accountIdentifier && <YamlDiffButton auditId={auditId} accountIdentifier={accountIdentifier} />}
       </>
     )
   }

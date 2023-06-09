@@ -53,7 +53,8 @@ import type {
   AccountLevelGitOpsPathProps,
   TemplateType,
   AccountRoutePlacement,
-  ExecutionQueryParams
+  ExecutionQueryParams,
+  ServiceOverridesQueryParams
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -981,12 +982,17 @@ const routes = {
   ),
   toServiceOverrides: withAccountId(
     ({
+      accountId,
       orgIdentifier,
       projectIdentifier,
       module,
-      accountRoutePlacement
-    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }>) => {
-      return getEnvServiceRoute({
+      accountRoutePlacement,
+      ...rest
+    }: Partial<ProjectPathProps & ModulePathParams & { accountRoutePlacement?: AccountRoutePlacement }> &
+      ServiceOverridesQueryParams) => {
+      const queryString = qs.stringify(rest, { skipNulls: true })
+
+      const routePath = getEnvServiceRoute({
         scope: {
           orgIdentifier,
           projectIdentifier,
@@ -995,6 +1001,8 @@ const routes = {
         path: 'serviceOverrides',
         accountRoutePlacement
       })
+
+      return queryString.length > 0 ? `${routePath}?${queryString}` : routePath
     }
   ),
   toPipelineDetail: withAccountId(
@@ -1301,7 +1309,7 @@ const routes = {
       source
     }: PipelineType<ExecutionPathProps>) => {
       const basePath = module || 'home'
-      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/et`
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/cet`
     }
   ),
   toResilienceView: withAccountId(
@@ -1632,27 +1640,27 @@ const routes = {
 
   toCVCodeErrors: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/eventsummary`
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/eventsummary`
   ),
 
   toCVCodeErrorsAgents: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/agents`
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/agents`
   ),
 
   toCVCodeErrorsAgentsTokens: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/tokens`
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/tokens`
   ),
 
   toCVCodeErrorsCriticalEvents: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/criticalevents`
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/criticalevents`
   ),
 
   toCVCodeErrorsSettings: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et`
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup`
   ),
 
   toCVMonitoringServicesInputSets: withAccountId(
@@ -1682,7 +1690,7 @@ const routes = {
   ),
   toErrorTracking: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
-      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/et`
+      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/cet`
     }
   ),
   toCVCreateSLOs: withAccountId(
@@ -2172,75 +2180,76 @@ const routes = {
   toLayoutConfig: withAccountId(() => '/idp-admin/layout'),
   toIDPAccessControl: withAccountId(() => '/idp-admin/access-control'),
   toConnectorsPage: withAccountId(() => '/idp-admin/connectors'),
+  toIDPOAuthConfig: withAccountId(() => '/idp-admin/oauth'),
 
   // Error Tracking
-  toET: withAccountId(() => '/et'),
-  toETHome: withAccountId(() => '/et/home'),
-  toETHomeTrial: withAccountId(() => '/et/home/trial'),
-  toETEventsSummary: withAccountId(
+  toCET: withAccountId(() => '/cet'),
+  toCETHome: withAccountId(() => '/cet/home'),
+  toCETHomeTrial: withAccountId(() => '/cet/home/trial'),
+  toCETEventsSummary: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/eventsummary`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/eventsummary`
   ),
 
-  toETMonitoredServices: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module = 'et' }: Partial<ProjectPathProps & { module?: string }>) => {
-      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/etmonitoredservices`
+  toCETMonitoredServices: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps & { module?: string }>) => {
+      return `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/etmonitoredservices`
     }
   ),
 
-  toETAgents: withAccountId(
+  toCETAgents: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/agents`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/agents`
   ),
 
-  toETAgentsTokens: withAccountId(
+  toCETAgentsTokens: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/tokens`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/tokens`
   ),
 
-  toETCriticalEvents: withAccountId(
+  toCETCriticalEvents: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/criticalevents`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/criticalevents`
   ),
 
-  toETSettings: withAccountId(
+  toCETSettings: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup`
   ),
 
-  toETDefaultSettings: withAccountId(
+  toCETDefaultSettings: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/default-settings`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/default-settings`
   ),
 
-  toETConnectors: withAccountId(
+  toCETConnectors: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/connectors`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/connectors`
   ),
 
-  toETSecrets: withAccountId(
+  toCETSecrets: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/secrets`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/secrets`
   ),
 
-  toETAccessControl: withAccountId(
+  toCETAccessControl: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/access-control`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/access-control`
   ),
 
-  toETDelegates: withAccountId(
+  toCETDelegates: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/delegates`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/resources/delegates`
   ),
 
-  toETPolicies: withAccountId(
+  toCETPolicies: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/governance/dashboard`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/governance/dashboard`
   ),
 
-  toETCodeErrorsCriticalEvents: withAccountId(
+  toCETEventSummaryOldNotifLink: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
-      `/et/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/criticalevents`
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/et/eventsummary`
   )
 }
 

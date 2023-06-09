@@ -148,7 +148,7 @@ export const RenderService: Renderer<CellProps<TableRowData>> = ({
 }) => {
   return showService ? (
     <Container>
-      <Text lineClamp={1} tooltipProps={{ isDark: true }} className={css.serviceColumnStyle}>
+      <Text tooltipProps={{ isDark: true }} className={css.serviceColumnStyle} lineClamp={1}>
         {serviceName}
       </Text>
     </Container>
@@ -275,13 +275,14 @@ const columnsProperties = {
   service: {
     width: {
       summary: '0%',
-      full: '18%'
+      full: '30%'
     }
   },
+
   latestBadge: {
     width: {
       summary: '0%',
-      full: '2%'
+      full: '10%'
     }
   },
   artifacts: {
@@ -293,7 +294,7 @@ const columnsProperties = {
   infras: {
     width: {
       summary: '58%',
-      full: '50%'
+      full: '30%'
     }
   },
   instancesCount: {

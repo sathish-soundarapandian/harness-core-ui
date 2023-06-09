@@ -62,7 +62,7 @@ import type {
   MultiTypeListUIType
 } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { useGitScope } from '@pipeline/utils/CIUtils'
-import { MultiTypeList } from '@common/components/MultiTypeList/MultiTypeList'
+import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
@@ -385,7 +385,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
-  const { CIE_HOSTED_VMS, CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, ENABLE_K8_BUILDS } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CIE_HOSTED_VMS_WINDOWS, ENABLE_K8_BUILDS } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
   const { licenseInformation } = useLicenseStore()
@@ -971,107 +971,102 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     [expressions]
   )
 
-  const renderContainerSecurityContext = React.useCallback(
-    ({ formik }: { formik: FormikProps<unknown> }): JSX.Element => {
-      return (
-        <>
-          <Separator topSeparation={0} />
-          <div className={css.tabSubHeading} id="containerSecurityContext">
-            {getString('pipeline.buildInfra.containerSecurityContext')}
-          </div>
-          {renderCheckboxFields({
-            name: 'privileged',
-            stringKey: 'pipeline.buildInfra.privileged',
-            tooltipId: 'privileged'
-          })}
-          {renderCheckboxFields({
-            name: 'allowPrivilegeEscalation',
-            stringKey: 'pipeline.buildInfra.allowPrivilegeEscalation',
-            tooltipId: 'allowPrivilegeEscalation'
-          })}
-          <Container className={css.bottomMargin7} width={300}>
-            <MultiTypeList
-              name="addCapabilities"
-              multiTextInputProps={{
-                expressions,
-                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-              }}
-              formik={formik}
-              multiTypeFieldSelectorProps={{
-                label: (
-                  <Text tooltipProps={{ dataTooltipId: 'addCapabilities' }}>
-                    {getString('pipeline.buildInfra.addCapabilities')}
-                  </Text>
-                ),
-                allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
-              }}
-              configureOptionsProps={{
-                hideExecutionTimeField: true
-              }}
-              disabled={isReadonly}
-            />
-          </Container>
-          <Container width={300} className={css.bottomMargin7}>
-            <MultiTypeList
-              name="dropCapabilities"
-              multiTextInputProps={{
-                expressions,
-                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-              }}
-              formik={formik}
-              multiTypeFieldSelectorProps={{
-                label: (
-                  <Text tooltipProps={{ dataTooltipId: 'dropCapabilities' }}>
-                    {getString('pipeline.buildInfra.dropCapabilities')}
-                  </Text>
-                ),
-                allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
-              }}
-              configureOptionsProps={{
-                hideExecutionTimeField: true
-              }}
-              disabled={isReadonly}
-            />
-          </Container>
-          {renderCheckboxFields({
-            name: 'runAsNonRoot',
-            stringKey: 'pipeline.buildInfra.runAsNonRoot',
-            tooltipId: 'runAsNonRoot'
-          })}
-          {renderCheckboxFields({
-            name: 'readOnlyRootFilesystem',
-            stringKey: 'pipeline.buildInfra.readOnlyRootFilesystem',
-            tooltipId: 'readOnlyRootFilesystem'
-          })}
-          <Container className={css.bottomMargin7}>
-            <MultiTypeTextField
-              label={
-                <Text
-                  font={{ variation: FontVariation.FORM_LABEL }}
-                  margin={{ bottom: 'xsmall' }}
-                  tooltipProps={{ dataTooltipId: 'runAsUser' }}
-                >
-                  {getString(runAsUserStringKey)}
+  const renderContainerSecurityContext = React.useCallback((): JSX.Element => {
+    return (
+      <>
+        <Separator topSeparation={0} />
+        <div className={css.tabSubHeading} id="containerSecurityContext">
+          {getString('pipeline.buildInfra.containerSecurityContext')}
+        </div>
+        {renderCheckboxFields({
+          name: 'privileged',
+          stringKey: 'pipeline.buildInfra.privileged',
+          tooltipId: 'privileged'
+        })}
+        {renderCheckboxFields({
+          name: 'allowPrivilegeEscalation',
+          stringKey: 'pipeline.buildInfra.allowPrivilegeEscalation',
+          tooltipId: 'allowPrivilegeEscalation'
+        })}
+        <Container className={css.bottomMargin7} width={300}>
+          <MultiTypeList
+            name="addCapabilities"
+            multiTextInputProps={{
+              expressions,
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+            }}
+            multiTypeFieldSelectorProps={{
+              label: (
+                <Text tooltipProps={{ dataTooltipId: 'addCapabilities' }}>
+                  {getString('pipeline.buildInfra.addCapabilities')}
                 </Text>
-              }
-              name="runAsUser"
-              style={{ width: 300, marginBottom: 'var(--spacing-xsmall)' }}
-              multiTextInputProps={{
-                multiTextInputProps: { expressions, allowableTypes },
-                disabled: isReadonly,
-                placeholder: '1000'
-              }}
-              configureOptionsProps={{
-                hideExecutionTimeField: true
-              }}
-            />
-          </Container>
-          <Separator topSeparation={0} />
-        </>
-      )
-    },
-    [expressions]
-  )
+              ),
+              allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+            }}
+            configureOptionsProps={{
+              hideExecutionTimeField: true
+            }}
+            disabled={isReadonly}
+          />
+        </Container>
+        <Container width={300} className={css.bottomMargin7}>
+          <MultiTypeList
+            name="dropCapabilities"
+            multiTextInputProps={{
+              expressions,
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+            }}
+            multiTypeFieldSelectorProps={{
+              label: (
+                <Text tooltipProps={{ dataTooltipId: 'dropCapabilities' }}>
+                  {getString('pipeline.buildInfra.dropCapabilities')}
+                </Text>
+              ),
+              allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+            }}
+            configureOptionsProps={{
+              hideExecutionTimeField: true
+            }}
+            disabled={isReadonly}
+          />
+        </Container>
+        {renderCheckboxFields({
+          name: 'runAsNonRoot',
+          stringKey: 'pipeline.buildInfra.runAsNonRoot',
+          tooltipId: 'runAsNonRoot'
+        })}
+        {renderCheckboxFields({
+          name: 'readOnlyRootFilesystem',
+          stringKey: 'pipeline.buildInfra.readOnlyRootFilesystem',
+          tooltipId: 'readOnlyRootFilesystem'
+        })}
+        <Container className={css.bottomMargin7}>
+          <MultiTypeTextField
+            label={
+              <Text
+                font={{ variation: FontVariation.FORM_LABEL }}
+                margin={{ bottom: 'xsmall' }}
+                tooltipProps={{ dataTooltipId: 'runAsUser' }}
+              >
+                {getString(runAsUserStringKey)}
+              </Text>
+            }
+            name="runAsUser"
+            style={{ width: 300, marginBottom: 'var(--spacing-xsmall)' }}
+            multiTextInputProps={{
+              multiTextInputProps: { expressions, allowableTypes },
+              disabled: isReadonly,
+              placeholder: '1000'
+            }}
+            configureOptionsProps={{
+              hideExecutionTimeField: true
+            }}
+          />
+        </Container>
+        <Separator topSeparation={0} />
+      </>
+    )
+  }, [expressions])
 
   const renderKubernetesBuildInfraAdvancedSection = React.useCallback(
     ({ showCardView = false, formik }: { formik: any; showCardView?: boolean }): React.ReactElement => {
@@ -1239,12 +1234,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         ]
         break
       case CIBuildInfrastructureType.Cloud:
-        buildInfraSelectOptions = [{ label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux }]
-        if (CIE_HOSTED_VMS_MAC)
-          buildInfraSelectOptions.push({
+        buildInfraSelectOptions = [
+          { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+          {
             label: getString('pipeline.infraSpecifications.osTypes.macos'),
             value: OsTypes.MacOS
-          })
+          }
+        ]
         if (CIE_HOSTED_VMS_WINDOWS)
           buildInfraSelectOptions.push({
             label: getString('pipeline.infraSpecifications.osTypes.windows'),
@@ -1529,9 +1525,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             {renderMultiTypeMap({ fieldName: 'labels', stringKey: 'ci.labels' })}
           </Container>
           <Container className={css.bottomMargin7}>
-            {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'ci.annotations' })}
+            {renderMultiTypeMap({ fieldName: 'annotations', stringKey: 'common.annotations' })}
           </Container>
-          {showContainerSecurityContext && renderContainerSecurityContext({ formik })}
+          {showContainerSecurityContext && renderContainerSecurityContext()}
           <Container className={css.bottomMargin7}>
             <MultiTypeTextField
               label={
@@ -1605,9 +1601,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               }}
               formik={formik}
               multiTypeFieldSelectorProps={{
-                label: (
-                  <Text tooltipProps={{ dataTooltipId: 'hostNames' }}>{getString('ci.buildInfra.hostNames')}</Text>
-                ),
+                label: <Text tooltipProps={{ dataTooltipId: 'hostNames' }}>{getString('common.hostNames')}</Text>,
                 allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
               }}
               configureOptionsProps={{
@@ -1974,12 +1968,12 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                             {renderPropagateKeyValuePairs({
                               keyValue: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                                 ?.annotations,
-                              stringKey: 'ci.annotations'
+                              stringKey: 'common.annotations'
                             })}
                             {renderPropagateList({
                               value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                                 ?.hostNames,
-                              stringKey: 'ci.buildInfra.hostNames'
+                              stringKey: 'common.hostNames'
                             })}
                             {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
                               ?.automountServiceAccountToken !== 'undefined' && (

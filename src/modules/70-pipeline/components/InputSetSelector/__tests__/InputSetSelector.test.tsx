@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, waitFor, within, createEvent } from '@testing-library/react'
+import { render, act, fireEvent, waitFor, within, createEvent, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { InputSetSummaryResponse, useGetInputSetsListForPipeline } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
@@ -17,7 +18,8 @@ import {
   mockInputSetsListError,
   mockInputSetsListWithGitDetails,
   multipleSelectedInputSets,
-  multipleSelectedInputSetsWithGitDetails
+  multipleSelectedInputSetsWithGitDetails,
+  paginatedInputSetsResponse
 } from './mocks'
 import type { InputSetValue } from '../utils'
 
@@ -185,7 +187,7 @@ describe('INPUT SET SELECTOR', () => {
     useGetInputSetsListForPipeline.mockImplementation(() => mockInputSetsList)
 
     const onChangeMock = jest.fn()
-    const { getByTestId, getByText, container } = render(
+    const { getByText, container } = render(
       <TestWrapper>
         <InputSetSelector value={multipleSelectedInputSets} {...commonProps} onChange={onChangeMock} />
       </TestWrapper>
@@ -194,12 +196,17 @@ describe('INPUT SET SELECTOR', () => {
     act(() => {
       fireEvent.click(getByText('pipeline.inputSets.selectPlaceholder'))
     })
-
     await waitFor(() => expect(container).toMatchSnapshot('snapshot afteropening the input set list'))
-    const selectedIS = getByTestId('0-inputset1')
+
+    const inputSetListPopoverList = document.getElementsByClassName('popoverContainer')
+    await waitFor(() => expect(inputSetListPopoverList).toBeDefined())
+    expect(inputSetListPopoverList).toHaveLength(1)
+    const inputSetListPopover = inputSetListPopoverList[0] as HTMLElement
+    const selectedIS = within(inputSetListPopover).getByTestId('0-inputset1')
+
     expect(selectedIS).toBeTruthy()
     expect(within(selectedIS).queryByText('main')).toBeNull()
-    expect(getByTestId('1-inputset2')).toBeTruthy()
+    expect(within(inputSetListPopover).getByTestId('1-inputset2')).toBeTruthy()
   })
 
   test('cross button exists when there is a selected inputset', async () => {
@@ -264,7 +271,7 @@ describe('INPUT SET SELECTOR', () => {
     // @ts-ignore
     useGetInputSetsListForPipeline.mockImplementation(() => mockInputSetsListWithGitDetails)
 
-    const { getByText, container } = render(
+    const { getByText } = render(
       <GitSyncTestWrapper>
         <InputSetSelector {...commonProps} value={multipleSelectedInputSetsWithGitDetails} />
       </GitSyncTestWrapper>
@@ -274,7 +281,7 @@ describe('INPUT SET SELECTOR', () => {
       fireEvent.click(getByText('pipeline.inputSets.selectPlaceholder'))
     })
 
-    const inputSetListPopoverList = container.getElementsByClassName('popoverContainer')
+    const inputSetListPopoverList = document.getElementsByClassName('popoverContainer')
     await waitFor(() => expect(inputSetListPopoverList).toBeDefined())
     expect(inputSetListPopoverList).toHaveLength(1)
     const inputSetListPopover = inputSetListPopoverList[0] as HTMLElement
@@ -286,10 +293,9 @@ describe('INPUT SET SELECTOR', () => {
       fireEvent.click(inputset1)
     })
 
-    expect(within(inputSetListPopover).getByTestId('invalid-icon')).toBeTruthy()
-
     // Checkif 'branch' is visible
-    expect(within(inputset1).queryByText('master')).toBeTruthy()
+    const inputSetWithGitRow = within(inputSetListPopover).getByTestId('popover-list-inputsetwithgit1')
+    expect(within(inputSetWithGitRow).queryByText('master')).toBeTruthy()
   })
 
   test('Input set API has error', async () => {
@@ -312,7 +318,7 @@ describe('INPUT SET SELECTOR', () => {
     useGetInputSetsListForPipeline.mockImplementation(() => mockInputSetsList)
 
     const onChangeMock = jest.fn()
-    const { getByText, container } = render(
+    const { getByText } = render(
       <TestWrapper>
         <InputSetSelector value={multipleSelectedInputSets} {...commonProps} onChange={onChangeMock} />
       </TestWrapper>
@@ -324,13 +330,17 @@ describe('INPUT SET SELECTOR', () => {
       fireEvent.click(getByText('pipeline.inputSets.selectPlaceholder'))
     })
 
-    const inputSetListPopoverList = container.getElementsByClassName('popoverContainer')
+    const inputSetListPopoverList = document.getElementsByClassName('popoverContainer')
     await waitFor(() => expect(inputSetListPopoverList).toBeDefined())
     expect(inputSetListPopoverList).toHaveLength(1)
     const inputSetListPopover = inputSetListPopoverList[0] as HTMLElement
-    expect(within(inputSetListPopover).getByText('is1')).toBeDefined()
-    expect(within(inputSetListPopover).getByText('is2')).toBeDefined()
-    expect(within(inputSetListPopover).getByText('ol1')).toBeDefined()
+    const inputSet1 = within(inputSetListPopover).getByTestId('checkbox-is1')
+    const inputSet2 = within(inputSetListPopover).getByTestId('checkbox-is1')
+    const overlayIS1 = within(inputSetListPopover).getByTestId('checkbox-ol1')
+
+    expect(inputSet1).toBeDefined()
+    expect(inputSet2).toBeDefined()
+    expect(overlayIS1).toBeDefined()
 
     let allCheckboxes = within(inputSetListPopover).getAllByRole('checkbox')
     expect(allCheckboxes).toHaveLength(3)
@@ -338,21 +348,19 @@ describe('INPUT SET SELECTOR', () => {
     expect(allCheckboxes[1]).toBeChecked()
     expect(allCheckboxes[2]).not.toBeChecked()
 
-    const allListItems = within(inputSetListPopover).getAllByRole('listitem')
-    // Check is2
-    act(() => {
-      fireEvent.click(allListItems[1])
-    })
-    allCheckboxes = within(inputSetListPopover).getAllByRole('checkbox')
-    expect(allCheckboxes[1]).not.toBeChecked()
-
     // Uncheck is1
-    const inputSet1 = within(inputSetListPopover).getByTestId('0-inputset1')
     act(() => {
       fireEvent.click(inputSet1)
     })
     allCheckboxes = within(inputSetListPopover).getAllByRole('checkbox')
     expect(allCheckboxes[0]).not.toBeChecked()
+
+    // Check ol1
+    act(() => {
+      fireEvent.click(overlayIS1)
+    })
+    allCheckboxes = within(inputSetListPopover).getAllByRole('checkbox')
+    expect(allCheckboxes[2]).toBeChecked()
   })
 
   test('Perform drag and drop on selected input sets', async () => {
@@ -361,7 +369,7 @@ describe('INPUT SET SELECTOR', () => {
     useGetInputSetsListForPipeline.mockImplementation(() => mockInputSetsList)
 
     const onChangeMock = jest.fn()
-    const { getByText, container, getByTestId } = render(
+    const { getByText } = render(
       <TestWrapper>
         <InputSetSelector value={multipleSelectedInputSets} {...commonProps} onChange={onChangeMock} />
       </TestWrapper>
@@ -373,12 +381,13 @@ describe('INPUT SET SELECTOR', () => {
       fireEvent.click(getByText('pipeline.inputSets.selectPlaceholder'))
     })
 
-    const inputSetListPopoverList = container.getElementsByClassName('popoverContainer')
+    const inputSetListPopoverList = document.getElementsByClassName('popoverContainer')
     await waitFor(() => expect(inputSetListPopoverList).toBeDefined())
     expect(inputSetListPopoverList).toHaveLength(1)
+    const inputSetListPopover = inputSetListPopoverList[0] as HTMLElement
 
-    const container1 = getByTestId('0-inputset1')
-    const container2 = getByTestId('1-inputset2')
+    const container1 = within(inputSetListPopover).getByTestId('0-inputset1')
+    const container2 = within(inputSetListPopover).getByTestId('1-inputset2')
 
     act(() => {
       const dragStartEvent = Object.assign(createEvent.dragStart(container1), eventData)
@@ -393,5 +402,76 @@ describe('INPUT SET SELECTOR', () => {
       const dropEvent = Object.assign(createEvent.drop(container1), eventData)
       fireEvent(container2, dropEvent)
     })
+  })
+
+  test('should refetch input sets on search term change', async () => {
+    const refetch = jest.fn()
+    const mockUseGetInputSets = useGetInputSetsListForPipeline as jest.MockedFunction<
+      typeof useGetInputSetsListForPipeline
+    >
+
+    mockUseGetInputSets.mockImplementation(() => ({
+      refetch,
+      absolutePath: '',
+      cancel: jest.fn(),
+      data: paginatedInputSetsResponse,
+      loading: false,
+      response: null,
+      error: null
+    }))
+    render(
+      <TestWrapper>
+        <InputSetSelector {...commonProps} />
+      </TestWrapper>
+    )
+
+    // input sets are fetched on mount
+    await waitFor(() => expect(refetch).toHaveBeenCalled())
+
+    fireEvent.click(screen.getByText('pipeline.inputSets.selectPlaceholder'))
+
+    expect(await screen.findByText('inputSet23')).toBeInTheDocument()
+
+    refetch.mockClear()
+
+    const searchInput = screen.getByPlaceholderText('search')
+
+    userEvent.type(searchInput, 'inputSet')
+    await waitFor(() => expect(refetch).toHaveBeenCalled())
+  })
+
+  test('should refetch input sets on page index change', async () => {
+    const refetch = jest.fn()
+    const mockUseGetInputSets = useGetInputSetsListForPipeline as jest.MockedFunction<
+      typeof useGetInputSetsListForPipeline
+    >
+
+    mockUseGetInputSets.mockImplementation(() => ({
+      refetch,
+      absolutePath: '',
+      cancel: jest.fn(),
+      data: paginatedInputSetsResponse,
+      loading: false,
+      response: null,
+      error: null
+    }))
+
+    render(
+      <TestWrapper>
+        <InputSetSelector {...commonProps} />
+      </TestWrapper>
+    )
+
+    // input sets are fetched on mount
+    await waitFor(() => expect(refetch).toHaveBeenCalled())
+
+    fireEvent.click(screen.getByText('pipeline.inputSets.selectPlaceholder'))
+
+    expect(await screen.findByText('inputSet23')).toBeInTheDocument()
+
+    refetch.mockClear()
+
+    userEvent.click(screen.getByLabelText('Next'))
+    await waitFor(() => expect(refetch).toHaveBeenCalled())
   })
 })

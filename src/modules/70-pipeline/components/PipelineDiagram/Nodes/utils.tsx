@@ -11,9 +11,19 @@ import { dragPlaceholderImageBase64 } from './assets/dragImageBase64'
 import { dragStagePlaceholderImageBase64 } from './assets/dragStageImageBase64'
 import type { Dimension } from './NodeDimensionStore'
 
+interface FqnPathProps {
+  identifier: string
+  entityType?: string
+  baseFqn?: string
+}
+
 export enum NodeEntity {
   STAGE = 'STAGE',
   STEP = 'STEP'
+}
+export enum NodeWrapperEntity {
+  step = 'step',
+  stepGroup = 'stepGroup'
 }
 export interface LayoutStyles extends Pick<Dimension, 'height' | 'width'> {
   marginLeft?: string
@@ -104,4 +114,17 @@ export const attachDragImageToEventHandler = (event: React.DragEvent<HTMLDivElem
 
     event.dataTransfer.setDragImage(dragImage, dragImage.width / 2, dragImage.height / 2)
   }
+}
+
+export const getEntityIdentifierBasedFqnPath = ({
+  baseFqn,
+  identifier,
+  entityType = NodeWrapperEntity.step
+}: FqnPathProps): string => {
+  return `${baseFqn}.${entityType}.${identifier}`
+}
+
+export const getBaseFqnWithoutEntityIdentifier = (fqn = ''): string => {
+  const lastDotIndex = fqn.lastIndexOf('.')
+  return lastDotIndex !== -1 ? fqn.substring(0, lastDotIndex) : fqn
 }

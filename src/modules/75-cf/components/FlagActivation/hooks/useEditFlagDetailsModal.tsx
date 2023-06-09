@@ -62,7 +62,7 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
 
   const [openEditDetailsModal, hideEditDetailsModal] = useModalHook(() => {
-    const gitSyncFormMeta = gitSync?.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS)
+    const gitSyncFormMeta = gitSync?.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.UPDATED_FLAG_DETAILS)
 
     const initialValues = {
       name: featureFlag.name.trim(),

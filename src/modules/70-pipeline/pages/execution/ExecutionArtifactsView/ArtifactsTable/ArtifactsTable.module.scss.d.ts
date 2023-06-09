@@ -8,7 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly table: string
-  readonly toggleAccordion: string
   readonly uppercase: string
+  readonly violations: string
 }
 export default styles

@@ -32,6 +32,10 @@
   .padded-section {
     padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-13) var(--spacing-huge);
   }
+  .padded-section-new {
+    padding: var(--spacing-medium) !important;
+    background-color: var(--white) !important;
+  }
   .editServiceModal {
     padding: 0;
   }

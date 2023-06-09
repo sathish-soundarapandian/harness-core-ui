@@ -82,7 +82,6 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     icon: 'ci-main',
     label: 'common.purpose.ci.continuous',
     getHomePageUrl: (accountId: string) => routes.toCI({ accountId }),
-    featureFlagName: FeatureFlag.CING_ENABLED,
     color: '--ci-border',
     backgroundColor: '--ci-background',
     backgroundColorLight: '--ci-background-light'
@@ -160,7 +159,7 @@ export const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
   [ModuleName.CET]: {
     icon: 'cet',
     label: 'common.purpose.cet.continuous',
-    getHomePageUrl: (accountId: string) => routes.toET({ accountId }),
+    getHomePageUrl: (accountId: string) => routes.toCET({ accountId }),
     featureFlagName: FeatureFlag.CET_ENABLED,
     color: '--cet-border'
   }

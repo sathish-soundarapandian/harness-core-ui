@@ -23,7 +23,11 @@ import {
   ButtonVariation,
   Container,
   Popover,
-  useToaster
+  useToaster,
+  sortByLastModified,
+  sortByCreated,
+  sortByName,
+  SortMethod
 } from '@harness/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
@@ -31,7 +35,6 @@ import { isEmpty, merge } from 'lodash-es'
 import {
   Failure,
   ConnectorInfoDTO,
-  getConnectorListPromise,
   ConnectorConfigDTO,
   GetConnectorListQueryParams,
   ConnectorResponse,
@@ -74,6 +77,9 @@ import {
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import FavoriteStar from '@common/components/FavoriteStar/FavoriteStar'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorsEmptyState from './connectors-no-data.png'
 import css from './ConnectorReferenceField.module.scss'
 
@@ -85,19 +91,21 @@ interface AdditionalParams {
 const getAdditionalParams = ({
   scope,
   projectIdentifier,
-  orgIdentifier
+  orgIdentifier,
+  allTabSelected
 }: {
   scope?: string
   projectIdentifier?: string
   orgIdentifier?: string
+  allTabSelected?: boolean
 }): AdditionalParams => {
   const additionalParams: AdditionalParams = {}
 
-  if (scope === Scope.PROJECT) {
+  if (scope === Scope.PROJECT || allTabSelected) {
     additionalParams.projectIdentifier = projectIdentifier
   }
 
-  if (scope === Scope.PROJECT || scope === Scope.ORG) {
+  if (scope === Scope.PROJECT || scope === Scope.ORG || allTabSelected) {
     additionalParams.orgIdentifier = orgIdentifier
   }
 
@@ -257,6 +265,7 @@ interface GetReferenceFieldMethodProps extends ConnectorReferenceFieldProps {
   version?: string
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
+  isFavoritesEnabled?: boolean
 }
 
 interface RecordRenderProps {
@@ -407,7 +416,13 @@ const RecordRender: React.FC<RecordRenderProps> = props => {
           width={30}
           color={item.record.status?.status === 'SUCCESS' ? Color.GREEN_500 : Color.RED_500}
         />
-
+        <FavoriteStar
+          resourceType="CONNECTOR"
+          resourceId={item.record.identifier}
+          scope={{ projectIdentifier: item.record.projectIdentifier, orgIdentifier: item.record.orgIdentifier }}
+          className={css.favoriteStar}
+          activeClassName={css.favoriteActive}
+        />
         {!item.record.harnessManaged ? (
           <RbacButton
             minimal
@@ -454,11 +469,12 @@ export function getReferenceFieldProps({
   openConnectorModal,
   setPagedConnectorData,
   connectorFilterProperties,
-  isMultiSelect,
   version,
+  isMultiSelect,
   selectedConnectors,
   isRecordDisabled,
-  renderRecordDisabledWarning
+  renderRecordDisabledWarning,
+  isFavoritesEnabled
 }: GetReferenceFieldMethodProps): Omit<
   ReferenceSelectProps<ConnectorReferenceDTO>,
   'onChange' | 'onMultiSelectChange' | 'onCancel' | 'pagination'
@@ -473,8 +489,8 @@ export function getReferenceFieldProps({
     createNewLabel: getString('newConnector'),
     // recordClassName: css.listItem,
     isNewConnectorLabelVisible: true,
-    fetchRecords: (done, search, page, scope, signal = undefined) => {
-      const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier })
+    fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected, sortMethod, isFavorite) => {
+      const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier, allTabSelected })
       const gitFilterParams =
         gitScope?.repo && gitScope?.branch
           ? {
@@ -483,50 +499,36 @@ export function getReferenceFieldProps({
               getDefaultFromOtherRepo: gitScope.getDefaultFromOtherRepo ?? true
             }
           : {}
-      const request =
-        Array.isArray(type) || !isEmpty(connectorFilterProperties)
-          ? getConnectorListV2Promise(
-              {
-                queryParams: {
-                  accountIdentifier,
-                  searchTerm: search || '',
-                  ...additionalParams,
-                  ...gitFilterParams,
-                  pageIndex: page || 0,
-                  pageSize: 10
-                },
-                body: merge(
-                  {
-                    ...(!category && { types: type }),
-                    category,
-                    filterType: 'Connector',
-                    projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
-                    orgIdentifier:
-                      scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
-                  },
-                  connectorFilterProperties
-                ) as ConnectorFilterProperties
-              },
-              signal
-            )
-          : getConnectorListPromise(
-              {
-                queryParams: {
-                  accountIdentifier,
-                  // If we also pass "type" along with "category", "category" will be ignored
-                  ...(!category && { type }),
-                  ...gitFilterParams,
-                  category,
-                  searchTerm: search,
-                  pageIndex: page,
-                  pageSize: 10,
-                  projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-                  orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined,
-                  ...(version && { version })
-                }
-              },
-              signal
-            )
+      const request = getConnectorListV2Promise(
+        {
+          queryParams: {
+            accountIdentifier,
+            searchTerm: search || '',
+            ...additionalParams,
+            ...gitFilterParams,
+            pageIndex: page || 0,
+            pageSize: 10,
+            ...(version ? { version } : undefined),
+            includeAllConnectorsAvailableAtScope: allTabSelected,
+            ...(isFavoritesEnabled ? { isFavorite } : undefined),
+            // eslint-disable-next-line
+            // @ts-ignore
+            sortOrders: sortMethod
+          },
+          body: merge(
+            {
+              ...(!category && { types: Array.isArray(type) ? type : [type] }),
+              category,
+              filterType: 'Connector',
+              projectIdentifier: scope === Scope.PROJECT || allTabSelected ? [projectIdentifier as string] : undefined,
+              orgIdentifier:
+                scope === Scope.PROJECT || scope === Scope.ORG || allTabSelected ? [orgIdentifier as string] : undefined
+            },
+            connectorFilterProperties
+          ) as ConnectorFilterProperties
+        },
+        signal
+      )
 
       return request
         .then(responseData => {
@@ -629,6 +631,8 @@ export const getConnectorStatusCall = async (
   }
 }
 
+const DEFAULT_SORT_METHOD = SortMethod.Newest
+
 export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = props => {
   const {
     defaultScope,
@@ -702,10 +706,14 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
 
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
+  const { PL_FAVORITES } = useFeatureFlags()
   const [connectorStatusCheckInProgress, setConnectorStatusCheckInProgress] = React.useState(false)
   const [connectorStatus, setConnectorStatus] = React.useState(typeof selected !== 'string' && selected?.live)
   const scopeFromSelected = typeof selected === 'string' && getScopeFromValue(selected || '')
   const selectedRef = typeof selected === 'string' && getIdentifierFromValue(selected || '')
+  const { preference: sortPreference = DEFAULT_SORT_METHOD, setPreference: setSortPreference } =
+    usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-select-connector`)
+
   const {
     data: connectorData,
     loading,
@@ -853,6 +861,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
   const tooltipContext = React.useContext(FormikTooltipContext)
   const dataTooltipId =
     props.tooltipProps?.dataTooltipId || (tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : '')
+
   const getReferenceFieldPropsValues = getReferenceFieldProps({
     defaultScope,
     gitScope,
@@ -873,8 +882,10 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     isMultiSelect,
     selectedConnectors,
     isRecordDisabled,
-    renderRecordDisabledWarning
+    renderRecordDisabledWarning,
+    isFavoritesEnabled: PL_FAVORITES
   })
+
   return (
     <FormGroup
       {...rest}
@@ -906,6 +917,13 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
           pageIndex: page || 0,
           gotoPage: pageIndex => setPage(pageIndex)
         }}
+        sortProps={{
+          selectedSortMethod: sortPreference,
+          onSortMethodChange: option => {
+            setSortPreference(option.value as SortMethod)
+          },
+          sortOptions: [...sortByLastModified, ...sortByCreated, ...sortByName]
+        }}
         disableCollapse={!(type === 'Github')}
         createNewBtnComponent={
           <RbacButton
@@ -925,6 +943,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
           ></RbacButton>
         }
         onMultiSelectChange={onMultiSelectChange}
+        showAllTab={true}
       />
     </FormGroup>
   )
@@ -963,6 +982,10 @@ function getConnectorSelectorSchema(selected: ConnectorSelectedValue, getString:
       return deafultSchema
   }
 }
+
+export const getConnectorValue = (connectorRef: ConnectorSelectedValue | string): string =>
+  typeof connectorRef === 'string' ? connectorRef : connectorRef.value
+
 // This is used to register default connector setting
 export const DefaultSettingConnectorField: React.FC<SettingRendererProps & { type: Array<ConnectorInfoDTO['type']> }> =
   ({ onSettingSelectionChange, identifier, setFieldValue, settingValue, type }) => {

@@ -313,6 +313,19 @@ const getGarDigestValues = (specValues: GoogleArtifactRegistryInitialValuesType)
   return values
 }
 
+const getGcrDigestValues = (specValues: ImagePathTypes) => {
+  const values = produce(specValues, draft => {
+    if (specValues?.digest && getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED) {
+      if (getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED) {
+        draft.digest = { label: specValues?.digest, value: specValues?.digest } as any
+      } else {
+        draft.digest = specValues?.digest
+      }
+    }
+  })
+  return values
+}
+
 export interface ArtifactDigestWrapperDetails {
   errorText: string
   digestPath: string
@@ -384,6 +397,12 @@ export const getArtifactFormData = (
       break
     case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
       values = getRepoValuesForNexus2(specValues)
+      break
+    case ENABLED_ARTIFACT_TYPES.Gcr:
+    case ENABLED_ARTIFACT_TYPES.Ecr:
+    case ENABLED_ARTIFACT_TYPES.Acr:
+      values = getTagValues(specValues)
+      values = getGcrDigestValues(values as ImagePathTypes)
       break
     default:
       values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
@@ -737,6 +756,9 @@ export const resetFieldValue = (formik: FormikValues, fieldPath: string, resetVa
   }
 }
 
+export const canFetchArtifactDigest = (...queryParams: string[]) => {
+  return !queryParams.some(param => getMultiTypeFromValue(param) === MultiTypeInputType.RUNTIME)
+}
 export const canFetchGarDigest = (
   project: string,
   region: string,
@@ -752,6 +774,19 @@ export const canFetchGarDigest = (
     getMultiTypeFromValue(packageId) !== MultiTypeInputType.RUNTIME &&
     getMultiTypeFromValue(connectorRefValue) !== MultiTypeInputType.RUNTIME &&
     getMultiTypeFromValue(version) !== MultiTypeInputType.RUNTIME
+  )
+}
+export const canFetchGcrDigest = (
+  imagePath: string,
+  registryHostname: string,
+  tag: string,
+  connectorRefValue: string
+) => {
+  return (
+    getMultiTypeFromValue(tag) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(imagePath) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(registryHostname) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(connectorRefValue) !== MultiTypeInputType.RUNTIME
   )
 }
 export const canFetchDigest = (imagePath: string, tag: string, connectorRefValue: string) => {

@@ -30,6 +30,7 @@ import MultiTypeSkipInstances from '@pipeline/components/PipelineStudio/SkipInst
 
 import { useStrings } from 'framework/strings'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
@@ -42,10 +43,12 @@ import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export interface AdvancedSpecifications {
   context?: string
+  customRef?: React.Ref<HTMLDivElement>
 }
-const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ children }): JSX.Element => {
+const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ children, customRef }): JSX.Element => {
   const { getString } = useStrings()
 
+  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
   const {
     state: {
       selectionState: { selectedStageId = '' }
@@ -66,7 +69,8 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
   }, [stage])
 
   const formikRef = React.useRef<StepFormikRef | null>(null)
-  const scrollRef = React.useRef<HTMLDivElement | null>(null)
+  const domRef = React.useRef<HTMLDivElement | null>(null)
+  const scrollRef = customRef || domRef
   const { submitFormsForTab } = React.useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
   const { trackEvent } = useTelemetry()
@@ -79,8 +83,15 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
 
   return (
     <div className={stageCss.deployStage}>
-      <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
+      {!CDS_PIPELINE_STUDIO_UPGRADES && (
+        <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+      )}
+      <div
+        className={cx(stageCss.contentSection, stageCss.paddedSection, {
+          [stageCss.paddedSectionNew]: CDS_PIPELINE_STUDIO_UPGRADES
+        })}
+        ref={scrollRef}
+      >
         <div className={stageCss.tabHeading}>
           <span data-tooltip-id="delegateSelectorDeployStage">
             {getString('pipeline.delegate.DelegateSelectorOptional')}

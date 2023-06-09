@@ -613,6 +613,10 @@ export interface ArtifactTypeSpec {
   [key: string]: any
 }
 
+export interface ArtifactTypeSpecWrapper {
+  spec?: ArtifactTypeSpec
+}
+
 export type ArtifactoryRegistrySpec = ArtifactTypeSpec & {
   artifactDirectory?: string
   artifactPath?: string
@@ -626,7 +630,6 @@ export type ArtifactoryRegistrySpec = ArtifactTypeSpec & {
 }
 
 export interface Attestation {
-  privateKey?: string
   spec?: AttestationSpec
   type?: 'cosign'
 }
@@ -690,6 +693,12 @@ export type AuditFilterProperties = FilterProperties & {
   scopes?: ResourceScopeDTO[]
   startTime?: number
   staticFilter?: 'EXCLUDE_LOGIN_EVENTS' | 'EXCLUDE_SYSTEM_EVENTS'
+}
+
+export interface AutoApprovalParams {
+  action: 'APPROVE'
+  comments?: string
+  scheduledDeadline: ScheduledDeadline
 }
 
 export interface AwsCodeCommitEventSpec {
@@ -958,6 +967,13 @@ export interface CcmConnectorFilter {
   k8sConnectorRef?: string[]
 }
 
+export type CdSscaEnforcementStepInfo = StepSpecType & {
+  infrastructure: ContainerStepInfra
+  policy: EnforcementPolicy
+  source: SbomSource
+  verifyAttestation: VerifyAttestation
+}
+
 export type CdSscaOrchestrationStepInfo = StepSpecType & {
   attestation: Attestation
   infrastructure: ContainerStepInfra
@@ -1097,6 +1113,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'TerraformCloud'
     | 'SignalFX'
     | 'Harness'
+    | 'Rancher'
   )[]
 }
 
@@ -1125,7 +1142,7 @@ export interface ContainerInfraYamlSpec {
   }
   os?: 'Linux' | 'MacOS' | 'Windows'
   priorityClassName?: string
-  resources: ContainerResource
+  resources?: ContainerResource
   runAsUser?: number
   serviceAccountName?: string
   tolerations?: Toleration[]
@@ -1165,6 +1182,10 @@ export interface ContainerStepInfra {
 export type CosignAttestation = AttestationSpec & {
   password?: string
   privateKey?: string
+}
+
+export type CosignVerifyAttestation = VerifyAttestationSpec & {
+  publicKey?: string
 }
 
 export interface CriteriaSpec {
@@ -1243,6 +1264,10 @@ export interface DelegateInfo {
   name?: string
   taskId?: string
   taskName?: string
+}
+
+export type DelegateInfra = StepGroupInfra & {
+  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export interface DestinationPipelineConfig {
@@ -1363,6 +1388,10 @@ export type EmptyDirYaml = CIVolume & {
 export interface EmptyDirYamlSpec {
   medium?: string
   size?: string
+}
+
+export interface EnforcementPolicy {
+  store?: PolicyStore
 }
 
 export interface EntityGitDetails {
@@ -2781,6 +2810,7 @@ export interface FailureStrategyActionConfig {
     | 'ManualIntervention'
     | 'ProceedWithDefaultValues'
     | 'MarkAsFailure'
+    | 'RetryStepGroup'
 }
 
 export interface FailureStrategyConfig {
@@ -3107,6 +3137,7 @@ export type HarnessApprovalStepInfo = StepSpecType & {
   approvalMessage?: string
   approverInputs?: ApproverInputInfo[]
   approvers: Approvers
+  autoApproval?: AutoApprovalParams
   includePipelineExecutionHistory: boolean
   isAutoRejectEnabled?: boolean
 }
@@ -3158,6 +3189,10 @@ export type HarnessPushSpec = HarnessEventSpec & {
 export type HarnessSpec = WebhookTriggerSpecV2 & {
   spec?: HarnessEventSpec
   type?: 'PullRequest' | 'Push' | 'IssueComment'
+}
+
+export type HarnessStore = StoreSpec & {
+  file?: string
 }
 
 export type HelmManifestSpec = ManifestTypeSpec & {
@@ -3451,6 +3486,11 @@ export interface JsonNode {
   [key: string]: any
 }
 
+export type K8sDirectInfra = StepGroupInfra & {
+  spec: ContainerInfraYamlSpec
+  type: 'KubernetesDirect' | 'Delegate' | 'Noop'
+}
+
 export type KeyValuesCriteriaSpec = CriteriaSpec & {
   conditions: Condition[]
   matchAnyCondition?: boolean
@@ -3551,12 +3591,12 @@ export interface MoveConfigResponse {
   pipelineIdentifier?: string
 }
 
-export type MultiArtifactTriggerConfig = NGTriggerSpecV2 & {
+export type MultiRegionArtifactTriggerConfig = NGTriggerSpecV2 & {
   artifactRef?: string
   eventConditions?: TriggerEventDataCondition[]
   jexlCondition?: string
   metaDataConditions?: TriggerEventDataCondition[]
-  sources?: ArtifactTypeSpec[]
+  sources?: ArtifactTypeSpecWrapper[]
   stageIdentifier?: string
   type?:
     | 'Gcr'
@@ -3626,7 +3666,7 @@ export interface NGTriggerDetailsResponse {
     [key: string]: string
   }
   triggerStatus?: TriggerStatus
-  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiArtifact'
+  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
   webhookCurlCommand?: string
   webhookDetails?: WebhookDetails
   webhookUrl?: string
@@ -3678,7 +3718,7 @@ export interface NGTriggerEventHistoryResponse {
   targetIdentifier?: string
   triggerEventStatus?: TriggerEventStatus
   triggerIdentifier?: string
-  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiArtifact'
+  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
 }
 
 export interface NGTriggerResponse {
@@ -3697,14 +3737,14 @@ export interface NGTriggerResponse {
   projectIdentifier?: string
   stagesToExecute?: string[]
   targetIdentifier?: string
-  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiArtifact'
+  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
   yaml?: string
 }
 
 export interface NGTriggerSourceV2 {
   pollInterval?: string
   spec?: NGTriggerSpecV2
-  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiArtifact'
+  type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
   webhookId?: string
 }
 
@@ -4409,6 +4449,7 @@ export interface PipelineValidationResponseDTO {
   startTs?: number
   status?: string
   templateValidationResponse?: TemplateValidationResponseDTO
+  validateTemplateReconcileResponseDTO?: ValidateTemplateReconcileResponseDTO
 }
 
 export interface PipelineValidationUUIDResponseBody {
@@ -4553,6 +4594,11 @@ export type PolicyStepInfo = StepSpecType & {
   policySets: string[]
   policySpec?: PolicySpec
   type?: string
+}
+
+export interface PolicyStore {
+  spec?: StoreSpec
+  type: 'harness'
 }
 
 export interface PollingSubscriptionStatus {
@@ -4748,6 +4794,7 @@ export interface ResourceDTO {
     | 'NG_ACCOUNT_DETAILS'
     | 'BUDGET_GROUP'
     | 'IP_ALLOWLIST_CONFIG'
+    | 'NETWORK_MAP'
 }
 
 export interface ResourceScope {
@@ -5916,6 +5963,11 @@ export interface RetryLatestExecutionResponseDto {
   latestExecutionId?: string
 }
 
+export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
+  spec: RetryFailureSpecConfig
+  type: 'RetryStepGroup'
+}
+
 export interface RetryStageInfo {
   createdAt?: number
   identifier?: string
@@ -6072,6 +6124,11 @@ export interface SbomSource {
 
 export interface SbomSourceSpec {
   [key: string]: any
+}
+
+export interface ScheduledDeadline {
+  time?: string
+  timeZone?: string
 }
 
 export type ScheduledTriggerConfig = NGTriggerSpecV2 & {
@@ -6377,6 +6434,7 @@ export interface StepData {
     | 'MULTIPLE_USER_GROUPS'
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
+    | 'MULTIPLE_CONNECTORS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -6470,6 +6528,8 @@ export interface StepGroupElementConfig {
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
+  sharedPaths?: ParameterFieldListString
+  stepGroupInfra?: StepGroupInfra
   steps?: ExecutionWrapperConfig[]
   strategy?: StrategyConfig
   template?: TemplateLinkConfig
@@ -6478,6 +6538,10 @@ export interface StepGroupElementConfig {
 
 export type StepGroupFailureActionConfig = FailureStrategyActionConfig & {
   type: 'StepGroupRollback'
+}
+
+export interface StepGroupInfra {
+  type?: 'KubernetesDirect' | 'Delegate' | 'Noop'
 }
 
 export interface StepPalleteFilterWrapper {
@@ -6498,6 +6562,10 @@ export interface StepSpecType {
 export interface StepWhenCondition {
   condition?: string
   stageStatus: 'Success' | 'Failure' | 'All'
+}
+
+export interface StoreSpec {
+  [key: string]: any
 }
 
 export interface StrategyConfig {
@@ -6533,6 +6601,7 @@ export type TagBuildSpec = BuildSpec & {
 export interface TargetExecutionSummary {
   executionStatus?: string
   planExecutionId?: string
+  runSequence?: number
   runtimeInput?: string
   startTs?: number
   targetId?: string
@@ -6586,6 +6655,7 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 }
 
 export interface TemplateLinkConfig {
+  gitBranch?: string
   templateInputs?: JsonNode
   templateRef: string
   templateVariables?: JsonNode
@@ -6711,7 +6781,7 @@ export interface TransitionTo {
 }
 
 export interface TriggerCatalogItem {
-  category: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiArtifact'
+  category: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled' | 'MultiRegionArtifact'
   triggerCatalogType: (
     | 'Github'
     | 'Gitlab'
@@ -6863,6 +6933,10 @@ export type ValidateTemplateInputsResponseDTO = ErrorMetadataDTO & {
   validYaml?: boolean
 }
 
+export interface ValidateTemplateReconcileResponseDTO {
+  reconcileNeeded?: boolean
+}
+
 export interface ValidationError {
   error?: string
   fieldId?: string
@@ -6891,6 +6965,15 @@ export interface VariableResponseMapValue {
 export interface VariationYamlSpec {
   variation: string
   weight: number
+}
+
+export interface VerifyAttestation {
+  spec?: VerifyAttestationSpec
+  type?: 'cosign'
+}
+
+export interface VerifyAttestationSpec {
+  [key: string]: any
 }
 
 export interface WaitStepExecutionDetailsDto {
@@ -10350,19 +10433,7 @@ export interface HandleInterruptQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  interruptType:
-    | 'AbortAll'
-    | 'Abort'
-    | 'Pause'
-    | 'Resume'
-    | 'Ignore'
-    | 'StageRollback'
-    | 'StepGroupRollback'
-    | 'MarkAsSuccess'
-    | 'ExpireAll'
-    | 'Retry'
-    | 'MarkAsFailure'
-    | 'UserMarkedFailure'
+  interruptType: 'AbortAll'
 }
 
 export interface HandleInterruptPathParams {
@@ -10382,7 +10453,7 @@ export type HandleInterruptProps = Omit<
   HandleInterruptPathParams
 
 /**
- * pause, resume or stop the pipeline executions
+ * stop the pipeline executions
  */
 export const HandleInterrupt = ({ planExecutionId, ...props }: HandleInterruptProps) => (
   <Mutate<
@@ -10412,7 +10483,7 @@ export type UseHandleInterruptProps = Omit<
   HandleInterruptPathParams
 
 /**
- * pause, resume or stop the pipeline executions
+ * stop the pipeline executions
  */
 export const useHandleInterrupt = ({ planExecutionId, ...props }: UseHandleInterruptProps) =>
   useMutate<
@@ -10428,7 +10499,7 @@ export const useHandleInterrupt = ({ planExecutionId, ...props }: UseHandleInter
   })
 
 /**
- * pause, resume or stop the pipeline executions
+ * stop the pipeline executions
  */
 export const handleInterruptPromise = (
   {
@@ -10455,19 +10526,7 @@ export interface HandleStageInterruptQueryParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  interruptType:
-    | 'AbortAll'
-    | 'Abort'
-    | 'Pause'
-    | 'Resume'
-    | 'Ignore'
-    | 'StageRollback'
-    | 'StepGroupRollback'
-    | 'MarkAsSuccess'
-    | 'ExpireAll'
-    | 'Retry'
-    | 'MarkAsFailure'
-    | 'UserMarkedFailure'
+  interruptType: 'AbortAll' | 'UserMarkedFailure'
 }
 
 export interface HandleStageInterruptPathParams {
@@ -10488,7 +10547,7 @@ export type HandleStageInterruptProps = Omit<
   HandleStageInterruptPathParams
 
 /**
- * pause, resume or stop the stage executions
+ * mark as failure or stop the stage executions
  */
 export const HandleStageInterrupt = ({ planExecutionId, nodeExecutionId, ...props }: HandleStageInterruptProps) => (
   <Mutate<
@@ -10518,7 +10577,7 @@ export type UseHandleStageInterruptProps = Omit<
   HandleStageInterruptPathParams
 
 /**
- * pause, resume or stop the stage executions
+ * mark as failure or stop the stage executions
  */
 export const useHandleStageInterrupt = ({ planExecutionId, nodeExecutionId, ...props }: UseHandleStageInterruptProps) =>
   useMutate<
@@ -10535,7 +10594,7 @@ export const useHandleStageInterrupt = ({ planExecutionId, nodeExecutionId, ...p
   )
 
 /**
- * pause, resume or stop the stage executions
+ * mark as failure or stop the stage executions
  */
 export const handleStageInterruptPromise = (
   {
@@ -18114,6 +18173,8 @@ export interface GetSchemaYamlQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -18428,6 +18489,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AwsSamBuild'
     | 'Semgrep'
     | 'SscaEnforcement'
+    | 'IdpConnector'
+    | 'CdSscaEnforcement'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

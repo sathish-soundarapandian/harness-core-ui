@@ -468,7 +468,7 @@ describe('FlagPipelineTab', () => {
       setupExecutionMocks([mockExecutionHistory[3]])
       renderComponent()
 
-      expect(screen.getAllByText('warning-sign')).toHaveLength(2)
+      expect(screen.getAllByText('warning-sign')).toHaveLength(3)
       expect(screen.getByTestId('stage-count')).toHaveTextContent('1')
     })
 

@@ -15,6 +15,7 @@ import css from '../ConfigFilesSelection.module.scss'
 interface ILocationValueItem {
   locations: string[]
   isHarnessStore: boolean
+  fieldName?: string
   onClick: (path: string, scope: string) => void
   isFileStore?: boolean
   isTooltip?: boolean
@@ -53,7 +54,6 @@ export function LocationValue(props: ILocationValueItem): React.ReactElement {
             </Text>
           )
         }
-
         return (
           <Container key={`${locationValue}${i}`} onClick={() => handleClick(locationValue)}>
             {isHarnessFileStore && <Icon name="edit" margin={{ right: 'xsmall' }} />}

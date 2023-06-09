@@ -1,7 +1,9 @@
 import {
   accountResourceConnectors,
   connectorsCatalogueAPI,
-  accountConnectorTestConnection
+  accountConnectorTestConnection,
+  accountConnectorsListAPI,
+  ceConnectorOverviewSave
 } from '../../support/35-connectors/constants'
 import { pageHeaderClassName } from '../../support/70-pipeline/constants'
 
@@ -16,6 +18,12 @@ describe('CE Azure Connector', () => {
   it('Create CE Azure connector', () => {
     cy.intercept('GET', connectorsCatalogueAPI, { fixture: 'ng/api/connectors/catalogue.json' }).as(
       'connectorsCatalogue'
+    )
+    cy.intercept('POST', accountConnectorsListAPI, { fixture: 'ng/api/connectors/emptyConnectors.json' }).as(
+      'connectorsCatalogue'
+    )
+    cy.intercept('POST', ceConnectorOverviewSave, { fixture: '/ng/api/connectors/CEConnectors/connectorList.json' }).as(
+      'connectorsList'
     )
     cy.intercept('POST', accountConnectorTestConnection, { fixture: '/ng/api/connectors/testConnection.json' }).as(
       'testConnection'

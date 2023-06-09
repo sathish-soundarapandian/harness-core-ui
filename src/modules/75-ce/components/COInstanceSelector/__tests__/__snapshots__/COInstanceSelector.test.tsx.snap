@@ -1048,7 +1048,7 @@ exports[`Instance Selector Modal modal should retain the selected resource group
                     style="width: 5%;"
                   >
                     <label
-                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                      class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
                     >
                       <input
                         checked=""

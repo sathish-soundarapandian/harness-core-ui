@@ -131,7 +131,7 @@
 
   .variable-list-header {
     display: grid;
-    grid-template-columns: repeat(3, minmax(10px, 1fr));
+    grid-template-columns: 1fr 1fr 2fr;
     font-size: var(--font-size-small);
     text-transform: uppercase;
     font-weight: 600;

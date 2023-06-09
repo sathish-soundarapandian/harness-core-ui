@@ -2728,7 +2728,7 @@ exports[`Test K8sBlueGreenDeployStep should submit with valid payload for instan
               style="flex-grow: 1;"
             >
               <label
-                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
               >
                 <input
                   checked=""

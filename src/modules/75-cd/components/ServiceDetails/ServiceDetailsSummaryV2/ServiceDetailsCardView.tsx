@@ -65,12 +65,9 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
   const [envFilter, setEnvFilter] = useState<{
     envId?: string
     isEnvGroup: boolean
-    envName?: string
-    isRollbackAllowed?: boolean
   }>({
     envId: undefined,
-    isEnvGroup: false,
-    isRollbackAllowed: false
+    isEnvGroup: false
   })
 
   //artifact state
@@ -309,7 +306,7 @@ export function ServiceDetailsCardView(props: ServiceDetailsCardViewProps): Reac
             iconProps={{ size: 13 }}
             text={getString('cd.environmentDetailPage.viewInTable')}
             onClick={() => {
-              setEnvFilter({ envId: undefined, isEnvGroup: false, isRollbackAllowed: false })
+              setEnvFilter({ envId: undefined, isEnvGroup: false })
               setArtifactFilter(undefined)
               setIsDetailsDialogOpen(true)
               setArtifactFilterApplied(false)

@@ -9,7 +9,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
-export const transformValuesFieldsConfig = (stepType: StepType) => [
+export const transformValuesFieldsConfig = (stepType?: StepType) => [
   {
     name: 'identifier',
     type: TransformValuesTypes.Text

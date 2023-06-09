@@ -16,7 +16,6 @@ import { useModuleSelectModal } from '../useModuleSelect'
 
 jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
   CVNG_ENABLED: true,
-  CING_ENABLED: true,
   CENG_ENABLED: true
 }))
 const TestComponent: React.FC = () => {
@@ -67,7 +66,6 @@ describe('module select test', () => {
   test('module plan btn', async () => {
     jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
       CVNG_ENABLED: true,
-      CING_ENABLED: true,
       CENG_ENABLED: true
     }))
     const { getByText } = render(

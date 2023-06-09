@@ -1,7 +1,7 @@
 workspaces: Workspaces
 navTitle: Infra as Code Management
 stageTitle: Infastructure as Code Management
-stageDescription: Description of IACM stage placeholder
+stageDescription: Use Infrastructure as-code to manage lifecycle of cloud resources
 terragrunt: Terragrunt
 pulumi: Pulumi
 cdk: CDK
@@ -10,3 +10,6 @@ cloudformation: Cloud Formation
 permissions:
   iacmWorkspaces: IACM Workspaces
   iacmWorkspace: IACM Workspace
+pipelineSteps:
+  required: '{{name}} is required'
+  description: Run terraform commands against your workspace

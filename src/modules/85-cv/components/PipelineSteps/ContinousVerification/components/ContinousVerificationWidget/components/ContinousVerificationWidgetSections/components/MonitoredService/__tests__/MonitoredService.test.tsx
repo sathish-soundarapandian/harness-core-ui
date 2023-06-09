@@ -7,7 +7,11 @@
 
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import { getEnvironmentIdentifierFromStage, getServiceIdentifierFromStage } from '../MonitoredService.utils'
+import {
+  getEnvironmentIdentifierFromStage,
+  getServiceIdentifierFromStage,
+  getStageToDeriveServiceFrom
+} from '../MonitoredService.utils'
 import { mockedPipeline, mockedSelectedDerivedStage, mockedSelectedStageNewDesign } from './MonitoredService.mock'
 
 describe('Unit tests for MonitoredService', () => {
@@ -56,5 +60,33 @@ describe('Unit tests for MonitoredService', () => {
     expect(
       getEnvironmentIdentifierFromStage(mockedSelectedStage as StageElementWrapper<DeploymentStageElementConfig>)
     ).toEqual('env1')
+  })
+})
+
+describe('getStageToDeriveServiceFrom', () => {
+  const pipeline = {
+    stages: [
+      { stage: { identifier: 'stage1' } },
+      {
+        parallel: [{ stage: { identifier: 'stage2' } }, { stage: { identifier: 'stage3' } }]
+      }
+    ]
+  } as PipelineInfoConfig
+
+  test('should return the correct stage when stageIdToDeriveServiceFrom is found', () => {
+    const stageIdToDeriveServiceFrom = 'stage2'
+    const expectedStage = { stage: { identifier: 'stage2' } }
+
+    const result = getStageToDeriveServiceFrom(pipeline, stageIdToDeriveServiceFrom)
+
+    expect(result).toEqual(expectedStage)
+  })
+
+  test('should return null when stageIdToDeriveServiceFrom is not found', () => {
+    const stageIdToDeriveServiceFrom = 'nonexistentStage'
+
+    const result = getStageToDeriveServiceFrom(pipeline, stageIdToDeriveServiceFrom)
+
+    expect(result).toBeNull()
   })
 })

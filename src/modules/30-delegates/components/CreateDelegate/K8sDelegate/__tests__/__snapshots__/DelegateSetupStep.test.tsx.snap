@@ -611,7 +611,7 @@ exports[`Create DelegateSetup Step render data 1`] = `
                         class="bp3-form-content"
                       >
                         <label
-                          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--inline"
                         >
                           <input
                             checked=""

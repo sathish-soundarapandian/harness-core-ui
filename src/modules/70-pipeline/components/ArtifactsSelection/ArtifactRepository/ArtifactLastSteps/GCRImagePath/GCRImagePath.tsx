@@ -45,9 +45,11 @@ import type {
   ImagePathTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
+import { GcrArtifactDigestField } from './GcrDigestField'
 import css from '../../ArtifactConnector.module.scss'
 
 export const gcrUrlList: SelectOption[] = Object.values(RegistryHostNames).map(item => ({ label: item, value: item }))
@@ -100,6 +102,11 @@ export function GCRImagePath({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+  const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
+
+  const getConnectorRefQueryData = (): string => {
+    return defaultTo(modifiedPrevStepData?.connectorId?.value, modifiedPrevStepData?.connectorId)
+  }
 
   const [tagList, setTagList] = useState([])
   const [lastQueryData, setLastQueryData] = useState({ imagePath: '', registryHostname: '' })
@@ -160,7 +167,7 @@ export function GCRImagePath({
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
     const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
 
-    merge(artifactObj.spec, { registryHostname: formData?.registryHostname })
+    merge(artifactObj.spec, { registryHostname: formData?.registryHostname, digest: formData?.digest })
     handleSubmit(artifactObj)
   }
 
@@ -170,6 +177,7 @@ export function GCRImagePath({
         ...modifiedPrevStepData,
         ...formData,
         tag: formData?.tag?.value ? formData?.tag?.value : formData?.tag,
+        digest: defaultTo(formData?.digest?.value, formData?.digest),
         connectorId: getConnectorIdValue(modifiedPrevStepData)
       })
     }
@@ -205,6 +213,7 @@ export function GCRImagePath({
             ...modifiedPrevStepData,
             ...formData,
             tag: formData?.tag?.value ? formData?.tag?.value : formData?.tag,
+            digest: defaultTo(formData?.digest?.value, formData?.digest),
             connectorId: getConnectorIdValue(modifiedPrevStepData)
           })
         }}
@@ -217,7 +226,9 @@ export function GCRImagePath({
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTypeInput
                   label={getString('connectors.GCR.registryHostname')}
-                  placeholder={getString('common.validation.urlIsRequired')}
+                  placeholder={getString('common.enterPlaceholder', {
+                    name: getString('connectors.GCR.registryHostname')
+                  })}
                   name="registryHostname"
                   selectItems={gcrUrlList}
                   useValue
@@ -268,6 +279,16 @@ export function GCRImagePath({
                 setTagList={setTagList}
                 tagDisabled={isTagDisabled(formik?.values)}
               />
+              {CD_NG_DOCKER_ARTIFACT_DIGEST && (
+                <GcrArtifactDigestField
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  isReadonly={isReadonly}
+                  connectorRefValue={getConnectorRefQueryData()}
+                  isVersionDetailsLoading={false}
+                />
+              )}
             </div>
             {!hideHeaderAndNavBtns && (
               <Layout.Horizontal spacing="medium">

@@ -22,7 +22,7 @@ import {
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import type { CellProps, Column, Renderer, Row, UseExpandedRowProps } from 'react-table'
-import { noop } from 'lodash-es'
+import { isEmpty, noop } from 'lodash-es'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetTasksLog, GetTasksLogQueryParams, DelegateStackDriverLog } from 'services/portal'
 import type { ExecutionNode } from 'services/pipeline-ng'
@@ -37,15 +37,21 @@ export enum TaskContext {
   ConnectorValidation = 'Connector_Validation'
 }
 
+interface Task {
+  taskId: string
+  taskName: string
+}
+
 interface DelegateTaskLogsProps {
   step: ExecutionNode
   telemetry: {
     taskContext: TaskContext
     hasError: boolean
   }
+  taskList: Task[]
 }
 
-export default function DelegateTaskLogs({ step, telemetry }: DelegateTaskLogsProps): JSX.Element {
+export default function DelegateTaskLogs({ step, telemetry, taskList }: DelegateTaskLogsProps): JSX.Element {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [currentPageToken, setCurrentPageToken] = useState<string | undefined>('')
   const { getString } = useStrings()
@@ -58,8 +64,9 @@ export default function DelegateTaskLogs({ step, telemetry }: DelegateTaskLogsPr
     has_error: telemetry.hasError
   })
 
-  /* istanbul ignore next */
-  const taskIds = step.delegateInfoList?.map(delegate => delegate.taskId || '')?.filter(a => a)
+  const delegateInfoList = step.delegateInfoList?.map(delegate => delegate.taskId || '')?.filter(a => a)
+  const taskIdsFromProps = taskList.map(task => task.taskId)
+  const taskIds = !isEmpty(delegateInfoList) ? delegateInfoList : taskIdsFromProps
   /* istanbul ignore next */
   const startTime = Math.floor((step?.startTs as number) / 1000) - timePadding
   /* istanbul ignore next */

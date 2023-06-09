@@ -337,13 +337,14 @@ exports[`FeatureFlagsDetailPage FeatureFlagsDetailPage should render data correc
                 class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main variationItem StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
               >
                 <div
-                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
                 >
                   <span
                     style="border-radius: 50%; width: 12px; height: 12px; background-color: rgb(64, 101, 160); display: inline-block;"
                   />
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-bottom-xsmall StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--margin-bottom-xsmall StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1; width: 200px;"
                   >
                     True
                   </span>
@@ -358,13 +359,14 @@ exports[`FeatureFlagsDetailPage FeatureFlagsDetailPage should render data correc
                 class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main variationItem StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
               >
                 <div
-                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
                 >
                   <span
                     style="border-radius: 50%; width: 12px; height: 12px; background-color: rgb(101, 222, 242); display: inline-block;"
                   />
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-bottom-xsmall StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small"
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--margin-bottom-xsmall StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small"
+                    style="--text-line-clamp: 1; width: 200px;"
                   >
                     False
                   </span>

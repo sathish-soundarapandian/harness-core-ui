@@ -2525,7 +2525,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                               style="flex-grow: 1;"
                                             >
                                               <label
-                                                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                                                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                                               >
                                                 <input
                                                   checked=""
@@ -2722,7 +2722,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                       style="flex-grow: 1;"
                                     >
                                       <label
-                                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                                       >
                                         <input
                                           checked=""
@@ -3096,7 +3096,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                           <p
                                             class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--margin-bottom-xsmall"
                                           >
-                                            ci.annotations
+                                            common.annotations
                                           </p>
                                         </span>
                                       </div>
@@ -3161,7 +3161,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                       style="flex-grow: 1;"
                                     >
                                       <label
-                                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                                       >
                                         <input
                                           checked=""
@@ -3229,7 +3229,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                       style="flex-grow: 1;"
                                     >
                                       <label
-                                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                                       >
                                         <input
                                           checked=""
@@ -3570,7 +3570,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                       style="flex-grow: 1;"
                                     >
                                       <label
-                                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                                       >
                                         <input
                                           checked=""
@@ -3638,7 +3638,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                       style="flex-grow: 1;"
                                     >
                                       <label
-                                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                                       >
                                         <input
                                           checked=""
@@ -4442,7 +4442,7 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                                           <p
                                             class="StyledProps--font StyledProps--main"
                                           >
-                                            ci.buildInfra.hostNames
+                                            common.hostNames
                                           </p>
                                         </div>
                                       </span>

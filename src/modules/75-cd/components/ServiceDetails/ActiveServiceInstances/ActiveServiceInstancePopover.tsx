@@ -131,10 +131,7 @@ export const commonActiveInstanceData = (
   const instanceInfoDTOProperties = (instanceData?.instanceInfoDTO as CustomDeploymentInstanceInfoDTO)?.properties || {}
   const defaultInstanceInfoData = [
     {
-      label:
-        instanceData.instanceInfoDTO?.type === ServiceDeploymentType.ServerlessAwsLambda
-          ? capitalize(getString('cd.serviceDashboard.function'))
-          : capitalize(getString('cd.serviceDashboard.pod')),
+      label: capitalize(getString('cd.serviceDashboard.pod')),
       value: instanceData.podName || ''
     },
     {
@@ -149,6 +146,24 @@ export const commonActiveInstanceData = (
 
   function instanceInfoData(deploymentType: string | undefined): any {
     switch (deploymentType) {
+      case ServiceDeploymentType.ServerlessAwsLambda:
+        return [
+          {
+            label: capitalize(getString('cd.serviceDashboard.function')),
+            value: instanceData.podName || ''
+          },
+          {
+            label: capitalize(getString('cd.serviceDashboard.artifact')),
+            value: instanceData.artifactName || ''
+          }
+        ]
+      case ServiceDeploymentType.AwsSam:
+        return [
+          {
+            label: capitalize(getString('cd.serviceDashboard.function')),
+            value: instanceData.podName || ''
+          }
+        ]
       case ServiceDeploymentType.AzureWebApp:
         return [
           {

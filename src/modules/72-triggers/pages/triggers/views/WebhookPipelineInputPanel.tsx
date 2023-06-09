@@ -15,7 +15,8 @@ import {
   Text,
   NestedAccordionProvider,
   HarnessDocTooltip,
-  PageSpinner
+  PageSpinner,
+  Icon
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { merge, cloneDeep, isEmpty, defaultTo, get, debounce, remove } from 'lodash-es'
@@ -35,7 +36,7 @@ import { isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import { useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import { useDeepCompareEffect, useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
@@ -44,7 +45,10 @@ import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import NewInputSetModal from '@pipeline/components/InputSetForm/NewInputSetModal'
 import { getPipelineWithInjectedWithCloneCodebase } from '@triggers/components/Triggers/WebhookTrigger/utils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import {
+  PipelineVariablesContextProvider,
+  usePipelineVariables
+} from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import {
   ciCodebaseBuild,
   ciCodebaseBuildPullRequest,
@@ -169,6 +173,7 @@ function WebhookPipelineInputPanelForm({
   )
   const [mergingInputSets, setMergingInputSets] = useState<boolean>(false)
   const [invalidInputSetIds, setInvalidInputSetIds] = useState<Array<string>>([])
+  const { setPipeline: updatePipelineInVariablesContext } = usePipelineVariables()
 
   const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier } = useParams<{
     projectIdentifier: string
@@ -190,7 +195,8 @@ function WebhookPipelineInputPanelForm({
     },
     body: {
       stageIdentifiers: formikProps.values?.stagesToExecute ?? []
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
   const inputSetSelectedBranch = useMemo(() => {
     return getTriggerInputSetsBranchQueryParameter({
@@ -214,7 +220,8 @@ function WebhookPipelineInputPanelForm({
       branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : branch,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   useEffect(() => {
@@ -505,6 +512,12 @@ function WebhookPipelineInputPanelForm({
     setInputSetError(formikProps?.errors?.inputSetRefs)
   }, [setInputSetError, formikProps?.errors?.inputSetRefs])
 
+  useDeepCompareEffect(() => {
+    if (resolvedPipeline) {
+      updatePipelineInVariablesContext(resolvedPipeline)
+    }
+  }, [resolvedPipeline])
+
   // Don't show spinner when fetching is triggered by typing from
   // Pipeline Reference. Giving users a better experience
   const isPipelineBranchNameInFocus = (): boolean =>
@@ -512,11 +525,14 @@ function WebhookPipelineInputPanelForm({
     !!document.activeElement &&
     document.activeElement === document.querySelector('input[name="pipelineBranchName"]')
 
-  const {
-    state: { storeMetadata }
-  } = usePipelineContext()
   return (
     <Layout.Vertical className={css.webhookPipelineInputContainer} spacing="large" padding="none">
+      <Layout.Horizontal className={css.infoBar}>
+        <Icon name="info-message" size={14} color={Color.GREEN_500} />
+
+        <Text color={Color.WHITE}>{getString('triggers.toast.payloadInfoBar')}</Text>
+      </Layout.Horizontal>
+
       {loading && !isPipelineBranchNameInFocus() ? (
         <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
           <PageSpinner />
@@ -530,7 +546,6 @@ function WebhookPipelineInputPanelForm({
                   {getString('triggers.pipelineInputLabel')}
                   <HarnessDocTooltip tooltipId="pipelineInputLabel" useStandAlone={true} />
                 </Text>
-
                 <GitSyncStoreProvider>
                   <InputSetSelector
                     pipelineIdentifier={pipelineIdentifier}
@@ -593,26 +608,20 @@ function WebhookPipelineInputPanelForm({
             template?.data?.inputSetTemplateYaml &&
             !mergingInputSets &&
             isEmpty(invalidInputSetIds) ? (
-              <PipelineVariablesContextProvider
-                pipeline={resolvedPipeline}
-                enablePipelineTemplatesResolution={true}
-                storeMetadata={storeMetadata}
-              >
-                <PipelineInputSetForm
-                  originalPipeline={resolvedPipeline}
-                  template={defaultTo(
-                    memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
-                    {} as PipelineInfoConfig
-                  )}
-                  path="pipeline"
-                  viewType={StepViewType.InputSet}
-                  maybeContainerClass={css.pipelineInputSetForm}
-                  viewTypeMetadata={{ isTrigger: true }}
-                  readonly={gitAwareForTriggerEnabled || !isEmpty(selectedInputSets)}
-                  gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
-                  disableRuntimeInputConfigureOptions
-                />
-              </PipelineVariablesContextProvider>
+              <PipelineInputSetForm
+                originalPipeline={resolvedPipeline}
+                template={defaultTo(
+                  memoizedParse<Pipeline>(template?.data?.inputSetTemplateYaml)?.pipeline,
+                  {} as PipelineInfoConfig
+                )}
+                path="pipeline"
+                viewType={StepViewType.InputSet}
+                maybeContainerClass={css.pipelineInputSetForm}
+                viewTypeMetadata={{ isTrigger: true }}
+                readonly={gitAwareForTriggerEnabled || !isEmpty(selectedInputSets)}
+                gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+                disableRuntimeInputConfigureOptions
+              />
             ) : null}
           </div>
         </div>
@@ -631,9 +640,15 @@ function WebhookPipelineInputPanelForm({
 }
 
 const WebhookPipelineInputPanel: React.FC<WebhookPipelineInputPanelPropsInterface> = props => {
+  const {
+    state: { storeMetadata }
+  } = usePipelineContext()
+
   return (
     <NestedAccordionProvider>
-      <WebhookPipelineInputPanelForm {...props} />
+      <PipelineVariablesContextProvider enablePipelineTemplatesResolution={true} storeMetadata={storeMetadata}>
+        <WebhookPipelineInputPanelForm {...props} />
+      </PipelineVariablesContextProvider>
     </NestedAccordionProvider>
   )
 }

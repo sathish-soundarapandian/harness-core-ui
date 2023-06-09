@@ -16,6 +16,7 @@ export interface UseActionCreatorReturn {
   fetchingSectionData(payload: string): void
   updateSectionData(payload: UpdateSectionsPayload): void
   toggleSection(payload: string): void
+  updateManuallyToggled(payload: string): void
   resetSection(payload: string): void
   search(payload: string): void
   resetSearch(): void
@@ -40,6 +41,9 @@ export function useActionCreator(dispatch: Dispatch<Action<ActionType>>): UseAct
       },
       toggleSection(payload: string) {
         dispatch({ type: ActionType.ToggleSection, payload })
+      },
+      updateManuallyToggled(payload: string) {
+        dispatch({ type: ActionType.UpdateManuallyToggled, payload })
       },
       resetSection(payload: string) {
         dispatch({ type: ActionType.ResetSection, payload })

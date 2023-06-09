@@ -32,8 +32,15 @@ export class ArtifactSourceTemplate extends Template {
   }
   renderTemplateInputsForm({
     template,
-    templateInputSetFetchParams
+    templateInputSetFetchParams,
+    shouldUtilizeFullWidth
   }: TemplateInputsProps & { accountId: string }): JSX.Element {
-    return <TemplateInputs template={template} templateInputSetFetchParams={templateInputSetFetchParams} />
+    return (
+      <TemplateInputs
+        template={template}
+        templateInputSetFetchParams={templateInputSetFetchParams}
+        shouldUtilizeFullWidth={shouldUtilizeFullWidth}
+      />
+    )
   }
 }

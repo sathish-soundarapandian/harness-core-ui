@@ -5,13 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { connectorsListNewestSort } from '../../support/35-connectors/constants'
+
 describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
   const gitSyncCall =
     '/ng/api/git-sync/git-sync-enabled?accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
   const stepsCall = '/pipeline/api/pipelines/v2/steps?routingId=accountId&accountId=accountId'
   const jirayamlSnippetCall = '/pipeline/api/approvals/stage-yaml-snippet?routingId=accountId&approvalType=JiraApproval'
-  const jiraConnectorsCall =
-    '/ng/api/connectors?accountIdentifier=accountId&type=Jira&searchTerm=&pageIndex=0&pageSize=10&projectIdentifier=project1&orgIdentifier=default'
   const jiraProjectsCall =
     '/ng/api/jira/projects?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud'
   const jiraIssueTypesCall =
@@ -60,7 +60,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(1000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'Jira Create').click()
+      cy.contains('p', 'Jira Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Apply Changes').click({ force: true })
       cy.contains('span', 'Jira Connector is required').should('be.visible').should('have.class', 'FormError--error')
@@ -69,14 +69,14 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form with empty required fields validations', () => {
-      cy.intercept('GET', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
       cy.intercept('GET', jiraIssueTypeMetadataCall, { fixture: 'ng/api/jiraIssueTypesFields' }).as('issueTypeFields')
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(4000)
-      cy.contains('p', 'Jira Create').click()
+      cy.contains('p', 'Jira Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Select').click({ force: true })
       cy.contains('p', 'Jira cloudJira cloudJira cloudJira cloudJira cloudJira cloud').click({ force: true })
@@ -95,14 +95,14 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('GET', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
       cy.intercept('GET', jiraIssueTypeMetadataCall, { fixture: 'ng/api/jiraIssueTypesFields' }).as('issueTypeFields')
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'Jira Create').click()
+      cy.contains('p', 'Jira Create').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Select').click({ force: true })
       cy.contains('p', 'Jira cloudJira cloudJira cloudJira cloudJira cloudJira cloud').click({ force: true })
@@ -139,7 +139,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('GET', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
       cy.wait(2000)
@@ -168,7 +168,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(1000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'Jira Update').click()
+      cy.contains('p', 'Jira Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Apply Changes').click({ force: true })
       cy.contains('span', 'Jira Connector is required').should('be.visible').should('have.class', 'FormError--error')
@@ -176,13 +176,13 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     })
 
     it('Submit form after filling details', () => {
-      cy.intercept('GET', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
+      cy.intercept('POST', connectorsListNewestSort, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraStatusesCall, { fixture: 'ng/api/jiraStatuses' })
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
-      cy.contains('p', 'Jira Update').click()
+      cy.contains('p', 'Jira Update').click({ force: true })
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
       cy.contains('span', 'Select').click({ force: true })
       cy.contains('p', 'Jira cloudJira cloudJira cloudJira cloudJira cloudJira cloud').click({ force: true })

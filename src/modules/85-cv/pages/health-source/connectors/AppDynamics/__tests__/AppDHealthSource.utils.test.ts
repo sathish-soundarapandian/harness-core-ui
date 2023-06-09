@@ -141,16 +141,16 @@ describe('Test Util funcitons', () => {
       })
     ).toEqual({
       completeMetricPath: 'cv.healthSource.connectors.AppDynamics.validation.fullPath',
-      'failFastThresholds.0.criteria.spec.greaterThan': 'cv.required',
-      'failFastThresholds.0.criteria.spec.lessThan': 'cv.required',
-      'failFastThresholds.0.groupName': 'cv.required',
-      'failFastThresholds.0.metricName': 'cv.required',
-      'failFastThresholds.0.metricType': 'cv.required',
-      'ignoreThresholds.0.criteria.spec.greaterThan': 'cv.required',
-      'ignoreThresholds.0.criteria.spec.lessThan': 'cv.required',
-      'ignoreThresholds.0.groupName': 'cv.required',
-      'ignoreThresholds.0.metricName': 'cv.required',
-      'ignoreThresholds.0.metricType': 'cv.required'
+      'failFastThresholds.0.criteria.spec.greaterThan': 'pipeline.required',
+      'failFastThresholds.0.criteria.spec.lessThan': 'pipeline.required',
+      'failFastThresholds.0.groupName': 'pipeline.required',
+      'failFastThresholds.0.metricName': 'pipeline.required',
+      'failFastThresholds.0.metricType': 'pipeline.required',
+      'ignoreThresholds.0.criteria.spec.greaterThan': 'pipeline.required',
+      'ignoreThresholds.0.criteria.spec.lessThan': 'pipeline.required',
+      'ignoreThresholds.0.groupName': 'pipeline.required',
+      'ignoreThresholds.0.metricName': 'pipeline.required',
+      'ignoreThresholds.0.metricType': 'pipeline.required'
     })
   })
 

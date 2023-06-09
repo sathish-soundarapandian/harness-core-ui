@@ -103,11 +103,7 @@ const UserGroupsInput: React.FC<FormikUserGroupsInput> = props => {
           disabled={!!disabled}
           onClear={clearSelectedItems}
           onClick={scope => {
-            if (scope) {
-              openSelectUserGroupsModal(userGroupsScopeAndIndentifier, scope)
-            } else {
-              openSelectUserGroupsModal()
-            }
+            openSelectUserGroupsModal(userGroupsScopeAndIndentifier, scope)
           }}
         />
       </Layout.Vertical>

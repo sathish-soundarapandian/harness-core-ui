@@ -257,6 +257,7 @@ function WebhookPipelineInputPanelFormV1({
                     onNewInputSetClick={() => setShowNewInputSetModal(true)}
                     invalidInputSetReferences={invalidInputSetIds}
                     onReconcile={onReconcile}
+                    isSimplifiedYAML
                   />
                 </GitSyncStoreProvider>
                 {inputSetError ? <Text intent="danger">{inputSetError}</Text> : null}

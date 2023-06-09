@@ -128,7 +128,11 @@ approvalStep:
   fetchUserGroupsFailed: Failed to fetch User Groups
   minimumCount: 'Number of approvers that are required at this step'
   disallowPipelineExecutor: 'Disallow the executor from approving the pipeline'
+  scheduleAutoApprovalOptional: Schedule Auto Approval (optional)
+  approverInputsOptional: Approver Inputs (optional)
   addApproverInputs: Add Approver Inputs
+  autoApproveDeadline: Enter the auto approve deadline
+  autoApproveLabel: Auto Approve
   execution:
     inputsTitle: Approval inputs
     statusMsg: '{{ count }} of {{ total }} approvals complete'
@@ -138,6 +142,8 @@ approvalStep:
     minimumCountOne: 'Minimum count cannot be less than one.'
     minimumCountDecimal: 'Minimum count cannot be decimal value.'
     minimumCountRequired: 'Minimum count is required.'
+    autoApproveScheduleTimeout: 'Auto approve schedule should not be beyond timeout'
+    autoApproveScheduleCurrentTime: 'Auto approve schedule should be greater than 15 minutes with respect to current time'
   status:
     APPROVE: Approved
     REJECT: Rejected
@@ -647,7 +653,8 @@ execution:
     abortExecution: 'Warning: Abort command will not clean up any resources created during execution so far. Please mark the stage as failed if you would like to clean up and revert back to the old state.'
     abortTitle: Abort Execution?
     markAsFailedTitle: Mark stage as failed?
-    markAsFailedConfirmation: Are you sure you want to mark this stage as failed? Doing so will mark the stage as failed and trigger the respective failure strategy.
+    markAsFailedConfirmation: 'Are you sure you want to mark this stage as failed?'
+    markAsFailedWarningText: 'By doing so, the respective failure strategy will be initiated (if defined).'
 resourceConstraints:
   title: Resource Constraint
   infoText: You have {{executioncount}} Pipeline {{executiontext}} queued for this {{infraEntityText}}. Only one execution on the same {{infraEntityText}} is allowed at a time.
@@ -732,6 +739,10 @@ duration: Duration
 ticketStatus: Current status
 and: '{{ $.common.andCaps }}'
 gitDetails: git details
+editGitDetails: Edit Git Details
+editGitDetailsTitle: Edit Git Details for the {{entity}}
+editingGitDetails: Editing Git Details
+editGitDetailsSuccess: Git Details is updated successfully.
 runtimeInputs: Runtime Inputs
 approveOrReject: Approve or Reject
 jenkinsBuild: Jenkins Builds
@@ -750,7 +761,7 @@ packageTypePlaceholder: Select Package Type
 pipelineInputPanel:
   noRuntimeInputs: 'No Runtime Inputs'
   automaticallyExtractedFromText: Automatically extracted from event payload
-  selectedExisitingOrProvide: 'Select an existing Input Set or provide new set of values'
+  useExisitingInputSets: 'Use existing Input Sets'
   existing: Use Existing Input Sets
   provide: Provide Values
   whatAreInputsets: What are Input Sets?
@@ -912,6 +923,7 @@ inputSets:
   inputSetUpdated: Input Set "{{name}}" updated
   overlayISUpdated: Overlay Input Set "{{name}}" updated
   inputSetApplied: Input Set(s) applied successfully
+  lastApplied: 'Last Applied: '
 provisionerSteps: Provisioner Steps
 addStage:
   title: Select Stage Type
@@ -1077,8 +1089,18 @@ moveStage:
   description: 'Propagation is set up between this stage and another stage. Moving the parent/child stage out of sequence resets any propagated settings to their defaults. Do you want to continue?'
 verification:
   currentTest: Current test
-  testsRan: Tests ran
+  testsRan: Tests ran on
+  baselineMessages:
+    passedWithNoBaseline: Verification passed with no data, as no baseline data found for comparison.
+    failed: Verification failed by comparing with the baseline data.
+    expired: 'Baseline data expired on {{date}} and the verification was carried out without baseline data.'
+    passed: Verification passed by comparing with the baseline data.
+    pinModalTitle: Pin Baseline Verification
+    pinModalMessage: An existing verification has been pinned as the baseline. If you choose to set a new verification as baseline, the current pinned verification will be unpinned. Are you sure you want to proceed?
+    pinConfirmationButtonText: Yes, Pin baseline verification
   baselineTest: Baseline test
+  pinBaseline: Pin baseline
+  unpinBaseline: Unpin baseline
   metricsInViolation: Metrics in violation
   logClustersInViolation: Log Clusters in violation
   errorClustersInViolation: Error Clusters in violation
@@ -1292,6 +1314,9 @@ stepDescription:
   TerraformCloudRun: Trigger a run in a Terraform Cloud Workspace.
   TerraformCloudRollback: Trigger a rollback of the latest run on your Terraform Cloud Workspace.
   SscaOrchestration: Orchestrate SBOM generation for your artifacts and repository
+  AwsSamDeploy: Deploy an AWS SAM function.
+  AwsSamBuild: Build an AWS SAM function.
+  AwsSamDownloadManifests: Download manifests using this step.
   SscaEnforcement: Enforce policies based on your SBOM by Allow list/Deny list
 
 executionStrategy:
@@ -1337,7 +1362,7 @@ executionStrategy:
       description: A blank slate for custom processes. You can use any combination of steps. Only recommended for advanced users.
       learnMoreLink: https://developer.harness.io/docs/continuous-delivery/manage-deployments/deployment-concepts/
     basic:
-      description: In a Basic deployment, all nodes within a single environment are replaced at the same time with new nodes containing the new service/artifact version.Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
+      description: In a Basic deployment, all nodes(pods, instances, etc) within a single environment are replaced at the same time with new nodes containing the new service/artifact version. Basic deployments are useful for experiments, learning Harness, and any non-mission critical workflows.
     common:
       steps:
         step1:
@@ -1503,6 +1528,7 @@ serviceDataDeleteWarningText: Changing deployment type will delete existing serv
 envTypeChangeServiceDataDeleteWarningText: Changing environment type will delete existing service data like artifacts, manifests etc. Do you still want to proceed?
 errorFramework:
   pipelineErrorsTitle: 'Pipeline cannot be saved because {{fields}} further configuration.'
+  templateErrorsTitle: 'Template cannot be saved because {{fields}} further configuration.'
   fixErrors: Fix Errors
   fixStep: Fix Step
   fixStage: Fix Stage
@@ -1708,6 +1734,7 @@ viewFreeze: View freeze details
 executionTriggeredBy: This execution was triggered by
 triggeredBy: Triggered by {{triggerType}}
 manuallyTriggered: This execution was triggered manually
+rollbackExecution: This execution was a rollback to a previous version
 triggeredByThirdParty: Triggered by a third party system
 triggeredByCron: Triggered on {{start}} by cron {{triggeredBy}}
 configureArtifactSource: Configure Artifact Source
@@ -1834,4 +1861,9 @@ pipelineExecutionEventData:
   stageIdentifier: Stage Identifier
   stageType: Stage Type
 retried: retried
+required: Required
 stageExecutedBefore: This stage has been re-executed.
+enableContainerBasedExecution: Enable container based execution
+artifactViolationDetails: Artifact violation details
+violationDetails: Violation details
+supplier: Supplier

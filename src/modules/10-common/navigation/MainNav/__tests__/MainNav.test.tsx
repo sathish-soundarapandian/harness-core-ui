@@ -108,7 +108,6 @@ describe('main nav tests', () => {
     const { queryByText } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
           NG_DASHBOARDS: true
         }}
       >
@@ -123,7 +122,6 @@ describe('main nav tests', () => {
     const { container } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
       >
@@ -151,7 +149,6 @@ describe('main nav tests', () => {
     const { queryByText } = render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
         defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } } }}
@@ -182,7 +179,6 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: false,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
         defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } } }}
@@ -212,7 +208,6 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
       >
@@ -244,7 +239,6 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CING_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
         defaultLicenseStoreValues={{

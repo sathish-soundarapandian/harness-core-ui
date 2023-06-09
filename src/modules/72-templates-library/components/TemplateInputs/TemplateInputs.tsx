@@ -69,6 +69,7 @@ export interface TemplateInputsProps {
     unknown
   >
   resolvedPipelineFetchParams?: ResolvedPipelineFetchParams
+  shouldUtilizeFullWidth?: boolean
 }
 
 type TemplateInputsFormData =
@@ -83,7 +84,8 @@ type TemplateInputsFormData =
 export const TemplateInputs: React.FC<TemplateInputsProps> = ({
   template,
   templateInputSetFetchParams,
-  resolvedPipelineFetchParams
+  resolvedPipelineFetchParams,
+  shouldUtilizeFullWidth
 }) => {
   const templateSpec =
     parse((template as TemplateSummaryResponse).yaml || '')?.template?.spec ||
@@ -246,6 +248,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({
                             allowableTypes={allowableTypes}
                             readonly
                             path={'data'}
+                            shouldUtilizeFullWidth={shouldUtilizeFullWidth}
                           />
                         </Container>
                       )}

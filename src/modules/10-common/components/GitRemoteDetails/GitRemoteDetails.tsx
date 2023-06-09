@@ -20,6 +20,7 @@ export interface GitRemoteDetailsProps {
   branch?: string
   onBranchChange?: (selectedFilter: { branch: string }, defaultSelected?: boolean) => void
   branchCustomClassName?: string
+  customClassName?: string
 
   flags?: {
     borderless?: boolean
@@ -53,7 +54,7 @@ const GitRemoteDetails = ({
   branch = '',
   onBranchChange,
   branchCustomClassName,
-
+  customClassName,
   flags: { borderless = true, showRepo = true, showBranch = true, normalInputStyle = false, readOnly = false } = {}
 }: GitRemoteDetailsProps): React.ReactElement => {
   return (
@@ -66,6 +67,7 @@ const GitRemoteDetails = ({
             margin={{
               right: 'small'
             }}
+            className={customClassName}
           />
           <Text
             tooltip={filePath && getTooltipContent(filePath, fileUrl)}
@@ -76,11 +78,11 @@ const GitRemoteDetails = ({
             }}
             lineClamp={1}
             alwaysShowTooltip
-            className={css.repoDetails}
+            className={cx(css.repoDetails, customClassName)}
           >
             {repoName}
           </Text>
-          {showBranch && <span className={css.separator}></span>}
+          {showBranch && <span className={cx(css.separator, customClassName)}></span>}
         </>
       )}
       {showBranch && (
@@ -90,6 +92,7 @@ const GitRemoteDetails = ({
           margin={{
             right: 'small'
           }}
+          className={customClassName}
         />
       )}
       {showBranch ? (

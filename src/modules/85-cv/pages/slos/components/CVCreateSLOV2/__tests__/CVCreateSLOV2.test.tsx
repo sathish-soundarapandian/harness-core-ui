@@ -796,7 +796,7 @@ describe('CVCreateSloV2', () => {
 
   test('should validate getCompositeSLOCustomValidation', () => {
     expect(getCompositeSLOCustomValidation(serviceLevelObjectiveV2 as any, str => str, true)).toEqual({
-      evaluationType: 'cv.required'
+      evaluationType: 'pipeline.required'
     })
     expect(
       getCompositeSLOCustomValidation(
@@ -1048,7 +1048,7 @@ describe('Simple SLO V2', () => {
         } as SLOV2Form,
         str => str
       )
-    ).toEqual({ considerAllConsecutiveMinutesFromStartAsBad: 'cv.required' })
+    ).toEqual({ considerAllConsecutiveMinutesFromStartAsBad: 'pipeline.required' })
     expect(
       getSimpleSLOCustomValidation(
         {
@@ -1058,7 +1058,7 @@ describe('Simple SLO V2', () => {
         } as SLOV2Form,
         str => str
       )
-    ).toEqual({ considerConsecutiveMinutes: 'cv.required' })
+    ).toEqual({ considerConsecutiveMinutes: 'pipeline.required' })
     expect(
       getSimpleSLOCustomValidation(
         {

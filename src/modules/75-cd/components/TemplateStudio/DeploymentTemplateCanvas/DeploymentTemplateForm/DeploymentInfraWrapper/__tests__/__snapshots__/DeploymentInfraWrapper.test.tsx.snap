@@ -1179,12 +1179,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                         </div>
                       </div>
                     </div>
-                    <span
-                      class="valueString"
-                      data-testid="variables[0].type"
+                    <div
+                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
                     >
-                      string
-                    </span>
+                      <span
+                        class="valueString"
+                        data-testid="variables[0].type"
+                      >
+                        string
+                      </span>
+                    </div>
                     <p
                       class="StyledProps--font Text--lineclamp StyledProps--main"
                       style="--text-line-clamp: 1;"
@@ -1917,12 +1921,16 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                         </div>
                       </div>
                     </div>
-                    <span
-                      class="valueString"
-                      data-testid="variables[0].type"
+                    <div
+                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
                     >
-                      string
-                    </span>
+                      <span
+                        class="valueString"
+                        data-testid="variables[0].type"
+                      >
+                        string
+                      </span>
+                    </div>
                     <p
                       class="StyledProps--font Text--lineclamp StyledProps--main"
                       style="--text-line-clamp: 1;"

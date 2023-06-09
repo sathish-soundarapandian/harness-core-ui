@@ -343,3 +343,44 @@ export const userGroupsAggregate: ResponsePageUserGroupAggregateDTO = {
   metaData: undefined,
   correlationId: '0f832df3-d742-4689-950b-f30573d1db5a'
 }
+
+export const getScheduleAutoapprovalRuntimeProps = () => ({
+  initialValues: {
+    spec: {
+      approvalMessage: '',
+      includePipelineExecutionHistory: false,
+      approverInputs: [],
+      approvers: {
+        userGroups: [],
+        minimumCount: 0,
+        disallowPipelineExecutor: false
+      },
+      autoApproval: {
+        action: 'APPROVE',
+        comments: '',
+        scheduledDeadline: { time: '', timeZone: 'UTC' }
+      }
+    }
+  },
+  inputSetData: {
+    path: '/ab/',
+    template: {
+      spec: {
+        approvalMessage: '',
+        includePipelineExecutionHistory: RUNTIME_INPUT_VALUE,
+        approverInputs: RUNTIME_INPUT_VALUE,
+        approvers: {
+          userGroups: RUNTIME_INPUT_VALUE,
+          minimumCount: RUNTIME_INPUT_VALUE,
+          disallowPipelineExecutor: RUNTIME_INPUT_VALUE
+        },
+        autoApproval: {
+          action: 'APPROVE',
+          comments: RUNTIME_INPUT_VALUE,
+          scheduledDeadline: { time: RUNTIME_INPUT_VALUE, timeZone: 'UTC' }
+        }
+      }
+    }
+  },
+  onUpdate: jest.fn()
+})

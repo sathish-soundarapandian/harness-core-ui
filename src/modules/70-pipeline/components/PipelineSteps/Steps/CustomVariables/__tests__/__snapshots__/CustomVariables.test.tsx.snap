@@ -303,12 +303,16 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
           </div>
         </div>
       </div>
-      <span
-        class="valueString"
-        data-testid="variables[0].type"
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
       >
-        string
-      </span>
+        <span
+          class="valueString"
+          data-testid="variables[0].type"
+        >
+          string
+        </span>
+      </div>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main"
         style="--text-line-clamp: 1;"
@@ -520,12 +524,16 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
           </div>
         </div>
       </div>
-      <span
-        class="valueString"
-        data-testid="variables[1].type"
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
       >
-        number
-      </span>
+        <span
+          class="valueString"
+          data-testid="variables[1].type"
+        >
+          number
+        </span>
+      </div>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main"
         style="--text-line-clamp: 1;"
@@ -800,12 +808,16 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
           </div>
         </div>
       </div>
-      <span
-        class="valueString"
-        data-testid="variables[0].type"
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
       >
-        string
-      </span>
+        <span
+          class="valueString"
+          data-testid="variables[0].type"
+        >
+          string
+        </span>
+      </div>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main"
         style="--text-line-clamp: 1;"
@@ -1017,12 +1029,16 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
           </div>
         </div>
       </div>
-      <span
-        class="valueString"
-        data-testid="variables[1].type"
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
       >
-        number
-      </span>
+        <span
+          class="valueString"
+          data-testid="variables[1].type"
+        >
+          number
+        </span>
+      </div>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main"
         style="--text-line-clamp: 1;"
@@ -1234,12 +1250,16 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
           </div>
         </div>
       </div>
-      <span
-        class="valueString"
-        data-testid="variables[2].type"
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
       >
-        secretType
-      </span>
+        <span
+          class="valueString"
+          data-testid="variables[2].type"
+        >
+          secretType
+        </span>
+      </div>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main"
         style="--text-line-clamp: 1;"
@@ -1608,12 +1628,16 @@ exports[`Custom Variables should render variables 1`] = `
           </div>
         </div>
       </div>
-      <span
-        class="valueString"
-        data-testid="variables[0].type"
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
       >
-        string
-      </span>
+        <span
+          class="valueString"
+          data-testid="variables[0].type"
+        >
+          string
+        </span>
+      </div>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main"
         style="--text-line-clamp: 1;"
@@ -1825,12 +1849,16 @@ exports[`Custom Variables should render variables 1`] = `
           </div>
         </div>
       </div>
-      <span
-        class="valueString"
-        data-testid="variables[1].type"
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
       >
-        number
-      </span>
+        <span
+          class="valueString"
+          data-testid="variables[1].type"
+        >
+          number
+        </span>
+      </div>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main"
         style="--text-line-clamp: 1;"
@@ -2042,12 +2070,16 @@ exports[`Custom Variables should render variables 1`] = `
           </div>
         </div>
       </div>
-      <span
-        class="valueString"
-        data-testid="variables[2].type"
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
       >
-        secretType
-      </span>
+        <span
+          class="valueString"
+          data-testid="variables[2].type"
+        >
+          secretType
+        </span>
+      </div>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main"
         style="--text-line-clamp: 1;"
@@ -2279,6 +2311,10 @@ exports[`Custom Variables should render variables 1`] = `
 exports[`Custom Variables validates input set correctly 1`] = `
 Object {
   "variables": Array [
+    Object {
+      "value": undefined,
+    },
+    undefined,
     Object {
       "value": undefined,
     },

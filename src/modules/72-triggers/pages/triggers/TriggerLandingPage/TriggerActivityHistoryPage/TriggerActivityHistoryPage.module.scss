@@ -12,3 +12,19 @@
 .table {
   padding: var(--spacing-small) var(--spacing-xlarge);
 }
+
+.notesIcon {
+  cursor: pointer;
+}
+
+.drawer {
+  :global(.bp3-drawer-header) {
+    margin: 0 !important;
+    padding-top: var(--spacing-5) !important;
+    padding-bottom: var(--spacing-5) !important;
+  }
+}
+
+.statusMessage {
+  padding-top: var(--spacing-small);
+}

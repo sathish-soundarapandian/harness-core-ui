@@ -18,7 +18,7 @@ import {
   AllowedTypes
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, defaultTo } from 'lodash-es'
+import { debounce, noop, defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -34,9 +34,11 @@ import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/Depl
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ServerlessInfraTypes } from '@pipeline/utils/stageHelpers'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
-import type { ConnectorInfoDTO } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ExecutionElementConfig } from 'services/cd-ng'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import { getValidationSchema, getValidationSchemaWithRegion } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ServerlessInfraSpec.module.scss'
@@ -51,6 +53,7 @@ export interface ServerlessSpecEditableProps {
   variablesData: ServerlessInfraTypes
   allowableTypes: AllowedTypes
   hasRegion?: boolean
+  provisioner?: ExecutionElementConfig['steps']
   formInfo: {
     formName: string
     type: ConnectorInfoDTO['type']
@@ -80,7 +83,6 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
-
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
 
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
@@ -99,7 +101,8 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
           const data: Partial<ServerlessInfraTypes> = {
             connectorRef: undefined,
             stage: value.stage === '' ? undefined : value.stage,
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value?.provisioner || undefined
           }
           if (hasRegion) {
             data.region = value.region === '' ? undefined : value.region
@@ -118,6 +121,9 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <ProvisionerField name="provisioner" isReadonly />
+              </Layout.Horizontal>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"
@@ -257,7 +263,8 @@ export const ServerlessInputForm: React.FC<ServerlessSpecEditableProps & { path:
   path,
   allowableTypes,
   hasRegion,
-  formInfo
+  formInfo,
+  provisioner
 }) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -267,9 +274,15 @@ export const ServerlessInputForm: React.FC<ServerlessSpecEditableProps & { path:
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
 
   return (
     <Layout.Vertical spacing="small">
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField name={provisionerName} path={path} provisioners={provisioner} />
+        </div>
+      )}
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

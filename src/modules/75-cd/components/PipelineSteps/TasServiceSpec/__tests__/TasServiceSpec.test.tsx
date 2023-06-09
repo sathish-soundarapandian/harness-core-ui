@@ -35,6 +35,7 @@ jest.mock('services/cd-ng', () => ({
     }
   }),
   useGetBuildDetailsForDockerWithYaml: () => mockDockerTagsCallResponse,
+  useGetLastSuccessfulBuildForDocker: () => mockDockerTagsCallResponse,
   useGetBuildDetailsForDocker: jest.fn().mockImplementation(() => {
     return { data: { data: { buildDetailsList: [] } }, refetch: jest.fn(), error: null }
   }),

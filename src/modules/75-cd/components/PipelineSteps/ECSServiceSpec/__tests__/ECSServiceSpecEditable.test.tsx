@@ -50,7 +50,7 @@ const fetchConnector = jest.fn().mockReturnValue(connectorData)
 const fetchConnectorList = (): Promise<unknown> => Promise.resolve(connectorsData)
 
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectorList })),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorData, refetch: fetchConnector, loading: false }
@@ -107,23 +107,13 @@ const testEcsManifestLastStep = async (portal: HTMLElement): Promise<void> => {
   userEvent.click(submitButton)
 }
 
-const testUpdateEcsTaskDefinitionManifest = async (CDS_SERVICE_CONFIG_LAST_STEP: boolean): Promise<void> => {
+const testUpdateEcsTaskDefinitionManifest = async (): Promise<void> => {
   const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
   const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
 
-  if (CDS_SERVICE_CONFIG_LAST_STEP) {
-    // Check if second step IS NOT displayed
-    const Git = queryByValueAttribute('Git')
-    await waitFor(() => expect(Git).toBeNull()) // Because upon editing manifest, directly third step will be shown
-  } else {
-    // Check if Git tile is checked and click Continue
-    const Git = queryByValueAttribute('Git')
-    await waitFor(() => expect(Git).not.toBeNull())
-    expect(Git).toBeChecked()
-    const secondStepContinueButton = getElementByText(portal, 'continue').parentElement as HTMLElement
-    await waitFor(() => expect(secondStepContinueButton).not.toBeDisabled())
-    userEvent.click(secondStepContinueButton)
-  }
+  // Check if second step IS NOT displayed
+  const Git = queryByValueAttribute('Git')
+  await waitFor(() => expect(Git).toBeNull()) // Because upon editing manifest, directly third step will be shown
 
   // Change fields in the last step and submit manifest
   await testEcsManifestLastStep(portal)
@@ -357,7 +347,7 @@ describe('ECSServiceSpecEditable tests', () => {
     expect(getByText('ScalableTarget_Manifest')).toBeInTheDocument()
   })
 
-  test('update EcsTaskDefinition manifest when CDS_SERVICE_CONFIG_LAST_STEP is OFF', async () => {
+  test('update EcsTaskDefinition manifest', async () => {
     const updateStage = jest.fn()
     pipelineContextECSManifests.updateStage = updateStage
 
@@ -400,61 +390,7 @@ describe('ECSServiceSpecEditable tests', () => {
     expect(taskDefinitionManifestEditButton).toBeInTheDocument()
     userEvent.click(taskDefinitionManifestEditButton)
 
-    await testUpdateEcsTaskDefinitionManifest(false)
-
-    await waitFor(() => {
-      expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsTaskDefinitionManifestUpdate)
-    })
-  })
-
-  test('update EcsTaskDefinition manifest when CDS_SERVICE_CONFIG_LAST_STEP is ON', async () => {
-    const updateStage = jest.fn()
-    pipelineContextECSManifests.updateStage = updateStage
-
-    const { getByText, container, getByTestId } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-        defaultFeatureFlagValues={{ CDS_SERVICE_CONFIG_LAST_STEP: true }}
-      >
-        <PipelineContext.Provider value={pipelineContextECSManifests}>
-          <ECSServiceSpecEditable
-            initialValues={{
-              isReadonlyServiceMode: false
-            }}
-            readonly={false}
-          />
-        </PipelineContext.Provider>
-      </TestWrapper>
-    )
-
-    // Click Edit button for Task Definition manifest
-    const taskDefinitionManifestSection = getByTestId('task-definition-card')
-    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
-    expect(
-      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
-    ).toHaveLength(2)
-    expect(
-      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
-    ).toBeInTheDocument()
-
-    // Try moving Task Definition ARN section and check if warning appears
-    const taskDefinitionArnSectionCard = getByText('cd.serviceDashboard.taskDefinitionArn')
-    userEvent.click(taskDefinitionArnSectionCard)
-    const warningDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
-    expect(within(warningDialog).getByText('cd.changeTaskDefinitionTypeWarning')).toBeInTheDocument()
-    const cancelBtn = within(warningDialog).getByText('cancel')
-    userEvent.click(cancelBtn)
-
-    // continue with updating manifest
-    expect(getByText('TaskDefinition_Manifest')).toBeInTheDocument()
-    const editButtons = container.querySelectorAll('[data-icon="Edit"]')
-    expect(editButtons).toHaveLength(4)
-    const taskDefinitionManifestEditButton = editButtons[0]
-    expect(taskDefinitionManifestEditButton).toBeInTheDocument()
-    userEvent.click(taskDefinitionManifestEditButton)
-
-    await testUpdateEcsTaskDefinitionManifest(true)
+    await testUpdateEcsTaskDefinitionManifest()
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgEcsTaskDefinitionManifestUpdate)
@@ -598,11 +534,7 @@ describe('ECSServiceSpecEditable tests', () => {
     pipelineContextECSManifests.updateStage = updateStage
 
     const { getByText, container, getByTestId } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}
-        defaultFeatureFlagValues={{ CDS_SERVICE_CONFIG_LAST_STEP: true }}
-      >
+      <TestWrapper path={TEST_PATH} pathParams={TEST_PATH_PARAMS as unknown as Record<string, string>}>
         <PipelineContext.Provider value={pipelineContextECSManifests}>
           <ECSServiceSpecEditable
             initialValues={{
@@ -632,7 +564,7 @@ describe('ECSServiceSpecEditable tests', () => {
     expect(taskDefinitionManifestEditButton).toBeInTheDocument()
     userEvent.click(taskDefinitionManifestEditButton)
 
-    await testUpdateEcsTaskDefinitionManifest(true)
+    await testUpdateEcsTaskDefinitionManifest()
 
     await waitFor(() => {
       expect(updateStage).toHaveBeenCalledWith(updateStageArgManifestUpdateForPropagatedStage)

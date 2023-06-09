@@ -117,7 +117,8 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const onExistingProvideRadioChange = (ev: FormEvent<HTMLInputElement>): void => {
-    setExistingProvide((ev.target as HTMLInputElement).value as ExistingProvide)
+    const existingProvideValue = ev.currentTarget.checked ? 'existing' : 'provide'
+    setExistingProvide(existingProvideValue)
   }
 
   const noRuntimeInputs = checkIfRuntimeInputsNotPresent()
@@ -151,49 +152,41 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
           </Layout.Horizontal>
         ) : (
           <>
-            {canSelectInputSets ? (
-              <>
-                {executionView ? null : (
-                  <Layout.Vertical
-                    className={css.pipelineHeader}
-                    padding={{ top: 'xlarge', left: 'xlarge', right: 'xlarge' }}
-                  >
-                    <SelectExistingInputsOrProvideNew
-                      existingProvide={existingProvide}
-                      onExistingProvideRadioChange={onExistingProvideRadioChange}
-                    />
-
-                    {showInputSetSelector() ? (
-                      <GitSyncStoreProvider>
-                        <InputSetSelector
-                          pipelineIdentifier={pipelineIdentifier}
-                          onChange={inputsets => {
-                            setSelectedInputSets(inputsets)
-                          }}
-                          value={selectedInputSets}
-                          pipelineGitDetails={get(pipelineResponse, 'data.gitDetails')}
-                          invalidInputSetReferences={invalidInputSetReferences}
-                          loadingMergeInputSets={loadingInputSets}
-                          onReconcile={onReconcile}
-                          reRunInputSetYaml={reRunInputSetYaml}
-                        />
-                      </GitSyncStoreProvider>
-                    ) : null}
-                  </Layout.Vertical>
-                )}
-              </>
-            ) : null}
+            <Layout.Vertical
+              className={css.pipelineHeader}
+              padding={{ top: 'xlarge', left: 'xlarge', right: 'xlarge' }}
+            >
+              <SelectExistingInputsOrProvideNew
+                existingProvide={existingProvide}
+                onExistingProvideRadioChange={onExistingProvideRadioChange}
+                hasInputSets={canSelectInputSets}
+              />
+              {!executionView && canSelectInputSets && showInputSetSelector() ? (
+                <GitSyncStoreProvider>
+                  <InputSetSelector
+                    pipelineIdentifier={pipelineIdentifier}
+                    onChange={inputsets => {
+                      setSelectedInputSets(inputsets)
+                    }}
+                    value={selectedInputSets}
+                    pipelineGitDetails={get(pipelineResponse, 'data.gitDetails')}
+                    invalidInputSetReferences={invalidInputSetReferences}
+                    loadingMergeInputSets={loadingInputSets}
+                    onReconcile={onReconcile}
+                    reRunInputSetYaml={reRunInputSetYaml}
+                  />
+                </GitSyncStoreProvider>
+              ) : null}
+            </Layout.Vertical>
             {showPipelineInputSetForm() ? (
               <PipelineInputSetFormWrapper
                 executionView={executionView}
-                existingProvide={existingProvide}
                 currentPipeline={currentPipeline}
                 executionIdentifier={executionIdentifier}
                 hasRuntimeInputs={hasRuntimeInputs}
                 template={template}
                 resolvedPipeline={resolvedPipeline}
                 selectedStageData={selectedStageData}
-                maybeContainerClassOverride={canSelectInputSets ? '' : css.noInputSetSelectionRunPipeline}
               />
             ) : null}
             {showVoidPipelineInputSetForm() ? <div className={css.noPipelineInputSetForm} /> : null}
@@ -206,7 +199,6 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
 
 export interface PipelineInputSetFormWrapperProps {
   executionView?: boolean
-  existingProvide: ExistingProvide
   executionIdentifier?: string
   currentPipeline?: {
     pipeline?: PipelineInfoConfig
@@ -221,20 +213,20 @@ export interface PipelineInputSetFormWrapperProps {
 function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): React.ReactElement | null {
   const {
     executionView,
-    existingProvide,
     currentPipeline,
     hasRuntimeInputs,
     template,
     executionIdentifier,
     resolvedPipeline,
-    selectedStageData,
-    maybeContainerClassOverride
+    selectedStageData
   } = props
 
   if (currentPipeline?.pipeline && resolvedPipeline && (hasRuntimeInputs || executionView)) {
     return (
       <>
-        {existingProvide === 'existing' ? <div className={css.divider} /> : null}
+        <div className={css.dividerWrapper}>
+          <div className={css.divider} />
+        </div>
         <PipelineInputSetForm
           originalPipeline={resolvedPipeline}
           template={template}
@@ -243,9 +235,7 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
           viewType={StepViewType.DeploymentForm}
           isRunPipelineForm
           executionIdentifier={executionIdentifier}
-          maybeContainerClass={
-            existingProvide === 'provide' ? cx(css.inputSetFormRunPipeline, maybeContainerClassOverride) : ''
-          }
+          maybeContainerClass={css.inputSetFormRunPipeline}
           selectedStageData={selectedStageData}
           disableRuntimeInputConfigureOptions
         />

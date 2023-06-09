@@ -41,6 +41,7 @@ import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHa
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import routes from '@common/RouteDefinitions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isNewTemplate } from '../TemplateStudioUtils'
 import css from './SaveTemplatePopover.module.scss'
 
@@ -77,13 +78,17 @@ function SaveTemplatePopover(
     updateTemplate
   } = React.useContext(TemplateContext)
   const { getString } = useStrings()
+  const { CDS_TEMPLATE_ERROR_HANDLING } = useFeatureFlags()
   const { accountId, templateIdentifier, templateType, module } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
   const [modalProps, setModalProps] = React.useState<ModalProps>()
   const { getComments } = useCommentModal()
   const { showSuccess, showError, clear } = useToaster()
-  const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.TEMPLATE })
+  const { openTemplateReconcileErrorsModal, openSelectedTemplateErrorsModal } = useTemplateErrors({
+    entity: TemplateErrorEntity.TEMPLATE,
+    templateData: template
+  })
   const [loading, setLoading] = React.useState<boolean>()
   const templateConfigModalHandler = React.useRef<TemplateConfigModalHandle>(null)
   const { getRBACErrorMessage } = useRBACError()
@@ -230,7 +235,7 @@ function SaveTemplatePopover(
   const onError = (error: any, comment?: string) => {
     if (!isEmpty((error as any)?.metadata?.errorNodeSummary)) {
       const isEdit = !isNewTemplate(templateIdentifier)
-      openTemplateErrorsModal({
+      openTemplateReconcileErrorsModal({
         error: (error as any)?.metadata?.errorNodeSummary,
         originalYaml: yamlStringify(
           sanitize({ template }, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
@@ -248,7 +253,11 @@ function SaveTemplatePopover(
       })
     } else {
       clear()
-      showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
+      {
+        CDS_TEMPLATE_ERROR_HANDLING
+          ? openSelectedTemplateErrorsModal?.((error as any)?.metadata?.schemaErrors)
+          : showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
+      }
     }
   }
 
@@ -312,7 +321,7 @@ function SaveTemplatePopover(
 
   const onSaveAsNewFailure = (error: any, latestTemplate: NGTemplateInfoConfig) => {
     if (!isEmpty((error as any)?.metadata?.errorNodeSummary)) {
-      openTemplateErrorsModal({
+      openTemplateReconcileErrorsModal({
         error: (error as any)?.metadata?.errorNodeSummary,
         originalYaml: yamlStringify(
           sanitize(

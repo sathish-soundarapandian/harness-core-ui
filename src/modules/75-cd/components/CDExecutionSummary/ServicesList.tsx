@@ -60,7 +60,8 @@ export function ServicesList({ services, limit = 2, className }: ServicesListPro
                     ...(serviceScope != Scope.ACCOUNT && { orgIdentifier: orgIdentifier }),
                     ...(serviceScope === Scope.PROJECT && { projectIdentifier: projectIdentifier }),
                     serviceId: getIdentifierFromScopedRef(defaultTo(identifier, '')),
-                    module
+                    module,
+                    accountRoutePlacement: 'settings'
                   })}`}
                 >
                   {service.displayName}

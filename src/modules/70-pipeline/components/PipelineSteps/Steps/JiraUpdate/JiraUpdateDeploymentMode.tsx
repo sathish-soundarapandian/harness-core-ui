@@ -7,8 +7,17 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash-es'
-import { EXECUTION_TIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import { isEmpty, pickBy, set } from 'lodash-es'
+import { Intent } from '@blueprintjs/core'
+import {
+  EXECUTION_TIME_INPUT_VALUE,
+  FormError,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  PageSpinner,
+  SelectOption,
+  Text
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -20,7 +29,11 @@ import { useQueryParams } from '@common/hooks'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { JiraStatusNG, useGetJiraStatuses } from 'services/cd-ng'
+import { JiraFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/JiraFieldsRenderer'
+import type { JiraFieldNGWithValue } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/types'
+import { getInitialValueForSelectedField } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/helper'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { JiraFieldNG, JiraStatusNG, useGetJiraIssueUpdateMetadata, useGetJiraStatuses } from 'services/cd-ng'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
@@ -38,7 +51,11 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
     refetchStatuses,
     statusFetchError,
     allowableTypes,
-    stepViewType
+    stepViewType,
+    refetchIssueUpdateMetadata,
+    issueUpdateMetadataResponse,
+    issueUpdateMetadataLoading,
+    issueUpdateMetadataFetchError
   } = formContentProps
   const template = inputSetData?.template
   const path = inputSetData?.path
@@ -48,6 +65,7 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
 
+  const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const commonParams = {
@@ -63,7 +81,13 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
       ? formContentProps?.formik?.values?.spec?.connectorRef
       : getGenuineValue(initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string))
 
+  const issueKeyFixedValue =
+    template?.spec?.issueKey === EXECUTION_TIME_INPUT_VALUE
+      ? formContentProps?.formik?.values?.spec?.issueKey
+      : initialValues.spec?.issueKey || inputSetData?.allValues?.spec?.issueKey
+
   const [statusValue, setStatusValue] = useState<SelectOption>()
+  const [additionalFields, setAdditionalFields] = React.useState<JiraFieldNGWithValue[]>([])
 
   useEffect(() => {
     // If connector value changes in form, fetch projects
@@ -77,6 +101,18 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectorRefFixedValue])
+
+  useEffect(() => {
+    if (connectorRefFixedValue && issueKeyFixedValue) {
+      refetchIssueUpdateMetadata({
+        queryParams: {
+          ...commonParams,
+          connectorRef: connectorRefFixedValue.toString(),
+          issueKey: issueKeyFixedValue.toString()
+        }
+      })
+    }
+  }, [connectorRefFixedValue, issueKeyFixedValue])
 
   useEffect(() => {
     // get status by connector ref response
@@ -95,6 +131,34 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusResponse?.data])
+
+  useEffect(() => {
+    if (issueKeyFixedValue && issueUpdateMetadataResponse?.data?.fields) {
+      const issueUpdateMetadataFieldsObj = issueUpdateMetadataResponse!.data!.fields
+      const selectedFieldsValue = initialValues.spec?.fields || inputSetData?.allValues?.spec?.fields
+
+      const additionallyConfiguredJiraFields = selectedFieldsValue.map((fieldValueObj, _index) => {
+        const fieldName = fieldValueObj.name
+        let matchedField = {} as JiraFieldNG
+        pickBy(issueUpdateMetadataFieldsObj, (fieldData, fieldKey) => {
+          if (fieldKey === fieldName) {
+            matchedField = fieldData
+            if (matchedField) {
+              const savedValueForThisField = getInitialValueForSelectedField(selectedFieldsValue, matchedField)
+              set(
+                formContentProps?.formik?.initialValues,
+                `${prefix}spec.fields[${_index}].value`,
+                !isEmpty(matchedField.allowedValues) && !savedValueForThisField ? [] : savedValueForThisField
+              )
+            }
+          }
+        })
+        return matchedField
+      })
+
+      setAdditionalFields(additionallyConfiguredJiraFields as JiraFieldNGWithValue[])
+    }
+  }, [issueKeyFixedValue, issueUpdateMetadataResponse])
 
   return (
     <React.Fragment>
@@ -204,24 +268,35 @@ function FormContent(formContentProps: JiraUpdateDeploymentModeFormContentInterf
         />
       ) : null}
 
-      {template?.spec?.fields?.map((field, index) => {
-        return (
-          <TextFieldInputSetView
-            label={field?.name}
-            key={field.name}
-            disabled={isApprovalStepFieldDisabled(readonly)}
-            name={`${prefix}spec.fields[${index}].value`}
-            placeholder={field.name}
-            className={css.deploymentViewFieldWidth}
-            multiTextInputProps={{
-              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-              expressions
-            }}
-            fieldPath={`spec.fields[${index}].value`}
-            template={template}
-          />
-        )
-      })}
+      {issueUpdateMetadataLoading ? (
+        <PageSpinner message={getString('pipeline.jiraCreateStep.fetchingFields')} className={css.fetching} />
+      ) : (
+        <JiraFieldsRenderer
+          fieldPrefix={prefix}
+          deploymentMode
+          selectedFields={additionalFields}
+          readonly={readonly}
+          formik={formContentProps?.formik}
+          connectorRef={connectorRefFixedValue?.toString()}
+          template={template}
+        />
+      )}
+      {issueUpdateMetadataFetchError && (
+        <FormError
+          errorMessage={
+            <Text
+              lineClamp={1}
+              width={350}
+              margin={{ bottom: 'medium' }}
+              intent={Intent.DANGER}
+              tooltipProps={{ isDark: true, popoverClassName: css.tooltip }}
+            >
+              {getRBACErrorMessage(issueUpdateMetadataFetchError)}
+            </Text>
+          }
+          name="issueUpdateMetadataDeploymentModeError"
+        />
+      )}
     </React.Fragment>
   )
 }
@@ -252,6 +327,20 @@ export default function JiraUpdateDeploymentMode(props: JiraUpdateDeploymentMode
     }
   })
 
+  const {
+    refetch: refetchIssueUpdateMetadata,
+    data: issueUpdateMetadataResponse,
+    error: issueUpdateMetadataFetchError,
+    loading: issueUpdateMetadataLoading
+  } = useGetJiraIssueUpdateMetadata({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: '',
+      issueKey: ''
+    }
+  })
+
   return (
     <FormContent
       {...props}
@@ -259,6 +348,10 @@ export default function JiraUpdateDeploymentMode(props: JiraUpdateDeploymentMode
       statusResponse={statusResponse}
       statusFetchError={statusFetchError}
       fetchingStatuses={fetchingStatuses}
+      refetchIssueUpdateMetadata={refetchIssueUpdateMetadata}
+      issueUpdateMetadataResponse={issueUpdateMetadataResponse}
+      issueUpdateMetadataFetchError={issueUpdateMetadataFetchError}
+      issueUpdateMetadataLoading={issueUpdateMetadataLoading}
     />
   )
 }

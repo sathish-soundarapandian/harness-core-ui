@@ -18,66 +18,23 @@ import { useDeepCompareEffect } from '@common/hooks'
 import { isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { BaseReactComponentProps, NodeType, PipelineGraphState, PipelineGraphType } from '../../types'
-import {
-  COLLAPSED_MATRIX_NODE_LENGTH,
-  DEFAULT_MATRIX_PARALLELISM,
-  getMatrixHeight,
-  getPositionOfAddIcon,
-  LayoutStyles,
-  MAX_ALLOWED_MATRIX_COLLAPSED_NODES
-} from '../utils'
+import { COLLAPSED_MATRIX_NODE_LENGTH, getPositionOfAddIcon, MAX_ALLOWED_MATRIX_COLLAPSED_NODES } from '../utils'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
 import { getPipelineGraphData } from '../../PipelineGraph/PipelineGraphUtils'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import { NodeStatusIndicator } from '../../NodeStatusIndicator/NodeStatusIndicator'
-import { useNodeDimensionContext } from '../NodeDimensionStore'
 import css from './MatrixNode.module.scss'
 import defaultCss from '../DefaultNode/DefaultNode.module.scss'
-
-const getCalculatedStyles = (data: PipelineGraphState[], parallelism: number, showAllNodes?: boolean): LayoutStyles => {
-  const nodeWidth = data?.[0]?.nodeType === StageType.APPROVAL ? 85 : 120 // (125- text with lineClamp,90-PipelineStage), 132(Diamond) + 40(padding)
-  const nodeHeight = 139 // 64(node) + 55/50(text)+ 25(gap)
-  parallelism = !parallelism ? 0 : (parallelism === 1 ? data.length : parallelism) || DEFAULT_MATRIX_PARALLELISM // parallelism strategy (undefined)- setting to default 0
-  if (showAllNodes) {
-    const maxChildLength = defaultTo(data?.length, 0)
-    const finalHeight = getMatrixHeight(nodeHeight, maxChildLength, parallelism, true)
-    let finalWidth =
-      nodeWidth * (parallelism === 0 ? 1 : Math.min(parallelism, (data || []).length)) + ((parallelism || 1) - 1) * 60 // colGap
-    if (parallelism === 0) {
-      finalWidth += 30
-    }
-    return {
-      height: finalHeight,
-      width: finalWidth
-    }
-  } else {
-    const updatedParallelism = Math.min(parallelism, MAX_ALLOWED_MATRIX_COLLAPSED_NODES) || 1
-    const maxChildLength = Math.min(data.length, COLLAPSED_MATRIX_NODE_LENGTH)
-    const finalHeight = getMatrixHeight(nodeHeight, maxChildLength, updatedParallelism, false)
-    let finalWidth =
-      nodeWidth * (parallelism === 0 ? 1 : Math.min(updatedParallelism, (data || []).length)) +
-      (updatedParallelism - 1) * 60 // colGap
-    if (parallelism === 0) {
-      finalWidth += 30
-    }
-    return {
-      height: finalHeight,
-      width: finalWidth
-    }
-  }
-}
 
 export function MatrixNode(props: any): JSX.Element {
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getString } = useStrings()
-  const { updateDimensions } = useNodeDimensionContext()
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
   const [showAddLink, setShowAddLink] = React.useState(false)
   const [treeRectangle, setTreeRectangle] = React.useState<DOMRect | void>()
   const [state, setState] = React.useState<PipelineGraphState[]>([])
   const [isNodeCollapsed, setNodeCollapsed] = React.useState(false)
   const [showAllNodes, setShowAllNodes] = React.useState(false)
-  const [layoutStyles, setLayoutStyles] = React.useState<LayoutStyles>({ height: 100, width: 70 })
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const DefaultNode: React.FC<any> | undefined = props?.getDefaultNode()?.component
   const defaultNode = props.getDefaultNode()?.component
@@ -125,22 +82,11 @@ export function MatrixNode(props: any): JSX.Element {
   }, [props?.data?.status])
 
   React.useLayoutEffect(() => {
-    // collapsed default matrix node dimensions
-    isNodeCollapsed
-      ? updateDimensions?.({
-          [(props?.data?.id || props?.id) as string]: { height: 165, width: 165, type: 'matrix', isNodeCollapsed }
-        })
-      : updateDimensions?.({
-          [(props?.data?.id || props?.id) as string]: { ...layoutStyles, type: 'matrix', isNodeCollapsed }
-        })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [layoutStyles])
-
-  React.useLayoutEffect(() => {
     if (state?.length) {
       props?.updateGraphLinks?.()
     }
-  }, [layoutStyles])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, props?.isNodeCollapsed, showAllNodes, isNodeCollapsed])
 
   React.useEffect(() => {
     updateTreeRect()
@@ -164,14 +110,6 @@ export function MatrixNode(props: any): JSX.Element {
       setNodeCollapsed(true)
     }
   }, [treeRectangle, props.data, templateTypes, templateIcons])
-
-  React.useLayoutEffect(() => {
-    if (state?.length) {
-      setLayoutStyles(getCalculatedStyles(state, maxParallelism, showAllNodes))
-    } else {
-      setLayoutStyles({ height: 100, width: 70 })
-    }
-  }, [state, props?.isNodeCollapsed, showAllNodes, isNodeCollapsed])
 
   const isSelectedNode = React.useMemo(() => {
     return state.some(node => node?.id && node.id === props?.selectedNodeId)
@@ -346,7 +284,7 @@ export function MatrixNode(props: any): JSX.Element {
                               prevNodeIdentifier={node.prevNodeIdentifier}
                               prevNode={node.prevNode}
                               nextNode={node.nextNode}
-                              updateGraphLinks={node.updateGraphLinks}
+                              updateGraphLinks={props?.updateGraphLinks}
                               readonly={props.readonly}
                               selectedNodeId={props?.selectedNodeId}
                               showMarkers={false}

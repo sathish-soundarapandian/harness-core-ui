@@ -10,7 +10,7 @@ import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { isEmpty, has, set, isBoolean, get, pick, defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
 import type { K8sDirectInfraYaml } from 'services/ci'
-import type { DeploymentStageConfig, Infrastructure, ServiceYamlV2 } from 'services/cd-ng'
+import type { DeploymentStageConfig, Infrastructure, ServiceYamlV2, StepGroupElementConfig } from 'services/cd-ng'
 
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -38,12 +38,15 @@ import '@cd/components/PipelineSteps'
 import '@ci/components/PipelineSteps'
 // eslint-disable-next-line no-restricted-imports
 import '@sto/components/PipelineSteps'
+// eslint-disable-next-line no-restricted-imports
+import '@iacm/components/IACMPipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
 import type { StageSelectionData } from '../../utils/runPipelineUtils'
 import { getSelectedStagesFromPipeline } from './CommonUtils/CommonUtils'
 import type { DeployServiceEntityData } from '../PipelineInputSetForm/ServicesInputSetForm/ServicesInputSetForm'
 import { validateOutputPanelInputSet } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/utils'
 import { getFailureStrategiesValidationSchema } from '../PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
+import type { CustomVariablesData } from '../PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 
 interface childPipelineMetadata {
   pipelineId: string
@@ -156,10 +159,10 @@ export function getPromisesForChildPipeline(
 }
 
 export interface ValidateStepProps {
-  step: StepElementConfig | TemplateStepNode
+  step: StepElementConfig | TemplateStepNode | StepGroupElementConfig
   getString: UseStringsReturn['getString']
   viewType: StepViewType
-  template?: StepElementConfig | TemplateStepNode
+  template?: StepElementConfig | TemplateStepNode | StepGroupElementConfig
   originalStep?: ExecutionWrapperConfig
 }
 
@@ -169,10 +172,14 @@ export const validateStep = ({
   originalStep,
   getString,
   viewType
-}: ValidateStepProps): FormikErrors<StepElementConfig> => {
+}: ValidateStepProps): FormikErrors<StepElementConfig | StepGroupElementConfig> => {
   const errors = {}
   const isTemplateStep = !!(originalStep?.step as unknown as TemplateStepNode)?.template
-  const stepType = isTemplateStep ? StepType.Template : (originalStep?.step as StepElementConfig)?.type
+  const stepType = isTemplateStep
+    ? StepType.Template
+    : !isEmpty(originalStep?.stepGroup)
+    ? StepType.StepGroup
+    : (originalStep?.step as StepElementConfig)?.type
   const pipelineStep = factory.getStep(stepType)
   const delegateSelectorPath = 'spec.delegateSelectors'
   const failureStrategySchema = getFailureStrategiesValidationSchema(getString)
@@ -207,8 +214,12 @@ export const validateStep = ({
   }
 
   if (!isEmpty(errorResponse)) {
-    const suffix = isTemplateStep ? '.template.templateInputs' : ''
-    set(errors, `step${suffix}`, errorResponse)
+    if (stepType === StepType.StepGroup) {
+      return Object.assign(errors, errorResponse)
+    } else {
+      const suffix = isTemplateStep ? '.template.templateInputs' : ''
+      set(errors, `step${suffix}`, errorResponse)
+    }
   }
   return errors
 }
@@ -260,26 +271,6 @@ export const validateSteps = ({
           }
         }
         if (stepParallel?.stepGroup) {
-          if (stepParallel?.stepGroup?.steps) {
-            const errorResponse = validateSteps({
-              steps: stepParallel?.stepGroup?.steps,
-              template: template?.[index]?.parallel?.[indexP]?.stepGroup?.steps,
-              originalSteps: getStepFromStage(stepParallel.stepGroup.identifier, originalSteps)?.stepGroup?.steps,
-              getString,
-              viewType
-            })
-            try {
-              failureStrategy.validateSync(stepParallel?.stepGroup)
-            } catch (error) {
-              if (error instanceof Yup.ValidationError) {
-                const failureStrategyFormErrors = yupToFormErrors(error)
-                Object.assign(errorResponse, failureStrategyFormErrors)
-              }
-            }
-            if (!isEmpty(errorResponse)) {
-              set(errors, `steps[${index}].parallel[${indexP}].stepGroup`, errorResponse)
-            }
-          }
           if (stepParallel?.stepGroup?.template?.templateInputs?.steps) {
             const errorResponse = validateSteps({
               steps: stepParallel?.stepGroup?.template?.templateInputs?.steps,
@@ -300,31 +291,40 @@ export const validateSteps = ({
             if (!isEmpty(errorResponse)) {
               set(errors, `steps[${index}].parallel[${indexP}].stepGroup.template.templateInputs`, errorResponse)
             }
+          } else {
+            const errorResponse = validateStep({
+              step: stepParallel.stepGroup,
+              template: template?.[index]?.parallel?.[indexP]?.stepGroup,
+              originalStep: getStepFromStage(stepParallel.stepGroup.identifier, originalSteps),
+              getString,
+              viewType
+            })
+            if (stepParallel?.stepGroup?.steps) {
+              const stepsErrorResponse = validateSteps({
+                steps: stepParallel?.stepGroup?.steps,
+                template: template?.[index]?.parallel?.[indexP]?.stepGroup?.steps,
+                originalSteps: getStepFromStage(stepParallel.stepGroup.identifier, originalSteps)?.stepGroup?.steps,
+                getString,
+                viewType
+              })
+              try {
+                failureStrategy.validateSync(stepParallel?.stepGroup)
+              } catch (error) {
+                if (error instanceof Yup.ValidationError) {
+                  const failureStrategyFormErrors = yupToFormErrors(error)
+                  Object.assign(stepsErrorResponse, failureStrategyFormErrors)
+                }
+              }
+              Object.assign(errorResponse, stepsErrorResponse)
+            }
+            if (!isEmpty(errorResponse)) {
+              set(errors, `steps[${index}].parallel[${indexP}].stepGroup`, errorResponse)
+            }
           }
         }
       })
     } else if (stepObj.stepGroup) {
       const originalStepGroup = getStepFromStage(stepObj.stepGroup.identifier, originalSteps)
-      if (stepObj.stepGroup.steps) {
-        const errorResponse = validateSteps({
-          steps: stepObj.stepGroup.steps,
-          template: template?.[index]?.stepGroup?.steps,
-          originalSteps: originalStepGroup?.stepGroup?.steps,
-          getString,
-          viewType
-        })
-        try {
-          failureStrategy.validateSync(stepObj?.stepGroup)
-        } catch (error) {
-          if (error instanceof Yup.ValidationError) {
-            const failureStrategyFormErrors = yupToFormErrors(error)
-            Object.assign(errorResponse, failureStrategyFormErrors)
-          }
-        }
-        if (!isEmpty(errorResponse)) {
-          set(errors, `steps[${index}].stepGroup`, errorResponse)
-        }
-      }
       if (stepObj.stepGroup?.template?.templateInputs?.steps) {
         const errorResponse = validateSteps({
           steps: stepObj.stepGroup?.template?.templateInputs?.steps,
@@ -344,6 +344,35 @@ export const validateSteps = ({
         if (!isEmpty(errorResponse)) {
           set(errors, `steps[${index}].stepGroup.template.templateInputs`, errorResponse)
         }
+      } else {
+        const errorResponse = validateStep({
+          step: stepObj.stepGroup,
+          template: template?.[index]?.stepGroup,
+          originalStep: getStepFromStage(stepObj.stepGroup.identifier, originalSteps),
+          getString,
+          viewType
+        })
+        if (stepObj.stepGroup.steps) {
+          const stepsErrorResponse = validateSteps({
+            steps: stepObj.stepGroup.steps,
+            template: template?.[index]?.stepGroup?.steps,
+            originalSteps: originalStepGroup?.stepGroup?.steps,
+            getString,
+            viewType
+          })
+          try {
+            failureStrategy.validateSync(stepObj?.stepGroup)
+          } catch (error) {
+            if (error instanceof Yup.ValidationError) {
+              const failureStrategyFormErrors = yupToFormErrors(error)
+              Object.assign(errorResponse, failureStrategyFormErrors)
+            }
+          }
+          Object.assign(errorResponse, stepsErrorResponse)
+        }
+        if (!isEmpty(errorResponse)) {
+          set(errors, `steps[${index}].stepGroup`, errorResponse)
+        }
       }
     }
   })
@@ -357,6 +386,7 @@ interface ValidateStageProps {
   viewType: StepViewType
   template?: StageElementConfig
   originalStage?: StageElementConfig
+  resolvedStage?: StageElementConfig
 }
 
 export const validateStage = ({
@@ -364,7 +394,8 @@ export const validateStage = ({
   template,
   viewType,
   originalStage,
-  getString
+  getString,
+  resolvedStage
 }: ValidateStageProps): FormikErrors<StageElementConfig> => {
   if (originalStage?.template) {
     const errors = validateStage({
@@ -372,7 +403,8 @@ export const validateStage = ({
       template: template?.template?.templateInputs as StageElementConfig,
       viewType,
       originalStage: originalStage.template.templateInputs as StageElementConfig,
-      getString
+      getString,
+      resolvedStage
     })
     if (!isEmpty(errors)) {
       return set({}, 'template.templateInputs', errors)
@@ -425,6 +457,7 @@ export const validateStage = ({
         set(errors, 'spec.service.serviceRef', stepErrorsResponse?.service?.serviceRef)
       }
       const serviceInputs = stageConfig?.service?.serviceInputs
+
       if (serviceInputs && !isValueRuntimeInput(templateStageConfig?.service?.serviceInputs as unknown as string)) {
         const serviceStep = factory.getStep(getStepTypeByDeploymentType(serviceInputs?.serviceDefinition?.type))
         const serviceStepErrorResponse = serviceStep?.validateInputSet({
@@ -435,6 +468,20 @@ export const validateStage = ({
         })
         if (!isEmpty(serviceStepErrorResponse)) {
           set(errors, `spec.service.serviceInputs.serviceDefinition.spec`, serviceStepErrorResponse)
+        }
+      }
+      if (stageConfig?.service?.serviceInputs?.serviceDefinition?.spec?.variables) {
+        const currentStepForVariable = factory.getStep(StepType.CustomVariable)
+        const variablesErrorsResponse = currentStepForVariable?.validateInputSet({
+          data: stageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
+          template: templateStageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
+          getString,
+          viewType,
+          allValues: get(originalStage, 'spec.service.serviceInputs.serviceDefinition.spec')
+        }) as FormikErrors<CustomVariablesData>
+
+        if (!isEmpty(variablesErrorsResponse?.variables)) {
+          set(errors, 'spec.service.serviceInputs.serviceDefinition.spec.variables', variablesErrorsResponse.variables)
         }
       }
     }
@@ -464,6 +511,24 @@ export const validateStage = ({
           })
           if (!isEmpty(serviceStepErrorResponse)) {
             set(errors, `spec.services.values[${index}].serviceInputs.serviceDefinition.spec`, serviceStepErrorResponse)
+          }
+          if (serviceInput.serviceInputs?.serviceDefinition?.spec?.variables) {
+            const variablesStep = factory.getStep(StepType.CustomVariable)
+            const variablesErrorResponse = variablesStep?.validateInputSet({
+              data: serviceInput.serviceInputs?.serviceDefinition?.spec,
+              template: templateStageConfig?.services?.values?.[index].serviceInputs?.serviceDefinition.spec,
+              getString,
+              viewType,
+              allValues: get(originalStage, `spec.services.values[${index}].serviceInputs.serviceDefinition.spec`)
+            }) as FormikErrors<CustomVariablesData>
+
+            if (!isEmpty(variablesErrorResponse?.variables)) {
+              set(
+                errors,
+                `spec.services.values[${index}].serviceInputs.serviceDefinition.spec.variables`,
+                variablesErrorResponse.variables
+              )
+            }
           }
         })
       }
@@ -528,6 +593,21 @@ export const validateStage = ({
       )
     }
 
+    if (stage?.variables) {
+      const step = factory.getStep(StepType.CustomVariable)
+      const errorsResponse: any = step?.validateInputSet({
+        data: stage,
+        template,
+        getString,
+        viewType,
+        allValues: resolvedStage
+      })
+
+      if (!isEmpty(errorsResponse)) {
+        set(errors, 'variables', errorsResponse?.variables)
+      }
+    }
+
     if (stage?.failureStrategies && stage.failureStrategies?.length > 0) {
       const failureStrategySchema = getFailureStrategiesValidationSchema(getString)
       const failureStrategy = Yup.object().shape({
@@ -555,6 +635,21 @@ export const validateStage = ({
 
       if (!isEmpty(errorsResponse)) {
         set(errors, 'spec.serviceConfig.serviceDefinition.spec', errorsResponse)
+      }
+
+      if (stageConfig?.serviceConfig?.serviceDefinition?.spec?.variables) {
+        const currentStep = factory.getStep(StepType.CustomVariable)
+        const stepErrorsResponse = currentStep?.validateInputSet({
+          data: stageConfig?.serviceConfig?.serviceDefinition?.spec,
+          template: templateStageConfig?.serviceConfig?.serviceDefinition?.spec,
+          getString,
+          viewType,
+          allValues: get(originalStage, 'spec.serviceConfig.serviceDefinition.spec')
+        }) as FormikErrors<CustomVariablesData>
+
+        if (!isEmpty(stepErrorsResponse?.variables)) {
+          set(errors, 'spec.serviceConfig.serviceDefinition.spec.variables', stepErrorsResponse.variables)
+        }
       }
     }
 
@@ -886,6 +981,22 @@ export const validatePipeline = ({
         }
       }
     }
+
+    if (pipeline?.variables) {
+      const step = factory.getStep(StepType.CustomVariable)
+      const errorsResponse: any = step?.validateInputSet({
+        data: pipeline,
+        template,
+        getString,
+        viewType,
+        allValues: resolvedPipeline
+      })
+
+      if (!isEmpty(errorsResponse)) {
+        set(errors, 'variables', errorsResponse.variables)
+      }
+    }
+
     const stages = stagesToExecute?.length
       ? pipeline?.stages?.filter(stage => stage && stage.stage && stagesToExecute.includes(stage.stage.identifier))
       : pipeline?.stages
@@ -903,12 +1014,13 @@ export const validatePipeline = ({
     stages?.forEach((stageObj, index) => {
       if (stageObj.stage) {
         const originalStage = getStageFromPipeline(stageObj.stage.identifier, originalPipeline)
+        const resolvedStage = getStageFromPipeline(stageObj.stage.identifier, resolvedPipeline)
         if (stageObj.stage.type === StageType.PIPELINE) {
           const chainedPipeline = (stageObj.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
           const chainedPipelineTemplate = (filteredTemplate?.stages?.[index]?.stage?.spec as PipelineStageConfig)
             ?.inputs as PipelineInfoConfig
-          const _originalPipeline = (originalPipeline?.stages?.[index]?.stage?.spec as PipelineStageConfig)
-            ?.inputs as PipelineInfoConfig
+          const _originalPipeline = (originalStage?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
+          const _resolvedPipeline = (resolvedStage?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
 
           const chainedPipelineOutputErrorsResponse = validateOutputPanelInputSet({
             data: { outputs: get(stageObj.stage?.spec as PipelineStageConfig, 'outputs', []) },
@@ -917,6 +1029,7 @@ export const validatePipeline = ({
             },
             getString
           })
+
           if (!isEmpty(chainedPipelineOutputErrorsResponse.outputs)) {
             set(
               errors,
@@ -929,7 +1042,7 @@ export const validatePipeline = ({
             pipeline: chainedPipeline,
             template: chainedPipelineTemplate,
             originalPipeline: _originalPipeline,
-            resolvedPipeline,
+            resolvedPipeline: _resolvedPipeline,
             viewType,
             getString,
             path,
@@ -948,6 +1061,7 @@ export const validatePipeline = ({
             stage: stageObj.stage as StageElementConfig,
             template: filteredTemplate?.stages?.[index]?.stage,
             originalStage: originalStage?.stage,
+            resolvedStage: resolvedStage?.stage,
             getString,
             viewType
           })
@@ -960,14 +1074,16 @@ export const validatePipeline = ({
         stageObj.parallel.forEach((stageP, indexP: number) => {
           if (stageP.stage) {
             const originalStage = getStageFromPipeline(stageP.stage.identifier, originalPipeline)
+            const resolvedStage = getStageFromPipeline(stageP.stage.identifier, resolvedPipeline)
             if (stageP.stage.type === StageType.PIPELINE) {
               const chainedPipeline = (stageP.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
               const chainedPipelineTemplate = (
                 filteredTemplate?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig
               )?.inputs as PipelineInfoConfig
-              const _originalPipeline = (
-                originalPipeline?.stages?.[index]?.parallel?.[indexP]?.stage?.spec as PipelineStageConfig
-              )?.inputs as PipelineInfoConfig
+              const _originalPipeline = (originalStage?.stage?.spec as PipelineStageConfig)
+                ?.inputs as PipelineInfoConfig
+              const _resolvedPipeline = (resolvedStage?.stage?.spec as PipelineStageConfig)
+                ?.inputs as PipelineInfoConfig
 
               const chainedPipelineOutputErrorsResponse = validateOutputPanelInputSet({
                 data: { outputs: get(stageP.stage?.spec as PipelineStageConfig, 'outputs', []) },
@@ -992,7 +1108,7 @@ export const validatePipeline = ({
                 pipeline: chainedPipeline,
                 template: chainedPipelineTemplate,
                 originalPipeline: _originalPipeline,
-                resolvedPipeline,
+                resolvedPipeline: _resolvedPipeline,
                 viewType,
                 getString,
                 path,
@@ -1009,8 +1125,9 @@ export const validatePipeline = ({
             } else {
               const errorsResponse = validateStage({
                 stage: stageP.stage as StageElementConfig,
-                template: filteredTemplate?.stages?.[index].parallel?.[indexP]?.stage,
+                template: filteredTemplate?.stages?.[index]?.parallel?.[indexP]?.stage,
                 originalStage: originalStage?.stage,
+                resolvedStage: resolvedStage?.stage,
                 getString,
                 viewType
               })

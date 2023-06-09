@@ -44,7 +44,10 @@ describe('Pipeline Execution', () => {
     cy.get('*[class^="RunPipelineForm-module_run-form"')
       .should('be.visible')
       .within(() => {
-        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        // Existing value should be unchecked as no input sets available
+        cy.get('input[type="checkbox"]').eq(0).should('not.be.checked')
+        // Click on checkbox 'Skip preflight check'
+        cy.get('input[type="checkbox"]').eq(1).check({ force: true }).should('be.checked')
         cy.contains('span', 'Run Pipeline').click()
       })
 
@@ -162,7 +165,10 @@ describe('Pipeline Execution', () => {
     cy.get('*[class^="RunPipelineForm-module_run-form"')
       .should('be.visible')
       .within(() => {
-        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        // Existing value should be unchecked as no input sets available
+        cy.get('input[type="checkbox"]').eq(0).should('not.be.checked')
+        // Click on checkbox 'Skip preflight check'
+        cy.get('input[type="checkbox"]').eq(1).check({ force: true }).should('be.checked')
         cy.contains('span', 'Run Pipeline').click()
       })
 
@@ -246,8 +252,10 @@ describe('Pipeline Execution', () => {
     cy.get('*[class^="RunPipelineForm-module_run-form"')
       .should('be.visible')
       .within(() => {
+        // Existing value should be unchecked as no input sets available
+        cy.get('input[type="checkbox"]').eq(0).should('not.be.checked')
         // Click on checkbox 'Skip preflight check'
-        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        cy.get('input[type="checkbox"]').eq(1).check({ force: true }).should('be.checked')
         // Click Run Pipeline button inside Run Pipeline Form
         cy.contains('span', 'Run Pipeline').click()
       })
@@ -367,7 +375,10 @@ describe('Pipeline Execution', () => {
     cy.get('*[class^="RunPipelineForm-module_run-form"')
       .should('be.visible')
       .within(() => {
-        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        // Existing value should be unchecked as no input sets available
+        cy.get('input[type="checkbox"]').eq(0).should('not.be.checked')
+        // Click on checkbox 'Skip preflight check'
+        cy.get('input[type="checkbox"]').eq(1).check({ force: true }).should('be.checked')
         cy.contains('span', 'Run Pipeline').click()
       })
 

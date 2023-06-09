@@ -10,7 +10,6 @@ import { StepWizard } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { ServiceDefinition } from 'services/cd-ng'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { deploymentTypeIcon, deploymentTypeLabel, ServiceTypes } from '@pipeline/utils/DeploymentTypeUtils'
 import ConfigFilesStore from './ConfigFilesSteps/ConfigFilesStore'
 import css from './ConfigFilesWizard.module.scss'
@@ -39,7 +38,6 @@ export function ConfigFilesWizard(props: any): React.ReactElement {
   } = props
 
   const { getString } = useStrings()
-  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
 
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg.prevStepData?.store === 'Harness') {
@@ -52,7 +50,7 @@ export function ConfigFilesWizard(props: any): React.ReactElement {
   }
 
   const getInitialStepNumber = (): number | undefined => {
-    if (isEditMode && CDS_SERVICE_CONFIG_LAST_STEP && !firstStep) {
+    if (isEditMode && !firstStep) {
       return 2
     }
   }

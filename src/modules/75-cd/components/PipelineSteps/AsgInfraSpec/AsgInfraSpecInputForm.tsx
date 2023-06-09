@@ -27,6 +27,7 @@ import { useQueryParams } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { connectorTypes } from '@pipeline/utils/constants'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import type { AsgInfraSpecCustomStepProps } from './AsgInfraSpec'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -42,7 +43,13 @@ export interface AsgInfraSpecInputFormProps {
   customStepProps: AsgInfraSpecCustomStepProps
 }
 
-const AsgInfraSpecInputForm = ({ template, readonly = false, path, allowableTypes }: AsgInfraSpecInputFormProps) => {
+const AsgInfraSpecInputForm = ({
+  template,
+  readonly = false,
+  path,
+  allowableTypes,
+  customStepProps
+}: AsgInfraSpecInputFormProps) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
@@ -62,9 +69,15 @@ const AsgInfraSpecInputForm = ({ template, readonly = false, path, allowableType
 
   const connectorFieldName = isEmpty(path) ? 'connectorRef' : `${path}.connectorRef`
   const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
+  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
 
   return (
     <Layout.Vertical spacing="small">
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && customStepProps?.provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField name={provisionerName} path={path} provisioners={customStepProps?.provisioner} />
+        </div>
+      )}
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

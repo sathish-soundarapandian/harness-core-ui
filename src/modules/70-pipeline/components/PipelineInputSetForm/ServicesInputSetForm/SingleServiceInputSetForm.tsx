@@ -49,7 +49,8 @@ export default function SingleServiceInputSetForm({
   viewType,
   stageIdentifier,
   allowableTypes,
-  childPipelineMetadata
+  childPipelineMetadata,
+  viewTypeMetadata
 }: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement | null {
   const {
     state: { pipeline, templateTypes },
@@ -193,6 +194,7 @@ export default function SingleServiceInputSetForm({
                 childPipelineMetadata
               }}
               onUpdate={data => formik?.setFieldValue(`${path}.service`, get(data, 'service'))}
+              viewTypeMetadata={viewTypeMetadata}
             />
           )}
 
@@ -219,6 +221,7 @@ export default function SingleServiceInputSetForm({
                   formik?.setValues(set(formik?.values, path, deploymentStageInputSet))
                 }
               }}
+              viewTypeMetadata={viewTypeMetadata}
             />
           )}
         </div>

@@ -668,7 +668,10 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         'isInComplete',
         'isTemplateNode',
         'loopingStrategyEnabled',
-        'isNestedGroup'
+        'isNestedGroup',
+        'nodeType',
+        'type',
+        'fqnPath'
       ])
       const isRemove = removeStepOrGroup({
         state,

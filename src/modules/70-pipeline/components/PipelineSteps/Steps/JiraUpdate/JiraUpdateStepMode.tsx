@@ -11,30 +11,29 @@ import { useParams } from 'react-router-dom'
 import { Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { FieldArray, FormikProps } from 'formik'
+import type { FormikProps } from 'formik'
 import {
   Accordion,
-  AllowedTypes,
-  Button,
   FormError,
   Formik,
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
+  PageSpinner,
   SelectOption,
   Text
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { String, useStrings } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { JiraFieldNG, JiraStatusNG, useGetJiraStatuses } from 'services/cd-ng'
+import { JiraFieldNG, JiraStatusNG, useGetJiraIssueUpdateMetadata, useGetJiraStatuses } from 'services/cd-ng'
 import type {
   AccountPathProps,
   GitQueryParams,
@@ -42,17 +41,30 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { JiraKVFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/JiraCreate/JiraKVFieldsRenderer'
 import { useQueryParams } from '@common/hooks'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { isMultiTypeFixed, isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeFixed } from '@common/utils/utils'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { getGenuineValue } from '../JiraApproval/helper'
-import type { JiraCreateFieldType } from '../JiraCreate/types'
-import { getKVFieldsToBeAddedInForm, getSelectedFieldsToBeAddedInForm } from '../JiraCreate/helper'
+import type { JiraCreateFieldType, JiraFieldNGWithValue } from '../JiraCreate/types'
+import {
+  getInitialValueForSelectedField,
+  getIsCurrentFieldASelectedOptionalField,
+  getKVFieldsToBeAddedInForm,
+  getProcessedValueForNonKVField,
+  getSelectedFieldsToBeAddedInForm,
+  isRuntimeOrExpressionType
+} from '../JiraCreate/helper'
 import { JiraDynamicFieldsSelector } from '../JiraCreate/JiraDynamicFieldsSelector'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { JiraFieldsRenderer } from '../JiraCreate/JiraFieldsRenderer'
-import type { JiraUpdateData, JiraUpdateFormContentInterface, JiraUpdateStepModeProps } from './types'
+import type {
+  JiraUpdateData,
+  JiraUpdateFieldType,
+  JiraUpdateFormContentInterface,
+  JiraUpdateStepModeProps
+} from './types'
 import { processFormData } from './helper'
 
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
@@ -68,7 +80,11 @@ function FormContent({
   isNewStep,
   readonly,
   allowableTypes,
-  stepViewType
+  stepViewType,
+  refetchIssueUpdateMetadata,
+  issueUpdateMetadataResponse,
+  issueUpdateMetadataFetchError,
+  issueUpdateMetadataLoading
 }: JiraUpdateFormContentInterface): JSX.Element {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
@@ -118,6 +134,62 @@ function FormContent({
 
     setStatusOptions(options)
   }, [statusResponse?.data])
+
+  useEffect(() => {
+    if (connectorRefFixedValue && issueKeyValue) {
+      refetchIssueUpdateMetadata({
+        queryParams: {
+          ...commonParams,
+          connectorRef: connectorRefFixedValue.toString(),
+          issueKey: issueKeyValue
+        }
+      })
+    }
+  }, [connectorRefFixedValue, issueKeyValue])
+
+  useEffect(() => {
+    // The below code utilises issue update metadata to figure out optional fields from Key value fields
+    // to ensure they are rendered properly i.e. not as a key value pair field
+    if (issueKeyValue && !isEmpty(issueUpdateMetadataResponse?.data?.fields)) {
+      const issueUpdateMetadataFieldsObj = issueUpdateMetadataResponse!.data!.fields
+      const fieldKeys = Object.keys(issueUpdateMetadataFieldsObj).sort()
+      const formikOptionalFields: JiraFieldNGWithValue[] = []
+      fieldKeys.forEach(fieldKey => {
+        const field = issueUpdateMetadataFieldsObj[fieldKey]
+        if (field) {
+          const savedValueForThisField = getInitialValueForSelectedField(formik.values.spec.fields, field)
+          const isCurrentFieldASelectedOptionalField = getIsCurrentFieldASelectedOptionalField(
+            formik.values.spec.fields,
+            field
+          )
+          if (isCurrentFieldASelectedOptionalField) {
+            formikOptionalFields.push({ ...field, value: savedValueForThisField })
+          }
+        }
+      })
+      formik.setFieldValue('spec.selectedOptionalFields', formikOptionalFields)
+
+      const toBeUpdatedNonKVFields: JiraUpdateFieldType[] = []
+      const nonKVFields = [...formikOptionalFields]
+
+      nonKVFields.forEach(field =>
+        toBeUpdatedNonKVFields.push({
+          name: field.name,
+          value: getProcessedValueForNonKVField(field)
+        })
+      )
+
+      const toBeUpdatedKVFields = getKVFieldsToBeAddedInForm(formik.values.spec.fields, [], formikOptionalFields, [])
+      const allfields = [...toBeUpdatedNonKVFields, ...toBeUpdatedKVFields]
+
+      formik.setFieldValue('spec.fields', allfields)
+    } else if (issueKeyValue !== undefined || isRuntimeOrExpressionType(issueKeyValue)) {
+      // Undefined check is needed so that form is not set to dirty as soon as we open
+      // This means we've cleared the value or marked it runtime/expression on which the optional fields depend
+      formik.setFieldValue('spec.selectedOptionalFields', [])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [issueKeyValue, issueUpdateMetadataResponse])
 
   const [showDynamicFieldsModal, hideDynamicFieldsModal] = useModalHook(() => {
     return (
@@ -376,51 +448,35 @@ function FormContent({
                 connectorRef={defaultTo(connectorRefFixedValue, '')}
               />
 
-              {!isEmpty(formik.values.spec.fields) ? (
-                <FieldArray
-                  name="spec.fields"
-                  render={({ remove }) => {
-                    return (
-                      <div>
-                        <div className={css.headerRow}>
-                          <String className={css.label} stringID="keyLabel" />
-                          <String className={css.label} stringID="valueLabel" />
-                        </div>
-                        {formik.values.spec.fields?.map((_unused: JiraCreateFieldType, i: number) => (
-                          <div className={css.headerRow} key={i}>
-                            <FormInput.Text
-                              name={`spec.fields[${i}].name`}
-                              placeholder={getString('pipeline.keyPlaceholder')}
-                              disabled={isApprovalStepFieldDisabled(readonly)}
-                            />
-                            <FormInput.MultiTextInput
-                              name={`spec.fields[${i}].value`}
-                              label=""
-                              placeholder={getString('common.valuePlaceholder')}
-                              multiTextInputProps={{
-                                allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
-                                  item => !isMultiTypeRuntime(item)
-                                ) as AllowedTypes,
-                                expressions
-                              }}
-                              disabled={isApprovalStepFieldDisabled(readonly)}
-                            />
-                            <Button
-                              minimal
-                              icon="main-trash"
-                              data-testid={`remove-fieldList-${i}`}
-                              onClick={() => remove(i)}
-                              disabled={isApprovalStepFieldDisabled(readonly)}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )
-                  }}
+              {issueUpdateMetadataLoading ? (
+                <PageSpinner message={getString('pipeline.jiraCreateStep.fetchingFields')} className={css.fetching} />
+              ) : !isEmpty(formik.values.spec.fields) ? (
+                <JiraKVFieldsRenderer
+                  formik={formik}
+                  allowableTypes={allowableTypes}
+                  selectedAllFields={formik.values.spec.fields}
+                  selectedOptionalFields={formik.values.spec.selectedOptionalFields}
+                  readonly={readonly}
                 />
               ) : null}
 
               <AddFieldsButton />
+              {issueUpdateMetadataFetchError && (
+                <FormError
+                  errorMessage={
+                    <Text
+                      lineClamp={1}
+                      width={350}
+                      margin={{ bottom: 'medium' }}
+                      intent={Intent.DANGER}
+                      tooltipProps={{ isDark: true, popoverClassName: css.tooltip }}
+                    >
+                      {getRBACErrorMessage(issueUpdateMetadataFetchError)}
+                    </Text>
+                  }
+                  name="issueUpdateMetadataError"
+                />
+              )}
             </div>
           }
         />
@@ -459,6 +515,20 @@ function JiraUpdateStepMode(
     }
   })
 
+  const {
+    refetch: refetchIssueUpdateMetadata,
+    data: issueUpdateMetadataResponse,
+    error: issueUpdateMetadataFetchError,
+    loading: issueUpdateMetadataLoading
+  } = useGetJiraIssueUpdateMetadata({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: '',
+      issueKey: ''
+    }
+  })
+
   return (
     <Formik<JiraUpdateData>
       onSubmit={values => onUpdate?.(processFormData(values))}
@@ -492,6 +562,10 @@ function JiraUpdateStepMode(
               stepViewType={stepViewType}
               refetchStatuses={refetchStatuses}
               fetchingStatuses={fetchingStatuses}
+              refetchIssueUpdateMetadata={refetchIssueUpdateMetadata}
+              issueUpdateMetadataResponse={issueUpdateMetadataResponse}
+              issueUpdateMetadataFetchError={issueUpdateMetadataFetchError}
+              issueUpdateMetadataLoading={issueUpdateMetadataLoading}
               statusResponse={statusResponse}
               statusFetchError={statusFetchError}
               isNewStep={isNewStep}

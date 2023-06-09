@@ -10,6 +10,8 @@ declare const styles: {
   readonly content: string
   readonly footer: string
   readonly header: string
+  readonly headerText: string
+  readonly idText: string
   readonly layout: string
   readonly metaData: string
   readonly metaDataPair: string

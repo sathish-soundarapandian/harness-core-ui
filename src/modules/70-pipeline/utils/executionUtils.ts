@@ -511,6 +511,14 @@ export function getIconStylesFromCollection(stageType?: string): React.CSSProper
   return {}
 }
 
+const getParentNodeId = (adjacencyMap: ExecutionGraph['nodeAdjacencyListMap'], nodeData: ExecutionNode) => {
+  return (
+    Object.entries(adjacencyMap || {}).find(([_, val]) => {
+      return (val?.children?.indexOf(nodeData.uuid!) ?? -1) >= 0
+    })?.[0] || ''
+  )
+}
+
 const addDependencyToArray = (service: ServiceDependency, arr: ExecutionPipelineNode<ExecutionNode>[]): void => {
   const stepItem: ExecutionPipelineItem<ExecutionNode> = {
     identifier: service.identifier as string,
@@ -640,10 +648,7 @@ const processNodeData = (
       })
     } else {
       if (nodeStrategyType === LITE_ENGINE_TASK) {
-        const parentNodeId =
-          Object.entries(nodeAdjacencyListMap || {}).find(([_, val]) => {
-            return (val?.children?.indexOf(nodeData.uuid!) ?? -1) >= 0
-          })?.[0] || ''
+        const parentNodeId = getParentNodeId(nodeAdjacencyListMap, nodeData)
         processLiteEngineTask(nodeData, rootNodes, nodeMap?.[parentNodeId])
       } else {
         items.push({
@@ -863,6 +868,10 @@ export function getIconDataBasedOnType(nodeData?: ExecutionNode): {
     if (nodeData.stepType === StepType.ResourceConstraint) {
       return { icon: 'traffic-lights', iconSize: 40 }
     }
+    // ticket for reference -> https://harness.atlassian.net/browse/CDS-59308
+    if (nodeData.stepType === StepType.JenkinsBuildV2) {
+      return { icon: 'service-jenkins', iconSize: 40 }
+    }
     const icon = StepTypeIconsMap[nodeData?.stepType as StepNodeType] || factory.getStepIcon(nodeData?.stepType || '')
     return {
       icon,
@@ -883,10 +892,7 @@ const addServiceDependenciesFromLiteTaskEngine = (
 ): void => {
   const liteEngineTask = Object.values(nodeMap).find(item => item.stepType === LITE_ENGINE_TASK)
   if (liteEngineTask) {
-    const parentNodeId =
-      Object.entries(adjacencyMap || {}).find(([_, val]) => {
-        return (val?.children?.indexOf(liteEngineTask.uuid!) ?? -1) >= 0
-      })?.[0] || ''
+    const parentNodeId = getParentNodeId(adjacencyMap, liteEngineTask)
     const parentNode: ExecutionNode | undefined = nodeMap[parentNodeId]
 
     // NOTE: liteEngineTask contains information about dependency services
@@ -1250,12 +1256,35 @@ export const processExecutionDataForGraph = (
   return items
 }
 
+const getGroupSeperatedRunningIdentifiers = (
+  nodeMap: { [key: string]: ExecutionNode },
+  runningStageStepIdentifiers: string[]
+): string[] => {
+  const groupIdentifiers: string[] = Object.values(nodeMap)
+    .filter(val => val.stepType === StepNodeType.STEP_GROUP && val.identifier)
+    .map(val => val.identifier ?? '')
+
+  if (groupIdentifiers.length === 0) return runningStageStepIdentifiers
+
+  const groupSeperatedRunningIdentifiers: string[] = []
+  runningStageStepIdentifiers.map((identifier: string) =>
+    groupIdentifiers.forEach(
+      (groupIdentifier: string) =>
+        identifier.includes(groupIdentifier) &&
+        groupSeperatedRunningIdentifiers.push(identifier.replace(`${groupIdentifier}_`, ''))
+    )
+  )
+  return groupSeperatedRunningIdentifiers
+}
+
 const updateBackgroundStepNodeStatuses = ({
   runningStageId,
-  nodeMap
+  nodeMap,
+  adjacencyMap
 }: {
   runningStageId?: string | null
   nodeMap: { [key: string]: ExecutionNode }
+  adjacencyMap?: { [key: string]: ExecutionNodeAdjacencyList }
 }): {
   [key: string]: ExecutionNode
 } => {
@@ -1265,14 +1294,35 @@ const updateBackgroundStepNodeStatuses = ({
   const runningStageStepIdentifiers: string[] =
     nodeMapValues.find(node => node.setupId === runningStageId)?.stepParameters?.specConfig?.stepIdentifiers || []
   // Overwrite status for stepType Background in running stage
+  const runningStepIdentifiers = getGroupSeperatedRunningIdentifiers(nodeMap, runningStageStepIdentifiers)
   nodeMapValues.forEach(node => {
+    const parentNodeId = getParentNodeId(adjacencyMap, node)
+    const parentNode: ExecutionNode | undefined = nodeMap[parentNodeId]
+    const childNodeId = adjacencyMap?.[node.uuid!]?.children?.[0]
+    const childNode: ExecutionNode | undefined = childNodeId ? nodeMap[childNodeId] : undefined
     if (
       node?.uuid &&
       node.identifier &&
-      runningStageStepIdentifiers.includes(node.identifier) &&
-      node.stepType === StepType.Background
+      node.stepType === StepType.Background &&
+      ((parentNode &&
+        (parentNode.stepType === StepNodeType.STRATEGY || parentNode.stepType === StepNodeType.FORK) &&
+        runningStepIdentifiers.includes(parentNode?.identifier ?? '')) ||
+        runningStepIdentifiers.includes(node.identifier))
     ) {
+      // Overwrite status temporarily for a standalone Background step or a child Background step in a strategy node in running stage
+      // this helps keep the stream open for logs instead of blob requests for logs wrt Background step
       newNodeMap[node.uuid].status = ExecutionStatusEnum.Running
+    } else if (
+      node?.uuid &&
+      node?.identifier &&
+      node?.stepType === StepNodeType.STRATEGY &&
+      childNode?.stepType === StepType.Background &&
+      runningStepIdentifiers.includes(node.identifier)
+    ) {
+      // Overwrite status and stepType temporarily for strategy on a Background step in running stage
+      // this helps keep the stream open for logs instead of blob requests for logs wrt Background step
+      newNodeMap[node.uuid].status = ExecutionStatusEnum.Running
+      newNodeMap[node.uuid].stepType = StepType.Background
     }
   })
   return newNodeMap
@@ -1339,7 +1389,7 @@ export const processForCIData = ({
       data.data.pipelineExecutionSummary.status as ExecutionStatus
     )
 
-    newNodeMap = updateBackgroundStepNodeStatuses({ runningStageId, nodeMap })
+    newNodeMap = updateBackgroundStepNodeStatuses({ runningStageId, nodeMap, adjacencyMap })
   }
 
   // NOTE: Remove Duration for Background stepType similar to Service Dependency

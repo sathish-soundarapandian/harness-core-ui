@@ -107,7 +107,8 @@ export const ECRStepBase = (
                 },
                 'spec.region': {},
                 'spec.account': {},
-                'spec.tags': {}
+                'spec.tags': {},
+                ...(buildInfrastructureType === CIBuildInfrastructureType.Cloud && { 'spec.caching': {} })
               }}
               formik={formik}
             />

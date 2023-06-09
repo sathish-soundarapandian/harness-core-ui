@@ -66,7 +66,6 @@ export default function useCreateEditConnector<T>(props: UseCreateEditConnector)
   const [connectorResponse, setConnectorResponse] = useState<UseSaveSuccessResponse>()
   const [connectorData, setConnectorData] = useState<T & BuildPayloadProps>({} as T & BuildPayloadProps)
   let gitDetails = props.gitDetails
-
   const { mutate: createConnector, loading: creating } = useCreateConnector({
     queryParams: { accountIdentifier: props.accountId }
   })

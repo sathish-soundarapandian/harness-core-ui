@@ -15,6 +15,11 @@ describe('Azure Arm Steps', () => {
     cy.wait(2000)
     cy.visitPageAssertion()
   }
+  const clickRuntimeOption = (index: number): void => {
+    cy.get('.MultiTypeInput--btn').eq(index).click()
+    cy.wait(100)
+    cy.contains('span', 'Runtime input').click()
+  }
 
   beforeEach(() => {
     cy.initializeRoute()
@@ -122,29 +127,23 @@ describe('Azure Arm Steps', () => {
     cy.wait(500)
 
     // timeout
-    cy.get('.MultiTypeInput--btn').eq(0).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(0)
     // azure connector
-    cy.get('.MultiTypeInput--btn').eq(1).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(1)
     // assignment name
-    cy.get('.MultiTypeInput--btn').eq(2).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(2)
 
     // add template file
     cy.contains('a', 'Specify Azure Blueprint Template File').click()
     cy.wait(500)
     cy.get('span[data-icon="service-github"]').click({ force: true })
-    cy.get('.MultiTypeInput--btn').eq(3).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(3)
     cy.contains('span', 'Continue').click()
     // repo details
     cy.get('input[name="gitFetchType"]').click()
     cy.contains('p', 'Latest from Branch').click()
-    cy.get('.MultiTypeInput--btn').eq(3).click()
-    cy.contains('span', 'Runtime input').click()
-    cy.get('.MultiTypeInput--btn').eq(4).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(3)
+    clickRuntimeOption(4)
     cy.contains('span', 'Submit').click({ force: true })
     cy.wait(500)
 
@@ -204,35 +203,26 @@ describe('Azure Arm Steps', () => {
     cy.contains('section', 'AzureCreateARMResource_1').click({ force: true })
     cy.wait(500)
     // timeout
-    cy.get('.MultiTypeInput--btn').eq(0).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(0)
     // provisioner identifier
-    cy.get('.MultiTypeInput--btn').eq(1).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(1)
     // azure connector
-    cy.get('.MultiTypeInput--btn').eq(2).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(2)
     // scope subscription
-    cy.get('.MultiTypeInput--btn').eq(3).click()
-    cy.contains('span', 'Runtime input').click()
-    // scope resource gorup
-    cy.get('.MultiTypeInput--btn').eq(4).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(3)
+    clickRuntimeOption(4)
 
     // add template file
     cy.contains('a', 'Specify ARM Template File').click()
     cy.wait(500)
     cy.get('span[data-icon="service-github"]').click({ force: true })
-    cy.get('.MultiTypeInput--btn').eq(5).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(5)
     cy.contains('span', 'Continue').click()
     // repo details
-    cy.get('.MultiTypeInput--btn').eq(5).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(5)
     cy.get('input[name="gitFetchType"]').click()
     cy.contains('p', 'Latest from Branch').click()
-    cy.get('.MultiTypeInput--btn').eq(6).click()
-    cy.contains('span', 'Runtime input').click()
+    clickRuntimeOption(6)
     cy.contains('span', 'Submit').click({ force: true })
     cy.wait(500)
 

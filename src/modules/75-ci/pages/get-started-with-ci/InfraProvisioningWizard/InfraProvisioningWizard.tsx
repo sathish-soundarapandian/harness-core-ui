@@ -38,6 +38,7 @@ import {
   createInputSetForPipelinePromise,
   ResponseInputSetResponse
 } from 'services/pipeline-ng'
+import type { Module } from 'framework/types/ModuleName'
 import type { GitQueryParams, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { Status } from '@common/utils/Constants'
@@ -640,7 +641,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       try {
         let setupPipelineAndTriggerPromise = getPipelineAndTriggerSetupPromise()
         if (setupPipelineAndTriggerPromise) {
-          const { storeInGit, createBranchIfNotExists, branch } =
+          const { storeInGit, createBranchIfNotExists } =
             (configurePipelineRef.current?.values as SavePipelineToRemoteInterface) || {}
           const shouldSavePipelineToGit = enableSavePipelinetoRemoteOption && storeInGit
           // if pipeline is being saved to Git and create branch if not specified is selected, we will attempt to save pipeline to Git twice
@@ -648,12 +649,11 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           // If above fails, save pipeline to the specified branch with git param isNewBranch as "true" and pass default branch of the repo as base branch
           if (shouldSavePipelineToGit && createBranchIfNotExists) {
             setupPipelineAndTriggerPromise.catch(savePipelineAndTriggerErr => {
-              const isBranchNotFoundOnGitError =
+              const hasSCMError =
                 ((get(savePipelineAndTriggerErr, 'responseMessages') as ResponseMessage[]) || []).filter(
-                  (item: ResponseMessage) =>
-                    item.code === 'SCM_BAD_REQUEST' && item.message === `Branch ${branch} not found`
+                  (item: ResponseMessage) => item.code === 'SCM_BAD_REQUEST'
                 ).length > 0
-              if (isBranchNotFoundOnGitError) {
+              if (hasSCMError) {
                 // Attempt pipeline save to git to new branch if only specified by user and if the branch specified doesn't exist on Git
                 setupPipelineAndTriggerPromise = getPipelineAndTriggerSetupPromise(true)
                 if (setupPipelineAndTriggerPromise) {
@@ -729,28 +729,18 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       includeGitParams?: boolean
       gitParams?: GitQueryParams
     }) => {
-      history.push(
-        CI_YAML_VERSIONING
-          ? routes.toPipelineStudioV1({
-              accountId: accountId,
-              module: 'ci',
-              orgIdentifier,
-              projectIdentifier,
-              pipelineIdentifier,
-              stageId: getString('buildText'),
-              sectionId: BuildTabs.EXECUTION,
-              ...(includeGitParams ? gitParams : {})
-            })
-          : routes.toPipelineStudio({
-              accountId: accountId,
-              module: 'ci',
-              orgIdentifier,
-              projectIdentifier,
-              pipelineIdentifier,
-              stageId: getString('buildText'),
-              sectionId: BuildTabs.EXECUTION
-            })
-      )
+      const commonQueryParams = {
+        accountId: accountId,
+        module: 'ci' as Module,
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
+        stageId: getString('buildText'),
+        sectionId: BuildTabs.EXECUTION,
+        ...(includeGitParams && gitParams)
+      }
+
+      history.push((CI_YAML_VERSIONING ? routes.toPipelineStudioV1 : routes.toPipelineStudio)({ ...commonQueryParams }))
     },
     [CI_YAML_VERSIONING, accountId, orgIdentifier, projectIdentifier]
   )

@@ -236,7 +236,7 @@ describe('Test StepUtils', () => {
     expect(errorKeys).toContain('prCloneStrategy')
     expect(errorKeys).toContain('resources')
   })
-  test('Test validatePipeline method with optional variable support', () => {
+  test('Test validatePipeline method with required variable property support', () => {
     const errors = validatePipeline({
       pipeline: pipelineWithVariables as unknown as PipelineInfoConfig,
       originalPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
@@ -245,17 +245,28 @@ describe('Test StepUtils', () => {
       viewType: StepViewType.DeploymentForm,
       getString
     })
-    expect(has(errors, 'variables')).toBeFalsy()
+    expect(has(errors, 'variables')).toBeTruthy()
+    expect(
+      isMatch(errors, {
+        variables: [{ value: 'fieldRequired' }]
+      })
+    ).toBeTruthy()
   })
 
-  test('Test validateStage method with optional variable support', () => {
+  test('Test validateStage method with required variable property support', () => {
     const errors = validateStage({
       stage: stageWithVariables as unknown as StageElementConfig,
       template: templateStageWithVariables as unknown as StageElementConfig,
       originalStage: originalStageWithVariables as StageElementConfig,
-      viewType: StepViewType.InputSet,
+      resolvedStage: originalStageWithVariables as StageElementConfig,
+      viewType: StepViewType.DeploymentForm,
       getString
     })
-    expect(has(errors, 'variables')).toBeFalsy()
+    expect(has(errors, 'variables')).toBeTruthy()
+    expect(
+      isMatch(errors, {
+        variables: [{ value: 'fieldRequired' }, { value: 'fieldRequired' }]
+      })
+    ).toBeTruthy()
   })
 })

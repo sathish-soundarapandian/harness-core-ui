@@ -51,6 +51,7 @@ export function GroupedLogs(
     }
 
     if (!currentSection?.data.length) {
+      actions.updateManuallyToggled(id)
       actions.fetchSectionData(id)
     } else {
       actions.toggleSection(id)

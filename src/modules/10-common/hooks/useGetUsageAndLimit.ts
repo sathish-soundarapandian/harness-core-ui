@@ -24,6 +24,7 @@ import {
 } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetLicenseUsage as useGetFFUsage } from 'services/cf'
+import { useGetChaosLicenseUsage } from 'services/chaos'
 import { useGetUsage as useGetCIUsage } from 'services/ci'
 import { useUsageReportUsage as useGetSTOUsage } from 'services/sto/stoComponents'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -78,6 +79,9 @@ interface UsageProps {
   cet?: {
     activeAgents?: UsageProp
   }
+  chaos?: {
+    experimentRunsPerMonth?: UsageProp
+  }
 }
 
 interface LimitProps {
@@ -104,7 +108,6 @@ interface LimitProps {
   }
   chaos?: {
     totalChaosExperimentRuns?: number
-    totalChaosInfrastructures?: number
   }
 }
 
@@ -178,8 +181,7 @@ function useGetLimit(module: ModuleName): LimitReturn {
       case ModuleName.CHAOS: {
         moduleLimit = {
           chaos: {
-            totalChaosExperimentRuns: (limitData?.data as ChaosModuleLicenseDTO)?.totalChaosExperimentRuns,
-            totalChaosInfrastructures: (limitData?.data as ChaosModuleLicenseDTO)?.totalChaosInfrastructures
+            totalChaosExperimentRuns: (limitData?.data as ChaosModuleLicenseDTO)?.totalChaosExperimentRuns
           }
         }
         break
@@ -338,6 +340,17 @@ export function useGetUsage(module: ModuleName): UsageReturn {
       enabled: module === ModuleName.CET
     }
   )
+  const {
+    data: chaosUsageData,
+    loading: loadingChaosUsage,
+    error: chaosUsageError,
+    refetch: refetchChaosUsage
+  } = useGetChaosLicenseUsage({
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: module !== ModuleName.CHAOS
+  })
 
   function setUsageByModule(): void {
     switch (module) {
@@ -434,6 +447,18 @@ export function useGetUsage(module: ModuleName): UsageReturn {
           refetchUsage: refetchCETUsage
         })
         break
+      case ModuleName.CHAOS:
+        setUsageData({
+          usage: {
+            chaos: {
+              experimentRunsPerMonth: chaosUsageData?.experimentRunsPerMonth
+            }
+          },
+          loadingUsage: loadingChaosUsage,
+          usageErrorMsg: chaosUsageError?.message,
+          refetchUsage: refetchChaosUsage
+        })
+        break
     }
   }
 
@@ -466,7 +491,10 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     cetUsageData,
     cetUsageError,
     loadingCETUsage,
-    refetchCETUsage
+    refetchCETUsage,
+    chaosUsageData,
+    loadingChaosUsage,
+    chaosUsageError
   ])
 
   return usageData

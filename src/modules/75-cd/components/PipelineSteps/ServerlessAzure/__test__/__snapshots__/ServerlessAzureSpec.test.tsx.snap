@@ -216,6 +216,9 @@ exports[`Test ServerlessAzureSpec snapshot should render edit view with empty in
         <div>
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
             <div
               class="connectorLabel connectorRef"
@@ -487,6 +490,9 @@ exports[`Test ServerlessAzureSpec snapshot should render edit view with runtime 
         class="FormikForm--main"
       >
         <div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
@@ -762,6 +768,9 @@ exports[`Test ServerlessAzureSpec snapshot should render edit view with values  
         class="FormikForm--main"
       >
         <div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >

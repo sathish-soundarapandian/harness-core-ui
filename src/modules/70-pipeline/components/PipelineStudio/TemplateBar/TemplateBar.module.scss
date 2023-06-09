@@ -116,3 +116,17 @@
     }
   }
 }
+
+.inlineText {
+  flex-grow: 1;
+}
+
+.gitRemoteDetailsWrapper {
+  display: block !important;
+  flex-grow: 1 !important;
+  padding-left: var(--spacing-xlarge) !important;
+}
+
+.gitRemoteDetails {
+  color: var(--white) !important;
+}

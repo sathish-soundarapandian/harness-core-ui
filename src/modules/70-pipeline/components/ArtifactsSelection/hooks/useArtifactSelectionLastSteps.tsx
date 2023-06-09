@@ -7,7 +7,6 @@
 
 import React from 'react'
 
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type {
   AmazonS3InitialValuesType,
@@ -76,9 +75,7 @@ export function useArtifactSelectionLastSteps(params: ArtifactSelectionLastSteps
   const { selectedArtifact, artifactLastStepProps, artifactPrevStepData, isArtifactEditMode, selectedConnector } =
     params
 
-  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
-
-  const shouldPassPrevStepData = isArtifactEditMode && !!selectedConnector && CDS_SERVICE_CONFIG_LAST_STEP
+  const shouldPassPrevStepData = isArtifactEditMode && !!selectedConnector
 
   switch (selectedArtifact) {
     case ENABLED_ARTIFACT_TYPES.Gcr:

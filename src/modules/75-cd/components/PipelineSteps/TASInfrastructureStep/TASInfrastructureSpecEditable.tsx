@@ -34,6 +34,7 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import type { TASInfrastructureUI } from './TASInfrastructureStep'
 import {
   TASInfrastructureSpecEditableProps,
@@ -204,7 +205,8 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
             organization:
               getValue(value.organization) === '' ? /* istanbul ignore next */ undefined : getValue(value.organization),
             space: getValue(value.space) === '' ? /* istanbul ignore next */ undefined : getValue(value.space),
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value?.provisioner || undefined
           }
           /* istanbul ignore else */ if (value.connectorRef) {
             data.connectorRef = value.connectorRef?.value || /* istanbul ignore next */ value.connectorRef
@@ -220,6 +222,9 @@ const TASInfrastructureSpecEditableNew: React.FC<TASInfrastructureSpecEditablePr
           formikRef.current = formik
           return (
             <FormikForm>
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <ProvisionerField name="provisioner" isReadonly />
+              </Layout.Horizontal>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

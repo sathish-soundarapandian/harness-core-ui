@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 export const getMockFor_useGetPipeline = (): any => ({
   data: {
     data: {
@@ -35,7 +42,12 @@ export const getMockFor_useGetPipeline = (): any => ({
   variables:
     - name: checkVariable1
       type: String
-      value: <+input>`,
+      value: <+input>
+      required: true
+    - name: checkVariable2
+      type: String
+      value: <+input>
+      required: false`,
       yamlPipeline: `pipeline:
   name: TestPipeline
   identifier: First
@@ -70,7 +82,12 @@ export const getMockFor_useGetPipeline = (): any => ({
   variables:
     - name: checkVariable1
       type: String
-      value: <+input>`
+      value: <+input>
+      required: true
+    - name: checkVariable2
+      type: String
+      value: <+input>
+      required: false`
     }
   }
 })
@@ -143,6 +160,9 @@ export const getMockFor_useGetTemplateFromPipeline = (): any => ({
   variables:
     - name: "checkVariable1"
       type: "String"
+      value: "<+input>"
+    - name: "checkVariable2"
+      type: "String"
       value: "<+input>"`
     }
   })
@@ -152,7 +172,7 @@ export const getMockFor_useGetMergeInputSetFromPipelineTemplateWithListInput = (
   mutate: jest.fn().mockResolvedValue({
     data: {
       pipelineYaml:
-        'pipeline:\n  identifier: "First"\n  variables:\n  - name: "checkVariable1"\n    type: "String"\n    value: "valuefrominputsetsmerge"\n'
+        'pipeline:\n  identifier: "First"\n  variables:\n  - name: "checkVariable1"\n    type: "String"\n    value: "valuefrominputsetsmerge"\n  - name: "checkVariable2"\n    type: "String"\n    value: "value2frominputsetsmerge"\n'
     }
   })
 })

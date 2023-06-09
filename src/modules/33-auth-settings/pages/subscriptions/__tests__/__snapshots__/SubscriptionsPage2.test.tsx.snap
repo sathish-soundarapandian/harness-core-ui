@@ -26,7 +26,7 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
       common.plans.title
     </h1>
     <div
-      class="Layout--horizontal StyledProps--main moduleSelectCards StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      class="StyledProps--font StyledProps--main moduleSelectCards"
     >
       <div
         class="bp3-card bp3-elevation-0 Card--card moduleSelectCard cd Card--selected"
@@ -988,7 +988,7 @@ exports[`Subscriptions Page should render CI details  with no data service table
       common.plans.title
     </h1>
     <div
-      class="Layout--horizontal StyledProps--main moduleSelectCards StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+      class="StyledProps--font StyledProps--main moduleSelectCards"
     >
       <div
         class="bp3-card bp3-elevation-0 Card--card moduleSelectCard"

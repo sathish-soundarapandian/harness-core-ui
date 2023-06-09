@@ -11,7 +11,7 @@
 
   .variable-list-row {
     display: grid;
-    grid-template-columns: repeat(3, minmax(10px, 1fr));
+    grid-template-columns: 1fr 1fr 2fr;
     gap: var(--spacing-small);
     padding: var(--spacing-small);
     border-bottom: solid 1px;

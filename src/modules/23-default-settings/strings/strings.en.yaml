@@ -17,6 +17,7 @@ stepTimeout: Step Timeout
 concurrentActivePipelineExecutions: Concurrent Active Pipeline Executions
 enablePipelineExecutionAuditEvents: Enable Pipeline Execution Audit Events
 allowUserToMarkStepAsFailedExplicitly: Allow users to mark a running Step as failure
+emailToNonHarnessUsers: Enable Emails to be sent to non-Harness Users
 enableMatrixFieldNames: Enable Matrix Labels By Name
 perspectivePreferences: PERSPECTIVES PREFERENCES
 showAnomalies: Show anomalies

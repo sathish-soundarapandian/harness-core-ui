@@ -419,7 +419,7 @@ exports[`Project Page List Create Project and Close 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     test
@@ -896,7 +896,7 @@ exports[`Project Page List Create Project and Close 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     UI for the Payment
@@ -1373,7 +1373,7 @@ exports[`Project Page List Create Project and Close 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Online users
@@ -2285,7 +2285,7 @@ exports[`Project Page List Create Project and Close 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Demo project
@@ -2762,7 +2762,7 @@ exports[`Project Page List Create Project and Close 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Drone
@@ -3239,7 +3239,7 @@ exports[`Project Page List Create Project and Close 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Swagger 2.0
@@ -4065,7 +4065,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     test
@@ -4542,7 +4542,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     UI for the Payment
@@ -5019,7 +5019,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Online users
@@ -5931,7 +5931,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Demo project
@@ -6408,7 +6408,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Drone
@@ -6885,7 +6885,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Swagger 2.0
@@ -7711,7 +7711,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     test
@@ -8188,7 +8188,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     UI for the Payment
@@ -8665,7 +8665,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Online users
@@ -9577,7 +9577,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Demo project
@@ -10054,7 +10054,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Drone
@@ -10531,7 +10531,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Swagger 2.0
@@ -11357,7 +11357,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     test
@@ -11834,7 +11834,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     UI for the Payment
@@ -12311,7 +12311,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Online users
@@ -13223,7 +13223,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Demo project
@@ -13700,7 +13700,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Drone
@@ -14177,7 +14177,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
                     idLabel
                   </p>
                   <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
+                    class="StyledProps--font Text--lineclamp StyledProps--main breakWord StyledProps--font-variation-small StyledProps--color StyledProps--color-grey400"
                     style="--text-line-clamp: 2;"
                   >
                     Swagger 2.0

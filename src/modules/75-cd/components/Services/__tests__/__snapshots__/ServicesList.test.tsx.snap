@@ -178,11 +178,16 @@ exports[`ServicesList render 1`] = `
     <div
       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--padding-right-large StyledProps--padding-left-large"
     >
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-lead StyledProps--color StyledProps--color-grey700"
+      <div
+        class="Text--withDocsTooltip"
+        data-tooltip-id="serviceDashboardTotalServices"
       >
-        cd.serviceDashboard.totalServices
-      </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-lead StyledProps--color StyledProps--color-grey700"
+        >
+          cd.serviceDashboard.totalServices
+        </p>
+      </div>
       <div
         class="bp3-popover-wrapper DropDown--main"
       >

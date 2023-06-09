@@ -22,7 +22,7 @@ import { useParams } from 'react-router-dom'
 import { debounce, defaultTo, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 
-import type { AwsLambdaInfrastructure } from 'services/cd-ng'
+import type { AwsLambdaInfrastructure, ExecutionElementConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useListAwsRegions } from 'services/portal'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -36,6 +36,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { connectorTypes } from '@pipeline/utils/constants'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getAwsLambdaInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import css from './AwsLambdaInfraSpec.module.scss'
@@ -45,6 +46,7 @@ export interface AwsLambdaInfraSpecEditableProps {
   onUpdate?: (data: AwsLambdaInfrastructure) => void
   readonly?: boolean
   allowableTypes: AllowedTypes
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProps> = ({
@@ -84,13 +86,14 @@ export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProp
   return (
     <Layout.Vertical spacing="medium">
       <Formik<AwsLambdaInfrastructure>
-        formName={'ECSInfraSpecEditable'}
+        formName={'AwsLambdaInfraSpecEditable'}
         initialValues={initialValues}
         validate={value => {
           const data: Partial<AwsLambdaInfrastructure> = {
             connectorRef: undefined,
             region: value.region === '' ? undefined : value.region,
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value?.provisioner || undefined
           }
           if (value.connectorRef) {
             data.connectorRef = getConnectorRefValue(value.connectorRef as ConnectorRefFormValueType)
@@ -105,6 +108,9 @@ export const AwsLambdaInfraSpecEditable: React.FC<AwsLambdaInfraSpecEditableProp
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <ProvisionerField name="provisioner" isReadonly />
+              </Layout.Horizontal>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

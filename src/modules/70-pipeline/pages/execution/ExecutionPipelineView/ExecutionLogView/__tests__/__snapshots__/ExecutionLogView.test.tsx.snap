@@ -234,9 +234,12 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                       />
                     </svg>
                   </span>
-                  <span>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1;"
+                  >
                     Google1
-                  </span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -470,9 +473,12 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                       />
                     </svg>
                   </span>
-                  <span>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1;"
+                  >
                     Google2
-                  </span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -524,7 +530,10 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                       />
                     </svg>
                   </span>
-                  <span />
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1;"
+                  />
                 </div>
               </div>
             </div>
@@ -576,7 +585,10 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                       />
                     </svg>
                   </span>
-                  <span />
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1;"
+                  />
                 </div>
               </div>
             </div>

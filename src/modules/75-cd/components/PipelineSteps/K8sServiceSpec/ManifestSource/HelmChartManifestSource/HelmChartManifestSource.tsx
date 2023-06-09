@@ -26,7 +26,6 @@ import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/Triggers
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -74,7 +73,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     fileUsage = FileUsage.MANIFEST_FILE
   } = props
   const { getString } = useStrings()
-  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const { getRBACErrorMessage } = useRBACError()
   const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
@@ -712,7 +710,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
         )}
       </div>
 
-      {NG_CDS_HELM_SUB_CHARTS && isFieldRuntime(`${manifestPath}.spec.subChartPath`, template) && (
+      {isFieldRuntime(`${manifestPath}.spec.subChartPath`, template) && (
         <TextFieldInputSetView
           template={template}
           fieldPath={`${manifestPath}.spec.subChartPath`}

@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Text } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
 import type { FontSize } from '@harness/design-system'
 import React from 'react'
 import type { Variation } from 'services/cf'
 import { CFVariationColors } from '@cf/constants'
+
 interface VariationWithIconProps {
   variation?: Variation
   index: number
@@ -32,7 +33,7 @@ export const VariationWithIcon: React.FC<VariationWithIconProps> = ({
   const { name, value } = variation
 
   return (
-    <>
+    <Layout.Horizontal flex={{ alignItems: 'flex-start' }} spacing="xsmall">
       <span
         style={{
           borderRadius: '50%',
@@ -42,9 +43,11 @@ export const VariationWithIcon: React.FC<VariationWithIconProps> = ({
           display: 'inline-block',
           ...iconStyle
         }}
-      ></span>
+      />
       <Text
         inline
+        lineClamp={1}
+        width="200px"
         margin={{ bottom: 'xsmall' }}
         color={color}
         font={{ size: fontSize }}
@@ -52,6 +55,6 @@ export const VariationWithIcon: React.FC<VariationWithIconProps> = ({
       >
         {textElement || name || value}
       </Text>
-    </>
+    </Layout.Horizontal>
   )
 }

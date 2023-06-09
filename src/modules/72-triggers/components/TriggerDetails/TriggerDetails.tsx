@@ -36,7 +36,8 @@ export default function TriggerDetails({ children }: { children: React.ReactElem
       projectIdentifier,
       repoIdentifier,
       branch
-    }
+    },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const pipelineInfo = data?.data

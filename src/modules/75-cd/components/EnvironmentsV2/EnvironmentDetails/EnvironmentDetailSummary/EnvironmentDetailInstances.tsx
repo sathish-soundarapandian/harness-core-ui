@@ -94,8 +94,13 @@ export function EnvironmentDetailInstances(props: EnvironmentDetailInstancesProp
         selected={selectedService === serviceId}
       >
         <div className={css.serviceCardTitle}>
-          <Icon name="services" />
-          <Text font={{ variation: FontVariation.CARD_TITLE }} lineClamp={1} tooltipProps={{ isDark: true }}>
+          <Text
+            font={{ variation: FontVariation.CARD_TITLE }}
+            icon="services"
+            lineClamp={1}
+            width={250}
+            tooltipProps={{ isDark: true }}
+          >
             {serviceName}
           </Text>
         </div>

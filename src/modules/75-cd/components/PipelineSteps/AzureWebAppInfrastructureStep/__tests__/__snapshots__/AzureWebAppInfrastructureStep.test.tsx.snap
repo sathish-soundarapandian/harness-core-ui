@@ -275,6 +275,9 @@ exports[`Test Azure WebApp Infrastructure Spec snapshot Should render edit view 
           </div>
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
             <div>
               <button
@@ -554,6 +557,9 @@ exports[`Test Azure WebApp Infrastructure Spec snapshot Should render edit view 
               
             </p>
           </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
@@ -881,6 +887,9 @@ exports[`Test Azure WebApp Infrastructure Spec snapshot Should render edit view 
               
             </p>
           </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >

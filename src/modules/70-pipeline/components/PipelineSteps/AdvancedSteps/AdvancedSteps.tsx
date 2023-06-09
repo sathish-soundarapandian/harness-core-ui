@@ -36,7 +36,6 @@ import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
 import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { PolicyConfig, TemplateStepNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { isMultiTypeRuntime } from '@common/utils/utils'
@@ -56,7 +55,7 @@ export type FormValues = Pick<Values, 'delegateSelectors' | 'when' | 'strategy' 
   policySets?: PolicyConfig['policySets'] | typeof RUNTIME_INPUT_VALUE
 }
 
-export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTemplate' | 'onRemoveTemplate'> {
+export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTemplate' | 'onRemoveTemplate' | 'onUpdate'> {
   stepType?: StepType
   stageType?: StageType
   deploymentType?: string
@@ -144,7 +143,6 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
   const accordionRef = React.useRef<AccordionHandle>({} as AccordionHandle)
   const { getString } = useStrings()
   const isFailureStrategyDisabled = getIsFailureStrategyDisabled({ stageType, stepType })
-  const { NG_K8_COMMAND_FLAGS } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const failureStrategyValues = get(formikProps.values, 'failureStrategies')
   const loopingStrategyValues = get(formikProps.values, 'strategy')
@@ -159,13 +157,19 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
         return AdvancedPanels.DelegateSelectors
       }
 
-      if (!hiddenPanels.includes(AdvancedPanels.ConditionalExecution)) {
-        return AdvancedPanels.ConditionalExecution
-      }
+      /**
+       * Keeping all the accordians closed except delegate selector by default to tackle the
+       * situation where the Monaco Editor requires an extra mount
+       * https://harness.atlassian.net/browse/CDS-70764
+       */
 
-      if (!hiddenPanels.includes(AdvancedPanels.FailureStrategy)) {
-        return AdvancedPanels.FailureStrategy
-      }
+      // if (!hiddenPanels.includes(AdvancedPanels.ConditionalExecution)) {
+      //   return AdvancedPanels.ConditionalExecution
+      // }
+
+      // if (!hiddenPanels.includes(AdvancedPanels.FailureStrategy)) {
+      //   return AdvancedPanels.FailureStrategy
+      // }
 
       return ''
     },
@@ -322,8 +326,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
             />
           )}
           {!hiddenPanels.includes(AdvancedPanels.CommandFlags) &&
-          stepsFactory.getStep(stepType)?.hasCommandFlagSelectionVisible &&
-          NG_K8_COMMAND_FLAGS ? (
+          stepsFactory.getStep(stepType)?.hasCommandFlagSelectionVisible ? (
             <Accordion.Panel
               id={AdvancedPanels.CommandFlags}
               summary={getString('pipeline.stepDescription.AdvancedCommandFlags')}

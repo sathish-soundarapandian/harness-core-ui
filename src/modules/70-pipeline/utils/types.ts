@@ -106,3 +106,42 @@ export interface CloudFunctionTrafficShiftExecutionStepInitialValues extends Ste
     trafficPercent: number
   }
 }
+
+export interface AwsSamDeployStepInitialValues extends StepElementConfig {
+  spec: {
+    connectorRef: string
+    image?: string
+    deployCommandOptions?: string | string[]
+    stackName?: string
+    privileged?: boolean
+    imagePullPolicy?: string
+    runAsUser?: string
+    envVariables?: { [key: string]: string }
+    resources?: {
+      limits?: {
+        memory?: string
+        cpu?: string
+      }
+    }
+  }
+}
+
+export interface AwsSamBuildStepInitialValues extends StepElementConfig {
+  spec: {
+    connectorRef: string
+    samBuildDockerRegistryConnectorRef: string
+    image?: string
+    samVersion?: string
+    buildCommandOptions?: string | string[]
+    privileged?: boolean
+    imagePullPolicy?: string
+    runAsUser?: string
+    envVariables?: { [key: string]: string }
+    resources?: {
+      limits?: {
+        memory?: string
+        cpu?: string
+      }
+    }
+  }
+}

@@ -8,7 +8,7 @@
 import React from 'react'
 import { Classes } from '@blueprintjs/core'
 import cx from 'classnames'
-import { Container, Heading, Layout, Text, Utils } from '@harness/uicore'
+import { Container, Heading, Text, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { ContainerProps } from '@harness/uicore/dist/components/Container/Container'
 import { useStrings } from 'framework/strings'
@@ -156,13 +156,11 @@ const FlagResultTooltip: React.FC<FlagResultProps> = ({ feature, metrics, metric
                         {metric.variationName}
                       </Text>
                     ) : (
-                      <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }}>
-                        <VariationWithIcon
-                          variation={feature.variations[index]}
-                          index={index}
-                          textStyle={{ color: Color.WHITE, fontSize: '11px' }}
-                        />
-                      </Layout.Horizontal>
+                      <VariationWithIcon
+                        variation={feature.variations[index]}
+                        index={index}
+                        textStyle={{ color: Color.WHITE, fontSize: '11px' }}
+                      />
                     )}
                   </td>
                   <td>

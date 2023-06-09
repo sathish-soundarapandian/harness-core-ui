@@ -28,10 +28,11 @@ interface Props {
   readonly?: boolean
   className?: string
   allValues?: ArtifactSourceConfigDetails
+  shouldUtilizeFullWidth?: boolean
 }
 
 export function ArtifactSourceConfigRuntimeInputs(props: Props) {
-  const { template, allowableTypes, path, readonly, allValues } = props
+  const { template, allowableTypes, path, readonly, allValues, shouldUtilizeFullWidth } = props
   const artifactSourceType = template?.type as ArtifactType
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
   const artifactSource = artifactSourceType && artifactSourceBaseFactory.getArtifactSource(artifactSourceType)
@@ -81,7 +82,8 @@ export function ArtifactSourceConfigRuntimeInputs(props: Props) {
                 initialValues: { artifacts: { primary: template } },
                 artifactPath: 'primary',
                 formik: formikProps,
-                path
+                path,
+                shouldUtilizeFullWidth
               })}
           </>
         )

@@ -10,5 +10,8 @@ declare const styles: {
   readonly expiresOnLabel: string
   readonly hoverMsg: string
   readonly hoverMsgTarget: string
+  readonly referenceSecret: string
+  readonly refernceSecretLayout: string
+  readonly testBtn: string
 }
 export default styles

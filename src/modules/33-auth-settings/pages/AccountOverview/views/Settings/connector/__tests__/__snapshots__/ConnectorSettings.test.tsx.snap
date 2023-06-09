@@ -120,7 +120,7 @@ exports[`Test ConnectorSetting Should render ConnectorSetting initial load - Bui
         class="bp3-popover-target"
       >
         <label
-          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkboxBuiltInSm StyledProps--main"
+          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkboxBuiltInSm Checkbox--checked StyledProps--main"
         >
           <input
             checked=""

@@ -53,7 +53,6 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import TargetingRulesTab from '@cf/pages/feature-flags-detail/targeting-rules-tab/TargetingRulesTab'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import FlagPipelineTab from '@cf/pages/feature-flags-detail/flag-pipeline-tab/FlagPipelineTab'
-import TabTargeting from '../EditFlagTabs/TabTargeting'
 import TabActivity from '../EditFlagTabs/TabActivity'
 import { CFEnvironmentSelect } from '../CFEnvironmentSelect/CFEnvironmentSelect'
 import patch, { ClauseData, getDiff } from '../../utils/instructions'
@@ -122,7 +121,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
   })
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
 
-  const { FFM_1513, FFM_2134_FF_PIPELINES_TRIGGER } = useFeatureFlags()
+  const { FFM_2134_FF_PIPELINES_TRIGGER } = useFeatureFlags()
 
   const { gitSyncValidationSchema, gitSyncInitialValues } =
     gitSync?.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.UPDATED_FLAG_RULES) || {}
@@ -432,7 +431,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
     return <PageError message={getErrorMessage(envsError)} onClick={() => refetchEnvironments()} />
   }
 
-  if (envsLoading || newEnvironmentCreateLoading || (refetchFlagLoading && !FFM_1513)) {
+  if (envsLoading || newEnvironmentCreateLoading) {
     return <ContainerSpinner height="100%" flex={{ justifyContent: 'center', alignItems: 'center' }} />
   }
 
@@ -481,12 +480,12 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
       {formikProps => {
         return (
           <FormikForm>
-            <Container className={css.formContainer} height={FFM_1513 ? undefined : '100vh'}>
+            <Container className={css.formContainer}>
               <Layout.Horizontal className={css.environmentHeaderContainer} flex={{ alignItems: 'center' }}>
                 <FlexExpander />
                 <CFEnvironmentSelect component={<EnvironmentSelect />} />
               </Layout.Horizontal>
-              <Container data-is-new-targetting-rules={FFM_1513} className={css.tabContainer}>
+              <Container className={css.tabContainer}>
                 {flagData && (
                   <>
                     <Tabs
@@ -498,26 +497,11 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                         id={FFDetailPageTab.TARGETING}
                         title={<Text className={css.tabTitle}>{getString('cf.featureFlags.targeting')}</Text>}
                         panel={
-                          <>
-                            {FFM_1513 ? (
-                              <TargetingRulesTab
-                                featureFlagData={flagData}
-                                refetchFlag={refetchFlag}
-                                refetchFlagLoading={refetchFlagLoading}
-                              />
-                            ) : (
-                              <TabTargeting
-                                formikProps={formikProps}
-                                editing={editing}
-                                projectIdentifier={projectIdentifier}
-                                environmentIdentifier={environmentIdentifier}
-                                setEditing={setEditing}
-                                feature={flagData}
-                                orgIdentifier={orgIdentifier}
-                                accountIdentifier={accountIdentifier}
-                              />
-                            )}
-                          </>
+                          <TargetingRulesTab
+                            featureFlagData={flagData}
+                            refetchFlag={refetchFlag}
+                            refetchFlagLoading={refetchFlagLoading}
+                          />
                         }
                       />
 

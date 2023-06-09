@@ -30,6 +30,7 @@ export interface ResourceOption {
   disabled?: boolean
   selectable?: boolean
   bgColor?: string
+  hidden?: boolean
 }
 interface ResourceCardListProps {
   items?: ResourceOption[]
@@ -39,7 +40,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { GITOPS_ONPREM_ENABLED, CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const { GITOPS_ONPREM_ENABLED, CDS_OrgAccountLevelServiceEnvEnvGroup, CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
   const hideGitopsOnPrem = !gitopsOnPremEnabled && isOnPrem()
 
@@ -106,22 +107,27 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   ]
 
   const options: ResourceOption[] = items || [
-    ...(CDS_OrgAccountLevelServiceEnvEnvGroup
-      ? ([
-          {
-            label: <String stringID="services" />,
-            icon: 'services',
-            route: routes.toServices({ accountId, orgIdentifier }),
-            colorClass: css.connectors
-          },
-          {
-            label: <String stringID="environments" />,
-            icon: 'infrastructure',
-            route: routes.toEnvironment({ accountId, orgIdentifier }),
-            colorClass: css.connectors
-          }
-        ] as ResourceOption[])
-      : []),
+    {
+      label: <String stringID="services" />,
+      icon: 'services',
+      route: routes.toServices({ accountId, orgIdentifier }),
+      colorClass: css.connectors,
+      hidden: !CDS_OrgAccountLevelServiceEnvEnvGroup
+    },
+    {
+      label: <String stringID="environments" />,
+      icon: 'infrastructure',
+      route: routes.toEnvironment({ accountId, orgIdentifier }),
+      colorClass: css.connectors,
+      hidden: !CDS_OrgAccountLevelServiceEnvEnvGroup
+    },
+    {
+      label: <String stringID="common.overrides" />,
+      icon: 'infrastructure',
+      route: routes.toServiceOverrides({ accountId, orgIdentifier }),
+      colorClass: css.connectors,
+      hidden: !CDS_OrgAccountLevelServiceEnvEnvGroup || !CDS_SERVICE_OVERRIDES_2_0
+    },
 
     {
       label: <String stringID="connectorsLabel" />,
@@ -201,29 +207,31 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   return (
     <>
       <div className={css.cardsWrapper}>
-        {options.map(option => (
-          <Card
-            key={option.icon}
-            className={cx(css.card, option.colorClass)}
-            disabled={option.disabled}
-            onClick={() => {
-              option?.onClick?.()
-              if (option.route) {
-                history.push(option.route)
-              }
-            }}
-            selected={option.selectable && showGitOpsEntities}
-          >
-            <Layout.Vertical flex spacing="small">
-              <Icon name={option.icon} size={70} />
-              <Text color={Color.BLACK} font={{ weight: 'semi-bold' }}>
-                {option.label}
-              </Text>
-              {option.subLabel}
-            </Layout.Vertical>
-            {showGitOpsEntities && option.icon.includes('gitops') && <div className={css.arrowDown} />}
-          </Card>
-        ))}
+        {options
+          .filter(option => !option.hidden)
+          .map(option => (
+            <Card
+              key={option.icon}
+              className={cx(css.card, option.colorClass)}
+              disabled={option.disabled}
+              onClick={() => {
+                option?.onClick?.()
+                if (option.route) {
+                  history.push(option.route)
+                }
+              }}
+              selected={option.selectable && showGitOpsEntities}
+            >
+              <Layout.Vertical flex spacing="small">
+                <Icon name={option.icon} size={70} />
+                <Text color={Color.BLACK} font={{ weight: 'semi-bold' }}>
+                  {option.label}
+                </Text>
+                {option.subLabel}
+              </Layout.Vertical>
+              {showGitOpsEntities && option.icon.includes('gitops') && <div className={css.arrowDown} />}
+            </Card>
+          ))}
       </div>
       {showGitOpsEntities && (
         <div className={css.gitOpsEntities}>

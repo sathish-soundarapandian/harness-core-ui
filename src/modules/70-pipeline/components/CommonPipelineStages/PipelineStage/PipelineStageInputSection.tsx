@@ -388,7 +388,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const currentPipeline = { pipeline: get(formikRef.current, 'values') }
 
   const showInputSetSelector = (): boolean => {
-    return !!(pipeline && currentPipeline && hasRuntimeInputs && existingProvide === 'existing')
+    return !!(pipeline && currentPipeline && hasRuntimeInputs && existingProvide === 'existing' && hasInputSets)
   }
 
   const showPipelineInputSetForm = (): boolean => {
@@ -408,7 +408,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   }
 
   const handleExistingProvideRadioChange = (ev: FormEvent<HTMLInputElement>): void => {
-    const existingProvideValue = (ev.target as HTMLInputElement).value as ExistingProvide
+    const existingProvideValue = ev.currentTarget.checked ? 'existing' : 'provide'
     setExistingProvide(existingProvideValue)
     let stageData = undefined
     switch (existingProvideValue) {
@@ -460,51 +460,44 @@ function PipelineInputSetFormBasic(): React.ReactElement {
                 </Layout.Horizontal>
               ) : (
                 <>
-                  {hasInputSets ? (
-                    <>
-                      <Layout.Vertical className={css.pipelineHeader}>
-                        <SelectExistingInputsOrProvideNew
-                          existingProvide={existingProvide}
-                          onExistingProvideRadioChange={handleExistingProvideRadioChange}
+                  <Layout.Vertical>
+                    <SelectExistingInputsOrProvideNew
+                      existingProvide={existingProvide}
+                      onExistingProvideRadioChange={handleExistingProvideRadioChange}
+                      hasInputSets={hasInputSets}
+                    />
+                    {showInputSetSelector() ? (
+                      <GitSyncStoreProvider>
+                        <InputSetSelector
+                          pipelineIdentifier={pipelineIdentifier}
+                          onChange={inputsets => {
+                            setSelectedInputSets(inputsets)
+                          }}
+                          value={selectedInputSets}
+                          pipelineGitDetails={get(pipelineResponse, 'data.gitDetails')}
+                          invalidInputSetReferences={invalidInputSetReferences}
+                          loadingMergeInputSets={loadingInputSets}
+                          onReconcile={onReconcile}
+                          reRunInputSetYaml={''}
+                          childPipelineProps={{
+                            childOrgIdentifier: orgIdentifier,
+                            childProjectIdentifier: projectIdentifier,
+                            inputSetReferences: inputSetReferencesFromYaml
+                          }}
                         />
+                      </GitSyncStoreProvider>
+                    ) : null}
+                  </Layout.Vertical>
 
-                        {showInputSetSelector() ? (
-                          <GitSyncStoreProvider>
-                            <InputSetSelector
-                              pipelineIdentifier={pipelineIdentifier}
-                              onChange={inputsets => {
-                                setSelectedInputSets(inputsets)
-                              }}
-                              value={selectedInputSets}
-                              pipelineGitDetails={get(pipelineResponse, 'data.gitDetails')}
-                              invalidInputSetReferences={invalidInputSetReferences}
-                              loadingMergeInputSets={loadingInputSets}
-                              onReconcile={onReconcile}
-                              reRunInputSetYaml={''}
-                              childPipelineProps={{
-                                usePortal: true,
-                                childOrgIdentifier: orgIdentifier,
-                                childProjectIdentifier: projectIdentifier,
-                                inputSetReferences: inputSetReferencesFromYaml
-                              }}
-                            />
-                          </GitSyncStoreProvider>
-                        ) : null}
-                      </Layout.Vertical>
-                    </>
-                  ) : null}
                   {showPipelineInputSetForm() ? (
                     <>
-                      {existingProvide === 'existing' ? <div className={css.divider} /> : null}
+                      <div className={css.divider} />
                       <PipelineInputSetFormInternal
                         originalPipeline={resolvedPipeline as PipelineInfoConfig}
                         template={defaultTo(inputSetTemplate?.pipeline, {} as PipelineInfoConfig)}
                         readonly={existingProvide === 'existing'}
                         path=""
                         viewType={StepViewType.TemplateUsage}
-                        maybeContainerClass={
-                          existingProvide === 'provide' && hasInputSets ? css.inputSetFormRunPipeline : ''
-                        }
                         allowableTypes={allowableTypes}
                         viewTypeMetadata={isChildPipBuildRuntime.current ? { isTemplateBuilder: true } : undefined}
                       />

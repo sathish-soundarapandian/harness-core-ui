@@ -9,6 +9,7 @@
 declare const styles: {
   readonly gridDisplay: string
   readonly idText: string
+  readonly newEnvInput: string
   readonly sdkLabel: string
   readonly secret: string
   readonly selectEnvironment: string

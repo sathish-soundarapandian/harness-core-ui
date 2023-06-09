@@ -139,6 +139,8 @@ export const healthSourceTypeMapping = (type: HealthSourceTypes): ConnectorInfoD
       return Connectors.GCP
     case HealthSourceTypes.Elk as ConnectorInfoDTO['type']:
       return Connectors.ELK
+    case HealthSourceTypes.CloudWatchMetrics as ConnectorInfoDTO['type']:
+      return Connectors.AWS
     default:
       return type as ConnectorInfoDTO['type']
   }

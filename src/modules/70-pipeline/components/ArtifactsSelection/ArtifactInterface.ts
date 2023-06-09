@@ -425,6 +425,7 @@ export interface ACRArtifactType {
   subscriptionId?: SelectOption | string
   registry?: SelectOption | string
   spec?: any
+  digest?: string
 }
 
 export interface GoogleCloudStorageInitialValuesType {

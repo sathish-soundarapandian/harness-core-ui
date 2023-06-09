@@ -266,6 +266,9 @@ exports[`Test TAS WebApp Infrastructure Spec snapshot Should render edit view wi
         <div>
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
             <div>
               <button
@@ -536,6 +539,9 @@ exports[`Test TAS WebApp Infrastructure Spec snapshot Should render edit view wi
         class="FormikForm--main"
       >
         <div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
@@ -854,6 +860,9 @@ exports[`Test TAS WebApp Infrastructure Spec snapshot Should render edit view wi
         class="FormikForm--main"
       >
         <div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >

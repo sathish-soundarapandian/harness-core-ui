@@ -40,14 +40,14 @@ jest.mock('@pipeline/utils/useSaveTemplate', () => ({
   })
 }))
 
-const openTemplateErrorsModalMock = jest.fn()
+const openTemplateReconcileErrorsModalMock = jest.fn()
 
 jest.mock('@pipeline/components/TemplateErrors/useTemplateErrors', () => ({
   __esModule: true,
   default: () => {
     return {
-      openTemplateErrorsModal: jest.fn().mockImplementation(() => {
-        openTemplateErrorsModalMock()
+      openTemplateReconcileErrorsModal: jest.fn().mockImplementation(() => {
+        openTemplateReconcileErrorsModalMock()
       })
     }
   }
@@ -322,6 +322,6 @@ describe('<SaveTemplatePopover /> tests', () => {
       }
     )
 
-    await waitFor(() => expect(openTemplateErrorsModalMock).toBeCalled())
+    await waitFor(() => expect(openTemplateReconcileErrorsModalMock).toBeCalled())
   })
 })

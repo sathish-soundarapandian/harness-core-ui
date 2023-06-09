@@ -1,0 +1,38 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "name": "GCR Trigger",
+    "identifier": "GCR_Trigger",
+    "tags": {},
+    "version": 1,
+    "numOfStages": 1,
+    "createdAt": 1685426459228,
+    "lastUpdatedAt": 1685431409388,
+    "modules": ["cd", "pms"],
+    "executionSummaryInfo": {
+      "numOfErrors": [],
+      "deployments": []
+    },
+    "filters": {
+      "cd": {
+        "deploymentTypes": ["Kubernetes"],
+        "environmentNames": ["Nexus2"],
+        "serviceNames": ["GCR Trigger"],
+        "infrastructureTypes": ["KubernetesDirect"]
+      },
+      "pms": {
+        "stageTypes": [],
+        "featureFlagStepCount": 0
+      }
+    },
+    "stageNames": ["S1"],
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "storeType": "INLINE",
+    "isDraft": false
+  },
+  "metaData": null,
+  "correlationId": "7345fdda-9d98-40fe-9d21-bb553548cb7a"
+}

@@ -9,7 +9,7 @@ import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import * as Yup from 'yup'
 import { connect, FormikErrors, yupToFormErrors } from 'formik'
-import { isArray, isEmpty } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -25,7 +25,6 @@ import { JenkinsStepBaseWithRef } from './JenkinsStepBase'
 import JenkinsStepInputSetBasic from './JenkinsStepInputSet'
 import { JenkinsStepVariables, JenkinsStepVariablesProps } from './JenkinsStepVariables'
 import type { JenkinsStepSpec, JenkinsStepData } from './types'
-import { variableSchema } from './helper'
 
 const JenkinsStepInputSet = connect(JenkinsStepInputSetBasic)
 export interface JenkinsStepSpecUI
@@ -162,25 +161,6 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
     ) {
       errors.spec = {
         jobName: getString?.('pipeline.jenkinsStep.validations.jobName')
-      }
-    }
-
-    /* istanbul ignore else */
-    if (isArray(template?.spec?.jobParameter) && getString) {
-      try {
-        const schema = Yup.object().shape({
-          spec: Yup.object().shape({
-            jobParameter: variableSchema(getString)
-          })
-        })
-        schema.validateSync(data)
-      } catch (e) {
-        /* istanbul ignore else */
-        if (e instanceof Yup.ValidationError) {
-          const err = yupToFormErrors(e)
-
-          Object.assign(errors, err)
-        }
       }
     }
 

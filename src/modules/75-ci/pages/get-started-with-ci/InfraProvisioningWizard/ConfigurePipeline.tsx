@@ -37,6 +37,7 @@ import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranch
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
 import { Status } from '@common/utils/Constants'
+import { isValidYAMLFilePath } from '@common/constants/Utils'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import { SupportedGitProvidersForCIOnboarding } from './SelectGitProvider'
 import { getValidRepoName } from '../../../utils/HostedBuildsUtils'
@@ -241,7 +242,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                             .trim()
                             .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
                             .test('is-valid-yaml-file', getString('ci.getStartedWithCI.validYAMLFile'), value => {
-                              return (value as string)?.endsWith('.yaml')
+                              return value && isValidYAMLFilePath(value as string)
                             })
                         })}
                       >
@@ -420,7 +421,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                   .trim()
                   .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
                   .test('is-valid-yaml-file', getString('ci.getStartedWithCI.validYAMLFile'), value => {
-                    return (value as string)?.endsWith('.yaml')
+                    return value && isValidYAMLFilePath(value as string)
                   })
               })}
               initialValues={{

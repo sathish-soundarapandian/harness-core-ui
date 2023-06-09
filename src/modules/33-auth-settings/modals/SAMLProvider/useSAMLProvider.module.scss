@@ -52,3 +52,10 @@
   position: relative;
   left: var(--spacing-xxxlarge);
 }
+
+.additionalFieldsContainer {
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.2) inset;
+  height: 400px;
+  overflow-y: scroll;
+  padding: var(--spacing-small) !important;
+}

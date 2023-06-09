@@ -128,6 +128,7 @@ export function ExecutionVerificationSummary(props: VerifyExecutionProps): JSX.E
         className={css.details}
         onSelectNode={onSelectNode}
         isConsoleView={isConsoleView}
+        activityId={activityId}
       />
       {displayAnalysisCount && (
         <SummaryOfDeployedNodes

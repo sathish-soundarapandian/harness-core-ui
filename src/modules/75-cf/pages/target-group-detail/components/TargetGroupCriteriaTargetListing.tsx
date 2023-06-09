@@ -28,7 +28,7 @@ const TargetGroupCriteriaTargetListing: FC<TargetGroupCriteriaTargetListingProps
     <ul className={css.listing}>
       {targets.map(({ name, identifier }) => (
         <li key={identifier}>
-          <Tag>{name}</Tag>
+          <Tag className={css.tagName}>{name}</Tag>
         </li>
       ))}
     </ul>

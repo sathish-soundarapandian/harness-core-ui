@@ -34,6 +34,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { connectorTypes } from '@pipeline/utils/constants'
+import ProvisionerField from '@pipeline/components/Provisioner/ProvisionerField'
 import { ConnectorRefFormValueType, getConnectorRefValue } from '@cd/utils/connectorUtils'
 import { getAsgInfraValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import css from './AsgInfraSpec.module.scss'
@@ -87,7 +88,8 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
           const data: Partial<AsgInfrastructure> = {
             connectorRef: undefined,
             region: value.region === '' ? undefined : value.region,
-            allowSimultaneousDeployments: value.allowSimultaneousDeployments
+            allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+            provisioner: value?.provisioner || undefined
           }
           if (value.connectorRef) {
             data.connectorRef = getConnectorRefValue(value.connectorRef as ConnectorRefFormValueType)
@@ -102,6 +104,9 @@ export const AsgInfraSpecEditable: React.FC<AsgInfraSpecEditableProps> = ({
           formikRef.current = formik as FormikProps<unknown> | null
           return (
             <FormikForm>
+              <Layout.Horizontal className={css.formRow} spacing="medium">
+                <ProvisionerField name="provisioner" isReadonly />
+              </Layout.Horizontal>
               <Layout.Horizontal className={css.formRow} spacing="medium">
                 <FormMultiTypeConnectorField
                   name="connectorRef"

@@ -698,7 +698,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
         <PageHeader
           className={css.pageHeaderStyles}
           title={
-            <Layout.Horizontal width="97%" flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
+            <Layout.Horizontal width="42%">
               <Text
                 lineClamp={1}
                 color={Color.GREY_800}
@@ -751,56 +751,58 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                   showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSet?.storeType, isEdit)}
                 />
               </div>
-              <Button
-                text="View Diff"
-                variation={ButtonVariation.PRIMARY}
-                onClick={props.openDiffModal}
-                style={{ marginLeft: '15px' }}
-              />
-              <Popover
-                className={cx(Classes.DARK, css.reconcileMenu)}
-                position={Position.LEFT}
-                isOpen={menuOpen}
-                onInteraction={nextOpenState => {
-                  handleMenu(nextOpenState)
-                }}
-              >
+              <div className={css.reconcileMenu}>
                 <Button
-                  variation={ButtonVariation.ICON}
-                  icon="Options"
-                  aria-label="input set menu actions"
-                  onClick={() => handleMenu(true)}
+                  text="View Diff"
+                  variation={ButtonVariation.PRIMARY}
+                  onClick={props.openDiffModal}
+                  style={{ marginLeft: '15px' }}
                 />
-                <Menu style={{ backgroundColor: 'unset' }}>
-                  <OutOfSyncErrorStrip
-                    inputSet={inputSet}
-                    pipelineGitDetails={get(pipeline, 'data.gitDetails')}
-                    fromInputSetForm
-                    inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
-                    closeReconcileMenu={() => handleMenu(false)}
+                <Popover
+                  className={cx(Classes.DARK)}
+                  position={Position.LEFT}
+                  isOpen={menuOpen}
+                  onInteraction={nextOpenState => {
+                    handleMenu(nextOpenState)
+                  }}
+                >
+                  <Button
+                    variation={ButtonVariation.ICON}
+                    icon="Options"
+                    aria-label="input set menu actions"
+                    onClick={() => handleMenu(true)}
                   />
-
-                  {showReloadFromGitoption() ? (
-                    <RbacMenuItem
-                      icon="repeat"
-                      text={getString('common.reloadFromGit')}
-                      onClick={handleReloadFromGitClick}
-                      permission={{
-                        resourceScope: {
-                          accountIdentifier: accountId,
-                          orgIdentifier,
-                          projectIdentifier
-                        },
-                        resource: {
-                          resourceType: ResourceType.PIPELINE,
-                          resourceIdentifier: inputSet?.identifier
-                        },
-                        permission: PermissionIdentifier.VIEW_PIPELINE
-                      }}
+                  <Menu style={{ backgroundColor: 'unset' }}>
+                    <OutOfSyncErrorStrip
+                      inputSet={inputSet}
+                      pipelineGitDetails={get(pipeline, 'data.gitDetails')}
+                      fromInputSetForm
+                      inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
+                      closeReconcileMenu={() => handleMenu(false)}
                     />
-                  ) : null}
-                </Menu>
-              </Popover>
+
+                    {showReloadFromGitoption() ? (
+                      <RbacMenuItem
+                        icon="repeat"
+                        text={getString('common.reloadFromGit')}
+                        onClick={handleReloadFromGitClick}
+                        permission={{
+                          resourceScope: {
+                            accountIdentifier: accountId,
+                            orgIdentifier,
+                            projectIdentifier
+                          },
+                          resource: {
+                            resourceType: ResourceType.PIPELINE,
+                            resourceIdentifier: inputSet?.identifier
+                          },
+                          permission: PermissionIdentifier.VIEW_PIPELINE
+                        }}
+                      />
+                    ) : null}
+                  </Menu>
+                </Popover>
+              </div>
             </Layout.Horizontal>
           }
           breadcrumbs={

@@ -63,7 +63,6 @@ jest.mock('services/cd-ng', () => ({
 
 const featureFlags = {
   CVNG_ENABLED: true,
-  CING_ENABLED: true,
   CENG_ENABLED: true
 }
 

@@ -13,6 +13,7 @@ import { FileStoreContext } from '@filestore/components/FileStoreContext/FileSto
 import { FILE_VIEW_TAB } from '@filestore/interfaces/FileStore'
 import ReferencedBy from './ReferencedBy/ReferencedBy'
 import DeletedView from './FileDetails/DeletedView'
+import { FileStoreLogs } from '../ActivityLog/FileStoreLogs'
 import css from '@filestore/components/FileView/FileView.module.scss'
 
 export default function FileView(): React.ReactElement {
@@ -54,7 +55,7 @@ export default function FileView(): React.ReactElement {
               title: getString('referencedBy'),
               panel: !isCachedNode(currentNode.identifier) ? <ReferencedBy /> : <div />
             },
-            { id: FILE_VIEW_TAB.ACTIVITY_LOG, title: getString('activityLog'), panel: <div /> }
+            { id: FILE_VIEW_TAB.ACTIVITY_LOG, title: getString('activityLog'), panel: <FileStoreLogs /> }
           ]}
         />
       ) : (

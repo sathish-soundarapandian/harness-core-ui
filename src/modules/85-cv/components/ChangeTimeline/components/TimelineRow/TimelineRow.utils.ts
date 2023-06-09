@@ -17,9 +17,17 @@ export function getDataWithPositions(
     return []
   }
 
+  data.forEach((item, index) => {
+    const preChartStartTime = startOfTimestamps > item.startTime && endOfTimestamps < item.endTime
+    if (preChartStartTime) {
+      data[index].startTime = startOfTimestamps
+    }
+  })
+
   const timelineDataPoints: TimelineDataPoint[] = []
   for (const datum of data) {
     const { startTime, endTime, icon, tooltip, type, identifiers } = datum || {}
+
     if (startTime && endTime) {
       timelineDataPoints.push({
         endTime,

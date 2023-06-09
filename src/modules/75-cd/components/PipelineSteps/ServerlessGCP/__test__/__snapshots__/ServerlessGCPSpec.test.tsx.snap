@@ -216,6 +216,9 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with empty init
         <div>
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
             <div
               class="connectorLabel connectorRef"
@@ -487,6 +490,9 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with runtime va
         class="FormikForm--main"
       >
         <div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >
@@ -762,6 +768,9 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with values  1`
         class="FormikForm--main"
       >
         <div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
+          />
           <div
             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main formRow"
           >

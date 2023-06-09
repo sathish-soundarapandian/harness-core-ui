@@ -55,6 +55,7 @@ import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationPro
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import FavoriteStar from '@common/components/FavoriteStar/FavoriteStar'
 import { getIconByType, isSMConnector } from '../utils/ConnectorUtils'
 import {
   CONNECTORS_PAGE_INDEX,
@@ -410,12 +411,27 @@ export const ConnectorMenuItem: React.FC<ConnectorMenuItemProps> = ({
 
 export const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column }) => {
   return (
-    <ConnectorMenuItem
-      connector={row.original}
-      onSuccessfulDelete={(column as any).reload}
-      forceDeleteSupported={(column as any).forceDeleteSupported}
-      openConnectorModal={(column as any).openConnectorModal}
-    />
+    <Layout.Horizontal>
+      {row.original.connector?.identifier && (
+        <FavoriteStar
+          resourceId={row.original.connector?.identifier}
+          resourceType="CONNECTOR"
+          isFavorite={row.original.isFavorite}
+          scope={{
+            projectIdentifier: row.original.connector.projectIdentifier,
+            orgIdentifier: row.original.connector.orgIdentifier
+          }}
+          className={css.favoriteStar}
+          activeClassName={css.favorite}
+        />
+      )}
+      <ConnectorMenuItem
+        connector={row.original}
+        onSuccessfulDelete={(column as any).reload}
+        forceDeleteSupported={(column as any).forceDeleteSupported}
+        openConnectorModal={(column as any).openConnectorModal}
+      />
+    </Layout.Horizontal>
   )
 }
 
@@ -424,6 +440,7 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
   const params = useParams<PipelineType<ProjectPathProps>>()
   const history = useHistory()
   const { getString } = useStrings()
+  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const listData: ConnectorResponse[] = useMemo(() => data?.content || [], [data?.content])
@@ -484,7 +501,6 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
     columns.splice(2, 1)
   }
 
-  const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
   const paginationProps = useDefaultPaginationProps({
     pageIndex: data?.pageIndex || CONNECTORS_PAGE_INDEX,
     pageSize: data?.pageSize || (PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : CONNECTORS_PAGE_SIZE),
@@ -508,6 +524,7 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
         columns={columns}
         data={listData}
         name="ConnectorsListView"
+        getRowClassName={() => css.row}
         onRowClick={connector => {
           const url = routes.toConnectorDetails({ ...params, connectorId: connector.connector?.identifier })
           history.push(connectorDetailsUrlWithGit(url, connector.gitDetails))

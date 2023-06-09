@@ -9,6 +9,7 @@ import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Container, Layout, Text } from '@harness/uicore'
+import type { GetDataError } from 'restful-react'
 import { String, useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
@@ -23,7 +24,7 @@ import GitRemoteDetails, { GitRemoteDetailsProps } from '@common/components/GitR
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
-import type { Error, ResponseMessage } from 'services/pipeline-ng'
+import type { Error, Failure, GitErrorMetadataDTO, ResponseMessage } from 'services/pipeline-ng'
 import type { Error as TemplateError } from 'services/template-ng'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -49,6 +50,10 @@ const entityTypeLabelMapping = {
   inputSet: 'input set',
   overlayInputSet: 'overlay input set',
   template: 'template'
+}
+
+export interface IRemoteFetchError extends GetDataError<Failure | Error> {
+  metadata: GitErrorMetadataDTO
 }
 
 function NoEntityFound(props: NoEntityFoundProps): JSX.Element {

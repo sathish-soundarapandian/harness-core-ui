@@ -11,7 +11,7 @@ import { Page } from '@common/exports'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import { TriggerEventHistoryNewQueryParams, useTriggerEventHistoryNew } from 'services/pipeline-ng'
-import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType, TriggerPathProps } from '@common/interfaces/RouteInterfaces'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useQueryParams } from '@common/hooks/useQueryParams'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
@@ -23,7 +23,7 @@ function TriggerActivityHistoryPage(): React.ReactElement {
   const { getString } = useStrings()
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, triggerIdentifier } = useParams<
     PipelineType<
-      PipelinePathProps & {
+      TriggerPathProps & {
         triggerIdentifier: string
       }
     >

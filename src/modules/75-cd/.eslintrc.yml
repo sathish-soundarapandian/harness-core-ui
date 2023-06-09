@@ -13,10 +13,10 @@ rules:
             - '!microfrontends/ChildAppMounter'
         - group:
             - modules/75-ce/*
+            - modules/75-cet/*
             - modules/75-cf/*
             - modules/75-chaos/*
             - modules/75-ci/*
-            - modules/75-et/*
             - modules/75-idp/*
             - modules/75-ssca/*
             - modules/85-cv/*
@@ -24,10 +24,10 @@ rules:
             - modules/85-sto/*
             - modules/90-gitops/*
             - '@ce/*'
+            - '@cet/*'
             - '@cf/*'
             - '@chaos/*'
             - '@ci/*'
-            - '@et/*'
             - '@idp/*'
             - '@ssca/*'
             - '@cv/*'

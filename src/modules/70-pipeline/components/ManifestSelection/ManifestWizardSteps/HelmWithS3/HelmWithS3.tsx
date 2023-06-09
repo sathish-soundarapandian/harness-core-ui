@@ -41,7 +41,6 @@ import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -87,7 +86,6 @@ function HelmWithS3({
 }: StepProps<ConnectorConfigDTO> & HelmWithHttpPropType): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps & AccountPathProps>()
   const { getString } = useStrings()
-  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const { getRBACErrorMessage } = useRBACError()
   const [regions, setRegions] = useState<SelectOption[]>([])
 
@@ -612,37 +610,35 @@ function HelmWithS3({
                   />
                 </div>
               </Layout.Horizontal>
-              {NG_CDS_HELM_SUB_CHARTS && (
-                <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
-                  <div
-                    className={cx(helmcss.halfWidth, {
-                      [helmcss.runtimeInput]:
-                        getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME
-                    })}
-                  >
-                    <FormInput.MultiTextInput
-                      label={getString('pipeline.manifestType.subChart')}
-                      placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
-                      name="subChartPath"
-                      multiTextInputProps={{ expressions, allowableTypes }}
-                      isOptional
+              <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
+                <div
+                  className={cx(helmcss.halfWidth, {
+                    [helmcss.runtimeInput]:
+                      getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME
+                  })}
+                >
+                  <FormInput.MultiTextInput
+                    label={getString('pipeline.manifestType.subChart')}
+                    placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
+                    name="subChartPath"
+                    multiTextInputProps={{ expressions, allowableTypes }}
+                    isOptional
+                  />
+                  {getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME && (
+                    <ConfigureOptions
+                      style={{ alignSelf: 'center', marginBottom: 5 }}
+                      value={formik.values?.subChartPath as string}
+                      type="String"
+                      variableName="subChartPath"
+                      showRequiredField={false}
+                      showDefaultField={false}
+                      onChange={value => formik.setFieldValue('subChartPath', value)}
+                      isReadonly={isReadonly}
+                      allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                     />
-                    {getMultiTypeFromValue(formik.values?.subChartPath) === MultiTypeInputType.RUNTIME && (
-                      <ConfigureOptions
-                        style={{ alignSelf: 'center', marginBottom: 5 }}
-                        value={formik.values?.subChartPath as string}
-                        type="String"
-                        variableName="subChartPath"
-                        showRequiredField={false}
-                        showDefaultField={false}
-                        onChange={value => formik.setFieldValue('subChartPath', value)}
-                        isReadonly={isReadonly}
-                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                      />
-                    )}
-                  </div>
-                </Layout.Horizontal>
-              )}
+                  )}
+                </div>
+              </Layout.Horizontal>
               <div className={helmcss.halfWidth}>
                 <DragnDropPaths
                   formik={formik}

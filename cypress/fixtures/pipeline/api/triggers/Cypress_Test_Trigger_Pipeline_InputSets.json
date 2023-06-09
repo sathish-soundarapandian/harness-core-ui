@@ -1,0 +1,58 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 3,
+    "pageItemCount": 3,
+    "pageSize": 100,
+    "content": [
+      {
+        "identifier": "inputset3",
+        "name": "input-set-3",
+        "pipelineIdentifier": "GCR_Trigger",
+        "inputSetType": "INPUT_SET",
+        "tags": {},
+        "createdAt": 1685683365147,
+        "lastUpdatedAt": 1685683365147,
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "storeType": "INLINE"
+      },
+      {
+        "identifier": "inputset2",
+        "name": "input-set-2",
+        "pipelineIdentifier": "GCR_Trigger",
+        "inputSetType": "INPUT_SET",
+        "tags": {},
+        "createdAt": 1685683328750,
+        "lastUpdatedAt": 1685683328750,
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "storeType": "INLINE"
+      },
+      {
+        "identifier": "inputset1",
+        "name": "input-set-1",
+        "pipelineIdentifier": "GCR_Trigger",
+        "inputSetType": "INPUT_SET",
+        "tags": {},
+        "createdAt": 1685683284433,
+        "lastUpdatedAt": 1685683284433,
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "storeType": "INLINE"
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false,
+    "pageToken": null
+  },
+  "metaData": null,
+  "correlationId": "1360c5f3-a5d0-4975-b712-6295c89ffc66"
+}

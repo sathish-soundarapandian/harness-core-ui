@@ -6,7 +6,7 @@
  */
 
 import React, { FC } from 'react'
-import { Heading } from '@harness/uicore'
+import { Container, Heading } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Segment } from 'services/cf'
@@ -27,17 +27,21 @@ const SpecifyIndividualTargets: FC<SpecifyIndividualTargetsProps> = ({ targetGro
         {getString('cf.segmentDetail.specifyIndividualTargets')}
       </Heading>
 
-      <TargetSelect
-        environmentIdentifier={targetGroup.environment as string}
-        fieldName="included"
-        label={`${getString('cf.segmentDetail.includeTheFollowing')}:`}
-      />
+      <Container className={sectionCss.targetSelect}>
+        <TargetSelect
+          environmentIdentifier={targetGroup.environment as string}
+          fieldName="included"
+          label={`${getString('cf.segmentDetail.includeTheFollowing')}:`}
+        />
+      </Container>
 
-      <TargetSelect
-        environmentIdentifier={targetGroup.environment as string}
-        fieldName="excluded"
-        label={`${getString('cf.segmentDetail.excludeTheFollowing')}:`}
-      />
+      <Container className={sectionCss.targetSelect}>
+        <TargetSelect
+          environmentIdentifier={targetGroup.environment as string}
+          fieldName="excluded"
+          label={`${getString('cf.segmentDetail.excludeTheFollowing')}:`}
+        />
+      </Container>
     </section>
   )
 }

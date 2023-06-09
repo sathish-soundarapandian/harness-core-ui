@@ -21,7 +21,11 @@ import {
   PageError,
   NoDataCard,
   NoDataCardProps,
-  PaginationProps
+  PaginationProps,
+  SortDropdownProps,
+  SortDropdown,
+  Checkbox,
+  CheckboxVariant
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Classes } from '@blueprintjs/core'
@@ -34,6 +38,8 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { CollapsableList } from '../CollapsableList/CollapsableList'
 import type { ScopeAndIdentifier } from '../MultiSelectEntityReference/MultiSelectEntityReference'
 import { EntityReferenceResponse, getScopeFromDTO, ScopedObjectDTO, TAB_ID } from './EntityReference.types'
@@ -113,7 +119,9 @@ export interface EntityReferenceProps<T extends ScopedObjectDTO> {
     page: number,
     scope?: Scope,
     signal?: AbortSignal,
-    allTabSelected?: boolean
+    allTabSelected?: boolean,
+    sortMethod?: string,
+    isFavorite?: boolean
   ) => void
   recordRender: (args: { item: EntityReferenceResponse<T>; selectedScope: Scope; selected?: boolean }) => JSX.Element
   collapsedRecordRender?: (args: {
@@ -141,6 +149,7 @@ export interface EntityReferenceProps<T extends ScopedObjectDTO> {
   selectedRecord?: ScopeAndIdentifier
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
+  sortProps?: SortDropdownProps
 }
 
 export const tabIdToScopeMap: Record<TAB_ID, Scope | undefined> = {
@@ -202,12 +211,14 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
     showAllTab = false,
     selectedRecord: selectedRecordFromProps,
     isRecordDisabled,
-    renderRecordDisabledWarning
+    renderRecordDisabledWarning,
+    sortProps
   } = props
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [selectedTab, setSelectedTab] = useState<TAB_ID>(
     getDefaultSelectedTab(defaultScope, projectIdentifier, orgIdentifier, selectedRecordFromProps, showAllTab)
   )
+  const { PL_FAVORITES } = useFeatureFlags()
   const { accountId } = useParams<AccountPathProps>()
   const {
     selectedProject,
@@ -221,6 +232,10 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
   const [selectedRecord, setSelectedRecord] = useState<T>()
   // used for multiselect
   const [selectedRecords, setSelectedRecords] = useState<ScopeAndIdentifier[]>(selectedRecordsFromProps ?? [])
+  const { preference: favoriteSelected = false, setPreference: setIsFavoriteSelected } = usePreferenceStore<boolean>(
+    PreferenceScope.USER,
+    `entity-reference-favorite-dropdown`
+  )
 
   const delayedFetchRecords = useRef(debounce((fn: () => void) => fn(), 300)).current
 
@@ -254,7 +269,9 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
           pageNo as number,
           tabIdToScopeMap[selectedTab],
           controllerRef.current?.signal,
-          selectedTab === TAB_ID.ALL
+          selectedTab === TAB_ID.ALL,
+          sortProps?.selectedSortMethod,
+          favoriteSelected
         )
       } else {
         delayedFetchRecords(() => {
@@ -269,7 +286,9 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
             pageNo as number,
             tabIdToScopeMap[selectedTab],
             controllerRef.current?.signal,
-            selectedTab === TAB_ID.ALL
+            selectedTab === TAB_ID.ALL,
+            sortProps?.selectedSortMethod,
+            favoriteSelected
           )
         })
       }
@@ -285,7 +304,7 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
       fetchData(true, true)
       inputRef.current = input
     }
-  }, [selectedTab, delayedFetchRecords, searchTerm, input])
+  }, [selectedTab, delayedFetchRecords, searchTerm, input, sortProps?.selectedSortMethod, favoriteSelected])
 
   useEffect(() => {
     if (firstUpdate.current) {
@@ -312,6 +331,22 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
           />
           {searchInlineComponent}
+          {PL_FAVORITES && (
+            <Checkbox
+              checked={favoriteSelected}
+              variant={CheckboxVariant.BOXED}
+              margin={{ left: 'small' }}
+              labelElement={<Icon name="star" color={Color.YELLOW_900} size={14} />}
+              onChange={e => {
+                setIsFavoriteSelected(e.currentTarget.checked)
+              }}
+            />
+          )}
+          {sortProps && (
+            <Container margin={{ left: 'small' }} width={185}>
+              <SortDropdown {...sortProps} />
+            </Container>
+          )}
         </div>
         {loading ? (
           <Container flex={{ align: 'center-center' }} padding="small">

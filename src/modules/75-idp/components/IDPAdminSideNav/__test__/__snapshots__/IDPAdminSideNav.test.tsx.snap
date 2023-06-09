@@ -82,6 +82,16 @@ exports[`IDP Sidenav render 1`] = `
         connectorsLabel
       </p>
     </a>
+    <a
+      class="link"
+      href="/account/accountId/idp-admin/oauth"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        idp.oAuthConfig
+      </p>
+    </a>
   </div>
 </div>
 `;

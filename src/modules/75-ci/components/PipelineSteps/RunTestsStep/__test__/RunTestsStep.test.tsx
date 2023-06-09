@@ -11,6 +11,7 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { InputTypes, fillAtForm } from '@common/utils/JestFormHelper'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
+import * as licenseStoreContextMock from 'framework/LicenseStore/LicenseStoreContext'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
@@ -107,6 +108,13 @@ describe('RunTests Step', () => {
         TI_DOTNET: true,
         CVNG_ENABLED: true
       })
+
+      jest.spyOn(licenseStoreContextMock, 'useLicenseStore').mockReturnValue({
+        licenseInformation: {
+          CET: { status: 'ACTIVE' }
+        }
+      } as any)
+
       const { container, getByText } = render(
         <TestStepWidget initialValues={{}} type={StepType.RunTests} stepViewType={StepViewType.Edit} />
       )

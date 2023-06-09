@@ -1,0 +1,32 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "images": [
+      "harnesscie-testing3",
+      "harnesscie-harnesscie-advanced-testing",
+      "harnesscie-advanced-testingui",
+      "mybuilder",
+      "gumgum/ad-server/adexchange",
+      "helm-test-chart",
+      "harnesscie-testing2123",
+      "todolist",
+      "harnesscie-testing21",
+      "sync-image-test",
+      "harnesscie-testing22",
+      "harnesscie-buildah-plugin",
+      "hello-world",
+      "harnesscie-win-vm-testing",
+      "ecr-trigger-automation",
+      "automation-nginx",
+      "test-docker-2",
+      "automation-todolist",
+      "nginx",
+      "simple-server",
+      "serverless-auto",
+      "test-docker",
+      "harness/nginx"
+    ]
+  },
+  "metaData": null,
+  "correlationId": "0f578c83-565f-4579-a899-827176c34a5e"
+}

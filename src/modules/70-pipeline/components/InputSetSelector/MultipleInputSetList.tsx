@@ -30,6 +30,7 @@ interface MultipleInputSetListProps {
     inputSetErrorDetails?: InputSetErrorWrapper,
     overlaySetErrorDetails?: { [key: string]: string }
   ) => void
+  checked: boolean
   pipelineGitDetails?: EntityGitDetails
   refetch: () => Promise<void>
   hideInputSetButton?: boolean
@@ -42,6 +43,7 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
   const {
     inputSet,
     onCheckBoxHandler,
+    checked,
     pipelineGitDetails,
     refetch,
     hideInputSetButton,
@@ -51,35 +53,34 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
   } = props
   const { getString } = useStrings()
 
+  const handleInputSetClick = (ticked: boolean): void => {
+    if (isInputSetInvalid(inputSet) || showReconcile) {
+      return
+    }
+    onCheckBoxHandler(
+      ticked,
+      defaultTo(inputSet.name, ''),
+      defaultTo(inputSet.identifier, ''),
+      defaultTo(inputSet.inputSetType, 'INPUT_SET'),
+      defaultTo(inputSet.gitDetails, null),
+      inputSet.inputSetErrorDetails,
+      inputSet.overlaySetErrorDetails
+    )
+  }
+
   return (
-    <li
-      className={cx(css.item)}
-      onClick={() => {
-        if (isInputSetInvalid(inputSet) || showReconcile) {
-          return
-        }
-        onCheckBoxHandler(
-          true,
-          defaultTo(inputSet.name, ''),
-          defaultTo(inputSet.identifier, ''),
-          defaultTo(inputSet.inputSetType, 'INPUT_SET'),
-          defaultTo(inputSet.gitDetails, null),
-          inputSet.inputSetErrorDetails,
-          inputSet.overlaySetErrorDetails
-        )
-      }}
-    >
+    <li className={cx(css.item)} data-testid={`popover-list-${inputSet.name}`}>
       <Layout.Horizontal flex={{ distribution: 'space-between' }}>
         <Layout.Horizontal flex={{ alignItems: 'center' }}>
           <Checkbox
             className={css.checkbox}
             disabled={isInputSetInvalid(inputSet) || showReconcile}
             labelElement={
-              <Layout.Horizontal flex={{ alignItems: 'center' }} padding={{ left: true }}>
+              <Layout.Horizontal flex={{ alignItems: 'center' }} padding={{ left: true }} style={{ maxWidth: '85%' }}>
                 <Icon name={getIconByType(inputSet.inputSetType)}></Icon>
                 <Container margin={{ left: true }} className={css.nameIdContainer}>
                   <Text
-                    data-testid={`popover-${inputSet.name}`}
+                    data-testid={`checkbox-${inputSet.name}`}
                     lineClamp={1}
                     font={{ weight: 'bold' }}
                     color={Color.GREY_800}
@@ -92,6 +93,8 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
                 </Container>
               </Layout.Horizontal>
             }
+            checked={checked}
+            onChange={ev => handleInputSetClick(ev.currentTarget.checked)}
           />
           {(isInputSetInvalid(inputSet) || showReconcile) && !reRunInputSetYaml && (
             <Container padding={{ left: 'large' }} className={css.invalidEntity}>
@@ -116,7 +119,11 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
             </Container>
           )}
         </Layout.Horizontal>
-        {inputSet.gitDetails?.repoIdentifier ? <InputSetGitDetails gitDetails={inputSet.gitDetails} /> : null}
+        {inputSet.gitDetails?.repoIdentifier ? (
+          <div onClick={() => handleInputSetClick(!checked)} className={css.inputSetGitDetailsWrapper}>
+            <InputSetGitDetails gitDetails={inputSet.gitDetails} />
+          </div>
+        ) : null}
       </Layout.Horizontal>
     </li>
   )

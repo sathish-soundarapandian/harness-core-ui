@@ -136,6 +136,7 @@ function ExecutionStrategyRef(
       case ServiceDeploymentType.ServerlessAwsLambda:
       case ServiceDeploymentType.AwsLambda:
       case ServiceDeploymentType.GoogleCloudFunctions:
+      case ServiceDeploymentType.AwsSam:
         setSelectedStrategy(ExecutionType.BASIC)
         break
       case ServiceDeploymentType.AzureWebApp:

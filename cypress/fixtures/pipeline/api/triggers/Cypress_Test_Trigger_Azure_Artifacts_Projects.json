@@ -1,0 +1,27 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "id": "d2b33e45-ec08-4eb7-a351-a61d989ad61d",
+      "name": "sample-k8s-manifests"
+    },
+    {
+      "id": "483263b0-ac55-4835-9af2-8e49a1ae843a",
+      "name": "PipelinesNgAutomation"
+    },
+    {
+      "id": "e3bbfdf8-b1df-4ff0-9755-c67b163328b3",
+      "name": "automation-cdc"
+    },
+    {
+      "id": "2b36d02e-066b-4611-b7a8-28b00c9c8971",
+      "name": "harness-azure"
+    },
+    {
+      "id": "8919b0cd-88f9-4fd7-a8a3-e838ad9cd273",
+      "name": "IDP"
+    }
+  ],
+  "metaData": null,
+  "correlationId": "13af4d26-0e81-4962-bae9-97aebce2a0fa"
+}

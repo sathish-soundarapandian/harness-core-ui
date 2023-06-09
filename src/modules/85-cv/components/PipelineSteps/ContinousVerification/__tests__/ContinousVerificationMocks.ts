@@ -184,3 +184,8 @@ export const mockedHealthSource = {
     ]
   }
 }
+
+export const mockedSignalFXHealthSource = {
+  ...mockedHealthSource,
+  type: 'SplunkSignalFXMetrics'
+}

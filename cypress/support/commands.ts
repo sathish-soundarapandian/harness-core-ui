@@ -170,10 +170,10 @@ Cypress.Commands.add('login', (emailValue: string, password: string) => {
 })
 
 /**
- * Ensures the page has fully loaded by checking for existence of a className('optional')
+ * Ensures the page has fully loaded by checking for existence of a selector('optional')
  */
-Cypress.Commands.add('visitPageAssertion', (className = activeTabClassName) => {
-  cy.get(className, {
+Cypress.Commands.add('visitPageAssertion', (selector = activeTabClassName) => {
+  cy.get(selector, {
     timeout: 30000
   }).should('be.visible')
   cy.wait(1000)
@@ -242,7 +242,7 @@ Cypress.Commands.add('visitChangeIntelligence', () => {
   cy.visitPageAssertion('[class^=SideNav-module_main]')
   cy.contains('span', 'Service Reliability').click()
   cy.get('[data-tab-id="ProjectTab"]').click()
-  cy.contains('p', 'Select a Project').click()
+  cy.get('[data-testid="project-select-button"]').click()
   cy.contains('p', 'Project 1').click()
 })
 

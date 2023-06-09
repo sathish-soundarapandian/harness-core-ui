@@ -41,7 +41,10 @@ import {
   ServiceNowFieldNGWithValue,
   ServiceNowStaticFields
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/types'
-import { EXPANDABLE_INPUT_SUPPORTED_FIELDS } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
+import {
+  EXPANDABLE_INPUT_SUPPORTED_FIELDS,
+  TEXT_INPUT_SUPPORTED_FIELD_TYPES
+} from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
 
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/helper'
 import type { ServiceNowTicketTypeSelectOption } from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/types'
@@ -399,9 +402,7 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
               } else if (
                 isNull(customFields[fieldIndex].schema) ||
                 isUndefined(customFields[fieldIndex].schema) ||
-                customFields[fieldIndex].schema.type === 'string' ||
-                customFields[fieldIndex].schema.type === 'glide_date_time' ||
-                customFields[fieldIndex].schema.type === 'integer' ||
+                TEXT_INPUT_SUPPORTED_FIELD_TYPES.has(customFields[fieldIndex].schema.type) ||
                 (isEmpty(customFields[fieldIndex].allowedValues) &&
                   customFields[fieldIndex].schema.type === 'option' &&
                   customFields[fieldIndex].schema.array)

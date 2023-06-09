@@ -18,8 +18,9 @@ import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import type { TrialInformation } from '../SubscriptionsPage'
 import { BuildCreditInfoTable } from './BuildCreditInfoTable'
 import SubscriptionUsageCard from './SubscriptionUsageCard'
-
+import CETActiveAgentsCard from './CETActiveAgentsCard'
 import SubscriptionTabPage from './SubscriptionTabPage'
+
 interface SubscriptionOverviewProps {
   accountName?: string
   licenseData?: ModuleLicenseDTO
@@ -44,15 +45,16 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
         licenseData={licenseData}
         trialInformation={trialInformation}
       />
-      {enabled && licenseData && module !== ModuleName.CHAOS && (
+      {enabled && licenseData && (
         <SubscriptionUsageCard module={module} licenseData={licenseData} creditsData={creditsData?.data} />
       )}
+      {licenseData && module === ModuleName.CET && <CETActiveAgentsCard />}
       <SubscriptionTabPage
         module={module}
         licenseData={licenseData}
         accountId={accountId}
         licenseType={(licenseData as CDModuleLicenseDTO)?.cdLicenseType}
-      ></SubscriptionTabPage>
+      />
       {buildCreditsView && module === 'CI' ? (
         <BuildCreditInfoTable data={creditsData?.data || []} licenseData={(licenseData as ModuleLicenseDTO) || ''} />
       ) : null}

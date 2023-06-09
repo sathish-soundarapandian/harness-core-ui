@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { queryByAttribute, render, RenderResult, waitFor, within } from '@testing-library/react'
+import { act, fireEvent, queryByAttribute, render, RenderResult, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
@@ -244,15 +244,15 @@ describe('test <CommandScriptsEdit />', () => {
     })
 
     test('should render a checkbox for onDelegate field', async () => {
-      const { getByTestId, findByTestId } = renderResult
+      const { getByTestId, container } = renderResult
       const optionalConfiguration = getByTestId('optional-config-summary')
       userEvent.click(optionalConfiguration)
-
-      const delegateCheckbox = await findByTestId('runOnDelegate')
+      const delegateCheckbox = queryByNameAttribute('spec.onDelegate', container) as HTMLInputElement
       expect(delegateCheckbox).toBeInTheDocument()
-
-      userEvent.click(delegateCheckbox)
-      await waitFor(() => expect(delegateCheckbox).toBeChecked())
+      act(() => {
+        fireEvent.click(delegateCheckbox)
+      })
+      expect(container).toMatchSnapshot()
     })
   })
 

@@ -10,7 +10,7 @@ import { isEmpty } from 'lodash-es'
 import type { AllowedTypes } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { ElastigroupInfrastructure, StoreConfig } from 'services/cd-ng'
+import type { ElastigroupInfrastructure, StoreConfig, ExecutionElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { getConnectorSchema } from '../PipelineStepsUtil'
 
@@ -44,6 +44,7 @@ export interface ElastigroupInfraSpecEditableProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: ElastigroupInfrastructure
   allowableTypes: AllowedTypes
+  provisioner?: ExecutionElementConfig['steps']
 }
 
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {

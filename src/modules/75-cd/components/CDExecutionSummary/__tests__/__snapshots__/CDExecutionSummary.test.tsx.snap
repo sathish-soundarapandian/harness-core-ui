@@ -33,7 +33,7 @@ exports[`<CDExecutionSummary /> tests render environmentList 1`] = `
           style="--text-line-clamp: 1;"
         >
           <a
-            href="/account/undefined/environments/demo1/details"
+            href="/account/undefined/settings/resources/environments/demo1/details"
           >
             demo1
           </a>
@@ -43,7 +43,7 @@ exports[`<CDExecutionSummary /> tests render environmentList 1`] = `
           style="--text-line-clamp: 1;"
         >
           <a
-            href="/account/undefined/environments/demo2/details"
+            href="/account/undefined/settings/resources/environments/demo2/details"
           >
             demo2
           </a>
@@ -107,7 +107,7 @@ exports[`<CDExecutionSummary /> tests render serviceList 1`] = `
             tabindex="0"
           >
             <a
-              href="/account/undefined/services/nginx"
+              href="/account/undefined/settings/resources/services/nginx"
             >
               todolist
             </a>
@@ -126,7 +126,7 @@ exports[`<CDExecutionSummary /> tests render serviceList 1`] = `
             tabindex="0"
           >
             <a
-              href="/account/undefined/services/service1"
+              href="/account/undefined/settings/resources/services/service1"
             >
               service1
             </a>
@@ -286,7 +286,7 @@ exports[`<CDExecutionSummary /> tests snapshot test 1`] = `
               tabindex="0"
             >
               <a
-                href="/account/undefined/services/service1"
+                href="/account/undefined/settings/resources/services/service1"
               >
                 service1
               </a>
@@ -305,7 +305,7 @@ exports[`<CDExecutionSummary /> tests snapshot test 1`] = `
               tabindex="0"
             >
               <a
-                href="/account/undefined/services/nginx"
+                href="/account/undefined/settings/resources/services/nginx"
               >
                 todolist
               </a>
@@ -345,7 +345,7 @@ exports[`<CDExecutionSummary /> tests snapshot test 1`] = `
             style="--text-line-clamp: 1;"
           >
             <a
-              href="/account/undefined/environments/UAT/details"
+              href="/account/undefined/settings/resources/environments/UAT/details"
             >
               UAT
             </a>

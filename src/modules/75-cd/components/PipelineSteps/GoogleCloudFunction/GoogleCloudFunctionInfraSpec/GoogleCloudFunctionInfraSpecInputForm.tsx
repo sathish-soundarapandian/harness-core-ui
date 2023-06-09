@@ -29,6 +29,7 @@ import { connectorTypes, EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { isFixedNonEmptyValue } from '@pipeline/utils/stageHelpers'
+import ProvisionerSelectField from '@pipeline/components/Provisioner/ProvisionerSelect'
 import type { ConnectorRefFormValueType } from '@cd/utils/connectorUtils'
 import type {
   GoogleCloudFunctionInfraSpecCustomStepProps,
@@ -57,7 +58,8 @@ const GoogleCloudFunctionInfraSpecInputForm = ({
   readonly = false,
   path,
   allowableTypes,
-  formik
+  formik,
+  customStepProps
 }: GoogleCloudFunctionInfraSpecInputFormProps) => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -162,6 +164,7 @@ const GoogleCloudFunctionInfraSpecInputForm = ({
   const connectorFieldName = isEmpty(path) ? 'connectorRef' : `${path}.connectorRef`
   const projectFieldName = isEmpty(path) ? 'project' : `${path}.project`
   const regionFieldName = isEmpty(path) ? 'region' : `${path}.region`
+  const provisionerName = isEmpty(path) ? 'provisioner' : `${path}.provisioner`
 
   const getProjectHelperText = React.useCallback(() => {
     const connectorRef = get(formik?.values, connectorFieldName)
@@ -175,6 +178,11 @@ const GoogleCloudFunctionInfraSpecInputForm = ({
 
   return (
     <Layout.Vertical spacing="small">
+      {getMultiTypeFromValue(template?.provisioner) === MultiTypeInputType.RUNTIME && customStepProps?.provisioner && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <ProvisionerSelectField name={provisionerName} path={path} provisioners={customStepProps?.provisioner} />
+        </div>
+      )}
       {isValueRuntimeInput(template?.connectorRef) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

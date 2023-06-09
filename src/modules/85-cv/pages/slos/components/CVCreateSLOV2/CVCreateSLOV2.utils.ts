@@ -464,7 +464,7 @@ export const getIsUserUpdatedSLOData = (
 }
 
 const getSLOTargetSchemaValidation = (getString: UseStringsReturn['getString']) => {
-  const REQUIRED = getString('cv.required')
+  const REQUIRED = getString('pipeline.required')
   return {
     [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: Yup.number()
       .typeError(REQUIRED)
@@ -527,7 +527,7 @@ export const getSimpleSLOCustomError = ({
         error = {
           ...error,
           [SLOV2FormFields.CONSIDER_ALL_CONSECUTIVE_MINUTES_FROM_START_AS_BAD]: defaultTo(
-            getString?.('cv.required'),
+            getString?.('pipeline.required'),
             ''
           )
         }
@@ -539,7 +539,7 @@ export const getSimpleSLOCustomError = ({
       } else {
         error = {
           ...error,
-          [SLOV2FormFields.CONSIDER_CONSECUTIVE_MINUTES]: defaultTo(getString?.('cv.required'), '')
+          [SLOV2FormFields.CONSIDER_CONSECUTIVE_MINUTES]: defaultTo(getString?.('pipeline.required'), '')
         }
       }
     }
@@ -597,13 +597,13 @@ export const getCompositeSLOCustomValidation = (
   const { evaluationType } = values
   if (enableRequestSLO && isUndefined(evaluationType)) {
     return {
-      [SLOV2FormFields.EVALUATION_TYPE]: getString('cv.required')
+      [SLOV2FormFields.EVALUATION_TYPE]: getString('pipeline.required')
     }
   }
 }
 
 export const getSimpleSLOV2FormValidationSchema = (getString: UseStringsReturn['getString']): any => {
-  const REQUIRED = getString('cv.required')
+  const REQUIRED = getString('pipeline.required')
   const METRIC_IS_REQUIRED = getString('cv.metricIsRequired')
 
   return Yup.object().shape({

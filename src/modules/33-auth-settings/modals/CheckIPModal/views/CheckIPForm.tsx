@@ -23,8 +23,7 @@ import {
   ModalErrorHandler,
   ModalErrorHandlerBinding,
   ButtonVariation,
-  TableV2,
-  Toggle
+  TableV2
 } from '@harness/uicore'
 import { validateIpAddressAllowlistedOrNot } from '@harnessio/react-ng-manager-client'
 import type { IpAllowlistConfigValidateResponse, IpAllowlistConfigResponse } from '@harnessio/react-ng-manager-client'
@@ -35,7 +34,8 @@ import { regexIpV4orV6 } from '@common/utils/StringUtils'
 import type { StepTestIPForm } from '@auth-settings/components/CreateIPAllowlist/StepTestIP/StepTestIP'
 import {
   RenderColumnName,
-  RenderColumnIPAddress
+  RenderColumnIPAddress,
+  RenderColumnApplicableFor
 } from '@auth-settings/components/IPAllowlistTableColumns/IPAllowlistTableColumns'
 import css from '../useCheckIPModal.module.scss'
 
@@ -43,17 +43,9 @@ interface CheckIPModalData {
   onClose: () => void
 }
 
-const RenderColumnEnabled: Renderer<CellProps<IpAllowlistConfigResponse>> = ({ value }) => {
+const RenderColumnStatus: Renderer<CellProps<IpAllowlistConfigResponse>> = ({ value }) => {
   const { getString } = useStrings()
-  return (
-    <Toggle
-      data-testid="toggleEnabled"
-      checked={value === true}
-      label={!value ? getString('common.disabled') : getString('enabledLabel')}
-      disabled={true}
-      margin
-    />
-  )
+  return <Text>{!value ? getString('common.disabled') : getString('enabledLabel')}</Text>
 }
 
 const CheckIPForm: React.FC<CheckIPModalData> = ({ onClose }) => {
@@ -78,8 +70,8 @@ const CheckIPForm: React.FC<CheckIPModalData> = ({ onClose }) => {
         Header: getString('status'),
         id: 'enabled',
         accessor: row => row.ip_allowlist_config.enabled,
-        width: '30%',
-        Cell: RenderColumnEnabled
+        width: '20%',
+        Cell: RenderColumnStatus
       },
       {
         Header: getString('name'),
@@ -92,8 +84,14 @@ const CheckIPForm: React.FC<CheckIPModalData> = ({ onClose }) => {
         Header: getString('authSettings.ipAddress.ipAddressCIDR'),
         id: 'ipAddress',
         accessor: row => row.ip_allowlist_config.ip_address,
-        width: '40%',
+        width: '30%',
         Cell: RenderColumnIPAddress
+      },
+      {
+        Header: getString('authSettings.ipAddress.applicableFor'),
+        id: 'applicableFor',
+        width: '20%',
+        Cell: RenderColumnApplicableFor
       }
     ],
     []

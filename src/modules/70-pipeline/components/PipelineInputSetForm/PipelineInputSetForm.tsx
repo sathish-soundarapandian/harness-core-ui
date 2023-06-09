@@ -88,7 +88,8 @@ export function StageFormInternal({
   stageClassName = '',
   allowableTypes,
   executionIdentifier,
-  childPipelineMetadata
+  childPipelineMetadata,
+  viewTypeMetadata
 }: {
   allValues?: StageElementWrapperConfig
   template?: StageElementWrapperConfig
@@ -99,6 +100,7 @@ export function StageFormInternal({
   allowableTypes: AllowedTypes
   executionIdentifier?: string
   childPipelineMetadata?: ChildPipelineMetadataType
+  viewTypeMetadata?: Record<string, boolean>
 }): JSX.Element {
   const { getString } = useStrings()
   return (
@@ -141,6 +143,7 @@ export function StageFormInternal({
           executionIdentifier={executionIdentifier}
           allowableTypes={allowableTypes}
           childPipelineMetadata={childPipelineMetadata}
+          viewTypeMetadata={viewTypeMetadata}
         />
       )}
       {(!isEmpty(template?.stage?.when) ||
@@ -174,7 +177,8 @@ export function StageForm({
   stageClassName = '',
   allowableTypes,
   executionIdentifier,
-  childPipelineMetadata
+  childPipelineMetadata,
+  viewTypeMetadata
 }: {
   allValues?: StageElementWrapperConfig
   template?: StageElementWrapperConfig
@@ -186,6 +190,7 @@ export function StageForm({
   executionIdentifier?: string
   allowableTypes: AllowedTypes
   childPipelineMetadata?: ChildPipelineMetadataType
+  viewTypeMetadata?: Record<string, boolean>
 }): JSX.Element {
   const [stageFormTemplate, setStageFormTemplate] = React.useState(template)
   const isTemplateStage = !!stageFormTemplate?.stage?.template
@@ -268,6 +273,7 @@ export function StageForm({
           stageClassName={stageClassName}
           executionIdentifier={executionIdentifier}
           childPipelineMetadata={childPipelineMetadata}
+          viewTypeMetadata={viewTypeMetadata}
         />
       </StageFormContextProvider>
     </div>
@@ -332,6 +338,7 @@ export function ChainedPipelineInputSetForm(props: ChainedPipelineInputSetFormPr
           allowableTypes={allowableTypes}
           executionIdentifier={executionIdentifier}
           hideTitle
+          viewTypeMetadata={viewTypeMetadata}
         />
       )}
       <PipelineInputSetFormInternal
@@ -506,6 +513,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                       allowableTypes={allowableTypes}
                       executionIdentifier={executionIdentifier}
                       childPipelineMetadata={childPipelineMetadata}
+                      viewTypeMetadata={viewTypeMetadata}
                     />
                   )}
                 </Layout.Vertical>
@@ -542,6 +550,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         viewType={viewType}
                         allowableTypes={allowableTypes}
                         childPipelineMetadata={childPipelineMetadata}
+                        viewTypeMetadata={viewTypeMetadata}
                       />
                     )}
                   </Layout.Vertical>

@@ -9,7 +9,7 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import type { HealthSource, MonitoredServiceDTO } from 'services/cv'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 
 export const getNewSpecs = (
   monitoredServiceData: MonitoredServiceDTO | undefined,
@@ -46,12 +46,33 @@ export function getServiceIdentifierFromStage(
 
   if (stageFromServiceConfig || stageFromService) {
     const stageIdToDeriveServiceFrom = stageFromServiceConfig?.stage || stageFromService?.stage
-    const stageToDeriveServiceFrom = pipeline?.stages?.find(el => el?.stage?.identifier === stageIdToDeriveServiceFrom)
+    const stageToDeriveServiceFrom = getStageToDeriveServiceFrom(pipeline, stageIdToDeriveServiceFrom)
     serviceId = getServiceIdFromStage(stageToDeriveServiceFrom as StageElementWrapper<DeploymentStageElementConfig>)
   } else {
     serviceId = getServiceIdFromStage(selectedStage as StageElementWrapper<DeploymentStageElementConfig>)
   }
   return serviceId
+}
+
+export function getStageToDeriveServiceFrom(
+  pipeline: PipelineInfoConfig,
+  stageIdToDeriveServiceFrom: string | undefined
+): StageElementWrapperConfig | null {
+  let stageToDeriveServiceFrom = null
+  const { stages = [] } = pipeline
+  for (const stageInfo of stages) {
+    const { stage, parallel } = stageInfo
+    if (parallel) {
+      for (const parallelStage of parallel) {
+        if (parallelStage?.stage?.identifier === stageIdToDeriveServiceFrom) {
+          stageToDeriveServiceFrom = parallelStage
+        }
+      }
+    } else if (stage?.identifier === stageIdToDeriveServiceFrom) {
+      stageToDeriveServiceFrom = stageInfo
+    }
+  }
+  return stageToDeriveServiceFrom
 }
 
 export function getEnvironmentIdentifierFromStage(

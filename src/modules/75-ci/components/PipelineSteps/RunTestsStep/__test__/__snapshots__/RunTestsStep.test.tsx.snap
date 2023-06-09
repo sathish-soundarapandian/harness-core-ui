@@ -1125,7 +1125,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                               style="flex-grow: 1;"
                             >
                               <label
-                                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
+                                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
                               >
                                 <input
                                   checked=""
@@ -2636,6 +2636,58 @@ exports[`RunTests Step Edit View renders runtime inputs 1`] = `
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main bottomMargin5"
+        >
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="runTestErrorTracking"
+          >
+            <p
+              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            >
+              ci.runTestsErrorTrackingSetupText
+            </p>
+          </div>
+          <div
+            class="StyledProps--main StyledProps--margin-bottom-small"
+          >
+            
+            <div
+              class="RadioButtonGroup--inline"
+            >
+              <label
+                class="RadioButton--radio StyledProps--main"
+              >
+                <input
+                  class="RadioButton--input"
+                  name="error-tracking-setup"
+                  type="radio"
+                  value="on"
+                />
+                <span
+                  class="RadioButton--radioIcon"
+                />
+                yes
+              </label>
+              <label
+                class="RadioButton--radio StyledProps--main"
+              >
+                <input
+                  checked=""
+                  class="RadioButton--input"
+                  name="error-tracking-setup"
+                  type="radio"
+                  value="off"
+                />
+                <span
+                  class="RadioButton--radioIcon"
+                />
+                no
+              </label>
             </div>
           </div>
         </div>

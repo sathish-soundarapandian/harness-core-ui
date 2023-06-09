@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { isNil } from 'lodash-es'
@@ -38,10 +38,11 @@ import { ValidationResultModal } from './ValidationModals/ValidationResultModal'
 import css from './ValidationBadge.module.scss'
 
 export interface ValidationBadgeProps {
+  onReconcile: () => void
   className?: string
 }
 
-export function ValidationBadge({ className }: ValidationBadgeProps): JSX.Element | null {
+export function ValidationBadge({ className, onReconcile }: ValidationBadgeProps): JSX.Element | null {
   const { getString } = useStrings()
   const params = useParams<PipelineType<PipelinePathProps> & GitQueryParams>()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier, pipelineIdentifier } = params
@@ -96,6 +97,16 @@ export function ValidationBadge({ className }: ValidationBadgeProps): JSX.Elemen
   const policyEval = validationResultData?.data?.policyEval as Evaluation | undefined
   const templatesValidation = validationResultData?.data?.templateValidationResponse
   const endTs = validationResultData?.data?.endTs
+  const shouldReconcile = validationResultData?.data?.validateTemplateReconcileResponseDTO?.reconcileNeeded
+
+  const onReconcileRef = useRef(onReconcile)
+  onReconcileRef.current = onReconcile
+
+  useEffect(() => {
+    if (shouldReconcile) {
+      onReconcileRef.current()
+    }
+  }, [shouldReconcile])
 
   const pollUntil = useMemo(() => {
     return !!validationUuid && !validationResultLoading && isStatusLoading(status)

@@ -22,7 +22,6 @@ import {
   SidecarArtifact,
   useGetBuildDetailsForGoogleArtifactRegistry,
   useGetBuildDetailsForGoogleArtifactRegistryV2,
-  useGetLastSuccessfulBuildForGoogleArtifactRegistryV2,
   useGetRegionsForGoogleArtifactRegistry
 } from 'services/cd-ng'
 import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -45,6 +44,7 @@ import {
   isNewServiceEnvEntity
 } from '../artifactSourceUtils'
 import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
+import { useGetDigestDetailsForGar } from './useGetDigestDetailsForGar'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -88,9 +88,12 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   }
 
   const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
-
+  const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
-  const versionValue = get(initialValues?.artifacts, `${artifactPath}.spec.version`, '')
+  const versionValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.version`, ''), artifact?.spec?.version),
+    get(initialValues?.artifacts, `${artifactPath}.spec.version`, '')
+  )
 
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
@@ -187,61 +190,35 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
         error: fetchingV2BuildsError,
         buildsDetail: buildsV2Detail
       }
-  const digestQueryParams = {
-    ...commonParams,
+
+  const {
+    fetchDigest,
+    fetchingDigest,
+    fetchDigestError: digestError,
+    garDigestData: digestData
+  } = useGetDigestDetailsForGar({
     connectorRef: getFinalQueryParamValue(connectorRefValue),
-    package: getFinalQueryParamValue(packageValue),
+    version: getFinalQueryParamValue(versionValue),
     project: getFinalQueryParamValue(projectValue),
     region: getFinalQueryParamValue(regionValue),
     repositoryName: getFinalQueryParamValue(repositoryNameValue),
-    tag: getFinalQueryParamValue(versionValue),
-    pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-    fqnPath: getFqnPath(
-      path as string,
-      !!isPropagatedStage,
-      stageIdentifier,
-      defaultTo(
-        isSidecar
-          ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
-          : artifactPath,
-        ''
-      ),
-      'digest',
-      serviceIdentifier as string,
-      isMultiService
-    )
-  }
-  const {
-    data: digestData,
-    loading: fetchingDigest,
-    refetch: fetchDigest,
-    error: digestError
-  } = useMutateAsGet(useGetLastSuccessfulBuildForGoogleArtifactRegistryV2, {
-    body: { version: versionValue, runtimeInputYaml: pipelineRuntimeYaml },
-    requestOptions: {
-      headers: {
-        'content-type': 'application/json'
-      }
-    },
-    queryParams: {
-      ...digestQueryParams,
-      fqnPath: getFqnPath(
-        path as string,
-        !!isPropagatedStage,
-        stageIdentifier,
-        defaultTo(
-          isSidecar
-            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
-            : artifactPath,
-          ''
-        ),
-        'digest',
-        serviceIdentifier as string,
-        isMultiService
-      )
-    },
-    lazy: true
+    packageValue: getFinalQueryParamValue(packageValue), // field name is 'package'
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    useArtifactV1Data,
+    formik,
+    path,
+    initialValues,
+    isPropagatedStage,
+    serviceId,
+    isSidecar,
+    artifactPath,
+    stageIdentifier,
+    pipelineIdentifier,
+    stepViewType
   })
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (

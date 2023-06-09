@@ -6,11 +6,14 @@
  */
 
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type {
+  ConnectorReferenceDTO,
+  ConnectorSelectedValue
+} from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 
-export type ConnectorRefFormValueType = { value: string } & string
+export type ConnectorRefFormValueType = ConnectorSelectedValue & string
 export const getConnectorRefValue = (connectorRef?: ConnectorRefFormValueType) => {
-  return connectorRef?.value ?? connectorRef
+  return (connectorRef as ConnectorSelectedValue)?.value ?? connectorRef
 }
 
 export type SelectedConnectorType = { record: ConnectorReferenceDTO; scope: Scope }

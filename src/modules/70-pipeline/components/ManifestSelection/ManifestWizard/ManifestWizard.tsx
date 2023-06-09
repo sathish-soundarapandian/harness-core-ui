@@ -12,7 +12,6 @@ import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfigWrapper } from 'services/cd-ng'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ManifestRepoTypes } from '../ManifestWizardSteps/ManifestRepoTypes'
 import ManifestStore from '../ManifestWizardSteps/ManifestStore'
@@ -90,7 +89,6 @@ export function ManifestWizard<T, U>({
   isEditMode = false
 }: ManifestWizardStepsProps<T, U>): React.ReactElement {
   const { getString } = useStrings()
-  const { CDS_SERVICE_CONFIG_LAST_STEP } = useFeatureFlags()
 
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
@@ -126,7 +124,7 @@ export function ManifestWizard<T, U>({
   }
 
   const getInitialStepNumber = (): number | undefined => {
-    if (isEditMode && CDS_SERVICE_CONFIG_LAST_STEP) {
+    if (isEditMode) {
       return 3
     }
     if (showManifestStoreStepDirectly(selectedManifest)) {

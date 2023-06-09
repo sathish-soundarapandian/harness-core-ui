@@ -25,7 +25,7 @@ import {
 import { FontVariation } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper, ServiceDefinition } from 'services/cd-ng'
 import type { CommonManifestDataType, CommonManifestLastStepPrevStepData, ManifestTypes } from '../../ManifestInterface'
 import {
   getConnectorRefOrConnectorId,
@@ -45,6 +45,7 @@ interface CommonManifestDetailsProps {
   allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   selectedManifest: ManifestTypes | null
+  selectedDeploymentType?: ServiceDefinition['type']
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
@@ -59,6 +60,7 @@ const showAdvancedSection = (selectedManifest: ManifestTypes | null): boolean =>
 export function CommonManifestDetails({
   stepName,
   selectedManifest,
+  selectedDeploymentType,
   expressions,
   allowableTypes,
   initialValues,
@@ -213,6 +215,7 @@ export function CommonManifestDetails({
                   <ManifestDetailsCoreSection
                     formik={formik}
                     selectedManifest={selectedManifest}
+                    selectedDeploymentType={selectedDeploymentType}
                     expressions={expressions}
                     allowableTypes={allowableTypes}
                     prevStepData={modifiedPrevStepData}

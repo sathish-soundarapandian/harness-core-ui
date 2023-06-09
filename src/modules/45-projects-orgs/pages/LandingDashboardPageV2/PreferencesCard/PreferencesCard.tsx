@@ -7,8 +7,31 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 import type { SavedProjectDetails } from 'framework/AppStore/AppStoreContext'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import css from './PreferencesCard.module.scss'
+
+const renderTooltipForProjectLabel = (projectName: string, orgName: string): JSX.Element => {
+  return (
+    <Layout.Vertical padding="medium" spacing="small">
+      <Text color={Color.WHITE}>{projectName ?? ''}</Text>
+      {orgName ? (
+        <Layout.Horizontal padding={{ top: 'small' }} flex={{ alignItems: 'center' }}>
+          <Icon name="nav-organization" size={13} color={Color.GREY_300} margin={{ right: 'xsmall' }} />
+          <Text inline color={Color.GREY_300} font={{ variation: FontVariation.SMALL_SEMI }}>
+            <String stringID="common.org" />
+          </Text>
+          <Text color={Color.GREY_300} font={{ variation: FontVariation.SMALL_SEMI }}>
+            :&nbsp;
+          </Text>
+
+          <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL_SEMI }}>
+            {orgName}
+          </Text>
+        </Layout.Horizontal>
+      ) : undefined}
+    </Layout.Vertical>
+  )
+}
 
 const RenderProject: Renderer<CellProps<SavedProjectDetails>> = ({ row }): JSX.Element => {
   const { orgIdentifier, projectIdentifier, name } = row.original
@@ -16,7 +39,16 @@ const RenderProject: Renderer<CellProps<SavedProjectDetails>> = ({ row }): JSX.E
 
   return (
     <Link to={routes.toProjectDetails({ projectIdentifier: projectIdentifier, orgIdentifier, accountId })}>
-      <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.SMALL_SEMI }}>
+      <Text
+        color={Color.PRIMARY_7}
+        font={{ variation: FontVariation.SMALL_SEMI }}
+        tooltip={renderTooltipForProjectLabel(name || projectIdentifier, orgIdentifier)}
+        tooltipProps={{
+          isDark: true,
+          fill: true,
+          position: 'left'
+        }}
+      >
         {name}
       </Text>
     </Link>

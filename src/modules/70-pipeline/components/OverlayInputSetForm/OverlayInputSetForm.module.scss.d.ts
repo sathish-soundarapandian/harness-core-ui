@@ -8,13 +8,16 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly basicForm: string
+  readonly divider: string
   readonly drag: string
   readonly dragOver: string
   readonly dragging: string
   readonly editor: string
+  readonly exisitingInputSetsHeader: string
   readonly inputSetForm: string
   readonly inputSetName: string
   readonly optionBtns: string
+  readonly overlayInputSetDialog: string
   readonly rowBtns: string
   readonly selectedInputSetsContainer: string
 }

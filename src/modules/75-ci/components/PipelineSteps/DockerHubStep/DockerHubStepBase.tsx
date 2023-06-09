@@ -9,6 +9,7 @@ import React from 'react'
 import { Formik, FormikForm, Accordion, Container } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { get } from 'lodash-es'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Connectors } from '@connectors/constants'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
@@ -33,6 +34,7 @@ export const DockerHubStepBase = (
   { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, onChange }: DockerHubStepProps,
   formikRef: StepFormikFowardRef<DockerHubStepData>
 ): JSX.Element => {
+  const { CI_ENABLE_DLC } = useFeatureFlags()
   const {
     state: {
       selectionState: { selectedStageId }
@@ -105,7 +107,9 @@ export const DockerHubStepBase = (
                   type: Connectors.DOCKER
                 },
                 'spec.repo': {},
-                'spec.tags': {}
+                'spec.tags': {},
+                ...(CI_ENABLE_DLC &&
+                  buildInfrastructureType === CIBuildInfrastructureType.Cloud && { 'spec.caching': {} })
               }}
               formik={formik}
             />

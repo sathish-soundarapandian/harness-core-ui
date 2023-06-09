@@ -152,8 +152,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     branch,
     connectorRef,
     storeType: pipelineMetadata?.data?.storeType,
-    stagesExecuted: pipelineExecutionSummary?.stagesExecuted,
-    isDebugMode: hasCI
+    stagesExecuted: pipelineExecutionSummary?.stagesExecuted
   })
   const { CI_YAML_VERSIONING } = useFeatureFlags()
 
@@ -176,8 +175,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
     branch,
     connectorRef,
-    storeType: pipelineMetadata?.data?.storeType,
-    isDebugMode: hasCI
+    storeType: pipelineMetadata?.data?.storeType
   })
 
   const { status, canRetry, modules, stagesExecuted } = pipelineExecutionSummary
@@ -373,8 +371,8 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             onReRunInDebugMode={
               hasCI && CI_REMOTE_DEBUG
                 ? isSimplifiedYAMLEnabled(module, CI_YAML_VERSIONING)
-                  ? openRunPipelineModalV1
-                  : openRunPipelineModal
+                  ? () => openRunPipelineModalV1(true)
+                  : () => openRunPipelineModal(true)
                 : undefined
             }
             onViewCompiledYaml={/* istanbul ignore next */ () => setViewCompiledYaml(pipelineExecutionSummary)}

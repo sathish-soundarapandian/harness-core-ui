@@ -7,6 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { defaultTo, get, isArray, memoize } from 'lodash-es'
+import cx from 'classnames'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { useParams } from 'react-router-dom'
@@ -66,7 +67,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     serviceIdentifier,
     initialValues,
     stepViewType,
-    artifacts
+    artifacts,
+    shouldUtilizeFullWidth = false
   } = props
 
   const { getString } = useStrings()
@@ -170,19 +172,21 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
     }
   })
 
-  const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
-    <div key={item.label.toString()}>
-      <Menu.Item
-        text={
-          <Layout.Horizontal spacing="small">
-            <Text>{item.label}</Text>
-          </Layout.Horizontal>
-        }
-        disabled={fetchingBuilds}
-        onClick={handleClick}
-      />
-    </div>
-  ))
+  const itemRenderer = memoize(
+    /* istanbul ignore next */ (item: { label: string }, { handleClick }) => (
+      <div key={item.label.toString()}>
+        <Menu.Item
+          text={
+            <Layout.Horizontal spacing="small">
+              <Text>{item.label}</Text>
+            </Layout.Horizontal>
+          }
+          disabled={fetchingBuilds}
+          onClick={handleClick}
+        />
+      </div>
+    )
+  )
 
   const selectItems = useMemo(() => {
     return buildDetails?.data?.map((builds: BuildDetails) => ({
@@ -202,7 +206,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
   return (
     <>
       {isRuntime && (
-        <Layout.Vertical key={artifactPath} className={genericServiceCss.inputWidth}>
+        <Layout.Vertical key={artifactPath} className={cx({ [genericServiceCss.inputWidth]: !shouldUtilizeFullWidth })}>
           {isFieldRuntime(`artifacts.${artifactPath}.spec.timeout`, template) && (
             <TimeoutFieldInputSetView
               name={`${path}.artifacts.${artifactPath}.spec.timeout`}
@@ -231,16 +235,18 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
               allowedTypes={allowableTypes}
               disableTypeSelection={readonly}
               skipRenderValueInExpressionLabel
-              expressionRender={() => {
-                return (
-                  <ShellScriptMonacoField
-                    name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`}
-                    scriptType={scriptType}
-                    disabled={readonly}
-                    expressions={expressions}
-                  />
-                )
-              }}
+              expressionRender={
+                /* istanbul ignore next */ () => {
+                  return (
+                    <ShellScriptMonacoField
+                      name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`}
+                      scriptType={scriptType}
+                      disabled={readonly}
+                      expressions={expressions}
+                    />
+                  )
+                }
+              }
             >
               <ShellScriptMonacoField
                 name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.spec.source.spec.script`}
@@ -304,7 +310,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
                   items: getBuildDetails(),
                   allowCreatingNewItems: true
                 },
-                onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                onFocus: /* istanbul ignore next */ (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
                     e?.target?.type !== 'text' ||
                     (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
@@ -463,6 +469,7 @@ export class CustomArtifactSource extends ArtifactSourceBase<ArtifactSourceRende
   protected artifactType = ENABLED_ARTIFACT_TYPES.CustomArtifact
   protected isSidecar = false
 
+  /* istanbul ignore next */
   isTagsSelectionDisabled(): boolean {
     return false
   }

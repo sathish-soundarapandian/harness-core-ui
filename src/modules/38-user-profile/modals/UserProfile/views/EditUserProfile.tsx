@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
 import {
   Button,
   Formik,
@@ -23,7 +24,9 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { UserInfo, useUpdateUserInfo } from 'services/cd-ng'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'
+import { regexUsernameDisallowedChars } from '@common/utils/StringUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 interface UserProfileData {
@@ -36,8 +39,13 @@ const EditUserProfile: React.FC<UserProfileData> = props => {
   const { user, onSubmit, onClose } = props
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
+  const { accountId } = useParams<AccountPathProps>()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
-  const { mutate: updateProfile, loading } = useUpdateUserInfo({})
+  const { mutate: updateProfile, loading } = useUpdateUserInfo({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
   const { showError, showSuccess } = useToaster()
   const { updateAppStore } = useAppStore()
 
@@ -69,7 +77,10 @@ const EditUserProfile: React.FC<UserProfileData> = props => {
           }}
           formName="editUserForm"
           validationSchema={Yup.object().shape({
-            name: Yup.string().trim().required(getString('validation.nameRequired'))
+            name: Yup.string()
+              .trim()
+              .required(getString('validation.nameRequired'))
+              .matches(regexUsernameDisallowedChars, getString('common.validation.invalidUsername'))
           })}
           onSubmit={values => {
             handleSubmit(values)
@@ -78,7 +89,7 @@ const EditUserProfile: React.FC<UserProfileData> = props => {
           {() => {
             return (
               <Form>
-                <Container width={300}>
+                <Container>
                   <ModalErrorHandler bind={setModalErrorHandler} />
                   <FormInput.Text name="name" label={getString('name')} />
                 </Container>
