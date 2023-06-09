@@ -10,7 +10,7 @@ import { Icon, Layout, Tab, Tabs, Text, TextInput } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 
 import { Page } from '@common/exports'
 import type { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -66,25 +66,28 @@ const NetworkMapStudio: React.FC = () => {
           />
         }
         title={
-          <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-            <Icon
-              name="code-edit"
-              size={20}
-              className={css.headerIcon}
-              onClick={() => setToggleEditName(prev => !prev)}
-            />
-            {toggleEditName ? (
-              <TextInput
-                defaultValue=""
-                placeholder={title === 'Untitled Network Map' ? 'Network Map Name' : title}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value)}
+          <React.Fragment>
+            <String tagName="div" className={css.networkMapTitle} stringID="common.networkMap" />
+            <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+              <Icon
+                name="code-edit"
+                size={20}
+                className={css.headerIcon}
+                onClick={() => setToggleEditName(prev => !prev)}
               />
-            ) : (
-              <Text color={title === 'Untitled Network Map' ? Color.GREY_200 : Color.GREY_900} font="medium">
-                {title}
-              </Text>
-            )}
-          </Layout.Horizontal>
+              {toggleEditName ? (
+                <TextInput
+                  defaultValue=""
+                  placeholder={title === 'Untitled Network Map' ? 'Network Map Name' : title}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value)}
+                />
+              ) : (
+                <Text color={title === 'Untitled Network Map' ? Color.GREY_200 : Color.GREY_900} font="medium">
+                  {title}
+                </Text>
+              )}
+            </Layout.Horizontal>
+          </React.Fragment>
         }
       />
       <Page.Body className={css.listBody}>

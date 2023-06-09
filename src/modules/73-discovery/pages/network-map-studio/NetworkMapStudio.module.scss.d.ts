@@ -9,6 +9,7 @@
 declare const styles: {
   readonly headerIcon: string
   readonly listBody: string
+  readonly networkMapTitle: string
   readonly setupShell: string
 }
 export default styles
