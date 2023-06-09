@@ -152,12 +152,6 @@ const config = {
         HARNESS_FF_SDK_ASYNC_DEV: HARNESS_FF_SDK_ASYNC
       }
     }),
-    new HTMLWebpackPlugin({
-      template: 'src/public.html',
-      filename: 'public.html',
-      publicPath: '/',
-      inject: false
-    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[name].[id].css'
