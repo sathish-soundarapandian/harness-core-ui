@@ -15,6 +15,10 @@ module.exports = {
   '/v1': {
     target: `${baseUrl}` // localhost is not supported for OpenAPI yet
   },
+  '/sei': {
+    // pathRewrite: { '^/sei': '' },
+    target: 'http://localhost:3000'
+  },
   '/ng/api': {
     pathRewrite: { '^/ng/api': '' },
     target: targetLocalHost ? 'https://localhost:7090' : `${baseUrl}/ng/api`
@@ -188,9 +192,5 @@ module.exports = {
   '/ssca/api': {
     pathRewrite: { '^/ssca/api': '/api' },
     target: process.env.SSCA_API_URL || 'https://localhost:8186'
-  },
-  '/sei': {
-    pathRewrite: { '^/sei': '' },
-    target: process.env.SEI_UI_URL || 'http://127.0.0.1:3000/'
   }
 }

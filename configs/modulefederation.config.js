@@ -89,7 +89,7 @@ module.exports = ({
   }
 
   if (enableSEI) {
-    remotes.sei = "sei@[window.getApiBaseUrl('sei/build/assets/remoteEntry.js')]"
+    remotes.sei = "sei@http://localhost:3000/remoteEntry.js"
   }
 
   if (process.env.TARGET_LOCALHOST) {

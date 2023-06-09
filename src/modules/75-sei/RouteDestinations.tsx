@@ -132,14 +132,10 @@ const module = 'sei'
 //   }
 // }
 
-export default function ChaosRoutes(): React.ReactElement {
-  const isChaosEnabled = useFeatureFlag(FeatureFlag.CHAOS_ENABLED)
+export default function SEIRoutes(): React.ReactElement {
+  const isSEIEnabled = useFeatureFlag(FeatureFlag.SEI_ENABLED)
 
-  // Register Chaos into RBAC, PipelineStudio and AuditTrail Factory only when Feature Flag is enabled
-  if (isChaosEnabled) {
-    // Pipeline registrations
-    // PipelineStudioFactory.registerStep(new ChaosExperimentStep())
-
+  if (isSEIEnabled) {
     // RBAC registrations
     RbacFactory.registerResourceCategory(ResourceCategory.SEI, {
       icon: 'sei-main',
@@ -156,39 +152,6 @@ export default function ChaosRoutes(): React.ReactElement {
         [PermissionIdentifier.DELETE_SEI_HUB]: <LocaleString stringID="rbac.permissionLabels.delete" />
       }
     })
-
-    // RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_EXPERIMENT, {
-    //   icon: 'chaos-main',
-    //   label: 'chaos.chaosExperiment',
-    //   category: ResourceCategory.CHAOS,
-    //   permissionLabels: {
-    //     [PermissionIdentifier.VIEW_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.view" />,
-    //     [PermissionIdentifier.EDIT_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-    //     [PermissionIdentifier.DELETE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.delete" />,
-    //     [PermissionIdentifier.EXECUTE_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.execute" />
-    //   }
-    // })
-
-    // RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
-    //   icon: 'chaos-main',
-    //   label: 'chaos.chaosInfrastructure',
-    //   category: ResourceCategory.CHAOS,
-    //   permissionLabels: {
-    //     [PermissionIdentifier.VIEW_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.view" />,
-    //     [PermissionIdentifier.EDIT_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-    //     [PermissionIdentifier.DELETE_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.delete" />
-    //   }
-    // })
-
-    // RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GAMEDAY, {
-    //   icon: 'chaos-main',
-    //   label: 'chaos.chaosGameday',
-    //   category: ResourceCategory.CHAOS,
-    //   permissionLabels: {
-    //     [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
-    //     [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
-    //   }
-    // })
   }
 
   // const RedirectToModuleTrialHome = (): React.ReactElement => {
