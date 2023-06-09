@@ -27,16 +27,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { DEFAULT_MODULES_ORDER, moduleInfoMap } from '@common/hooks/useNavModuleInfo'
 import { useStrings } from 'framework/strings'
-import {
-  getBrowserName,
-  getComponentsFromModule,
-  getOsVersion,
-  IssueType,
-  issueTypes,
-  priorityItems,
-  PriorityType,
-  SubmitTicket
-} from './Utils'
+import { getBrowserName, getOsVersion, IssueType, issueTypes, priorityItems, PriorityType, SubmitTicket } from './Utils'
 import css from './SubmitTicketModalSteps.module.scss'
 
 interface SubmitTicketModalStepTwoProps {
@@ -149,7 +140,6 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
           issueType: IssueType.PROBLEM,
           priority: PriorityType.HIGH,
           ticketDetails: '',
-          component: '',
           fileData: ''
         }}
         formName="ticketDetailsForm"
@@ -172,7 +162,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
         })}
         onSubmit={handleSubmit}
       >
-        {formik => (
+        {() => (
           <Form>
             <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
               <FormInput.Text
@@ -201,13 +191,6 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
                 className={css.fieldWidth}
                 placeholder={getString('common.moduleLabel')}
                 items={moduleOptions}
-              />
-              <FormInput.Select
-                name="component"
-                label={getString('common.resourceCenter.ticketmenu.component')}
-                className={css.fieldWidth}
-                placeholder={getString('common.resourceCenter.ticketmenu.component')}
-                items={getComponentsFromModule(formik.values.module)}
               />
               <FormInput.TextArea
                 name="ticketDetails"
