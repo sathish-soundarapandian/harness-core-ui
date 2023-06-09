@@ -34,3 +34,4 @@ gcpIncludeDiscounts: (GCP only) Include Discounts
 gcpIncludeTaxes: (GCP Only) Include Taxes
 showGcpCostAs: (GCP only) Show costs as
 enableServiceOverrideV2: Enable Service Override V2
+exportServiceVariablesAsEnvVariables: Export Service Variables as Env Variables

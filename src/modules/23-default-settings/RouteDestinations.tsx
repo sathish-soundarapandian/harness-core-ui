@@ -237,6 +237,12 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.ALLOW_USER_TO_MARK_STE
   settingCategory: 'PMS'
 })
 
+DefaultSettingsFactory.registerSettingHandler(SettingType.EXPORT_SERVICE_VARIABLES_AS_ENV_VARIABLES, {
+  label: 'defaultSettings.exportServiceVariablesAsEnvVariables',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
+  settingCategory: 'PMS'
+})
+
 DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_GIT_COMMANDS, {
   label: 'defaultSettings.enableGitCommands',
   settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,

@@ -100,7 +100,8 @@ export enum SettingType {
   INCLUDE_GCP_TAXES = 'include_gcp_taxes',
   SHOW_GCP_COST_AS = 'show_gcp_cost_as',
   EMAIL_TO_NON_HARNESS_USERS = 'email_to_non_harness_users',
-  ENABLE_SERVICE_OVERRIDE_V2 = 'service_override_v2'
+  ENABLE_SERVICE_OVERRIDE_V2 = 'service_override_v2',
+  EXPORT_SERVICE_VARIABLES_AS_ENV_VARIABLES = 'export_service_variables_as_env_variables'
 }
 
 export const isValidYAMLFilePath = (filePath: string): boolean => {
