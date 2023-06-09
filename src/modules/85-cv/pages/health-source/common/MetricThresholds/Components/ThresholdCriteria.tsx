@@ -16,7 +16,7 @@ import type { MetricThresholdCriteria } from 'services/cv'
 import ThresholdSelect from './ThresholdSelect'
 import type { ThresholdCriteriaPropsType } from '../MetricThresholds.types'
 import { getCriterialItems, handleCriteriaPercentageUpdate } from '../MetricThresholds.utils'
-import { MetricCriteriaValues, MetricThresholdPropertyName } from '../MetricThresholds.constants'
+import { MetricCriteriaValues, MetricThresholdPropertyName, MIN_THRESHOLD_VALUE } from '../MetricThresholds.constants'
 import css from './MetricThreshold.module.scss'
 
 export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JSX.Element {
@@ -65,7 +65,7 @@ export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JS
           inline
           className={css.metricThresholdContentInput}
           label={getString('cv.monitoringSources.appD.greaterThan')}
-          inputGroup={{ type: 'number', min: 1 }}
+          inputGroup={{ type: 'number', min: MIN_THRESHOLD_VALUE }}
           name={`${thresholdTypeName}.${index}.criteria.spec.${FieldName.METRIC_THRESHOLD_GREATER_THAN}`}
         />
       )}
@@ -75,7 +75,7 @@ export default function ThresholdCriteria(props: ThresholdCriteriaPropsType): JS
           inline
           className={css.metricThresholdContentInput}
           label={getString('cv.monitoringSources.appD.lesserThan')}
-          inputGroup={{ type: 'number', min: 1 }}
+          inputGroup={{ type: 'number', min: MIN_THRESHOLD_VALUE }}
           name={`${thresholdTypeName}.${index}.criteria.spec.${FieldName.METRIC_THRESHOLD_LESS_THAN}`}
         />
       )}

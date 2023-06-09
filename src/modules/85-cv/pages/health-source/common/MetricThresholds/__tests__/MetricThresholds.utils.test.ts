@@ -6,6 +6,7 @@
  */
 
 import type { MetricThresholdType } from '@cv/pages/health-source/connectors/AppDynamics/AppDHealthSource.types'
+import { isNotAValidNumber } from '@cv/utils/CommonUtils'
 import type { TimeSeriesMetricPackDTO } from 'services/cv'
 import type { GroupedCreatedMetrics } from '../../CustomMetric/CustomMetric.types'
 
@@ -301,6 +302,29 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(errors).toEqual({ 'failFastThresholds.0.spec.spec.count': 'cv.metricThresholds.validations.countValue' })
   })
 
+  test('should check validateCommonFieldsForMetricThreshold should not show error if any of the criteria spec value is 0', () => {
+    const errors = {}
+    const testValue: MetricThresholdType = {
+      metricType: 'test',
+      groupName: 'test',
+      metricName: 'test',
+      type: 'FailImmediately',
+      spec: {
+        action: 'FailImmediately',
+        spec: {}
+      },
+      criteria: {
+        type: MetricCriteriaValues.Absolute,
+        spec: {
+          greaterThan: 0,
+          lessThan: 1
+        }
+      }
+    }
+    validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
+    expect(errors).toEqual({})
+  })
+
   test('should check validateCommonFieldsForMetricThreshold for greater than and less than value can have values less than 1 and decimal', () => {
     const errors = {}
     const testValue: MetricThresholdType = {
@@ -321,31 +345,6 @@ describe('AppDIgnoreThresholdTabContent', () => {
     }
     validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
     expect(errors).toEqual({})
-  })
-
-  test('should check validateCommonFieldsForMetricThreshold shows error if any of the criteria spec value is 0', () => {
-    const errors = {}
-    const testValue: MetricThresholdType = {
-      metricType: 'test',
-      groupName: 'test',
-      metricName: 'test',
-      type: 'FailImmediately',
-      spec: {
-        action: 'FailImmediately',
-        spec: {}
-      },
-      criteria: {
-        type: MetricCriteriaValues.Absolute,
-        spec: {
-          greaterThan: 0,
-          lessThan: 1
-        }
-      }
-    }
-    validateCommonFieldsForMetricThreshold('failFastThresholds', errors, [testValue], key => key, true)
-    expect(errors).toEqual({
-      'failFastThresholds.0.criteria.spec.greaterThan': 'pipeline.required'
-    })
   })
 
   test('should check validateCommonFieldsForMetricThreshold handles null threshold value', () => {
@@ -826,5 +825,20 @@ describe('AppDIgnoreThresholdTabContent', () => {
     )
 
     expect(result).toEqual(metricThresholdExpectedMock)
+  })
+
+  test('should return true for undefined value', () => {
+    const result = isNotAValidNumber()
+    expect(result).toBe(true)
+  })
+
+  test('should return true for NaN value', () => {
+    const result = isNotAValidNumber(NaN)
+    expect(result).toBe(true)
+  })
+
+  test('should return false for valid number value', () => {
+    const result = isNotAValidNumber(42)
+    expect(result).toBe(false)
   })
 })

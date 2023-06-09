@@ -9,6 +9,7 @@ import { isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { MetricPackDTO, MetricThreshold, TimeSeriesMetricPackDTO } from 'services/cv'
 import type { GroupedMetric } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
+import { isNotAValidNumber } from '@cv/utils/CommonUtils'
 import type { GroupedCreatedMetrics } from '../CustomMetric/CustomMetric.types'
 import {
   CustomMetricDropdownOption,
@@ -196,9 +197,6 @@ export function checkDuplicate(
   })
 }
 
-const getIsAbsoluteValueIsZero = (type?: string, value?: number): boolean =>
-  type === MetricCriteriaValues.Absolute && value === 0
-
 /**
  *  Common validation for thresholds
  *
@@ -237,19 +235,11 @@ export function validateCommonFieldsForMetricThreshold(
       // For absolute type, greaterThan or lessThan any one of the field is mandatory.
       if (
         value.criteria?.type === MetricCriteriaValues.Absolute &&
-        !value.criteria?.spec?.greaterThan &&
-        !value.criteria?.spec?.lessThan
+        isNotAValidNumber(value?.criteria?.spec?.greaterThan) &&
+        isNotAValidNumber(value?.criteria?.spec?.lessThan)
       ) {
-        errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('pipeline.required')
         errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('pipeline.required')
-      }
-
-      if (getIsAbsoluteValueIsZero(value?.criteria?.type, value?.criteria?.spec?.greaterThan)) {
         errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('pipeline.required')
-      }
-
-      if (getIsAbsoluteValueIsZero(value?.criteria?.type, value?.criteria?.spec?.lessThan)) {
-        errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('pipeline.required')
       }
 
       // Percentage value is required for selected criteria percentage type
@@ -257,7 +247,7 @@ export function validateCommonFieldsForMetricThreshold(
         value.criteria?.type === MetricCriteriaValues.Percentage &&
         value?.criteria?.spec &&
         thresholdName === MetricThresholdPropertyName.FailFastThresholds &&
-        !(value?.criteria?.spec?.greaterThan as number)
+        isNotAValidNumber(value?.criteria?.spec?.greaterThan)
       ) {
         errors[`${thresholdName}.${index}.criteria.spec.greaterThan`] = getString('pipeline.required')
       }
@@ -266,7 +256,7 @@ export function validateCommonFieldsForMetricThreshold(
         value.criteria?.type === MetricCriteriaValues.Percentage &&
         value?.criteria?.spec &&
         thresholdName === MetricThresholdPropertyName.IgnoreThreshold &&
-        !(value?.criteria?.spec?.lessThan as number)
+        isNotAValidNumber(value?.criteria?.spec?.lessThan)
       ) {
         errors[`${thresholdName}.${index}.criteria.spec.lessThan`] = getString('pipeline.required')
       }

@@ -371,3 +371,7 @@ export const nearestMinutes = (interval: number, someMoment: moment.Moment) => {
   const roundedMinutes = Math.ceil(someMoment.clone().minute() / interval) * interval
   return someMoment.clone().minute(roundedMinutes).second(0)
 }
+
+export function isNotAValidNumber(numberValue?: number): boolean {
+  return numberValue === undefined || isNaN(numberValue as number)
+}

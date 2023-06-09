@@ -91,3 +91,5 @@ export const NewDefaultVauesForFailFastThreshold: MetricThresholdType = {
     spec: {}
   }
 }
+
+export const MIN_THRESHOLD_VALUE = 0
