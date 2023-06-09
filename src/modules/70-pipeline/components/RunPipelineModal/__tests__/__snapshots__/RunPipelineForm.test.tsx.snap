@@ -60,18 +60,27 @@ exports[`EXECUTION VIEW should should have the values prefilled and fields as di
                         </p>
                       </span>
                     </span>
-                    <label
-                      class="bp3-control bp3-switch bp3-disabled bp3-align-right toggleExisitingProvide"
+                    <span
+                      class="bp3-popover-wrapper disabledPopover"
                     >
-                      <input
-                        data-testid="selectExistingOrProvide"
-                        disabled=""
-                        type="checkbox"
-                      />
                       <span
-                        class="bp3-control-indicator"
-                      />
-                    </label>
+                        class="bp3-popover-target"
+                      >
+                        <label
+                          class="bp3-control bp3-switch bp3-disabled bp3-align-right toggleExisitingProvide"
+                        >
+                          <input
+                            data-testid="selectExistingOrProvide"
+                            disabled=""
+                            tabindex="0"
+                            type="checkbox"
+                          />
+                          <span
+                            class="bp3-control-indicator"
+                          />
+                        </label>
+                      </span>
+                    </span>
                   </div>
                 </div>
                 <div
@@ -409,18 +418,27 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                         </p>
                       </span>
                     </span>
-                    <label
-                      class="bp3-control bp3-switch bp3-align-right toggleExisitingProvide"
+                    <span
+                      class="bp3-popover-wrapper disabledPopover"
                     >
-                      <input
-                        checked=""
-                        data-testid="selectExistingOrProvide"
-                        type="checkbox"
-                      />
                       <span
-                        class="bp3-control-indicator"
-                      />
-                    </label>
+                        class="bp3-popover-target"
+                      >
+                        <label
+                          class="bp3-control bp3-switch bp3-align-right toggleExisitingProvide"
+                        >
+                          <input
+                            checked=""
+                            data-testid="selectExistingOrProvide"
+                            tabindex="0"
+                            type="checkbox"
+                          />
+                          <span
+                            class="bp3-control-indicator"
+                          />
+                        </label>
+                      </span>
+                    </span>
                   </div>
                   <span
                     class="bp3-popover-wrapper isPopoverParent"
@@ -1103,18 +1121,27 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                         </p>
                       </span>
                     </span>
-                    <label
-                      class="bp3-control bp3-switch bp3-align-right toggleExisitingProvide"
+                    <span
+                      class="bp3-popover-wrapper disabledPopover"
                     >
-                      <input
-                        checked=""
-                        data-testid="selectExistingOrProvide"
-                        type="checkbox"
-                      />
                       <span
-                        class="bp3-control-indicator"
-                      />
-                    </label>
+                        class="bp3-popover-target"
+                      >
+                        <label
+                          class="bp3-control bp3-switch bp3-align-right toggleExisitingProvide"
+                        >
+                          <input
+                            checked=""
+                            data-testid="selectExistingOrProvide"
+                            tabindex="0"
+                            type="checkbox"
+                          />
+                          <span
+                            class="bp3-control-indicator"
+                          />
+                        </label>
+                      </span>
+                    </span>
                   </div>
                   <span
                     class="bp3-popover-wrapper isPopoverParent"

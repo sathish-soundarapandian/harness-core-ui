@@ -637,6 +637,10 @@ describe('RERUN MODE', () => {
     const selectExistingOrProvide = await findByTestId('selectExistingOrProvide')
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
     expect(selectExistingOrProvide).toBeDisabled()
+    act(() => {
+      fireEvent.mouseOver(selectExistingOrProvide)
+    })
+    expect(await screen.findByText('pipeline.inputSets.noInputSetsCreated')).toBeInTheDocument()
 
     // Expect header and the submit button to show rerun pipeline
     expect(queryAllByText('pipeline.execution.actions.rerunPipeline')).toHaveLength(2)

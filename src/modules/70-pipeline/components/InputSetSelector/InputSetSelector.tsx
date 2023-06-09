@@ -152,6 +152,7 @@ export function InputSetSelector({
       childPipelineProps?.inputSetReferences?.length > 0 &&
       isEmpty(value)
     ) {
+      // Check when switching from Yaml to Visual view, to show the selected input sets in chained pipeline inputs tab
       const savedInputSets = childPipelineProps.inputSetReferences?.reduce((accum, inputSetRef) => {
         const currentInputSet = inputSetResponse?.data?.content?.find(
           currInputSet => currInputSet.identifier === inputSetRef

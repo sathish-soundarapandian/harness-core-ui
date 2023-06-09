@@ -906,6 +906,7 @@ inputSets:
   selectPlaceholder: Select Input Set(s)
   createNewInputSet: Create New Input Set
   aboutInputSets: A Harness Input Set is a group of Pipeline settings and values. You create Input Sets and use them when you run a Pipeline. Input Sets let you use one Pipeline for many scenarios.
+  noInputSetsCreated: There are no input sets created
   overlayISHelperText: Selected inputs will be applied in the order listed. Drag to reorder the input sets.
   invalidFields: Invalid Fields
   removeInvalidFields: Remove Invalid Fields

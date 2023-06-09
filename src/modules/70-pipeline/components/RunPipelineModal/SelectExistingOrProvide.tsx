@@ -6,7 +6,7 @@
  */
 
 import React, { FormEvent } from 'react'
-import { PopoverPosition, Switch } from '@blueprintjs/core'
+import { Popover, PopoverInteractionKind, PopoverPosition, Switch } from '@blueprintjs/core'
 import { Text, Layout } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -49,14 +49,27 @@ function SelectExistingInputsOrProvideNew({
       >
         {getString('pipeline.pipelineInputPanel.useExisitingInputSets')}
       </Text>
-      <Switch
-        disabled={!hasInputSets}
-        checked={existingProvide === 'existing'}
-        onChange={onExistingProvideRadioChange}
-        alignIndicator={'right'}
-        className={css.toggleExisitingProvide}
-        data-testid={'selectExistingOrProvide'}
-      />
+      <Popover
+        disabled={hasInputSets}
+        position={PopoverPosition.RIGHT_TOP}
+        interactionKind={PopoverInteractionKind.HOVER}
+        className={css.disabledPopover}
+        content={
+          <Text color={Color.GREY_200} className={css.popoverDisabledTextStyle}>
+            {getString('pipeline.inputSets.noInputSetsCreated')}
+          </Text>
+        }
+        usePortal={false}
+      >
+        <Switch
+          disabled={!hasInputSets}
+          checked={existingProvide === 'existing'}
+          onChange={onExistingProvideRadioChange}
+          alignIndicator={'right'}
+          className={css.toggleExisitingProvide}
+          data-testid={'selectExistingOrProvide'}
+        />
+      </Popover>
     </Layout.Horizontal>
   )
 }

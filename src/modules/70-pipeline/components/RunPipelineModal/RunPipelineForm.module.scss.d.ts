@@ -12,6 +12,7 @@ declare const styles: {
   readonly bp3Tooltip: string
   readonly content: string
   readonly crossIcon: string
+  readonly disabledPopover: string
   readonly disabledStageDropdown: string
   readonly divider: string
   readonly dividerWrapper: string
@@ -37,6 +38,7 @@ declare const styles: {
   readonly noRuntimeInput: string
   readonly optionBtns: string
   readonly pipelineHeader: string
+  readonly popoverDisabledTextStyle: string
   readonly preFlightCheckModal: string
   readonly radio: string
   readonly radioGroup: string

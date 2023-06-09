@@ -139,6 +139,23 @@
   }
 }
 
+.disabledPopover {
+  :global {
+    .bp3-popover-arrow-fill {
+      fill: var(--primary-9-dark) !important;
+    }
+    .bp3-popover-content {
+      background-color: var(--primary-9-dark) !important;
+    }
+  }
+}
+
+.popoverDisabledTextStyle {
+  padding: var(--spacing-3) !important;
+  border: var(--spacing-1) solid var(--primary-9-dark);
+  border-radius: var(--spacing-2);
+}
+
 .inputSetsUpdatingSpinner {
   transform: scale(0.6);
 }
