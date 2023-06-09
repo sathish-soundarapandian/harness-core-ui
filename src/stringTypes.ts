@@ -244,6 +244,7 @@ export interface StringsMap {
   'common.defaultExperience': string
   'common.defaultSettings': string
   'common.defineDelegateSelector': string
+  'common.delay15Sec': string
   'common.delegateFailText1Part1': string
   'common.delegateFailText2': string
   'common.delegateFailed': string
@@ -383,6 +384,7 @@ export interface StringsMap {
   'common.friendlyName': string
   'common.friendlyNamePlaceholder': string
   'common.gcp': string
+  'common.generatedAt': string
   'common.genericErrors.inviteExpired': string
   'common.genericErrors.licenseCallFailed': string
   'common.genericErrors.unauthorized': string
@@ -555,6 +557,7 @@ export interface StringsMap {
   'common.instanceValidation.required': string
   'common.invalid': string
   'common.invalidIdentifiers': string
+  'common.isHelpful': string
   'common.jexlCondition': string
   'common.jexlExpression': string
   'common.labelTestConnection': string
@@ -1118,6 +1121,7 @@ export interface StringsMap {
   'common.stayOnThisPage': string
   'common.stepName': string
   'common.stoText': string
+  'common.stop': string
   'common.submittingRequest': string
   'common.submittingRequestToGitViaDelegate': string
   'common.subscribed': string
@@ -3463,7 +3467,6 @@ export interface StringsMap {
   'dashboards.createModal.stepOne': string
   'dashboards.createModal.submitFail': string
   'dashboards.createModal.success': string
-  'dashboards.createModal.view': string
   'dashboards.dashboardList.headerViewCount': string
   'dashboards.dashboardSortingOptions.default': string
   'dashboards.dashboardSortingOptions.mostLiked': string
@@ -4021,6 +4024,17 @@ export interface StringsMap {
   'pipeline.configSource': string
   'pipeline.configureArtifactSource': string
   'pipeline.configureLogSettings': string
+  'pipeline.copilot.analyzeFailure': string
+  'pipeline.copilot.analyzing': string
+  'pipeline.copilot.askAICopilot': string
+  'pipeline.copilot.assist': string
+  'pipeline.copilot.foundPossibleRemediations': string
+  'pipeline.copilot.helpText': string
+  'pipeline.copilot.introduction': string
+  'pipeline.copilot.label': string
+  'pipeline.copilot.noRemediationFound': string
+  'pipeline.copilot.possibleSolutions': string
+  'pipeline.copilot.requestTimedOut': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string

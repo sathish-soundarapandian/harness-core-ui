@@ -1524,3 +1524,7 @@ serviceOverrides:
 cloudSpends: Cloud Spends
 variableType: Variable Type
 timezone: Timezone
+stop: Stop
+isHelpful: Helpful?
+delay15Sec: This can take up to 15 seconds.
+generatedAt: Generated at

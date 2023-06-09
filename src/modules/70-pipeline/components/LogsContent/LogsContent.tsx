@@ -17,7 +17,8 @@ import {
   Icon,
   Tab,
   Text,
-  Tabs
+  Tabs,
+  Layout
 } from '@harness/uicore'
 import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso'
 import { Color } from '@harness/design-system'
@@ -32,12 +33,13 @@ import type {
   LogsContentProps,
   RenderLogsInterface
 } from '@pipeline/factories/ExecutionFactory/types'
-import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
+import { showHarnessCoPilot, resolveCurrentStep } from '@pipeline/utils/executionUtils'
 import type { ModulePathParams, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 import { ExecutionStatus, isExecutionComplete, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
+import HarnessCopilot from '../HarnessCopilot/HarnessCopilot'
 import { useLogsContent } from './useLogsContent'
 import { GroupedLogsWithRef as GroupedLogs } from './components/GroupedLogs'
 import { SingleSectionLogsWithRef as SingleSectionLogs } from './components/SingleSectionLogs'
@@ -51,10 +53,6 @@ enum ConsoleDetailTab {
   CONSOLE_LOGS = 'CONSOLE_LOGS',
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT'
-}
-
-function resolveCurrentStep(selectedStepId: string, queryParams: ExecutionPageQueryParams): string {
-  return queryParams.retryStep ? queryParams.retryStep : selectedStepId
 }
 
 function isStepSelected(selectedStageId?: string, selectedStepId?: string): boolean {
@@ -294,35 +292,42 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
       </div>
       {renderLogs({ hasLogs, isSingleSectionLogs, virtuosoRef, state, actions })}
       {mode === 'console-view' && hasError ? (
-        <div className={cx(css.errorMsgs, { [css.isWarning]: isWarning })}>
-          {errorObjects.map((errorObject, index) => {
-            const { error = {}, explanations = [], hints = [] } = errorObject
-            return (
-              <div key={index} className={css.errorMsgContainer}>
-                <Container margin={{ bottom: 'medium' }}>
-                  <Icon className={css.errorIcon} name={isWarning ? 'warning-sign' : 'circle-cross'} />
-                  <LinkifyText
-                    content={error.message}
-                    textProps={{ font: { weight: 'bold' }, color: Color.RED_700 }}
-                    linkStyles={css.link}
+        <Layout.Horizontal>
+          <Container className={cx(css.errorMsgs, { [css.isWarning]: isWarning })} width={'100%'}>
+            {errorObjects.map((errorObject, index) => {
+              const { error = {}, explanations = [], hints = [] } = errorObject
+              return (
+                <div key={index} className={css.errorMsgContainer}>
+                  <Container margin={{ bottom: 'medium' }}>
+                    <Icon className={css.errorIcon} name={isWarning ? 'warning-sign' : 'circle-cross'} />
+                    <LinkifyText
+                      content={error.message}
+                      textProps={{ font: { weight: 'bold' }, color: Color.RED_700 }}
+                      linkStyles={css.link}
+                    />
+                  </Container>
+                  <ErrorList
+                    items={explanations}
+                    header={getString('common.errorHandler.issueCouldBe')}
+                    icon={'info'}
+                    color={Color.WHITE}
                   />
-                </Container>
-                <ErrorList
-                  items={explanations}
-                  header={getString('common.errorHandler.issueCouldBe')}
-                  icon={'info'}
-                  color={Color.WHITE}
-                />
-                <ErrorList
-                  items={hints}
-                  header={getString('common.errorHandler.tryTheseSuggestions')}
-                  icon={'lightbulb'}
-                  color={Color.WHITE}
-                />
-              </div>
-            )
-          })}
-        </div>
+                  <ErrorList
+                    items={hints}
+                    header={getString('common.errorHandler.tryTheseSuggestions')}
+                    icon={'lightbulb'}
+                    color={Color.WHITE}
+                  />
+                </div>
+              )
+            })}
+          </Container>
+          {showHarnessCoPilot({ pipelineStagesMap, selectedStageId }) ? (
+            <Container className={css.copilot} width="40%" flex={{ justifyContent: 'flex-end' }}>
+              <HarnessCopilot mode="console-view" />
+            </Container>
+          ) : null}
+        </Layout.Horizontal>
       ) : null}
     </div>
   )

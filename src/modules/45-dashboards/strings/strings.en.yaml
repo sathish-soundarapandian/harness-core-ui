@@ -27,7 +27,6 @@ createModal:
 
   sampleTitle: 'Dashboard Title'
   sampleDesc: 'Dashboard Description'
-  view: 'view'
   fav: 'fav'
   dataSource: 'Data Source'
   namePlaceholder: 'Name your dashboard'

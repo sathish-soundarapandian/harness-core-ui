@@ -1,0 +1,125 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.drawer {
+  width: 34vw !important;
+}
+
+.panel {
+  padding: var(--spacing-medium) var(--spacing-xlarge) var(--spacing-xlarge) var(--spacing-xxlarge) !important;
+}
+
+.closeBtn {
+  color: var(--grey-700) !important;
+  &:hover {
+    cursor: pointer;
+    color: var(--grey-700) !important;
+  }
+}
+
+.pill {
+  border-radius: 100px;
+  padding: var(--spacing-xsmall) var(--spacing-4) !important;
+  width: fit-content !important;
+}
+
+.successPill {
+  background-color: var(--ai-purple-100) !important;
+}
+
+.failurePill {
+  background-color: var(--red-50) !important;
+}
+
+.statusActionBtn {
+  cursor: pointer;
+}
+
+.remediation {
+  border: 4px solid var(--ai-purple-200);
+  border-radius: 10px;
+}
+
+.markdown {
+  background-color: var(--white);
+  border-radius: 10px;
+  margin-bottom: var(--spacing-small);
+  line-height: 1.4;
+
+  pre {
+    background-color: var(--grey-100);
+    color: var(--grey-700);
+    padding: var(--spacing-small);
+    overflow-x: auto;
+    border: 1px solid var(--grey-200);
+    border-radius: 4px;
+    white-space: pre-wrap; /* wrap text */
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 23px;
+    letter-spacing: 0.2px;
+  }
+
+  code {
+    font-family: 'Inter', monospace;
+    font-weight: bold;
+    box-sizing: border-box;
+    background: var(--grey-100);
+    border-radius: 4px;
+  }
+}
+
+.label {
+  color: var(--ai-purple-900) !important;
+  line-height: 22px !important;
+}
+
+.overflow {
+  height: 95%;
+  overflow-y: scroll;
+}
+
+.tooltip {
+  border-radius: 15px;
+  width: 344px;
+  :global {
+    .bp3-popover-arrow-fill {
+      fill: var(--ai-purple-300) !important;
+    }
+    .bp3-popover-content {
+      background-color: var(--ai-purple-300);
+    }
+  }
+}
+
+.tooltipPadding {
+  padding: var(--spacing-small) var(--spacing-small) var(--spacing-medium) var(--spacing-medium) !important;
+}
+
+.tooltipContent {
+  padding: 0 0 var(--spacing-4) var(--spacing-medium) !important;
+}
+
+.askAIBtn {
+  border-radius: 100px !important;
+}
+
+.copilot {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.flex1 {
+  flex: 1;
+}
+
+.flex2 {
+  flex: 2;
+}

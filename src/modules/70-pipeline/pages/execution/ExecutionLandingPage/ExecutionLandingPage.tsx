@@ -24,6 +24,7 @@ import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/i
 import { PipelineExecutionWarning } from '@pipeline/components/PipelineExecutionWarning/PipelineExecutionWarning'
 import { logsCache } from '@pipeline/components/LogsContent/LogsState/utils'
 import ExecutionContext from '@pipeline/context/ExecutionContext'
+import type { OpenAIRemediationsForExecutionError } from '@pipeline/factories/ExecutionFactory/types'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { usePolling } from '@common/hooks/usePolling'
 import { useReportSummary, useGetToken } from 'services/ti-service'
@@ -133,6 +134,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   const { data: serviceToken } = useGetToken({
     queryParams: { accountId }
   })
+  const [openAIRemediationsForExecution, setOpenAIRemediationsForExecution] =
+    useState<OpenAIRemediationsForExecutionError>()
 
   const { data: reportSummary, loading: reportSummaryLoading } = useReportSummary({
     queryParams: {
@@ -342,7 +345,9 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         addNewNodeToMap(id, node) {
           setAllNodeMap(nodeMap => ({ ...nodeMap, [id]: node }))
         },
-        retriedHistoryInfo
+        retriedHistoryInfo,
+        openAIRemediations: openAIRemediationsForExecution,
+        setOpenAIRemediations: setOpenAIRemediationsForExecution
       }}
     >
       <ExecutionPipelineVariables

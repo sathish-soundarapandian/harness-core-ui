@@ -7,10 +7,12 @@
 
 /* eslint-disable react/display-name */
 import React from 'react'
-import { render, waitFor, fireEvent } from '@testing-library/react'
+import { render, waitFor, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import type { GraphLayoutNode } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ExecutionContext, ExecutionContextParams } from '@pipeline/context/ExecutionContext'
+import { nodeLayoutForCIStage } from '@pipeline/utils/__tests__/mockJson/mockExecutionContext'
 import { LogsContent, DefaultConsoleViewStepDetails } from '../LogsContent'
 import { useLogsContent } from '../useLogsContent'
 import { getDefaultReducerState } from '../LogsState/utils'
@@ -60,7 +62,8 @@ const execContextValues: ExecutionContextParams = {
 
 jest.mock('services/logs', () => ({
   useGetToken: jest.fn(() => ({})),
-  logBlobPromise: jest.fn(() => Promise.resolve({}))
+  logBlobPromise: jest.fn(() => Promise.resolve({})),
+  rcaPromise: jest.fn().mockImplementation(() => Promise.resolve({ rca: '```sample markdown text```' }))
 }))
 jest.mock('../useLogsContent.tsx', () => ({
   useLogsContent: jest.fn(() => ({
@@ -260,6 +263,81 @@ describe('<LogsContent /> tests', () => {
 
       expect(container).toMatchSnapshot()
       expect(getByText('Grouped logs')).toBeTruthy()
+    })
+  })
+
+  describe('Harness Copilot integration testing', () => {
+    test('Harness Copilot integration', async () => {
+      const { getByText } = render(
+        <TestWrapper>
+          <ExecutionContext.Provider
+            value={{
+              ...execContextValues,
+              selectedStepId: 'SELECTED_STEP',
+              selectedStageId: 'SELECTED_CI_STAGE',
+              allNodeMap: { SELECTED_STEP: { failureInfo: { responseMessages } } } as any,
+              pipelineStagesMap: new Map<string, GraphLayoutNode>([['SELECTED_CI_STAGE', nodeLayoutForCIStage]]),
+              logsToken: 'x-harness-token'
+            }}
+          >
+            <LogsContent mode="console-view" />
+          </ExecutionContext.Provider>
+        </TestWrapper>
+      )
+      // Verify footer is visible
+      expect(getByText('pipeline.copilot.askAICopilot')).toBeInTheDocument()
+
+      act(() => {
+        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+      })
+
+      // Should update status when clicked on Ask AI
+      await waitFor(() => {
+        expect(getByText('pipeline.copilot.analyzing')).toBeInTheDocument()
+      })
+    })
+
+    test('Verify e2e', async () => {
+      jest.mock('services/logs', () => ({
+        rcaPromise: jest.fn().mockImplementation(() => Promise.resolve({ rca: '```hello```' }))
+      }))
+      const { getByText } = render(
+        <TestWrapper>
+          <ExecutionContext.Provider
+            value={{
+              ...execContextValues,
+              selectedStepId: 'SELECTED_STEP',
+              selectedStageId: 'SELECTED_CI_STAGE',
+              allNodeMap: { SELECTED_STEP: { failureInfo: { responseMessages } } } as any,
+              pipelineStagesMap: new Map<string, GraphLayoutNode>([['SELECTED_CI_STAGE', nodeLayoutForCIStage]]),
+              logsToken: 'x-harness-token'
+            }}
+          >
+            <LogsContent mode="console-view" />
+          </ExecutionContext.Provider>
+        </TestWrapper>
+      )
+
+      // Verify footer is visible
+      expect(getByText('pipeline.copilot.askAICopilot')).toBeInTheDocument()
+
+      act(() => {
+        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+      })
+
+      // Should update status when clicked on Ask AI
+      await waitFor(() => {
+        expect(getByText('pipeline.copilot.foundPossibleRemediations')).toBeInTheDocument()
+      })
+
+      act(() => {
+        fireEvent.click(getByText('common.viewText'))
+      })
+
+      // wait for the side panel to be visible
+      await waitFor(() => {
+        expect(getByText('pipeline.copilot.possibleSolutions')).toBeInTheDocument()
+      })
     })
   })
 })
