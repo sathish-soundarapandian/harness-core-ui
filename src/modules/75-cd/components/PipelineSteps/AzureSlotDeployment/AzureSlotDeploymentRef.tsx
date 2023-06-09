@@ -5,20 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React from 'react'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import {
-  Formik,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  RUNTIME_INPUT_VALUE,
-  SelectOption,
-  Text
-} from '@harness/uicore'
-import type { IItemRendererProps } from '@blueprintjs/select'
+import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -30,15 +20,13 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
 import { useQueryParams } from '@common/hooks'
-import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { getAzureWebAppDeploymentSlotsV2Promise, getAzureWebAppNamesV2Promise } from 'services/cd-ng'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { AzureSlotDeploymentDynamicField } from './AzureWebAppField'
 import type { AzureSlotDeploymentProps } from './AzureSlotDeploymentInterface.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -49,47 +37,13 @@ export const AzureSlotDeploymentRef = (
   formikRef: StepFormikFowardRef
 ): JSX.Element => {
   /* istanbul ignore next */
-  const {
-    allowableTypes,
-    isNewStep = true,
-    readonly,
-    initialValues,
-    onUpdate,
-    onChange,
-    stepViewType,
-    selectedStage
-  } = props
+  const { allowableTypes, isNewStep = true, readonly, initialValues, onUpdate, onChange, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const { AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS } = useFeatureFlags()
   const query = useQueryParams()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sectionId = (query as any).sectionId || ''
-  const loadingPlaceholderText = getString('pipeline.artifactsSelection.loadingDigest')
-  const [loading, setLoading] = useState<boolean>(false)
-  const [dynamicWebNames, setDynamicWebNames] = useState<SelectOption[]>(
-    loading ? [{ label: getString('loading'), value: '' }] : []
-  )
-  const [dynamicSlots, setDynamicSlots] = useState<SelectOption[]>([])
-
-  const itemRenderer = (item: SelectOption, itemProps: IItemRendererProps) => (
-    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={false} />
-  )
-
-  const isMultiEnv = React.useMemo(() => {
-    return selectedStage?.stage?.spec?.environment?.environmentRef
-  }, [selectedStage?.stage?.spec?.environment?.environmentRef])
-
-  const isEnvAndInfra = React.useMemo(() => {
-    return (
-      selectedStage?.stage?.spec?.environment?.environmentRef &&
-      selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier
-    )
-  }, [
-    selectedStage?.stage?.spec?.environment?.environmentRef,
-    selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier
-  ])
 
   return (
     <Formik
@@ -154,131 +108,8 @@ export const AzureSlotDeploymentRef = (
               />
             </div>
             <div className={stepCss.divider} />
-            {AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS &&
-            selectedStage?.stage?.spec?.environment?.environmentRef &&
-            selectedStage?.stage?.spec?.environment?.environmentRef !== RUNTIME_INPUT_VALUE &&
-            selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier !==
-              RUNTIME_INPUT_VALUE &&
-            selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier ? (
-              <>
-                <FormInput.MultiTypeInput
-                  // selectItems={getItems(loading, getString('loading'), dynamicWebNames)}
-                  style={{ width: '67%' }}
-                  selectItems={dynamicWebNames}
-                  useValue
-                  multiTypeInputProps={{
-                    expressions,
-                    allowableTypes,
-                    selectProps: {
-                      defaultSelectedItem: {
-                        label: formik?.values?.spec?.webApp,
-                        value: formik?.values?.spec?.webApp
-                      } as SelectOption,
-                      items: dynamicWebNames,
-                      addClearBtn: true,
-                      itemRenderer: itemRenderer,
-                      allowCreatingNewItems: true,
-                      addTooltip: true,
-                      noResults: (
-                        <Text padding={'small'}>
-                          {loading ? getString('loading') : getString('pipeline.ACR.subscriptionError')}
-                        </Text>
-                      )
-                    },
-                    onChange: e => {
-                      formik.setFieldError('spec.webApp', undefined)
-                      if (e === RUNTIME_INPUT_VALUE) {
-                        formik.setFieldValue('spec.webApp', RUNTIME_INPUT_VALUE)
-                        formik.setFieldValue('spec.deploymentSlot', RUNTIME_INPUT_VALUE)
-                        return
-                      } else {
-                        formik.setFieldValue('spec.webApp', (e as SelectOption)?.value)
-                        if (get(formik, 'values.spec.deploymentSlot') !== RUNTIME_INPUT_VALUE) {
-                          formik.setFieldValue('spec.deploymentSlot', '')
-                        }
-                      }
-                    },
-                    onFocus: () => {
-                      setLoading(true)
-                      setDynamicSlots([])
-                      getAzureWebAppNamesV2Promise({
-                        queryParams: {
-                          accountIdentifier: accountId,
-                          projectIdentifier,
-                          orgIdentifier,
-                          envId: selectedStage?.stage?.spec?.environment?.environmentRef,
-                          infraDefinitionId:
-                            selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier
-                        }
-                      })
-                        .then(res => {
-                          if (res?.data) {
-                            setDynamicWebNames(
-                              res?.data?.webAppNames?.map((name: string): SelectOption => {
-                                return {
-                                  value: name,
-                                  label: name
-                                } as SelectOption
-                              }) as SelectOption[]
-                            )
-                          }
-                        })
-                        .finally(() => {
-                          setLoading(false)
-                        })
-                    }
-                  }}
-                  label={'Web App Name'}
-                  name="spec.webApp"
-                />
-                <FormInput.MultiTypeInput
-                  style={{ width: '67%' }}
-                  selectItems={dynamicSlots}
-                  useValue
-                  multiTypeInputProps={{
-                    expressions,
-                    allowableTypes,
-                    selectProps: {
-                      defaultSelectedItem: {
-                        label: formik?.values?.spec?.deploymentSlot,
-                        value: formik?.values?.spec?.deploymentSlot
-                      } as SelectOption,
-                      items: dynamicSlots,
-                      addClearBtn: true,
-                      itemRenderer: itemRenderer,
-                      allowCreatingNewItems: true,
-                      addTooltip: true
-                    },
-
-                    onFocus: () => {
-                      getAzureWebAppDeploymentSlotsV2Promise({
-                        queryParams: {
-                          accountIdentifier: accountId,
-                          projectIdentifier,
-                          orgIdentifier,
-                          envId: selectedStage?.stage?.spec?.environment?.environmentRef,
-                          infraDefinitionId:
-                            selectedStage?.stage?.spec?.environment?.infrastructureDefinitions?.[0]?.identifier
-                        },
-                        webAppName: formik?.values?.spec?.webApp
-                      }).then(res => {
-                        if (res?.data) {
-                          setDynamicSlots(
-                            res?.data?.deploymentSlots?.map((slot: any): SelectOption => {
-                              return {
-                                value: slot?.name,
-                                label: slot?.name
-                              } as SelectOption
-                            }) as SelectOption[]
-                          )
-                        }
-                      })
-                    }
-                  }}
-                  label={'Deployment Slot'}
-                  name="spec.deploymentSlot"
-                />
-              </>
+            {AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS ? (
+              <AzureSlotDeploymentDynamicField {...props} />
             ) : (
               <>
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
