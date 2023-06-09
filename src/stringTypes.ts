@@ -3165,6 +3165,7 @@ export interface StringsMap {
   'connectors.serviceNow.privateKey': string
   'connectors.serviceNow.refreshToken': string
   'connectors.serviceNow.resourceID': string
+  'connectors.serviceNow.scopeHelperText': string
   'connectors.serviceNow.scopePlaceholder': string
   'connectors.serviceNow.serviceNowUrl': string
   'connectors.serviceNow.serviceNowViewPermissions': string

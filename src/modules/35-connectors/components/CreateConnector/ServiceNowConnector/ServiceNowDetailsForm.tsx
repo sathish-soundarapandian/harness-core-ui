@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Layout,
   Button,
@@ -22,6 +22,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
+import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -91,6 +92,11 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
   const [initialValues, setInitialValues] = React.useState(defaultInitialFormData)
   const [loadConnector] = React.useState(false)
 
+  const formikRef = React.useRef<FormikProps<ServiceNowFormData> | null>(null)
+  const [isRefreshTokenScopeDisabled, setIsRefreshTokenScopeDisabled] = React.useState(false)
+  const [serviceNowUrl, setServiceNowUrl] = React.useState('')
+  const [tokenUrl, setTokenUrl] = React.useState('')
+
   const isServiceNowRefreshTokenAuthEnabled = useFeatureFlag(FeatureFlag.CDS_SERVICENOW_REFRESH_TOKEN_AUTH)
 
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = React.useState(true && props.isEditMode)
@@ -117,6 +123,28 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
 
     return baseAuthOptions
   }, [isServiceNowRefreshTokenAuthEnabled])
+
+  useEffect(() => {
+    if (initialValues?.tokenUrl) {
+      setTokenUrl(initialValues.tokenUrl)
+    }
+
+    if (initialValues?.serviceNowUrl) {
+      setServiceNowUrl(initialValues.serviceNowUrl)
+    }
+  }, [initialValues?.serviceNowUrl, initialValues?.tokenUrl])
+
+  // In this scenario, the scope is automatically evaluated from the service now url itself
+  useEffect(() => {
+    if (tokenUrl && serviceNowUrl) {
+      if (tokenUrl.startsWith(serviceNowUrl) && tokenUrl !== serviceNowUrl) {
+        formikRef.current?.setFieldValue('scope', '')
+        setIsRefreshTokenScopeDisabled(true)
+      } else {
+        setIsRefreshTokenScopeDisabled(false)
+      }
+    }
+  }, [tokenUrl, serviceNowUrl])
 
   React.useEffect(() => {
     if (loadingConnectorSecrets) {
@@ -222,6 +250,7 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
         }}
       >
         {formik => {
+          formikRef.current = formik
           return (
             <>
               <ModalErrorHandler bind={setModalErrorHandler} />
@@ -231,6 +260,9 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
                   placeholder={getString('UrlLabel')}
                   label={getString('connectors.serviceNow.serviceNowUrl')}
                   className={css.detailsFormWidth}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    setServiceNowUrl(event.target.value?.trim())
+                  }
                 />
                 <Container className={cx(css.authContainer, css.detailsFormWidth)}>
                   <Text font={{ variation: FontVariation.H6 }} inline margin={{ bottom: 'small', right: 'small' }}>
@@ -317,12 +349,17 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
                       placeholder={getString('UrlLabel')}
                       label={getString('connectors.serviceNow.tokenUrl')}
                       className={css.detailsFormWidth}
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => setTokenUrl(event.target.value?.trim())}
                     />
                     <FormInput.Text
                       name="scope"
                       placeholder={getString('connectors.serviceNow.scopePlaceholder')}
                       label={getString('common.scopeLabel')}
                       className={css.detailsFormWidth}
+                      disabled={isRefreshTokenScopeDisabled}
+                      helperText={
+                        isRefreshTokenScopeDisabled ? getString('connectors.serviceNow.scopeHelperText') : undefined
+                      }
                     />
                   </>
                 ) : null}

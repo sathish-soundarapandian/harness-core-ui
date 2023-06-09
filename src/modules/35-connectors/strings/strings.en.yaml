@@ -232,6 +232,7 @@ serviceNow:
   adfs: ADFS Client Credentials with Certificate
   refreshToken: Refresh Token
   scopePlaceholder: Enter Scope
+  scopeHelperText: Scope is not required as it will get evaluated from URL itself
   adfsUrl: ADFS URL
   tokenUrl: Token Url
   resourceID: Resource ID
