@@ -26,6 +26,7 @@ import type {
 } from 'services/cd-ng'
 import type { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import type { Duration } from '@common/exports'
 
 export interface IACMCustomMicroFrontendProps {
   customHooks: {
@@ -52,5 +53,6 @@ export interface IACMCustomMicroFrontendProps {
     MultiTypeFieldSelector: typeof MultiTypeFieldSelector
     ConnectorReferenceField: typeof ConnectorReferenceField
     MultiTypeSecretInput: typeof MultiTypeSecretInput
+    Duration: typeof Duration
   }
 }

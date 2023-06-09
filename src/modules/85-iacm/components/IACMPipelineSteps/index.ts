@@ -7,5 +7,7 @@
 
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { IACMTerraformPluginStep } from './IACMTerraformPlugin'
+import { IACMApprovalStep } from './IACMApproval'
 
 factory.registerStep(new IACMTerraformPluginStep())
+factory.registerStep(new IACMApprovalStep())

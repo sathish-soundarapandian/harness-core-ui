@@ -13,3 +13,4 @@ permissions:
 pipelineSteps:
   required: '{{name}} is required'
   description: Run terraform commands against your workspace
+  approvalDescription: Approve IACM operations

@@ -9601,6 +9601,7 @@ export interface StringsMap {
   'iacm.navTitle': string
   'iacm.permissions.iacmWorkspace': string
   'iacm.permissions.iacmWorkspaces': string
+  'iacm.pipelineSteps.approvalDescription': string
   'iacm.pipelineSteps.description': string
   'iacm.pipelineSteps.required': string
   'iacm.pulumi': string

@@ -30,6 +30,7 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { useGetConnector, useGetListOfBranchesByRefConnectorV2, useGetListOfReposByRefConnector } from 'services/cd-ng'
 import { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { Duration } from '@common/exports'
 
 const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ApprovalStageOverview,
@@ -39,7 +40,8 @@ const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   MultiTypeConnectorField,
   MultiTypeFieldSelector,
   ConnectorReferenceField,
-  MultiTypeSecretInput
+  MultiTypeSecretInput,
+  Duration
 }
 
 const customFunctions: IACMCustomMicroFrontendProps['customFunctions'] = {
