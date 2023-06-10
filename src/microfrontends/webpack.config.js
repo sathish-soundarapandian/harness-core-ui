@@ -6,7 +6,7 @@
  */
 
 const path = require('path')
-const tsTransformPaths = require('@zerollup/ts-transform-paths')
+const tsTransformPaths = require('@harness/ts-transform-paths')
 module.exports = {
   mode: 'production',
   entry: './src/microfrontends/index.ts',
