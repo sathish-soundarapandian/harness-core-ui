@@ -124,7 +124,7 @@ const SelectService: React.FC<Props> = ({ name }) => {
   )
 
   const RenderServiceName: Renderer<CellProps<DatabaseServiceCollection>> = ({ row }) => (
-    <Layout.Vertical spacing={'small'} margin={{ left: 'medium' }}>
+    <Layout.Vertical spacing={'small'} margin={{ left: 'small' }}>
       <Text lineClamp={1} font={{ size: 'normal', weight: 'semi-bold' }} color={Color.PRIMARY_7}>
         {row.original.name}
       </Text>
@@ -176,7 +176,7 @@ const SelectService: React.FC<Props> = ({ name }) => {
     () => [
       {
         Header: '',
-        width: '5%',
+        width: '10%',
         id: 'action',
         Cell: RenderSelectServiceCheckbox,
         disableSortBy: true
@@ -184,7 +184,7 @@ const SelectService: React.FC<Props> = ({ name }) => {
       {
         Header: '',
         id: 'name',
-        width: '57%',
+        width: '40%',
         Cell: RenderServiceName
       },
       {

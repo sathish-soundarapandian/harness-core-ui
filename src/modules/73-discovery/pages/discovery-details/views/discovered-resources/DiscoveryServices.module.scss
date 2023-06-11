@@ -5,6 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 .tableBody {
+  width: 95%;
+  margin: auto;
+
   div[class*='TableV2--row TableV2--card'] {
     border-radius: 6px !important;
     padding: var(--spacing-medium) 0px !important;

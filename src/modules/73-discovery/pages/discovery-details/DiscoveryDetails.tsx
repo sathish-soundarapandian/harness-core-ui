@@ -16,6 +16,7 @@ import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useStrings } from 'framework/strings'
 import { useGetInfra } from 'services/servicediscovery'
 import DiscoveredServices from './views/discovered-resources/DiscoveredServices'
+import NetworkMapTable from './views/network-map/NetworkMapTable'
 import css from './DiscoveryDetails.module.scss'
 
 const DiscoveryDetails: React.FC = () => {
@@ -94,7 +95,7 @@ const DiscoveryDetails: React.FC = () => {
                 {
                   id: 'network maps',
                   title: 'Network Maps',
-                  panel: <div>Network Maps</div>
+                  panel: <NetworkMapTable />
                 },
                 {
                   id: 'network details',

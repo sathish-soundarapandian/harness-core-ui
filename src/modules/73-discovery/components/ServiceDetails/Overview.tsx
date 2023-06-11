@@ -44,14 +44,12 @@ const Overview: React.FC<Overview> = props => {
       projectIdentifier: projectIdentifier
     }
   })
-
+  console.log(serviceWorkloadData)
   let totalReplicas = 0
 
   if (serviceWorkloadData) {
-    serviceWorkloadData.items?.map(item => {
-      item.workloads?.forEach(workload => {
-        totalReplicas += workload?.replicas ? workload.replicas.length : 0
-      })
+    serviceWorkloadData.workloads?.forEach(workload => {
+      totalReplicas += workload?.replicas ? workload.replicas.length : 0
     })
   }
 
@@ -217,7 +215,7 @@ const Overview: React.FC<Overview> = props => {
               title={getString('discovery.serviceDrawer.kind')}
               content={
                 <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-                  {serviceWorkloadData && serviceWorkloadData.items?.map(item => item?.kind)}
+                  {serviceWorkloadData?.kind}
                 </Text>
               }
             />
@@ -231,16 +229,42 @@ const Overview: React.FC<Overview> = props => {
               padding={{ top: 'medium' }}
             />
             <Divider />
-            {serviceWorkloadData &&
-            serviceWorkloadData.items?.map(item => item.workloads && item.workloads[0]?.podLabels) ? (
+            {serviceWorkloadData && serviceWorkloadData?.workloads[0]?.podLabels ? (
               <>
                 <ListItems
                   title={getString('discovery.serviceDrawer.labels')}
                   content={
                     <Layout.Vertical width={'60%'}>
-                      {Object.entries(
-                        serviceWorkloadData?.items?.map(item => item.workloads && item.workloads[0]?.podLabels)
-                      ).map(([key, value]) => {
+                      {Object.entries(serviceWorkloadData && serviceWorkloadData?.workloads[0]?.podLabels).map(
+                        ([key, value]) => {
+                          return (
+                            <Text
+                              color={Color.GREY_700}
+                              font={{ variation: FontVariation.BODY2 }}
+                              lineClamp={1}
+                              key={key}
+                            >
+                              {key}:{value}
+                            </Text>
+                          )
+                        }
+                      )}
+                    </Layout.Vertical>
+                  }
+                  padding={{ top: 'medium' }}
+                />
+                <Divider />
+              </>
+            ) : (
+              <></>
+            )}
+            {serviceWorkloadData && serviceWorkloadData?.workloads[0]?.podAnnotations ? (
+              <ListItems
+                title={getString('discovery.serviceDrawer.annotations')}
+                content={
+                  <Layout.Vertical width={'60%'}>
+                    {Object.entries(serviceWorkloadData && serviceWorkloadData?.workloads[0]?.podAnnotations).map(
+                      ([key, value]) => {
                         return (
                           <Text
                             color={Color.GREY_700}
@@ -251,31 +275,8 @@ const Overview: React.FC<Overview> = props => {
                             {key}:{value}
                           </Text>
                         )
-                      })}
-                    </Layout.Vertical>
-                  }
-                  padding={{ top: 'medium' }}
-                />
-                <Divider />
-              </>
-            ) : (
-              <></>
-            )}
-            {serviceWorkloadData &&
-            serviceWorkloadData.items?.map(item => item.workloads && item.workloads[0]?.podAnnotations) ? (
-              <ListItems
-                title={getString('discovery.serviceDrawer.annotations')}
-                content={
-                  <Layout.Vertical width={'60%'}>
-                    {Object.entries(
-                      serviceWorkloadData?.items?.map(item => item.workloads && item.workloads[0]?.podAnnotations)
-                    ).map(([key, value]) => {
-                      return (
-                        <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }} lineClamp={1} key={key}>
-                          {key}:{value}
-                        </Text>
-                      )
-                    })}
+                      }
+                    )}
                   </Layout.Vertical>
                 }
                 padding={{ top: 'medium' }}
