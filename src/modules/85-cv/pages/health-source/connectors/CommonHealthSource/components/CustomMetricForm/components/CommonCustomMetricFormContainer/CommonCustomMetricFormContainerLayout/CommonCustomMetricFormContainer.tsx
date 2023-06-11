@@ -8,7 +8,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
-import { Container } from '@harness/uicore'
+import { Container, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import {
   TimeSeries,
   useGetSampleMetricData,
@@ -85,8 +85,15 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
       setRecords([])
       setHealthSourceTimeSeriesData([])
 
+      const queryFieldValueType = getMultiTypeFromValue(queryFieldValue)
+
       // Fetch the records for latest query
-      if (query && !isConnectorRuntimeOrExpression && !isQueryRuntimeOrExpression) {
+      if (
+        query &&
+        !isConnectorRuntimeOrExpression &&
+        !isQueryRuntimeOrExpression &&
+        (!queryField || queryFieldValueType === MultiTypeInputType.FIXED)
+      ) {
         handleFetchRecords()
       }
     }
@@ -151,6 +158,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
         query={query}
         dataTooltipId={'healthSourceQuery'}
         isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+        healthSourceConfig={healthSourceConfig}
         querySectionTitle={getString(
           healthSourceConfig?.customMetrics?.queryAndRecords?.titleStringKey ||
             'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle'

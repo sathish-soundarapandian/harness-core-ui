@@ -37,8 +37,12 @@ describe('JsonSelectorWithDrawer', () => {
       </TestWrapper>
     )
 
+    await waitFor(() => {
+      expect(document.querySelector('input[name="serviceInstanceField"]')).toBeInTheDocument()
+    })
+
     act(() => {
-      userEvent.click(screen.getByText(/test/))
+      userEvent.click(screen.getByTestId(/jsonSelectorBtn/))
     })
 
     await waitFor(() =>

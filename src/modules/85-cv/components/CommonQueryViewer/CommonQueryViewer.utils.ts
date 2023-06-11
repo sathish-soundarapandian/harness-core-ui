@@ -34,3 +34,15 @@ export function getRunQueryBtnTooltip(
   const tooltipMessage = getRunQueryButtonTooltip(query, isQueryFieldNotPresent, queryFieldIdentifier, getString)
   return tooltipMessage
 }
+
+export const shouldShowCommonRecords = ({
+  isQueryRuntimeOrExpression,
+  isConnectorRuntimeOrExpression,
+  hideRecords
+}: {
+  isQueryRuntimeOrExpression?: boolean
+  isConnectorRuntimeOrExpression?: boolean
+  hideRecords?: boolean
+}): boolean => {
+  return !(isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression) && !hideRecords
+}

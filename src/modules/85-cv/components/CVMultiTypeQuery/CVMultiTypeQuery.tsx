@@ -19,10 +19,12 @@ export default function CVMultiTypeQuery({
   allowedTypes,
   onTypeChange,
   fetchButtonProps = {},
-  runQueryBtnTooltip
+  runQueryBtnTooltip,
+  hideFetchButton = false
 }: {
   name: string
   disableFetchButton?: boolean
+  hideFetchButton?: boolean
   expressions: string[]
   allowedTypes?: AllowedTypes
   fetchRecords?: () => void
@@ -62,17 +64,19 @@ export default function CVMultiTypeQuery({
         title={getString('cv.query')}
         editorOptions={{ lineNumbers: 'off' }}
       />
-      <Button
-        intent="primary"
-        text={getString('cv.monitoringSources.gcoLogs.fetchRecords')}
-        onClick={async () => {
-          fetchRecords?.()
-        }}
-        margin={{ top: 'medium' }}
-        disabled={disableFetchButton}
-        {...fetchButtonProps}
-        tooltip={runQueryBtnTooltip}
-      />
+      {!hideFetchButton && (
+        <Button
+          intent="primary"
+          text={getString('cv.monitoringSources.gcoLogs.fetchRecords')}
+          onClick={async () => {
+            fetchRecords?.()
+          }}
+          margin={{ top: 'medium' }}
+          disabled={disableFetchButton}
+          {...fetchButtonProps}
+          tooltip={runQueryBtnTooltip}
+        />
+      )}
     </MultiTypeFieldSelector>
   )
 }

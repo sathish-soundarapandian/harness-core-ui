@@ -7,6 +7,7 @@
 
 import { IDrawerProps, Position } from '@blueprintjs/core'
 import type { TextAreaProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
+import type { HealthSourceConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import type { TimeSeriesSampleDTO } from 'services/cv'
 import type { RecordsProps } from '../Records/types'
 
@@ -50,6 +51,7 @@ export interface CommonQueryViewerProps {
   queryTextareaName?: string
   querySectionTitle?: string
   queryFieldIdentifier?: string
+  healthSourceConfig: HealthSourceConfig
 }
 
 export interface CommonQueryViewDialogProps extends RecordsProps {

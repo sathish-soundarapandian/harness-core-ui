@@ -159,7 +159,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     test('should test whether the inputs are disabled if the query is not entered and should take correct default value', async () => {
       const { getByTestId } = render(<WrapperComponent {...mockProps} />)
       expect(getByTestId('jsonSelectorBtn')).toBeDisabled()
-      expect(getByTestId('jsonSelectorBtn')).toHaveTextContent('_sourcehost')
+      expect(document.querySelector('input[name="serviceInstanceField"]')).toHaveValue('_sourcehost')
     })
 
     test('should test whether the inputs are enabled if the query present', async () => {
@@ -191,7 +191,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
 
       await waitFor(() => expect(screen.getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
 
-      expect(getByTestId('jsonSelectorBtn')).toHaveTextContent('_sourcehost')
+      expect(document.querySelector('input[name="serviceInstanceField"]')).toHaveValue('_sourcehost')
 
       expect(getByTestId('jsonSelectorBtn')).not.toBeDisabled()
 
@@ -529,7 +529,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         expect(templateFixedInput).toBeInTheDocument()
       })
 
-      test('should test template inputs are Runtime and fetch logs button is hidden if connector is runtime', () => {
+      test('should test fetch logs button is hidden if connector is runtime', () => {
         const mockPropsConnectorTemplateProps = {
           ...mockedCustomMetricsFormForLogsTableConnectorTemplates,
           setMappedMetrics: jest.fn(),
@@ -537,7 +537,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
           setGroupedCreatedMetrics: jest.fn(),
           setNonCustomFeilds: jest.fn()
         } as any
-        const { container } = render(
+        render(
           <SetupSourceTabsContext.Provider
             value={{
               isTemplate: true,
@@ -570,27 +570,17 @@ describe('Unit tests for CustomMetricFormContainer', () => {
           /cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText/
         )
 
-        const templateFixedInput = container.querySelector('.MultiTypeInput--FIXED')
-        const templateRuntimeInput = container.querySelector('.MultiTypeInput--RUNTIME')
-
         expect(fetchSampleDataButton).not.toBeInTheDocument()
-        expect(templateFixedInput).not.toBeInTheDocument()
-        expect(templateRuntimeInput).toBeInTheDocument()
       })
 
-      test('should test runtime inputs are rendered and fetch logs button is hidden, if query is a runtime', () => {
-        const { container } = render(<TemplatesWrapperComponent {...mockProps} query="<+input>" />)
-
-        const templateFixedInput = container.querySelector('.MultiTypeInput--FIXED')
-        const templateRuntimeInput = container.querySelector('.MultiTypeInput--RUNTIME')
+      test('should test fetch logs button is hidden, if query is a runtime', () => {
+        render(<TemplatesWrapperComponent {...mockProps} query="<+input>" />)
 
         const fetchSampleDataButton = screen.queryByText(
           /cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText/
         )
 
         expect(fetchSampleDataButton).not.toBeInTheDocument()
-        expect(templateFixedInput).not.toBeInTheDocument()
-        expect(templateRuntimeInput).toBeInTheDocument()
       })
     })
   })

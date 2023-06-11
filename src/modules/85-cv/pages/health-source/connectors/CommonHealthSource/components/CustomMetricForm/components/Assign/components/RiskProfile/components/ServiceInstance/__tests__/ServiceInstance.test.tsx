@@ -44,7 +44,7 @@ describe('Common health source ServiceInstance', () => {
 
     expect(jsonSelectorButton).toBeInTheDocument()
     expect(jsonSelectorButton).toBeDisabled()
-    expect(screen.getByText(/k8.test.instance/)).toBeInTheDocument()
+    expect(document.querySelector('input[name="serviceInstanceField"]')).toHaveValue('k8.test.instance')
   })
 
   test('ServiceInstance should render JSON selector component as enabled if records are present', () => {
@@ -54,10 +54,10 @@ describe('Common health source ServiceInstance', () => {
 
     expect(jsonSelectorButton).toBeInTheDocument()
     expect(jsonSelectorButton).not.toBeDisabled()
-    expect(screen.getByText(/k8.test.instance/)).toBeInTheDocument()
+    expect(document.querySelector('input[name="serviceInstanceField"]')).toHaveValue('k8.test.instance')
   })
 
-  test('ServiceInstance should render JSON selector component as runtime input, if connectorRef is runtime', () => {
+  test('ServiceInstance should render JSON selector component when connectorRef is runtime', () => {
     const WrapperComponentWithServiceContext = (props: Partial<TestServiceInstancePropsType>): JSX.Element => {
       const serviceInstanceComponentProps = {
         ...serviceInstancePropsMockWithDefaultValue,
@@ -85,9 +85,7 @@ describe('Common health source ServiceInstance', () => {
 
     const jsonSelectorButton = screen.queryByTestId(/jsonSelectorBtn/)
 
-    expect(jsonSelectorButton).not.toBeInTheDocument()
-
-    expect(screen.getByPlaceholderText('<+input>')).toBeInTheDocument()
+    expect(jsonSelectorButton).toBeInTheDocument()
   })
 
   test('ServiceInstance should render JSON selector component as disabled if isQueryRecordsAvailable prop is false', () => {

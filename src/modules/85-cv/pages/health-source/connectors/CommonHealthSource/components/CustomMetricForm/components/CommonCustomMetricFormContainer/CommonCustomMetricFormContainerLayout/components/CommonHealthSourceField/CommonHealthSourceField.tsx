@@ -28,7 +28,7 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
   const [listOptions, setListOptions] = useState<SelectOption[]>([])
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const { label, identifier, placeholder, type, isTemplateSupportEnabled } = field
+  const { label, identifier, placeholder, type, isTemplateSupportEnabled, allowCreatingNewItems } = field
   const shouldShowTemplatisedComponent = isTemplate && isTemplateSupportEnabled
   const shouldFetchDropdownOptions = !(isTemplate && isTemplateSupportEnabled && isConnectorRuntimeOrExpression)
   const fieldValue = values?.[identifier] as string
@@ -81,6 +81,16 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
                 data-testid={identifier}
                 multiTypeInputProps={{
                   expressions,
+                  /**
+                   * Ignoring TS and ESLint as selectProps in MultiTypeInput requesting
+                   * for all the select component props
+                   *
+                   * selectProps?: Omit<SelectProps, 'onChange' | 'value'>
+                   *
+                   * */
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  selectProps: { allowCreatingNewItems },
                   allowableTypes: isConnectorRuntimeOrExpression
                     ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
                     : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]

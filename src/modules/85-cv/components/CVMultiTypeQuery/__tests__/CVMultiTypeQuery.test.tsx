@@ -22,8 +22,8 @@ describe('Validate CVMultiTypeQuery', () => {
   test('should render CVMultiTypeQuery', () => {
     const { container, getByText } = render(
       <TestWrapper>
-        <Formik formName="" initialValues={{ query: mockQuery }} onSubmit={() => undefined}>
-          {_ => {
+        <Formik formName="" initialValues={{ query: mockQuery }} onSubmit={jest.fn()}>
+          {() => {
             return <CVMultiTypeQuery runQueryBtnTooltip={''} name={'query'} expressions={[]} disableFetchButton />
           }}
         </Formik>
@@ -38,8 +38,8 @@ describe('Validate CVMultiTypeQuery', () => {
     const fetchRecords = jest.fn()
     const { container, getByText } = render(
       <TestWrapper>
-        <Formik formName="" initialValues={{ query: mockQuery }} onSubmit={() => undefined}>
-          {_ => {
+        <Formik formName="" initialValues={{ query: mockQuery }} onSubmit={jest.fn()}>
+          {() => {
             return (
               <CVMultiTypeQuery
                 name={'query'}
@@ -59,6 +59,30 @@ describe('Validate CVMultiTypeQuery', () => {
       fireEvent.click(getByText('cv.monitoringSources.gcoLogs.fetchRecords'))
     })
     expect(fetchRecords).toBeCalledTimes(1)
+  })
+
+  test('should check fetch records button is hidden if hideFetchButton prop is true', async () => {
+    const fetchRecords = jest.fn()
+    render(
+      <TestWrapper>
+        <Formik formName="" initialValues={{ query: mockQuery }} onSubmit={jest.fn()}>
+          {() => {
+            return (
+              <CVMultiTypeQuery
+                name={'query'}
+                hideFetchButton
+                expressions={['exp1']}
+                fetchRecords={fetchRecords}
+                disableFetchButton={false}
+                runQueryBtnTooltip={''}
+              />
+            )
+          }}
+        </Formik>
+      </TestWrapper>
+    )
+
+    expect(screen.queryByText('cv.monitoringSources.gcoLogs.fetchRecords')).not.toBeInTheDocument()
   })
 
   test('should show errors', async () => {
@@ -105,7 +129,7 @@ describe('Validate CVMultiTypeQuery', () => {
   test('should have modal title as Query', async () => {
     const { container } = render(
       <TestWrapper>
-        <Formik formName="" initialValues={{ query: '' }} onSubmit={() => undefined}>
+        <Formik formName="" initialValues={{ query: '' }} onSubmit={jest.fn()}>
           <CVMultiTypeQuery
             name={'query'}
             expressions={['exp1']}

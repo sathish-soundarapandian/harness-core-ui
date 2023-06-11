@@ -31,7 +31,8 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
     shouldBeAbleToDeleteLastMetric,
     filterRemovedMetricNameThresholds,
     openEditMetricModal,
-    defaultServiceInstance
+    defaultServiceInstance,
+    healthSourceConfig
   } = props
 
   const { isQueryRuntimeOrExpression, updateParentFormik } = useCommonHealthSource()
@@ -76,9 +77,12 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
     let isUpdated = false
     const isServiceInstanceFixed = getMultiTypeFromValue(formikValues.serviceInstanceField) === MultiTypeInputType.FIXED
 
+    const canUpdateServiceInstanceBasedOnQueryType =
+      healthSourceConfig?.customMetrics?.assign?.updateServiceInstanceBasedOnQuery
+
     if (isQueryRuntimeOrExpression) {
       const canMakeRuntime = !formikValues.serviceInstanceField || isServiceInstanceFixed
-      if (canMakeRuntime) {
+      if (canMakeRuntime && canUpdateServiceInstanceBasedOnQueryType) {
         formikValues.serviceInstanceField = RUNTIME_INPUT_VALUE
         isUpdated = true
       }
