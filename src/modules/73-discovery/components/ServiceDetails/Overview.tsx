@@ -44,7 +44,7 @@ const Overview: React.FC<Overview> = props => {
       projectIdentifier: projectIdentifier
     }
   })
-  console.log(serviceWorkloadData)
+
   let totalReplicas = 0
 
   if (serviceWorkloadData) {

@@ -5,17 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Classes, Drawer, Menu, MenuItem, Position } from '@blueprintjs/core'
+import { Drawer, Position } from '@blueprintjs/core'
 import {
   Button,
-  ButtonVariation,
   Container,
   DropDown,
   ExpandingSearchInput,
   Icon,
   Layout,
   Page,
-  Popover,
   SelectOption,
   TableV2,
   Text
@@ -37,11 +35,6 @@ import { useStrings } from 'framework/strings'
 import ServiceDetails from '@discovery/components/ServiceDetails/ServiceDetails'
 import routes from '@common/RouteDefinitions'
 import css from './DiscoveryServices.module.scss'
-interface ServiceDetailsProps {
-  infraID: string
-  serviceID: string
-  serviceName: string
-}
 
 export interface ConnectionMap {
   [sourceID: string]: ApiCustomServiceConnection[]

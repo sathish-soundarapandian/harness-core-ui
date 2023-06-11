@@ -17,7 +17,9 @@ import { useStrings } from 'framework/strings'
 import { useGetInfra } from 'services/servicediscovery'
 import DiscoveredServices from './views/discovered-resources/DiscoveredServices'
 import NetworkMapTable from './views/network-map/NetworkMapTable'
+import DiscoveryHistory from './views/discovery-history/DiscoveryHistory'
 import css from './DiscoveryDetails.module.scss'
+import Settings from './views/settings/Settings'
 
 const DiscoveryDetails: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
@@ -98,14 +100,14 @@ const DiscoveryDetails: React.FC = () => {
                   panel: <NetworkMapTable />
                 },
                 {
-                  id: 'network details',
-                  title: 'Network Details',
-                  panel: <div>Disovery History</div>
+                  id: 'discovery history',
+                  title: 'Discovery History',
+                  panel: <DiscoveryHistory />
                 },
                 {
                   id: 'settings',
                   title: 'Settings',
-                  panel: <div>Settings</div>
+                  panel: <Settings />
                 }
               ]}
             />
