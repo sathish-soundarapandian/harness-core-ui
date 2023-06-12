@@ -162,7 +162,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   setUpEditor(theme)
   const params = useParams()
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
-  const yamlRef = useRef<string>(currentYaml)
+  const yamlRef = useRef<string>('')
   const [initialSelectionRemoved, setInitialSelectionRemoved] = useState<boolean>(
     !defaultTo(existingYaml, existingJSON)
   )
@@ -213,6 +213,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   useEffect(() => {
     yamlRef.current = currentYaml
   }, [currentYaml])
+
+  useEffect(() => {
+    setCurrentYaml(yamlRef.current)
+  }, [yamlRef.current])
 
   const getEditorCurrentVersion = (): number | undefined => {
     return editorRef.current?.editor?.getModel()?.getAlternativeVersionId()
@@ -659,7 +663,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         )}
       </Layout.Horizontal>
     )
-  }, [yamlValidationErrors, fileName, entityType, theme, isReadOnlyMode])
+  }, [
+    yamlValidationErrors,
+    fileName,
+    entityType,
+    theme,
+    isReadOnlyMode,
+    currentYaml,
+    showCopyIcon,
+    isEditorExpanded,
+    shouldShowPluginsPanel
+  ])
 
   // used to remove initial selection that appears when yaml builder is loaded with an initial value
   useEffect(() => {
@@ -694,7 +708,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         ref={editorRef}
       />
     ),
-    [width, height, currentYaml, onYamlChange, codeLensRegistrations.current, isReadOnlyMode, isEditModeSupported]
+    [width, height, currentYaml, codeLensRegistrations.current, isReadOnlyMode, isEditModeSupported]
   )
 
   const throttledOnResize = throttle(() => {
@@ -955,7 +969,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           if (closestStageIndex < 0) {
             updatedYAML = yamlStringify({ ...parse(updatedYAML), stages: [getDefaultStageForModule(module)] })
             onYamlChange(updatedYAML)
-            setCurrentYaml(updatedYAML)
             yamlRef.current = updatedYAML
             closestStageIndex = 0
           }
@@ -999,7 +1012,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           }
           updatedYAML = yamlStringify(set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps))
           onYamlChange(updatedYAML)
-          setCurrentYaml(updatedYAML)
           yamlRef.current = updatedYAML
           setPluginOpnStatus?.(Status.SUCCESS)
           spotLightInsertedYAML({
