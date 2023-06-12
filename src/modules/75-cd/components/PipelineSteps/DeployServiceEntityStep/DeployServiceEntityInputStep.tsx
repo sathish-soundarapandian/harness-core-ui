@@ -15,20 +15,7 @@ import {
   SelectOption,
   useToaster
 } from '@harness/uicore'
-import {
-  cloneDeep,
-  cloneDeep,
-  defaultTo,
-  get,
-  isBoolean,
-  isEmpty,
-  isEqual,
-  isNil,
-  merge,
-  pick,
-  set,
-  set
-} from 'lodash-es'
+import { cloneDeep, defaultTo, get, isBoolean, isEmpty, isEqual, isNil, merge, pick, set } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
@@ -195,41 +182,41 @@ export function DeployServiceEntityInputStep({
 
     // updated values based on selected environments
     const existingEnvironmentValues = get(formik.values, pathToEnvironments)
-    const newEnvironmentsValues = createEnvValues(
-      isMultiEnvironment ? existingEnvironmentValues : [existingEnvironmentValues],
-      environmentIdentifiers,
-      cloneDeep(environmentsData),
-      deployToAllEnvironments || false,
-      gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions',
-      serviceIdentifiers,
-      isMultiEnvironment || false,
-      stepViewType
-    )
+    // const newEnvironmentsValues = createEnvValues(
+    //   isMultiEnvironment ? existingEnvironmentValues : [existingEnvironmentValues],
+    //   environmentIdentifiers,
+    //   cloneDeep(environmentsData),
+    //   deployToAllEnvironments || false,
+    //   gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions',
+    //   serviceIdentifiers,
+    //   isMultiEnvironment || false,
+    //   stepViewType
+    // )
 
-    const areEnvironmentsRuntimeUnderEnvGroup = !isBoolean(deployToAllEnvironments) && envGroupIdentifier
-    if (isMultiEnvironment) {
-      const newFormikValues = { ...formik.values }
-      if (areFiltersAdded) {
-        set(
-          newFormikValues,
-          pathToEnvironments,
-          newEnvironmentsValues.map(envValue => pick(envValue, 'environmentRef'))
-        )
-      } else {
-        updateStageFormTemplate(newEnvironmentsTemplate, fullPath)
+    // const areEnvironmentsRuntimeUnderEnvGroup = !isBoolean(deployToAllEnvironments) && envGroupIdentifier
+    // if (isMultiEnvironment) {
+    //   const newFormikValues = { ...formik.values }
+    //   if (areFiltersAdded) {
+    //     set(
+    //       newFormikValues,
+    //       pathToEnvironments,
+    //       newEnvironmentsValues.map(envValue => pick(envValue, 'environmentRef'))
+    //     )
+    //   } else {
+    //     updateStageFormTemplate(newEnvironmentsTemplate, fullPath)
 
-        // update form values
-        set(newFormikValues, pathToEnvironments, newEnvironmentsValues)
-      }
+    //     // update form values
+    //     set(newFormikValues, pathToEnvironments, newEnvironmentsValues)
+    //   }
 
-      if (areEnvironmentsRuntimeUnderEnvGroup) {
-        set(newFormikValues, pathForDeployToAll, false)
-      }
-      formik.setFieldValue(mainEntityPath, get(newFormikValues, mainEntityPath))
-    } else {
-      updateStageFormTemplate(newEnvironmentsTemplate[0], fullPath)
-      formik.setFieldValue(mainEntityPath, newEnvironmentsValues[0])
-    }
+    //   if (areEnvironmentsRuntimeUnderEnvGroup) {
+    //     set(newFormikValues, pathForDeployToAll, false)
+    //   }
+    //   formik.setFieldValue(mainEntityPath, get(newFormikValues, mainEntityPath))
+    // } else {
+    //   updateStageFormTemplate(newEnvironmentsTemplate[0], fullPath)
+    //   formik.setFieldValue(mainEntityPath, newEnvironmentsValues[0])
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentsData, environmentIdentifiers, envGroupIdentifier])
 
