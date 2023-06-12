@@ -68,6 +68,7 @@ exports[`<StageTemplateCanvas /> tests should match snapshot in empty state 1`] 
                       </span>
                       <div
                         class="switch"
+                        data-testid="toggle-s1"
                       >
                         <label
                           class="bp3-control bp3-switch"
