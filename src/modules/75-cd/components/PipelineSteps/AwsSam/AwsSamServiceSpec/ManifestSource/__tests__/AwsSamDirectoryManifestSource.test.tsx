@@ -73,16 +73,16 @@ describe('AwsSamDirectoryManifestSource tests', () => {
     // Connector
     const connnectorRefInput = screen.getByTestId(/connectorRef/)
     expect(connnectorRefInput).toBeInTheDocument()
-    userEvent.click(connnectorRefInput!)
+    await userEvent.click(connnectorRefInput!)
 
     const connectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
     const githubConnector1 = await findByText(connectorSelectorDialog, 'Git CTR')
     expect(githubConnector1).toBeInTheDocument()
     const githubConnector2 = await findByText(connectorSelectorDialog, 'Sample')
     expect(githubConnector2).toBeInTheDocument()
-    userEvent.click(githubConnector1)
+    await userEvent.click(githubConnector1)
     const applySelected = getByText(connectorSelectorDialog, 'entityReference.apply')
-    userEvent.click(applySelected)
+    await userEvent.click(applySelected)
     await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
 
     // Repo Name
@@ -90,7 +90,7 @@ describe('AwsSamDirectoryManifestSource tests', () => {
       'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.repoName'
     ) as HTMLInputElement
     expect(repoNameInput).toBeInTheDocument()
-    userEvent.type(repoNameInput, 'test-repo')
+    await userEvent.type(repoNameInput, 'test-repo')
     await waitFor(() => expect(repoNameInput.value).toBe('test-repo'))
 
     // Branch
@@ -98,7 +98,7 @@ describe('AwsSamDirectoryManifestSource tests', () => {
       'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.branch'
     ) as HTMLInputElement
     expect(branchInput).toBeInTheDocument()
-    userEvent.type(branchInput, 'test-branch')
+    await userEvent.type(branchInput, 'test-branch')
     await waitFor(() => expect(branchInput.value).toBe('test-branch'))
 
     // Path1
@@ -106,7 +106,7 @@ describe('AwsSamDirectoryManifestSource tests', () => {
       'pipeline.stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.paths[0]'
     ) as HTMLInputElement
     expect(path1Input).toBeInTheDocument()
-    userEvent.type(path1Input, 'test-path')
+    await userEvent.type(path1Input, 'test-path')
 
     // Add Path
     const plusButton = screen.queryByText('plusAdd')

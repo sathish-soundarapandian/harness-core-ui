@@ -136,8 +136,7 @@ describe('Retry History Button tests', () => {
     const retryHistoryExecutionList = await screen.findByTestId('retryHistoryExecutionList')
     expect(retryHistoryExecutionList).toMatchSnapshot('RetryHistoryExecutionList Snapshot')
     const executionDetailText = await screen.findByText('pipeline.recentExecutionText 2/2')
-<<<<<<< HEAD
-    userEvent.click(executionDetailText)
+    await userEvent.click(executionDetailText)
     expect(getByTestId('location')).toMatchInlineSnapshot(`
     <div
       data-testid="location"
@@ -145,12 +144,6 @@ describe('Retry History Button tests', () => {
       /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/pWoxb6ZARgCrf2fYtZ4k5Q/pipeline
     </div>
   `)
-=======
-    await userEvent.click(executionDetailText)
-    expect(mockHistoryPush).toBeCalledWith(
-      '/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/pWoxb6ZARgCrf2fYtZ4k5Q/pipeline'
-    )
->>>>>>> 0d93fb11b6d5 (feat: [OIP-3]: Update jest version)
   })
 
   test('render retry history execution list on loading state', async () => {

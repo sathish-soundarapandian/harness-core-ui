@@ -113,10 +113,10 @@ describe('DeployCloudFunctionGenOne  tests', () => {
     expect(timeoutInput).toBeVisible()
     expect(fieldInput).toBeVisible()
 
-    userEvent.type(timeoutInput!, '20m')
-    userEvent.type(fieldInput!, 'AbcD')
+    await userEvent.type(timeoutInput!, '20m')
+    await userEvent.type(fieldInput!, 'AbcD')
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Step_1',

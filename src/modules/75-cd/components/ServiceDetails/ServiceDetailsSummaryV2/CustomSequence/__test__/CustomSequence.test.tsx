@@ -84,8 +84,8 @@ describe('CustomSequence - ', () => {
     expect(customSeqDrawer?.querySelectorAll('[data-icon="drag-handle-vertical"]').length).toBe(5)
 
     //reset to default
-    userEvent.click(queryByText(customSeqDrawer!, 'cd.customSequence.resetToDefault')!)
-    userEvent.click(customSeqDrawer?.querySelector('button[aria-label="save"]')!)
+    await userEvent.click(queryByText(customSeqDrawer!, 'cd.customSequence.resetToDefault')!)
+    await userEvent.click(customSeqDrawer?.querySelector('button[aria-label="save"]')!)
 
     // save response with default sequence
     const response = {
@@ -117,7 +117,7 @@ describe('CustomSequence - ', () => {
     expect(customSeqDrawer?.querySelectorAll('[data-icon="drag-handle-vertical"]').length).toBe(5)
 
     //saving custom sequence
-    userEvent.click(customSeqDrawer?.querySelector('button[aria-label="save"]')!)
+    await userEvent.click(customSeqDrawer?.querySelector('button[aria-label="save"]')!)
 
     // save response with custom sequence
     const response = {
@@ -154,25 +154,25 @@ describe('CustomSequence - ', () => {
     const descIcon = (): any => customSeqDrawer?.querySelectorAll('[data-icon="main-caret-down"]')
     const incsIcon = (): any => customSeqDrawer?.querySelectorAll('[data-icon="main-caret-up"]')
 
-    userEvent.click(descIcon()?.[0]!)
+    await userEvent.click(descIcon()?.[0]!)
     //desc icon should disappear
     expect(descIcon()?.length).toBe(1)
 
-    userEvent.click(incsIcon()?.[0]!)
+    await userEvent.click(incsIcon()?.[0]!)
     //both should appear
     expect(incsIcon()?.length).toBe(2)
     expect(descIcon()?.length).toBe(2)
 
-    userEvent.click(incsIcon()?.[0]!)
+    await userEvent.click(incsIcon()?.[0]!)
     //increase icon should disappear
     expect(incsIcon()?.length).toBe(1)
 
     /* --- saving custom sequence --- */
-    userEvent.click(customSeqDrawer?.querySelector('button[aria-label="save"]')!)
+    await userEvent.click(customSeqDrawer?.querySelector('button[aria-label="save"]')!)
 
     // should not be called as promise returned error
     expect(afterSaveActions).not.toBeCalled()
-    userEvent.click(customSeqDrawer?.querySelector('[icon="cross"]')!)
+    await userEvent.click(customSeqDrawer?.querySelector('[icon="cross"]')!)
   })
 })
 
@@ -220,7 +220,7 @@ describe('CustomSequence - Empty, loading & Error states', () => {
     expect(errorText).toBeInTheDocument()
     const retry = customSeqDrawer?.querySelector('button[aria-label="Retry"]')
     expect(retry).toBeTruthy()
-    userEvent.click(retry!)
+    await userEvent.click(retry!)
     expect(errorText).toBeInTheDocument()
   })
 })
