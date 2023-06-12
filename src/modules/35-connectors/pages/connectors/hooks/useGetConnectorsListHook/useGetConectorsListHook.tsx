@@ -91,10 +91,10 @@ export const useGetConnectorsListHook = (
       const orderedCatalogue: ConnectorCatalogueItem[] | { category: string; connectors: string[] } = []
       connectorCatalogueOrder.forEach(catalogueItem => {
         const catalogueEntry = originalData.find(item => item['category'] === catalogueItem)
-        // deprecate aws code commit
+        // deprecate aws code commit and hide harness code repo
         if (catalogueEntry?.category == codeRepoCatalogue) {
           catalogueEntry.connectors = catalogueEntry?.connectors?.filter(
-            connector => connector !== Connectors.AWS_CODECOMMIT
+            connector => connector !== Connectors.AWS_CODECOMMIT && connector !== Connectors.Harness
           )
         }
         const isProjectOrOrg = projectIdentifier != undefined || orgIdentifier != undefined
