@@ -35,7 +35,7 @@ const RouteDestinationsWithoutAuth: React.FC = () => {
       <Route exact path="/">
         <RedirectToHome />
       </Route>
-      {CDRoutes.props.children}
+     {window.publicAccessOnAccount?CDRoutes.props.children:null}
       <Route path="/assessment">
         <AssessmentsHome />
       </Route>
