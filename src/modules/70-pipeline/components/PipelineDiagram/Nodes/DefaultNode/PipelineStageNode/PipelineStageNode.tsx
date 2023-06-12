@@ -58,7 +58,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const allowAdd = defaultTo(props.allowAdd, false)
   const { getStageFromPipeline, updateStage } = usePipelineContext()
   const { stage: pipelineStage } = getStageFromPipeline(props?.identifier)
-  const whenCondition = pipelineStage?.stage?.when?.condition
+  const whenCondition = pipelineStage?.stage?.when?.condition === 'false'
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const onDropEvent = (event: React.DragEvent): void => {
@@ -161,12 +161,12 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         <div
           draggable={!props.readonly}
           className={cx(defaultCss.defaultCard, {
-            [defaultCss.selected]: isSelectedNode() && whenCondition !== 'false',
+            [defaultCss.selected]: isSelectedNode() && !whenCondition,
             [defaultCss.failed]: stageStatus === ExecutionStatusEnum.Failed,
             [defaultCss.runningNode]: stageStatus === ExecutionStatusEnum.Running,
             [defaultCss.skipped]: stageStatus === ExecutionStatusEnum.Skipped,
             [defaultCss.notStarted]: stageStatus === ExecutionStatusEnum.NotStarted,
-            [defaultCss.disabled]: whenCondition === 'false'
+            [defaultCss.disabled]: whenCondition
           })}
           style={{
             width: 90,
@@ -231,7 +231,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
                 size={28}
                 name={props.icon as IconName}
                 {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-                {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+                {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
               />
             )
           )}
@@ -241,18 +241,14 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               style={secondaryIconStyle}
               size={13}
               {...secondaryIconProps}
-              {...(whenCondition === 'false'
-                ? { className: defaultCss.disbaledIcon }
-                : { className: defaultCss.secondaryIcon })}
+              {...(whenCondition ? { className: defaultCss.disbaledIcon } : { className: defaultCss.secondaryIcon })}
             />
           )}
           {props?.data?.tertiaryIcon && (
             <Icon
               name={props?.data?.tertiaryIcon}
               size={13}
-              {...(whenCondition === 'false'
-                ? { className: defaultCss.disbaledIcon }
-                : { className: defaultCss.tertiaryIcon })}
+              {...(whenCondition ? { className: defaultCss.disbaledIcon } : { className: defaultCss.tertiaryIcon })}
             />
           )}
           {isTemplateNode && (
@@ -281,7 +277,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
                 e.stopPropagation()
                 if (pipelineStage && pipelineStage?.stage) {
                   const stageData = produce(pipelineStage, draft => {
-                    if (whenCondition === 'false') {
+                    if (whenCondition) {
                       unset(draft, 'stage.when.condition')
                     } else {
                       set(draft, 'stage.when.condition', 'false')
@@ -294,7 +290,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
                 }
               }}
             >
-              <Switch aria-label="Global Freeze Toggle" checked={whenCondition !== 'false'} />
+              <Switch aria-label="Global Freeze Toggle" checked={!whenCondition} />
             </div>
           )}
           <Button
@@ -356,7 +352,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             <Icon
               size={26}
               name={'conditional-skip-new'}
-              {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+              {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
             />
           </Text>
         </div>
@@ -374,7 +370,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               name={'looping'}
               background={Color.PURPLE_300}
               {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-              {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+              {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
             />
           </Text>
         </div>

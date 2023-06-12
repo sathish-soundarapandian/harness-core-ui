@@ -52,7 +52,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
     getStageFromPipeline
   } = usePipelineContext()
 
-  const whenCondition = props?.data?.step?.when?.condition
+  const whenCondition = props?.data?.step?.when?.condition === 'false'
   const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
 
   const stepType = props.type || props?.data?.step?.stepType || props?.data?.step?.template?.templateInputs?.type || ''
@@ -171,12 +171,12 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         draggable={!props.readonly}
         data-collapsedNode={props?.isNodeCollapsed}
         className={cx(defaultCss.defaultCard, {
-          [defaultCss.selected]: isSelectedNode() && whenCondition !== 'false',
+          [defaultCss.selected]: isSelectedNode() && !whenCondition,
           [defaultCss.failed]: stepStatus === ExecutionStatusEnum.Failed,
           [defaultCss.runningNode]: stepStatus === ExecutionStatusEnum.Running,
           [defaultCss.skipped]: stepStatus === ExecutionStatusEnum.Skipped,
           [defaultCss.notStarted]: stepStatus === ExecutionStatusEnum.NotStarted,
-          [defaultCss.disabled]: whenCondition === 'false'
+          [defaultCss.disabled]: whenCondition
         })}
         style={{
           width: 64,
@@ -234,7 +234,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 size={40}
                 {...isSelectedCss()}
                 name={defaultTo(stepIcon, 'cross') as IconName}
-                {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+                {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
               />
             </>
           )
@@ -245,7 +245,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             onClick={e => {
               e.stopPropagation()
               const originalStepData = cloneDeep(props?.data?.step)
-              if (whenCondition === 'false') {
+              if (whenCondition) {
                 unset(originalStepData, 'when')
               } else {
                 set(originalStepData, 'when.condition', 'false')
@@ -276,7 +276,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
               }
             }}
           >
-            <Switch aria-label="Global Freeze Toggle" checked={whenCondition !== 'false'} />
+            <Switch aria-label="Global Freeze Toggle" checked={!whenCondition} />
           </div>
         )}
         {secondaryIcon && (
@@ -285,9 +285,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             style={secondaryIconStyle}
             size={13}
             {...secondaryIconProps}
-            {...(whenCondition === 'false'
-              ? { className: defaultCss.disbaledIcon }
-              : { className: defaultCss.secondaryIcon })}
+            {...(whenCondition ? { className: defaultCss.disbaledIcon } : { className: defaultCss.secondaryIcon })}
           />
         )}
         {props.data?.skipCondition && (
@@ -301,7 +299,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
               <Icon
                 size={26}
                 name={'conditional-skip-new'}
-                {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+                {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
               />
             </Text>
           </div>
@@ -317,7 +315,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
               <Icon
                 size={26}
                 name={'conditional-skip-new'}
-                {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+                {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
               />
             </Text>
           </div>
@@ -334,7 +332,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 size={16}
                 name={'looping'}
                 {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-                {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+                {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
               />
             </Text>
           </div>

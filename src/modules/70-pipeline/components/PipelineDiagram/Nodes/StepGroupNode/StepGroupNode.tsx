@@ -63,7 +63,7 @@ export function StepGroupNode(props: any): JSX.Element {
     getStageFromPipeline
   } = usePipelineContext()
 
-  const whenCondition = props?.data?.stepGroup?.when?.condition
+  const whenCondition = props?.data?.stepGroup?.when?.condition === 'false'
   const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageIdentifier, ''))
   const { showPrimary } = useToaster()
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
@@ -230,7 +230,7 @@ export function StepGroupNode(props: any): JSX.Element {
               parentMatrix: isParentMatrix,
               [css.templateStepGroup]: !!props?.data?.isTemplateNode,
               [css.rollbackGroup]: StageType.PIPELINE_ROLLBACK === props?.type,
-              [defaultCss.disabled]: whenCondition === 'false'
+              [defaultCss.disabled]: whenCondition
             })}
           >
             <div
@@ -276,7 +276,7 @@ export function StepGroupNode(props: any): JSX.Element {
                   <Icon
                     size={26}
                     name={'conditional-skip-new'}
-                    {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+                    {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
                   />
                 </Text>
               </div>
@@ -286,7 +286,7 @@ export function StepGroupNode(props: any): JSX.Element {
               onClick={e => {
                 e.stopPropagation()
                 const originalStepData = cloneDeep(props?.data?.stepGroup)
-                if (whenCondition === 'false') {
+                if (whenCondition) {
                   unset(originalStepData, 'when')
                 } else {
                   set(originalStepData, 'when.condition', 'false')
@@ -317,7 +317,7 @@ export function StepGroupNode(props: any): JSX.Element {
                 }
               }}
             >
-              <Switch aria-label="Global Freeze Toggle" checked={whenCondition !== 'false'} />
+              <Switch aria-label="Global Freeze Toggle" checked={!whenCondition} />
             </div>
             {props.data?.conditionalExecutionEnabled && (
               <div className={css.conditional}>
@@ -330,7 +330,7 @@ export function StepGroupNode(props: any): JSX.Element {
                   <Icon
                     size={26}
                     name={'conditional-skip-new'}
-                    {...(whenCondition === 'false' ? { className: defaultCss.disbaledIcon } : {})}
+                    {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
                   />
                 </Text>
               </div>
