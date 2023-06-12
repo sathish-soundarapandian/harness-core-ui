@@ -23,7 +23,7 @@ import * as Yup from 'yup'
 import cx from 'classnames'
 import { URLValidationSchema } from '@common/utils/Validation'
 import { useToaster } from '@common/components'
-import { useTestNotificationSetting, SlackSettingDTO } from 'services/notifications'
+import { useTestNotificationSetting, WebhookSettingDTO } from 'services/notifications'
 import { NotificationType, WebhookNotificationConfiguration, TestStatus } from '@rbac/interfaces/Notifications'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -64,10 +64,10 @@ export const TestWebhookNotifications: React.FC<{
       setTestStatus(TestStatus.INIT)
       const resp = await testNotificationSetting({
         accountId,
-        type: 'SLACK',
+        type: 'WEBHOOK',
         recipient: testData.webhookUrl,
         notificationId: 'asd'
-      } as SlackSettingDTO)
+      } as WebhookSettingDTO)
       if (resp.status === 'SUCCESS' && resp.data) {
         showSuccess(getString('rbac.notifications.webhookTestSuccess'))
         setTestStatus(TestStatus.SUCCESS)

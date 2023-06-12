@@ -1142,7 +1142,7 @@ export interface ContainerInfraYamlSpec {
   }
   os?: 'Linux' | 'MacOS' | 'Windows'
   priorityClassName?: string
-  resources?: ContainerResource
+  resources: ContainerResource
   runAsUser?: number
   serviceAccountName?: string
   tolerations?: Toleration[]
@@ -2810,7 +2810,6 @@ export interface FailureStrategyActionConfig {
     | 'ManualIntervention'
     | 'ProceedWithDefaultValues'
     | 'MarkAsFailure'
-    | 'RetryStepGroup'
 }
 
 export interface FailureStrategyConfig {
@@ -4581,6 +4580,11 @@ export type PmsSlackChannel = PmsNotificationChannel & {
   webhookUrl?: string
 }
 
+export type PmsWebhookChannel = PmsNotificationChannel & {
+  userGroups?: string[]
+  webhookUrl?: string
+}
+
 export interface PolicyConfig {
   policySets: string[]
 }
@@ -5961,11 +5965,6 @@ export interface RetryInterruptConfig {
 export interface RetryLatestExecutionResponseDto {
   errorMessage?: string
   latestExecutionId?: string
-}
-
-export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
-  spec: RetryFailureSpecConfig
-  type: 'RetryStepGroup'
 }
 
 export interface RetryStageInfo {
@@ -18174,7 +18173,6 @@ export interface GetSchemaYamlQueryParams {
     | 'Semgrep'
     | 'SscaEnforcement'
     | 'IdpConnector'
-    | 'CdSscaEnforcement'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -18490,7 +18488,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Semgrep'
     | 'SscaEnforcement'
     | 'IdpConnector'
-    | 'CdSscaEnforcement'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

@@ -11,7 +11,13 @@ import { Color } from '@harness/design-system'
 import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { NotificationType } from '@rbac/interfaces/Notifications'
-import type { NotificationRules, PmsEmailChannel, PmsPagerDutyChannel, PmsSlackChannel } from 'services/pipeline-ng'
+import type {
+  NotificationRules,
+  PmsEmailChannel,
+  PmsPagerDutyChannel,
+  PmsSlackChannel,
+  PmsWebhookChannel
+} from 'services/pipeline-ng'
 import { NotificationTypeSelectOptions } from '@rbac/constants/NotificationConstants'
 import ConfigureEmailNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureEmailNotifications/ConfigureEmailNotifications'
 import ConfigureSlackNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureSlackNotifications/ConfigureSlackNotifications'
@@ -190,7 +196,6 @@ function NotificationMethods({
                 notificationMethod: {
                   type: method.value.toString(),
                   spec: {
-                    userGroups: data.userGroups,
                     webhookUrl: data.webhookUrl
                   }
                 }
@@ -205,16 +210,14 @@ function NotificationMethods({
                 notificationMethod: {
                   type: method.value.toString(),
                   spec: {
-                    userGroups: data?.userGroups,
                     webhookUrl: data?.webhookUrl
                   }
                 }
               })
             }
             config={{
-              type: NotificationType.Slack,
-              webhookUrl: (prevStepData?.notificationMethod?.spec as PmsSlackChannel)?.webhookUrl || '',
-              userGroups: (prevStepData?.notificationMethod?.spec as PmsSlackChannel)?.userGroups || []
+              type: NotificationType.Webhook,
+              webhookUrl: (prevStepData?.notificationMethod?.spec as PmsWebhookChannel)?.webhookUrl || ''
             }}
           />
         ) : null}
