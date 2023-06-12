@@ -3,8 +3,8 @@ import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
-import { getCommandStrWithNewline } from '../utils'
-import css from '../CDOnboardingWizardWithCLI.module.scss'
+import { getCommandStrWithNewline } from '../../utils'
+import css from '../../CDOnboardingWizardWithCLI.module.scss'
 export default function PipelineSetupStep(): JSX.Element {
   return (
     <Layout.Vertical className={css.deploymentSteps}>

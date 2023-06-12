@@ -1,17 +1,21 @@
 import React, { ReactElement, ReactNode } from 'react'
 export interface StepsProgress {
-  isComplete?: boolean
+  [key: string]: {
+    stepData: any
+    isComplete?: boolean
+  }
 }
+
 export interface OnboardingStoreContextProps {
   children?: ReactNode
   activeStepId?: string
-  steps: string[]
-  stepsProgress: { [key: string]: StepsProgress }
+  stepsProgress: StepsProgress
   saveToLS?: boolean
-  updateOnboardingStore: (data: OnboardingStoreContextProps) => void
+  updateOnboardingStore: (data: OnboardingStoreState) => void
 }
+
+type OnboardingStoreState = Omit<OnboardingStoreContextProps, 'updateOnboardingStore'>
 export const OnboardingStoreContext = React.createContext<OnboardingStoreContextProps>({
-  steps: [],
   stepsProgress: {},
   updateOnboardingStore: () => void 0
 })
@@ -19,19 +23,20 @@ export const OnboardingStoreContext = React.createContext<OnboardingStoreContext
 export function useOnboardingStore(): OnboardingStoreContextProps {
   return React.useContext(OnboardingStoreContext)
 }
-
-export function OnboardingStoreProvider(props: any): ReactElement {
-  const [state, setState] = React.useState<Omit<OnboardingStoreContextProps, 'updateOnboardingStore'>>({
-    steps: [],
+export function OnboardingStoreProvider(props: React.PropsWithChildren<OnboardingStoreContextProps>): ReactElement {
+  const [state, setState] = React.useState<OnboardingStoreState>({
     stepsProgress: {}
   })
 
-  function updateOnboardingStore(data: OnboardingStoreContextProps): void {
-    setState(prevState => ({
-      ...prevState,
-      ...data
-    }))
-  }
+  const updateOnboardingStore = React.useCallback(
+    function updateOnboardingStore(data: OnboardingStoreState): void {
+      setState(prevState => ({
+        ...prevState,
+        ...data
+      }))
+    },
+    [setState]
+  )
   return (
     <OnboardingStoreContext.Provider
       value={{

@@ -3,7 +3,7 @@ import { Layout, Tab, Tabs, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
-import css from '../CDOnboardingWizardWithCLI.module.scss'
+import css from '../../CDOnboardingWizardWithCLI.module.scss'
 export default function CLISetupStep(): JSX.Element {
   return (
     <Layout.Vertical className={css.deploymentSteps}>

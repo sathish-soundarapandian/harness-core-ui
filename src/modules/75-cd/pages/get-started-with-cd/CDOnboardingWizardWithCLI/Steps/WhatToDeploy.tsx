@@ -3,10 +3,12 @@ import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { Layout, CardSelect, Text, Icon, IconName } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { SERVICE_TYPES, EntityType, INFRA_TYPES } from './Constants'
-import css from './CDOnboardingWizardWithCLI.module.scss'
-
-function WhatToDeploy(): JSX.Element {
+import { SERVICE_TYPES, EntityType, INFRA_TYPES, CDOnboardingSteps } from '../Constants'
+import css from '../CDOnboardingWizardWithCLI.module.scss'
+interface WhatToDeployProps {
+  saveProgress: (stepId: string, data: any) => void
+}
+function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
   const [state, setState] = React.useState<{ svcType?: EntityType; artifactType?: EntityType }>({})
 
   const { getString } = useStrings()
@@ -28,6 +30,10 @@ function WhatToDeploy(): JSX.Element {
       return data
     })
   }, [state.svcType])
+
+  React.useEffect(() => {
+    saveProgress(CDOnboardingSteps.WHAT_TO_DEPLOY, state)
+  }, [state])
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} font={{ size: 'medium' }} margin={{ bottom: 'xlarge' }}>
@@ -40,17 +46,20 @@ function WhatToDeploy(): JSX.Element {
       <CardSelect<EntityType>
         data={svcTypes}
         cornerSelected
-        className={css.serviceTypeCards}
+        className={cx(css.serviceTypeCards, css.infraCards)}
         renderItem={(item: EntityType) => (
-          <Layout.Horizontal flex spacing={'small'}>
+          <Layout.Vertical flex spacing={'xlarge'}>
+            <Icon name={item?.icon as IconName} size={30} />
             <Text
               className={cx({ [css.bold]: state.svcType?.id === item.id })}
-              font={{ variation: FontVariation.FORM_TITLE }}
-              color={state.svcType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
+              font={{
+                variation: state.artifactType?.id === item.id ? FontVariation.FORM_TITLE : FontVariation.BODY
+              }}
+              color={state.artifactType?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
             >
               {item.label}
             </Text>
-          </Layout.Horizontal>
+          </Layout.Vertical>
         )}
         selected={state.svcType}
         onChange={setSvc}

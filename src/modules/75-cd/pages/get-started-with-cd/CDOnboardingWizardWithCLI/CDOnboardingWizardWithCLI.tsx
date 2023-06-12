@@ -1,17 +1,35 @@
 import React from 'react'
 import cx from 'classnames'
+import produce from 'immer'
 import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Stepper } from '@common/components/Stepper/Stepper'
 import { useStrings } from 'framework/strings'
-import WhatToDeploy from './WhatToDeploy'
-import WhereAndHowToDepoy from './WhereAndHowToDepoy'
-import DeploymentSetupSteps from './DeploymentSetupSteps/DeploymentSetupSteps'
+import WhatToDeploy from './Steps/WhatToDeploy'
+import WhereAndHowToDepoy from './Steps/WhereAndHowToDepoy'
+import DeploymentSetupSteps from './Steps/DeploymentSetupSteps/DeploymentSetupSteps'
 import WhatToDeployPreview from './Previews/WhatToDeployPreview'
+import { StepsProgress, useOnboardingStore } from './Store/OnboardingStore'
+import { CDOnboardingSteps } from './Constants'
 import css from '../GetStartedWithCD.module.scss'
 
 export default function CDOnboardingWizardWithCLI(): JSX.Element {
   const { getString } = useStrings()
+  const { updateOnboardingStore, ...state } = useOnboardingStore()
+  const onStepChange = (stepId: string): void => {
+    const updatedStepsProgress = produce(state.stepsProgress, (draft: StepsProgress) => {
+      draft[stepId] = { ...state.stepsProgress[stepId], isComplete: true }
+    })
+    console.log({ updatedStepsProgress })
+    updateOnboardingStore({ stepsProgress: updatedStepsProgress })
+  }
+
+  const saveProgress = (stepId: string, data: any): void => {
+    const updatedStepsProgress = produce(state.stepsProgress, (draft: StepsProgress) => {
+      draft[stepId] = { ...state.stepsProgress[stepId], stepData: data }
+    })
+    updateOnboardingStore({ stepsProgress: updatedStepsProgress })
+  }
   return (
     <Layout.Vertical flex={{ alignItems: 'start' }}>
       <Container className={cx(css.topPage, css.oldGetStarted, css.cdwizardcli)}>
@@ -30,32 +48,31 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
           id="createSLOTabs"
           isStepValid={() => true}
           runValidationOnMount={false}
-          onStepChange={console.log}
-          // hideTitleWhenActive
+          onStepChange={onStepChange}
           stepList={[
             {
-              id: 'what',
+              id: CDOnboardingSteps.WHAT_TO_DEPLOY,
               title: getString('cd.getStartedWithCD.flowbyquestions.what.title'),
               // subTitle: 'subs',
-              panel: <WhatToDeploy />,
+              panel: <WhatToDeploy saveProgress={saveProgress} />,
               preview: <WhatToDeployPreview />,
               helpPanelReferenceId: 'aaa',
               errorMessage: ['error']
             },
             {
-              id: 'howNwhere',
+              id: CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY,
               title: getString('cd.getStartedWithCD.flowbyquestions.howNwhere.title'),
               // subTitle: 'subs',
-              panel: <WhereAndHowToDepoy />,
+              panel: <WhereAndHowToDepoy saveProgress={saveProgress} />,
               // preview: <div>prebiew</div>,
               helpPanelReferenceId: 'aaa',
               errorMessage: ['error']
             },
             {
-              id: 'stepsToDeploy',
+              id: CDOnboardingSteps.DEPLOYMENT_STEPS,
               title: getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.title'),
               // subTitle: 'subs',
-              panel: <DeploymentSetupSteps />,
+              panel: <DeploymentSetupSteps saveProgress={saveProgress} />,
               // preview: <div>prebiew</div>,
               helpPanelReferenceId: 'aaa',
               errorMessage: ['error'],

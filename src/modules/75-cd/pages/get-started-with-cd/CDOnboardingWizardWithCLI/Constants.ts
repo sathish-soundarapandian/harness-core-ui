@@ -19,9 +19,9 @@ export interface DeploymentFlowType extends EntityType {
   subtitle: string
 }
 export const SERVICE_TYPES: EntityMap = {
-  KubernetesService: { id: 'KubernetesService', label: 'Kubernetes Service' },
-  ServerslessFunction: { id: 'ServerlessFunction', label: 'Serverless Function' },
-  TraditionalApp: { id: 'TraditionalApp', label: 'Traditional App' }
+  KubernetesService: { id: 'KubernetesService', label: 'Kubernetes Service', icon: 'app-kubernetes' },
+  ServerslessFunction: { id: 'ServerlessFunction', label: 'Serverless Function', icon: 'serverless-deploy-step' },
+  TraditionalApp: { id: 'TraditionalApp', label: 'Traditional App', icon: 'square' }
 }
 
 export const INFRA_TYPES: { [key: string]: EntityMap } = {
@@ -73,4 +73,10 @@ export const StrategyVideoByType: { [key: string]: string } = {
   BlueGreen: BlueGreenVideo,
   Rolling: RollingUpdateVideo,
   Canary: CanaryVideo
+}
+
+export enum CDOnboardingSteps {
+  WHAT_TO_DEPLOY = 'whatToDeploy',
+  HOW_N_WHERE_TO_DEPLOY = 'howNwhere',
+  DEPLOYMENT_STEPS = 'deploymentSteps'
 }

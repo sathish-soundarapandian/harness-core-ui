@@ -7,11 +7,14 @@ import { useGetDelegatesHeartbeatDetailsV2 } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import useCreateDelegateViaCommandsModal from '@delegates/pages/delegates/delegateCommandLineCreation/components/useCreateDelegateViaCommandsModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { DeploymentFlowType, DEPLOYMENT_FLOW_TYPES } from './Constants'
-import css from './CDOnboardingWizardWithCLI.module.scss'
+import { DeploymentFlowType, DEPLOYMENT_FLOW_TYPES, CDOnboardingSteps } from '../Constants'
+import css from '../CDOnboardingWizardWithCLI.module.scss'
 import { usePolling } from '@common/hooks/usePolling'
 
-function WhereAndHowToDepoy(): JSX.Element {
+interface WhereAndHowToDepoyProps {
+  saveProgress: (stepId: string, data: any) => void
+}
+function WhereAndHowToDepoy({ saveProgress }: WhereAndHowToDepoyProps): JSX.Element {
   const [selected, setSelected] = React.useState(DEPLOYMENT_FLOW_TYPES.CDPipeline)
   const [delegateName, setDelegateName] = React.useState('')
 
@@ -39,8 +42,10 @@ function WhereAndHowToDepoy(): JSX.Element {
 
   const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal({
     hideDocker: true,
-    onClose: (delegateName?: string) =>
-      verifyHeartBeat({ queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier, delegateName } })
+    onClose: (delegateId?: string) =>
+      verifyHeartBeat({
+        queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier, delegateName: delegateId }
+      })
   })
   const deploymentTypes = React.useMemo((): DeploymentFlowType[] => {
     return Object.values(DEPLOYMENT_FLOW_TYPES).map((deploymentType: DeploymentFlowType) => {
@@ -52,6 +57,10 @@ function WhereAndHowToDepoy(): JSX.Element {
     cancel()
     openDelegateModalWithCommands()
   }
+
+  React.useEffect(() => {
+    saveProgress(CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY, delegateName)
+  }, [delegateName, saveProgress])
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'medium' }} margin={{ bottom: 'large' }}>
