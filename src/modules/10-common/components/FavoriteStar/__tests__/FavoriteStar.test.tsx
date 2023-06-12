@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { act, fireEvent, render } from '@testing-library/react'
 import { createFavorite, deleteFavorite } from '@harnessio/react-ng-manager-client'
@@ -21,11 +28,7 @@ deleteFavoriteMock.mockImplementation(() => {
 describe('test favorite star', () => {
   test('simple render', () => {
     const { container } = render(
-      <TestWrapper
-        path={routes.toConnectors({ accountId: testAccountId })}
-        pathParams={{ accountId: testAccountId }}
-        defaultFeatureFlagValues={{ PL_FAVORITES: true }}
-      >
+      <TestWrapper path={routes.toConnectors({ accountId: testAccountId })} pathParams={{ accountId: testAccountId }}>
         <FavoriteStar resourceId="testResourceId" resourceType="CONNECTOR" />
       </TestWrapper>
     )
@@ -34,11 +37,7 @@ describe('test favorite star', () => {
 
   test('click on empty star', async () => {
     const { container } = render(
-      <TestWrapper
-        path={routes.toConnectors({ accountId: testAccountId })}
-        pathParams={{ accountId: testAccountId }}
-        defaultFeatureFlagValues={{ PL_FAVORITES: true }}
-      >
+      <TestWrapper path={routes.toConnectors({ accountId: testAccountId })} pathParams={{ accountId: testAccountId }}>
         <FavoriteStar resourceId="testResourceId" resourceType="CONNECTOR" />
       </TestWrapper>
     )
@@ -56,11 +55,7 @@ describe('test favorite star', () => {
     })
 
     const { container } = render(
-      <TestWrapper
-        path={routes.toConnectors({ accountId: testAccountId })}
-        pathParams={{ accountId: testAccountId }}
-        defaultFeatureFlagValues={{ PL_FAVORITES: true }}
-      >
+      <TestWrapper path={routes.toConnectors({ accountId: testAccountId })} pathParams={{ accountId: testAccountId }}>
         <FavoriteStar resourceId="testResourceId" resourceType="CONNECTOR" />
       </TestWrapper>
     )
@@ -78,11 +73,7 @@ describe('test favorite star', () => {
     })
 
     const { container } = render(
-      <TestWrapper
-        path={routes.toConnectors({ accountId: testAccountId })}
-        pathParams={{ accountId: testAccountId }}
-        defaultFeatureFlagValues={{ PL_FAVORITES: true }}
-      >
+      <TestWrapper path={routes.toConnectors({ accountId: testAccountId })} pathParams={{ accountId: testAccountId }}>
         <FavoriteStar resourceId="testResourceId" resourceType="CONNECTOR" isFavorite />
       </TestWrapper>
     )
@@ -95,11 +86,7 @@ describe('test favorite star', () => {
 
   test('click on filled star', () => {
     const { container } = render(
-      <TestWrapper
-        path={routes.toConnectors({ accountId: testAccountId })}
-        pathParams={{ accountId: testAccountId }}
-        defaultFeatureFlagValues={{ PL_FAVORITES: true }}
-      >
+      <TestWrapper path={routes.toConnectors({ accountId: testAccountId })} pathParams={{ accountId: testAccountId }}>
         <FavoriteStar resourceId="testResourceId" resourceType="CONNECTOR" isFavorite />
       </TestWrapper>
     )

@@ -6,7 +6,7 @@
  */
 
 import React, { useRef, useState } from 'react'
-import { Container, ExpandingSearchInputHandle, Icon, PageSpinner, Text } from '@harness/uicore'
+import { Container, ExpandingSearchInputHandle, Icon, ListHeader, PageSpinner, SortMethod } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
@@ -29,7 +29,12 @@ import { GetListOfExecutionsQueryParams, PipelineExecutionSummary, useGetListOfE
 import { ExecutionListEmpty, ExecutionListEmptyWithoutCta } from './ExecutionListEmpty/ExecutionListEmpty'
 import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
 import { MemoisedExecutionListTable } from './ExecutionListTable/ExecutionListTable'
-import { getIsAnyFilterApplied, getIsSavedFilterApplied, useExecutionListQueryParams } from './utils/executionListUtil'
+import {
+  getIsAnyFilterApplied,
+  getIsSavedFilterApplied,
+  useExecutionListQueryParams,
+  useExecutionListSortOptions
+} from './utils/executionListUtil'
 import { prepareFiltersPayload } from '../utils/Filters/filters'
 import css from './ExecutionList.module.scss'
 
@@ -69,6 +74,8 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     pipelineIdentifier: pipelineIdentifierFromQueryParam,
     repoName
   } = queryParams
+
+  const sortOptions = useExecutionListSortOptions()
 
   const resetFilter = (): void => {
     searchRef.current.clear()
@@ -193,11 +200,17 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
           <LoadingComponent />
         ) : executionList && hasExecutions ? (
           <>
-            <div className={css.tableTitle}>
-              <Text color={Color.GREY_800} font={{ weight: 'bold' }}>
-                {`${getString('total')}: ${data?.data?.totalElements}`}
-              </Text>
-            </div>
+            <ListHeader
+              totalCount={data?.data?.totalElements}
+              sortOptions={sortOptions}
+              onSortMethodChange={option => {
+                const sortArray = (option.value as SortMethod)?.split(',')
+                if (!Array.isArray(sortArray)) return
+                updateQueryParams({ sort: sortArray })
+              }}
+              selectedSortMethod={sort?.toString()}
+              className={css.listHeader}
+            />
             <MemoisedExecutionListTable
               executionList={executionList}
               onViewCompiledYaml={setViewCompiledYaml}

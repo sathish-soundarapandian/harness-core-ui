@@ -3,9 +3,14 @@ allowpaths:
   - /v1/attempt/{assessmentId}
   - /v1/attempt/save
   - /v1/results/{resultCode}
-  - /v1/benchmark/{assessmentId}/{majorVersion}
+  - /v1/benchmark/{resultCode}
   - /v1/assessment/invite
   - /v1/section-results/{resultCode}
+  - /v1/section-result-overview/{resultCode}
+  - /v1/sections/{assessmentId}
+  - /v1/detailed-results/{resultCode}
+  - /v1/improve/{resultCode}
+  - /v1/improve-maturity
 
 operationIdOverrides:
   /v1/attempt/{assessmentId}.post: submitAssessmentForUser

@@ -106,3 +106,18 @@ export enum SettingType {
 export const isValidYAMLFilePath = (filePath: string): boolean => {
   return YAML_FILE_EXTENSIONS.findIndex((extension: string) => filePath.endsWith(extension)) !== -1
 }
+
+/* This utility converts a POST request body payload to encoded pairs to be sent as form values */
+/* https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_forms_through_JavaScript */
+export const createFormDataFromObjectPayload = (data: Record<string, any>): string => {
+  const urlEncodedDataPairs = []
+
+  // Turn the data object into an array of URL-encoded key/value pairs.
+  for (const [name, value] of Object.entries(data)) {
+    urlEncodedDataPairs.push(`${encodeURIComponent(name)}=${encodeURIComponent(value)}`)
+  }
+
+  // Combine the pairs into a single string and replace all %-encoded spaces to
+  // the '+' character; matches the behavior of browser form submissions.
+  return urlEncodedDataPairs.join('&').replace(/%20/g, '+')
+}

@@ -1,3 +1,26 @@
 .jsonSelectorButton {
   width: 100% !important;
 }
+
+.inputJsonButton {
+  width: 30px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: center;
+}
+
+.inputJsonButtonWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.inputJsonButtonTemplate {
+  right: 30px !important;
+}
+
+.multiTypeSelectButton {
+  &::before {
+    height: 0 !important;
+  }
+}

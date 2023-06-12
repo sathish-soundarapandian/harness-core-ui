@@ -170,6 +170,7 @@ export const AllEnvironmentsFlagsListing: FC<AllEnvironmentsFlagsListingProps> =
               deleteFlag={deleteFlag}
               gitSync={gitSync}
               refetchFlags={refetchFlags}
+              noEdit
             />
           </Container>
         ),

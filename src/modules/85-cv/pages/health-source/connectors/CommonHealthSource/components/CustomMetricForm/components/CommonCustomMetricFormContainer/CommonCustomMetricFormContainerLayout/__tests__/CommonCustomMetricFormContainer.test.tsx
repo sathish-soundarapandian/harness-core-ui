@@ -6,28 +6,27 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
-import { CHART_VISIBILITY_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import {
+  CHART_VISIBILITY_ENUM,
+  CustomMetricFormFieldNames,
+  FIELD_ENUM
+} from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { riskCategoryMock } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/__tests__/CustomMetricFormContainer.mock'
+import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import CommonCustomMetricFormContainer from '../CommonCustomMetricFormContainer'
 import type { CommonCustomMetricFormContainerProps } from '../CommonCustomMetricFormContainer.types'
-import { mockedStackdriverLogSampleData } from './CommonCustomMetricFormContainer.mocks'
+import { initialValues, mockedStackdriverLogSampleData } from './CommonCustomMetricFormContainer.mocks'
 import CommonHealthSourceProvider from '../../../CommonHealthSourceContext/CommonHealthSourceContext'
 import { shouldAutoBuildChart, shouldShowChartComponent } from '../CommonCustomMetricFormContainer.utils'
 
 const WrapperComponent = (props: CommonCustomMetricFormContainerProps): JSX.Element => {
-  const initialValues = {
-    metricName: 'Health source Query',
-    identifier: 'Health source Query',
-    query: 'Test',
-    messageIdentifier: '',
-    serviceInstanceField: ''
-  }
   return (
     <TestWrapper
       pathParams={{
@@ -72,6 +71,14 @@ jest.mock('services/cv', () => ({
       }
     })
   })),
+  useGetParamValues: jest.fn().mockImplementation(
+    () =>
+      ({
+        mutate: jest.fn(),
+        loading: true,
+        error: null
+      } as any)
+  ),
   useGetRiskCategoryForCustomHealthMetric: jest.fn().mockImplementation(() => ({
     loading: false,
     error: null,
@@ -117,6 +124,57 @@ describe('Unit tests for CommonCustomMetricFormContainer', () => {
     //Verify if charts are present
     await waitFor(() => expect(getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
     expect(container.getElementsByClassName('StackTraceList--textContainer').length).toBe(1)
+  })
+
+  test('should check Run query button is hidden if log indexes is runtime in ELK Health source', async () => {
+    render(
+      <SetupSourceTabsContext.Provider
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        value={{ isTemplate: true, sourceData: { product: { value: HealthSourceTypes.ElasticSearch_Logs } } }}
+      >
+        <TestWrapper
+          pathParams={{
+            accountId: '1234_accountId',
+            projectIdentifier: '1234_project',
+            orgIdentifier: '1234_ORG'
+          }}
+        >
+          <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+            <Formik initialValues={{ ...initialValues, index: '<+input>' }} onSubmit={jest.fn()}>
+              <FormikForm>
+                <CommonCustomMetricFormContainer
+                  {...initialProps}
+                  healthSourceConfig={{
+                    ...initialProps.healthSourceConfig,
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    //@ts-ignore
+                    customMetrics: {
+                      queryAndRecords: {
+                        enabled: true,
+                        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics',
+                        queryField: {
+                          type: FIELD_ENUM.DROPDOWN,
+                          label: 'Log Indexes',
+                          identifier: CustomMetricFormFieldNames.INDEX,
+                          placeholder: 'Select Log Index',
+                          isTemplateSupportEnabled: true,
+                          allowCreatingNewItems: true
+                        }
+                      }
+                    }
+                  }}
+                />
+              </FormikForm>
+            </Formik>
+          </CommonHealthSourceProvider>
+        </TestWrapper>
+      </SetupSourceTabsContext.Provider>
+    )
+
+    const runQueryButton = screen.queryByText('cv.monitoringSources.commonHealthSource.runQuery')
+
+    expect(runQueryButton).not.toBeInTheDocument()
   })
 
   test('Verify that records are fetched automatically when query is prefilled in edit flow', async () => {

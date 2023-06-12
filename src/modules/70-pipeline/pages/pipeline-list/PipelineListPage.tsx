@@ -13,6 +13,8 @@ import {
   ExpandingSearchInputHandle,
   HarnessDocTooltip,
   Layout,
+  SortDropdown,
+  SortMethod,
   Text,
   useToggleOpen
 } from '@harness/uicore'
@@ -49,7 +51,11 @@ import GetStartedWithCDButton from '@pipeline/components/GetStartedWithCDButton/
 import { useGetFreeOrCommunityCD } from '@common/utils/utils'
 import { CreatePipeline } from './CreatePipeline/CreatePipeline'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
-import { getEmptyStateIllustration, usePipelinesQueryParamOptions } from './PipelineListUtils'
+import {
+  getEmptyStateIllustration,
+  usePipelineListSortOptions,
+  usePipelinesQueryParamOptions
+} from './PipelineListUtils'
 import type {
   PipelineListPagePathParams,
   PipelineListPageQueryParams,
@@ -86,6 +92,7 @@ function _PipelineListPage(): React.ReactElement {
     () => (sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort),
     [queryParams.sort, sortingPreference]
   )
+  const sortOptions = usePipelineListSortOptions()
 
   useDocumentTitle([getString('pipelines')])
 
@@ -308,14 +315,28 @@ function _PipelineListPage(): React.ReactElement {
               <Text color={Color.GREY_800} font={{ weight: 'bold' }}>
                 {`${getString('total')}: ${pipelinesQuery.data?.data?.totalElements}`}
               </Text>
-              <Button
-                intent="primary"
-                icon="refresh"
-                onClick={() => pipelinesQuery.refetch()} // don't use pipelinesQuery.refetch directly, that causes passing click event as refetch props causing issues
-                minimal
-                tooltipProps={{ isDark: true }}
-                tooltip={getString('common.refresh')}
-              />
+              <Layout.Horizontal spacing={'small'}>
+                <SortDropdown
+                  onSortMethodChange={option => {
+                    const sortArray = (option.value as SortMethod)?.split(',')
+
+                    if (!Array.isArray(sortArray)) return
+
+                    setSortingPreference(JSON.stringify(sortArray))
+                    updateQueryParams({ sort: sortArray })
+                  }}
+                  selectedSortMethod={sort?.toString()}
+                  sortOptions={sortOptions}
+                />
+                <Button
+                  intent="primary"
+                  icon="refresh"
+                  onClick={() => pipelinesQuery.refetch()} // don't use pipelinesQuery.refetch directly, that causes passing click event as refetch props causing issues
+                  minimal
+                  tooltipProps={{ isDark: true }}
+                  tooltip={getString('common.refresh')}
+                />
+              </Layout.Horizontal>
             </div>
             <PipelineListTable
               gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}

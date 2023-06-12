@@ -1,0 +1,40 @@
+.HorizontalSteps {
+  display: flex;
+  align-items: center;
+  border-left: 1px solid var(--grey-200);
+  .step {
+    border-radius: 50%;
+    border: 2px solid var(--grey-0);
+    box-shadow: 0px 0px 1px #888888, 0px 2px 4px #606170;
+    width: 24px;
+    height: 24px;
+    padding: 2px;
+    margin: 4px;
+
+    text-align: center;
+    background: var(--primary-1);
+    .text {
+      color: var(--primary-7);
+    }
+    &.completed {
+      background: var(--green-600);
+      .text {
+        color: var(--grey-0);
+      }
+    }
+    &.inProgress {
+      background: var(--primary-7);
+      .text {
+        color: var(--grey-0);
+      }
+    }
+  }
+  .line {
+    flex: 1;
+    height: 3px;
+    background-color: var(--primary-4) !important;
+    width: 24px;
+    border-radius: 2px;
+    margin: 4px;
+  }
+}

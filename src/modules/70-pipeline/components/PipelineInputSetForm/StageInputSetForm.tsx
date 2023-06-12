@@ -19,7 +19,7 @@ import {
 } from '@harness/uicore'
 import { connect, FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, get, some, isEmpty, isNil, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -171,7 +171,7 @@ export function StageInputSetFormInternal({
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
   const { CIE_HOSTED_VMS_WINDOWS, CDS_OrgAccountLevelServiceEnvEnvGroup, IACM_ENABLED } = useFeatureFlags()
-  const iacmRequired = some(formik?.values?.stages, stages => stages?.stage?.type === StageType.IACM)
+  const iacmRequired = stageType === StageType.IACM
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
     ({
@@ -627,7 +627,7 @@ export function StageInputSetFormInternal({
         />
       )}
 
-      {(deploymentStageTemplate.infrastructure || (deploymentStageTemplate as any).platform) && (
+      {!iacmRequired && (deploymentStageTemplate.infrastructure || (deploymentStageTemplate as any).platform) && (
         <div id={`Stage.${stageIdentifier}.Infrastructure`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('infrastructureText')}</div>
 

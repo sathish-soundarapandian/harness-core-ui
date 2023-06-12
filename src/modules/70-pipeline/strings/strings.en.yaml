@@ -1870,3 +1870,15 @@ artifactViolationDetails: Artifact violation details
 violationDetails: Violation details
 supplier: Supplier
 viewDiff: View Diff
+copilot:
+  analyzeFailure: Unsure how to analyze failure?
+  askAICopilot: Ask AI Copilot
+  label: Harness AI Copilot
+  assist: I can assist you with debugging the issue and suggest solutions.
+  analyzing: AI Copilot is analyzing
+  requestTimedOut: Request Timed Out
+  noRemediationFound: Sorry, no remediation found.
+  foundPossibleRemediations: 'We found few possible remediations'
+  possibleSolutions: Possible Solutions
+  introduction: Introducing Harness AI Copilot
+  helpText: Click here for additional information on the errors occurring in this step and potential strategies for resolving them.

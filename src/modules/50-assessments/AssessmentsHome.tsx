@@ -1,9 +1,10 @@
 import React from 'react'
 import { Route, Router, Switch, useHistory } from 'react-router-dom'
 import NotFoundPage from '@common/pages/404/NotFoundPage'
-import AssessmentResults from './components/AssessmentResults/AssessmentResults'
-import AssessmentSurvey from './components/AssessmentSurvey/AssessmentSurvey'
+import AssessmentOverview from './components/AssessmentOverview/AssessmentOverview'
+import AssessmentSurvey from './components/AssessmentResults/AssessmentResults'
 import Assessments from './components/Assessments/Assessments'
+import ImproveMaturity from './components/ImproveMaturity/ImproveMaturity'
 
 export default function AssessmentsHome(): JSX.Element {
   const history = useHistory()
@@ -14,11 +15,14 @@ export default function AssessmentsHome(): JSX.Element {
           <Route exact path="/assessment/:inviteCode">
             <Assessments />
           </Route>
-          <Route exact path="/assessment/results/:resultsCode">
-            <AssessmentResults />
+          <Route exact path="/assessment/home/:resultsCode">
+            <AssessmentOverview />
           </Route>
-          <Route exact path="/assessment/survey/:resultsCode">
+          <Route exact path="/assessment/results/:resultsCode">
             <AssessmentSurvey />
+          </Route>
+          <Route exact path="/assessment/improve-maturity/:resultsCode">
+            <ImproveMaturity />
           </Route>
           <Route path="*">
             <NotFoundPage />

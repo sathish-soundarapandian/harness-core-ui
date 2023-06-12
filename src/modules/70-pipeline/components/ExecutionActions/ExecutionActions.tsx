@@ -321,7 +321,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
 
   return (
     <Layout.Horizontal onClick={killEvent}>
-      {!menuOnlyActions && (
+      {!menuOnlyActions && stageId && (
         <>
           {canAbort && (
             <Button
@@ -334,7 +334,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
             />
           )}
 
-          {stageId && canMarkAsFailed && (
+          {canMarkAsFailed && (
             <Button
               size={ButtonSize.SMALL}
               icon="mark-as-failed"

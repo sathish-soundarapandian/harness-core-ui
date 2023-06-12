@@ -1,0 +1,29 @@
+.capabilitiesContainer {
+  overflow: scroll;
+  .subHeader {
+    height: 50px !important;
+    display: flex;
+    justify-content: space-between;
+    background: #ffffff !important;
+    box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
+    margin-bottom: 24px !important;
+    padding: 8px 32px;
+    .selectSDLC {
+      width: 170px;
+      margin-right: 8px;
+    }
+    .groupByCheckbox {
+      width: 200px;
+      padding-top: 4px;
+      padding-left: 4px;
+      border: 1px solid #d9dae6;
+      border-radius: 4px;
+    }
+  }
+  .infoDisplay {
+    height: 72px;
+    padding: 16px;
+    border: 2px solid #cdf4fe;
+    border-radius: 4px;
+  }
+}

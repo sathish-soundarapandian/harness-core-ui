@@ -44,7 +44,10 @@ import {
   CreateOverlayInputSetForPipelineQueryParams,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   ResponseMergeInputSetResponse,
-  GitErrorMetadataDTO
+  GitErrorMetadataDTO,
+  useGetStaticSchemaYaml,
+  GetSchemaYamlQueryParams,
+  GetStaticSchemaYamlQueryParams
 } from 'services/pipeline-ng'
 import { useGetSettingValue } from 'services/cd-ng'
 import { SettingType } from '@common/constants/Utils'
@@ -81,6 +84,7 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { isValueExpression } from '@common/utils/utils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import {
@@ -217,6 +221,8 @@ export function OverlayInputSetForm({
       repoIdentifier
     }
   }, [accountId, orgIdentifier, pipelineIdentifier, projectIdentifier, repoIdentifier])
+
+  const { STATIC_YAML_SCHEMA } = useFeatureFlags()
 
   const {
     data: overlayInputSetResponse,
@@ -658,15 +664,30 @@ export function OverlayInputSetForm({
     }
   )
 
-  const { loading, data: pipelineSchema } = useGetSchemaYaml({
+  const commonQueryParamsForSchema = {
+    entityType: 'Pipelines',
+    projectIdentifier: projectIdentifier,
+    orgIdentifier: orgIdentifier,
+    accountIdentifier: accountId,
+    scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
+  }
+
+  const { loading: loadingSchemaV1, data: pipelineSchemaV1 } = useGetSchemaYaml({
     queryParams: {
-      entityType: 'Pipelines',
-      projectIdentifier,
-      orgIdentifier,
-      accountIdentifier: accountId,
-      scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
-    }
+      ...commonQueryParamsForSchema
+    } as GetSchemaYamlQueryParams,
+    lazy: STATIC_YAML_SCHEMA
   })
+
+  const { loading: loadingStaticSchema, data: pipelineStaticSchema } = useGetStaticSchemaYaml({
+    queryParams: {
+      ...commonQueryParamsForSchema
+    } as GetStaticSchemaYamlQueryParams,
+    lazy: !STATIC_YAML_SCHEMA
+  })
+
+  const loading = defaultTo(loadingSchemaV1, loadingStaticSchema)
+  const pipelineSchema = defaultTo(pipelineSchemaV1, pipelineStaticSchema)
 
   const selectedInputSetReferences: string[] | undefined = React.useMemo(() => {
     return selectedInputSets?.map(getInputSetReference)

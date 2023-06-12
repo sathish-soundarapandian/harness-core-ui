@@ -124,7 +124,7 @@ exports[`Unit tests for NewRelic health source Template should work with custom 
                       class="StyledProps--font StyledProps--main metricPack"
                     >
                       <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                       >
                         <input
                           checked=""

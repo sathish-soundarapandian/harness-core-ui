@@ -1,0 +1,9 @@
+.improveMaturityContainer {
+  display: flex;
+  flex-direction: row-reverse;
+  height: 100%;
+  flex-wrap: nowrap;
+  .container {
+    width: 76% !important;
+  }
+}

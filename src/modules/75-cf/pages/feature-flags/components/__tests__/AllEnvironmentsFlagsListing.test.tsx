@@ -106,28 +106,7 @@ describe('AllEnvironmentsFlagsListing', () => {
 
     const menuItems = screen.getAllByRole('listitem')
 
-    expect(menuItems).toHaveLength(2)
-    expect(menuItems[0]).toHaveTextContent('edit')
-    expect(menuItems[1]).toHaveTextContent('delete')
-  })
-
-  test('it should go to Flag details page on click of edit', async () => {
-    renderComponent()
-
-    const rows = screen.getAllByRole('row')
-    const flag1Columns = getAllByRole(rows[1], 'cell')
-    const menuButton = getByRole(flag1Columns[3], 'button')
-
-    userEvent.click(menuButton)
-
-    const menuItems = screen.getAllByRole('listitem')
-
-    expect(menuItems).toHaveLength(2)
-    expect(menuItems[0]).toHaveTextContent('edit')
-    expect(menuItems[1]).toHaveTextContent('delete')
-
-    userEvent.click(document.querySelector('[icon="edit"]') as HTMLElement)
-
-    expect(screen.getByTestId('location')).toHaveTextContent('feature-flags/Great_New_Feature')
+    expect(menuItems).toHaveLength(1)
+    expect(menuItems[0]).toHaveTextContent('delete')
   })
 })

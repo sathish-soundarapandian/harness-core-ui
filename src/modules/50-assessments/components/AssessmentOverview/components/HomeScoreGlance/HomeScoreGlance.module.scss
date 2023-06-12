@@ -1,0 +1,18 @@
+.homeScoreGlance {
+  .leftContainer {
+    width: 60%;
+    .leftCard {
+      margin-right: var(--spacing-medium);
+      height: 248px;
+      margin: 16px 0;
+      padding: 24px;
+      .leftScoreCardContent {
+        width: 50%;
+      }
+      .circularPercentageContent {
+        width: 200px;
+        height: 200px;
+      }
+    }
+  }
+}

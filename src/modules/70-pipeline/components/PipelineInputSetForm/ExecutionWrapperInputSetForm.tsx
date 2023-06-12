@@ -14,6 +14,7 @@ import type { DeploymentStageConfig, ExecutionWrapperConfig, StepElementConfig }
 import { useStrings } from 'framework/strings'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepMode } from '@pipeline/utils/stepUtils'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '../AbstractSteps/Step'
 import { StepWidget } from '../AbstractSteps/StepWidget'
@@ -232,6 +233,7 @@ export function ExecutionWrapperInputSetForm(props: {
                         }
                         viewType={viewType}
                         stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
+                        mode={StepMode.STEP_GROUP}
                       />
                     </div>
                   )}
@@ -347,6 +349,7 @@ export function ExecutionWrapperInputSetForm(props: {
                     }
                     viewType={viewType}
                     stageType={defaultTo(customStepProps?.stageType, StageType.DEPLOY)}
+                    mode={StepMode.STEP_GROUP}
                   />
                 </div>
               )}

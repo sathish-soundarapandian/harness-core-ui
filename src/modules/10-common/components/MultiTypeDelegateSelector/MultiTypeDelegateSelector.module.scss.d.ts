@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly fieldSelectorContainer: string
+  readonly radioStyle: string
   readonly wrapper: string
 }
 export default styles

@@ -133,7 +133,9 @@ export const V2_HEALTHSOURCES = [
   HealthSourceTypes.SumologicMetrics,
   HealthSourceTypes.Elk,
   HealthSourceTypes.SignalFX,
-  HealthSourceTypes.SplunkSignalFXMetrics
+  HealthSourceTypes.SplunkSignalFXMetrics,
+  HealthSourceTypes.GrafanaLoki,
+  HealthSourceTypes.GrafanaLokiLogs
 ]
 
 export enum VerifyStepActions {

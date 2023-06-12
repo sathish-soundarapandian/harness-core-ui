@@ -1,11 +1,8 @@
 stronglyAgree: STRONGLY AGREE
 stronglyDisagree: STRONGLY DISAGREE
 questions: QUESTIONS
-questionsAnswered: Questions Answered
-determineMaturity: 'Next: Determine Maturity'
-developerEffectiveness: Developer Effectiveness
-survey: Survey
-benchmarkComparison: 'Benchmark comparison:'
+answered: answered
+benchmarkComparison: 'Benchmark comparison'
 searchForCategory: Search for category
 scoreOutOf10: score out of 10
 comparison: score comparison
@@ -18,19 +15,56 @@ maxScore: Maximum score
 benchmark: Benchmark
 learnMoreAboutMaturity: Learn More about maturity
 maturityScore: Maturity Score
-inviteToTakeAssessment: Invite to take Assessment
+inviteToTakeAssessment: To take Assessment
 scoreCompare: How does your score compare
 companyOverAllScore: Company Overall score
 basedOnResultsHarnessRecommendations: Based on your results, Harness recommends these areas with most potential positive changes
 maturityLevelDefinition: Maturity level is a way to measure where your team, software or projects stand against rest of others.
-yourTopOpportnities: Your Top Opportunities
+yourTopOpportunities: Your Top Opportunities
 downloadPDFReport: Download a PDF Report
 enterEmailAddress: 'Enter email addresses ...'
 downloadPDF: Download PDF
-shareResults: Share Results
+shareResults: To view results
 copyLink: Copy Link
 sendInvite: Send Invite
 invitationSent: Assessment invitation sent to the invited users
 learnHowWeCompare: Learn More about how we compare
 typicalComparison: Typical comparisons include external benchmarks and prior surveys taken by your co-workers
 inYourCompany: in your company
+softwareDeliveryMaturityModel: Software Delivery Maturity Model
+estimatedTime: Estimated time
+result: Result
+viewResults: View Results
+howYourScoreCompare: How does your score compare?
+youAreBestInCategory: You are at the highest level in this category
+sectionScoreDistributionComparision: Section score distribution  and comparison
+yourBestPerformance: Where you performed best
+viewInDetail: View in Detail
+howYouPerformedInSections: Your performance in each category
+companyAvgScore: Company Average Score
+externalBenchmarkScore: External Benchmark Score
+improveMaturity: Improve Maturity
+maturityScoreDesc: Maturity level is a way to measure where your team, software, or projects stand in comparison to others.
+currentScore: Current Score
+increment: Increment
+benchmarkScore: Benchmark Score
+levelString: Level
+projectedScore: Projected Score
+recommendedModule: Recommended module to use
+howHarnessCanHelp: See how Harness can help improve your maturity score
+groupBySDLC: Group by SDLC category
+projectedScoreWithRec: Projected Score With Recommendation
+modules:
+  ci: '{{$.common.purpose.ci.continuous}}'
+  cd: '{{$.common.purpose.cd.continuous}}'
+  sei: 'Software Engineering Insights'
+  cf: '{{$.common.purpose.cf.continuous}}'
+  cv: '{{$.common.purpose.cv.serviceReliability}}'
+  ccm: '{{$.common.purpose.ce.continuous}}'
+  sto: '{{$.common.stoText}}'
+  chaos: '{{$.common.purpose.chaos.continuous}}'
+  cet: '{{$.common.purpose.cet.continuous}}'
+  srm: '{{$.common.serviceReliabilityManagement}}'
+  idp: '{{$.common.purpose.idp.fullName}}'
+  scm: 'Source Control Management'
+  ssca: '{{$.common.sscaText}}'

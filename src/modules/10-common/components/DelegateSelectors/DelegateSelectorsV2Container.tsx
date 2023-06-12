@@ -24,6 +24,7 @@ export interface DelegateSelectorsV2ContainerProps
   pollingInterval?: number
   wrapperClassName?: string
   onTagInputChange?: (tags: string[]) => void
+  showLabelText?: boolean
 }
 
 export const DelegateSelectorsV2Container = (props: DelegateSelectorsV2ContainerProps): React.ReactElement | null => {
@@ -83,6 +84,7 @@ export const DelegateSelectorsV2Container = (props: DelegateSelectorsV2Container
         </div>
       ) : (
         <DelegateSelectorsV2
+          aria-label={getString('delegate.DelegateSelector')}
           data={data?.resource || []}
           placeholder={placeholder}
           onTagInputChange={onTagInputChange}

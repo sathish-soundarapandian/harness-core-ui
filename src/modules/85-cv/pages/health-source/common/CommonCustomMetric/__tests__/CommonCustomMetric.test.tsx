@@ -11,6 +11,7 @@ import { Formik, FormInput } from '@harness/uicore'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
+import type { HealthSourceConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import CustomMetric from '../CommonCustomMetric'
 import { initGroupedCreatedMetrics, initializeSelectedMetricsMap } from '../CommonCustomMetric.utils'
 import { commonHealthSourceProviderPropsMock2, updateParentFormikMock } from './CommonCustomMetric.mock'
@@ -41,6 +42,7 @@ const WrapperComponent = () => {
               createdMetrics={createdMetrics}
               groupedCreatedMetrics={groupedCreatedMetrics}
               defaultMetricName={'appdMetric'}
+              healthSourceConfig={{} as HealthSourceConfig}
               tooptipMessage={'cv.monitoringSources.gcoLogs.addQueryTooltip'}
               addFieldLabel={'cv.monitoringSources.addMetric'}
               initCustomForm={INIT as any}

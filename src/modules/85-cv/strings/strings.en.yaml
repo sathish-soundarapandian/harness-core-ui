@@ -1034,7 +1034,7 @@ sloDowntime:
   label: Downtime
   downtimeName: Downtime Name
   downtimeWindow: SLO Downtime Window
-  category: Category
+  category: '{{$.common.category}}'
   noData: No SLO downtime configured
   createSLODowntime: Create new SLO Downtime
   editSLODowntime: Edit SLO Downtime

@@ -1,0 +1,30 @@
+.subHeader {
+  display: flex;
+  justify-content: space-between;
+  height: 52px !important;
+  background: #ffffff !important;
+  border-top: 1px solid #d9dae5 !important;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
+  margin-bottom: 24px !important;
+  padding: 10px;
+}
+
+.scoreDropdown {
+  max-width: 200px !important;
+  height: 32px !important;
+  padding-left: var(--spacing-large) !important;
+  padding-top: var(--spacing-small) !important;
+}
+
+.benchmarkDropdown {
+  width: 300px !important;
+  height: 32px !important;
+  padding-left: var(--spacing-large) !important;
+  padding-top: var(--spacing-small) !important;
+}
+
+.searchInput {
+  height: 32px;
+  align-self: center;
+  margin-right: var(--spacing-medium) !important;
+}

@@ -11,6 +11,7 @@ import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import * as cvService from 'services/cv'
 import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
+import type { HealthSourceConfig } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { CommonQueryViewerProps } from '../types'
@@ -40,7 +41,13 @@ describe('Unit tests for CommonQueryViewer ', () => {
     jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
     const fetchRecordsMock = jest.fn()
     const { getByText } = render(
-      <WrapperComponent fetchRecords={fetchRecordsMock} query={'Test'} loading={false} error={null} />
+      <WrapperComponent
+        healthSourceConfig={{} as HealthSourceConfig}
+        fetchRecords={fetchRecordsMock}
+        query={'Test'}
+        loading={false}
+        error={null}
+      />
     )
 
     const fetchRecordsButton = await waitFor(() => getByText('cv.monitoringSources.commonHealthSource.runQuery'))
@@ -56,7 +63,13 @@ describe('Unit tests for CommonQueryViewer ', () => {
     jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
     const fetchRecordsMock = jest.fn()
     const { getByText } = render(
-      <WrapperComponent fetchRecords={fetchRecordsMock} query={'Test'} loading={true} error={null} />
+      <WrapperComponent
+        healthSourceConfig={{} as HealthSourceConfig}
+        fetchRecords={fetchRecordsMock}
+        query={'Test'}
+        loading={true}
+        error={null}
+      />
     )
     const fetchRecordsButton = await waitFor(() => getByText('cv.monitoringSources.commonHealthSource.runQuery'))
 
@@ -69,7 +82,13 @@ describe('Unit tests for CommonQueryViewer ', () => {
     jest.spyOn(cvService, 'useGetStackdriverLogSampleData').mockReturnValue({} as any)
     const fetchRecordsMock = jest.fn()
     const { container } = render(
-      <WrapperComponent fetchRecords={fetchRecordsMock} query={'Test'} loading={false} error={null} />
+      <WrapperComponent
+        healthSourceConfig={{} as HealthSourceConfig}
+        fetchRecords={fetchRecordsMock}
+        query={'Test'}
+        loading={false}
+        error={null}
+      />
     )
 
     // click on expand query dialog icon.

@@ -7,7 +7,8 @@
 
 import type * as React from 'react'
 import type { IconName } from '@harness/uicore'
-import { defaultTo, has, isEmpty } from 'lodash-es'
+import { defaultTo, get, has, isEmpty } from 'lodash-es'
+import type { Module } from 'framework/types/ModuleName'
 import {
   ExecutionStatus,
   ExecutionStatusEnum,
@@ -31,6 +32,9 @@ import type {
   ResponsePipelineExecutionDetail,
   InterruptEffectDTO
 } from 'services/pipeline-ng'
+import type { CDStageModuleInfo } from 'services/cd-ng'
+import type { CIPipelineStageModuleInfo } from 'services/ci'
+import { isLocalHost, isQA } from '@common/utils/utils'
 import {
   ExecutionPipelineNode,
   ExecutionPipelineNodeType,
@@ -42,6 +46,8 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
 import { getConditionalExecutionFlag } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
+import type { ExecutionContextParams } from '@pipeline/context/ExecutionContext'
+import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import { isApprovalStep } from './stepUtils'
 import { PriorityByStageStatus, StageType } from './stageHelpers'
 
@@ -1495,4 +1501,95 @@ export const getFavIconDetailsFromPipelineExecutionStatus = (pipelineStatus: Pip
   }
 
   return undefined
+}
+
+export const getSelectedStageModule = (
+  pipelineStagesMap: ExecutionContextParams['pipelineStagesMap'],
+  selectedStageId: ExecutionContextParams['selectedStageId']
+): Module | undefined => {
+  const currentStage = pipelineStagesMap.get(selectedStageId)
+  if (!currentStage) {
+    return
+  }
+  return currentStage.module as Module
+}
+
+const getCurrentModuleInfo = ({
+  pipelineStagesMap,
+  selectedStageId,
+  pipelineExecutionDetail
+}: {
+  pipelineStagesMap: ExecutionContextParams['pipelineStagesMap']
+  selectedStageId: ExecutionContextParams['selectedStageId']
+  pipelineExecutionDetail: ExecutionContextParams['pipelineExecutionDetail']
+}): CDStageModuleInfo | CIPipelineStageModuleInfo => {
+  const currentModule = getSelectedStageModule(pipelineStagesMap, selectedStageId)
+  switch (currentModule) {
+    case 'cd':
+      return get(pipelineExecutionDetail, 'pipelineExecutionSummary.moduleInfo.cd', {})
+    case 'ci':
+      return get(pipelineExecutionDetail, 'pipelineExecutionSummary.moduleInfo.ci.ciPipelineStageModuleInfo', {})
+    default:
+      return {}
+  }
+}
+
+export const getInfraTypeFromStageForCurrentStep = ({
+  pipelineStagesMap,
+  selectedStageId,
+  pipelineExecutionDetail
+}: {
+  pipelineStagesMap: ExecutionContextParams['pipelineStagesMap']
+  selectedStageId: ExecutionContextParams['selectedStageId']
+  pipelineExecutionDetail: ExecutionContextParams['pipelineExecutionDetail']
+}): unknown => {
+  const currentModule = getSelectedStageModule(pipelineStagesMap, selectedStageId) as Module
+  const currentModuleInfo = getCurrentModuleInfo({
+    pipelineStagesMap,
+    selectedStageId,
+    pipelineExecutionDetail
+  })
+  switch (currentModule) {
+    case 'cd':
+      return get(currentModuleInfo, 'infrastructureTypes', [])?.[0]
+    case 'ci':
+      return get(currentModuleInfo, 'infraType', '')
+  }
+}
+
+export const showHarnessCoPilot = ({
+  pipelineStagesMap,
+  selectedStageId
+}: {
+  pipelineStagesMap: ExecutionContextParams['pipelineStagesMap']
+  selectedStageId: ExecutionContextParams['selectedStageId']
+}): boolean => {
+  return (
+    (isLocalHost() || isQA()) &&
+    (['ci', 'cd'] as Module[]).includes(getSelectedStageModule(pipelineStagesMap, selectedStageId) as Module)
+  )
+}
+
+export function resolveCurrentStep(selectedStepId: string, queryParams: ExecutionPageQueryParams): string {
+  return queryParams.retryStep ? queryParams.retryStep : selectedStepId
+}
+
+export const getCommandFromCurrentStep = ({
+  step,
+  pipelineStagesMap,
+  selectedStageId
+}: {
+  step: ExecutionNode
+  pipelineStagesMap: ExecutionContextParams['pipelineStagesMap']
+  selectedStageId: ExecutionContextParams['selectedStageId']
+}): string => {
+  const currentModule = getSelectedStageModule(pipelineStagesMap, selectedStageId) as Module
+  switch (currentModule) {
+    case 'cd':
+      return get(step, 'stepParameters.spec.source.spec.script', '') as string
+    case 'ci':
+      return get(step, 'stepParameters.spec.command', '') as string
+    default:
+      return ''
+  }
 }

@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly container: string
+  readonly copilot: string
   readonly errorContainer: string
   readonly errorIcon: string
   readonly errorMsg: string

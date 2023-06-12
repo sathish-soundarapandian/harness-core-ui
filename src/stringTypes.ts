@@ -78,6 +78,7 @@ export interface StringsMap {
   'common.assignedAt': string
   'common.assignedThrough': string
   'common.at': string
+  'common.atAGlance': string
   'common.auditTrail': string
   'common.aws': string
   'common.azure': string
@@ -139,6 +140,7 @@ export interface StringsMap {
   'common.cantDeleteEntity': string
   'common.capsAll': string
   'common.cardNumber': string
+  'common.category': string
   'common.cdAndGitops': string
   'common.ce.autostopping': string
   'common.ce.cost': string
@@ -243,6 +245,8 @@ export interface StringsMap {
   'common.defaultExperience': string
   'common.defaultSettings': string
   'common.defineDelegateSelector': string
+  'common.delay15Sec': string
+  'common.delegateExpressionList': string
   'common.delegateFailText1Part1': string
   'common.delegateFailText2': string
   'common.delegateFailed': string
@@ -384,6 +388,7 @@ export interface StringsMap {
   'common.frequency': string
   'common.friendlyMessage': string
   'common.gcp': string
+  'common.generatedAt': string
   'common.genericErrors.inviteExpired': string
   'common.genericErrors.licenseCallFailed': string
   'common.genericErrors.unauthorized': string
@@ -556,6 +561,8 @@ export interface StringsMap {
   'common.instanceValidation.required': string
   'common.invalid': string
   'common.invalidIdentifiers': string
+  'common.invite': string
+  'common.isHelpful': string
   'common.jexlCondition': string
   'common.jexlExpression': string
   'common.labelTestConnection': string
@@ -948,6 +955,7 @@ export interface StringsMap {
   'common.resourceIdentifier': string
   'common.resourceLabel': string
   'common.resourceTypeLabel': string
+  'common.results': string
   'common.role': string
   'common.roleAssignmentLabel': string
   'common.saveAndClose': string
@@ -1123,6 +1131,7 @@ export interface StringsMap {
   'common.stayOnThisPage': string
   'common.stepName': string
   'common.stoText': string
+  'common.stop': string
   'common.submittingRequest': string
   'common.submittingRequestToGitViaDelegate': string
   'common.subscribed': string
@@ -3483,7 +3492,6 @@ export interface StringsMap {
   'dashboards.createModal.stepOne': string
   'dashboards.createModal.submitFail': string
   'dashboards.createModal.success': string
-  'dashboards.createModal.view': string
   'dashboards.dashboardList.headerViewCount': string
   'dashboards.dashboardSortingOptions.default': string
   'dashboards.dashboardSortingOptions.mostLiked': string
@@ -3658,42 +3666,75 @@ export interface StringsMap {
   'projectsOrgs.welcomeSecondLine': string
   'projectsOrgs.whyCreateProject': string
   'projectsOrgs.youHaveNoProjects': string
+  'assessments.answered': string
   'assessments.basedOnResultsHarnessRecommendations': string
   'assessments.benchmark': string
   'assessments.benchmarkComparison': string
+  'assessments.benchmarkScore': string
+  'assessments.companyAvgScore': string
   'assessments.companyOverAllScore': string
   'assessments.companyScore': string
   'assessments.comparison': string
   'assessments.copyLink': string
-  'assessments.determineMaturity': string
-  'assessments.developerEffectiveness': string
+  'assessments.currentScore': string
   'assessments.downloadPDF': string
   'assessments.downloadPDFReport': string
   'assessments.enterEmailAddress': string
+  'assessments.estimatedTime': string
+  'assessments.externalBenchmarkScore': string
+  'assessments.groupBySDLC': string
+  'assessments.howHarnessCanHelp': string
+  'assessments.howYouPerformedInSections': string
+  'assessments.howYourScoreCompare': string
+  'assessments.improveMaturity': string
   'assessments.inYourCompany': string
+  'assessments.increment': string
   'assessments.invitationSent': string
   'assessments.inviteToTakeAssessment': string
   'assessments.learnHowWeCompare': string
   'assessments.learnMoreAboutMaturity': string
   'assessments.level': string
+  'assessments.levelString': string
   'assessments.maturityLevelDefinition': string
   'assessments.maturityScore': string
+  'assessments.maturityScoreDesc': string
   'assessments.maxScore': string
+  'assessments.modules.ccm': string
+  'assessments.modules.cd': string
+  'assessments.modules.cet': string
+  'assessments.modules.cf': string
+  'assessments.modules.chaos': string
+  'assessments.modules.ci': string
+  'assessments.modules.cv': string
+  'assessments.modules.idp': string
+  'assessments.modules.scm': string
+  'assessments.modules.sei': string
+  'assessments.modules.srm': string
+  'assessments.modules.ssca': string
+  'assessments.modules.sto': string
+  'assessments.projectedScore': string
+  'assessments.projectedScoreWithRec': string
   'assessments.question': string
   'assessments.questions': string
-  'assessments.questionsAnswered': string
   'assessments.recommendations': string
+  'assessments.recommendedModule': string
+  'assessments.result': string
   'assessments.scoreCompare': string
   'assessments.scoreOutOf10': string
   'assessments.searchForCategory': string
+  'assessments.sectionScoreDistributionComparision': string
   'assessments.sendInvite': string
   'assessments.shareResults': string
+  'assessments.softwareDeliveryMaturityModel': string
   'assessments.stronglyAgree': string
   'assessments.stronglyDisagree': string
-  'assessments.survey': string
   'assessments.typicalComparison': string
+  'assessments.viewInDetail': string
+  'assessments.viewResults': string
+  'assessments.youAreBestInCategory': string
+  'assessments.yourBestPerformance': string
   'assessments.yourScore': string
-  'assessments.yourTopOpportnities': string
+  'assessments.yourTopOpportunities': string
   'code.branches': string
   'code.homepageHeading': string
   'code.learnMore': string
@@ -4041,6 +4082,17 @@ export interface StringsMap {
   'pipeline.configSource': string
   'pipeline.configureArtifactSource': string
   'pipeline.configureLogSettings': string
+  'pipeline.copilot.analyzeFailure': string
+  'pipeline.copilot.analyzing': string
+  'pipeline.copilot.askAICopilot': string
+  'pipeline.copilot.assist': string
+  'pipeline.copilot.foundPossibleRemediations': string
+  'pipeline.copilot.helpText': string
+  'pipeline.copilot.introduction': string
+  'pipeline.copilot.label': string
+  'pipeline.copilot.noRemediationFound': string
+  'pipeline.copilot.possibleSolutions': string
+  'pipeline.copilot.requestTimedOut': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string

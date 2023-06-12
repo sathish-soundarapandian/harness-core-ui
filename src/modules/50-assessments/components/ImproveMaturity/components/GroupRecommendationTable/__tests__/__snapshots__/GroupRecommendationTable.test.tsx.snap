@@ -1,0 +1,175 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Recommendation gouped by SDLC Should render the values in flat tables grouped by SDLC 1`] = `
+<div>
+  <div
+    class="TableV2--table"
+  >
+    <div
+      class="TableV2--header"
+      role="row"
+    >
+      <div
+        class="TableV2--cell"
+        colspan="1"
+        role="columnheader"
+        style="width: 2%;"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          
+        </p>
+      </div>
+      <div
+        class="TableV2--cell"
+        colspan="1"
+        role="columnheader"
+        style="width: 90%;"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          
+        </p>
+      </div>
+    </div>
+    <div
+      class="TableV2--body"
+    >
+      <div
+        class="TableV2--row TableV2--card"
+        role="row"
+      >
+        <div
+          class="TableV2--cells"
+        >
+          <div
+            class="TableV2--cell"
+            role="cell"
+            style="width: 2%;"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main"
+            >
+              <button
+                class="bp3-button Button--button StyledProps--font StyledProps--main toggleAccordion StyledProps--color StyledProps--color-grey600 Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                style="cursor: pointer;"
+                title="Toggle Row Expanded"
+                type="button"
+              >
+                <span
+                  class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                  icon="chevron-right"
+                >
+                  <svg
+                    data-icon="chevron-right"
+                    height="19"
+                    viewBox="0 0 16 16"
+                    width="19"
+                  >
+                    <desc>
+                      chevron-right
+                    </desc>
+                    <path
+                      d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="TableV2--cell"
+            role="cell"
+            style="width: 90%;"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-left StyledProps--flex-alignItems-center StyledProps--margin-left-medium"
+            >
+              <img
+                alt=""
+                height="45"
+                src="test-file-stub"
+                width="45"
+              />
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey1000"
+              >
+                Integrated Security and Governance   
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="TableV2--row TableV2--card"
+        role="row"
+      >
+        <div
+          class="TableV2--cells"
+        >
+          <div
+            class="TableV2--cell"
+            role="cell"
+            style="width: 2%;"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main"
+            >
+              <button
+                class="bp3-button Button--button StyledProps--font StyledProps--main toggleAccordion StyledProps--color StyledProps--color-grey600 Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                style="cursor: pointer;"
+                title="Toggle Row Expanded"
+                type="button"
+              >
+                <span
+                  class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                  icon="chevron-right"
+                >
+                  <svg
+                    data-icon="chevron-right"
+                    height="19"
+                    viewBox="0 0 16 16"
+                    width="19"
+                  >
+                    <desc>
+                      chevron-right
+                    </desc>
+                    <path
+                      d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="TableV2--cell"
+            role="cell"
+            style="width: 90%;"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-left StyledProps--flex-alignItems-center StyledProps--margin-left-medium"
+            >
+              <img
+                alt=""
+                height="45"
+                src="test-file-stub"
+                width="45"
+              />
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey1000"
+              >
+                Discoverability and Documentation 
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

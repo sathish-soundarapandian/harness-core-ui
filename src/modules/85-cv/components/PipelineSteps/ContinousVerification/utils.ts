@@ -12,7 +12,6 @@ import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { HealthSourceTypes, UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
-import { getConnectorTypeName } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.utils'
 import type { ConnectorInfoDTO, HealthSource } from 'services/cv'
 import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -343,11 +342,7 @@ export function enrichHealthSourceWithVersionForHealthsourceType(
 }
 
 export function getSourceTypeForConnector(healthSource: HealthSource): ConnectorInfoDTO['type'] | undefined {
-  return (
-    isHealthSourceVersionV2(healthSource)
-      ? getConnectorTypeName(healthSource?.type as HealthSourceTypes)
-      : healthSourceTypeMapping(healthSource?.type as HealthSourceTypes)
-  ) as ConnectorInfoDTO['type']
+  return healthSourceTypeMapping(healthSource?.type as HealthSourceTypes) as ConnectorInfoDTO['type']
 }
 
 export function shouldRenderField(input: { name: string; path: string }): boolean {

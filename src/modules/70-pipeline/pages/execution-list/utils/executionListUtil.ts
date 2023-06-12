@@ -5,12 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { SelectOption, sortByName, sortByStatus } from '@harness/uicore'
+import { useMemo } from 'react'
 import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { StringUtils } from '@common/exports'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams, useQueryParamsOptions, UseQueryParamsOptions } from '@common/hooks/useQueryParams'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_EXECUTION_LIST_TABLE_SORT } from '@pipeline/utils/constants'
+import { useStrings } from 'framework/strings'
 import type { ProcessedExecutionListPageQueryParams } from '../types'
 
 export const getIsAnyFilterApplied = (queryParams: ProcessedExecutionListPageQueryParams): boolean => {
@@ -38,4 +41,13 @@ export const useExecutionsQueryParamOptions = (): UseQueryParamsOptions<Processe
 
 export const useExecutionListQueryParams = (): ProcessedExecutionListPageQueryParams => {
   return useQueryParams<ProcessedExecutionListPageQueryParams>(useExecutionsQueryParamOptions())
+}
+
+export const useExecutionListSortOptions = (): SelectOption[] => {
+  const { getString } = useStrings()
+  const options = useMemo(() => {
+    return [...sortByName, ...sortByStatus, { label: getString('common.executedBy'), value: 'startTs,DESC' }] // executedBy column is used to sort by startTs
+  }, [getString])
+
+  return options
 }

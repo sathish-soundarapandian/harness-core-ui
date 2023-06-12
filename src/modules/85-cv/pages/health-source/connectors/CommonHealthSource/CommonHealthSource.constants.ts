@@ -26,11 +26,11 @@ export const HealthSourceProducts: HealthSourceProductsType = {
     value: ElkProduct.ELK_LOGS,
     label: ElkProduct.ELK_LOGS
   },
-  [HealthSourceTypes.SignalFX]: {
+  [HealthSourceTypes.SplunkSignalFXMetrics]: {
     label: SignalFX.SIGNALFX_METRICS_DISPLAY_NAME,
     value: HealthSourceTypes.SplunkSignalFXMetrics
   },
-  [HealthSourceTypes.GrafanaLoki]: {
+  [HealthSourceTypes.GrafanaLokiLogs]: {
     label: GrafanaLoki.GRAFANA_LOKI_DISPLAY_NAME,
     value: GrafanaLoki.GRAFANA_LOKI_LOGS
   }

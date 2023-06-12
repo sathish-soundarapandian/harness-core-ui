@@ -10,7 +10,8 @@
 import React from 'react'
 import { Get, GetProps, useGet, UseGetProps } from 'restful-react'
 
-import { getConfig, getUsingFetch, GetUsingFetchProps } from '../config'
+import { getConfig, getUsingFetch, GetUsingFetchProps, mutateUsingFetch, MutateUsingFetchProps } from '../config'
+
 export interface Error {
   /**
    * Details about the error encountered
@@ -144,6 +145,31 @@ export interface LogBlobQueryParams {
   'X-Harness-Token': string
 }
 
+interface RcaQueryParams {
+  /**
+   * Account level token to ensure allowed access
+   */
+  'X-Harness-Token': string
+}
+
+export interface ResponseRemediation {
+  rca: string
+  detailed_rca: string
+}
+
+export interface Infrastructure {
+  type?: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+}
+
+export interface RcaRequestBody {
+  accountID: string
+  infra?: Infrastructure['type']
+  err_summary?: string
+  command?: string
+  step_type?: string
+  keys?: string[]
+}
+
 export type LogBlobProps = Omit<GetProps<void, void, LogBlobQueryParams, void>, 'path'>
 
 /**
@@ -174,3 +200,20 @@ export const logBlobPromise = (
   props: GetUsingFetchProps<void, void, LogBlobQueryParams, void>,
   signal?: RequestInit['signal']
 ) => getUsingFetch<void, void, LogBlobQueryParams, void>(getConfig('log-service'), `/blob`, props, signal)
+
+/**
+ * Get rca
+ *
+ * Get rca from log response
+ */
+export const rcaPromise = (
+  props: MutateUsingFetchProps<ResponseRemediation, Error, RcaQueryParams, string, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseRemediation, Error, RcaQueryParams, string, void>(
+    'POST',
+    getConfig('log-service'),
+    `/rca`,
+    props,
+    signal
+  )

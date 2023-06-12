@@ -1527,10 +1527,19 @@ displayName: Display Name
 displayNamePlaceHolder: Enter Display Name
 advancedSettings: Advanced Settings
 timezone: Timezone
+stop: Stop
 errorFavorite: Oops! Something went wrong while marking this entity as a favorite.
 errorUnFavorite: Oops! Something went wrong while removing this entity from your favorites.
 previousActionInProgress: Please wait, your previous action is being processed.
 learnMoreAboutGCR: Learn more about GCR with Harness
 learnMoreAboutECR: Learn more about ECR with Harness
+isHelpful: Helpful?
+delay15Sec: This can take up to 15 seconds.
+generatedAt: Generated at
 unknown: Unknown
 viewErrorDetails: Click to view error details
+delegateExpressionList: Delegate Selection Expression List
+atAGlance: At a Glance
+invite: Invite
+results: Results
+category: Category

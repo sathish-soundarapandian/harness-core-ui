@@ -11,7 +11,7 @@ import ReactTimeago from 'react-timeago'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { Text, Layout, TableV2, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { capitalize, defaultTo } from 'lodash-es'
+import { capitalize, defaultTo, get } from 'lodash-es'
 import { Drawer } from '@blueprintjs/core'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
@@ -31,12 +31,13 @@ interface TriggerActivityListProps {
 type CellType = Renderer<CellProps<NGTriggerEventHistoryResponse>>
 
 const RenderColumnTime: CellType = ({ row }) => {
-  const data = row.original
+  const data = get(row.original, 'targetExecutionSummary')
+
   return (
     <Layout.Vertical>
       <Layout.Horizontal spacing="small" width={230}>
         <Text color={Color.BLACK} lineClamp={1} font={{ variation: FontVariation.BODY2 }}>
-          <ReactTimeago date={data?.targetExecutionSummary?.startTs as number} />
+          <ReactTimeago date={defaultTo(data, 'startTs') as number} />
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>
@@ -47,19 +48,20 @@ const RenderColumnEventId: CellType = ({ row }) => {
   const data = row.original
   return (
     <Layout.Horizontal flex={{ align: 'center-center' }} style={{ justifyContent: 'flex-start' }} spacing="xsmall">
-      <Text>{data?.eventCorrelationId}</Text>
+      <Text>{get(data, 'eventCorrelationId')}</Text>
     </Layout.Horizontal>
   )
 }
 
 const RenderColumnStatus: CellType = ({ row }) => {
   const data = row.original.triggerEventStatus
+  const { status, message } = defaultTo(data, {})
   return (
     <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
-      <ExecutionStatusLabel status={capitalize(data?.status) as ExecutionStatus} />
+      <ExecutionStatusLabel status={capitalize(status) as ExecutionStatus} />
       <div className={css.statusMessage}>
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500} lineClamp={1}>
-          {data?.message}
+          {message}
         </Text>
       </div>
     </Layout.Vertical>
@@ -69,7 +71,7 @@ const RenderColumnStatus: CellType = ({ row }) => {
 const RenderColumnExecutionId: CellType = ({ row }) => {
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } =
     useParams<PipelineType<PipelinePathProps>>()
-  const data = row.original
+  const data = get(row.original, 'targetExecutionSummary')
   return (
     <Layout.Horizontal flex={{ align: 'center-center' }} style={{ justifyContent: 'flex-start' }} spacing="xsmall">
       <Link
@@ -77,8 +79,8 @@ const RenderColumnExecutionId: CellType = ({ row }) => {
           accountId,
           orgIdentifier,
           projectIdentifier,
-          pipelineIdentifier: pipelineIdentifier || '-1',
-          executionIdentifier: data?.targetExecutionSummary?.planExecutionId || '-1',
+          pipelineIdentifier: defaultTo(pipelineIdentifier, '-1'),
+          executionIdentifier: defaultTo(get(data, 'planExecutionId'), '-1'),
           module,
           source: 'executions'
         })}
@@ -89,7 +91,7 @@ const RenderColumnExecutionId: CellType = ({ row }) => {
           tooltipProps={{ isDark: true }}
           lineClamp={1}
         >
-          {data?.targetExecutionSummary?.targetId}
+          {get(data, 'targetId')}
         </Text>
       </Link>
     </Layout.Horizontal>
@@ -104,8 +106,8 @@ const RenderColumnPayload: CellType = ({ row, column }) => {
         size={20}
         className={css.notesIcon}
         onClick={() => {
-          ;(column as any)?.setShowPayload(true)
-          ;(column as any)?.setSelectedPayloadRow(row.original?.payload)
+          ;(column as any).setShowPayload(true)
+          ;(column as any).setSelectedPayloadRow(get(row.original, 'payload'))
         }}
       />
     </Layout.Horizontal>
@@ -116,10 +118,8 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
   const { getString } = useStrings()
   const [showPayload, setShowPayload] = React.useState<boolean>(true)
   const [selectedPayloadRow, setSelectedPayloadRow] = React.useState<string | undefined>()
-  const data: NGTriggerEventHistoryResponse[] = useMemo(
-    () => triggersListResponse?.content || [],
-    [triggersListResponse?.content]
-  )
+  const { content, totalElements, size, totalPages, pageable } = defaultTo(triggersListResponse, {})
+  const data: NGTriggerEventHistoryResponse[] = useMemo(() => defaultTo(content, []), [content])
 
   const columns: Column<NGTriggerEventHistoryResponse>[] = useMemo(
     () => [
@@ -159,10 +159,10 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
   )
 
   const paginationProps = useDefaultPaginationProps({
-    itemCount: defaultTo(triggersListResponse?.totalElements, 0),
-    pageSize: defaultTo(triggersListResponse?.size, COMMON_DEFAULT_PAGE_SIZE),
-    pageCount: defaultTo(triggersListResponse?.totalPages, -1),
-    pageIndex: defaultTo(triggersListResponse?.pageable?.pageNumber, 0)
+    itemCount: defaultTo(totalElements, 0),
+    pageSize: defaultTo(size, COMMON_DEFAULT_PAGE_SIZE),
+    pageCount: defaultTo(totalPages, -1),
+    pageIndex: get(pageable, 'pageNumber', 0)
   })
 
   return (

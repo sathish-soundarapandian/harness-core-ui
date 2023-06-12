@@ -149,6 +149,7 @@ function StepFormInternal({
             path={`${path}.failureStrategies`}
             readonly={readonly}
             viewType={viewType}
+            mode={StepMode.STEP}
           />
         </div>
       )}

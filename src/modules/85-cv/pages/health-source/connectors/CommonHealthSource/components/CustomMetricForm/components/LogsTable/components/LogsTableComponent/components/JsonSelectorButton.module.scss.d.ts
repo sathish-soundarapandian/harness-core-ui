@@ -7,6 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly inputJsonButton: string
+  readonly inputJsonButtonTemplate: string
+  readonly inputJsonButtonWrapper: string
   readonly jsonSelectorButton: string
+  readonly multiTypeSelectButton: string
 }
 export default styles

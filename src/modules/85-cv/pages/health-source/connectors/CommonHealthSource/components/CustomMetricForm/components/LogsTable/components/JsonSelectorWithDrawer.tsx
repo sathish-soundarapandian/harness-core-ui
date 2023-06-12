@@ -1,14 +1,6 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { useFormikContext } from 'formik'
-import {
-  AllowedTypes,
-  Container,
-  Layout,
-  MultiTypeInputType,
-  NoDataCard,
-  RUNTIME_INPUT_VALUE,
-  Text
-} from '@harness/uicore'
+import { AllowedTypes, Container, Layout, MultiTypeInputType, NoDataCard, Text } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import classNames from 'classnames'
@@ -21,16 +13,14 @@ import type {
   CommonCustomMetricFormikInterface,
   FieldMapping
 } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
-import { getIsConnectorRuntimeOrExpression } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import {
   logsTableDefaultConfigs,
   FIELD_ENUM
 } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
-import JsonSelectorButton from './LogsTableComponent/components/JsonSelectorButton'
 import JsonDrawerMultiType from './LogsTableComponent/components/JsonDrawerMultiType'
 import type { LogFieldsMultiTypeState } from '../../../CustomMetricForm.types'
-import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
 import { getSelectedPath } from './JsonSelectorWithDrawer.utils'
+import InputWithJsonSelector from './LogsTableComponent/components/InputWithJsonSelector/InputWithJsonSelector'
 import css from './JsonSelectorWithDrawer.module.scss'
 
 interface JsonSelectorWithDrawerProps {
@@ -46,10 +36,9 @@ interface JsonSelectorWithDrawerProps {
 
 export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProps): JSX.Element | null {
   const { getString } = useStrings()
-  const { isTemplate, sourceData } = useContext(SetupSourceTabsContext)
-  const { values, setFieldValue, setValues } = useFormikContext<CommonCustomMetricFormikInterface>()
-  const { isQueryRuntimeOrExpression } = useCommonHealthSource()
-  const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
+  const { isTemplate } = useContext(SetupSourceTabsContext)
+  const { values, setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
+
   const {
     fieldMappings,
     disableFields,
@@ -61,36 +50,6 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
   } = props
   const filteredFieldsMapping = fieldMappings?.filter(field => field.type === FIELD_ENUM.JSON_SELECTOR)
   const isDisabled = disableFields
-
-  useEffect(() => {
-    if (
-      (isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression) &&
-      isTemplate &&
-      multiTypeRecord &&
-      filteredFieldsMapping
-    ) {
-      const updatedMultiTypeRecord: LogFieldsMultiTypeState = {} as LogFieldsMultiTypeState
-      const updatedFormikValues: Record<keyof CommonCustomMetricFormikInterface, any> = {} as Record<
-        keyof CommonCustomMetricFormikInterface,
-        any
-      >
-
-      filteredFieldsMapping.forEach(field => {
-        if (multiTypeRecord[field.identifier] === MultiTypeInputType.FIXED) {
-          updatedMultiTypeRecord[field.identifier] = MultiTypeInputType.RUNTIME
-          updatedFormikValues[field.identifier] = RUNTIME_INPUT_VALUE
-        }
-      })
-
-      if (!isEmpty(updatedMultiTypeRecord)) {
-        setMultiTypeRecord(c => ({ ...c, ...updatedMultiTypeRecord }))
-
-        setValues(currentValues => {
-          return { ...currentValues, ...updatedFormikValues }
-        })
-      }
-    }
-  }, [filteredFieldsMapping, isConnectorRuntimeOrExpression, isQueryRuntimeOrExpression, isTemplate, values])
 
   const handleTemplateTypeUpdate = (
     fieldName: keyof CommonCustomMetricFormikInterface,
@@ -185,15 +144,14 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
                 setMultiType={handleTemplateTypeUpdate}
               />
             ) : (
-              <JsonSelectorButton
+              <InputWithJsonSelector
                 className={css.jsonSelectorButton}
                 displayTextclassName={classNames({
                   [css.inputText]: Boolean(values[field.identifier])
                 })}
                 displayText={(values[field.identifier] as string) || `Select ${field.label}`}
                 onClick={() => openDrawer(field.identifier, field.label)}
-                disabled={isDisabled}
-                icon="plus"
+                isDisabled={isDisabled}
                 name={field.identifier}
               />
             )}

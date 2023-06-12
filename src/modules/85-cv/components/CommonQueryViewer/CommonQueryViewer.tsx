@@ -22,7 +22,7 @@ import { CommonQueryContent } from './components/CommonQueryContent/CommonQueryC
 import { SetupSourceTabsContext } from '../CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { CommonRecords } from '../CommonRecords/CommonRecords'
 import type { CommonQueryViewerProps } from './types'
-import { getIsQueryButtonDisabled, getRunQueryBtnTooltip } from './CommonQueryViewer.utils'
+import { getIsQueryButtonDisabled, getRunQueryBtnTooltip, shouldShowCommonRecords } from './CommonQueryViewer.utils'
 
 export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
@@ -39,7 +39,8 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
     isConnectorRuntimeOrExpression,
     dataTooltipId,
     querySectionTitle,
-    queryFieldIdentifier
+    queryFieldIdentifier,
+    healthSourceConfig
   } = props
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -49,6 +50,15 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
   const isQueryButtonDisabled = useMemo(() => {
     return getIsQueryButtonDisabled({ query, loading, queryFieldIdentifier, values })
   }, [loading, query, queryFieldIdentifier, values])
+
+  const queryField = healthSourceConfig?.customMetrics?.queryAndRecords?.queryField
+  const queryFieldValue = (queryField ? values[queryField.identifier] : '') as string
+
+  const hideRecords = useMemo(() => {
+    const queryFieldValueType = getMultiTypeFromValue(queryFieldValue)
+
+    return queryField && queryFieldValueType !== MultiTypeInputType.FIXED
+  }, [queryField, queryFieldValue])
 
   const runQueryBtnTooltip = useMemo(
     () => getRunQueryBtnTooltip(queryFieldIdentifier, values, query, getString),
@@ -109,6 +119,7 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
             text: getString('cv.monitoringSources.commonHealthSource.runQuery'),
             variation: ButtonVariation.SECONDARY
           }}
+          hideFetchButton={hideRecords}
           runQueryBtnTooltip={runQueryBtnTooltip}
         />
       ) : (
@@ -122,7 +133,7 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
           runQueryBtnTooltip={runQueryBtnTooltip}
         />
       )}
-      {!(isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression) ? (
+      {shouldShowCommonRecords({ hideRecords, isConnectorRuntimeOrExpression, isQueryRuntimeOrExpression }) ? (
         <CommonRecords
           fetchRecords={handleFetchRecords}
           loading={loading}

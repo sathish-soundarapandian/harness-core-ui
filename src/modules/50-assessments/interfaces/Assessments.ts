@@ -1,8 +1,13 @@
 export interface AssessmentsForm {
-  userResponse: SubmittedQuestionResponse[]
+  userResponse: FormatedResponse
 }
 
-export interface SubmittedQuestionResponse {
-  questionId: string
-  responseIds: string[]
+export interface FormatedResponse {
+  [sectionId: string]: { [index: string]: string[] }
+}
+
+export interface SectionDetails {
+  id: string
+  name: string
+  questionIds: string[]
 }

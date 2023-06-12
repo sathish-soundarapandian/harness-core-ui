@@ -220,6 +220,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
             openEditMetricModal={openModal}
             defaultServiceInstance={healthSourceConfig.customMetrics?.assign?.defaultServiceInstance}
+            healthSourceConfig={healthSourceConfig}
           >
             <Container ref={wrapperRef}>
               <CustomMetricForm

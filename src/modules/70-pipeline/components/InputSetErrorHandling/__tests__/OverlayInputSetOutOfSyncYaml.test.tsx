@@ -135,6 +135,7 @@ jest.mock('services/pipeline-ng', () => ({
   useCreateOverlayInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: errorResponse })),
   useGetInputSetsListForPipeline: jest.fn(() => GetInputSetsInlineResponse),
   useGetSchemaYaml: jest.fn().mockImplementation(() => ({ data: {} })),
+  useGetStaticSchemaYaml: jest.fn().mockImplementation(() => ({ data: {} })),
   useYamlDiffForInputSet: jest.fn(() => GetOverlayISYamlDiffInline)
 }))
 

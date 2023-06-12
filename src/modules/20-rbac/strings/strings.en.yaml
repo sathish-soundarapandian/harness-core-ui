@@ -51,8 +51,8 @@ permissionLabels:
   delete: '{{ $.delete}}'
   access: Access
   execute: '{{$.common.execute}}'
+  invite: '{{$.common.invite}}'
   manage: '{{$.common.manage}}'
-  invite: Invite
   evaluate: Evaluate
   approveReject: Approve / Reject
   copy: '{{$.common.copy}}'

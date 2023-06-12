@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC } from 'react'
+import React, { FC, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
+import type { IconName } from '@blueprintjs/core'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
@@ -32,6 +33,7 @@ export interface FlagOptionsMenuButtonProps {
   ) => void
   queryParams: DeleteFeatureFlagQueryParams
   refetchFlags: () => void
+  noEdit?: boolean
 }
 
 const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
@@ -40,7 +42,8 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
   gitSync,
   deleteFlag,
   queryParams,
-  refetchFlags
+  refetchFlags,
+  noEdit = false
 }) => {
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
@@ -88,32 +91,39 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     )
   }
 
-  return (
-    <RbacOptionsMenuButton
-      items={[
-        {
-          icon: 'edit',
-          text: getString('edit'),
-          onClick: gotoDetailPage,
-          permission: {
-            resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: environment },
-            permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG
-          },
-          ...planEnforcementProps
+  const menuItems = useMemo(() => {
+    const opts = [
+      {
+        icon: 'edit' as IconName,
+        text: getString('edit'),
+        onClick: gotoDetailPage,
+        permission: {
+          resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: environment },
+          permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG
         },
-        {
-          icon: FFM_7921_ARCHIVING_FEATURE_FLAGS ? 'archive' : 'trash',
-          text: FFM_7921_ARCHIVING_FEATURE_FLAGS ? getString('archive') : getString('delete'),
-          onClick: FFM_7921_ARCHIVING_FEATURE_FLAGS ? openDialog : confirmDeleteFlag,
-          permission: {
-            resource: { resourceType: ResourceType.FEATUREFLAG, resourceIdentifier: environment },
-            permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
-          },
-          ...planEnforcementProps
-        }
-      ]}
-    />
-  )
+        ...planEnforcementProps
+      },
+      {
+        icon: (FFM_7921_ARCHIVING_FEATURE_FLAGS ? 'archive' : 'trash') as IconName,
+        text: FFM_7921_ARCHIVING_FEATURE_FLAGS ? getString('archive') : getString('delete'),
+        onClick: FFM_7921_ARCHIVING_FEATURE_FLAGS ? openDialog : confirmDeleteFlag,
+        permission: {
+          resource: { resourceType: ResourceType.FEATUREFLAG },
+          permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
+        },
+        ...planEnforcementProps
+      }
+    ]
+
+    if (noEdit) {
+      opts.shift()
+    }
+
+    return opts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [noEdit])
+
+  return <RbacOptionsMenuButton items={menuItems} />
 }
 
 export default FlagOptionsMenuButton

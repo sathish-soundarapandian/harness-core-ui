@@ -5,13 +5,12 @@
 
 .jsonSelectorButton {
   box-shadow: none !important;
-  border: 1px solid var(--bp3-intent-color, var(--grey-200)) !important;
   color: var(--grey-800) !important;
   height: 36px !important;
   position: relative;
-  padding: var(--spacing-xsmall) var(--spacing-small) !important;
   background-color: var(--white) !important;
   display: flex;
+  width: 100%;
   justify-content: space-between;
   border-radius: var(--spacing-2);
   &:hover {

@@ -30,7 +30,8 @@ export const healthSourcesConfig: HealthSourcesConfig = {
         hideCV: false,
         hideServiceIdentifier: false,
         hideSLIAndHealthScore: false,
-        defaultServiceInstance: '_sourceHost'
+        defaultServiceInstance: '_sourceHost',
+        updateServiceInstanceBasedOnQuery: true
       }
     },
     metricPacks: {
@@ -135,7 +136,8 @@ export const healthSourcesConfig: HealthSourcesConfig = {
           label: 'Log Indexes',
           identifier: CustomMetricFormFieldNames.INDEX,
           placeholder: 'Select Log Index',
-          isTemplateSupportEnabled: true
+          isTemplateSupportEnabled: true,
+          allowCreatingNewItems: true
         }
       },
       fieldMappings: [
@@ -206,6 +208,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
         enabled: true,
         hideCV: false,
         hideSLIAndHealthScore: false,
+        updateServiceInstanceBasedOnQuery: true,
         serviceInstance: [
           {
             type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,

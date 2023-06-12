@@ -4,13 +4,19 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
-import type { InterruptEffectDTO } from 'services/pipeline-ng'
+import type { InterruptEffectDTO, GraphLayoutNode } from 'services/pipeline-ng'
 import * as utils from '../executionUtils'
 
 import stageGraph from './stage-graph.json'
 import success from './successful-execution.json'
 import interruptHistories from './mockJson/interruptHistories.json'
+import {
+  cdStagePipelineExecutionDetails,
+  ciStagePipelineExecutionDetails,
+  nodeLayoutForCDStage,
+  nodeLayoutForCIStage,
+  nodeLayoutForPMS
+} from './mockJson/mockExecutionContext'
 
 jest.mock('@pipeline/components/PipelineSteps/PipelineStepFactory', () => ({}))
 
@@ -371,6 +377,127 @@ describe('ExecutionUtils tests', () => {
           }
         })
       ).toEqual(['s3', 's1', 's2'])
+    })
+  })
+
+  describe('Utils for copilot integration', () => {
+    test('Test showHarnessCoPilot method', () => {
+      const args = {
+        pipelineStagesMap: new Map<string, GraphLayoutNode>([['', {}]]),
+        selectedStageId: 'CI_stage_1'
+      }
+      /* Testing for modules CI and CD */
+      expect(utils.showHarnessCoPilot(args)).toBe(false)
+      // for CI
+      expect(
+        utils.showHarnessCoPilot({
+          ...args,
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_stage_1', nodeLayoutForCIStage]])
+        })
+      ).toBe(true)
+      expect(
+        utils.showHarnessCoPilot({
+          ...args,
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_stage_2', nodeLayoutForCIStage]])
+        })
+      ).toBe(false)
+
+      // for CD
+      expect(
+        utils.showHarnessCoPilot({
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage_1', nodeLayoutForCDStage]]),
+          selectedStageId: 'CD_stage_1'
+        })
+      ).toBe(true)
+      expect(
+        utils.showHarnessCoPilot({
+          ...args,
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage_2', nodeLayoutForCDStage]])
+        })
+      ).toBe(false)
+
+      // for Pipeline PMS
+      expect(
+        utils.showHarnessCoPilot({
+          selectedStageId: 'PMS_Stage_1',
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['PMS_Stage_1', nodeLayoutForPMS]])
+        })
+      ).toBe(false)
+
+      /* Testing for Environment being local or QA */
+
+      // mock hostname
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      delete global.window.location
+      global.window = Object.create(window)
+      global.window.location = {
+        ...window.location,
+        hostname: 'qa.harness.io'
+      }
+
+      const commonArgs = {
+        ...args,
+        pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_stage_1', nodeLayoutForCIStage]])
+      }
+
+      expect(utils.showHarnessCoPilot(commonArgs)).toBe(true)
+
+      global.window.location = {
+        ...window.location,
+        hostname: 'app.harness.io'
+      }
+
+      expect(utils.showHarnessCoPilot(commonArgs)).toBe(false)
+    })
+
+    test('Test resolveCurrentStep method', () => {
+      expect(utils.resolveCurrentStep('step_id_2', { retryStep: 'step_id_1' })).toBe('step_id_1')
+      expect(utils.resolveCurrentStep('step_id_2', {})).toBe('step_id_2')
+    })
+
+    test('Test getSelectedStageModule method', () => {
+      expect(
+        utils.getSelectedStageModule(new Map<string, GraphLayoutNode>([['CD_stage', nodeLayoutForCDStage]]), 'CD_stage')
+      ).toBe('cd')
+      expect(
+        utils.getSelectedStageModule(new Map<string, GraphLayoutNode>([['CI_stage', nodeLayoutForCIStage]]), 'CI_stage')
+      ).toBe('ci')
+      expect(
+        utils.getSelectedStageModule(new Map<string, GraphLayoutNode>([['PMS_stage', nodeLayoutForPMS]]), 'PMS_stage')
+      ).toBe('pms')
+      expect(utils.getSelectedStageModule(new Map<string, GraphLayoutNode>([]), 'PMS_stage_1')).toBe(undefined)
+    })
+
+    test('Test getInfraTypeFromStageForCurrentStep method', () => {
+      expect(
+        utils.getInfraTypeFromStageForCurrentStep({
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage', nodeLayoutForCDStage]]),
+          selectedStageId: 'CD_stage',
+          pipelineExecutionDetail: {}
+        })
+      ).toBeUndefined()
+
+      // for CD
+
+      expect(
+        utils.getInfraTypeFromStageForCurrentStep({
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage', nodeLayoutForCDStage]]),
+          selectedStageId: 'CD_stage',
+          pipelineExecutionDetail: cdStagePipelineExecutionDetails
+        })
+      ).toBe('KUBERNETES')
+
+      // for CI
+
+      expect(
+        utils.getInfraTypeFromStageForCurrentStep({
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_stage', nodeLayoutForCIStage]]),
+          selectedStageId: 'CI_stage',
+          pipelineExecutionDetail: ciStagePipelineExecutionDetails
+        })
+      ).toBe('HostedVm')
     })
   })
 })

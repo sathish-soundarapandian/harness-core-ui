@@ -6,7 +6,10 @@
  */
 
 import type { GroupedMetric } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
-import type { CommonCustomMetricFormikInterface } from '../../connectors/CommonHealthSource/CommonHealthSource.types'
+import type {
+  CommonCustomMetricFormikInterface,
+  HealthSourceConfig
+} from '../../connectors/CommonHealthSource/CommonHealthSource.types'
 
 export type InitCustomFormData = InitHealthSourceCustomFormInterface
 
@@ -50,6 +53,7 @@ export interface CommonCustomMetricInterface {
   filterRemovedMetricNameThresholds?: (metricName: string) => void
   openEditMetricModal: () => void
   defaultServiceInstance?: string
+  healthSourceConfig: HealthSourceConfig
 }
 
 export interface CommonUpdateSelectedMetricsMapInterface {

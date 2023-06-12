@@ -1,40 +1,35 @@
-import type { FormikErrors, FormikProps } from 'formik'
-import { isEmpty, set } from 'lodash-es'
-import type { UseStringsReturn } from 'framework/strings'
-import type { UserAssessmentDTO } from 'services/assessments'
-import type { AssessmentsForm, SubmittedQuestionResponse } from '../../interfaces/Assessments'
-
-export const validateAssessments = (
-  formData: AssessmentsForm,
-  getString: UseStringsReturn['getString']
-): FormikErrors<AssessmentsForm> => {
-  const errors: FormikErrors<AssessmentsForm> = {}
-  const { userResponse = [] } = formData
-
-  userResponse.forEach((response, index) => {
-    if (isEmpty(response?.responseIds)) {
-      set(errors, `userResponse.${index}`, getString('fieldRequired'))
-    }
-  })
-
-  return errors
-}
-
-export function getQuestionsAnswered(assessmentForm: FormikProps<AssessmentsForm>): number {
-  const userResponseData = assessmentForm?.values?.userResponse || []
-  const filteredResponses = userResponseData.filter(response => !isEmpty(response?.responseIds))
-  return filteredResponses.length || 0
-}
+import type { QuestionResponse, UserAssessmentDTO, UserResponseRequestItem } from 'services/assessments'
+import type { FormatedResponse } from '../../interfaces/Assessments'
 
 export function getInitialUserResponse(
   userResponse: UserAssessmentDTO['userResponse'],
-  questions: UserAssessmentDTO['questions']
-): SubmittedQuestionResponse[] {
-  return (userResponse ||
-    questions?.map(question => {
+  sectionQuestions: UserAssessmentDTO['sectionQuestions']
+): FormatedResponse {
+  let response: { [index: string]: string[] } = {}
+  if (userResponse) {
+    response = userResponse.reduce((acc: { [index: string]: string[] }, curr: UserResponseRequestItem) => {
       return {
-        questionId: question?.questionId,
-        responseIds: []
+        ...acc,
+        [curr.questionId || '']: curr.responseIds || []
       }
-    })) as SubmittedQuestionResponse[]
+    }, {})
+  }
+  if (!sectionQuestions) return {}
+  const sectionIds = Object.keys(sectionQuestions)
+  return sectionIds.reduce((acc: FormatedResponse, sectionId: string) => {
+    const responses = sectionQuestions[sectionId].reduce(
+      (allQuestions: { [index: string]: string[] }, question: QuestionResponse) => {
+        const questionId = question.questionId || ''
+        return {
+          ...allQuestions,
+          [questionId]: response[questionId] || []
+        }
+      },
+      {}
+    )
+    return {
+      ...acc,
+      [sectionId]: { ...responses }
+    }
+  }, {})
 }

@@ -7,16 +7,21 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import {
+  GetSchemaYamlQueryParams,
+  GetStaticSchemaYamlQueryParams,
   ResponseJsonNode,
   ResponseYamlSchemaResponse,
   useGetSchemaYaml,
+  useGetStaticSchemaYaml,
   useGetStepYamlSchema
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useToaster } from '@common/exports'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export interface PipelineSchemaData {
   pipelineSchema: ResponseJsonNode | null
@@ -37,15 +42,34 @@ export function PipelineSchemaContextProvider(props: React.PropsWithChildren<unk
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { data: pipelineSchema, error } = useGetSchemaYaml({
+  const { STATIC_YAML_SCHEMA } = useFeatureFlags()
+
+  const commonQueryParams = {
+    entityType: 'Pipelines',
+    projectIdentifier: projectIdentifier,
+    orgIdentifier: orgIdentifier,
+    accountIdentifier: accountId,
+    scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
+  }
+
+  const { data: pipelineSchemaV1, error: schemaError } = useGetSchemaYaml({
     queryParams: {
-      entityType: 'Pipelines',
-      projectIdentifier: projectIdentifier,
-      orgIdentifier: orgIdentifier,
-      accountIdentifier: accountId,
-      scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
-    }
+      ...commonQueryParams
+    } as GetSchemaYamlQueryParams,
+    lazy: STATIC_YAML_SCHEMA
   })
+
+  const { data: pipelineStaticSchema, error: staticSchemaError } = useGetStaticSchemaYaml({
+    queryParams: {
+      ...commonQueryParams
+    } as GetStaticSchemaYamlQueryParams,
+    lazy: !STATIC_YAML_SCHEMA
+  })
+
+  const pipelineSchema = defaultTo(pipelineSchemaV1, pipelineStaticSchema)
+
+  const error = defaultTo(schemaError, staticSchemaError)
+
   const { data: loopingStrategySchema } = useGetStepYamlSchema({
     queryParams: {
       entityType: 'StrategyNode',

@@ -167,7 +167,7 @@ module.exports = {
   },
   assessments: {
     output: 'src/services/assessments/index.tsx',
-    file: 'src/services/assessments/swagger.json',
+    url: 'http://localhost:12050/assessments/api/swagger.json',
     transformer: 'scripts/swagger-transform.js',
     customImport: `import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from "../config";`,
     customProps: {

@@ -406,8 +406,9 @@ describe('Pipeline Execution', () => {
     cy.get("span[data-icon='spinner']").should('be.visible')
 
     cy.get('*[class^="ExecutionHeader"]').within(() => {
-      cy.get('span[icon="stop"]').click()
+      cy.get('[data-icon="Options"]').click()
     })
+    cy.contains('div', 'Abort Pipeline').should('be.visible').click()
     cy.wait(1000)
     cy.contains('span', 'Confirm').click({ force: true })
     cy.wait(1000)

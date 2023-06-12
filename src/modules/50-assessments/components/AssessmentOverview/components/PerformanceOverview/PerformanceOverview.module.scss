@@ -1,0 +1,22 @@
+.performanceOverviewCard {
+  overflow-y: scroll !important;
+  margin-bottom: var(--spacing-medium);
+  .heading {
+    font-weight: 600 !important;
+    line-height: 28px !important;
+    color: var(--black) !important;
+    font-size: var(--font-size-medium) !important;
+    padding-bottom: var(--spacing-small) !important;
+  }
+  .subHeading {
+    font-weight: 400;
+    font-size: var(--font-size-normal) !important;
+    line-height: 24px;
+  }
+  .recommendationsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+}

@@ -30,6 +30,7 @@ export interface FieldMapping {
   defaultValue?: string
   placeholder?: string
   isTemplateSupportEnabled: boolean
+  allowCreatingNewItems?: boolean
 }
 
 export type ServiceInstanceType = FieldMapping
@@ -41,6 +42,7 @@ export interface AssignSectionType {
   hideServiceIdentifier?: boolean
   hideSLIAndHealthScore?: boolean
   serviceInstance?: Array<ServiceInstanceType>
+  updateServiceInstanceBasedOnQuery?: boolean
 }
 
 export interface HealthSourceConfig {

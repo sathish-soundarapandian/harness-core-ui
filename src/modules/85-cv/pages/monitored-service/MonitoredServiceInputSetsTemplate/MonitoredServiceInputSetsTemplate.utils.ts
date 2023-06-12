@@ -141,6 +141,15 @@ export const healthSourceTypeMapping = (type: HealthSourceTypes): ConnectorInfoD
       return Connectors.ELK
     case HealthSourceTypes.CloudWatchMetrics as ConnectorInfoDTO['type']:
       return Connectors.AWS
+    case HealthSourceTypes.SumologicLogs:
+    case HealthSourceTypes.SumologicMetrics:
+      return Connectors.SUMOLOGIC
+    case HealthSourceTypes.SignalFX:
+    case HealthSourceTypes.SplunkSignalFXMetrics:
+      return Connectors.SignalFX
+    case HealthSourceTypes.GrafanaLoki as ConnectorInfoDTO['type']:
+    case HealthSourceTypes.GrafanaLokiLogs as ConnectorInfoDTO['type']:
+      return Connectors.CUSTOM
     default:
       return type as ConnectorInfoDTO['type']
   }

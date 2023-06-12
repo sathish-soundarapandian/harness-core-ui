@@ -118,6 +118,7 @@ jest.mock('services/pipeline-ng', () => ({
   useDeleteInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: deleteInputSet })),
   usePostPipelineExecuteWithInputSetYaml: jest.fn(() => ({})),
   useGetSchemaYaml: jest.fn(() => ({})),
+  useGetStaticSchemaYaml: jest.fn(() => ({})),
   useSoftDeletePipeline: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetInputsetYaml: jest.fn(() => ({ data: null })),
   useYamlDiffForInputSet: jest.fn(() => ({ data: null }))

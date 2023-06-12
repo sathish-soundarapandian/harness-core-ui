@@ -17,8 +17,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useGetTemplateSchema } from 'services/template-ng'
@@ -26,6 +25,7 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/useEnableEditModes'
+import { useGetStaticSchemaYaml } from 'services/pipeline-ng'
 import css from './TemplateYamlView.module.scss'
 
 export const POLL_INTERVAL = 1 /* sec */ * 1000 /* ms */
@@ -57,7 +57,9 @@ const TemplateYamlView: React.FC = () => {
   const userPreferenceEditMode = React.useMemo(() => defaultTo(Boolean(preference === 'true'), false), [preference])
   const { enableEditMode } = useEnableEditModes()
   const { expressions } = useVariablesExpression()
-  const isTemplateSchemaValidationDisabled = useFeatureFlag(FeatureFlag.DISABLE_TEMPLATE_SCHEMA_VALIDATION)
+
+  const { DISABLE_TEMPLATE_SCHEMA_VALIDATION: isTemplateSchemaValidationDisabled, STATIC_YAML_SCHEMA } =
+    useFeatureFlags()
   const expressionRef = React.useRef<string[]>([])
   expressionRef.current = expressions
 
@@ -104,17 +106,31 @@ const TemplateYamlView: React.FC = () => {
     }
   }, [userPreferenceEditMode])
 
-  const { data: templateSchema } = useGetTemplateSchema({
+  const commonQueryParams = {
+    projectIdentifier,
+    orgIdentifier,
+    accountIdentifier: accountId,
+    scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
+  }
+
+  const { data: templateSchemaV1 } = useGetTemplateSchema({
     queryParams: {
       templateEntityType: template.type,
       entityType: template.spec?.type || template.spec?.stageType,
-      projectIdentifier,
-      orgIdentifier,
-      accountIdentifier: accountId,
-      scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
+      ...commonQueryParams
     },
-    lazy: isTemplateSchemaValidationDisabled
+    lazy: isTemplateSchemaValidationDisabled || STATIC_YAML_SCHEMA
   })
+
+  const { data: templateStaticSchema } = useGetStaticSchemaYaml({
+    queryParams: {
+      ...commonQueryParams,
+      entityType: 'Template'
+    },
+    lazy: isTemplateSchemaValidationDisabled || !STATIC_YAML_SCHEMA
+  })
+
+  const templateSchema = defaultTo(templateSchemaV1, templateStaticSchema)
 
   const onEditButtonClick = async () => {
     try {

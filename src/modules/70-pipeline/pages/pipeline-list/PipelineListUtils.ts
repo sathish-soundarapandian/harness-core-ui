@@ -6,6 +6,8 @@
  */
 
 import { Color } from '@harness/design-system'
+import { SelectOption, sortByLastUpdated, sortByName } from '@harness/uicore'
+import { useMemo } from 'react'
 import EmptySearchResults from '@common/images/EmptySearchResults.svg'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import type { PMSPipelineSummaryResponse } from 'services/pipeline-ng'
@@ -14,6 +16,7 @@ import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_PIPELINE_LIST_TABLE_SORT
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useStrings } from 'framework/strings'
 import CFPipelineIllustration from './images/cf-pipeline-illustration.svg'
 import CDPipelineIllustration from './images/cd-pipeline-illustration.svg'
 import CIPipelineIllustration from './images/ci-pipeline-illustration.svg'
@@ -73,4 +76,17 @@ export const getEmptyStateIllustration = (hasFilter: boolean, module?: Module): 
   }
 
   return illustration[module] || CDPipelineIllustration
+}
+
+export const usePipelineListSortOptions = (): SelectOption[] => {
+  const { getString } = useStrings()
+  const options = useMemo(() => {
+    return [
+      ...sortByName,
+      { label: getString('pipeline.lastExecution'), value: 'executionSummaryInfo.lastExecutionTs,DESC' },
+      ...sortByLastUpdated
+    ]
+  }, [getString])
+
+  return options
 }

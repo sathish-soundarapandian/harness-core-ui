@@ -43,3 +43,11 @@ export const mockedStackdriverLogSampleData = [
     spanId: '4f71be0a0da5e27d'
   }
 ]
+
+export const initialValues = {
+  metricName: 'Health source Query',
+  identifier: 'Health source Query',
+  query: 'Test',
+  messageIdentifier: '',
+  serviceInstanceField: ''
+}
