@@ -10,7 +10,8 @@ import WhereAndHowToDepoy from './Steps/WhereAndHowToDepoy'
 import DeploymentSetupSteps from './Steps/DeploymentSetupSteps/DeploymentSetupSteps'
 import WhatToDeployPreview from './Previews/WhatToDeployPreview'
 import { StepsProgress, useOnboardingStore } from './Store/OnboardingStore'
-import { CDOnboardingSteps } from './Constants'
+import { CDOnboardingSteps } from './types'
+import { STEP_VALIDATION_MAP } from './StepValidations'
 import css from '../GetStartedWithCD.module.scss'
 
 export default function CDOnboardingWizardWithCLI(): JSX.Element {
@@ -20,7 +21,6 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
     const updatedStepsProgress = produce(state.stepsProgress, (draft: StepsProgress) => {
       draft[stepId] = { ...state.stepsProgress[stepId], isComplete: true }
     })
-    console.log({ updatedStepsProgress })
     updateOnboardingStore({ stepsProgress: updatedStepsProgress })
   }
 
@@ -30,6 +30,13 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
     })
     updateOnboardingStore({ stepsProgress: updatedStepsProgress })
   }
+
+  const isStepValid = (stepId: string): boolean => {
+    const isValid = STEP_VALIDATION_MAP[stepId](state.stepsProgress[stepId].stepData)
+    console.log(stepId, { isValid })
+    return isValid
+  }
+
   return (
     <Layout.Vertical flex={{ alignItems: 'start' }}>
       <Container className={cx(css.topPage, css.oldGetStarted, css.cdwizardcli)}>
@@ -46,8 +53,7 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
         </Layout.Vertical>
         <Stepper
           id="createSLOTabs"
-          isStepValid={() => true}
-          runValidationOnMount={false}
+          isStepValid={isStepValid}
           onStepChange={onStepChange}
           stepList={[
             {

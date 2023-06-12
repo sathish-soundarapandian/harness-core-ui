@@ -1,23 +1,8 @@
-import type { IconName } from '@harness/icons'
 import BlueGreenVideo from '@pipeline/components/PipelineStudio/ExecutionStrategy/resources/Blue-Green-deployment.mp4'
 import CanaryVideo from '@pipeline/components/PipelineStudio/ExecutionStrategy/resources/Canary-deployment.mp4'
 import RollingUpdateVideo from '@pipeline/components/PipelineStudio/ExecutionStrategy/resources/Rolling-Update-deployment.mp4'
+import type { EntityMap, DeploymentStrategyTypes, DeploymentFlowType } from './types'
 
-export interface EntityType {
-  id: string
-  label: string
-  icon?: IconName
-}
-export interface DeploymentStrategyTypes extends EntityType {
-  subtitle?: string
-  steps?: { title: string; description: string }[]
-}
-export interface EntityMap {
-  [key: string]: EntityType
-}
-export interface DeploymentFlowType extends EntityType {
-  subtitle: string
-}
 export const SERVICE_TYPES: EntityMap = {
   KubernetesService: { id: 'KubernetesService', label: 'Kubernetes Service', icon: 'app-kubernetes' },
   ServerslessFunction: { id: 'ServerlessFunction', label: 'Serverless Function', icon: 'serverless-deploy-step' },
@@ -73,10 +58,4 @@ export const StrategyVideoByType: { [key: string]: string } = {
   BlueGreen: BlueGreenVideo,
   Rolling: RollingUpdateVideo,
   Canary: CanaryVideo
-}
-
-export enum CDOnboardingSteps {
-  WHAT_TO_DEPLOY = 'whatToDeploy',
-  HOW_N_WHERE_TO_DEPLOY = 'howNwhere',
-  DEPLOYMENT_STEPS = 'deploymentSteps'
 }

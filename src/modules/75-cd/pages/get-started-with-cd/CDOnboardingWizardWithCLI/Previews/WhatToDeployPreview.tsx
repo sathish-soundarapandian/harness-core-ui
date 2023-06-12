@@ -4,7 +4,7 @@ import { Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useOnboardingStore } from '../Store/OnboardingStore'
-import { CDOnboardingSteps } from '../Constants'
+import { CDOnboardingSteps } from '../types'
 
 export default function WhatToDeployPreview(): JSX.Element {
   const { getString } = useStrings()

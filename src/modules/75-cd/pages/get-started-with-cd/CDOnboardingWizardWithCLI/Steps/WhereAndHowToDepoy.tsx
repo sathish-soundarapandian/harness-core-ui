@@ -7,7 +7,8 @@ import { useGetDelegatesHeartbeatDetailsV2 } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import useCreateDelegateViaCommandsModal from '@delegates/pages/delegates/delegateCommandLineCreation/components/useCreateDelegateViaCommandsModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { DeploymentFlowType, DEPLOYMENT_FLOW_TYPES, CDOnboardingSteps } from '../Constants'
+import { DEPLOYMENT_FLOW_TYPES } from '../Constants'
+import { CDOnboardingSteps, DeploymentFlowType, WhereAndHowToDeployType } from '../types'
 import css from '../CDOnboardingWizardWithCLI.module.scss'
 import { usePolling } from '@common/hooks/usePolling'
 
@@ -15,12 +16,11 @@ interface WhereAndHowToDepoyProps {
   saveProgress: (stepId: string, data: any) => void
 }
 function WhereAndHowToDepoy({ saveProgress }: WhereAndHowToDepoyProps): JSX.Element {
-  const [selected, setSelected] = React.useState(DEPLOYMENT_FLOW_TYPES.CDPipeline)
-  const [delegateName, setDelegateName] = React.useState('')
+  const [state, setState] = React.useState<WhereAndHowToDeployType>()
 
   const { getString } = useStrings()
   const setType = (selectedType: DeploymentFlowType): void => {
-    setSelected(selectedType)
+    setState(prevState => ({ ...prevState, type: selectedType }))
   }
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -42,10 +42,12 @@ function WhereAndHowToDepoy({ saveProgress }: WhereAndHowToDepoyProps): JSX.Elem
 
   const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal({
     hideDocker: true,
-    onClose: (delegateId?: string) =>
+    onClose: (delegateId?: string) => {
+      setState(prevState => ({ ...prevState, delegateName: delegateId as string }))
       verifyHeartBeat({
         queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier, delegateName: delegateId }
       })
+    }
   })
   const deploymentTypes = React.useMemo((): DeploymentFlowType[] => {
     return Object.values(DEPLOYMENT_FLOW_TYPES).map((deploymentType: DeploymentFlowType) => {
@@ -59,8 +61,8 @@ function WhereAndHowToDepoy({ saveProgress }: WhereAndHowToDepoyProps): JSX.Elem
   }
 
   React.useEffect(() => {
-    saveProgress(CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY, delegateName)
-  }, [delegateName, saveProgress])
+    saveProgress(CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY, state)
+  }, [state, saveProgress])
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'medium' }} margin={{ bottom: 'large' }}>
@@ -79,8 +81,8 @@ function WhereAndHowToDepoy({ saveProgress }: WhereAndHowToDepoyProps): JSX.Elem
             <Layout.Vertical>
               <Text
                 padding={{ bottom: 'small' }}
-                font={{ variation: selected.id === item.id ? FontVariation.FORM_TITLE : FontVariation.BODY }}
-                color={selected.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
+                font={{ variation: state?.type?.id === item.id ? FontVariation.FORM_TITLE : FontVariation.BODY }}
+                color={state?.type?.id === item.id ? Color.PRIMARY_7 : Color.GREY_800}
               >
                 {item.label}
               </Text>
@@ -90,26 +92,30 @@ function WhereAndHowToDepoy({ saveProgress }: WhereAndHowToDepoyProps): JSX.Elem
             </Layout.Vertical>
           </Layout.Vertical>
         )}
-        selected={selected}
+        selected={state?.type}
         onChange={setType}
       />
-      <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
-        {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.title')}
-      </Text>
-      <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
-        {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.description1')}
-      </Text>
-      <Text color={Color.BLACK} margin={{ bottom: 'xxlarge' }}>
-        {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.description2')}
-      </Text>
-      <Button variation={ButtonVariation.PRIMARY} width={'fit-content'} onClick={openDelagateDialog}>
-        {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.installDelegate')}
-      </Button>
-      {loading && (
-        <Layout.Horizontal padding="large">
-          <Icon size={16} name="steps-spinner" color={Color.BLUE_800} style={{ marginRight: '12px' }} />
-          <Text font="small">{getString('delegates.commandLineCreation.clickDoneAndCheckLater')}</Text>
-        </Layout.Horizontal>
+      {state?.type?.id === DEPLOYMENT_FLOW_TYPES.CDPipeline.id && (
+        <Layout.Vertical>
+          <Text color={Color.BLACK} className={css.bold} margin={{ bottom: 'large' }}>
+            {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.title')}
+          </Text>
+          <Text color={Color.BLACK} margin={{ bottom: 'large' }}>
+            {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.description1')}
+          </Text>
+          <Text color={Color.BLACK} margin={{ bottom: 'xxlarge' }}>
+            {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.description2')}
+          </Text>
+          <Button variation={ButtonVariation.PRIMARY} width={'fit-content'} onClick={openDelagateDialog}>
+            {getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.installDelegate')}
+          </Button>
+          {loading && (
+            <Layout.Horizontal padding="large">
+              <Icon size={16} name="steps-spinner" color={Color.BLUE_800} style={{ marginRight: '12px' }} />
+              <Text font="small">{getString('delegates.commandLineCreation.clickDoneAndCheckLater')}</Text>
+            </Layout.Horizontal>
+          )}
+        </Layout.Vertical>
       )}
     </Layout.Vertical>
   )

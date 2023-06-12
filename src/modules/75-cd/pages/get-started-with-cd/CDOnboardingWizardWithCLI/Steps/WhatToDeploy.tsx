@@ -3,13 +3,14 @@ import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { Layout, CardSelect, Text, Icon, IconName } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { SERVICE_TYPES, EntityType, INFRA_TYPES, CDOnboardingSteps } from '../Constants'
+import { SERVICE_TYPES, INFRA_TYPES } from '../Constants'
+import { CDOnboardingSteps, EntityType, WhatToDeployType } from '../types'
 import css from '../CDOnboardingWizardWithCLI.module.scss'
 interface WhatToDeployProps {
   saveProgress: (stepId: string, data: any) => void
 }
 function WhatToDeploy({ saveProgress }: WhatToDeployProps): JSX.Element {
-  const [state, setState] = React.useState<{ svcType?: EntityType; artifactType?: EntityType }>({})
+  const [state, setState] = React.useState<WhatToDeployType>({})
 
   const { getString } = useStrings()
   const setSvc = (selected: EntityType): void => {
