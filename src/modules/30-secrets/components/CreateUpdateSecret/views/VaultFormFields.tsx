@@ -52,7 +52,7 @@ const getReferenceTestData = (data: any) => {
       ...omit(data.secret, ['type']),
       spec: {
         ...pick(data.secret.spec, ['value']),
-        ...(data.secret.spec.additionalMetadata && { additonal_metadata: data.secret.spec.additionalMetadata }),
+        ...(data.secret.spec.additionalMetadata && { additional_metadata: data.secret.spec.additionalMetadata }),
         type: data.secret.type,
         secret_manager_identifier: data.secret.spec.secretManagerIdentifier,
         value_type: data.secret.spec.valueType
