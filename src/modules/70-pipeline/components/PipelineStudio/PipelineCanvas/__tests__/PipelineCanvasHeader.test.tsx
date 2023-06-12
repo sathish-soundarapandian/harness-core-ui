@@ -82,6 +82,8 @@ describe('', () => {
     userEvent.click(screen.getByLabelText('pipeline menu actions'))
     userEvent.click(screen.getByText('pipeline.outOfSyncErrorStrip.reconcile'))
 
+    expect(await screen.findByText('pipeline.outOfSyncErrorStrip.reconcileStarted')).toBeInTheDocument()
+
     expect(await screen.findByText('pipeline.outOfSyncErrorStrip.updatedTemplateInfo')).toBeInTheDocument()
   })
 })
