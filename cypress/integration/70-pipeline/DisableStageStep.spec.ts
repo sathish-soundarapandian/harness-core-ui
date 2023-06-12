@@ -32,11 +32,13 @@ describe('Enable/disable stage/step execution', () => {
   })
   it('disabling stages', () => {
     cy.get('div[data-testid="toggle-stage1"]').click({ force: true })
-    cy.wait(500)
+    cy.get('div[data-testid="toggle-stage1"] input[type="checkbox"]').should('not.be.checked')
+
     cy.get('div[data-testid="toggle-pipeline"]').click({ force: true })
-    cy.wait(500)
+    cy.get('div[data-testid="toggle-pipeline"] input[type="checkbox"]').should('not.be.checked')
+
     cy.get('div[data-testid="toggle-customStage"]').click({ force: true })
-    cy.wait(500)
+    cy.get('div[data-testid="toggle-customStage"] input[type="checkbox"]').should('not.be.checked')
 
     cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/pipelineWithAllStagesAfterSave.json' }).as(
       'pipelineDetailsAPIRouteAfterSave'
@@ -44,8 +46,7 @@ describe('Enable/disable stage/step execution', () => {
     cy.contains('span', 'Save').click()
     cy.wait(500)
     // Verify all details in YAML view
-    cy.get('div[data-name="toggle-option-two"]').click()
-    cy.wait(1000)
+    cy.get('div[data-name="toggle-option-two"]').should('be.visible').click()
     cy.contains('span', 'condition').should('be.visible') // Conditional execution is there
     cy.contains('span', 'false').should('be.visible') // Jexl is made false
   })
