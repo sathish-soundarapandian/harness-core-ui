@@ -72,7 +72,6 @@ const triggerDrawerMap = (
   getString: (key: StringKeys) => string,
   isNewService: boolean,
   allowV2Artifacts: boolean | undefined,
-  isGoogleCloudStorageEnabled: boolean | undefined,
   isBambooArtifactNg: boolean | undefined
 ): AddDrawerMapInterface => ({
   drawerLabel: getString('common.triggersLabel'),
@@ -214,16 +213,12 @@ const triggerDrawerMap = (
               }
             ]
           : []),
-        ...(isGoogleCloudStorageEnabled
-          ? [
-              {
-                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleCloudStorage]),
-                value: ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
-                iconName: ArtifactIconByType.GoogleCloudStorage as IconName,
-                disabled: isNewService
-              }
-            ]
-          : [])
+        {
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleCloudStorage]),
+          value: ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
+          iconName: ArtifactIconByType.GoogleCloudStorage as IconName,
+          disabled: isNewService
+        }
       ]
     },
     {
@@ -264,10 +259,8 @@ export const getCategoryItems = (
   getString: (key: StringKeys) => string,
   isNewService: boolean,
   allowV2Artifacts: boolean | undefined,
-  isGoogleCloudStorageEnabled: boolean | undefined,
   isBambooArtifactNg: boolean | undefined
-): AddDrawerMapInterface =>
-  triggerDrawerMap(getString, isNewService, allowV2Artifacts, isGoogleCloudStorageEnabled, isBambooArtifactNg)
+): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService, allowV2Artifacts, isBambooArtifactNg)
 
 export interface ItemInterface {
   itemLabel: string
