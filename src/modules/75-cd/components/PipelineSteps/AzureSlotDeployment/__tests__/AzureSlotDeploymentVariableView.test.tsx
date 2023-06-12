@@ -12,6 +12,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { TestWrapper } from '@common/utils/testUtils'
 import type { AzureSlotDeploymentVariableStepProps } from '../AzureSlotDeploymentInterface.types'
 import { AzureSlotDeploymentVariableStep } from '../AzureSlotDeploymentVariableView'
+import { selectedStageMock } from './mock'
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const props = {
@@ -51,7 +52,8 @@ const props = {
       }
     }
   },
-  stepType: StepType.AzureSlotDeployment
+  stepType: StepType.AzureSlotDeployment,
+  selectedStage: selectedStageMock
 } as AzureSlotDeploymentVariableStepProps
 
 describe('Azure Slot Deployment Variable view ', () => {
@@ -70,6 +72,7 @@ describe('Azure Slot Deployment Variable view ', () => {
         }}
         stepType={StepType.AzureSlotDeployment}
         onUpdate={() => jest.fn()}
+        selectedStage={selectedStageMock}
         {...{
           stageIdentifier: 'qaStage',
           metadataMap: props.metadataMap,
@@ -95,6 +98,7 @@ describe('Azure Slot Deployment Variable view ', () => {
               deploymentSlot: 'deploymentSlot'
             }
           }}
+          selectedStage={selectedStageMock}
           stepType={StepType.AzureSlotDeployment}
           onUpdate={() => jest.fn()}
           {...{

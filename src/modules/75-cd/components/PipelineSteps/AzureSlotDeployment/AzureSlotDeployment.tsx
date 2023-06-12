@@ -114,7 +114,6 @@ export class AzureSlotDeployment extends PipelineStep<AzureSlotDeploymentStepInf
       path,
       customStepProps
     } = props
-    console.log('PROPS', props)
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <AzureSlotDeploymentInputSet

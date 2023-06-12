@@ -12,6 +12,7 @@ import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@ha
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { selectedStageMock } from './mock'
 
 import AzureSlotDeploymentInputSet from '../AzureSlotDeploymentInputSet'
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -46,6 +47,7 @@ describe('Test Azure Slot Deployment input set', () => {
                 template
               }}
               path="test"
+              selectedStage={selectedStageMock}
               allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
             />
           </FormikForm>
