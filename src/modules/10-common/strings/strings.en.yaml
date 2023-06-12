@@ -1532,3 +1532,7 @@ previousActionInProgress: Please wait, your previous action is being processed.
 learnMoreAboutGCR: Learn more about GCR with Harness
 learnMoreAboutECR: Learn more about ECR with Harness
 delegateExpressionList: Delegate Selection Expression List
+stop: Stop
+isHelpful: Helpful?
+delay15Sec: This can take up to 15 seconds.
+generatedAt: Generated at

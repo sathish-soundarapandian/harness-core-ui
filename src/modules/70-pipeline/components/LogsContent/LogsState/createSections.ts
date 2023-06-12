@@ -35,7 +35,7 @@ function parseToTime(p: unknown): number | undefined {
 
 const NON_MUTATE_STATES: UnitLoadingStatus[] = ['LOADING', 'QUEUED']
 
-function getTaskFromExecutableResponse(node: ExecutionNode): any {
+export function getTaskFromExecutableResponse(node: ExecutionNode): any {
   /**
    * task object must always be picked from the first entry
    * in `executableResponses`

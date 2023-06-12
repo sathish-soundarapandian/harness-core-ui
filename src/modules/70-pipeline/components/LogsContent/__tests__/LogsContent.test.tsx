@@ -7,10 +7,13 @@
 
 /* eslint-disable react/display-name */
 import React from 'react'
-import { render, waitFor, fireEvent } from '@testing-library/react'
+import { render, waitFor, fireEvent, act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import type { GraphLayoutNode } from 'services/pipeline-ng'
+import * as logsService from 'services/logs'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ExecutionContext, ExecutionContextParams } from '@pipeline/context/ExecutionContext'
+import { nodeLayoutForCIStage } from '@pipeline/utils/__tests__/mockJson/mockExecutionContext'
 import { LogsContent, DefaultConsoleViewStepDetails } from '../LogsContent'
 import { useLogsContent } from '../useLogsContent'
 import { getDefaultReducerState } from '../LogsState/utils'
@@ -58,9 +61,12 @@ const execContextValues: ExecutionContextParams = {
   addNewNodeToMap: jest.fn()
 }
 
+jest.mock('moment', () => () => ({ format: () => 'DUMMY_DATE' }))
+
 jest.mock('services/logs', () => ({
   useGetToken: jest.fn(() => ({})),
-  logBlobPromise: jest.fn(() => Promise.resolve({}))
+  logBlobPromise: jest.fn(() => Promise.resolve({})),
+  rcaPromise: jest.fn().mockImplementation(() => Promise.resolve({ rca: '```sample markdown text```' }))
 }))
 jest.mock('../useLogsContent.tsx', () => ({
   useLogsContent: jest.fn(() => ({
@@ -260,6 +266,173 @@ describe('<LogsContent /> tests', () => {
 
       expect(container).toMatchSnapshot()
       expect(getByText('Grouped logs')).toBeTruthy()
+    })
+  })
+
+  describe('Harness Copilot integration testing', () => {
+    const commonArgs = {
+      ...execContextValues,
+      selectedStepId: 'SELECTED_STEP',
+      selectedStageId: 'SELECTED_CI_STAGE',
+      allNodeMap: { SELECTED_STEP: { failureInfo: { responseMessages } } } as any,
+      pipelineStagesMap: new Map<string, GraphLayoutNode>([['SELECTED_CI_STAGE', nodeLayoutForCIStage]]),
+      logsToken: 'x-harness-token'
+    }
+    test('Harness Copilot integration', async () => {
+      const spy = jest.spyOn(logsService, 'rcaPromise')
+      const { getByText } = render(
+        <TestWrapper>
+          <ExecutionContext.Provider value={commonArgs}>
+            <LogsContent mode="console-view" />
+          </ExecutionContext.Provider>
+        </TestWrapper>
+      )
+      // Verify footer is visible
+      expect(getByText('pipeline.copilot.askAICopilot')).toBeInTheDocument()
+
+      act(() => {
+        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+      })
+
+      // Should update status when clicked on Ask AI
+      await waitFor(() => {
+        expect(getByText('pipeline.copilot.analyzing')).toBeInTheDocument()
+      })
+
+      expect(spy).toBeCalled()
+    })
+
+    test('Validate no api call is made if remediations are already fetched for an execution', async () => {
+      const { getByText } = render(
+        <TestWrapper>
+          <ExecutionContext.Provider
+            value={{
+              ...commonArgs,
+              openAIRemediations: {
+                lastGeneratedAt: 12345678000,
+                remediations: [{ rca: '```debug failing issue```', detailed_rca: '' }]
+              }
+            }}
+          >
+            <LogsContent mode="console-view" />
+          </ExecutionContext.Provider>
+        </TestWrapper>
+      )
+      // Verify Ask AI button should not be visible as remediations are already available in execution context
+      expect(screen.queryByText('pipeline.copilot.askAICopilot')).not.toBeInTheDocument()
+
+      expect(getByText('pipeline.copilot.foundPossibleRemediations')).toBeInTheDocument()
+    })
+
+    test('Test success scenario', async () => {
+      const { getByText } = render(
+        <TestWrapper>
+          <ExecutionContext.Provider value={commonArgs}>
+            <LogsContent mode="console-view" />
+          </ExecutionContext.Provider>
+        </TestWrapper>
+      )
+
+      // Verify footer is visible
+      expect(getByText('pipeline.copilot.askAICopilot')).toBeInTheDocument()
+
+      act(() => {
+        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+      })
+
+      // Should update status when clicked on Ask AI
+      await waitFor(() => {
+        expect(getByText('pipeline.copilot.foundPossibleRemediations')).toBeInTheDocument()
+      })
+
+      act(() => {
+        fireEvent.click(getByText('common.viewText'))
+      })
+
+      // wait for the side panel to be visible
+      await waitFor(() => {
+        expect(getByText('pipeline.copilot.possibleSolutions')).toBeInTheDocument()
+      })
+
+      await waitFor(() => expect(document.body.querySelector(`.bp3-drawer`)).not.toBeNull())
+      const drawerArr = document.getElementsByClassName('bp3-drawer')
+      expect(drawerArr).toHaveLength(1)
+
+      // drawer close takes user back to button view
+      const closeDrawerButton = screen.getByTestId('close-drawer-button')
+      userEvent.click(closeDrawerButton)
+
+      await waitFor(() => expect(screen.queryByText('pipeline.copilot.possibleSolutions')).not.toBeInTheDocument())
+
+      await waitFor(() => {
+        expect(getByText('pipeline.copilot.foundPossibleRemediations')).toBeInTheDocument()
+      })
+    })
+
+    test('Abort options should be visible if remediations take too long to fetch', async () => {
+      const { getByText } = render(
+        <TestWrapper>
+          <ExecutionContext.Provider value={commonArgs}>
+            <LogsContent mode="console-view" />
+          </ExecutionContext.Provider>
+        </TestWrapper>
+      )
+
+      act(() => {
+        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+      })
+
+      // Should update status when clicked on Ask AI
+      await waitFor(() => {
+        expect(getByText('pipeline.copilot.analyzing')).toBeInTheDocument()
+      })
+
+      const stopBtn = document.getElementsByClassName('statusActionBtn')?.[0]
+
+      expect(stopBtn).toBeInTheDocument()
+    })
+
+    test('Test failure scenario when api errors out', async () => {
+      jest.spyOn(logsService, 'rcaPromise').mockReturnValue({
+        error: {
+          message: 'error',
+          status: 400
+        }
+      } as any)
+
+      const { getByText } = render(
+        <TestWrapper>
+          <ExecutionContext.Provider value={commonArgs}>
+            <LogsContent mode="console-view" />
+          </ExecutionContext.Provider>
+        </TestWrapper>
+      )
+
+      act(() => {
+        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+      })
+
+      await waitFor(() => {
+        expect(getByText('retry')).toBeInTheDocument()
+      })
+    })
+
+    test('Test failure scenario when no logsToken is available', async () => {
+      const { getByText } = render(
+        <TestWrapper>
+          <ExecutionContext.Provider value={{ ...commonArgs, logsToken: '' }}>
+            <LogsContent mode="console-view" />
+          </ExecutionContext.Provider>
+        </TestWrapper>
+      )
+
+      act(() => {
+        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+      })
+
+      await waitFor(() => {
+        expect(getByText('retry')).toBeInTheDocument()
+      })
     })
   })
 })

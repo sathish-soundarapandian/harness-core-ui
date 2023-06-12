@@ -17,6 +17,8 @@ import { useModuleInfo } from '@common/hooks/useModuleInfo'
 
 const PR_ENV_HOST_NAME = 'pr.harness.io'
 
+const QA_ENV_HOST_NAME = 'qa.harness.io'
+
 interface SetPageNumberProps {
   setPage: (value: number) => void
   pageItemsCount?: number
@@ -115,6 +117,11 @@ export const addHotJarSuppressionAttribute = (): { [HOTJAR_SUPPRESSION_ATTR]: bo
 // Utility to check if environment is a PR environment
 export const isPR = (): boolean => {
   return location.hostname?.includes(PR_ENV_HOST_NAME)
+}
+
+// Utility to check if environment is QA environment
+export const isQA = (): boolean => {
+  return location.hostname === QA_ENV_HOST_NAME
 }
 
 // Utility to check if environment is a local develop environment

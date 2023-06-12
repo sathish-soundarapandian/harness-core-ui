@@ -9,7 +9,7 @@ import React from 'react'
 import { useLocation } from 'react-router-dom'
 import cx from 'classnames'
 import qs from 'qs'
-
+import { Container } from '@harness/uicore'
 import type { ResponseMessage } from 'services/cd-ng'
 import type { ExecutionGraph, ExecutionNode } from 'services/pipeline-ng'
 import { String } from 'framework/strings'
@@ -18,7 +18,9 @@ import { LogsContentWithErrorBoundary as LogsContent } from '@pipeline/component
 import { isExecutionSkipped, isExecutionCompletedWithBadState } from '@pipeline/utils/statusHelpers'
 import { StepDetails, StepLabels } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
 import { useQueryParams } from '@common/hooks'
-import type { ExecutionQueryParams } from '@pipeline/utils/executionUtils'
+import { ExecutionQueryParams, showHarnessCoPilot } from '@pipeline/utils/executionUtils'
+import HarnessCopilot from '@pipeline/components/HarnessCopilot/HarnessCopilot'
+import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 
 import css from './StepDetailsTab.module.scss'
 
@@ -32,6 +34,7 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
   const { step, executionMetadata, labels } = props
   const { pathname } = useLocation()
   const queryParams = useQueryParams<ExecutionQueryParams>()
+  const { pipelineStagesMap, selectedStageId } = useExecutionContext()
 
   const logUrl = `${pathname}?${qs.stringify({ ...queryParams, view: 'log' })}`
 
@@ -48,6 +51,17 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
           <String className={css.title} stringID="errorSummaryText" tagName="div" />
           <p>{errorMessage}</p>
         </div>
+      ) : null}
+      {showHarnessCoPilot({
+        pipelineStagesMap,
+        selectedStageId
+      }) ? (
+        <Container
+          flex={{ justifyContent: 'flex-start' }}
+          padding={{ top: 'large', bottom: 'large', right: 'bottom', left: 'medium' }}
+        >
+          <HarnessCopilot mode="step-details" />
+        </Container>
       ) : null}
       <StepDetails step={step} labels={labels} executionMetadata={executionMetadata} />
       <LogsContent mode="step-details" toConsoleView={logUrl} />
