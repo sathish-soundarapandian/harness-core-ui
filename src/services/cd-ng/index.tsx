@@ -2967,7 +2967,6 @@ export interface ConnectorResponse {
   gitDetails?: EntityGitDetails
   governanceMetadata?: GovernanceMetadata
   harnessManaged?: boolean
-  isFavorite?: boolean
   lastModifiedAt?: number
   status?: ConnectorConnectivityDetails
 }
@@ -19847,9 +19846,9 @@ export type ListTagsForAMIArtifactBodyRequestBody = string
 
 export type UpdateFreezeStatusBodyRequestBody = string[]
 
-export type UpdateSamlMetaDataForSamlSSOIdRequestBody = void
-
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
+
+export type UploadSamlMetaDataRequestBody = void
 
 export interface GetAccountSettingQueryParams {
   accountIdentifier: string
@@ -30549,13 +30548,7 @@ export interface UploadSamlMetaDataQueryParams {
 }
 
 export type UploadSamlMetaDataProps = Omit<
-  MutateProps<
-    RestResponseSSOConfig,
-    unknown,
-    UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
-    void
-  >,
+  MutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -30563,13 +30556,7 @@ export type UploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
-  <Mutate<
-    RestResponseSSOConfig,
-    unknown,
-    UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
-    void
-  >
+  <Mutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>
     verb="POST"
     path={`/authentication-settings/saml-metadata-upload`}
     base={getConfig('ng/api')}
@@ -30578,13 +30565,7 @@ export const UploadSamlMetaData = (props: UploadSamlMetaDataProps) => (
 )
 
 export type UseUploadSamlMetaDataProps = Omit<
-  UseMutateProps<
-    RestResponseSSOConfig,
-    unknown,
-    UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
-    void
-  >,
+  UseMutateProps<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -30592,13 +30573,11 @@ export type UseUploadSamlMetaDataProps = Omit<
  * Create SAML Config
  */
 export const useUploadSamlMetaData = (props: UseUploadSamlMetaDataProps) =>
-  useMutate<
-    RestResponseSSOConfig,
-    unknown,
-    UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
-    void
-  >('POST', `/authentication-settings/saml-metadata-upload`, { base: getConfig('ng/api'), ...props })
+  useMutate<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
+    'POST',
+    `/authentication-settings/saml-metadata-upload`,
+    { base: getConfig('ng/api'), ...props }
+  )
 
 /**
  * Create SAML Config
@@ -30608,18 +30587,18 @@ export const uploadSamlMetaDataPromise = (
     RestResponseSSOConfig,
     unknown,
     UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<
-    RestResponseSSOConfig,
-    unknown,
-    UploadSamlMetaDataQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload`, props, signal)
+  mutateUsingFetch<RestResponseSSOConfig, unknown, UploadSamlMetaDataQueryParams, UploadSamlMetaDataRequestBody, void>(
+    'POST',
+    getConfig('ng/api'),
+    `/authentication-settings/saml-metadata-upload`,
+    props,
+    signal
+  )
 
 export interface UpdateSamlMetaDataQueryParams {
   accountId: string
@@ -30685,7 +30664,7 @@ export type UpdateSamlMetaDataForSamlSSOIdProps = Omit<
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >,
   'path' | 'verb'
@@ -30700,7 +30679,7 @@ export const UpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UpdateSa
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >
     verb="PUT"
@@ -30715,7 +30694,7 @@ export type UseUpdateSamlMetaDataForSamlSSOIdProps = Omit<
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >,
   'path' | 'verb'
@@ -30730,7 +30709,7 @@ export const useUpdateSamlMetaDataForSamlSSOId = ({ samlSSOId, ...props }: UseUp
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >(
     'PUT',
@@ -30750,7 +30729,7 @@ export const updateSamlMetaDataForSamlSSOIdPromise = (
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   > & { samlSSOId: string },
   signal?: RequestInit['signal']
@@ -30759,7 +30738,7 @@ export const updateSamlMetaDataForSamlSSOIdPromise = (
     RestResponseSSOConfig,
     unknown,
     UpdateSamlMetaDataForSamlSSOIdQueryParams,
-    UpdateSamlMetaDataForSamlSSOIdRequestBody,
+    UploadSamlMetaDataRequestBody,
     UpdateSamlMetaDataForSamlSSOIdPathParams
   >('PUT', getConfig('ng/api'), `/authentication-settings/saml-metadata-upload/${samlSSOId}`, props, signal)
 
@@ -34177,7 +34156,6 @@ export interface GetConnectorListV2QueryParams {
   repoName?: string
   getDistinctFromBranches?: boolean
   version?: string
-  isFavorite?: boolean
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]

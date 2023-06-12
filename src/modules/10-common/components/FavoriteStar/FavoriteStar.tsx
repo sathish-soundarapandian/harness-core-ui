@@ -15,13 +15,11 @@ import {
 import React, { useState } from 'react'
 import { useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import classNames from 'classnames'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { Module } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
 import type { ResourceScope } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './FavoriteStar.module.scss'
 
 interface FavoriteStarProps {
@@ -30,15 +28,12 @@ interface FavoriteStarProps {
   module?: Module
   isFavorite?: boolean
   scope?: ResourceScope
-  activeClassName?: string
-  className?: string
 }
 
 const FavoriteStar: React.FC<FavoriteStarProps> = props => {
   const [isFavorite, setIsFavorite] = useState<boolean>(Boolean(props.isFavorite))
   const [apiInProgress, setAPIInProgress] = useState<boolean>(false)
   const { currentUserInfo } = useAppStore()
-  const { PL_FAVORITES } = useFeatureFlags()
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { accountId: accountIdFromParams } = useParams<AccountPathProps>()
@@ -113,20 +108,14 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
     }
   }
 
-  const { activeClassName = '' } = props
-
-  if (!PL_FAVORITES) {
-    return null
-  }
-
   return (
     <Icon
       name={isFavorite ? 'star' : 'star-empty'}
       color={isFavorite ? Color.YELLOW_900 : Color.GREY_400}
       size={24}
       onClick={handleClick}
-      className={classNames(css.star, props.className, { [activeClassName]: isFavorite })}
-      padding="xsmall"
+      className={css.star}
+      padding="small"
     />
   )
 }

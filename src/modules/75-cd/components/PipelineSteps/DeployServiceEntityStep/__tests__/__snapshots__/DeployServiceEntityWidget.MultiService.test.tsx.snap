@@ -193,7 +193,7 @@ exports[`DeployServiceEntityWidget - multi services tests user can delete select
                 style="flex-grow: 1; width: 300px;"
               >
                 <label
-                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
+                  class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
                 >
                   <input
                     checked=""

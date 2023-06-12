@@ -679,7 +679,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs i
                       style="overflow: auto; height: 300px;"
                     >
                       <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox selected Checkbox--checked StyledProps--main"
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox selected StyledProps--main"
                       >
                         <input
                           type="checkbox"
@@ -698,7 +698,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when error occurs i
                       class="StyledProps--font StyledProps--main"
                     >
                       <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                       >
                         <input
                           checked=""
@@ -1214,7 +1214,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when multiple versi
                       class="StyledProps--font StyledProps--main"
                     >
                       <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                       >
                         <input
                           checked=""
@@ -1585,7 +1585,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when status is fail
                       style="overflow: auto; height: 300px;"
                     >
                       <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox selected Checkbox--checked StyledProps--main"
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox selected StyledProps--main"
                       >
                         <input
                           type="checkbox"
@@ -1604,7 +1604,7 @@ exports[`<DeleteTemplateModal /> tests should match snapshot when status is fail
                       class="StyledProps--font StyledProps--main"
                     >
                       <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                       >
                         <input
                           checked=""

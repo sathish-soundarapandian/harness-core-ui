@@ -3429,7 +3429,7 @@ exports[`Test AppResizeStep should submit with valid paylod for instace type cou
               style="flex-grow: 1;"
             >
               <label
-                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
               >
                 <input
                   checked=""
