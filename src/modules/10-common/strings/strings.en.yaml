@@ -1531,3 +1531,4 @@ errorUnFavorite: Oops! Something went wrong while removing this entity from your
 previousActionInProgress: Please wait, your previous action is being processed.
 learnMoreAboutGCR: Learn more about GCR with Harness
 learnMoreAboutECR: Learn more about ECR with Harness
+delegateExpressionList: Delegate Selection Expression List

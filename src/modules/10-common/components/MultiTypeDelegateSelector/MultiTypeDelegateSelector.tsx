@@ -13,9 +13,13 @@ import {
   MultiTypeInputType,
   HarnessDocTooltip,
   Container,
-  AllowedTypes
+  AllowedTypes,
+  ExpressionInput,
+  EXPRESSION_INPUT_PLACEHOLDER,
+  Radio,
+  Layout
 } from '@harness/uicore'
-import { get, compact } from 'lodash-es'
+import { get, compact, isArray } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { errorCheck } from '@common/utils/formikHelpers'
@@ -40,6 +44,77 @@ export interface MultiTypeDelegateSelectorProps extends IFormGroupProps {
 export interface ConnectedMultiTypeDelegateSelectorProps extends MultiTypeDelegateSelectorProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formik: FormikContextType<any>
+}
+
+interface ExpressionFieldProps {
+  name: string
+  value: string[] | string
+  disabled?: boolean
+  expressions?: string[]
+  formik?: FormikContextType<any>
+}
+
+enum ExpressionView {
+  List = 'List',
+  Single = 'Single'
+}
+
+const ExpressionField = (props: ExpressionFieldProps): JSX.Element => {
+  const { name, formik, disabled, value, expressions } = props
+  const { getString } = useStrings()
+  const [expressionView, setExpressionView] = React.useState<ExpressionView>(
+    !isArray(value) ? ExpressionView.List : ExpressionView.Single
+  )
+
+  return (
+    <>
+      <Layout.Horizontal className={css.radioStyle} spacing="medium">
+        <Radio
+          label={getString('delegate.DelegateSelector')}
+          value={ExpressionView.Single}
+          disabled={disabled}
+          checked={expressionView === ExpressionView.Single}
+          onClick={val => {
+            setExpressionView(val.currentTarget.value as ExpressionView)
+            // converting single value to array
+            !isArray(value) && formik?.setFieldValue(name, [value])
+          }}
+          width={140}
+        />
+        <Container flex={{ alignItems: 'center' }}>
+          <Radio
+            label={getString('common.delegateExpressionList')}
+            value={ExpressionView.List}
+            checked={expressionView === ExpressionView.List}
+            disabled={disabled}
+            onClick={val => {
+              setExpressionView(val.currentTarget.value as ExpressionView)
+              //if single element in array then convert it to text field value on radio switch
+              if (isArray(value) && value.length === 1) {
+                formik?.setFieldValue(name, value[0])
+              }
+            }}
+          />
+          <HarnessDocTooltip tooltipId={'delegateExpressionList'} useStandAlone />
+        </Container>
+      </Layout.Horizontal>
+      {expressionView === ExpressionView.List ? (
+        <ExpressionInput
+          name={name}
+          value={value as string}
+          disabled={disabled}
+          inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+          items={expressions}
+          onChange={val =>
+            /* istanbul ignore next */
+            formik?.setFieldValue(name, val)
+          }
+        />
+      ) : (
+        <ExpressionsListInput name={name} value={value as string[]} readOnly={disabled} expressions={expressions} />
+      )}
+    </>
+  )
 }
 
 export function MultiTypeDelegateSelector(props: ConnectedMultiTypeDelegateSelectorProps): React.ReactElement {
@@ -85,7 +160,7 @@ export function MultiTypeDelegateSelector(props: ConnectedMultiTypeDelegateSelec
           supportListOfExpressions={true}
           disableMultiSelectBtn={disabled}
           expressionRender={() => (
-            <ExpressionsListInput name={name} value={value} readOnly={disabled} expressions={expressions} />
+            <ExpressionField name={name} value={value} disabled={disabled} formik={formik} expressions={expressions} />
           )}
           style={{ flexGrow: 1, marginBottom: 0 }}
         >

@@ -243,6 +243,7 @@ export interface StringsMap {
   'common.defaultExperience': string
   'common.defaultSettings': string
   'common.defineDelegateSelector': string
+  'common.delegateExpressionList': string
   'common.delegateFailText1Part1': string
   'common.delegateFailText2': string
   'common.delegateFailed': string
