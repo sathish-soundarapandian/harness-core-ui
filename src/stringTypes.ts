@@ -3734,6 +3734,7 @@ export interface StringsMap {
   'assessments.softwareDeliveryMaturityModel': string
   'assessments.stronglyAgree': string
   'assessments.stronglyDisagree': string
+  'assessments.toViewResults': string
   'assessments.typicalComparison': string
   'assessments.viewInDetail': string
   'assessments.viewResults': string

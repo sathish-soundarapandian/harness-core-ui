@@ -1,4 +1,9 @@
 .inviteModalFieldInput {
-  width: 513px !important;
+  width: 100% !important;
   margin-top: var(--spacing-small) !important;
+}
+.inviteModalContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-large);
 }

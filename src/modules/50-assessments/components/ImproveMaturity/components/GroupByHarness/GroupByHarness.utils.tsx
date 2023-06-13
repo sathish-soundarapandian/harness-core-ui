@@ -1,10 +1,12 @@
-import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Container, Icon, Layout, Text } from '@harness/uicore'
 import type { CellProps, Renderer, UseExpandedRowProps } from 'react-table'
 import { Color, FontVariation } from '@harness/design-system'
 import React from 'react'
 import { killEvent } from '@common/utils/eventUtils'
 import type { QuestionMaturity } from 'services/assessments'
 import { StringKeys, useStrings } from 'framework/strings'
+import { getModuleIcon } from '@common/utils/utils'
+import { Module, moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import css from './GroupByHarness.module.scss'
 
 export interface ModuleCount {
@@ -30,7 +32,7 @@ export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<ModuleCoun
   row
 }) => {
   const { getString } = useStrings()
-  const { module } = row.original
+  const module = row.original.module.toLowerCase()
   return (
     <Layout.Horizontal onClick={killEvent}>
       <Button
@@ -41,8 +43,9 @@ export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<ModuleCoun
         className={css.toggleAccordion}
         margin={{ top: 'xsmall' }}
       />
+      <Icon name={getModuleIcon(moduleToModuleNameMapping[module as Module])} size={20} className={css.alignCenter} />
       <Text className={css.toggleText} font={{ variation: FontVariation.FORM_TITLE }}>
-        {getString(`assessments.modules.${module.toLowerCase()}` as StringKeys)}
+        {getString(`assessments.modules.${module}` as StringKeys)}
       </Text>
     </Layout.Horizontal>
   )

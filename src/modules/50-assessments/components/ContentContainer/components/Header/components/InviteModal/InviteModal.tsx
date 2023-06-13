@@ -2,12 +2,15 @@ import React, { useCallback, useState } from 'react'
 import {
   Button,
   ButtonVariation,
+  Container,
   Layout,
   ModalDialog,
   MultiSelect,
   MultiSelectOption,
   useToaster
 } from '@harness/uicore'
+import { TextArea } from '@blueprintjs/core'
+import { capitalize } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@auth-settings/utils'
 import { useSendAssessmentInvite } from 'services/assessments'
@@ -26,6 +29,7 @@ const InviteModal = (props: InviteModalProps): JSX.Element => {
   const { showSuccess, showError } = useToaster()
   const { mutate: saveAssessment } = useSendAssessmentInvite({})
   const [invitedUsers, setInvitedUsers] = useState<MultiSelectOption[]>([])
+  const [emailContent, setEmailContent] = useState<string>()
   const handleInviteAssessmentModalClose = useCallback(() => setOpen(false), [])
 
   const handleSendInvite = useCallback(async () => {
@@ -51,9 +55,9 @@ const InviteModal = (props: InviteModalProps): JSX.Element => {
       {...DialogProps}
       isOpen={isOpen}
       onClose={handleInviteAssessmentModalClose}
-      title={getString('assessments.inviteToTakeAssessment')}
+      title={capitalize(`${getString('common.invite')} ${getString('assessments.inviteToTakeAssessment')}`)}
     >
-      <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ bottom: 'xlarge' }}>
+      <Container className={css.inviteModalContainer}>
         <MultiSelect
           value={invitedUsers}
           items={invitedUsers}
@@ -63,15 +67,33 @@ const InviteModal = (props: InviteModalProps): JSX.Element => {
             setInvitedUsers(items)
           }}
         />
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          id="invite-button"
-          data-testid="invite-button"
-          text={getString('assessments.sendInvite')}
-          onClick={handleSendInvite}
-          margin={{ right: 'small' }}
+        <TextArea
+          placeholder={'Need to decide'}
+          maxLength={2048}
+          value={emailContent}
+          onChange={e => {
+            setEmailContent((e.currentTarget as HTMLTextAreaElement).value.trim())
+          }}
         />
-      </Layout.Horizontal>
+        <Layout.Horizontal>
+          <Button
+            variation={ButtonVariation.PRIMARY}
+            id="invite-button"
+            data-testid="invite-button"
+            text={getString('assessments.sendInvite')}
+            onClick={handleSendInvite}
+            margin={{ right: 'small' }}
+            disabled={invitedUsers.length === 0}
+          />
+          <Button
+            variation={ButtonVariation.TERTIARY}
+            id="cancel-invite-button"
+            data-testid="cancel-invite-button"
+            text={getString('cancel')}
+            onClick={handleInviteAssessmentModalClose}
+          />
+        </Layout.Horizontal>
+      </Container>
     </ModalDialog>
   )
 }

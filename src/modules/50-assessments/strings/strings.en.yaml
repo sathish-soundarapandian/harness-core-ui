@@ -22,9 +22,10 @@ companyOverAllScore: Company Overall score
 maturityLevelDefinition: Maturity level is a way to measure where your team, software or projects stand against rest of others.
 yourTopOpportunities: Your top opportunities
 downloadPDFReport: Download a PDF Report
-enterEmailAddress: 'Enter email addresses ...'
+enterEmailAddress: Enter email addresses
 downloadPDF: Download PDF
-shareResults: To view results
+shareResults: Share Results
+toViewResults: To view results
 copyLink: Copy Link
 sendInvite: Send Invite
 invitationSent: Assessment invitation sent to the invited users

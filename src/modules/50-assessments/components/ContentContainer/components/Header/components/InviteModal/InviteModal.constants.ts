@@ -7,5 +7,5 @@ export const DialogProps: IDialogProps = {
   canEscapeKeyClose: true,
   canOutsideClickClose: true,
   enforceFocus: false,
-  style: { width: 800, height: 250, borderLeft: 0, paddingBottom: 0, position: 'relative', overflowY: 'scroll' }
+  style: { width: 700, height: 450, borderLeft: 0, paddingBottom: 0, position: 'relative', overflowY: 'scroll' }
 }

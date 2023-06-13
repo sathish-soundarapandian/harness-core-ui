@@ -37,13 +37,10 @@ const Header = (props: HeaderProps): JSX.Element => {
   const getPopoverContent = (): JSX.Element => {
     return (
       <Menu>
-        <Menu.Item
-          text={dropdownItemRenderer('shareResults')}
-          onClick={() => setIsShareResultsModalOpen(!isShareResultsModalOpen)}
-        />
+        <Menu.Item text={dropdownItemRenderer('toViewResults')} onClick={() => setIsShareResultsModalOpen(true)} />
         <Menu.Item
           text={dropdownItemRenderer('inviteToTakeAssessment')}
-          onClick={() => setIsInviteAssessmentModalOpen(!isShareResultsModalOpen)}
+          onClick={() => setIsInviteAssessmentModalOpen(true)}
         />
       </Menu>
     )

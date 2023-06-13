@@ -14,21 +14,24 @@ export const RenderHeaderCheckbox = (
   title: string,
   description: string,
   groupSelection?: (value: boolean, sectionId?: string) => void,
-  sectionId?: string
+  sectionId?: string,
+  harnessComponent?: string
 ): Renderer<HeaderProps<QuestionMaturity>> => {
   const header: Renderer<HeaderProps<QuestionMaturity>> = () => {
     return (
       <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
-        <Checkbox
-          checked={selectionState === 'CHECKED'}
-          indeterminate={selectionState === 'INDETERMINATE'}
-          className={css.noPadding}
-          onChange={() => groupSelection && groupSelection(selectionState !== 'CHECKED', sectionId)}
-          data-testid="header-checkbox"
-        />
+        {!harnessComponent && (
+          <Checkbox
+            checked={selectionState === 'CHECKED'}
+            indeterminate={selectionState === 'INDETERMINATE'}
+            className={css.noPadding}
+            onChange={() => groupSelection && groupSelection(selectionState !== 'CHECKED', sectionId)}
+            data-testid="header-checkbox"
+          />
+        )}
         <Container className={css.recommendationContainer} padding={{ left: 'medium' }}>
           <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{title}</Text>
-          <Text font="small">{description}</Text>
+          {!harnessComponent && <Text font="small">{description}</Text>}
         </Container>
       </Container>
     )
@@ -48,26 +51,29 @@ export const RenderHeader = (title: string): Renderer<HeaderProps<QuestionMaturi
 }
 
 export const CheckboxCell = (
-  onSelectionChange?: (questionId: string, sectionId: string, value: boolean) => void
+  onSelectionChange?: (questionId: string, sectionId: string, value: boolean) => void,
+  harnessComponent?: string
 ): Renderer<CellProps<QuestionMaturity>> => {
   const cell: Renderer<CellProps<QuestionMaturity>> = ({ row }) => {
     return (
       <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }} padding={{ left: 'small' }}>
-        <Checkbox
-          margin={{ top: 'small', left: 'small' }}
-          checked={row?.original?.selected}
-          className={css.noPadding}
-          data-testid="row-checkbox"
-          onClick={e => {
-            killEvent(e)
-            onSelectionChange &&
-              onSelectionChange(
-                row?.original?.questionId || '',
-                row?.original?.sectionId || '',
-                !row?.original?.selected
-              )
-          }}
-        />
+        {!harnessComponent && (
+          <Checkbox
+            margin={{ top: 'small', left: 'small' }}
+            checked={row?.original?.selected}
+            className={css.noPadding}
+            data-testid="row-checkbox"
+            onClick={e => {
+              killEvent(e)
+              onSelectionChange &&
+                onSelectionChange(
+                  row?.original?.questionId || '',
+                  row?.original?.sectionId || '',
+                  !row?.original?.selected
+                )
+            }}
+          />
+        )}
         <Container className={css.recommendationContainer} padding={{ left: 'medium' }}>
           <Text font={{ variation: FontVariation.CARD_TITLE }}>{row.original.capability}</Text>
           <Text font="small" lineClamp={3}>

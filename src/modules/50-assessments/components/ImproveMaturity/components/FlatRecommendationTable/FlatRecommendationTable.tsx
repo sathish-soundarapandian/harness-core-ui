@@ -62,10 +62,11 @@ const FlatRecommendationTable = ({
           getString('assessments.recommendations').toUpperCase(),
           getString('assessments.improveMaturityBySelection'),
           groupSelection,
-          sectionId
+          sectionId,
+          harnessComponent
         ),
         id: 'rowSelect',
-        Cell: CheckboxCell(onSelectionChange),
+        Cell: CheckboxCell(onSelectionChange, harnessComponent),
         disableSortBy: true,
         width: sectionId ? '60%' : '40%'
       },
@@ -84,9 +85,9 @@ const FlatRecommendationTable = ({
         width: '26%'
       }
     ],
-    [getString, groupSelection, onSelectionChange, sectionId, selectionState]
+    [getString, groupSelection, harnessComponent, onSelectionChange, sectionId, selectionState]
   )
-  const hiddenColumns = sectionId ? ['category'] : harnessComponent ? ['rowSelect'] : []
+  const hiddenColumns = sectionId ? ['category'] : []
   return (
     <TableV2
       data={questionMaturityList}
