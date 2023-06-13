@@ -17,11 +17,10 @@ import { AppWithAuthentication, AppWithoutAuthentication } from './App'
 const ignoredErrorClasses = ['YAMLSemanticError', 'YAMLSyntaxError', 'AbortError']
 const DefaultRouter: React.FC<React.PropsWithChildren<unknown>> = props => {
   const { browserRouterEnabled } = window
-  const baseName = window.publicAccessOnAccount ? `${window.harnessNameSpace}/gateway/ng` : `${window.harnessNameSpace}/ng`
   return (
     <>
       {browserRouterEnabled ? (
-        <BrowserRouter basename={baseName}>{props.children}</BrowserRouter>
+        <BrowserRouter basename={`${window.harnessNameSpace}/ng`}>{props.children}</BrowserRouter>
       ) : (
         <HashRouter>{props.children}</HashRouter>
       )}
