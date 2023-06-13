@@ -58,7 +58,8 @@ export const GitSyncStoreProvider: React.FC<Pick<GitSyncStoreProps, 'spinner'>> 
       queryParams: { accountIdentifier: accountId }
     },
     {
-      staleTime: Infinity
+      staleTime: Infinity,
+      enabled: !window.publicAccessOnAccount
     }
   )
 
