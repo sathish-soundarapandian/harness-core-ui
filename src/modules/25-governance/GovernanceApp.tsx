@@ -8,6 +8,7 @@
 import React, { lazy, FC } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
+import routes from '@common/RouteDefinitions'
 import type { GovernanceCustomMicroFrontendProps } from './GovernanceCustomMicroFrontendProps.types'
 import { customComponents, customHooks, RouteMatch } from './GovernanceCustomMicroFrontendProps'
 
@@ -29,6 +30,7 @@ const PolicyManagementMFE: FC = props => {
       ChildApp={RemoteGovernanceApp}
       customHooks={customHooks}
       customComponents={customComponents}
+      customRoutes={routes}
       baseRoutePath={path}
       {...props}
     />
@@ -42,6 +44,7 @@ export const PolicyManagementPipelineView: FC<any> = (props: any) => {
       ChildApp={RemoteGovernanceApp}
       customHooks={customHooks}
       customComponents={customComponents}
+      customRoutes={routes}
       baseRoutePath={path}
     >
       <RemotePipelineGovernanceView {...props} />
@@ -56,6 +59,7 @@ export const PolicyManagementPolicySetWizard: FC<any> = (props: any) => {
       ChildApp={RemoteGovernanceApp}
       customHooks={customHooks}
       customComponents={customComponents}
+      customRoutes={routes}
       baseRoutePath={path}
     >
       <RemotePolicySetWizard {...props} />
