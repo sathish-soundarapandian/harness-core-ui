@@ -19,8 +19,9 @@ import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { getAllowableTypes } from '../AzureSlotDeployment/utils'
+import { getAllowableTypes, isMultiEnv } from '../AzureSlotDeployment/utils'
 import type { AzureTrafficShiftProps } from './AzureTrafficShiftInterface.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -39,6 +40,7 @@ export const AzureTrafficShiftRef = (props: AzureTrafficShiftProps, formikRef: S
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const query = useQueryParams()
+  const { AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS } = useFeatureFlags()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sectionId = (query as any).sectionId || ''
 
@@ -100,8 +102,11 @@ export const AzureTrafficShiftRef = (props: AzureTrafficShiftProps, formikRef: S
                 label={getString('pipeline.trafficPercentage')}
                 multiTextInputProps={{
                   expressions,
-                  multitypeInputValue: MultiTypeInputType.EXPRESSION,
-                  allowableTypes: getAllowableTypes(selectedStage) as AllowedTypes
+                  multitypeInputValue: getMultiTypeFromValue(get(formik.values, 'spec.traffic')),
+                  allowableTypes:
+                    AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS && isMultiEnv(selectedStage)
+                      ? (getAllowableTypes(selectedStage) as AllowedTypes)
+                      : allowableTypes
                 }}
                 disabled={readonly}
               />

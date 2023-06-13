@@ -16,6 +16,7 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -44,6 +45,8 @@ export const AzureWebAppSwapSlotRef = (
   const query = useQueryParams()
   const sectionId = (query as any).sectionId || ''
   const { expressions } = useVariablesExpression()
+  const { AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS } = useFeatureFlags()
+
   return (
     <Formik
       enableReinitialize={true}
@@ -106,9 +109,14 @@ export const AzureWebAppSwapSlotRef = (
                 label={'Target Slot'}
                 multiTextInputProps={{
                   expressions,
-                  allowableTypes: isMultiEnv(selectedStage)
-                    ? (getAllowableTypes(selectedStage) as AllowedTypes)
-                    : allowableTypes
+                  multitypeInputValue:
+                    AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS && isMultiEnv(selectedStage)
+                      ? MultiTypeInputType.EXPRESSION
+                      : getMultiTypeFromValue(get(formik.values, 'spec.targetSlot')),
+                  allowableTypes:
+                    AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS && isMultiEnv(selectedStage)
+                      ? (getAllowableTypes(selectedStage) as AllowedTypes)
+                      : allowableTypes
                 }}
                 disabled={readonly}
               />
