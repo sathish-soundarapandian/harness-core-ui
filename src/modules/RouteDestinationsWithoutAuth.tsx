@@ -16,7 +16,6 @@ import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import RedirectPage from '@common/pages/redirect/Redirect'
 import { returnUrlParams } from '@common/utils/routeUtils'
 import AssessmentsHome from '@assessments/AssessmentsHome'
-import CDRoutes from '@cd/RouteDestinations'
 
 const RedirectToHome: React.FC = () => {
   const history = useHistory()
@@ -35,7 +34,6 @@ const RouteDestinationsWithoutAuth: React.FC = () => {
       <Route exact path="/">
         <RedirectToHome />
       </Route>
-      {window.publicAccessOnAccount ? CDRoutes.props.children : null}
       <Route path="/assessment">
         <AssessmentsHome />
       </Route>
