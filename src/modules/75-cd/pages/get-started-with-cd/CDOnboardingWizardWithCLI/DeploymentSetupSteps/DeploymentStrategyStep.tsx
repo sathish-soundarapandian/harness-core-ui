@@ -3,7 +3,8 @@ import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { Layout, CardSelect, Text, Icon, IconName } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
-import { DEPLOYMENT_STRATEGY_TYPES, DeploymentStrategyTypes, StrategyVideoByType } from '../Constants'
+import { DEPLOYMENT_STRATEGY_TYPES, StrategyVideoByType } from '../Constants'
+import type { DeploymentStrategyTypes } from '../types'
 import css from '../CDOnboardingWizardWithCLI.module.scss'
 export default function DeploymentStrategyStep(): JSX.Element {
   return (

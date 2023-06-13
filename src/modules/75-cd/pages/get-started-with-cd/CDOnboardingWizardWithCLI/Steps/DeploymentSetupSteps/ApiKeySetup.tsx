@@ -4,13 +4,12 @@ import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useCreateToken, useListAggregatedApiKeys, useListAggregatedTokens } from 'services/cd-ng'
-import type { ResponseString } from 'services/cd-ng'
 import { String } from 'framework/strings'
 import { TokenValueRenderer } from '@rbac/modals/TokenModal/views/TokenValueRenderer'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
-import { getIdentifierFromName } from '@common/utils/StringUtils'
 
 export interface ApiKeySetupProps {
   onKeyGenerate: (key: string) => void
@@ -23,12 +22,7 @@ export default function ApiKeySetup({ onKeyGenerate }: ApiKeySetupProps): JSX.El
   const { mutate: createToken } = useCreateToken({
     queryParams: { accountIdentifier: accountId }
   })
-  const {
-    data,
-    loading
-    // refetch ,
-    // error
-  } = useListAggregatedApiKeys({
+  const { data } = useListAggregatedApiKeys({
     queryParams: {
       accountIdentifier: accountId,
       apiKeyType: API_KEY_TYPE,
