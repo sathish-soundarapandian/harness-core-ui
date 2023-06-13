@@ -350,6 +350,8 @@ export interface StringsMap {
   'common.failedCount': string
   'common.failureRate': string
   'common.false': string
+  'common.favorite.add': string
+  'common.favorite.remove': string
   'common.favorites': string
   'common.feature.keepGettingShipDone.requestUpgrade': string
   'common.feature.keepGettingShipDone.title': string

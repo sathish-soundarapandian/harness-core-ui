@@ -927,6 +927,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
           },
           sortOptions: [...sortByLastModified, ...sortByCreated, ...sortByName]
         }}
+        enableFavorite
         disableCollapse={!(type === 'Github')}
         createNewBtnComponent={
           <RbacButton

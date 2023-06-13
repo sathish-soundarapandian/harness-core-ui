@@ -332,7 +332,7 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
           />
           {searchInlineComponent}
-          {PL_FAVORITES && (
+          {PL_FAVORITES && props.enableFavorite && (
             <Checkbox
               checked={favoriteSelected}
               variant={CheckboxVariant.BOXED}

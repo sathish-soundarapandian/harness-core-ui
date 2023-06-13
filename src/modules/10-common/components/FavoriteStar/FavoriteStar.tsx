@@ -13,7 +13,7 @@ import {
   DeleteFavoriteProjectQueryParams
 } from '@harnessio/react-ng-manager-client'
 import React, { useState } from 'react'
-import { useToaster } from '@harness/uicore'
+import { Text, Utils, useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import classNames from 'classnames'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -23,6 +23,7 @@ import type { ResourceScope } from 'services/cd-ng'
 import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './FavoriteStar.module.scss'
+import { PopoverInteractionKind } from '@blueprintjs/core'
 
 interface FavoriteStarProps {
   resourceId: string
@@ -123,14 +124,23 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
   }
 
   return (
-    <Icon
-      name={isFavorite ? 'star' : 'star-empty'}
-      color={isFavorite ? Color.YELLOW_900 : Color.GREY_400}
-      size={24}
-      onClick={handleClick}
-      className={classNames(css.star, props.className, { [activeClassName]: isFavorite })}
-      padding="xsmall"
-    />
+    <Utils.WrapOptionalTooltip
+      tooltip={
+        <Text color={Color.GREY_100} padding="small">
+          {isFavorite ? getString('common.favorite.remove') : getString('common.favorite.add')}
+        </Text>
+      }
+      tooltipProps={{ isDark: true, interactionKind: PopoverInteractionKind.HOVER }}
+    >
+      <Icon
+        name={isFavorite ? 'star' : 'star_empty'}
+        color={isFavorite ? Color.YELLOW_900 : Color.GREY_400}
+        size={24}
+        onClick={handleClick}
+        className={classNames(css.star, props.className, { [activeClassName]: isFavorite })}
+        padding="xsmall"
+      />
+    </Utils.WrapOptionalTooltip>
   )
 }
 
