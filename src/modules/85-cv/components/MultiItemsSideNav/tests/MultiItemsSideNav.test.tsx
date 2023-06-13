@@ -8,7 +8,7 @@
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { Formik } from 'formik'
-import { noop } from 'lodash'
+import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import { MultiItemsSideNav } from '../MultiItemsSideNav'
 import { getFilteredGroupedCreatedMetric, getSelectedMetricIndex } from '../MultiItemsSideNav.utils'
