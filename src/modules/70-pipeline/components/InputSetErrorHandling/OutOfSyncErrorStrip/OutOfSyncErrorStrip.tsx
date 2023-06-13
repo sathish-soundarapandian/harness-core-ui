@@ -171,12 +171,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier: pipelineIdentifier ?? get(inputSet, 'pipelineIdentifier'),
-      ...(isGitSyncEnabled
-        ? {
-            pipelineRepoID: repoIdentifier,
-            pipelineBranch: branch
-          }
-        : {}),
+
       repoIdentifier: isGitSyncEnabled
         ? overlayInputSetRepoIdentifier ?? inputSetRepoIdentifier
         : repoName ?? get(inputSet, 'gitDetails.repoName'),
@@ -188,7 +183,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
       storeType: storeType ?? get(inputSet, 'storeType'),
       ...gitParams,
       pipelineBranch: reconcileBranch,
-      pipelineRepoID: repoIdentifier
+      branch: get(inputSet, 'gitDetails.branch')
     },
     inputSetIdentifier: overlayInputSetIdentifier ?? get(inputSet, 'identifier', ''),
     lazy: true
