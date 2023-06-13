@@ -125,7 +125,8 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
   const { data: metadata, error: gettingFeatureMetadataError } = useGetAllFeatureRestrictionMetadata({
     queryParams: {
       accountIdentifier: accountId
-    }
+    },
+    lazy: window.publicAccessOnAccount
   })
 
   useEffect(() => {

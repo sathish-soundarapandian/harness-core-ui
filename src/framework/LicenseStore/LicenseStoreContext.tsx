@@ -125,7 +125,8 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
   } = useGetAccountLicenses({
     queryParams: {
       accountIdentifier: accountId
-    }
+    },
+    lazy: window.publicAccessOnAccount
   })
 
   const { mutate: getVersionMap } = useGetLastModifiedTimeForAllModuleTypes({
@@ -140,16 +141,19 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
   })
 
   useEffect(() => {
-    getVersionMap()
-      .then(response => {
-        setState(prevState => ({
-          ...prevState,
-          versionMap: response.data || {}
-        }))
-      })
-      .catch(_err => {
-        // do nothing
-      })
+    if (!window.publicAccessOnAccount) {
+      getVersionMap()
+        .then(response => {
+          setState(prevState => ({
+            ...prevState,
+            versionMap: response.data || {}
+          }))
+        })
+        .catch(_err => {
+          // do nothing
+        })
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
