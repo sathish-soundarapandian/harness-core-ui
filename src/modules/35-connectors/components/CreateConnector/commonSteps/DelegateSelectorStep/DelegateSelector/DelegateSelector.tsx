@@ -26,6 +26,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import useCreateDelegateViaCommandsModal from '@delegates/pages/delegates/delegateCommandLineCreation/components/useCreateDelegateViaCommandsModal'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
+
 import css from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector.module.scss'
 
 export enum DelegateOptions {
@@ -46,6 +47,7 @@ export interface DelegateSelectorProps extends ProjectPathProps {
   setDelegateSelectors: (delegateSelectors: Array<string>) => void
   setDelegatesFound: (delegatesFound: DelegatesFoundState) => void
   delegateSelectorMandatory: boolean
+  dialogTitle?: string
 }
 
 export interface DelegateGroupDetailsCustom extends DelegateGroupDetails {
@@ -105,7 +107,6 @@ const CustomRadioGroup: React.FC<CustomRadioGroupProps> = props => {
     </Container>
   )
 }
-
 export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
   const {
     mode,
@@ -113,7 +114,8 @@ export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
     delegateSelectors = [],
     setDelegateSelectors,
     setDelegatesFound,
-    delegateSelectorMandatory = false
+    delegateSelectorMandatory = false,
+    dialogTitle
   } = props
   const [formattedData, setFormattedData] = useState<DelegateGroupDetailsCustom[]>([])
   const { getString } = useStrings()
@@ -321,7 +323,7 @@ export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
   return (
     <Layout.Vertical className={css.delegateSelectorContainer}>
       <Text color={Color.GREY_800} margin={{ top: 'xlarge', bottom: 'medium' }}>
-        {getString('connectors.delegate.configure')}
+        {dialogTitle || getString('connectors.delegate.configure')}
       </Text>
       <CustomRadioGroup items={options} handleClick={newMode => resetDelegateSelectorsAndUpdateMode(newMode)} />
       {CustomComponent}

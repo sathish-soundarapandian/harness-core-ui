@@ -128,6 +128,7 @@ export interface ConnectorReferenceFieldProps extends Omit<IFormGroupProps, 'lab
   projectIdentifier?: string
   selected?: ConnectorSelectedValue | string
   onChange?: (connector: ConnectorReferenceDTO, scope: Scope) => void
+  clearSelection?: () => void
   orgIdentifier?: string
   gitScope?: GitFilterScope
   defaultScope?: Scope
@@ -223,6 +224,7 @@ export function getEditRenderer(
     </Popover>
   )
 }
+
 export function getSelectedRenderer(
   selected: ConnectorSelectedValue,
   status = selected?.live,
@@ -632,6 +634,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     type = 'K8sCluster',
     name,
     selected,
+    clearSelection,
     label,
     width = 400,
     placeholder,
@@ -771,6 +774,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     }
 
     if (
+      selected &&
       typeof selected === 'string' &&
       getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED &&
       connectorData &&
@@ -895,6 +899,14 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
         )}
         {...optionalReferenceSelectProps}
         disabled={disabled || loading}
+        clearSelection={
+          props.clearSelection
+            ? () => {
+                setSelectedValue(undefined)
+                props.clearSelection?.()
+              }
+            : undefined
+        }
         componentName="Connector"
         noDataCard={{ image: ConnectorsEmptyState }}
         pagination={{
@@ -987,6 +999,10 @@ export const DefaultSettingConnectorField: React.FC<SettingRendererProps & { typ
         selected={formik.values[identifier]}
         label={''}
         placeholder={`- ${getString('select')} -`}
+        clearSelection={() => {
+          setFieldValue(identifier, '')
+          onSettingSelectionChange('')
+        }}
         accountIdentifier={accountId}
         {...(orgIdentifier ? { orgIdentifier } : {})}
         {...(projectIdentifier ? { projectIdentifier } : {})}

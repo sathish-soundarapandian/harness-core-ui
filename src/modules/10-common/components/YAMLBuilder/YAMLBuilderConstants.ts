@@ -38,9 +38,10 @@ export const EditorTheme = {
 export const DEFAULT_EDITOR_HEIGHT = 600
 export const MIN_SNIPPET_SECTION_WIDTH = 400
 
-export const TRIGGER_CHARS_FOR_NEW_EXPR = ['+']
+export const VAR_REGEX = /.*<\+.*?/
+export const PLUS = '+'
+export const TRIGGER_CHARS_FOR_NEW_EXPR = [PLUS]
 export const TRIGGER_CHAR_FOR_PARTIAL_EXPR = '.'
-export const KEY_CODE_FOR_PLUS_SIGN = 'Equal'
 export const ANGULAR_BRACKET_CHAR = '<'
 export const KEY_CODE_FOR_SEMI_COLON = 'Semicolon'
 export const KEY_CODE_FOR_PERIOD = 'Period'

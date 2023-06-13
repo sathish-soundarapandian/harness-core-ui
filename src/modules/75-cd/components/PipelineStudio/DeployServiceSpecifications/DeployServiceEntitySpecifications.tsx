@@ -9,7 +9,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import cx from 'classnames'
 import { AllowedTypes, Container, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import produce from 'immer'
-import { debounce, defaultTo, get, isEmpty, isEqual, isNil, pick, set, unset } from 'lodash-es'
+import { defaultTo, get, isEmpty, isEqual, isNil, pick, set, unset } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { StageElementConfig } from 'services/cd-ng'
@@ -68,12 +68,10 @@ export default function DeployServiceEntitySpecifications({
   const scrollRef = customRef || domRef
   const { getString } = useStrings()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debounceUpdateStage = useCallback(
-    debounce(
-      (changedStage?: StageElementConfig) =>
-        changedStage ? updateStage(changedStage) : /* istanbul ignore next */ Promise.resolve(),
-      300
-    ),
+  const updateStageCallback = useCallback(
+    (changedStage?: StageElementConfig) =>
+      changedStage ? updateStage(changedStage) : /* istanbul ignore next */ Promise.resolve(),
+
     [updateStage]
   )
   const { stages } = getFlattenedStages(pipeline)
@@ -177,7 +175,7 @@ export default function DeployServiceEntitySpecifications({
           }
         }
       })
-      await debounceUpdateStage(stageData?.stage)
+      await updateStageCallback(stageData?.stage)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [stage]
@@ -230,7 +228,7 @@ export default function DeployServiceEntitySpecifications({
           set(draft, 'stage.spec.service', { useFromStage: { stage: value.value } })
         }
       })
-      debounceUpdateStage(stageData?.stage)
+      updateStageCallback(stageData?.stage)
       setSelectedPropagatedState(value)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

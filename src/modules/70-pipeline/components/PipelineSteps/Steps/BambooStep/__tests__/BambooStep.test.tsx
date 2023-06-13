@@ -77,6 +77,8 @@ describe('Bamboo step tests', () => {
       />
     )
 
+    const planNameField = queryByAttribute('name', container, 'spec.planName')
+    planNameField?.focus()
     fireEvent.click(getByText('Submit'))
     await waitFor(() => queryByText('Errors'))
     expect(container).toMatchSnapshot()

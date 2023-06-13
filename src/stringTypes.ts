@@ -1099,6 +1099,7 @@ export interface StringsMap {
   'common.smtp.labelSubject': string
   'common.smtp.labelTo': string
   'common.smtp.modalSubHeading': string
+  'common.smtp.noSMTPConfig': string
   'common.smtp.port': string
   'common.smtp.portPositive': string
   'common.smtp.portRequired': string
@@ -2969,6 +2970,7 @@ export interface StringsMap {
   'connectors.datadog.urlValidation': string
   'connectors.datadogConnectorDetails': string
   'connectors.delegate.configure': string
+  'connectors.delegate.configureForNonConnectors': string
   'connectors.delegate.couldNotFetch': string
   'connectors.delegate.delegateSelectorAny': string
   'connectors.delegate.delegateSelectorSelective': string
@@ -3894,6 +3896,7 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactsArrayPath': string
   'pipeline.artifactsSelection.classifier': string
   'pipeline.artifactsSelection.classifierPlaceholder': string
+  'pipeline.artifactsSelection.container': string
   'pipeline.artifactsSelection.customArtifactManualFill': string
   'pipeline.artifactsSelection.customArtifactScriptFill': string
   'pipeline.artifactsSelection.delegateselectionPlaceholder': string
@@ -4173,6 +4176,7 @@ export interface StringsMap {
   'pipeline.deploymentRepoStore': string
   'pipeline.depth': string
   'pipeline.digest': string
+  'pipeline.digestDependencyRequired': string
   'pipeline.discard': string
   'pipeline.draft': string
   'pipeline.duplicateImport': string

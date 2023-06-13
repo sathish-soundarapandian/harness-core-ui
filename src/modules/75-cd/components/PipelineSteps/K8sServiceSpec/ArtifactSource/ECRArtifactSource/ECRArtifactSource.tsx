@@ -49,7 +49,8 @@ import {
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
   isExecutionTimeFieldDisabled,
-  getValidInitialValuePath
+  getValidInitialValuePath,
+  DefaultParam
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
@@ -119,6 +120,10 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     get(initialValues?.artifacts, `${artifactPath}.spec.tag`, '')
   )
 
+  const tagRegexValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tagRegex`, ''), artifact?.spec?.tagRegex),
+    get(initialValues, `artifacts.${artifactPath}.spec.tagRegex`, '')
+  )
   const isMultiService = isArtifactInMultiService(formik?.values?.services, path)
 
   // Image Path
@@ -546,6 +551,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
 
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            (isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) || tagValue !== DefaultParam) &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <div className={css.inputFieldLayout}>
                 <DigestField
@@ -559,6 +565,25 @@ const Content = (props: ECRRenderContent): JSX.Element => {
                   disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
                 />
               </div>
+            )}
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            (isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) || tagRegexValue !== DefaultParam) &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <TextFieldInputSetView
+                tooltipProps={{
+                  dataTooltipId: 'artifactDigestTooltip'
+                }}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={getString('pipeline.digest')}
+                name={`${path}.artifacts.${artifactPath}.spec.digest`}
+                fieldPath={`artifacts.${artifactPath}.spec.digest`}
+                template={template}
+              />
             )}
         </Layout.Vertical>
       )}

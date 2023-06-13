@@ -48,9 +48,6 @@ import {
 } from '@pipeline/utils/CIUtils'
 import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import type { Pipeline } from '@pipeline/utils/types'
-import { usePermission } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 
 import { Failure, getConnectorListV2Promise, GetConnectorQueryParams, useGetConnector } from 'services/cd-ng'
@@ -106,6 +103,7 @@ import {
 import type { TriggerProps } from '../Trigger'
 import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
 import { isNewTrigger } from '../utils'
+import { useIsTriggerCreatePermission } from '../useIsTriggerCreatePermission'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -965,26 +963,9 @@ export default function ManifestTriggerWizard(
     }
   }
 
-  const [isExecutable] = usePermission(
-    {
-      resourceScope: {
-        projectIdentifier: projectIdentifier,
-        orgIdentifier: orgIdentifier,
-        accountIdentifier: accountId
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EXECUTE_PIPELINE],
-      options: {
-        skipCache: true
-      }
-    },
-    [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
-  )
+  const isTriggerCreatePermission = useIsTriggerCreatePermission()
 
-  const isTriggerRbacDisabled = !isExecutable
+  const isTriggerRbacDisabled = !isTriggerCreatePermission
 
   const wizardMap = getWizardMap({
     getString,

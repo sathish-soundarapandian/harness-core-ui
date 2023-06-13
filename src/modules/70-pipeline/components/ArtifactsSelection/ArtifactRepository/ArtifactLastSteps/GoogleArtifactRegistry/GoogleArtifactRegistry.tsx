@@ -55,7 +55,6 @@ import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { isValueFixed } from '@common/utils/utils'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -494,10 +493,12 @@ export function GoogleArtifactRegistry(
     const versionData =
       formData.versionType === TagTypes.Value
         ? {
-            version: defaultTo(formData.spec.version, '')
+            version: defaultTo(formData.spec.version, ''),
+            digest: defaultTo(get(formData.spec.digest, 'value'), formData.spec.digest)
           }
         : {
-            versionRegex: defaultTo(formData.spec.versionRegex, '')
+            versionRegex: defaultTo(formData.spec.versionRegex, ''),
+            digest: formData.spec.digest
           }
     const identifierData = isIdentifierAllowed
       ? {
@@ -513,18 +514,15 @@ export function GoogleArtifactRegistry(
         region: defaultTo(formData.spec.region.value, formData.spec.region),
         repositoryName: formData.spec.repositoryName,
         package: formData.spec.package,
-        ...versionData,
-        digest: formData.spec.digest
+        ...versionData
       }
     })
   }
 
   const handleValidate = (formData: GoogleArtifactRegistryInitialValuesType) => {
-    const digestValue = get(formData.spec, 'digest') as SelectOption | string
-    const finalDigestValue = isValueFixed(digestValue) ? get(digestValue, 'value') : digestValue
     const submitObject = {
       ...formData,
-      spec: { ...formData.spec, digest: finalDigestValue }
+      spec: { ...formData.spec }
     }
     if (hideHeaderAndNavBtns) {
       submitFormData(submitObject, getConnectorIdValue(modifiedPrevStepData))
@@ -586,11 +584,9 @@ export function GoogleArtifactRegistry(
         validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         validate={handleValidate}
         onSubmit={formData => {
-          const digestValue = get(formData.spec, 'digest') as SelectOption | string
-          const finalDigestValue = isValueFixed(digestValue) ? get(digestValue, 'value') : digestValue
           const submitObject = {
             ...formData,
-            spec: { ...formData.spec, digest: finalDigestValue }
+            spec: { ...formData.spec }
           }
 
           submitFormData(submitObject, getConnectorIdValue(modifiedPrevStepData))

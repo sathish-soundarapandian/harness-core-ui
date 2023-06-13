@@ -35,6 +35,7 @@ import { isArtifactInMultiService } from '@pipeline/components/ArtifactsSelectio
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
+  DefaultParam,
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
@@ -90,10 +91,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
   const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
-  const versionValue = getDefaultQueryParam(
-    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.version`, ''), artifact?.spec?.version),
-    get(initialValues?.artifacts, `${artifactPath}.spec.version`, '')
-  )
 
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
@@ -115,6 +112,16 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.repositoryName`, ''), artifact?.spec?.repositoryName),
     get(initialValues?.artifacts, `${artifactPath}.spec.repositoryName`)
   )
+  const versionRegexValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.versionRegex`, ''), artifact?.spec?.versionRegex),
+    get(initialValues?.artifacts, `${artifactPath}.spec.versionRegex`)
+  )
+
+  const versionValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.version`, ''), artifact?.spec?.version),
+    get(initialValues?.artifacts, `${artifactPath}.spec.version`)
+  )
+  // const isVersionRegexPresent = versionRegexValue !== DefaultParam
 
   // v1 tags api is required to fetch tags for artifact source template usage while linking to service
   // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
@@ -440,6 +447,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            (isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) || versionValue !== DefaultParam) &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <div className={css.inputFieldLayout}>
                 <DigestField
@@ -453,6 +461,28 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                   disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
                 />
               </div>
+            )}
+
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            (isFieldRuntime(`artifacts.${artifactPath}.spec.versionRegex`, template) ||
+              versionRegexValue !== DefaultParam) &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <TextFieldInputSetView
+                tooltipProps={{
+                  dataTooltipId: 'artifactDigestTooltip'
+                }}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                placeholder={getString('pipeline.artifactsSelection.digestPlaceholder')}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={getString('pipeline.digest')}
+                name={`${path}.artifacts.${artifactPath}.spec.digest`}
+                fieldPath={`artifacts.${artifactPath}.spec.digest`}
+                template={template}
+              />
             )}
         </Layout.Vertical>
       )}

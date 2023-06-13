@@ -27,6 +27,17 @@ import {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { GithubPackageRegistry } from '../GithubPackageRegistry'
 
+const fetchPackagesMock = jest.fn()
+
+jest.mock('services/cd-ng', () => ({
+  useGetPackagesFromGithub: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: fetchPackagesMock, error: null, loading: false }
+  }),
+  useGetVersionsFromPackages: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
 const commonInitialValues: GithubPackageRegistryInitialValuesType = {
   identifier: '',
   versionType: TagTypes.Value,
@@ -96,7 +107,7 @@ describe('GithubPackageRegistry tests', () => {
       versionType: TagTypes.Value,
       spec: {
         ...commonInitialValues.spec,
-        packageType: 'npm',
+        packageType: 'container',
         org: 'testOrg',
         packageName: 'testPackage',
         version: 'xyz.zip'
@@ -111,18 +122,24 @@ describe('GithubPackageRegistry tests', () => {
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     expect(queryByNameAttribute('spec.packageType')).not.toBeNull()
     expect(queryByNameAttribute('spec.org')).not.toBeNull()
-    expect(queryByNameAttribute('spec.packageName')).not.toBeNull()
+    const packageNameInput = queryByNameAttribute('spec.packageName') as HTMLElement
+    expect(packageNameInput).not.toBeNull()
     expect(queryByNameAttribute('spec.version')).not.toBeNull()
     expect(container).toMatchSnapshot()
+
+    fireEvent.change(packageNameInput, { target: { value: 'testPackageName' } })
+    packageNameInput.focus()
+    fireEvent.focus(packageNameInput)
 
     const submitBtn = getByText('submit')
     fireEvent.click(submitBtn)
     await waitFor(() => {
       expect(props.handleSubmit).toBeCalled()
+      expect(fetchPackagesMock).toHaveBeenCalled()
       expect(props.handleSubmit).toHaveBeenCalledWith({
         spec: {
           connectorRef: 'testConnector',
-          packageType: 'npm',
+          packageType: 'container',
           org: 'testOrg',
           packageName: 'testPackage',
           version: 'xyz.zip'
@@ -139,7 +156,7 @@ describe('GithubPackageRegistry tests', () => {
       versionType: TagTypes.Value,
       spec: {
         ...commonInitialValues.spec,
-        packageType: 'npm',
+        packageType: 'container',
         org: 'testOrg',
         packageName: 'testPackage',
         version: 'xyz.zip'
@@ -175,7 +192,7 @@ describe('GithubPackageRegistry tests', () => {
         identifier: 'test_id',
         spec: {
           connectorRef: 'testConnector',
-          packageType: 'npm',
+          packageType: 'container',
           org: 'testOrg',
           packageName: 'testPackage',
           version: 'xyz.zip'
@@ -191,7 +208,7 @@ describe('GithubPackageRegistry tests', () => {
       versionType: TagTypes.Regex,
       spec: {
         ...commonInitialValues.spec,
-        packageType: 'npm',
+        packageType: 'container',
         org: 'testOrg',
         packageName: 'testPackage',
         versionRegex: '*.zip'
@@ -217,7 +234,7 @@ describe('GithubPackageRegistry tests', () => {
       expect(props.handleSubmit).toHaveBeenCalledWith({
         spec: {
           connectorRef: 'testConnector',
-          packageType: 'npm',
+          packageType: 'container',
           org: 'testOrg',
           packageName: 'testPackage',
           versionRegex: '*.zip'
@@ -233,7 +250,7 @@ describe('GithubPackageRegistry tests', () => {
       versionType: TagTypes.Value,
       spec: {
         ...commonInitialValues.spec,
-        packageType: 'npm',
+        packageType: 'container',
         org: RUNTIME_INPUT_VALUE,
         packageName: RUNTIME_INPUT_VALUE,
         version: RUNTIME_INPUT_VALUE
@@ -266,7 +283,7 @@ describe('GithubPackageRegistry tests', () => {
       expect(props.handleSubmit).toHaveBeenCalledWith({
         spec: {
           connectorRef: 'testConnector',
-          packageType: 'npm',
+          packageType: 'container',
           org: '<+input>',
           packageName: '<+input>',
           version: '<+input>.regex(<+input>.includes(/test/))'
@@ -282,7 +299,7 @@ describe('GithubPackageRegistry tests', () => {
       versionType: TagTypes.Regex,
       spec: {
         ...commonInitialValues.spec,
-        packageType: 'npm',
+        packageType: 'container',
         org: RUNTIME_INPUT_VALUE,
         packageName: RUNTIME_INPUT_VALUE,
         versionRegex: RUNTIME_INPUT_VALUE
@@ -334,7 +351,7 @@ describe('GithubPackageRegistry tests', () => {
       expect(props.handleSubmit).toHaveBeenCalledWith({
         spec: {
           connectorRef: 'testConnector',
-          packageType: 'npm',
+          packageType: 'container',
           org: '<+input>.regex(<+input>.includes(/test/))',
           packageName: '<+input>.regex(<+input>.includes(/test/))',
           versionRegex: '<+input>.regex(<+input>.includes(/test/))'

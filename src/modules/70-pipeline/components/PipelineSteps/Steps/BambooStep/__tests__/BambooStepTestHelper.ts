@@ -118,9 +118,10 @@ export const getBambooStepDeploymentModeProps = (): BambooStepDeploymentModeProp
     template: {
       identifier: 'ss',
       type: StepType.BambooBuild,
+      timeout: RUNTIME_INPUT_VALUE,
       spec: {
         planName: RUNTIME_INPUT_VALUE,
-        connectorRef: '',
+        connectorRef: RUNTIME_INPUT_VALUE,
         delegateSelectors: [],
         planParameter: []
       }

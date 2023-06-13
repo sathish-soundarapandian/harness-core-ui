@@ -6,12 +6,12 @@
  */
 
 import React from 'react'
-import { render, waitFor, findByText as findByTextGlobal, queryByAttribute } from '@testing-library/react'
+import { render, waitFor, findByText as findByTextGlobal, queryByAttribute, getByText } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import DeployServiceEntityWidget from '../DeployServiceEntityWidget'
 import services from './services.json'
 import metadata from './servicesMetadata.json'
@@ -246,6 +246,66 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
 
     await waitFor(() => {
       expect(onUpdate).toHaveBeenLastCalledWith({ services: { values: '<+input>', metadata: { parallel: true } } })
+    })
+  })
+
+  test('user can switch back and forth between multi service & single service', async () => {
+    const onUpdate = jest.fn()
+    const { container } = render(
+      <TestWrapper defaultFeatureFlagValues={defaultFeatureFlagValues}>
+        <DeployServiceEntityWidget
+          initialValues={{
+            services: {
+              metadata: {
+                parallel: false
+              },
+              values: [
+                {
+                  serviceRef: 'svc_2'
+                }
+              ]
+            }
+          }}
+          allowableTypes={allowableTypes}
+          readonly={false}
+          stageIdentifier=""
+          onUpdate={onUpdate}
+          setupModeType={setupMode.DIFFERENT}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(container.querySelector('.bp3-spinner')).not.toBeInTheDocument())
+
+    const toggle = container.querySelector('.Toggle--input')!
+
+    userEvent.click(toggle)
+
+    const confirmationDialog = findDialogContainer() as HTMLElement
+    await waitFor(() => expect(confirmationDialog).toBeTruthy())
+
+    expect(getByText(confirmationDialog, 'applyChanges')).toBeInTheDocument()
+    userEvent.click(getByText(confirmationDialog, 'applyChanges') as HTMLButtonElement)
+
+    await waitFor(() => {
+      expect(onUpdate).toHaveBeenLastCalledWith({
+        service: {
+          serviceRef: ''
+        }
+      })
+    })
+
+    userEvent.click(toggle)
+
+    await waitFor(() => {
+      expect(onUpdate).toHaveBeenLastCalledWith({
+        services: {
+          metadata: {
+            parallel: false
+          },
+          values: []
+        }
+      })
     })
   })
 })

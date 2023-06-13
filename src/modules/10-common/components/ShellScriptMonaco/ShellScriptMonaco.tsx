@@ -16,6 +16,7 @@ import type { languages, IDisposable, editor } from 'monaco-editor/esm/vs/editor
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import { useDeepCompareEffect } from '@common/hooks'
+import { VAR_REGEX } from '../YAMLBuilder/YAMLBuilderConstants'
 import css from './ShellScriptMonaco.module.scss'
 
 export type ScriptType = 'Bash' | 'PowerShell' | 'Python'
@@ -41,8 +42,6 @@ export interface ShellScriptMonacoProps {
 export interface ConnectedShellScriptMonacoProps extends ShellScriptMonacoProps {
   formik: FormikProps<unknown>
 }
-
-const VAR_REGEX = /.*<\+.*?/
 
 export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React.ReactElement {
   const { scriptType, formik, name, disabled, expressions, title, className, editorOptions } = props

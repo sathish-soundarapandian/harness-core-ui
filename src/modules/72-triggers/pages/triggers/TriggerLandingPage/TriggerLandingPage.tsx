@@ -15,9 +15,6 @@ import { useGetTriggerDetails, useUpdateTrigger, useGetPipelineSummary } from 's
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
-import { usePermission } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import routes from '@common/RouteDefinitions'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -25,6 +22,7 @@ import { useQueryParams } from '@common/hooks'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import { TriggerBreadcrumbs } from '@triggers/pages/trigger-details/TriggerDetails'
+import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
 import { getEnabledStatusTriggerValues, getTriggerIcon } from '../utils/TriggersListUtils'
 import { clearNullUndefined, ResponseStatus, TriggerTypes } from '../utils/TriggersWizardPageUtils'
 import css from './TriggerLandingPage.module.scss'
@@ -81,24 +79,7 @@ const TriggerLandingPage: React.FC = ({ children }) => {
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })
 
-  const [isExecutable] = usePermission(
-    {
-      resourceScope: {
-        projectIdentifier: projectIdentifier,
-        orgIdentifier: orgIdentifier,
-        accountIdentifier: accountId
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EXECUTE_PIPELINE],
-      options: {
-        skipCache: true
-      }
-    },
-    [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
-  )
+  const isTriggerCreatePermission = useIsTriggerCreatePermission()
 
   const { showSuccess, showError } = useToaster()
   const { getString } = useStrings()
@@ -121,7 +102,7 @@ const TriggerLandingPage: React.FC = ({ children }) => {
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
-  const isTriggerRbacDisabled = !isExecutable || isPipelineInvalid
+  const isTriggerRbacDisabled = !isTriggerCreatePermission || isPipelineInvalid
 
   const routeParams = {
     accountId,

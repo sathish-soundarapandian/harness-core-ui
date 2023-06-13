@@ -21,8 +21,7 @@ import {
   RUNTIME_INPUT_VALUE,
   SelectOption,
   AllowedTypesWithRunTime,
-  MultiSelectOption,
-  getMultiTypeFromValue
+  MultiSelectOption
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
@@ -275,6 +274,18 @@ function CICodebaseInputSetFormInternal({
   const isPrCloneStrategyRuntimeInput = (template?.properties || templateInputsProperties)?.ci?.codebase
     ?.prCloneStrategy
   const isRepoNameRuntimeInput = (template?.properties || templateInputsProperties)?.ci?.codebase?.repoName
+  const isBuildRuntimeInput = isRuntimeInput((template?.properties || templateInputsProperties)?.ci?.codebase?.build)
+  const isTagRuntimeInput = isRuntimeInput(
+    (template?.properties || templateInputsProperties)?.ci?.codebase?.build?.spec?.tag
+  )
+  const isBranchRuntimeInput = isRuntimeInput(
+    (template?.properties || templateInputsProperties)?.ci?.codebase?.build?.spec?.branch
+  )
+  const isPRNumberRuntimeInput = isRuntimeInput(
+    (template?.properties || templateInputsProperties)?.ci?.codebase?.build?.spec?.number
+  )
+  const buildIncludesRuntimeInput =
+    isBuildRuntimeInput || isTagRuntimeInput || isBranchRuntimeInput || isPRNumberRuntimeInput
   const isCpuLimitRuntimeInput = (template?.properties || templateInputsProperties)?.ci?.codebase?.resources?.limits
     ?.cpu
   const isMemoryLimitRuntimeInput = (template?.properties || templateInputsProperties)?.ci?.codebase?.resources?.limits
@@ -311,8 +322,6 @@ function CICodebaseInputSetFormInternal({
   const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
   const [isFetchingBranches, setIsFetchingBranches] = useState<boolean>(false)
   const [isDefaultBranchSet, setIsDefaultBranchSet] = useState<boolean>(false)
-  const isTemplatePipeline = !!template?.template
-  const finalTemplate = isTemplatePipeline ? (template?.template?.templateInputs as PipelineInfoConfig) : template
 
   const radioLabels = getBuildTypeLabels(getString)
   const codebaseTypeError = get(formik?.errors, codeBaseTypePath)
@@ -531,10 +540,15 @@ function CICodebaseInputSetFormInternal({
   const pipelineHasCodebaseSection = useMemo((): boolean => {
     return (
       (isCloneCodebaseEnabledAtLeastAtOneStage || codebaseHasRuntimeInputs) &&
-      getMultiTypeFromValue(finalTemplate?.properties?.ci?.codebase?.build as unknown as string) ===
-        MultiTypeInputType.RUNTIME
+      (isConnectorRuntimeInput || isRepoNameRuntimeInput || buildIncludesRuntimeInput)
     )
-  }, [isCloneCodebaseEnabledAtLeastAtOneStage, codebaseHasRuntimeInputs, finalTemplate])
+  }, [
+    isCloneCodebaseEnabledAtLeastAtOneStage,
+    codebaseHasRuntimeInputs,
+    isConnectorRuntimeInput,
+    isRepoNameRuntimeInput,
+    buildIncludesRuntimeInput
+  ])
 
   useEffect(() => {
     const existingValues = { ...formik?.values }
@@ -798,7 +812,7 @@ function CICodebaseInputSetFormInternal({
                           )}
                       </>
                     ))}
-                  {(!isConnectorRuntimeInput ||
+                  {((!isConnectorRuntimeInput && buildIncludesRuntimeInput) ||
                     (isConnectorRuntimeInput && get(formik?.values, codeBaseInputFieldFormName.connectorRef))) && (
                     <>
                       <Text
@@ -807,7 +821,7 @@ function CICodebaseInputSetFormInternal({
                       >
                         {getString('filters.executions.buildType')}
                       </Text>
-                      {showBuildAsDisabledTextField ? (
+                      {showBuildAsDisabledTextField && (
                         <Container
                           width={viewTypeMetadata?.isTemplateBuilder ? '361px' : containerWidth}
                           className={css.bottomMargin3}
@@ -824,53 +838,59 @@ function CICodebaseInputSetFormInternal({
                             style={{ marginBottom: 0, flexGrow: 1 }}
                           />
                         </Container>
-                      ) : (
-                        <Layout.Horizontal
-                          flex={{ justifyContent: 'start' }}
-                          padding={{ top: 'small', left: 'xsmall', bottom: 'xsmall' }}
-                          margin={{ left: 'large' }}
-                        >
-                          <Radio
-                            label={radioLabels['branch']}
-                            width={110}
-                            onClick={() => handleTypeChange(CodebaseTypes.BRANCH)}
-                            checked={codeBaseType === CodebaseTypes.BRANCH}
-                            disabled={disableBuildRadioBtnSelection}
-                            font={{ variation: FontVariation.FORM_LABEL }}
-                            key="branch-radio-option"
-                          />
-                          <Radio
-                            label={radioLabels['tag']}
-                            width={90}
-                            margin={{ left: 'huge' }}
-                            onClick={() => handleTypeChange(CodebaseTypes.TAG)}
-                            checked={codeBaseType === CodebaseTypes.TAG}
-                            disabled={disableBuildRadioBtnSelection}
-                            font={{ variation: FontVariation.FORM_LABEL }}
-                            key="tag-radio-option"
-                          />
-                          {connectorType !== 'Codecommit' && (
+                      )}
+                      {(isBuildRuntimeInput ||
+                        (isConnectorRuntimeInput && get(formik?.values, codeBaseInputFieldFormName.connectorRef))) &&
+                        !showBuildAsDisabledTextField && (
+                          <Layout.Horizontal
+                            flex={{ justifyContent: 'start' }}
+                            padding={{ top: 'small', left: 'xsmall', bottom: 'xsmall' }}
+                            margin={{ left: 'large' }}
+                          >
                             <Radio
-                              label={radioLabels['PR']}
+                              label={radioLabels['branch']}
                               width={110}
-                              margin={{ left: 'huge' }}
-                              onClick={() => handleTypeChange(CodebaseTypes.PR)}
-                              checked={codeBaseType === CodebaseTypes.PR}
+                              onClick={() => handleTypeChange(CodebaseTypes.BRANCH)}
+                              checked={codeBaseType === CodebaseTypes.BRANCH}
                               disabled={disableBuildRadioBtnSelection}
                               font={{ variation: FontVariation.FORM_LABEL }}
-                              key="pr-radio-option"
+                              key="branch-radio-option"
                             />
-                          )}
-                        </Layout.Horizontal>
-                      )}
+                            <Radio
+                              label={radioLabels['tag']}
+                              width={90}
+                              margin={{ left: 'huge' }}
+                              onClick={() => handleTypeChange(CodebaseTypes.TAG)}
+                              checked={codeBaseType === CodebaseTypes.TAG}
+                              disabled={disableBuildRadioBtnSelection}
+                              font={{ variation: FontVariation.FORM_LABEL }}
+                              key="tag-radio-option"
+                            />
+                            {connectorType !== 'Codecommit' && (
+                              <Radio
+                                label={radioLabels['PR']}
+                                width={110}
+                                margin={{ left: 'huge' }}
+                                onClick={() => handleTypeChange(CodebaseTypes.PR)}
+                                checked={codeBaseType === CodebaseTypes.PR}
+                                disabled={disableBuildRadioBtnSelection}
+                                font={{ variation: FontVariation.FORM_LABEL }}
+                                key="pr-radio-option"
+                              />
+                            )}
+                          </Layout.Horizontal>
+                        )}
                       {codebaseTypeError && (formik.submitCount > 0 || viewTypeMetadata?.isTrigger) && (
                         <Text color={Color.RED_600}>{codebaseTypeError}</Text>
                       )}
-                      <Container width={containerWidth}>
-                        {codeBaseType === CodebaseTypes.BRANCH && renderCodeBaseTypeInput(CodebaseTypes.BRANCH)}
-                        {codeBaseType === CodebaseTypes.TAG && renderCodeBaseTypeInput(CodebaseTypes.TAG)}
-                        {codeBaseType === CodebaseTypes.PR && renderCodeBaseTypeInput(CodebaseTypes.PR)}
-                      </Container>
+                      {(buildIncludesRuntimeInput ||
+                        (isConnectorRuntimeInput && get(formik?.values, codeBaseInputFieldFormName.connectorRef))) && (
+                        <Container width={containerWidth}>
+                          {codeBaseType === CodebaseTypes.BRANCH && renderCodeBaseTypeInput(CodebaseTypes.BRANCH)}
+                          {codeBaseType === CodebaseTypes.TAG && renderCodeBaseTypeInput(CodebaseTypes.TAG)}
+                          {codeBaseType === CodebaseTypes.PR && renderCodeBaseTypeInput(CodebaseTypes.PR)}
+                        </Container>
+                      )}
                     </>
                   )}
                   {(isDepthRuntimeInput ||

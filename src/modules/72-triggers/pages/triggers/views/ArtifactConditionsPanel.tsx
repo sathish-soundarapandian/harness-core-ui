@@ -83,7 +83,7 @@ const ArtifactConditionsPanel: React.FC<WebhookConditionsPanelPropsInterface> = 
       <Layout.Vertical className={cx(css.formContent, css.marginBottom)}>
         <Text className={css.sectionHeader}>
           {getString('triggers.conditionsPanel.jexlCondition')}
-          <HarnessDocTooltip tooltipId="jexlCondition" useStandAlone={true} />
+          <HarnessDocTooltip tooltipId="wizardForm_webhook_jexlCondition" useStandAlone={true} />
         </Text>
         <FormInput.Text
           style={{ width: '100%', marginBottom: '0' }}

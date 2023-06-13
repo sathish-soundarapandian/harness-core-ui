@@ -47,6 +47,7 @@ import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
+  DefaultParam,
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
@@ -158,6 +159,10 @@ const Content = (props: ACRRenderContent): JSX.Element => {
   const tagValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tag`, ''), artifact?.spec?.tag),
     get(initialValues?.artifacts, `${artifactPath}.spec.tag`, '')
+  )
+  const tagRegexValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tagRegex`, ''), artifact?.spec?.tagRegex),
+    get(initialValues, `artifacts.${artifactPath}.spec.tagRegex`, '')
   )
 
   const { fetchTags, fetchingTags, fetchTagsError, acrTagsData } = useGetBuildDetailsForAcrArtifact({
@@ -700,6 +705,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
 
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            (isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) || tagValue !== DefaultParam) &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <div className={css.inputFieldLayout}>
                 <DigestField
@@ -713,6 +719,25 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                   disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
                 />
               </div>
+            )}
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            (isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) || tagRegexValue !== DefaultParam) &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <TextFieldInputSetView
+                tooltipProps={{
+                  dataTooltipId: 'artifactDigestTooltip'
+                }}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={getString('pipeline.digest')}
+                name={`${path}.artifacts.${artifactPath}.spec.digest`}
+                fieldPath={`artifacts.${artifactPath}.spec.digest`}
+                template={template}
+              />
             )}
         </Layout.Vertical>
       )}

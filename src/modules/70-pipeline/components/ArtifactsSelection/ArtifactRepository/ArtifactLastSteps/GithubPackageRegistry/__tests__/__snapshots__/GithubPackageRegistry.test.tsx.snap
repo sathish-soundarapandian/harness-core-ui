@@ -66,7 +66,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
                             placeholder="- pipeline.packageTypePlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="container"
+                            value="pipeline.artifactsSelection.container"
                           />
                           <span
                             class="bp3-input-action"
@@ -585,7 +585,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
                             placeholder="- pipeline.packageTypePlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="npm"
+                            value="pipeline.artifactsSelection.container"
                           />
                           <span
                             class="bp3-input-action"
@@ -1072,7 +1072,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
                             placeholder="- pipeline.packageTypePlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="npm"
+                            value="pipeline.artifactsSelection.container"
                           />
                           <span
                             class="bp3-input-action"

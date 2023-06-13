@@ -25,6 +25,7 @@ import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRender
 import type { ArtifactDigestWrapperDetails } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from '../../ArtifactConnector.module.scss'
 
 const onTagInputFocus = (e: React.FocusEvent<HTMLInputElement>, fetchDigest: () => void): void => {
@@ -75,6 +76,9 @@ interface ArtifactDigestFieldProps {
   isReadonly: boolean
   selectedArtifact?: ArtifactType
   lastImagePath?: string
+  isDigestDisabled?: boolean
+  isLastBuildRegexType?: boolean
+  helperText?: React.ReactNode
 }
 
 function BaseArtifactDigestField({
@@ -86,6 +90,9 @@ function BaseArtifactDigestField({
   digestDetails,
   formik,
   isBuildDetailsLoading,
+  isDigestDisabled,
+  isLastBuildRegexType,
+  helperText,
   expressions,
   allowableTypes,
   isReadonly
@@ -116,52 +123,92 @@ function BaseArtifactDigestField({
 
   return (
     <>
-      <div className={css.imagePathContainer}>
-        <FormInput.MultiTypeInput
-          selectItems={getItems(loading, getString('pipeline.artifactsSelection.loadingDigest'), digestItems)}
-          multiTypeInputProps={{
-            expressions,
-            allowableTypes,
-            selectProps: {
-              defaultSelectedItem: digestDetails.formikDigestValueField as SelectOption,
-              noResults: <NoDigestResults digestError={error} noDigestText={digestDetails.errorText} />,
-              items: digestItems,
-              addClearBtn: true,
-              itemRenderer: itemRenderer,
-              allowCreatingNewItems: true,
-              addTooltip: true
-            },
-            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-              /* istanbul ignore next */
-              if (canFetchDigest) {
-                /* istanbul ignore next */
-                onTagInputFocus(e, refetch)
-              }
-            }
-          }}
-          label={getString('pipeline.digest')}
-          name={digestDetails.digestPath}
-          className={css.tagInputButton}
-        />
-
-        {getMultiTypeFromValue(digestDetails.formikDigestValueField as string) === MultiTypeInputType.RUNTIME && (
-          <div className={css.configureOptions}>
-            <SelectConfigureOptions
-              value={digestDetails.formikDigestValueField as string}
+      {isLastBuildRegexType ? (
+        <div className={css.imagePathContainer}>
+          <FormInput.MultiTextInput
+            name={digestDetails.digestPath as string}
+            placeholder={getString('pipeline.artifactsSelection.digestPlaceholder')}
+            label={getString('pipeline.digest')}
+            disabled={isReadonly || isDigestDisabled}
+            tooltipProps={{
+              dataTooltipId: 'artifactDigestTooltip'
+            }}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+          />
+          {getMultiTypeFromValue(digestDetails.formikDigestValueField as any) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              style={{ marginTop: 22 }}
+              value={defaultTo(digestDetails.formikDigestValueField as string, '')}
               type="String"
-              options={digestItems}
-              loading={loading}
-              variableName="digest"
+              variableName={digestDetails.digestPath as string}
               showRequiredField={false}
               showDefaultField={false}
-              onChange={value => {
-                formik.setFieldValue(digestDetails.digestPath, value)
-              }}
+              onChange={value => formik.setFieldValue(digestDetails.digestPath, value)}
               isReadonly={isReadonly}
+              allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
             />
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      ) : (
+        <div className={css.imagePathContainer}>
+          <FormInput.MultiTypeInput
+            tooltipProps={{
+              dataTooltipId: 'artifactDigestTooltip'
+            }}
+            placeholder={getString('pipeline.artifactsSelection.digestPlaceholder')}
+            disabled={isDigestDisabled}
+            helperText={helperText}
+            selectItems={getItems(loading, getString('pipeline.artifactsSelection.loadingDigest'), digestItems)}
+            multiTypeInputProps={{
+              expressions,
+              allowableTypes,
+              selectProps: {
+                defaultSelectedItem: digestDetails.formikDigestValueField as SelectOption,
+                noResults: !isLastBuildRegexType ? (
+                  <NoDigestResults digestError={error} noDigestText={digestDetails.errorText} />
+                ) : null,
+                items: digestItems,
+                addClearBtn: true,
+                itemRenderer: itemRenderer,
+                allowCreatingNewItems: true,
+                addTooltip: true,
+                usePortal: true
+              },
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                /* istanbul ignore next */
+                if (canFetchDigest && !isLastBuildRegexType) {
+                  /* istanbul ignore next */
+                  onTagInputFocus(e, refetch)
+                }
+              }
+            }}
+            label={getString('pipeline.digest')}
+            name={digestDetails.digestPath as string}
+            className={css.tagInputButton}
+          />
+
+          {getMultiTypeFromValue(digestDetails.formikDigestValueField as string) === MultiTypeInputType.RUNTIME && (
+            <div className={css.configureOptions}>
+              <SelectConfigureOptions
+                value={digestDetails.formikDigestValueField as string}
+                type="String"
+                options={digestItems}
+                loading={loading}
+                variableName="digest"
+                showRequiredField={false}
+                showDefaultField={false}
+                onChange={value => {
+                  formik.setFieldValue(digestDetails.digestPath, value)
+                }}
+                isReadonly={isReadonly}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </>
   )
 }

@@ -151,6 +151,7 @@ function BambooStepInputSet(
             placeholder={getString('connectors.selectConnector')}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
+            disabled={readonly}
             orgIdentifier={orgIdentifier}
             width={385}
             setRefValue
@@ -183,7 +184,8 @@ function BambooStepInputSet(
           <div className={cx(css.formGroup, css.lg)}>
             <FormInput.MultiTypeInput
               label={getString('pipeline.bamboo.planName')}
-              name="spec.planKey"
+              name={`${prefix}spec.planName`}
+              disabled={readonly}
               useValue
               selectItems={planDetails}
               placeholder={
@@ -208,8 +210,7 @@ function BambooStepInputSet(
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   const targetType = get(e, 'target.type', '')
                   const targetPlaceHolder = get(e, 'target.placeholder', '')
-                  /* istanbul ignore next */
-                  if (targetType === 'text' && targetPlaceHolder === EXPRESSION_STRING) {
+                  if (targetType !== 'text' || (targetType === 'text' && targetPlaceHolder === EXPRESSION_STRING)) {
                     return
                   }
                   refetchPlans()

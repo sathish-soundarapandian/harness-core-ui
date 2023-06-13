@@ -109,7 +109,12 @@ const isIndeterminate = (events: PipelineEventsFormData, currentEvent: PipelineE
 
 const isAll_Event = (currentEvent: PipelineEventType): boolean => currentEvent === PipelineEventType.ALL_EVENTS
 
-function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEventsProps): React.ReactElement {
+function PipelineEvents({
+  nextStep,
+  previousStep,
+  prevStepData,
+  stagesOptions
+}: PipelineEventsProps): React.ReactElement {
   const { getString } = useStrings()
   const initialValues: PipelineEventsFormData = { types: {} }
   const types: Required<PipelineEventsFormData>['types'] = {}
@@ -320,12 +325,23 @@ function PipelineEvents({ nextStep, prevStepData, stagesOptions }: PipelineEvent
                   )
                 })}
               </Layout.Vertical>
-              <Button
-                type="submit"
-                variation={ButtonVariation.PRIMARY}
-                rightIcon="chevron-right"
-                text={getString('continue')}
-              />
+              <Layout.Horizontal spacing={'medium'}>
+                <Button
+                  text={getString('back')}
+                  variation={ButtonVariation.SECONDARY}
+                  onClick={() => {
+                    previousStep?.({
+                      ...prevStepData
+                    })
+                  }}
+                />
+                <Button
+                  type="submit"
+                  variation={ButtonVariation.PRIMARY}
+                  rightIcon="chevron-right"
+                  text={getString('continue')}
+                />
+              </Layout.Horizontal>
             </Form>
           )
         }}

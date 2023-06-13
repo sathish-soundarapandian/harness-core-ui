@@ -12,7 +12,12 @@ exports[`Digest Field tests Should match snapshot with error and buildDetailsLis
         class="bp3-label"
         for="stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars[4].sidecar.spec.digest"
       >
-        pipeline.digest
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="artifactDigestTooltip"
+        >
+          pipeline.digest
+        </span>
          
         <span
           class="bp3-text-muted"
@@ -37,7 +42,7 @@ exports[`Digest Field tests Should match snapshot with error and buildDetailsLis
                   autocomplete="off"
                   class="bp3-input"
                   name="stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars[4].sidecar.spec.digest"
-                  placeholder="Search..."
+                  placeholder="pipeline.artifactsSelection.digestPlaceholder"
                   style="padding-right: 0px;"
                   type="text"
                   value=""
@@ -116,7 +121,12 @@ exports[`Digest Field tests initial render snapshot test 1`] = `
         class="bp3-label"
         for="stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars[4].sidecar.spec.digest"
       >
-        pipeline.digest
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="artifactDigestTooltip"
+        >
+          pipeline.digest
+        </span>
          
         <span
           class="bp3-text-muted"
@@ -141,7 +151,7 @@ exports[`Digest Field tests initial render snapshot test 1`] = `
                   autocomplete="off"
                   class="bp3-input"
                   name="stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars[4].sidecar.spec.digest"
-                  placeholder="Search..."
+                  placeholder="pipeline.artifactsSelection.digestPlaceholder"
                   style="padding-right: 0px;"
                   type="text"
                   value=""
@@ -220,7 +230,12 @@ exports[`Digest Field tests when digest call is not empty 1`] = `
         class="bp3-label"
         for="stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars[4].sidecar.spec.digest"
       >
-        pipeline.digest
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="artifactDigestTooltip"
+        >
+          pipeline.digest
+        </span>
          
         <span
           class="bp3-text-muted"
@@ -245,7 +260,7 @@ exports[`Digest Field tests when digest call is not empty 1`] = `
                   autocomplete="off"
                   class="bp3-input"
                   name="stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars[4].sidecar.spec.digest"
-                  placeholder="Search..."
+                  placeholder="pipeline.artifactsSelection.digestPlaceholder"
                   style="padding-right: 0px;"
                   type="text"
                   value=""
@@ -324,7 +339,12 @@ exports[`Digest Field tests when digest is runtime input 1`] = `
         class="bp3-label"
         for="stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars[5].sidecar.spec.digest"
       >
-        pipeline.digest
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="artifactDigestTooltip"
+        >
+          pipeline.digest
+        </span>
          
         <span
           class="bp3-text-muted"
@@ -349,7 +369,7 @@ exports[`Digest Field tests when digest is runtime input 1`] = `
                   autocomplete="off"
                   class="bp3-input"
                   name="stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars[5].sidecar.spec.digest"
-                  placeholder="Search..."
+                  placeholder="pipeline.artifactsSelection.digestPlaceholder"
                   style="padding-right: 0px;"
                   type="text"
                   value=""

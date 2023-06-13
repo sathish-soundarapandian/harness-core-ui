@@ -23,7 +23,6 @@ import WelcomePage from './pages/welcome/WelcomePage'
 import HomeSideNav from './components/HomeSideNav/HomeSideNav'
 import AccountSideNav from './components/AccountSideNav/AccountSideNav'
 import AccountResources from './pages/AccountResources/AccountResources'
-import SmtpDetails from './components/Smtp/SmtpDetails'
 import { useFeatureFlags } from './hooks/useFeatureFlag'
 import MainDashboardSideNav from './components/HomeSideNav/MainDashboardSideNav'
 
@@ -95,9 +94,7 @@ export default (
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toAccountResources({ ...accountPathProps })} exact>
       <AccountResources />
     </RouteWithLayout>
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toAccountSMTP({ ...accountPathProps })} exact>
-      <SmtpDetails />
-    </RouteWithLayout>
+
     <Route path={routes.toGenericError({ ...accountPathProps })}>
       <GenericErrorPage />
     </Route>
