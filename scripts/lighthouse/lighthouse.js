@@ -29,14 +29,14 @@ let passWord = ''
 let emailId = 'ui_perf_test_prod@mailinator.com'
 async function run() {
   // process.argv[2] could be QA / Pre-QA / Production
-  const env = process.argv[2]
+  const env = 'Pre-QA'
   if (env === 'QA') {
     url = QA_URL
     passWord = process.env.PASSWORD
   } else if (env === 'Pre-QA') {
     url = PRE_QA_URL
     emailId = 'perf_test_pre-qa@mailinator.com'
-    passWord = process.env.PASSWORD
+    passWord = 'Harness@123'
   } else {
     passWord = process.env.LIGHT_HOUSE_SECRET
   }
@@ -136,8 +136,8 @@ async function run() {
   const runLightHouseNtimesAndGetResults = async (numberOfTimes, passedUrl) => {
     // Comment executablePath while running in local
     const browser = await puppeteer.launch({
-      headless: true,
-      executablePath: '/usr/bin/google-chrome',
+      headless: false,
+      // executablePath: '/usr/bin/google-chrome',
       args: ['--no-sandbox', `--remote-debugging-port=${PORT}`]
     })
     let page = await browser.newPage()
@@ -152,7 +152,7 @@ async function run() {
     await page.waitForNavigation()
     let baseUrl = ''
     if (page.url().includes('/ng/')) {
-      await page.waitForXPath("//span[text()='Welcome']")
+      await page.waitForXPath("//span[text()='Welcome']", { timeout: 300000 })
       baseUrl = page.url().split('/home')[0]
     } else {
       await page.waitForXPath("//span[text()='Main Dashboard']")
