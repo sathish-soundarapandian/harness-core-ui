@@ -265,6 +265,7 @@ featureFlagDetail:
 flagFilters:
   active: Active Flags
   allFlags: All Flags
+  archivedFlags: Archived
   enabled: Enabled Flags
   recentlyAccessed: Recently Changed Flags
   permanent: Permanent Flags

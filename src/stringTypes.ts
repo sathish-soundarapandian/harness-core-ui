@@ -8051,6 +8051,7 @@ export interface StringsMap {
   'cf.featureFlags.typeOfFlag': string
   'cf.flagFilters.active': string
   'cf.flagFilters.allFlags': string
+  'cf.flagFilters.archivedFlags': string
   'cf.flagFilters.enabled': string
   'cf.flagFilters.permanent': string
   'cf.flagFilters.potentiallyStale': string

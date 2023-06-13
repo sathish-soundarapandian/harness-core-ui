@@ -21,7 +21,8 @@ export interface FlagTableFiltersProps {
 export enum FlagFilterKeys {
   LIFETIME = 'lifetime',
   STATUS = 'status',
-  ENABLED = 'enabled'
+  ENABLED = 'enabled',
+  ARCHIVED = 'archived'
 }
 
 export const FlagFilterValues = {
@@ -67,6 +68,12 @@ export const featureFlagFilters = (features: Features | null): Array<FilterProps
     total: features?.featureCounts?.totalPotentiallyStale || 0,
     tooltipId: 'ff_flagFilters_potentiallyStaleFlags',
     filterTotalColor: Color.ORANGE_800
+  },
+  {
+    queryProps: { key: FlagFilterKeys.STATUS, value: FlagFilterValues.POTENTIALLY_STALE },
+    label: 'cf.flagFilters.archivedFlags',
+    total: 0,
+    filterTotalColor: Color.GREY_700
   }
 ]
 
