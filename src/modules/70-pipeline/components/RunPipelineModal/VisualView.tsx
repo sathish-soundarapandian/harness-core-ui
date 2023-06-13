@@ -105,7 +105,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const showInputSetSelector = (): boolean => {
-    return !!(pipeline && currentPipeline && hasRuntimeInputs && existingProvide === 'existing')
+    return !!(pipeline && currentPipeline && hasRuntimeInputs && existingProvide === 'existing' && hasInputSets)
   }
 
   const showPipelineInputSetForm = (): boolean => {
@@ -122,8 +122,6 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const noRuntimeInputs = checkIfRuntimeInputsNotPresent()
-  // Do not show input set selector on rerun
-  const canSelectInputSets = hasInputSets && !reRunInputSetYaml
 
   return (
     <div
@@ -152,32 +150,35 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
           </Layout.Horizontal>
         ) : (
           <>
-            <Layout.Vertical
-              className={css.pipelineHeader}
-              padding={{ top: 'xlarge', left: 'xlarge', right: 'xlarge' }}
-            >
-              <SelectExistingInputsOrProvideNew
-                existingProvide={existingProvide}
-                onExistingProvideRadioChange={onExistingProvideRadioChange}
-                hasInputSets={canSelectInputSets}
-              />
-              {!executionView && canSelectInputSets && showInputSetSelector() ? (
-                <GitSyncStoreProvider>
-                  <InputSetSelector
-                    pipelineIdentifier={pipelineIdentifier}
-                    onChange={inputsets => {
-                      setSelectedInputSets(inputsets)
-                    }}
-                    value={selectedInputSets}
-                    pipelineGitDetails={get(pipelineResponse, 'data.gitDetails')}
-                    invalidInputSetReferences={invalidInputSetReferences}
-                    loadingMergeInputSets={loadingInputSets}
-                    onReconcile={onReconcile}
-                    reRunInputSetYaml={reRunInputSetYaml}
-                  />
-                </GitSyncStoreProvider>
-              ) : null}
-            </Layout.Vertical>
+            {/* Do not show input set selector on rerun / execution input-set view */}
+            {!executionView && !reRunInputSetYaml && (
+              <Layout.Vertical
+                className={css.pipelineHeader}
+                padding={{ top: 'xlarge', left: 'xlarge', right: 'xlarge' }}
+              >
+                <SelectExistingInputsOrProvideNew
+                  existingProvide={existingProvide}
+                  onExistingProvideRadioChange={onExistingProvideRadioChange}
+                  hasInputSets={hasInputSets}
+                />
+                {showInputSetSelector() ? (
+                  <GitSyncStoreProvider>
+                    <InputSetSelector
+                      pipelineIdentifier={pipelineIdentifier}
+                      onChange={inputsets => {
+                        setSelectedInputSets(inputsets)
+                      }}
+                      value={selectedInputSets}
+                      pipelineGitDetails={get(pipelineResponse, 'data.gitDetails')}
+                      invalidInputSetReferences={invalidInputSetReferences}
+                      loadingMergeInputSets={loadingInputSets}
+                      onReconcile={onReconcile}
+                      reRunInputSetYaml={reRunInputSetYaml}
+                    />
+                  </GitSyncStoreProvider>
+                ) : null}
+              </Layout.Vertical>
+            )}
             {showPipelineInputSetForm() ? (
               <PipelineInputSetFormWrapper
                 executionView={executionView}
@@ -187,6 +188,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                 template={template}
                 resolvedPipeline={resolvedPipeline}
                 selectedStageData={selectedStageData}
+                showDivider={!executionView && !reRunInputSetYaml}
               />
             ) : null}
             {showVoidPipelineInputSetForm() ? <div className={css.noPipelineInputSetForm} /> : null}
@@ -208,6 +210,7 @@ export interface PipelineInputSetFormWrapperProps {
   resolvedPipeline?: PipelineInfoConfig
   selectedStageData: StageSelectionData
   maybeContainerClassOverride?: string
+  showDivider?: boolean
 }
 
 function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): React.ReactElement | null {
@@ -218,15 +221,18 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
     template,
     executionIdentifier,
     resolvedPipeline,
-    selectedStageData
+    selectedStageData,
+    showDivider
   } = props
 
   if (currentPipeline?.pipeline && resolvedPipeline && (hasRuntimeInputs || executionView)) {
     return (
       <>
-        <div className={css.dividerWrapper}>
-          <div className={css.divider} />
-        </div>
+        {showDivider && (
+          <div className={css.dividerWrapper} data-testid={'inputSetFormDivider'}>
+            <div className={css.divider} />
+          </div>
+        )}
         <PipelineInputSetForm
           originalPipeline={resolvedPipeline}
           template={template}
