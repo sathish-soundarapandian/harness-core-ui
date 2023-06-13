@@ -60,3 +60,18 @@
 .bold {
   font-weight: 600 !important;
 }
+.delegateImg {
+  width: 100%;
+  height: 160px;
+}
+
+.almostFullScreenCloseBtn:global(.bp3-button.bp3-minimal) {
+  position: absolute;
+  right: 100%;
+  top: 0;
+  background: var(--primary-5) !important;
+  opacity: 0.5;
+  color: var(--white) !important;
+  border-radius: 4px 0 0 4px !important;
+  padding: 0 !important;
+}

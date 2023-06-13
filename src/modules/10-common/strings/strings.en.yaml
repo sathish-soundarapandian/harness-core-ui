@@ -24,6 +24,7 @@ warning: Warning
 artifactPaths: 'Artifact Paths'
 gnupgKeys: GnuPG Keys
 featureComingSoon: This feature is coming soon.
+howItWorks: How it works?
 skip: Skip
 sync: Sync
 nextStep: Next Step

@@ -7,7 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly almostFullScreenCloseBtn: string
   readonly bold: string
+  readonly delegateImg: string
   readonly deploymentSteps: string
   readonly deploymentStrategyCards: string
   readonly deploymentStrategyStep: string

@@ -18,6 +18,7 @@ export interface useCreateDelegateViaCommandsModalProps {
   oldDelegateCreation?: () => void
   onClose?: (delegateName?: string) => void
   hideDocker?: boolean
+  onDelegateNameChange?: (name: string) => void
 }
 
 export interface useCreateDelegateViaCommandsModalReturn {
@@ -29,17 +30,19 @@ const useCreateDelegateViaCommandsModal = (
   useCreateDelegateViaCommandsModalProps?: useCreateDelegateViaCommandsModalProps
 ): useCreateDelegateViaCommandsModalReturn => {
   const { trackEvent } = useTelemetry()
-  const onClose = (delegateName?: string): void => {
+
+  const onClose = (): void => {
     trackEvent(DelegateActions.DelegateCommandLineCreationClosed, {
       category: Category.DELEGATE
     })
     if (useCreateDelegateViaCommandsModalProps?.onClose) {
-      useCreateDelegateViaCommandsModalProps.onClose(delegateName)
+      useCreateDelegateViaCommandsModalProps.onClose()
     }
     if (closeDelegateModalWithCommands) {
       closeDelegateModalWithCommands()
     }
   }
+
   const [openDelegateModalWithCommands, closeDelegateModalWithCommands] = useModalHook(() => {
     return (
       <Drawer position={Position.RIGHT} isOpen={true} isCloseButtonShown={false} size={'86%'} onClose={onClose}>

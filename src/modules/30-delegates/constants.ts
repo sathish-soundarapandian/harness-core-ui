@@ -14,7 +14,7 @@ export const DelegateTypes = {
 
 export const POLL_INTERVAL = 2 /* sec */ * 1000 /* ms */
 export const TIME_OUT = 5 * 60 * 1000
-export const DELEGATE_COMMAND_LINE_TIME_OUT = 3 * 60 * 1000
+export const DELEGATE_COMMAND_LINE_TIME_OUT = 1 * 60 * 1000
 
 export enum DelegateStatus {
   ENABLED = 'ENABLED',

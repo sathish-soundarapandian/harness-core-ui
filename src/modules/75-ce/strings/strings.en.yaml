@@ -987,7 +987,6 @@ nodeRecommendation:
   distribution: DISTRIBUTION
   nodepool: Nodepool
   poolDetails: NODEPOOL DETAILS
-  howItWorks: How it works?
   text1: 'The node pool recommendations are computed by analyzing historical utilization data and requests metrics of Pods. CCM recommends the optimal resource configurations for the Spot and On-demand instances.'
   text2: 'CCM also offers the flexibility of modifying the resource configurations. You can modify the value of CPU, memory, and node counts. In such a scenario, CCM generates context-aware cluster sizing recommendations based on the resource configurations that you provide.'
   listhead: 'It uses the following parameters to determine the maximum node counts:'

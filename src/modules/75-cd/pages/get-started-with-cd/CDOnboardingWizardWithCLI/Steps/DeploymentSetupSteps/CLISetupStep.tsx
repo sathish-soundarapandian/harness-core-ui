@@ -3,16 +3,17 @@ import { Layout, Tab, Tabs, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
+import ApiKeySetup, { ApiKeySetupProps } from './ApiKeySetup'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
-export default function CLISetupStep(): JSX.Element {
+export default function CLISetupStep({ onKeyGenerate }: ApiKeySetupProps): JSX.Element {
   return (
     <Layout.Vertical className={css.deploymentSteps}>
       <Layout.Vertical margin={{ bottom: 'xlarge' }}>
-        <Text color={Color.BLACK} padding={{ top: 'large' }}>
+        <Text className={css.bold} color={Color.BLACK} padding={{ top: 'large' }}>
           <String
             className={css.marginBottomLarge}
             stringID="cd.getStartedWithCD.flowbyquestions.deplopymentSteps.stepsTitle"
-          />{' '}
+          />
         </Text>
         <Text color={Color.BLACK} padding={{ top: 'large' }}>
           <String
@@ -26,6 +27,7 @@ export default function CLISetupStep(): JSX.Element {
         <Text color={Color.BLACK} padding={{ top: 'large' }}>
           <String stringID="cd.getStartedWithCD.flowbyquestions.deplopymentSteps.stepsIntro2" />
         </Text>
+        <ApiKeySetup onKeyGenerate={onKeyGenerate} />
       </Layout.Vertical>
       <InstallCLIInfo />
     </Layout.Vertical>
@@ -39,7 +41,7 @@ function InstallCLIInfo(): JSX.Element {
       <Text color={Color.BLACK} padding={{ top: 'xlarge' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.title"
+          stringID="cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.title"
         />
       </Text>
       <Tabs id="selectedOS">
@@ -50,7 +52,7 @@ function InstallCLIInfo(): JSX.Element {
             <CommandBlock
               darkmode
               allowCopy={true}
-              commandSnippet={getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.mac')}
+              commandSnippet={getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.mac')}
               ignoreWhiteSpaces={true}
               downloadFileProps={{ downloadFileName: 'testname', downloadFileExtension: 'xdf' }}
               copyButtonText={getString('common.copy')}
@@ -64,7 +66,7 @@ function InstallCLIInfo(): JSX.Element {
             <CommandBlock
               darkmode
               allowCopy={true}
-              commandSnippet={getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.linux')}
+              commandSnippet={getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.linux')}
               ignoreWhiteSpaces={true}
               downloadFileProps={{ downloadFileName: 'testname', downloadFileExtension: 'xdf' }}
               copyButtonText={getString('common.copy')}
@@ -78,7 +80,7 @@ function InstallCLIInfo(): JSX.Element {
             <CommandBlock
               darkmode
               allowCopy={true}
-              commandSnippet={getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step1.win')}
+              commandSnippet={getString('cd.getStartedWithCD.flowbyquestions.deplopymentSteps.steps.step2.win')}
               ignoreWhiteSpaces={true}
               downloadFileProps={{ downloadFileName: 'testname', downloadFileExtension: 'xdf' }}
               copyButtonText={getString('common.copy')}

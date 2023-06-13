@@ -32,9 +32,10 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
   }
 
   const isStepValid = (stepId: string): boolean => {
-    const isValid = STEP_VALIDATION_MAP[stepId](state.stepsProgress[stepId].stepData)
-    console.log(stepId, { isValid })
-    return isValid
+    if (STEP_VALIDATION_MAP[stepId]) {
+      return STEP_VALIDATION_MAP[stepId](state.stepsProgress[stepId].stepData)
+    }
+    return true
   }
 
   return (
@@ -62,17 +63,17 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
               // subTitle: 'subs',
               panel: <WhatToDeploy saveProgress={saveProgress} />,
               preview: <WhatToDeployPreview />,
-              helpPanelReferenceId: 'aaa',
-              errorMessage: ['error']
+              helpPanelReferenceId: 'aaa'
+              // errorMessage: ['error']
             },
             {
               id: CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY,
-              title: getString('cd.getStartedWithCD.flowbyquestions.howNwhere.title'),
+              title: getString('cd.getStartedWithCD.flowbyquestions.howNwhere.K8s.cdPipeline.installDelegate'), //getString('cd.getStartedWithCD.flowbyquestions.howNwhere.title'),
               // subTitle: 'subs',
               panel: <WhereAndHowToDepoy saveProgress={saveProgress} />,
               // preview: <div>prebiew</div>,
               helpPanelReferenceId: 'aaa',
-              errorMessage: ['error']
+              errorMessage: ['Delegate should be working to move to next step']
             },
             {
               id: CDOnboardingSteps.DEPLOYMENT_STEPS,
@@ -81,7 +82,7 @@ export default function CDOnboardingWizardWithCLI(): JSX.Element {
               panel: <DeploymentSetupSteps saveProgress={saveProgress} />,
               // preview: <div>prebiew</div>,
               helpPanelReferenceId: 'aaa',
-              errorMessage: ['error'],
+              // errorMessage: ['error'],
               nextButtonTitle: 'Verify'
             }
           ]}

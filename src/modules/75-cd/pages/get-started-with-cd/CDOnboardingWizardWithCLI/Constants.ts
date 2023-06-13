@@ -59,3 +59,6 @@ export const StrategyVideoByType: { [key: string]: string } = {
   Rolling: RollingUpdateVideo,
   Canary: CanaryVideo
 }
+
+export const MAX_DELETAGE_POLL_COUNT = 10
+export const DELETAGE_POLL_COUNT_INTERVAL_MS = 3000

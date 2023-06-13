@@ -28,15 +28,12 @@ export function OnboardingStoreProvider(props: React.PropsWithChildren<Onboardin
     stepsProgress: {}
   })
 
-  const updateOnboardingStore = React.useCallback(
-    function updateOnboardingStore(data: OnboardingStoreState): void {
-      setState(prevState => ({
-        ...prevState,
-        ...data
-      }))
-    },
-    [setState]
-  )
+  const updateOnboardingStore = React.useCallback(function updateOnboardingStore(data: OnboardingStoreState): void {
+    setState(prevState => ({
+      ...prevState,
+      ...data
+    }))
+  }, [])
   return (
     <OnboardingStoreContext.Provider
       value={{

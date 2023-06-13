@@ -13,6 +13,7 @@ import {
 import { FontVariation, Intent, Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
+import type { HideModal } from '@harness/use-modal'
 import DelegatesEmptyState from '@delegates/images/DelegatesEmptyState.svg'
 import { useStrings } from 'framework/strings'
 import {
@@ -43,8 +44,12 @@ import css from './DelegateCommandLineCreation.module.scss'
 
 interface DelegateCommandLineCreationProps {
   oldDelegateCreation?: () => void
-  onDone: (delegateName?: string) => void
+  onDone: HideModal
   hideDocker?: boolean
+  onDelegateConfigChange?: (data: {
+    delegateName?: DelegateDefaultName
+    delegateType?: DelegateCommandLineTypes
+  }) => void
 }
 interface CommonStatesforAllClicksProps {
   commandTypeLocal: CommandType | undefined
@@ -61,7 +66,8 @@ const intsallDelegateLinkTutorial =
 const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = ({
   onDone,
   oldDelegateCreation,
-  hideDocker
+  hideDocker,
+  onDelegateConfigChange
 }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -129,6 +135,13 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       setTerraFormDataToCommand()
     }
   }, [terraFormData])
+
+  useEffect(() => {
+    onDelegateConfigChange?.({
+      delegateName: delegateName as DelegateDefaultName,
+      delegateType: delegateType as DelegateCommandLineTypes
+    })
+  }, [delegateName, delegateType])
 
   const {
     refetch,
@@ -352,7 +365,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
           {verifyButtonClicked && (
             <VerifyDelegateConnection
               onErrorHandler={onDelegateError}
-              onDone={() => onDone(delegateName)}
+              onDone={onDone}
               name={delegateName}
               delegateType={commonProblemsDelegateType}
             />

@@ -1,4 +1,5 @@
 import type { IconName } from '@harness/icons'
+import type { DelegateCommonProblemTypes } from '@delegates/constants'
 export interface EntityType {
   id: string
   label: string
@@ -28,4 +29,6 @@ export interface WhatToDeployType {
 export interface WhereAndHowToDeployType {
   type?: DeploymentFlowType
   delegateName?: string
+  delegateType?: DelegateCommonProblemTypes
+  isDelegateVerified?: boolean
 }
