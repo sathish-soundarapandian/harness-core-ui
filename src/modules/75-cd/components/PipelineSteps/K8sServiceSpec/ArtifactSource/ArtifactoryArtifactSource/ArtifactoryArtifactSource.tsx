@@ -659,6 +659,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             <ServerlessArtifactoryRepository
               connectorRef={getFinalQueryParamValue(connectorRefValue)}
               repoFormat={isGenericArtifactory ? 'generic' : repoFormat}
+              isReadonly={isFieldDisabled(`artifacts.${artifactPath}.spec.repository`)}
               expressions={expressions}
               allowableTypes={allowableTypes}
               formik={formik}
