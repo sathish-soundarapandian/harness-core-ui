@@ -9,6 +9,5 @@
 declare const styles: {
   readonly menuItem: string
   readonly topHeader: string
-  readonly welcomeText: string
 }
 export default styles

@@ -73,9 +73,9 @@ export const getScoreComparisonChartOptions = (
   const defautOptions = {
     chart: {
       type: 'bar',
-      spacing: [10, 0, 0, 0],
-      height: 130,
-      width: 500
+      spacing: [0, 0, 0, 0],
+      height: 230,
+      width: 400
     },
     credits: undefined,
     title: {
@@ -87,26 +87,16 @@ export const getScoreComparisonChartOptions = (
     plotOptions: {
       series: {
         marker: {
-          states: {
-            hover: {
-              enabled: false
-            }
-          },
-          enabled: false,
           radius: 1
-        }
+        },
+        enableMouseTracking: false
       },
       bar: {
-        pointWidth: 15,
+        pointWidth: 25,
         pointPadding: 0.1,
         dataLabels: {
           enabled: true, // Enable data labels
           format: '{y}' // Set the format of the data labels
-        },
-        states: {
-          hover: {
-            enabled: false // Disable the hover effect
-          }
         }
       }
     },
@@ -114,6 +104,7 @@ export const getScoreComparisonChartOptions = (
       enabled: false
     },
     xAxis: {
+      type: 'category',
       title: {
         text: ''
       },
@@ -126,6 +117,7 @@ export const getScoreComparisonChartOptions = (
       categories: ['Your Score', 'Company score', 'Benchmark', 'Maximum Score']
     },
     yAxis: {
+      max: 120,
       labels: { enabled: false },
       title: {
         text: ''
@@ -138,17 +130,20 @@ export const getScoreComparisonChartOptions = (
       {
         name: 'Your Score',
         data: [userScore],
-        color: '#A3E9FF'
+        color: '#CDF4FE',
+        borderColor: '#0278D5'
       },
       {
         name: 'Company score',
         data: [questionOrgScore],
-        color: '#FFDABF'
+        color: '#FFDABF',
+        borderColor: '#FF832B'
       },
       {
         name: 'Benchmark',
         data: [questionBenchMarkScore],
-        color: '#FEE89D'
+        color: '#FEE89D',
+        borderColor: '#FCB519'
       }
     ]
   }

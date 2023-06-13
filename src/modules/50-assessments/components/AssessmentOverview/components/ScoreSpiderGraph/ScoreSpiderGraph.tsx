@@ -1,5 +1,5 @@
 import { Button, ButtonVariation, Card, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { FontVariation } from '@harness/design-system'
 import Highcharts from 'highcharts'
 import more from 'highcharts/highcharts-more'
 import HighchartsReact from 'highcharts-react-official'
@@ -17,9 +17,7 @@ const ScoreSpiderGraph = ({ sectionScores }: ScoreSpiderGraphProps): JSX.Element
   return (
     <Card className={css.scoreSpiderGraph}>
       <div className={css.header}>
-        <Text font={{ weight: 'bold', size: 'medium' }} color={Color.GREY_1000}>
-          {getString('assessments.howYouPerformedInSections')}
-        </Text>
+        <Text font={{ variation: FontVariation.H5 }}>{getString('assessments.howYouPerformedInSections')}</Text>
         <Button variation={ButtonVariation.LINK}>{getString('assessments.viewInDetail')}</Button>
       </div>
       <HighchartsReact highcharts={more(Highcharts)} options={getSpiderChartOptions(sectionScores)} />

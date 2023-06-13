@@ -1,8 +1,7 @@
 .recommendationContainer {
   display: flex;
   flex-direction: column;
-  height: 90px;
-  gap: 4px;
+  gap: var(--spacing-small);
 }
 .iconMargin {
   margin-right: var(--spacing-medium);

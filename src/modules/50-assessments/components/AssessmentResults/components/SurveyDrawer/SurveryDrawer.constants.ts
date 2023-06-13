@@ -13,8 +13,13 @@ export const DrawerProps: IDrawerProps = {
   isCloseButtonShown: true
 }
 
-export enum LEVELS {
-  LEVEL_3 = 'LEVEL_3',
-  LEVEL_2 = 'LEVEL_2',
-  LEVEL_1 = 'LEVEL_1'
+export const SURVEY_CHART_OPTIONS = {
+  chart: {
+    height: 120
+  },
+  plotOptions: {
+    bar: {
+      pointWidth: 16
+    }
+  }
 }

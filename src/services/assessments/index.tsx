@@ -133,6 +133,7 @@ export interface QuestionMaturity {
 }
 
 export interface QuestionOption {
+  maturityLevel?: 'LEVEL_1' | 'LEVEL_2' | 'LEVEL_3'
   optionId?: string
   optionPoints?: number
   optionText?: string
@@ -744,6 +745,65 @@ export const getImproveMaturityStatePromise = (
   getUsingFetch<ImprovedMaturityDTO, unknown, void, GetImproveMaturityStatePathParams>(
     getConfig('assessments/api'),
     `/v1/improve/${resultCode}`,
+    props,
+    signal
+  )
+
+export interface GetQuestionLevelOptionsQueryParams {
+  questionId?: string
+}
+
+export interface GetQuestionLevelOptionsPathParams {
+  resultCode: string
+}
+
+export type GetQuestionLevelOptionsProps = Omit<
+  GetProps<Question, unknown, GetQuestionLevelOptionsQueryParams, GetQuestionLevelOptionsPathParams>,
+  'path'
+> &
+  GetQuestionLevelOptionsPathParams
+
+/**
+ * View options for a specific question
+ */
+export const GetQuestionLevelOptions = ({ resultCode, ...props }: GetQuestionLevelOptionsProps) => (
+  <Get<Question, unknown, GetQuestionLevelOptionsQueryParams, GetQuestionLevelOptionsPathParams>
+    path={`/v1/question-level-results/${resultCode}`}
+    base={getConfig('assessments/api')}
+    {...props}
+  />
+)
+
+export type UseGetQuestionLevelOptionsProps = Omit<
+  UseGetProps<Question, unknown, GetQuestionLevelOptionsQueryParams, GetQuestionLevelOptionsPathParams>,
+  'path'
+> &
+  GetQuestionLevelOptionsPathParams
+
+/**
+ * View options for a specific question
+ */
+export const useGetQuestionLevelOptions = ({ resultCode, ...props }: UseGetQuestionLevelOptionsProps) =>
+  useGet<Question, unknown, GetQuestionLevelOptionsQueryParams, GetQuestionLevelOptionsPathParams>(
+    (paramsInPath: GetQuestionLevelOptionsPathParams) => `/v1/question-level-results/${paramsInPath.resultCode}`,
+    { base: getConfig('assessments/api'), pathParams: { resultCode }, ...props }
+  )
+
+/**
+ * View options for a specific question
+ */
+export const getQuestionLevelOptionsPromise = (
+  {
+    resultCode,
+    ...props
+  }: GetUsingFetchProps<Question, unknown, GetQuestionLevelOptionsQueryParams, GetQuestionLevelOptionsPathParams> & {
+    resultCode: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<Question, unknown, GetQuestionLevelOptionsQueryParams, GetQuestionLevelOptionsPathParams>(
+    getConfig('assessments/api'),
+    `/v1/question-level-results/${resultCode}`,
     props,
     signal
   )

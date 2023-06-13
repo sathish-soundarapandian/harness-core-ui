@@ -1,11 +1,15 @@
-import { Checkbox, Container, TableV2 } from '@harness/uicore'
+import { TableV2 } from '@harness/uicore'
 import React, { useCallback, useMemo } from 'react'
-import type { CellProps, HeaderProps, Renderer } from 'react-table'
 import type { QuestionMaturity } from 'services/assessments'
-import { killEvent } from '@common/utils/eventUtils'
 import { useStrings } from 'framework/strings'
+import {
+  CheckboxCell,
+  RenderCategory,
+  RenderHeader,
+  RenderHeaderCheckbox,
+  RenderProjection
+} from './FlatRecommendationTable.utils'
 import HarnessRecommendation from '../HarnessRecommendation/HarnessRecommendation'
-import { RenderCategory, RenderProjection, RenderRecommendation } from './FlatRecommendationTable.utils'
 import css from './FlatRecommendationTable.module.scss'
 
 interface CapabilitiesContainerProps {
@@ -50,74 +54,37 @@ const FlatRecommendationTable = ({
     [questionMaturityList, harnessComponent]
   )
 
-  const RenderHeaderCheckbox: Renderer<HeaderProps<QuestionMaturity>> = useCallback(() => {
-    return (
-      <Checkbox
-        checked={selectionState === 'CHECKED'}
-        indeterminate={selectionState === 'INDETERMINATE'}
-        className={css.noPadding}
-        onChange={() => groupSelection && groupSelection(selectionState !== 'CHECKED', sectionId)}
-        data-testid="header-checkbox"
-      />
-    )
-  }, [selectionState, groupSelection, sectionId])
-
-  const CheckboxCell: Renderer<CellProps<QuestionMaturity>> = useCallback(
-    ({ row }) => {
-      return (
-        <Container height={90} padding={{ left: 'medium' }}>
-          <Checkbox
-            checked={row?.original?.selected}
-            className={css.noPadding}
-            data-testid="row-checkbox"
-            onClick={e => {
-              killEvent(e)
-              onSelectionChange &&
-                onSelectionChange(
-                  row?.original?.questionId || '',
-                  row?.original?.sectionId || '',
-                  !row?.original?.selected
-                )
-            }}
-          ></Checkbox>
-        </Container>
-      )
-    },
-    [onSelectionChange]
-  )
-
   const columns = useMemo(
     () => [
       {
-        Header: RenderHeaderCheckbox,
+        Header: RenderHeaderCheckbox(
+          selectionState,
+          getString('assessments.recommendations').toUpperCase(),
+          getString('assessments.improveMaturityBySelection'),
+          groupSelection,
+          sectionId
+        ),
         id: 'rowSelect',
-        Cell: CheckboxCell,
+        Cell: CheckboxCell(onSelectionChange),
         disableSortBy: true,
-        width: '4%'
+        width: sectionId ? '60%' : '40%'
       },
       {
-        Header: getString('assessments.recommendations'),
-        id: 'rowRecommandation',
-        Cell: RenderRecommendation,
-        disableSortBy: true,
-        width: sectionId ? '50%' : '36%'
-      },
-      {
-        Header: getString('common.category'),
+        Header: RenderHeader(getString('common.category').toUpperCase()),
         id: 'category',
         Cell: RenderCategory,
         disableSortBy: true,
         width: '36%'
       },
       {
-        Header: getString('assessments.projectedScoreWithRec'),
+        Header: RenderHeader(getString('assessments.projectedScoreWithRec').toUpperCase()),
         id: 'projection',
         Cell: RenderProjection,
         disableSortBy: true,
         width: '26%'
       }
     ],
-    [CheckboxCell, RenderHeaderCheckbox, getString, sectionId]
+    [getString, groupSelection, onSelectionChange, sectionId, selectionState]
   )
   const hiddenColumns = sectionId ? ['category'] : harnessComponent ? ['rowSelect'] : []
   return (

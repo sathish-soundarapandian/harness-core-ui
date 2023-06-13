@@ -1,25 +1,85 @@
-import { Container, Layout, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Checkbox, Container, Layout, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import React from 'react'
-import type { CellProps, Renderer } from 'react-table'
+import type { CellProps, HeaderProps, Renderer } from 'react-table'
 import { useStrings } from 'framework/strings'
 import type { QuestionMaturity } from 'services/assessments'
 import ImprovementImage from '@assessments/assets/EngineeringBenchmarks.svg'
+import { killEvent } from '@common/utils/eventUtils'
 import { getSectionImage } from '../../../utils'
 import css from './FlatRecommendationTable.module.scss'
 
-export const RenderRecommendation: Renderer<CellProps<QuestionMaturity>> = ({ row }) => {
-  return (
-    <Container className={css.recommendationContainer} padding={{ left: 'medium' }}>
-      <Text font={{ weight: 'bold' }} color={Color.GREY_1000} margin={{ bottom: 'small' }}>
-        {row.original.capability}
-      </Text>
-      <Text font="small" lineClamp={3}>
-        {row.original.recommendation?.recommendationText}
-      </Text>
-    </Container>
-  )
+export const RenderHeaderCheckbox = (
+  selectionState: 'CHECKED' | 'INDETERMINATE' | 'UNCHECKED',
+  title: string,
+  description: string,
+  groupSelection?: (value: boolean, sectionId?: string) => void,
+  sectionId?: string
+): Renderer<HeaderProps<QuestionMaturity>> => {
+  const header: Renderer<HeaderProps<QuestionMaturity>> = () => {
+    return (
+      <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+        <Checkbox
+          checked={selectionState === 'CHECKED'}
+          indeterminate={selectionState === 'INDETERMINATE'}
+          className={css.noPadding}
+          onChange={() => groupSelection && groupSelection(selectionState !== 'CHECKED', sectionId)}
+          data-testid="header-checkbox"
+        />
+        <Container className={css.recommendationContainer} padding={{ left: 'medium' }}>
+          <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{title}</Text>
+          <Text font="small">{description}</Text>
+        </Container>
+      </Container>
+    )
+  }
+  return header
 }
+
+export const RenderHeader = (title: string): Renderer<HeaderProps<QuestionMaturity>> => {
+  const header: Renderer<HeaderProps<QuestionMaturity>> = () => {
+    return (
+      <Text font={{ variation: FontVariation.TABLE_HEADERS }} padding={{ left: 'medium' }}>
+        {title}
+      </Text>
+    )
+  }
+  return header
+}
+
+export const CheckboxCell = (
+  onSelectionChange?: (questionId: string, sectionId: string, value: boolean) => void
+): Renderer<CellProps<QuestionMaturity>> => {
+  const cell: Renderer<CellProps<QuestionMaturity>> = ({ row }) => {
+    return (
+      <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }} padding={{ left: 'small' }}>
+        <Checkbox
+          margin={{ top: 'small', left: 'small' }}
+          checked={row?.original?.selected}
+          className={css.noPadding}
+          data-testid="row-checkbox"
+          onClick={e => {
+            killEvent(e)
+            onSelectionChange &&
+              onSelectionChange(
+                row?.original?.questionId || '',
+                row?.original?.sectionId || '',
+                !row?.original?.selected
+              )
+          }}
+        />
+        <Container className={css.recommendationContainer} padding={{ left: 'medium' }}>
+          <Text font={{ variation: FontVariation.CARD_TITLE }}>{row.original.capability}</Text>
+          <Text font="small" lineClamp={3}>
+            {row.original.recommendation?.recommendationText}
+          </Text>
+        </Container>
+      </Container>
+    )
+  }
+  return cell
+}
+
 export const RenderCategory: Renderer<CellProps<QuestionMaturity>> = ({ row }) => {
   const sectionName = row?.original?.sectionText || row?.original?.sectionId || ''
   const sectionImage = getSectionImage(sectionName)

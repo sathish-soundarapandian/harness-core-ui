@@ -2,7 +2,11 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import SurveyDrawer from '../SurveyDrawer'
+import { mockDetails } from './SurveyDrawer.mock'
 
+jest.mock('services/assessments', () => ({
+  useGetQuestionLevelOptions: jest.fn().mockImplementation(() => ({ data: mockDetails, loading: false, error: null }))
+}))
 const mockCurrentRowDetails: any = {
   questionName:
     'Adding additional features or functions of a new product, requirements, or work that is not authorized',
@@ -11,25 +15,26 @@ const mockCurrentRowDetails: any = {
   userScore: 85,
   organizationScore: 32,
   benchmarkScore: 68,
+  maturityLevel: 'LEVEL_3',
   recommendations:
     'Scope creep can result in context switches for developers resulting in dissatisfaction, overwork and poor outcomes. Consider leveraging Agile Training and Tooling to understand and chart scope creep'
 }
-const currentSection = 'Planning and Requirements Process'
 
 describe('SurveyDrawer', () => {
   test('renders the current section', () => {
     render(
       <TestWrapper>
         <SurveyDrawer
-          currentSection={currentSection}
           isOpen
           onHideCallback={jest.fn()}
-          currentRowDetails={mockCurrentRowDetails}
+          scores={mockCurrentRowDetails}
+          questionId={'q1'}
+          resultsCode={'resultCode'}
         />
       </TestWrapper>
     )
-    const sectionText = screen.getByText('Scope Creep')
-    expect(sectionText).toBeInTheDocument()
+
+    expect(screen.getByText('Integrated Security and Governance')).toBeInTheDocument()
     expect(screen.getByText('assessments.youAreAt assessments.levelString 3')).toBeInTheDocument()
   })
 
@@ -41,10 +46,11 @@ describe('SurveyDrawer', () => {
     render(
       <TestWrapper>
         <SurveyDrawer
-          currentSection={currentSection}
           isOpen
           onHideCallback={jest.fn()}
-          currentRowDetails={mockCurrentRowDetailsWithoutBenchmark}
+          scores={mockCurrentRowDetailsWithoutBenchmark}
+          questionId={''}
+          resultsCode={''}
         />
       </TestWrapper>
     )

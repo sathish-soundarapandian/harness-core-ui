@@ -7,10 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly contentText: string
   readonly isPercentageDiffHigher: string
   readonly isPercentageDiffLower: string
   readonly percentageBox: string
-  readonly percentageText: string
 }
 export default styles

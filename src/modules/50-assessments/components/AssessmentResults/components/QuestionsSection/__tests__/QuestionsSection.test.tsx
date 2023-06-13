@@ -4,12 +4,13 @@ import userEvent from '@testing-library/user-event'
 import { useGetAssessmentDetailedResults } from 'services/assessments'
 import { TestWrapper } from '@common/utils/testUtils'
 import QuestionsSection from '../QuestionsSection'
-import { mockQuestions } from './QuestionsSection.mock'
+import { mockQuestions, mockDetails } from './QuestionsSection.mock'
 
 jest.mock('services/assessments', () => ({
   useGetAssessmentDetailedResults: jest
     .fn()
-    .mockImplementation(() => ({ data: mockQuestions, loading: false, error: null, refetch: jest.fn() }))
+    .mockImplementation(() => ({ data: mockQuestions, loading: false, error: null, refetch: jest.fn() })),
+  useGetQuestionLevelOptions: jest.fn().mockImplementation(() => ({ data: mockDetails, loading: false, error: null }))
 }))
 
 describe('QuestionsSection', () => {

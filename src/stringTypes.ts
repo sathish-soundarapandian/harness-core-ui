@@ -887,6 +887,7 @@ export interface StringsMap {
   'common.readonlyPermissions': string
   'common.readonlyPermissionsForFile': string
   'common.recents': string
+  'common.recommendation': string
   'common.recommended': string
   'common.referenceButtonText': string
   'common.referenceTextWarning': string
@@ -3668,7 +3669,6 @@ export interface StringsMap {
   'projectsOrgs.youHaveNoProjects': string
   'assessments.answered': string
   'assessments.backToImproveMaturity': string
-  'assessments.basedOnResultsHarnessRecommendations': string
   'assessments.benchmark': string
   'assessments.benchmarkComparison': string
   'assessments.benchmarkScore': string
@@ -3689,6 +3689,7 @@ export interface StringsMap {
   'assessments.howYouPerformedInSections': string
   'assessments.howYourScoreCompare': string
   'assessments.improveMaturity': string
+  'assessments.improveMaturityBySelection': string
   'assessments.inYourCompany': string
   'assessments.increment': string
   'assessments.invitationSent': string
@@ -3724,6 +3725,8 @@ export interface StringsMap {
   'assessments.result': string
   'assessments.scoreCompare': string
   'assessments.scoreOutOf10': string
+  'assessments.scoresInPercent': string
+  'assessments.sdlcCategories': string
   'assessments.searchForCategory': string
   'assessments.sectionScoreDistributionComparision': string
   'assessments.sendInvite': string

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Container, Layout, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
 import { useStrings } from 'framework/strings'
@@ -22,7 +22,7 @@ const ScoreDistribution = ({ sectionScores, overallScoreOverview }: ScoreDistrib
     <Card className={css.scoreDistribution}>
       <Layout.Horizontal className={css.headerContainer}>
         <Container className={css.titleText}>
-          <Text font={{ weight: 'semi-bold', size: 'medium' }} width="340px" color="grey700">
+          <Text font={{ variation: FontVariation.H4 }} width="340px">
             {getString('assessments.sectionScoreDistributionComparision')}
           </Text>
         </Container>
@@ -57,7 +57,7 @@ const ScoreDistribution = ({ sectionScores, overallScoreOverview }: ScoreDistrib
           </Container>
         )}
       </Layout.Horizontal>
-      <HighchartsReact highcharts={Highcharts} options={getBarChart(sectionScores)} />
+      <HighchartsReact highcharts={Highcharts} options={getBarChart(sectionScores, getString)} />
     </Card>
   )
 }

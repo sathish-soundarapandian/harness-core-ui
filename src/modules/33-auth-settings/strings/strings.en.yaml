@@ -158,7 +158,7 @@ autoRenewal: Auto renewal on {{date}}
 proRata: Prorated amount covers for {{date}}
 salesTax: Plus sales tax
 unitPrice: Unit Price
-recommendation: Recommendation
+recommendation: '{{$.common.recommendation}}'
 priceBreakdown: Subscription Price Breakdown
 costCalculator:
   tax: Tax

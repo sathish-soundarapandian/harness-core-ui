@@ -18,22 +18,25 @@ export default function PercentageCard(props: PercentageCardProps): JSX.Element 
       <Layout.Vertical>
         <Layout.Horizontal margin={{ top: 'medium', bottom: 'xsmall' }}>
           <Text
-            className={cx(css.percentageText, {
+            font={{ variation: FontVariation.H1 }}
+            className={cx({
               [css.isPercentageDiffHigher]: percentageTitle === 'Higher',
               [css.isPercentageDiffLower]: percentageTitle === 'Lower'
             })}
           >{`${percentage}%  `}</Text>
-          <Text font={{ variation: FontVariation.H4 }} padding={{ left: 'small', top: 'small' }}>
+          <Text font={{ variation: FontVariation.H4 }} padding={{ left: 'small', top: 'medium' }}>
             {percentageTitle}
           </Text>
         </Layout.Horizontal>
         <Layout.Horizontal margin={{ bottom: 'large' }}>
-          <Text padding={{ top: 'xsmall' }}>Than</Text>
-          <Text padding={{ bottom: 'small', left: 'small' }} font={{ variation: FontVariation.CARD_TITLE }}>
+          <Text font={{ variation: FontVariation.BODY2 }} padding={{ top: 'xsmall' }}>
+            Than
+          </Text>
+          <Text padding={{ bottom: 'small', left: 'small' }} font={{ variation: FontVariation.BODY2_SEMI }}>
             {textLineOne}
           </Text>
         </Layout.Horizontal>
-        <Text className={css.contentText}>{textLineTwo}</Text>
+        <Text font={{ variation: FontVariation.SMALL }}>{textLineTwo}</Text>
       </Layout.Vertical>
     </Container>
   )

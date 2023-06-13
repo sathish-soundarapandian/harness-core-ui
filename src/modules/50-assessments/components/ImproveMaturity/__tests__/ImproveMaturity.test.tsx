@@ -104,9 +104,9 @@ describe('Improve Maturity', () => {
       </TestWrapper>
     )
 
-    expect(getByText('assessments.recommendations')).toBeInTheDocument()
-    expect(getByText('common.category')).toBeInTheDocument()
-    expect(getByText('assessments.projectedScoreWithRec')).toBeInTheDocument()
+    expect(getByText('ASSESSMENTS.RECOMMENDATIONS')).toBeInTheDocument()
+    expect(getByText('COMMON.CATEGORY')).toBeInTheDocument()
+    expect(getByText('ASSESSMENTS.PROJECTEDSCOREWITHREC')).toBeInTheDocument()
   })
 
   test('On selection of row checkbox, the maturity score gets updated', () => {

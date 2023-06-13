@@ -7,8 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly compareSeriesText: string
   readonly recommendationContainer: string
-  readonly scoreLabels: string
   readonly surveyTable: string
   readonly toggleAccordion: string
 }

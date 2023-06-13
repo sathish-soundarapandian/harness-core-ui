@@ -46,15 +46,21 @@ const HomeScoreGlance = ({ sectionResult }: HomeScoreGlanceProps): JSX.Element =
         <Card className={css.leftCard}>
           <Layout.Horizontal flex={{ distribution: 'space-between' }}>
             <Layout.Vertical className={css.leftScoreCardContent} padding={{ top: 'large' }}>
-              <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
-                {getString('assessments.maturityScore')}
-              </Text>
-              <Text font={{ size: 'normal' }} padding={{ top: 'small', bottom: 'huge' }}>
+              <Text font={{ variation: FontVariation.H5 }}>{getString('assessments.maturityScore')}</Text>
+              <Text
+                font={{ variation: FontVariation.BODY2, weight: 'light' }}
+                padding={{ top: 'small', bottom: 'huge' }}
+                color={Color.GREY_500}
+              >
                 {getString('assessments.maturityLevelDefinition')}
               </Text>
               <Link to={''} target="_blank">
                 <Layout.Horizontal>
-                  <Text font={{ variation: FontVariation.SMALL }} color={Color.PRIMARY_7} padding={{ right: 'small' }}>
+                  <Text
+                    font={{ variation: FontVariation.BODY2, weight: 'light' }}
+                    color={Color.PRIMARY_7}
+                    padding={{ right: 'small' }}
+                  >
                     {getString('assessments.learnMoreAboutMaturity')}
                   </Text>
                   <Icon name="main-share" color={Color.PRIMARY_7} height={10} width={10} />
@@ -72,15 +78,21 @@ const HomeScoreGlance = ({ sectionResult }: HomeScoreGlanceProps): JSX.Element =
         <Card className={css.leftCard}>
           <Container flex={{ justifyContent: 'space-between' }}>
             <Layout.Vertical className={css.leftScoreCardContent} padding={{ top: 'large' }}>
-              <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
-                {getString('assessments.howYourScoreCompare')}
-              </Text>
-              <Text font={{ size: 'normal' }} padding={{ top: 'small', bottom: 'huge', right: 'xxlarge' }}>
+              <Text font={{ variation: FontVariation.H5 }}>{getString('assessments.howYourScoreCompare')}</Text>
+              <Text
+                font={{ variation: FontVariation.BODY2, weight: 'light' }}
+                padding={{ top: 'small', bottom: 'huge', right: 'xxlarge' }}
+                color={Color.GREY_500}
+              >
                 {getString('assessments.typicalComparison')}
               </Text>
               <Link to={''} target="_blank">
                 <Layout.Horizontal>
-                  <Text font={{ variation: FontVariation.SMALL }} color={Color.PRIMARY_7} padding={{ right: 'small' }}>
+                  <Text
+                    font={{ variation: FontVariation.BODY2, weight: 'light' }}
+                    color={Color.PRIMARY_7}
+                    padding={{ right: 'small' }}
+                  >
                     {getString('assessments.learnHowWeCompare')}
                   </Text>
                   <Icon name="main-share" color={Color.PRIMARY_7} height={10} width={10} />

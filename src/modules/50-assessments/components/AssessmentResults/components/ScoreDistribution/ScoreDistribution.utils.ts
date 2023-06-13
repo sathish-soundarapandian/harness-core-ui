@@ -1,5 +1,6 @@
 import type Highcharts from 'highcharts'
 import type { SectionScore } from 'services/assessments'
+import type { StringsMap } from 'stringTypes'
 import { calculatePercentage } from '../../../utils'
 
 const parseSectionScores = (
@@ -40,7 +41,10 @@ const parseSectionScores = (
   }
 }
 
-export const getBarChart = (sectionScores: SectionScore[]): Highcharts.Options => {
+export const getBarChart = (
+  sectionScores: SectionScore[],
+  getString: (key: keyof StringsMap) => string
+): Highcharts.Options => {
   const { selfScores, organizationScores, benchmarkScores, sections } = parseSectionScores(sectionScores)
   return {
     chart: {
@@ -55,14 +59,14 @@ export const getBarChart = (sectionScores: SectionScore[]): Highcharts.Options =
       categories: sections,
       crosshair: true,
       title: {
-        text: 'SDLC Categories'
+        text: getString('assessments.sdlcCategories').toUpperCase()
       }
     },
     yAxis: {
       min: 0,
       max: 100,
       title: {
-        text: 'scores in %'
+        text: getString('assessments.scoresInPercent').toUpperCase()
       }
     },
     plotOptions: {
@@ -75,19 +79,19 @@ export const getBarChart = (sectionScores: SectionScore[]): Highcharts.Options =
     },
     series: [
       {
-        name: 'YOUR SCORE',
+        name: getString('assessments.yourScore').toUpperCase(),
         type: 'column',
         color: '#3DC7F6',
         data: selfScores
       },
       {
-        name: 'Company Score',
+        name: getString('assessments.companyScore').toUpperCase(),
         type: 'column',
         color: '#FFA86B',
         data: organizationScores
       },
       {
-        name: 'EXTERNAL BENCHMARK SCORE',
+        name: getString('assessments.externalBenchmarkScore').toUpperCase(),
         type: 'column',
         color: '#FDD13B',
         data: benchmarkScores

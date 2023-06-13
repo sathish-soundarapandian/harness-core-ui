@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { Card, PageError, PageSpinner, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -54,7 +54,7 @@ const MaturityScore = ({ improvementScore, benchmarkId }: MaturityScoreProps): J
   const benchmarkScore = overallScoreOverview?.benchmarkScore?.score || 0
   return (
     <Card className={css.maturityScoreCard}>
-      <Text font={{ weight: 'bold', size: 'medium' }} color={Color.GREY_1000} margin={{ bottom: 'small' }}>
+      <Text font={{ variation: FontVariation.H5 }} color={Color.GREY_1000} margin={{ bottom: 'small' }}>
         {getString('assessments.maturityScore')}
       </Text>
       <Text margin={{ bottom: 'xxlarge' }}>{getString('assessments.maturityScoreDesc')}</Text>

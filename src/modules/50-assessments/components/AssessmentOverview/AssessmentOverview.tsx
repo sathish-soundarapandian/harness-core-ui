@@ -1,5 +1,5 @@
 import { Container, Layout, PageError, PageSpinner, Select, SelectOption, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -78,16 +78,16 @@ export default function AssessmentOverview(): JSX.Element {
           <Layout.Vertical padding={'xxlarge'}>
             <Container flex={{ justifyContent: 'space-between' }}>
               <Container>
-                <Text font={{ weight: 'bold', size: 'medium' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
-                  {getString('common.atAGlance')}
+                <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'medium' }}>
+                  {getString('summary')}
                 </Text>
                 <Layout.Horizontal>
-                  <Text font={{ size: 'small' }} margin={{ right: 'small' }}>
-                    Organization:{' '}
+                  <Text font={{ variation: FontVariation.SMALL }} margin={{ right: 'small' }}>
+                    {`${getString('orgLabel')}: `}
                   </Text>
                   <Container flex>
                     <img src={`https://logo.clearbit.com/${companyName}?size=14`} alt="" width={16} height={16} />
-                    <Text font={{ size: 'small' }} margin={{ left: 'small' }}>
+                    <Text font={{ variation: FontVariation.SMALL_BOLD }} margin={{ left: 'small' }}>
                       {companyName}
                     </Text>
                   </Container>

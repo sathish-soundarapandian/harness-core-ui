@@ -10,6 +10,7 @@ declare const styles: {
   readonly imageContianerSelected: string
   readonly levelImageContainer: string
   readonly questionLevel: string
+  readonly questionOptionText: string
   readonly selected: string
 }
 export default styles

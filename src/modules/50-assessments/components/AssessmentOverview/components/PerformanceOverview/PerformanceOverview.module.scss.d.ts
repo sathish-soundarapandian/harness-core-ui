@@ -7,9 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly heading: string
   readonly performanceOverviewCard: string
   readonly recommendationsContainer: string
-  readonly subHeading: string
 }
 export default styles

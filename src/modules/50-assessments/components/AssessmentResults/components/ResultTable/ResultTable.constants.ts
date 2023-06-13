@@ -1,11 +1,11 @@
 export const SURVEY_CHART_OPTIONS = {
   chart: {
-    height: 80,
-    width: 300
+    height: 120,
+    width: 200
   },
   plotOptions: {
     bar: {
-      pointWidth: 10
+      pointWidth: 16
     }
   }
 }

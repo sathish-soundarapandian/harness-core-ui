@@ -1,5 +1,5 @@
 import { Card, Layout, Tag, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import React, { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -29,19 +29,19 @@ const SectionPerformanceCard = ({ sectionScore, resultCode }: SectionPerformance
     <Card className={css.sectionPerformanceCard} onClick={onCardClick}>
       <Layout.Vertical>
         <img src={sectionImage} width="45" height="45" alt="" className={css.sectionIcon} />
-        <Text className={css.sectionName} font={{ weight: 'bold', size: 'normal' }}>
+        <Text className={css.sectionName} font={{ variation: FontVariation.H5 }} color={Color.GREY_600}>
           {sectionScore.sectionText}
         </Text>
         <img src={levelImage} width="160" height="88" alt="" className={css.margin} />
-        <Text className={css.margin} font={{ weight: 'bold', size: 'medium' }}>
-          {`${getString('assessments.levelString')} ${level.at(-1)}`}
+        <Text className={css.margin} font={{ variation: FontVariation.H4 }}>
+          {`${getString('assessments.levelString').toUpperCase()} ${level.at(-1)}`}
         </Text>
         <div className={css.margin}>
           {sectionScore.numRecommendations ? (
             <ResultTag
               content={
                 <Text
-                  font={{ weight: 'semi-bold', size: 'normal' }}
+                  font={{ variation: FontVariation.BODY2 }}
                   color={Color.PRIMARY_7}
                   padding={{ left: 'xsmall' }}
                 >{`${sectionScore.numRecommendations} ${getString('assessments.recommendations')}`}</Text>

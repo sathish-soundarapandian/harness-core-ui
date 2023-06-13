@@ -90,12 +90,12 @@ exports[`Recommendation gouped by SDLC Should render the values in flat tables g
             >
               <img
                 alt=""
-                height="45"
+                height="24"
                 src="test-file-stub"
-                width="45"
+                width="24"
               />
               <p
-                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey1000"
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--padding-left-medium"
               >
                 Integrated Security and Governance   
               </p>
@@ -156,12 +156,12 @@ exports[`Recommendation gouped by SDLC Should render the values in flat tables g
             >
               <img
                 alt=""
-                height="45"
+                height="24"
                 src="test-file-stub"
-                width="45"
+                width="24"
               />
               <p
-                class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey1000"
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--padding-left-medium"
               >
                 Discoverability and Documentation 
               </p>

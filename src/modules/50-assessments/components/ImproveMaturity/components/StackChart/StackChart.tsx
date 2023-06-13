@@ -2,7 +2,7 @@ import React from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { Icon, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getStackChart } from './StackChart.utils'
 import css from './StackChart.module.scss'
@@ -26,7 +26,7 @@ const StackChart = ({
   if (!getString) return <></>
   return (
     <div className={css.stackChart}>
-      <Text font={{ weight: 'bold', size: 'medium' }} color={Color.GREY_1000} margin={{ bottom: 'small' }}>
+      <Text font={{ variation: FontVariation.H6 }} color={Color.GREY_700} margin={{ bottom: 'small' }}>
         {getString('assessments.comparison')}
       </Text>
       <HighchartsReact

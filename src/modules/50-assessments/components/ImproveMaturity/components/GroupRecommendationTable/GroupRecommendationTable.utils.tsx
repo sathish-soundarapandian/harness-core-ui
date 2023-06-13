@@ -1,6 +1,6 @@
 import React from 'react'
 import { Layout, Button, ButtonVariation, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import type { CellProps, Renderer, UseExpandedRowProps } from 'react-table'
 import type { QuestionMaturity } from 'services/assessments'
 import { killEvent } from '@common/utils/eventUtils'
@@ -47,8 +47,8 @@ export const RenderSection: Renderer<CellProps<Sections>> = ({ row }) => {
   const sectionImage = getSectionImage(sectionName)
   return (
     <Layout.Horizontal flex={{ justifyContent: 'left', alignItems: 'center' }} margin={{ left: 'medium' }}>
-      <img src={sectionImage} width="45" height="45" alt="" />
-      <Text font={{ weight: 'bold', size: 'medium' }} color={Color.GREY_1000}>
+      <img src={sectionImage} width="24" height="24" alt="" />
+      <Text font={{ variation: FontVariation.H5 }} padding={{ left: 'medium' }}>
         {sectionName}
       </Text>
     </Layout.Horizontal>

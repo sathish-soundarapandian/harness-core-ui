@@ -9,7 +9,8 @@ import {
   RenderQuestion,
   RenderLevelForQuestion,
   RenderComparison,
-  RenderQuestionsRecommendations
+  RenderQuestionsRecommendations,
+  RenderHeader
 } from './QuestionSection.utils'
 import css from './QuestionsSection.module.scss'
 
@@ -54,24 +55,27 @@ export default function QuestionsSection(props: QuestionsSectionProps): JSX.Elem
           }}
           columns={[
             {
-              Header: getString('common.category').toLocaleUpperCase(),
+              Header: RenderHeader(getString('common.category').toLocaleUpperCase(), 'medium'),
               id: 'categoryName',
               width: '30%',
               Cell: RenderQuestion
             },
 
             {
-              Header: getString('assessments.levelString').toLocaleUpperCase(),
+              Header: RenderHeader(getString('assessments.levelString').toLocaleUpperCase(), 'medium'),
+              id: 'level',
               width: '10%',
               Cell: RenderLevelForQuestion
             },
             {
-              Header: getString('assessments.comparison').toLocaleUpperCase(),
+              Header: RenderHeader(getString('assessments.comparison').toLocaleUpperCase(), 'large'),
+              id: 'comparision',
               width: '30%',
               Cell: RenderComparison
             },
             {
-              Header: getString('assessments.recommendations').toLocaleUpperCase(),
+              Header: RenderHeader(getString('assessments.recommendations').toLocaleUpperCase(), 'medium'),
+              id: 'recommendations',
               width: '30%',
               Cell: RenderQuestionsRecommendations
             }
@@ -85,8 +89,9 @@ export default function QuestionsSection(props: QuestionsSectionProps): JSX.Elem
             <SurveyDrawer
               isOpen={isOpen}
               onHideCallback={onHideCallback}
-              currentSection={currentSection}
-              currentRowDetails={currentRowDetails}
+              scores={currentRowDetails.questionScore || {}}
+              resultsCode={resultsCode}
+              questionId={currentRowDetails.questionId || ''}
             />
             {isOpen ? (
               <Button

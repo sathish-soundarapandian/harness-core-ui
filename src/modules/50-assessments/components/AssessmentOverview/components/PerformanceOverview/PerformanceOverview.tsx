@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card, Text, Container } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useStrings, StringKeys } from 'framework/strings'
 import type { SectionScore } from 'services/assessments'
 import SectionPerformanceCard from '../SectionPerformanceCard/SectionPerformanceCard'
@@ -16,10 +17,7 @@ const PerformanceOverview = ({ sectionList, isBest, resultsCode }: PerformanceOv
   const titleProp = isBest ? 'yourBestPerformance' : 'yourTopOpportunities'
   return (
     <Card className={css.performanceOverviewCard}>
-      <Text className={css.heading}>{getString(`assessments.${titleProp}` as StringKeys)}</Text>
-      <Text className={css.subHeading} padding={{ bottom: 'small' }}>
-        {getString('assessments.basedOnResultsHarnessRecommendations')}
-      </Text>
+      <Text font={{ variation: FontVariation.H4 }}>{getString(`assessments.${titleProp}` as StringKeys)}</Text>
       <Container className={css.recommendationsContainer}>
         {sectionList.length
           ? sectionList.map(sec => {

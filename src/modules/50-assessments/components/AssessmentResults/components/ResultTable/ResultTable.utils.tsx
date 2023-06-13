@@ -2,7 +2,7 @@ import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicor
 import React from 'react'
 import type { CellProps, Renderer, UseExpandedRowProps } from 'react-table'
 import Highcharts from 'highcharts'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import HighchartsReact from 'highcharts-react-official'
 import { killEvent } from '@common/utils/eventUtils'
 import thumpsUpImage from '@assessments/assets/Thumpsup.svg'
@@ -25,7 +25,7 @@ export const RenderCategory: Renderer<CellProps<SectionScore>> = ({ row }) => {
       id={sectionName?.replace(/ /g, '').toLowerCase()}
     >
       <img src={sectionImage} width="30" height="30" alt="" />
-      <Text padding={'medium'} font={{ weight: 'bold', size: 'medium' }} color={Color.GREY_600}>
+      <Text padding={'medium'} font={{ variation: FontVariation.H5 }} color={Color.GREY_600}>
         {sectionName}
       </Text>
     </Layout.Horizontal>
@@ -49,7 +49,7 @@ export const RenderLevelForSection: Renderer<CellProps<SectionScore>> = ({ row }
   return (
     <Layout.Horizontal flex={{ justifyContent: 'left', alignItems: 'center' }}>
       <img src={renderLevelImage} width="42" height="42" alt="" />
-      <Text padding={'medium'} font={{ weight: 'bold', size: 'medium' }} color={Color.GREY_900}>
+      <Text padding={'medium'} font={{ variation: FontVariation.H5 }} color={Color.GREY_900}>
         {`${getString('assessments.levelString')} ${level?.slice(-1)}`}
       </Text>
     </Layout.Horizontal>
@@ -60,11 +60,11 @@ export const renderComparizionGraph = (sectionScore: ScoreOverviewDTO): JSX.Elem
   const { benchmarkScore, organizationScore, selfScore } = sectionScore
   return (
     <Layout.Horizontal flex={{ justifyContent: 'left', alignItems: 'center' }}>
-      <Layout.Vertical padding={{ top: 'small' }} width={120}>
-        <Text className={css.scoreLabels}>{'Your score'}</Text>
-        <Text className={css.scoreLabels}>{'Company score'}</Text>
-        {benchmarkScore ? <Text className={css.scoreLabels}>{'Benchmark'}</Text> : null}
-      </Layout.Vertical>
+      <Container className={css.compareSeriesText}>
+        <Text font={{ variation: FontVariation.SMALL_SEMI }}>{'Your score'}</Text>
+        <Text font={{ variation: FontVariation.SMALL }}>{'Company score'}</Text>
+        {benchmarkScore ? <Text font={{ variation: FontVariation.SMALL }}>{'Benchmark'}</Text> : null}
+      </Container>
       <Container flex={{ alignItems: 'center' }}>
         <HighchartsReact
           highcharts={Highcharts}
@@ -94,15 +94,17 @@ export const RenderRecommendations: Renderer<CellProps<SectionScore>> = ({ row }
   const recommendationsCount = row.original.numRecommendations
   if (recommendationsCount && recommendationsCount > 0) {
     return (
-      <ResultTag
-        content={
-          <Text
-            font={{ weight: 'semi-bold', size: 'normal' }}
-            color={Color.PRIMARY_7}
-            padding={{ left: 'xsmall' }}
-          >{`${recommendationsCount} ${getString('assessments.recommendations')}`}</Text>
-        }
-      />
+      <div>
+        <ResultTag
+          content={
+            <Text
+              font={{ variation: FontVariation.BODY2 }}
+              color={Color.PRIMARY_7}
+              padding={{ left: 'xsmall' }}
+            >{`${recommendationsCount} ${getString('assessments.recommendations')}`}</Text>
+          }
+        />
+      </div>
     )
   } else {
     return (

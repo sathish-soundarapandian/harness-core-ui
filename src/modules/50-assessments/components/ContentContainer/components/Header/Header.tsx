@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Position, PopoverInteractionKind, Menu } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, Layout, Popover, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { StringKeys } from 'framework/strings'
 import ShowPasswordImage from '@assessments/assets/ShowPassword.svg'
@@ -53,7 +53,7 @@ const Header = (props: HeaderProps): JSX.Element => {
     <Container className={css.topHeader} flex={{ justifyContent: 'space-between' }}>
       <Layout.Vertical>
         {backButton}
-        <Text padding={{ left: 'medium' }} className={css.welcomeText}>
+        <Text padding={{ left: 'medium' }} font={{ variation: FontVariation.H3 }} color={Color.GREY_700}>
           {title}
         </Text>
       </Layout.Vertical>

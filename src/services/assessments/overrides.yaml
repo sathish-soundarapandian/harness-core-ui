@@ -11,6 +11,7 @@ allowpaths:
   - /v1/detailed-results/{resultCode}
   - /v1/improve/{resultCode}
   - /v1/improve-maturity
+  - /v1/question-level-results/{resultCode}
 
 operationIdOverrides:
   /v1/attempt/{assessmentId}.post: submitAssessmentForUser

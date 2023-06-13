@@ -2,12 +2,6 @@
   padding: var(--spacing-large) !important;
   margin: 4px;
 }
-.scoreLabels {
-  font-weight: 500 !important;
-  font-size: var(--font-size-small) !important;
-  line-height: 15px !important;
-  color: var(--grey-800) !important;
-}
 .recommendationContainer {
   padding: 2px 12px 2px 8px;
   gap: 4px;
@@ -20,4 +14,11 @@
 .toggleAccordion {
   // to have better click target area for toggle
   padding: var(--spacing-none) var(--spacing-small) !important;
+}
+.compareSeriesText {
+  display: flex;
+  text-align: right;
+  padding-right: var(--spacing-small) !important;
+  flex-direction: column;
+  gap: var(--spacing-small);
 }

@@ -1,11 +1,22 @@
 import { Container, Layout, Text } from '@harness/uicore'
 import React from 'react'
-import { Color } from '@harness/design-system'
-import type { CellProps, Renderer } from 'react-table'
+import { Color, FontVariation } from '@harness/design-system'
+import type { CellProps, HeaderProps, Renderer } from 'react-table'
 import type { QuestionScore, Recommendation, ScoreOverviewDTO } from 'services/assessments'
 import { useStrings } from 'framework/strings'
 import thumpsUpImage from '@assessments/assets/Thumpsup.svg'
 import { renderComparizionGraph } from '../ResultTable/ResultTable.utils'
+
+export const RenderHeader = (title: string, leftPadding: string): Renderer<HeaderProps<QuestionScore>> => {
+  const header: Renderer<HeaderProps<QuestionScore>> = () => {
+    return (
+      <Text font={{ variation: FontVariation.TABLE_HEADERS }} padding={{ left: leftPadding }}>
+        {title}
+      </Text>
+    )
+  }
+  return header
+}
 
 export const RenderQuestion: Renderer<CellProps<QuestionScore>> = ({ row }) => {
   const { recommendation, capability } = row.original
