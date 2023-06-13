@@ -19,7 +19,7 @@ import { useStrings } from 'framework/strings'
 
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import { useToaster } from '@common/components'
+// import { useToaster } from '@common/components'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useGetAzureWebAppDeploymentSlotsV2, useGetAzureWebAppNamesV2 } from 'services/cd-ng'
@@ -69,7 +69,7 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
   const [dynamicWebNames, setDynamicWebNames] = useState<SelectOption[]>([])
   const [dynamicSwapSlots, setDynamicSwapSlots] = useState<SelectOption[]>([])
   const [webAppName, setWebAppName] = useState('')
-  const { showWarning } = useToaster()
+  // const { showWarning } = useToaster()
 
   const itemRenderer = (item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={false} />
@@ -196,7 +196,7 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
               refetchWebAppNames()
             }
           }}
-          label={'Web App Name (To get list of target slots)'}
+          label={'Web App Name'}
           name={''}
         />
       ) : null}
@@ -231,9 +231,9 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
             },
 
             onFocus: () => {
-              if (!webAppName) {
-                showWarning('Provide web app name, to get list of target slots')
-              }
+              // if (!webAppName) {
+              //   showWarning('Provide web app name, to get list of target slots')
+              // }
               refetchWebAppSlots()
             }
           }}
