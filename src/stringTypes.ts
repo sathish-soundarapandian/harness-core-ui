@@ -3158,6 +3158,7 @@ export interface StringsMap {
   'connectors.rancher.delegateOutClusterInfo': string
   'connectors.rancher.delegateSelector': string
   'connectors.rancher.rancherUrlLabel': string
+  'connectors.rancher.title': string
   'connectors.rancher.validation': string
   'connectors.rancherConnectorDetails': string
   'connectors.readMore': string
@@ -12261,6 +12262,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   'pipelineSteps.pullNeverLabel': string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  'pipelineSteps.rancherConnectorLabel': string
   /**
    * @deprecated migrate this string to module level file
    */

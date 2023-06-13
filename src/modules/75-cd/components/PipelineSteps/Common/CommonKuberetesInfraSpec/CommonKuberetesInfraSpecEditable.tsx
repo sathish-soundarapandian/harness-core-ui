@@ -26,7 +26,7 @@ import { useFormikContext } from 'formik'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import type { Failure, K8sGcpInfrastructure, K8sAwsInfrastructure } from 'services/cd-ng'
+import type { Failure, K8sGcpInfrastructure, K8sAwsInfrastructure, K8sRancherInfrastructure } from 'services/cd-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
@@ -47,6 +47,10 @@ import css from './CommonKuberetesInfraSpecEditable.module.scss'
 export interface K8sGcpInfrastructureUI extends Omit<K8sGcpInfrastructure, 'cluster'> {
   cluster?: { label?: string; value?: string } | string | any
 }
+
+export interface K8sRancherInfrastructureUI extends Omit<K8sRancherInfrastructure, 'cluster'> {
+  cluster?: { label?: string; value?: string } | string | any
+}
 export interface K8sAwsInfrastructureUI extends Omit<K8sAwsInfrastructure, 'cluster'> {
   cluster?: { label?: string; value?: string } | string | any
 }
@@ -54,7 +58,7 @@ export interface K8sAwsInfrastructureUI extends Omit<K8sAwsInfrastructure, 'clus
 export interface CommonKuberetesInfraSpecEditableProps {
   readonly?: boolean
   allowableTypes: AllowedTypes
-  connectorType: 'Aws' | 'Gcp'
+  connectorType: 'Aws' | 'Gcp' | 'Rancher'
   clusterError: GetDataError<Failure | Error> | null
   clusterLoading: boolean
   clusterOptions: SelectOption[]
@@ -90,7 +94,8 @@ export const getClusterValue = (cluster: { label?: string; value?: string } | st
 
 const connectorDependentFields = {
   Aws: 'pipelineSteps.awsConnectorLabel' as keyof StringsMap,
-  Gcp: 'pipelineSteps.gcpConnectorLabel' as keyof StringsMap
+  Gcp: 'pipelineSteps.gcpConnectorLabel' as keyof StringsMap,
+  Rancher: 'pipelineSteps.rancherConnectorLabel' as keyof StringsMap
 }
 export function CommonKuberetesInfraSpecEditable(props: CommonKuberetesInfraSpecEditableProps): React.ReactElement {
   const {

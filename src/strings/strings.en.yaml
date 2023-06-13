@@ -848,6 +848,7 @@ pipelineSteps:
   typeName: 'instanceType'
   awsConnectorLabel: AWS Connector
   gcpConnectorLabel: GCP Connector
+  rancherConnectorLabel: Rancher Connector
   dockerHubConnectorLabel: Docker Connector
   k8sRolloutDeploy: K8s Rollout Deploy
   k8sApply: K8s Apply

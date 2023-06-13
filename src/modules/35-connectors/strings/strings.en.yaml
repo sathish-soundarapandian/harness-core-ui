@@ -364,6 +364,7 @@ rancher:
   delegateOutClusterInfo: Specify rancher URL and credentials
   rancherUrlLabel: 'Rancher URL'
   validation: 'Rancher URL is required'
+  title: Rancher
 aws:
   awsAccessKey: AWS Access Key
   accessKey: '{{ $.common.accessKey }}'

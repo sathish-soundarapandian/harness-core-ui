@@ -49,6 +49,7 @@ import type {
 } from '@cd/components/PipelineSteps/InfraProvisioning/InfraProvisioning'
 import type { GcpInfrastructureSpec } from '@cd/components/PipelineSteps/GcpInfrastructureSpec/GcpInfrastructureSpec'
 import type { PDCInfrastructureSpec } from '@cd/components/PipelineSteps/PDCInfrastructureSpec/PDCInfrastructureSpec'
+import type { RancherInfrastructureSpec } from '@cd/components/PipelineSteps/RancherInfrastructureSpec/RancherInfrastructureSpec'
 import type { SshWinRmAwsInfrastructureSpec } from '@cd/components/PipelineSteps/SshWinRmAwsInfrastructureSpec/SshWinRmAwsInfrastructureSpec'
 import type { SshWinRmAzureInfrastructureSpec } from '@cd/components/PipelineSteps/SshWinRmAzureInfrastructureSpec/SshWinRmAzureInfrastructureSpec'
 import { useStrings } from 'framework/strings'
@@ -275,6 +276,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
         : deploymentTypeInfraTypeMap[newDeploymentType])
 
     setSelectedInfrastructureType(infrastructureType)
+
     setInfraGroups(getInfraGroups(newDeploymentType, getString, !!isSvcEnvEnabled))
 
     const initialInfraDefValues = getInfrastructureDefaultValue(stage, infrastructureType)
@@ -442,6 +444,32 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<Dep
                   provisioner: value?.provisioner || undefined
                 },
                 InfraDeploymentType.KubernetesGcp
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.Rancher: {
+        return (
+          <StepWidget<RancherInfrastructureSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as RancherInfrastructureSpec}
+            type={StepType.Rancher}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  cluster: value.cluster,
+                  namespace: value.namespace,
+                  releaseName: value.releaseName,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments,
+                  provisioner: value?.provisioner || undefined
+                },
+                InfraDeploymentType.Rancher
               )
             }
           />

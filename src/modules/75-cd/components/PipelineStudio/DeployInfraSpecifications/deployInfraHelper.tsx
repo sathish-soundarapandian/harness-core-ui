@@ -436,7 +436,12 @@ export const getInfraGroups = (
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.viaCloudProvider'),
       items: getInfraGroupItems(
-        [InfraDeploymentType.KubernetesGcp, InfraDeploymentType.KubernetesAzure, InfraDeploymentType.KubernetesAws],
+        [
+          InfraDeploymentType.KubernetesGcp,
+          InfraDeploymentType.KubernetesAzure,
+          InfraDeploymentType.KubernetesAws,
+          InfraDeploymentType.Rancher
+        ],
         getString
       )
     }
@@ -544,6 +549,11 @@ const infraGroupItems: {
     label: 'pipeline.serviceDeploymentTypes.tas',
     icon: 'tas',
     value: InfraDeploymentType.TAS
+  },
+  [InfraDeploymentType.Rancher]: {
+    label: 'connectors.rancher.title',
+    icon: 'rancher',
+    value: InfraDeploymentType.Rancher
   }
 }
 

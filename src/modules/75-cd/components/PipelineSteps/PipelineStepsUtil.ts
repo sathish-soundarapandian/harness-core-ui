@@ -28,6 +28,7 @@ export enum InfraDeploymentType {
   KubernetesDirect = 'KubernetesDirect',
   KubernetesGcp = 'KubernetesGcp',
   KubernetesAws = 'KubernetesAws',
+  HelmRancher = 'HelmRancher',
   PDC = 'Pdc',
   KubernetesAzure = 'KubernetesAzure',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
@@ -45,7 +46,8 @@ export enum InfraDeploymentType {
   TAS = 'TAS',
   GoogleCloudFunctions = 'GoogleCloudFunctions',
   AwsLambda = 'AwsLambda',
-  AwsSam = 'AWS_SAM'
+  AwsSam = 'AWS_SAM',
+  Rancher = 'Rancher'
 }
 
 export const deploymentTypeToInfraTypeMap = {

@@ -217,7 +217,9 @@ export enum StepType {
   AwsSamInfra = 'AwsSamInfra',
   DownloadManifests = 'DownloadManifests',
   IACMTerraformPlugin = 'IACMTerraformPlugin',
-  DownloadServerlessManifests = 'DownloadServerlessManifests'
+  DownloadServerlessManifests = 'DownloadServerlessManifests',
+  Rancher = 'Rancher',
+  KubernetesRancher = 'KubernetesRancher'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

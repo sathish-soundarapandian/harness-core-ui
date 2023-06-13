@@ -138,6 +138,7 @@ import { AwsSamServiceSpec } from './AwsSam/AwsSamServiceSpec/AwsSamServiceSpec'
 import { AwsSamInfraSpec } from './AwsSam/AwsSamInfraSpec/AwsSamInfraSpec'
 import { AwsSamDownloadManifestsStep } from './AwsSam/AwsSamDownloadManifests/AwsSamDownloadManifestsStep'
 import { DownloadServerlessManifestsStep } from './ServerlessAwsLambda/DownloadServerlessManifests/DownloadServerlessManifestsStep'
+import { RancherInfrastructureSpec } from './RancherInfrastructureSpec/RancherInfrastructureSpec'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -270,3 +271,4 @@ factory.registerStep(new AwsSamServiceSpec())
 factory.registerStep(new AwsSamInfraSpec())
 factory.registerStep(new AwsSamDownloadManifestsStep())
 factory.registerStep(new DownloadServerlessManifestsStep())
+factory.registerStep(new RancherInfrastructureSpec())
