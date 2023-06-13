@@ -242,32 +242,34 @@ export function ExecutionWrapperInputSetForm(props: {
                     headerProps={{ font: { size: 'normal' } }}
                     headerColor="var(--black)"
                   >
-                    <ExecutionWrapperInputSetForm
-                      executionIdentifier={executionIdentifier}
-                      stepsTemplate={
-                        isTemplateStepGroup ? nodep.stepGroup?.template?.templateInputs?.steps : nodep.stepGroup.steps
-                      }
-                      formik={formik}
-                      readonly={readonly}
-                      path={
-                        isTemplateStepGroup
-                          ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.steps`
-                          : `${path}[${index}].parallel[${indexp}].stepGroup.steps`
-                      }
-                      allValues={
-                        isTemplateStepGroup
-                          ? nodep.stepGroup?.template?.templateInputs?.steps
-                          : stepGroup?.stepGroup?.steps
-                      }
-                      values={
-                        isTemplateStepGroup
-                          ? nodep.stepGroup?.template?.templateInputs?.steps
-                          : initialValues?.stepGroup?.steps
-                      }
-                      viewType={viewType}
-                      allowableTypes={allowableTypes}
-                      customStepProps={customStepProps}
-                    />
+                    <div className={stepCss.paddingLeft}>
+                      <ExecutionWrapperInputSetForm
+                        executionIdentifier={executionIdentifier}
+                        stepsTemplate={
+                          isTemplateStepGroup ? nodep.stepGroup?.template?.templateInputs?.steps : nodep.stepGroup.steps
+                        }
+                        formik={formik}
+                        readonly={readonly}
+                        path={
+                          isTemplateStepGroup
+                            ? `${path}[${index}].parallel[${indexp}].stepGroup.template.templateInputs.steps`
+                            : `${path}[${index}].parallel[${indexp}].stepGroup.steps`
+                        }
+                        allValues={
+                          isTemplateStepGroup
+                            ? nodep.stepGroup?.template?.templateInputs?.steps
+                            : stepGroup?.stepGroup?.steps
+                        }
+                        values={
+                          isTemplateStepGroup
+                            ? nodep.stepGroup?.template?.templateInputs?.steps
+                            : initialValues?.stepGroup?.steps
+                        }
+                        viewType={viewType}
+                        allowableTypes={allowableTypes}
+                        customStepProps={customStepProps}
+                      />
+                    </div>
                   </CollapseForm>
                 </Layout.Vertical>
               )
@@ -358,32 +360,34 @@ export function ExecutionWrapperInputSetForm(props: {
                 headerProps={{ font: { size: 'normal' } }}
                 headerColor="var(--black)"
               >
-                <ExecutionWrapperInputSetForm
-                  executionIdentifier={executionIdentifier}
-                  stepsTemplate={
-                    isTemplateStepGroup ? item.stepGroup?.template?.templateInputs?.steps : item.stepGroup.steps
-                  }
-                  formik={formik}
-                  readonly={readonly}
-                  path={
-                    isTemplateStepGroup
-                      ? `${path}[${index}].stepGroup.template.templateInputs.steps`
-                      : `${path}[${index}].stepGroup.steps`
-                  }
-                  allValues={
-                    isTemplateStepGroup
-                      ? initialValues?.stepGroup?.template?.templateInputs?.steps
-                      : initialValues?.stepGroup?.steps
-                  }
-                  values={
-                    isTemplateStepGroup
-                      ? initialValues?.stepGroup?.template?.templateInputs?.steps
-                      : initialValues?.stepGroup?.steps
-                  }
-                  viewType={viewType}
-                  allowableTypes={allowableTypes}
-                  customStepProps={customStepProps}
-                />
+                <div className={stepCss.paddingLeft}>
+                  <ExecutionWrapperInputSetForm
+                    executionIdentifier={executionIdentifier}
+                    stepsTemplate={
+                      isTemplateStepGroup ? item.stepGroup?.template?.templateInputs?.steps : item.stepGroup.steps
+                    }
+                    formik={formik}
+                    readonly={readonly}
+                    path={
+                      isTemplateStepGroup
+                        ? `${path}[${index}].stepGroup.template.templateInputs.steps`
+                        : `${path}[${index}].stepGroup.steps`
+                    }
+                    allValues={
+                      isTemplateStepGroup
+                        ? initialValues?.stepGroup?.template?.templateInputs?.steps
+                        : initialValues?.stepGroup?.steps
+                    }
+                    values={
+                      isTemplateStepGroup
+                        ? initialValues?.stepGroup?.template?.templateInputs?.steps
+                        : initialValues?.stepGroup?.steps
+                    }
+                    viewType={viewType}
+                    allowableTypes={allowableTypes}
+                    customStepProps={customStepProps}
+                  />
+                </div>
               </CollapseForm>
             </Layout.Vertical>
           )

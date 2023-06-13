@@ -41,6 +41,7 @@ declare const styles: {
   readonly md: string
   readonly nameIdLabel: string
   readonly noLookDivider: string
+  readonly paddingLeft: string
   readonly removeBpLabelMargin: string
   readonly removeBpPopoverWrapperTopMargin: string
   readonly rowGap: string
