@@ -105,6 +105,7 @@ export class AzureSwapSlot extends PipelineStep<AzureWebAppSwapSlotStepInfo> {
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <AzureWebAppSwapSlotInputStep
+          {...(customStepProps as AzureWebAppSwapSlotVariableStepProps)}
           initialValues={initialValues}
           allowableTypes={allowableTypes}
           allValues={inputSetData?.allValues}
@@ -125,6 +126,7 @@ export class AzureSwapSlot extends PipelineStep<AzureWebAppSwapSlotStepInfo> {
 
     return (
       <AzureSwapSlotWithRef
+        {...(customStepProps as AzureWebAppSwapSlotVariableStepProps)}
         initialValues={this.getInitialValues(initialValues)}
         onUpdate={data => onUpdate?.(this.processFormData(data))}
         onChange={data => onChange?.(this.processFormData(data))}

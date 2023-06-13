@@ -9,6 +9,7 @@ import type { AllowedTypes } from '@harness/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import type { SelectedStageType } from '../AzureSlotDeployment/utils'
 
 export interface AzureWebAppSwapSlotStepInfo {
   name: string
@@ -33,6 +34,7 @@ export interface AzureWebAppSwapSlotVariableStepProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData?: AzureWebAppSwapSlotData
   stepType?: string
+  selectedStage: SelectedStageType
 }
 
 export interface AzureWebAppSwapSlotProps<T = AzureWebAppSwapSlotData> {
@@ -51,4 +53,5 @@ export interface AzureWebAppSwapSlotProps<T = AzureWebAppSwapSlotData> {
   path?: string
   stepType?: string
   allValues?: T
+  selectedStage: SelectedStageType
 }

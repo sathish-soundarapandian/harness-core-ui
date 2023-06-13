@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
@@ -20,12 +20,22 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { getAllowableTypes } from '../AzureSlotDeployment/utils'
 import type { AzureTrafficShiftProps } from './AzureTrafficShiftInterface.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const AzureTrafficShiftRef = (props: AzureTrafficShiftProps, formikRef: StepFormikFowardRef): JSX.Element => {
   /* istanbul ignore next */
-  const { allowableTypes, isNewStep = true, readonly, initialValues, onUpdate, onChange, stepViewType } = props
+  const {
+    allowableTypes,
+    isNewStep = true,
+    readonly,
+    initialValues,
+    onUpdate,
+    onChange,
+    stepViewType,
+    selectedStage
+  } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const query = useQueryParams()
@@ -88,7 +98,11 @@ export const AzureTrafficShiftRef = (props: AzureTrafficShiftProps, formikRef: S
                 name="spec.traffic"
                 placeholder={getString('pipeline.traffic')}
                 label={getString('pipeline.trafficPercentage')}
-                multiTextInputProps={{ expressions, allowableTypes }}
+                multiTextInputProps={{
+                  expressions,
+                  multitypeInputValue: MultiTypeInputType.EXPRESSION,
+                  allowableTypes: getAllowableTypes(selectedStage) as AllowedTypes
+                }}
                 disabled={readonly}
               />
               {getMultiTypeFromValue(get(formik, 'values.spec.traffic')) === MultiTypeInputType.RUNTIME && (

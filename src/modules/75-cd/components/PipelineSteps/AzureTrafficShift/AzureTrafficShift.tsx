@@ -111,6 +111,7 @@ export class AzureTrafficShift extends PipelineStep<AzureTrafficShiftStepInfo> {
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <AzureTrafficShiftInputSet
+          {...(customStepProps as AzureTrafficShiftVariableStepProps)}
           initialValues={initialValues}
           allowableTypes={allowableTypes}
           allValues={inputSetData?.allValues}
@@ -131,6 +132,7 @@ export class AzureTrafficShift extends PipelineStep<AzureTrafficShiftStepInfo> {
 
     return (
       <AzureTrafficShiftStackWithRef
+        {...(customStepProps as AzureTrafficShiftVariableStepProps)}
         initialValues={this.getInitialValues(initialValues)}
         onUpdate={data => onUpdate?.(this.processFormData(data))}
         onChange={data => onChange?.(this.processFormData(data))}

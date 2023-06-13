@@ -9,6 +9,7 @@ import type { AllowedTypes } from '@harness/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import type { SelectedStageType } from '../AzureSlotDeployment/utils'
 
 export interface AzureTrafficShiftStepInfo {
   name: string
@@ -34,6 +35,7 @@ export interface AzureTrafficShiftVariableStepProps {
   variablesData?: AzureTrafficShiftData
   stepType?: string
   onUpdate?(data: AzureTrafficShiftData): void
+  selectedStage: SelectedStageType
 }
 
 export interface AzureTrafficShiftProps<T = AzureTrafficShiftData> {
@@ -52,4 +54,5 @@ export interface AzureTrafficShiftProps<T = AzureTrafficShiftData> {
   path?: string
   stepType?: string
   allValues?: T
+  selectedStage: SelectedStageType
 }

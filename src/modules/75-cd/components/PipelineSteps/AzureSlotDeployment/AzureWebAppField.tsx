@@ -52,7 +52,6 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
   /* istanbul ignore next */
   const {
     readonly,
-
     selectedStage,
     formik,
     webAppNamePath = 'spec.webApp',
