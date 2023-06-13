@@ -46,6 +46,7 @@ import { Connectors } from '@connectors/constants'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
+
 import { getNameSpaceSchema, getReleaseNameSchema } from '../PipelineStepsUtil'
 import {
   CommonKuberetesInfraSpecEditable,
@@ -263,7 +264,6 @@ const RancherInfrastructureSpecInputForm: React.FC<RancherInfrastructureSpecEdit
         }
       })
 
-      // reset cluster on connectorRef change
       if (
         getMultiTypeFromValue(template?.cluster) === MultiTypeInputType.RUNTIME &&
         getMultiTypeFromValue(initialValues?.cluster) !== MultiTypeInputType.RUNTIME
@@ -288,7 +288,6 @@ const RancherInfrastructureSpecInputForm: React.FC<RancherInfrastructureSpecEdit
         }
       })
 
-      // reset cluster on connectorRef change
       if (
         getMultiTypeFromValue(template?.cluster) === MultiTypeInputType.RUNTIME &&
         getMultiTypeFromValue(initialValues?.cluster) !== MultiTypeInputType.RUNTIME
@@ -327,7 +326,7 @@ const RancherInfrastructureSpecInputForm: React.FC<RancherInfrastructureSpecEdit
       readonly={readonly}
       stepViewType={stepViewType}
       fetchClusters={fetchClusterNames}
-      connectorType={'Gcp'}
+      connectorType={Connectors.Rancher}
       provisioner={provisioner}
     />
   )

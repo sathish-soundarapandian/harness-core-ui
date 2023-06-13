@@ -15,7 +15,13 @@ import type { GetDataError } from 'restful-react'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
-import type { K8sGcpInfrastructure, Failure, ExecutionElementConfig, K8sRancherInfrastructure } from 'services/cd-ng'
+import type {
+  K8sGcpInfrastructure,
+  Failure,
+  ExecutionElementConfig,
+  K8sRancherInfrastructure,
+  ConnectorInfoDTO
+} from 'services/cd-ng'
 import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
@@ -41,7 +47,7 @@ export type K8sGcpInfrastructureTemplate = { [key in keyof K8sGcpInfrastructure]
 export type K8sRancherInfrastructureTemplate = { [key in keyof K8sRancherInfrastructure]: string }
 
 interface CommonKuberetesInfraInputFormProps {
-  template?: K8sGcpInfrastructureTemplate
+  template?: K8sGcpInfrastructureTemplate | K8sRancherInfrastructureTemplate
   allowableTypes: AllowedTypes
   clusterError: GetDataError<Failure | Error> | null
   clusterLoading: boolean
@@ -51,7 +57,7 @@ interface CommonKuberetesInfraInputFormProps {
   stepViewType?: StepViewType
   clusterOptions: SelectOption[]
   setClusterOptions: React.Dispatch<React.SetStateAction<SelectOption[]>>
-  connectorType: 'Aws' | 'Gcp'
+  connectorType: ConnectorInfoDTO['type']
   connectorRef?: string
   provisioner?: ExecutionElementConfig['steps']
 }
