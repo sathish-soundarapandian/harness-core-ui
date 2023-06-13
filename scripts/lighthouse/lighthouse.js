@@ -136,8 +136,8 @@ async function run() {
   const runLightHouseNtimesAndGetResults = async (numberOfTimes, passedUrl) => {
     // Comment executablePath while running in local
     const browser = await puppeteer.launch({
-      headless: false,
-      // executablePath: '/usr/bin/google-chrome',
+      headless: true,
+      executablePath: '/usr/bin/google-chrome',
       args: ['--no-sandbox', `--remote-debugging-port=${PORT}`]
     })
     let page = await browser.newPage()
