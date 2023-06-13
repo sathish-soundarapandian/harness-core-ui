@@ -145,3 +145,20 @@ export interface AwsSamBuildStepInitialValues extends StepElementConfig {
     }
   }
 }
+
+export interface ServerlessPrepareRollbackStepInitialValues extends StepElementConfig {
+  spec: {
+    connectorRef: string
+    image?: string
+    serverlessVersion?: string
+    privileged?: boolean
+    imagePullPolicy?: string
+    runAsUser?: string
+    resources?: {
+      limits?: {
+        memory?: string
+        cpu?: string
+      }
+    }
+  }
+}

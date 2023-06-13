@@ -137,7 +137,8 @@ import { K8sBlueGreenStageScaleDown } from './K8sBlueGreenStageScaleDown/K8sBlue
 import { AwsSamServiceSpec } from './AwsSam/AwsSamServiceSpec/AwsSamServiceSpec'
 import { AwsSamInfraSpec } from './AwsSam/AwsSamInfraSpec/AwsSamInfraSpec'
 import { AwsSamDownloadManifestsStep } from './AwsSam/AwsSamDownloadManifests/AwsSamDownloadManifestsStep'
-import { DownloadServerlessManifestsStep } from './ServerlessAwsLambda/DownloadServerlessManifests/DownloadServerlessManifestsStep'
+import { DownloadServerlessManifestsStep } from './ServerlessAwsLambda/DownloadServerlessManifestsStep/DownloadServerlessManifestsStep'
+import { ServerlessPrepareRollbackStep } from './ServerlessAwsLambda/ServerlessPrepareRollbackStep/ServerlessPrepareRollbackStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -270,3 +271,4 @@ factory.registerStep(new AwsSamServiceSpec())
 factory.registerStep(new AwsSamInfraSpec())
 factory.registerStep(new AwsSamDownloadManifestsStep())
 factory.registerStep(new DownloadServerlessManifestsStep())
+factory.registerStep(new ServerlessPrepareRollbackStep())

@@ -1024,3 +1024,4 @@ customSequence:
   switchSuccessMsg: Successfully switched to {{sequence}} sequence
   switchFailedMsg: Failed to switch
 samVersionLabel: SAM Version
+serverlessVersionLabel: Serverless Version

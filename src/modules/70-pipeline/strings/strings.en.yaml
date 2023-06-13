@@ -1320,6 +1320,7 @@ stepDescription:
   AwsSamBuild: Build an AWS SAM function.
   DownloadManifests: Download manifests using this step.
   SscaEnforcement: Enforce policies based on your SBOM by Allow list/Deny list
+  ServerlessPrepareRollback: Prepare a rollback of your deployment.
 
 executionStrategy:
   executionStrategies: Execution Strategies

@@ -15,15 +15,13 @@ import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import { FormMultiTypeCheckboxField } from '@common/components'
-import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
 import { MultiTypeListInputSet } from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
 import { MultiTypeMapInputSet } from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { AwsSamBuildStepInitialValues, AwsSamDeployStepInitialValues } from '@pipeline/utils/types'
 import { getHasValuesAsRuntimeInputFromTemplate } from '@pipeline/utils/CIUtils'
+import { AwsSamServerlessStepCommonOptionalFieldsInputSet } from '../Common/AwsSamServerlessStepCommonOptionalFields/AwsSamServerlessStepCommonOptionalFieldsInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export type AwsSamBuildDeployStepInitialValues = AwsSamBuildStepInitialValues | AwsSamDeployStepInitialValues
@@ -148,93 +146,7 @@ export function AwsSamBuildDeployStepOptionalFieldsInputSet(
         </div>
       )}
 
-      {isValueRuntimeInput(get(template, `spec.privileged`)) && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeCheckboxField
-            name={`${prefix}spec.privileged`}
-            label={getString('optionalField', { name: getString('pipeline.buildInfra.privileged') })}
-            multiTypeTextbox={{
-              expressions,
-              allowableTypes,
-              disabled: readonly,
-              width: 416.5
-            }}
-            tooltipProps={{ dataTooltipId: 'privileged' }}
-            disabled={readonly}
-          />
-        </div>
-      )}
-
-      {isValueRuntimeInput(get(template, `spec.imagePullPolicy`)) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <SelectInputSetView
-            name={`${prefix}spec.imagePullPolicy`}
-            label={getString('optionalField', { name: getString('pipelineSteps.pullLabel') })}
-            selectItems={getImagePullPolicyOptions(getString)}
-            placeholder={getString('select')}
-            disabled={readonly}
-            useValue={true}
-            multiTypeInputProps={{
-              expressions,
-              allowableTypes,
-              selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) }
-            }}
-            template={template}
-            fieldPath={`spec.imagePullPolicy`}
-          />
-        </div>
-      )}
-
-      {isValueRuntimeInput(get(template, `spec.runAsUser`)) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${prefix}spec.runAsUser`}
-            label={getString('optionalField', { name: getString('pipeline.stepCommonFields.runAsUser') })}
-            placeholder="1000"
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            fieldPath={`spec.runAsUser`}
-            template={template}
-          />
-        </div>
-      )}
-
-      {isValueRuntimeInput(get(template, `spec.resources.limits.memory`)) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${prefix}spec.resources.limits.memory`}
-            label={getString('optionalField', { name: getString('pipelineSteps.limitMemoryLabel') })}
-            placeholder={getString('common.enterPlaceholder', { name: getString('pipelineSteps.limitMemoryLabel') })}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            fieldPath={`spec.resources.limits.memory`}
-            template={template}
-          />
-        </div>
-      )}
-
-      {isValueRuntimeInput(get(template, `spec.resources.limits.cpu`)) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${prefix}spec.resources.limits.cpu`}
-            label={getString('optionalField', { name: getString('pipelineSteps.limitCPULabel') })}
-            placeholder={getString('common.enterPlaceholder', { name: getString('pipelineSteps.limitCPULabel') })}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            fieldPath={`spec.resources.limits.cpu`}
-            template={template}
-          />
-        </div>
-      )}
+      <AwsSamServerlessStepCommonOptionalFieldsInputSet inputSetData={inputSetData} allowableTypes={allowableTypes} />
 
       {!isEmpty(get(template, `spec.envVariables`)) &&
         renderMultiTypeMapInputSet({
