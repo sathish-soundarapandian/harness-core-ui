@@ -21,7 +21,9 @@ import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import FavoriteStar from '@common/components/FavoriteStar/FavoriteStar'
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ProjectCard.module.scss'
 
 export interface ProjectCardProps {
@@ -60,6 +62,7 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
   const data = projectResponse.project || null
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
+  const { PL_FAVORITES } = useFeatureFlags()
   const allowInteraction = !isPreview && !minimal
   const history = useHistory()
   const invitePermission = {
@@ -87,25 +90,37 @@ const ProjectCard: React.FC<ProjectCardProps> = props => {
     >
       <Container padding="xlarge" className={css.projectInfo}>
         {allowInteraction ? (
-          <CardBody.Menu
-            menuContent={
-              <ContextMenu
-                project={data}
-                reloadProjects={reloadProjects}
-                editProject={editProject}
-                collaborators={handleInviteCollaborators}
-                openDialog={openDialog}
-                setMenuOpen={setMenuOpen}
+          <Layout.Horizontal flex={{ justifyContent: 'flex-end' }} className={css.cardHeader}>
+            {PL_FAVORITES && (
+              <FavoriteStar
+                isFavorite={projectResponse.isFavorite}
+                resourceId={data.identifier}
+                resourceType="PROJECT"
+                className={css.favorite}
+                activeClassName={css.favoriteActive}
               />
-            }
-            menuPopoverProps={{
-              className: Classes.DARK,
-              isOpen: menuOpen,
-              onInteraction: /* istanbul ignore next */ nextOpenState => {
-                setMenuOpen(nextOpenState)
+            )}
+            <CardBody.Menu
+              className={css.menu}
+              menuContent={
+                <ContextMenu
+                  project={data}
+                  reloadProjects={reloadProjects}
+                  editProject={editProject}
+                  collaborators={handleInviteCollaborators}
+                  openDialog={openDialog}
+                  setMenuOpen={setMenuOpen}
+                />
               }
-            }}
-          />
+              menuPopoverProps={{
+                className: Classes.DARK,
+                isOpen: menuOpen,
+                onInteraction: /* istanbul ignore next */ nextOpenState => {
+                  setMenuOpen(nextOpenState)
+                }
+              }}
+            />
+          </Layout.Horizontal>
         ) : null}
         <Container
           data-testid="card-content"

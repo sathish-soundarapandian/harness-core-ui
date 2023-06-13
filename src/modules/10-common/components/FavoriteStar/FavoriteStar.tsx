@@ -12,6 +12,7 @@ import {
   deleteFavorite as deleteFavoritePromise,
   DeleteFavoriteProjectQueryParams
 } from '@harnessio/react-ng-manager-client'
+import { PopoverInteractionKind } from '@blueprintjs/core'
 import React, { useState } from 'react'
 import { Text, Utils, useToaster } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
@@ -20,10 +21,14 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { Module } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
 import type { ResourceScope } from 'services/cd-ng'
-import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type {
+  AccountPathProps,
+  ModulePathParams,
+  OrgPathProps,
+  ProjectPathProps
+} from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './FavoriteStar.module.scss'
-import { PopoverInteractionKind } from '@blueprintjs/core'
 
 interface FavoriteStarProps {
   resourceId: string
@@ -42,9 +47,17 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
   const { PL_FAVORITES } = useFeatureFlags()
   const { showError } = useToaster()
   const { getString } = useStrings()
-  const { accountId: accountIdFromParams } = useParams<AccountPathProps>()
-  const { module } = useParams<ModulePathParams>()
-  const { accountIdentifier: accountId = accountIdFromParams, projectIdentifier, orgIdentifier } = props.scope || {}
+  const {
+    accountId: accountIdFromParams,
+    projectIdentifier: projectFromParam,
+    orgIdentifier: OrgFromParam,
+    module
+  } = useParams<AccountPathProps & ProjectPathProps & OrgPathProps & ModulePathParams>()
+  const {
+    accountIdentifier: accountId = accountIdFromParams,
+    projectIdentifier = projectFromParam,
+    orgIdentifier = OrgFromParam
+  } = props.scope || {}
 
   const deleteFavorite = async (): Promise<void> => {
     try {
@@ -78,7 +91,7 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
           user_id: currentUserInfo.uuid,
           resource_id: props.resourceId,
           resource_type: props.resourceType,
-          module: props.module || module.toUpperCase() || 'CORE',
+          module: module ? module.toUpperCase() : 'CORE',
           account: accountId,
           project: projectIdentifier,
           org: orgIdentifier
@@ -134,7 +147,7 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
     >
       <Icon
         name={isFavorite ? 'star' : 'star_empty'}
-        color={isFavorite ? Color.YELLOW_900 : Color.GREY_400}
+        color={isFavorite ? Color.YELLOW_700 : Color.GREY_400}
         size={24}
         onClick={handleClick}
         className={classNames(css.star, props.className, { [activeClassName]: isFavorite })}

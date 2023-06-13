@@ -1,8 +1,16 @@
 .star {
   &:hover {
     svg path {
-      stroke: var(--yellow-900) !important;
+      stroke: var(--yellow-700) !important;
       transition: 100ms linear ease-out;
+    }
+  }
+
+  &.favorite {
+    &:hover {
+      svg path {
+        stroke: var(--yellow-900) !important;
+      }
     }
   }
 }

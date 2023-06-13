@@ -20,6 +20,19 @@
     max-height: 154px;
     overflow: scroll;
   }
+
+  .favorite {
+    visibility: hidden;
+  }
+  .favoriteActive {
+    visibility: visible;
+  }
+
+  &:hover {
+    .favorite {
+      visibility: visible;
+    }
+  }
 }
 
 .previewProjectCard {
@@ -64,4 +77,19 @@
 
 .breakWord {
   word-break: break-word;
+}
+
+.cardHeader {
+  position: absolute;
+  top: 15px;
+  left: -14px;
+  width: 100% !important;
+  .menu {
+    height: 28px;
+    width: 28px;
+
+    & > div {
+      position: static;
+    }
+  }
 }

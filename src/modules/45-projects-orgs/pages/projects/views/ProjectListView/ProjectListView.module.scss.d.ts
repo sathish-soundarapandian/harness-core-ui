@@ -8,11 +8,14 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly colorbox: string
+  readonly favorite: string
+  readonly favoriteActive: string
   readonly layout: string
   readonly moduleListContainer: string
   readonly org: string
   readonly project: string
   readonly projectTextContainer: string
+  readonly row: string
   readonly table: string
 }
 export default styles

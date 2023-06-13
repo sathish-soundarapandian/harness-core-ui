@@ -8,8 +8,12 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly breakWord: string
+  readonly cardHeader: string
   readonly cardTags: string
   readonly colorBar: string
+  readonly favorite: string
+  readonly favoriteActive: string
+  readonly menu: string
   readonly moduleRendererContainer: string
   readonly previewProjectCard: string
   readonly projectAvatarGroup: string

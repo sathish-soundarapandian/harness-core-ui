@@ -37,3 +37,18 @@
 .moduleListContainer {
   overflow: hidden;
 }
+
+.row {
+  .favorite {
+    visibility: hidden;
+  }
+  .favoriteActive {
+    visibility: visible;
+  }
+
+  &:hover {
+    .favorite {
+      visibility: visible;
+    }
+  }
+}

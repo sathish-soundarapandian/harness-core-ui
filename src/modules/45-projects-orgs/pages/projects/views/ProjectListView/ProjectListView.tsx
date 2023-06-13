@@ -27,6 +27,7 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
+import FavoriteStar from '@common/components/FavoriteStar/FavoriteStar'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectListView.module.scss'
@@ -214,6 +215,13 @@ const RenderColumnMenu: Renderer<CellProps<ProjectAggregateDTO>> = ({ row, colum
 
   return (
     <Layout.Horizontal className={css.layout}>
+      <FavoriteStar
+        isFavorite={row.original.projectResponse.isFavorite}
+        resourceId={data.identifier}
+        resourceType="PROJECT"
+        className={css.favorite}
+        activeClassName={css.favoriteActive}
+      />
       <Popover
         isOpen={menuOpen}
         onInteraction={nextOpenState => {
@@ -329,6 +337,7 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
           })
         )
       }}
+      getRowClassName={() => css.row}
       pagination={paginationProps}
     />
   )
