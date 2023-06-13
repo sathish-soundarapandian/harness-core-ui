@@ -12,6 +12,8 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { TestWrapper } from '@common/utils/testUtils'
 import type { AzureWebAppSwapSlotVariableStepProps } from '../SwapSlot.types'
 import { AzureWebAppSwapSlotVariableStep } from '../AzureWebAppSwapSlotVariableView'
+import { selectedStageMock } from '../../AzureSlotDeployment/__tests__/mock'
+
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const props = () =>
@@ -37,7 +39,8 @@ const props = () =>
         targetSlot: 'targetSlot'
       }
     },
-    stepType: StepType.AzureSwapSlot
+    stepType: StepType.AzureSwapSlot,
+    selectedStage: selectedStageMock
   } as AzureWebAppSwapSlotVariableStepProps)
 
 describe('Azure Web App Swap Slot step Variable view ', () => {
@@ -53,6 +56,7 @@ describe('Azure Web App Swap Slot step Variable view ', () => {
             targetSlot: 'targetSlot'
           }
         }}
+        selectedStage={selectedStageMock}
         {...{
           stageIdentifier: 'qaStage',
           metadataMap: props().metadataMap,
@@ -77,6 +81,7 @@ describe('Azure Web App Swap Slot step Variable view ', () => {
               targetSlot: 'targetSlot'
             }
           }}
+          selectedStage={selectedStageMock}
           {...{
             stageIdentifier: 'qaStage',
             metadataMap: props().metadataMap,

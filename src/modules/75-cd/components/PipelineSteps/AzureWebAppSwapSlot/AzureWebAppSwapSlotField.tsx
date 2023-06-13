@@ -19,12 +19,12 @@ import { useStrings } from 'framework/strings'
 
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { useToaster } from '@common/components'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useGetAzureWebAppDeploymentSlotsV2, useGetAzureWebAppNamesV2 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
-import type { AzureSlotDeploymentProps } from './AzureSlotDeploymentInterface.types'
 import {
   getEnvId,
   getInfraId,
@@ -34,40 +34,42 @@ import {
   isRuntimeEnvId,
   isRuntimeInfraId,
   isMultiEnv
-} from './utils'
+} from '../AzureSlotDeployment/utils'
+
+import type { AzureWebAppSwapSlotProps } from './SwapSlot.types'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export type AcceptableValue = boolean | string | number | SelectOption | string[]
 export interface AzureSlotDeploymentDynamic {
   webAppNamePath?: string
-  webAppSlotPath?: string
+  webAppSwapSlotPath?: string
   stageIdentifier?: string
   isRuntime?: boolean
 }
-export type AzureSlotDeploymentDynamicProps = AzureSlotDeploymentProps & {
+export type AzureSwapSlotDeploymentDynamicProps = AzureWebAppSwapSlotProps & {
   formik?: FormikContextType<any>
 } & AzureSlotDeploymentDynamic
-const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX.Element => {
+const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicProps): JSX.Element => {
   /* istanbul ignore next */
   const {
     readonly,
     selectedStage,
     formik,
     webAppNamePath = 'spec.webApp',
-    webAppSlotPath = 'spec.deploymentSlot',
+    webAppSwapSlotPath = 'spec.targetSlot',
     stageIdentifier = '',
     isRuntime = false,
-    inputSetData,
-    allValues
+    inputSetData
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   //   const { AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS } = useFeatureFlags()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [dynamicWebNames, setDynamicWebNames] = useState<SelectOption[]>([])
-  const [dynamicSlots, setDynamicSlots] = useState<SelectOption[]>([])
+  const [dynamicSwapSlots, setDynamicSwapSlots] = useState<SelectOption[]>([])
+  const [webAppName, setWebAppName] = useState('')
+  const { showWarning } = useToaster()
 
   const itemRenderer = (item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={false} />
@@ -76,9 +78,9 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
   React.useEffect(() => {
     if (isRuntime) {
       setFieldValue(webAppNamePath, '')
-      setFieldValue(webAppSlotPath, '')
+      setFieldValue(webAppSwapSlotPath, '')
       setDynamicWebNames([])
-      setDynamicSlots([])
+      setDynamicSwapSlots([])
     }
   }, [getEnvIdRuntime(stageIdentifier, formik?.values), getInfraIdRuntime(stageIdentifier, formik?.values), isRuntime])
 
@@ -93,8 +95,8 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
   const {
     data: webAppNameData,
     loading: loadingWebApp,
-    refetch: refetchWebAppNames
-    // error
+    refetch: refetchWebAppNames,
+    error: errorWebApp
   } = useGetAzureWebAppNamesV2({
     queryParams: {
       accountIdentifier: accountId,
@@ -106,10 +108,10 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
     lazy: true
   })
   const {
-    data: webAppSlotsData,
+    data: webAppSwapSlotsData,
     loading: loadingWebSlots,
-    refetch: refetchWebAppSlots
-    // error: webAppSlotsError
+    refetch: refetchWebAppSlots,
+    error: errorWebAppSwapSlot
   } = useGetAzureWebAppDeploymentSlotsV2({
     queryParams: {
       accountIdentifier: accountId,
@@ -119,12 +121,12 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
       infraDefinitionId: getInfraId(selectedStage) || getInfraIdRuntime(stageIdentifier, formik?.values)
     },
     lazy: true,
-    webAppName: getFieldValue(webAppNamePath) || get(allValues, 'spec.webApp')
+    webAppName
   })
 
   React.useEffect(() => {
     if (webAppNameData) {
-      setDynamicSlots([])
+      setDynamicSwapSlots([])
       setDynamicWebNames(
         webAppNameData?.data?.webAppNames?.map((name: string): SelectOption => {
           return {
@@ -137,9 +139,9 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
   }, [webAppNameData])
 
   React.useEffect(() => {
-    if (webAppSlotsData) {
-      setDynamicSlots(
-        webAppSlotsData?.data?.deploymentSlots?.map((slot: any): SelectOption => {
+    if (webAppSwapSlotsData) {
+      setDynamicSwapSlots(
+        webAppSwapSlotsData?.data?.deploymentSlots?.map((slot: any): SelectOption => {
           return {
             value: slot?.name,
             label: slot?.name
@@ -147,7 +149,7 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
         }) as SelectOption[]
       )
     }
-  }, [webAppSlotsData])
+  }, [webAppSwapSlotsData])
 
   const envOrInfraRuntime = isRuntimeEnvId(selectedStage) || isRuntimeInfraId(selectedStage)
 
@@ -157,52 +159,51 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
 
   return !envOrInfraRuntime && !isMultiEnvs ? (
     <Layout.Vertical width={'67%'}>
-      {!isRuntime ||
-      getMultiTypeFromValue(get(inputSetData?.template, `spec.webApp`)) === MultiTypeInputType.RUNTIME ? (
+      {!isRuntime || getMultiTypeFromValue(get(inputSetData?.template, `${webAppSwapSlotPath}`)) ? (
         <FormInput.MultiTypeInput
+          // style={{ width: '67%' }}
           selectItems={dynamicWebNames}
-          useValue
+          // useValue
           multiTypeInputProps={{
-            defaultValue: getFieldValue(webAppNamePath),
+            defaultValue: webAppName,
             expressions,
-            allowableTypes: getAllowableTypes(selectedStage) as AllowedTypes,
+            allowableTypes: [MultiTypeInputType.FIXED],
             selectProps: {
               defaultSelectedItem: {
-                label: getFieldValue(webAppNamePath),
-                value: getFieldValue(webAppNamePath)
+                label: webAppName,
+                value: webAppName
               } as SelectOption,
               items: dynamicWebNames,
-
               addClearBtn: true,
               itemRenderer: itemRenderer,
               allowCreatingNewItems: true,
               addTooltip: true,
               noResults: (
                 <Text padding={'small'}>
-                  {loadingWebApp ? getString('loading') : getString('pipeline.ACR.subscriptionError')}
+                  {loadingWebApp
+                    ? getString('loading')
+                    : get(errorWebApp, 'data.message', null) || getString('pipeline.ACR.subscriptionError')}
                 </Text>
               )
             },
 
             onChange: e => {
-              if (e === RUNTIME_INPUT_VALUE) {
-                setFieldValue(webAppNamePath, RUNTIME_INPUT_VALUE)
-                setFieldValue(webAppSlotPath, RUNTIME_INPUT_VALUE)
-                return
-              }
+              setWebAppName((e as SelectOption)?.value as string)
+              setFieldValue(webAppSwapSlotPath, '')
             },
             onFocus: () => {
-              setDynamicSlots([])
+              setDynamicSwapSlots([])
               refetchWebAppNames()
             }
           }}
-          label={'Web App Name'}
-          name={webAppNamePath}
+          label={'Web App Name (To get list of target slots)'}
+          name={''}
         />
       ) : null}
-      {!isRuntime || getMultiTypeFromValue(get(inputSetData?.template, `${webAppSlotPath}`)) ? (
+      {!isRuntime || getMultiTypeFromValue(get(inputSetData?.template, `${webAppSwapSlotPath}`)) ? (
         <FormInput.MultiTypeInput
-          selectItems={dynamicSlots}
+          // style={{ width: '67%' }}
+          selectItems={dynamicSwapSlots}
           useValue
           multiTypeInputProps={{
             multitypeInputValue:
@@ -211,10 +212,10 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
             allowableTypes: getAllowableTypes(selectedStage) as AllowedTypes,
             selectProps: {
               defaultSelectedItem: {
-                label: getFieldValue(webAppSlotPath),
-                value: getFieldValue(webAppSlotPath)
+                label: getFieldValue(webAppSwapSlotPath),
+                value: getFieldValue(webAppSwapSlotPath)
               } as SelectOption,
-              items: dynamicSlots,
+              items: dynamicSwapSlots,
               addClearBtn: true,
               itemRenderer: itemRenderer,
               allowCreatingNewItems: true,
@@ -222,17 +223,22 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
 
               noResults: (
                 <Text padding={'small'}>
-                  {loadingWebSlots ? getString('loading') : getString('pipeline.ACR.subscriptionError')}
+                  {loadingWebSlots
+                    ? getString('loading')
+                    : get(errorWebAppSwapSlot, 'data.message', null) || getString('pipeline.ACR.subscriptionError')}
                 </Text>
               )
             },
 
             onFocus: () => {
+              if (!webAppName) {
+                showWarning('Provide web app name, to get list of target slots')
+              }
               refetchWebAppSlots()
             }
           }}
-          label={'Deployment Slot'}
-          name={webAppSlotPath}
+          label={'Target Slot'}
+          name={webAppSwapSlotPath}
         />
       ) : null}
     </Layout.Vertical>
@@ -240,38 +246,24 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
     <>
       <div className={cx(stepCss.formGroup, stepCss.lg)}>
         <FormInput.MultiTextInput
-          name={webAppNamePath}
+          name={''}
           placeholder={'Specify web app name'}
           label={'Web App Name'}
           multiTextInputProps={{
             expressions,
             allowableTypes: getAllowableTypes(selectedStage) as AllowedTypes,
-            multitypeInputValue: MultiTypeInputType.EXPRESSION
+            multitypeInputValue: MultiTypeInputType.EXPRESSION,
+            defaultValue: webAppName
           }}
           disabled={readonly}
         />
-        {getMultiTypeFromValue(getFieldValue(webAppNamePath)) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={getFieldValue(webAppNamePath)}
-            type="String"
-            variableName="spec.webApp"
-            showRequiredField={false}
-            showDefaultField={false}
-            onChange={
-              /* istanbul ignore next */ value => {
-                setFieldValue(webAppNamePath, value)
-              }
-            }
-            isReadonly={readonly}
-          />
-        )}
       </div>
 
       <div className={cx(stepCss.formGroup, stepCss.lg)}>
         <FormInput.MultiTextInput
-          name={webAppSlotPath}
+          name={webAppSwapSlotPath}
           placeholder={'Specify deployment slot'}
-          label={'Deployment Slot'}
+          label={'Target Slot'}
           multiTextInputProps={{
             expressions,
             multitypeInputValue: MultiTypeInputType.EXPRESSION,
@@ -279,16 +271,16 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
           }}
           disabled={readonly}
         />
-        {getMultiTypeFromValue(getFieldValue(webAppSlotPath)) === MultiTypeInputType.RUNTIME && (
+        {getMultiTypeFromValue(getFieldValue(webAppSwapSlotPath)) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
-            value={getFieldValue(webAppSlotPath)}
+            value={getFieldValue(webAppSwapSlotPath)}
             type="String"
-            variableName={webAppSlotPath}
+            variableName={webAppSwapSlotPath}
             showRequiredField={false}
             showDefaultField={false}
             onChange={
               /* istanbul ignore next */ value => {
-                setFieldValue(webAppSlotPath, value)
+                setFieldValue(webAppSwapSlotPath, value)
               }
             }
             isReadonly={readonly}
@@ -299,4 +291,4 @@ const AzureSlotDeploymentDynamic = (props: AzureSlotDeploymentDynamicProps): JSX
   )
 }
 
-export const AzureSlotDeploymentDynamicField = connect(AzureSlotDeploymentDynamic)
+export const AzureSwapSlotDeploymentDynamicField = connect(AzureSwapSlotDeploymentDynamic)

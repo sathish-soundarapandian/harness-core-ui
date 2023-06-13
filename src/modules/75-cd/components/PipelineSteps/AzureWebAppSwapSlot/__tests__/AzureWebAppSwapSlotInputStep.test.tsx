@@ -12,6 +12,7 @@ import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@ha
 import { TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { selectedStageMock } from '../../AzureSlotDeployment/__tests__/mock'
 
 import AzureWebAppSwapSlotInputStep from '../AzureWebAppSwapSlotInputStep'
 
@@ -40,6 +41,7 @@ const renderComponent = (data: any) => {
             inputSetData={{
               template: data
             }}
+            selectedStage={selectedStageMock}
             path="test"
             allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
           />

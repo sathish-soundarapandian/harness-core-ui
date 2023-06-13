@@ -22,6 +22,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getAllowableTypes, isMultiEnv } from '../AzureSlotDeployment/utils'
+import { AzureSwapSlotDeploymentDynamicField } from './AzureWebAppSwapSlotField'
 
 import type { AzureWebAppSwapSlotProps } from './SwapSlot.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -102,40 +103,44 @@ export const AzureWebAppSwapSlotRef = (
               />
             </div>
             <div className={stepCss.divider} />
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.MultiTextInput
-                name="spec.targetSlot"
-                placeholder={'Specify target slot'}
-                label={'Target Slot'}
-                multiTextInputProps={{
-                  expressions,
-                  multitypeInputValue:
-                    AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS && isMultiEnv(selectedStage)
-                      ? MultiTypeInputType.EXPRESSION
-                      : getMultiTypeFromValue(get(formik.values, 'spec.targetSlot')),
-                  allowableTypes:
-                    AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS && isMultiEnv(selectedStage)
-                      ? (getAllowableTypes(selectedStage) as AllowedTypes)
-                      : allowableTypes
-                }}
-                disabled={readonly}
-              />
-              {getMultiTypeFromValue(get(formik, 'values.spec.targetSlot')) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={get(formik, 'values.spec.targetSlot') as string}
-                  type="String"
-                  variableName="spec.targetSlot"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  onChange={
-                    /* istanbul ignore next */ value => {
-                      formik?.setFieldValue('spec.targetSlot', value)
-                    }
-                  }
-                  isReadonly={readonly}
+            {AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS ? (
+              <AzureSwapSlotDeploymentDynamicField {...props} />
+            ) : (
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormInput.MultiTextInput
+                  name="spec.targetSlot"
+                  placeholder={'Specify target slot'}
+                  label={'Target Slot'}
+                  multiTextInputProps={{
+                    expressions,
+                    multitypeInputValue:
+                      AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS && isMultiEnv(selectedStage)
+                        ? MultiTypeInputType.EXPRESSION
+                        : getMultiTypeFromValue(get(formik.values, 'spec.targetSlot')),
+                    allowableTypes:
+                      AZURE_WEBAPP_LISTING_APP_NAMES_AND_SLOTS && isMultiEnv(selectedStage)
+                        ? (getAllowableTypes(selectedStage) as AllowedTypes)
+                        : allowableTypes
+                  }}
+                  disabled={readonly}
                 />
-              )}
-            </div>
+                {getMultiTypeFromValue(get(formik, 'values.spec.targetSlot')) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={get(formik, 'values.spec.targetSlot') as string}
+                    type="String"
+                    variableName="spec.targetSlot"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    onChange={
+                      /* istanbul ignore next */ value => {
+                        formik?.setFieldValue('spec.targetSlot', value)
+                      }
+                    }
+                    isReadonly={readonly}
+                  />
+                )}
+              </div>
+            )}
           </>
         )
       }}
