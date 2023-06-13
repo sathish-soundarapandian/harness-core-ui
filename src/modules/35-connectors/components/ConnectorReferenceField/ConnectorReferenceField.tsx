@@ -150,6 +150,7 @@ export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
   status: ConnectorResponse['status']
   gitDetails?: EntityGitDetails
   harnessManaged?: boolean
+  isFavorite?: boolean
 }
 export function getEditRenderer(
   selected: ConnectorSelectedValue,
@@ -422,6 +423,7 @@ const RecordRender: React.FC<RecordRenderProps> = props => {
           scope={{ projectIdentifier: item.record.projectIdentifier, orgIdentifier: item.record.orgIdentifier }}
           className={css.favoriteStar}
           activeClassName={css.favoriteActive}
+          isFavorite={item.record.isFavorite}
         />
         {!item.record.harnessManaged ? (
           <RbacButton
@@ -544,7 +546,8 @@ export function getReferenceFieldProps({
                   ...connector.connector,
                   status: connector.status,
                   gitDetails: connector.gitDetails?.objectId ? connector.gitDetails : undefined,
-                  harnessManaged: connector.harnessManaged
+                  harnessManaged: connector.harnessManaged,
+                  isFavorite: connector.isFavorite
                 } as ConnectorReferenceDTO
               })
             })

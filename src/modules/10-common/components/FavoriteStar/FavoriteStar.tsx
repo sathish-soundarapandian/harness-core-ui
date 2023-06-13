@@ -20,7 +20,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { Module } from 'framework/types/ModuleName'
 import { useStrings } from 'framework/strings'
 import type { ResourceScope } from 'services/cd-ng'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './FavoriteStar.module.scss'
 
@@ -42,6 +42,7 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { accountId: accountIdFromParams } = useParams<AccountPathProps>()
+  const { module } = useParams<ModulePathParams>()
   const { accountIdentifier: accountId = accountIdFromParams, projectIdentifier, orgIdentifier } = props.scope || {}
 
   const deleteFavorite = async (): Promise<void> => {
@@ -76,8 +77,10 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
           user_id: currentUserInfo.uuid,
           resource_id: props.resourceId,
           resource_type: props.resourceType,
-          module: props.module || 'CORE',
-          account: accountId
+          module: props.module || module.toUpperCase() || 'CORE',
+          account: accountId,
+          project: projectIdentifier,
+          org: orgIdentifier
         },
         pathParams: {
           org: orgIdentifier,

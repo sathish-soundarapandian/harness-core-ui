@@ -150,6 +150,7 @@ export interface EntityReferenceProps<T extends ScopedObjectDTO> {
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
   sortProps?: SortDropdownProps
+  enableFavorite?: boolean
 }
 
 export const tabIdToScopeMap: Record<TAB_ID, Scope | undefined> = {

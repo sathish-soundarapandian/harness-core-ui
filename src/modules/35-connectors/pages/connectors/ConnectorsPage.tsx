@@ -579,7 +579,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
         }
       />
       <Layout.Vertical className={css.listPage}>
-        {connectors?.content?.length || isGitSyncEnabled || searchTerm || loading || appliedFilter ? (
+        {connectors?.content?.length || isGitSyncEnabled || searchTerm || loading || appliedFilter || favorite ? (
           <Layout.Horizontal flex className={css.header}>
             <Layout.Horizontal spacing="small">
               <RbacButton
