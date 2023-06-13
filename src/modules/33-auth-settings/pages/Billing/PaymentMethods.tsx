@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { capitalize, isEmpty } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import { Text, Card, Layout, OverlaySpinner, ButtonVariation, Button } from '@harness/uicore'
@@ -29,17 +29,25 @@ const cardByImageMap: { [key: string]: string } = {
 }
 function PaymentMethods(): JSX.Element {
   const { getString } = useStrings()
+  const [refetchCreditCards, setRefetchCreditcrds] = useState<boolean>(false)
   const { accountId } = useParams<AccountPathProps>()
-  const { data, loading } = useListPaymentMethods({
+  const {
+    data,
+    loading,
+    refetch: refetchCards
+  } = useListPaymentMethods({
     queryParams: { accountIdentifier: accountId }
   })
   const history = useHistory()
   const { openSubscribeModal } = useCreditCardWidget({
-    // refresh to fetch new license after subscribe
+    updateRefetchCards: () => setRefetchCreditcrds(!refetchCreditCards),
     onClose: () => {
       history.push(routes.toBilling({ accountId }))
     }
   })
+  useEffect(() => {
+    refetchCards()
+  }, [refetchCreditCards])
   return (
     <OverlaySpinner show={loading}>
       <Card className={css.card}>

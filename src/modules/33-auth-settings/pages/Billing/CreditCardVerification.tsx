@@ -7,12 +7,7 @@
 
 import React, { useEffect } from 'react'
 import { Layout } from '@harness/uicore'
-import type {
-  BillingContactProps,
-  PaymentMethodProps,
-  SubscribeViews,
-  SubscriptionProps
-} from '@common/constants/SubscriptionTypes'
+import type { SubscribeViews, SubscriptionProps } from '@common/constants/SubscriptionTypes'
 import { CreditCard, Category } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { Module } from 'framework/types/ModuleName'
@@ -27,13 +22,13 @@ interface CreditCardVerificationProp {
   setSubscriptionProps: (props: SubscriptionProps) => void
   module: Module
   onClose: () => void
+  updateRefetchCards?: () => void
 }
 export default function CreditCardVerification({
   subscriptionProps,
-  setView,
-  setInvoiceData,
   setSubscriptionProps,
-  onClose
+  onClose,
+  updateRefetchCards
 }: CreditCardVerificationProp): JSX.Element {
   const { trackEvent } = useTelemetry()
 
@@ -72,24 +67,10 @@ export default function CreditCardVerification({
       />
       <FooterCreditCard
         onClose={onClose}
-        canPay={true}
-        setView={setView}
-        setInvoiceData={setInvoiceData}
+        isValid={subscriptionProps.isValid}
         nameOnCard={subscriptionProps.paymentMethodInfo?.nameOnCard}
-        billingInfo={subscriptionProps.billingContactInfo}
         subscriptionId={subscriptionProps.subscriptionId}
-        setBillingContactInfo={(value: BillingContactProps) => {
-          setSubscriptionProps({
-            ...subscriptionProps,
-            billingContactInfo: value
-          })
-        }}
-        setPaymentMethodInfo={(value: PaymentMethodProps) => {
-          setSubscriptionProps({
-            ...subscriptionProps,
-            paymentMethodInfo: value
-          })
-        }}
+        updateRefetchCards={updateRefetchCards}
       />
     </Layout.Vertical>
   )
