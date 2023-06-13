@@ -231,8 +231,9 @@ serviceNow:
   usernamePasswordAPIKey: 'Username and Password/API Key'
   adfs: ADFS Client Credentials with Certificate
   refreshToken: Refresh Token
+  oidcRefreshToken: OIDC Refresh token
   scopePlaceholder: Enter Scope
-  scopeHelperText: Scope is not required as it will get evaluated from URL itself
+  scopeHelperText: Scope is not required as it will be fetched from ServiceNow URL
   adfsUrl: ADFS URL
   tokenUrl: Token Url
   resourceID: Resource ID

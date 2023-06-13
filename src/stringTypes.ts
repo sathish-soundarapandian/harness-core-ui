@@ -3162,6 +3162,7 @@ export interface StringsMap {
   'connectors.serviceNow.adfs': string
   'connectors.serviceNow.adfsUrl': string
   'connectors.serviceNow.clientID': string
+  'connectors.serviceNow.oidcRefreshToken': string
   'connectors.serviceNow.privateKey': string
   'connectors.serviceNow.refreshToken': string
   'connectors.serviceNow.resourceID': string
