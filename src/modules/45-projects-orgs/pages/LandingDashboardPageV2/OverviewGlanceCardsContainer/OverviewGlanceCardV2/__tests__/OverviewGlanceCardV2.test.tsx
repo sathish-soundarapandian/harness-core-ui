@@ -7,22 +7,8 @@
 
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import { CurrentLocation, TestWrapper } from '@common/utils/testUtils'
 import OverviewGlanceCardV2 from '../OverviewGlanceCardV2'
-
-// eslint-disable-next-line jest-no-mock
-jest.mock('react-router-dom', () => {
-  const fullModule = jest.requireActual('react-router-dom')
-
-  return {
-    ...fullModule,
-    useHistory: jest.fn(() => ({
-      push: useHistoryPushMock
-    }))
-  }
-})
-
-const useHistoryPushMock = jest.fn()
 
 describe('overview glance card v2 tests', () => {
   test('render', () => {
@@ -115,7 +101,7 @@ describe('overview glance card v2 tests', () => {
   })
 
   test('test on click', () => {
-    const { container } = render(
+    const { container, getByTestId } = render(
       <TestWrapper>
         <OverviewGlanceCardV2
           label="projectsText"
@@ -124,11 +110,18 @@ describe('overview glance card v2 tests', () => {
           redirectUrl="testurl"
           countChangeInfo={{ countChange: -2, countChangeRate: 2 }}
         />
+        <CurrentLocation />
       </TestWrapper>
     )
     const containerElement = container.querySelector('[data-testid="overviewcard"]')
     fireEvent.click(containerElement!)
 
-    expect(useHistoryPushMock).toBeCalledWith('testurl')
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /testurl
+      </div>
+    `)
   })
 })

@@ -52,6 +52,17 @@
     color: var(--grey-350);
   }
 }
+
+.relativeWrapper {
+  position: relative;
+
+  .clearSelection {
+    position: absolute;
+    top: 0;
+    right: 30px;
+  }
+}
+
 .contentContainer {
   .closeButton {
     position: absolute;

@@ -17,10 +17,10 @@ import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { useToaster } from '@common/exports'
 import * as cdng from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
-import * as usePermission from '@rbac/hooks/usePermission'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import * as hooks from '@common/hooks'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
+import * as useIsTriggerCreatePermission from '@triggers/components/Triggers/useIsTriggerCreatePermission'
 import {
   GetGitTriggerEventDetailsResponse,
   GetTriggerResponse,
@@ -563,7 +563,7 @@ describe('TriggersWizardPage Triggers tests', () => {
 
     test('Submit onEdit values with Enabled False', async () => {
       jest.spyOn(cdng, 'useGetConnector').mockReturnValue(ConnectorResponse as any)
-      jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [true])
+      jest.spyOn(useIsTriggerCreatePermission, 'useIsTriggerCreatePermission').mockImplementation(() => true)
       jest.spyOn(pipelineNg, 'useGetSchemaYaml').mockImplementation(() => {
         return {
           data: GetSchemaYaml as any,
@@ -635,7 +635,7 @@ describe('TriggersWizardPage Triggers tests', () => {
 
     test('Submit onEdit does not require push because empty actions response', async () => {
       jest.spyOn(cdng, 'useGetConnector').mockReturnValue(ConnectorResponse as any)
-      jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [true])
+      jest.spyOn(useIsTriggerCreatePermission, 'useIsTriggerCreatePermission').mockImplementation(() => true)
       jest.spyOn(pipelineNg, 'useGetSchemaYaml').mockImplementation(() => {
         return {
           data: GetSchemaYaml as any,
@@ -1154,7 +1154,7 @@ describe('TriggersWizardPage Triggers tests', () => {
   describe('Need to Run Tests Last', () => {
     test('Submit onEdit shows toast to fill out actions', async () => {
       jest.spyOn(cdng, 'useGetConnector').mockReturnValue(ConnectorResponse as any)
-      jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [true])
+      jest.spyOn(useIsTriggerCreatePermission, 'useIsTriggerCreatePermission').mockImplementation(() => true)
       jest.spyOn(pipelineNg, 'useGetSchemaYaml').mockImplementation(() => {
         return {
           data: GetSchemaYaml as any,

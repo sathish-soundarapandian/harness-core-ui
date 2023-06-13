@@ -76,7 +76,6 @@ import {
   EDITOR_WHITESPACE,
   TRIGGER_CHARS_FOR_NEW_EXPR,
   TRIGGER_CHAR_FOR_PARTIAL_EXPR,
-  KEY_CODE_FOR_PLUS_SIGN,
   ANGULAR_BRACKET_CHAR,
   KEY_CODE_FOR_SEMI_COLON,
   KEY_CODE_FOR_PERIOD,
@@ -88,7 +87,9 @@ import {
   navigationKeysMap,
   allowedKeysInEditModeMap,
   MAX_ERR_MSSG_LENGTH,
-  allowedKeysInReadOnlyModeMap
+  allowedKeysInReadOnlyModeMap,
+  PLUS,
+  VAR_REGEX
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
@@ -458,10 +459,24 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }
 
-  const shouldInvokeExpressions = (editor: editor.IStandaloneCodeEditor, event: IKeyboardEvent): boolean => {
-    const lastKeyStrokeCharacter = getEditorContentInCurrentLine(editor)?.substr(-1)
-    const { shiftKey, code } = event
-    return lastKeyStrokeCharacter === ANGULAR_BRACKET_CHAR && shiftKey && code === KEY_CODE_FOR_PLUS_SIGN
+  const shouldInvokeExpressions = (
+    editor: editor.IStandaloneCodeEditor,
+    event: IKeyboardEvent,
+    isWidgetClosed: boolean
+  ): boolean => {
+    const currentLineContent = getEditorContentInCurrentLine(editor)
+    const { browserEvent, code, ctrlKey } = event
+
+    if (!currentLineContent) return false
+
+    // when user tries to open suggest widget using ctrl+space
+    if (ctrlKey && code === KEY_CODE_FOR_SPACE && isWidgetClosed) {
+      return VAR_REGEX.test(currentLineContent)
+    }
+
+    // when last character is < and + is entered
+    const lastCharacter = currentLineContent.slice(-1)
+    return lastCharacter === ANGULAR_BRACKET_CHAR && browserEvent.key === PLUS
   }
 
   /* #endregion */
@@ -482,7 +497,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       })
 
   const handleEditorKeyDownEvent = (event: IKeyboardEvent, editor: any): void => {
-    const { keyCode, code, ctrlKey, metaKey, shiftKey } = event
+    const { keyCode, code, ctrlKey, metaKey, shiftKey, browserEvent } = event
     const isMetaOrControlKeyPressed = [CONTROL_EVENT_KEY_CODE, META_EVENT_KEY_CODE, SHIFT_EVENT_KEY_CODE].includes(
       keyCode
     )
@@ -525,8 +540,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       }
 
       // dispose expressionCompletion if (+) sign is not preceding with (<)
-      if (code === KEY_CODE_FOR_PLUS_SIGN) {
-        const lastKeyStrokeCharacter = getEditorContentInCurrentLine(editor)?.substr(-1)
+      if (browserEvent.key === PLUS) {
+        const lastKeyStrokeCharacter = getEditorContentInCurrentLine(editor)?.slice(-1)
         if (lastKeyStrokeCharacter !== ANGULAR_BRACKET_CHAR) {
           expressionCompletionDisposer?.dispose()
         }
@@ -575,17 +590,15 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         }
       }
 
-      if (shiftKey) {
-        // this is to invoke expressions callback
-        if (shouldInvokeExpressions(editor, event)) {
-          const yamlPath = getMetaDataForKeyboardEventProcessing({
-            editor,
-            onErrorCallback
-          })?.parentToCurrentPropertyPath
-          disposePreviousSuggestions()
-          registerCompletionItemProviderForExpressions(editor, TRIGGER_CHARS_FOR_NEW_EXPR, yamlPath)
-        }
+      if (shouldInvokeExpressions(editor, event, isSuggestWidgetClosed)) {
+        const yamlPath = getMetaDataForKeyboardEventProcessing({
+          editor,
+          onErrorCallback
+        })?.parentToCurrentPropertyPath
+        disposePreviousSuggestions()
+        registerCompletionItemProviderForExpressions(editor, TRIGGER_CHARS_FOR_NEW_EXPR, yamlPath)
       }
+
       // this is to invoke partial expressions callback e.g. invoke expressions callback on hitting a period(.) after an expression: expr1.expr2. <-
       if (code === KEY_CODE_FOR_PERIOD) {
         const yamlPath = getMetaDataForKeyboardEventProcessing({ editor, onErrorCallback })?.parentToCurrentPropertyPath

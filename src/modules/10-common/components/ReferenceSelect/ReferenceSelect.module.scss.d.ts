@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly clearSelection: string
   readonly closeButton: string
   readonly container: string
   readonly contentContainer: string
@@ -17,6 +18,7 @@ declare const styles: {
   readonly placeholderContainer: string
   readonly pointer: string
   readonly referenceSelect: string
+  readonly relativeWrapper: string
   readonly selectBtn: string
 }
 export default styles

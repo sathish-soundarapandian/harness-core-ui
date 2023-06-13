@@ -8,14 +8,23 @@
 import * as React from 'react'
 import { useParams } from 'react-router-dom'
 import type { AllowedTypes } from '@harness/uicore'
-import { get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import type { FormikValues } from 'formik'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { ArtifactDigestWrapperDetails, canFetchGarDigest } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import {
+  ArtifactDigestWrapperDetails,
+  canFetchGarDigest,
+  checkIfQueryParamsisNotEmpty,
+  helperTextDataForDigest,
+  resetFieldValue
+} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useMutateAsGet } from '@common/hooks'
 import { useGetLastSuccessfulBuildForGoogleArtifactRegistry } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { isValueFixed } from '@common/utils/utils'
+import { getHelperTextForDigest } from '@pipeline/utils/stageHelpers'
 import BaseArtifactDigestField from '../ArtifactImagePathTagView/BaseArtifactDigestField'
 
 interface GarDigestFieldWrapperProps {
@@ -51,6 +60,35 @@ export function GarArtifactDigestField({
     get(formik?.values?.spec, 'package'),
     connectorRefValue
   )
+
+  const versionValue = defaultTo(formik?.values?.spec?.version?.value, formik?.values?.spec?.version)
+  const digestValue = defaultTo(formik?.values?.spec?.digest?.value, formik?.values?.spec?.digest)
+
+  const isDigestDisabled = React.useMemo(() => {
+    if (formik?.values?.versionType === TagTypes.Value && versionValue) {
+      if ((isValueFixed(versionValue) && checkIfQueryParamsisNotEmpty([versionValue])) || !isValueFixed(versionValue))
+        return false
+    } else if (formik?.values?.versionType === TagTypes.Regex && formik?.values?.spec?.versionRegex) {
+      if (
+        (isValueFixed(formik?.values?.spec?.versionRegex) &&
+          checkIfQueryParamsisNotEmpty([formik?.values?.spec?.versionRegex])) ||
+        !isValueFixed(formik?.values?.spec?.versionRegex)
+      )
+        return false
+    }
+    // return true will disable the digest fields
+    else {
+      resetFieldValue(formik, 'spec.digest')
+      return true
+    }
+  }, [versionValue, formik?.values?.spec?.versionRegex])
+
+  const isVersionRegexType = formik?.values?.versionType === TagTypes.Regex
+
+  const helperText =
+    isValueFixed(digestValue) &&
+    getHelperTextForDigest(helperTextDataForDigest(artifactType, formik, connectorRefValue), getString, false)
+
   const {
     data: dataGar,
     loading: loadingGar,
@@ -92,6 +130,9 @@ export function GarArtifactDigestField({
       allowableTypes={allowableTypes}
       isReadonly={isReadonly}
       isBuildDetailsLoading={isVersionDetailsLoading}
+      helperText={helperText}
+      isLastBuildRegexType={isVersionRegexType}
+      isDigestDisabled={isDigestDisabled}
     />
   )
 }

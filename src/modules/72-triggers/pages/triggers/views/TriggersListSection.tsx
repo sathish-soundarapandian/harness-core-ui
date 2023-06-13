@@ -37,9 +37,6 @@ import {
   useDeleteTrigger,
   useUpdateTrigger
 } from 'services/pipeline-ng'
-import { usePermission } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { UseStringsReturn } from 'framework/strings'
@@ -50,6 +47,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 import { useQueryParams } from '@common/hooks'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
+import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
 import { getTriggerIcon, GitSourceProviders, getEnabledStatusTriggerValues } from '../utils/TriggersListUtils'
 import { TriggerTypes, clearNullUndefined, ResponseStatus } from '../utils/TriggersWizardPageUtils'
 import TriggerStatusCell from './subviews/TriggerStatusCell'
@@ -160,6 +158,7 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
             e.stopPropagation()
             setMenuOpen(true)
           }}
+          data-testid={`${data.identifier}-more-button`}
         />
         <Menu style={{ minWidth: 'unset' }}>
           <Menu.Item
@@ -177,6 +176,7 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
               }
               setMenuOpen(false)
             }}
+            data-testid={`${data.identifier}-edit-button`}
           />
           <Menu.Divider />
           {CDS_TRIGGER_ACTIVITY_PAGE && (
@@ -210,6 +210,7 @@ const RenderColumnMenu: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
               confirmDelete()
               setMenuOpen(false)
             }}
+            data-testid={`${data.identifier}-delete-button`}
           />
         </Menu>
       </Popover>
@@ -319,7 +320,8 @@ const RenderWebhookIcon = ({
   webhookSourceRepo,
   webhookUrl,
   column,
-  curlCommand
+  curlCommand,
+  identifier
 }: {
   type?: string
   webhookSourceRepo?: string
@@ -331,6 +333,7 @@ const RenderWebhookIcon = ({
     getString: UseStringsReturn['getString']
     isTriggerRbacDisabled: boolean
   }
+  identifier?: string
   curlCommand?: string
 }): JSX.Element => {
   const [optionsOpen, setOptionsOpen] = React.useState(false)
@@ -362,6 +365,7 @@ const RenderWebhookIcon = ({
             }
             setOptionsOpen(true)
           }}
+          data-testid={`${identifier}-copy`}
         />
         <Menu style={{ minWidth: 'unset' }}>
           <Menu.Item
@@ -372,6 +376,7 @@ const RenderWebhookIcon = ({
               ;(column as any).showSuccess(column.getString('triggers.toast.webhookUrlCopied'))
               setOptionsOpen(false)
             }}
+            data-testid={`${identifier}-copyAsUrl`}
           />
           {curlCommand && (
             <>
@@ -384,6 +389,7 @@ const RenderWebhookIcon = ({
                   ;(column as any).showSuccess(column.getString('triggers.toast.webhookCurlCopied'))
                   setOptionsOpen(false)
                 }}
+                data-testid={`${identifier}-copyAsCurl`}
               />
             </>
           )}
@@ -405,6 +411,7 @@ const RenderWebhookIcon = ({
           copy(webhookUrl)
           ;(column as any).showSuccess(column.getString('triggers.toast.webhookUrlCopied'))
         }}
+        data-testid={`${identifier}-copy`}
       />
     )
   }
@@ -432,6 +439,7 @@ const RenderColumnWebhook: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
         webhookSourceRepo: data?.webhookDetails?.webhookSourceRepo,
         webhookUrl: data?.webhookUrl,
         curlCommand: data?.webhookCurlCommand,
+        identifier: data.identifier,
         column
       })}
     </div>
@@ -517,6 +525,7 @@ const RenderColumnEnable: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
             column.showError(err?.data?.message)
           }
         }}
+        data-testid={`${data.identifier}-enabled`}
       />
     </div>
   )
@@ -561,26 +570,9 @@ export const TriggersListSection: React.FC<TriggersListSectionProps> = ({
   const totalItems = get(triggerListData, 'totalItems', 0)
   const totalPages = get(triggerListData, 'totalPages', 0)
 
-  const [isExecutable] = usePermission(
-    {
-      resourceScope: {
-        projectIdentifier: projectIdentifier,
-        orgIdentifier: orgIdentifier,
-        accountIdentifier: accountId
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EXECUTE_PIPELINE],
-      options: {
-        skipCache: true
-      }
-    },
-    [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
-  )
+  const isTriggerCreatePermission = useIsTriggerCreatePermission()
 
-  const isTriggerRbacDisabled = !isExecutable || isPipelineInvalid
+  const isTriggerRbacDisabled = !isTriggerCreatePermission || isPipelineInvalid
 
   const columns: any = React.useMemo(
     // const columns: CustomColumn<NGTriggerDetailsResponse>[] = React.useMemo( // wait for backend to support condition

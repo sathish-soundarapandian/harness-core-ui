@@ -64,10 +64,6 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 
-import { usePermission } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-
 import { connectorUrlType } from '@connectors/constants'
 
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
@@ -121,6 +117,7 @@ import type {
 } from '../TriggerWizardInterface'
 import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
 import useIsGithubWebhookAuthenticationEnabled from './useIsGithubWebhookAuthenticationEnabled'
+import { useIsTriggerCreatePermission } from '../useIsTriggerCreatePermission'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 
@@ -1423,26 +1420,9 @@ export default function WebhookTriggerWizard(
     }
   }
 
-  const [isExecutable] = usePermission(
-    {
-      resourceScope: {
-        projectIdentifier,
-        orgIdentifier,
-        accountIdentifier
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EXECUTE_PIPELINE],
-      options: {
-        skipCache: true
-      }
-    },
-    [accountIdentifier, orgIdentifier, projectIdentifier, pipelineIdentifier]
-  )
+  const isTriggerCreatePermission = useIsTriggerCreatePermission()
 
-  const isTriggerRbacDisabled = !isExecutable
+  const isTriggerRbacDisabled = !isTriggerCreatePermission
 
   const ConnectorRefRegex = /^.+source\.spec\.spec\.spec\.connectorRef$/
   const invocationMapWebhook: YamlBuilderProps['invocationMap'] = new Map<RegExp, InvocationMapFunction>()

@@ -58,6 +58,8 @@ export type UseGetReturnData<TData, TError = undefined, TQueryParams = undefined
 
 export const findDialogContainer = (): HTMLElement | null => document.querySelector('.bp3-dialog')
 export const findPopoverContainer = (): HTMLElement | null => document.querySelector('.bp3-popover-content')
+export const findDrawerContainer = (): HTMLElement | null => document.querySelector('.bp3-drawer')
+export const findTransitionContainer = (): HTMLElement | null => document.querySelector('.bp3-transition-container')
 
 export interface TestWrapperProps {
   path?: string

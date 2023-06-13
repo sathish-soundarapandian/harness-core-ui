@@ -9,13 +9,14 @@ import useResponseError from '@cf/hooks/useResponseError'
 import ArchiveFlagButtons from './ArchiveFlagButtons'
 
 export interface ArchiveDialogProps {
+  backToListingPage?: () => void
   flagData: Feature
-  refetchFlags: () => void
   deleteFeatureFlag: (
     data: string,
     mutateRequestOptions?: MutateRequestOptions<DeleteFeatureFlagQueryParams, void> | undefined
   ) => void
   queryParams: DeleteFeatureFlagQueryParams
+  refetchFlags?: () => void
 }
 
 interface UseArchiveFlagDialogReturn {
@@ -26,7 +27,8 @@ const useArchiveFlagDialog = ({
   flagData,
   deleteFeatureFlag,
   queryParams,
-  refetchFlags
+  refetchFlags,
+  backToListingPage
 }: ArchiveDialogProps): UseArchiveFlagDialogReturn => {
   const [isAnIdentifierMatch, setIsAnIdentifierMatch] = useState<boolean>(false)
   const [validationFlagIdentifier, setValidationFlagIdentifier] = useState<string>('')
@@ -38,7 +40,11 @@ const useArchiveFlagDialog = ({
     try {
       await deleteFeatureFlag(flagData.identifier, { queryParams })
       showSuccess(getString('cf.featureFlags.archiving.archiveSuccess'))
-      refetchFlags()
+      if (backToListingPage) {
+        backToListingPage()
+      } else if (refetchFlags) {
+        refetchFlags()
+      }
       setValidationFlagIdentifier('')
       closeDialog()
     } catch (e) {

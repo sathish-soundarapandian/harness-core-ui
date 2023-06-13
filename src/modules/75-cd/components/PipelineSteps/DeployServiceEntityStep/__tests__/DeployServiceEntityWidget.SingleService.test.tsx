@@ -6,12 +6,12 @@
  */
 
 import React from 'react'
-import { render, waitFor, findByText as findByTextGlobal, queryByAttribute } from '@testing-library/react'
+import { render, waitFor, findByText as findByTextGlobal, queryByAttribute, getByText } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 
-import { TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import DeployServiceEntityWidget from '../DeployServiceEntityWidget'
 import services from './services.json'
 import metadata from './servicesMetadata.json'
@@ -303,6 +303,138 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     await waitFor(() => {
       expect(onUpdate).toHaveBeenLastCalledWith({ service: { serviceRef: '' } })
+    })
+  })
+
+  test('switching to multi service when expression clears service and user can toggle back without confirmation', async () => {
+    const onUpdate = jest.fn()
+    const { container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ NG_SVC_ENV_REDESIGN: true }}>
+        <DeployServiceEntityWidget
+          initialValues={{ service: { serviceRef: '<+pipeline.variables.svcName>' } }}
+          allowableTypes={allowableTypes}
+          readonly={false}
+          stageIdentifier=""
+          onUpdate={onUpdate}
+          setupModeType={setupMode.DIFFERENT}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(container.querySelector('.bp3-spinner')).not.toBeInTheDocument())
+
+    const toggle = container.querySelector('.Toggle--input')!
+
+    userEvent.click(toggle)
+
+    const confirmationDialog = findDialogContainer() as HTMLElement
+    await waitFor(() => expect(confirmationDialog).toBeTruthy())
+
+    expect(
+      getByText(confirmationDialog, 'cd.pipelineSteps.serviceTab.multiServicesClearConfirmationText')
+    ).toBeInTheDocument()
+    userEvent.click(getByText(confirmationDialog, 'applyChanges') as HTMLButtonElement)
+
+    await waitFor(() => {
+      expect(onUpdate).toHaveBeenLastCalledWith({
+        services: {
+          metadata: {
+            parallel: true
+          },
+          values: []
+        }
+      })
+    })
+
+    userEvent.click(toggle)
+
+    await waitFor(() => {
+      expect(onUpdate).toHaveBeenLastCalledWith({
+        service: { serviceRef: '' }
+      })
+    })
+  })
+
+  test('switching to multi service when fixed', async () => {
+    const onUpdate = jest.fn()
+    const { container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ NG_SVC_ENV_REDESIGN: true }}>
+        <DeployServiceEntityWidget
+          initialValues={{
+            service: {
+              serviceRef: 'svc_1',
+              serviceInputs: {
+                serviceDefinition: {
+                  spec: {
+                    artifacts: {
+                      primary: {
+                        spec: {
+                          connectorRef: '<+input>',
+                          imagePath: '<+input>',
+                          tag: '<+input>'
+                        },
+                        type: 'DockerRegistry'
+                      }
+                    }
+                  },
+                  type: 'Kubernetes'
+                }
+              }
+            }
+          }}
+          allowableTypes={allowableTypes}
+          readonly={false}
+          stageIdentifier=""
+          onUpdate={onUpdate}
+          setupModeType={setupMode.DIFFERENT}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(container.querySelector('.bp3-spinner')).not.toBeInTheDocument())
+
+    const toggle = container.querySelector('.Toggle--input')!
+
+    userEvent.click(toggle)
+
+    const multiSvcConfirmationDialog = findDialogContainer() as HTMLElement
+    await waitFor(() => expect(multiSvcConfirmationDialog).toBeTruthy())
+
+    expect(
+      getByText(multiSvcConfirmationDialog, 'cd.pipelineSteps.serviceTab.multiServicesConfirmationText')
+    ).toBeInTheDocument()
+    userEvent.click(getByText(multiSvcConfirmationDialog, 'applyChanges') as HTMLButtonElement)
+
+    await waitFor(() => {
+      expect(onUpdate).toHaveBeenLastCalledWith({
+        services: {
+          metadata: {
+            parallel: false
+          },
+          values: [
+            {
+              serviceRef: 'svc_1',
+              serviceInputs: {
+                serviceDefinition: {
+                  spec: {
+                    artifacts: {
+                      primary: {
+                        spec: {
+                          connectorRef: '<+input>',
+                          imagePath: '<+input>',
+                          tag: '<+input>'
+                        },
+                        type: 'DockerRegistry'
+                      }
+                    }
+                  },
+                  type: 'Kubernetes'
+                }
+              }
+            }
+          ]
+        }
+      })
     })
   })
 })

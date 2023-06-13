@@ -51,9 +51,6 @@ import {
   getPipelineWithoutCodebaseInputs
 } from '@pipeline/utils/CIUtils'
 import { useStrings } from 'framework/strings'
-import { usePermission } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
@@ -80,6 +77,7 @@ import useIsGithubWebhookAuthenticationEnabled from '@triggers/components/Trigge
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import { isNewTrigger } from '@triggers/components/Triggers/utils'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
+import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -1779,26 +1777,9 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     }
   }
 
-  const [isExecutable] = usePermission(
-    {
-      resourceScope: {
-        projectIdentifier: projectIdentifier,
-        orgIdentifier: orgIdentifier,
-        accountIdentifier: accountId
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EXECUTE_PIPELINE],
-      options: {
-        skipCache: true
-      }
-    },
-    [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
-  )
+  const isTriggerCreatePermission = useIsTriggerCreatePermission()
 
-  const isTriggerRbacDisabled = !isExecutable
+  const isTriggerRbacDisabled = !isTriggerCreatePermission
 
   const wizardMap = initialValues.triggerType
     ? getWizardMap({
@@ -2135,7 +2116,9 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
         onHide={returnToTriggersPage}
         // defaultTabId="Conditions"
         submitLabel={isEdit ? getString('triggers.updateTrigger') : getString('triggers.createTrigger')}
-        disableSubmit={loadingGetTrigger || createTriggerLoading || updateTriggerLoading || fetchingTemplate}
+        disableSubmit={
+          loadingGetTrigger || createTriggerLoading || updateTriggerLoading || isTriggerRbacDisabled || fetchingTemplate
+        }
         isEdit={isEdit}
         wizardType="scheduled"
         errorToasterMessage={errorToasterMessage}

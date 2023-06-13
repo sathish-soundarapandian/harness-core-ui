@@ -638,17 +638,22 @@ export const GetTriggerListForTargetResponse: UseGetReturnData<ResponsePageNGTri
       pageSize: 25,
       content: [
         {
-          name: 'AllValues123',
-          identifier: 'AllValues',
+          name: 'Webhook Custom',
+          identifier: 'WebhookCustom',
           description: 'desc',
           type: 'Webhook',
           executions: [2, 3, 4, 5, 4, 3, 2],
           enabled: true,
-          yaml: 'trigger:\n  name: AllValues123\n  identifier: AllValues\n  description: desc\n  target:\n    targetIdentifier: p1\n    type: Pipeline\n    spec:\n      runtimeInputYaml: |\n        pipeline:\n          identifier: p1\n          stages:\n            - stage:\n                identifier: stage1\n                type: Deployment\n                spec:\n                  infrastructure:\n                    infrastructureDefinition:\n                      type: KubernetesDirect\n                      spec:\n                        namespace: newNameSpaces\n                        releaseName: "22"\n  source:\n    type: Webhook\n    spec:\n      type: GITHUB\n      spec:\n        repoUrl: repoUrlss1\n        event: Pull Request\n        actions:\n          - closed\n          - edited\n          - opened\n        payloadConditions:\n          - key: sourceBranch\n            operator: Equals\n            value: "123"\n          - key: targetBranch\n            operator: Regex\n            value: Regex\n          - key: abcd\n            operator: In\n            value: abc\n          - key: defg\n            operator: NotIn\n            value: def\n'
+          webhookCurlCommand: 'webhookCurlCommand',
+          webhookUrl: 'webhookUrl',
+          webhookDetails: {
+            webhookSourceRepo: 'CUSTOM'
+          },
+          yaml: 'trigger:\n  name: Webhook Custom\n  identifier: WebhookCustom\n  enabled: true\n  description: ""\n  tags: {}\n  stagesToExecute: []\n  orgIdentifier: default\n  projectIdentifier: Pankaj\n  pipelineIdentifier: dockerdigestissue\n  source:\n    type: Webhook\n    spec:\n      type: Custom\n      spec:\n        payloadConditions: []\n        headerConditions: []\n  inputSetRefs:\n    - Input_Set_1\n'
         },
         {
-          name: 'test1',
-          identifier: 'test1',
+          name: 'Webhook GITHUB',
+          identifier: 'WebhookGITHUB',
           type: 'Webhook',
           lastTriggerExecutionDetails: {
             lastExecutionTime: 1607637774407,
@@ -660,7 +665,7 @@ export const GetTriggerListForTargetResponse: UseGetReturnData<ResponsePageNGTri
             tag1: '',
             tag2: 'val2'
           },
-          yaml: 'trigger:\n  name: test1\n  identifier: test1\n  target:\n    targetIdentifier: p1\n    type: Pipeline\n    spec:\n      runtimeInputYaml: |\n        pipeline:\n          identifier: p1\n          stages:\n            - stage:\n                identifier: stage1\n                type: Deployment\n                spec:\n                  infrastructure:\n                    infrastructureDefinition:\n                      type: KubernetesDirect\n                      spec:\n                        namespace: namespace\n                        releaseName: releaseName\n  source:\n    type: Webhook\n    spec:\n      type: GITHUB\n      spec:\n        repoUrl: test\n        event: Pull Request\n        actions: []\n'
+          yaml: 'trigger:\n  name: Webhook GITHUB\n  identifier: WebhookGITHUB\n  target:\n    targetIdentifier: p1\n    type: Pipeline\n    spec:\n      runtimeInputYaml: |\n        pipeline:\n          identifier: p1\n          stages:\n            - stage:\n                identifier: stage1\n                type: Deployment\n                spec:\n                  infrastructure:\n                    infrastructureDefinition:\n                      type: KubernetesDirect\n                      spec:\n                        namespace: namespace\n                        releaseName: releaseName\n  source:\n    type: Webhook\n    spec:\n      type: GITHUB\n      spec:\n        repoUrl: test\n        event: Pull Request\n        actions: []\n'
         },
         {
           name: 'trigger-2',
@@ -668,7 +673,7 @@ export const GetTriggerListForTargetResponse: UseGetReturnData<ResponsePageNGTri
           type: 'Webhook',
           enabled: false,
           webhookUrl: 'http://localhost:12001/api/webhook/trigger?accountIdentifier=accountIdentifier',
-          yaml: 'trigger:\n  name: trigger-2\n  identifier: trigger2\n  target:\n    targetIdentifier: p1\n    type: Pipeline\n    spec:\n      runtimeInputYaml: |\n        pipeline: {}\n  source:\n    type: Webhook\n    spec:\n      type: GITHUB\n      spec:\n        repoUrl: "12"\n        event: Pull Request\n        actions:\n          - closed\n          - edited\n          - labeled\n        payloadConditions:\n          - key: sourceBranch\n            operator: Regex\n            value: abc\n          - key: targetBranch\n            operator: Contains\n            value: abc\n'
+          yaml: 'trigger:\n  name: trigger-2\n  identifier: trigger2\n  enabled: false\n  description: ""\n  tags: {}\n  stagesToExecute: []\n  orgIdentifier: default\n  projectIdentifier: Pankaj\n  pipelineIdentifier: dockerdigestissue\n  source:\n    type: Webhook\n    spec:\n      type: Custom\n      spec:\n        payloadConditions: []\n        headerConditions: []\n  inputSetRefs:\n    - Input_Set_1\n'
         },
         {
           name: 'testcustomtrigger1',

@@ -65,6 +65,7 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   createNewBtnComponent?: JSX.Element
   createNewHandler?: () => void
   hideModal?: boolean
+  clearSelection?: () => void
   selectedRenderer?: JSX.Element
   editRenderer?: JSX.Element
   width?: CSSProperties['width']
@@ -135,6 +136,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
     selectedRenderer,
     componentName = '',
     disabled,
+    clearSelection,
     createNewBtnComponent,
     isMultiSelect,
     selectedReferences,
@@ -169,7 +171,15 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
   }, [selected])
   const defaultScopeRef = useRef(referenceProps.defaultScope)
 
+  const valueOfSelectedItem = useMemo((): string | undefined => {
+    return !selected || typeof selected === 'string' ? selected : selected?.value
+  }, [selected])
+  const selectedHasValue = useMemo((): boolean => {
+    return valueOfSelectedItem !== null && valueOfSelectedItem !== undefined && valueOfSelectedItem !== ''
+  }, [valueOfSelectedItem])
+
   const getPlaceholderElement = (): ReactNode => {
+    const showClearBtn = Boolean(clearSelection) && selectedHasValue && !props.disabled
     if (isMultiSelect) {
       return (
         <MultiReferenceSelectPlaceholder
@@ -199,7 +209,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
       <Button
         minimal
         data-testid={`cr-field-${name}`}
-        className={css.container}
+        className={cx(css.container, { [css.relativeWrapper]: showClearBtn })}
         style={{ width }}
         withoutCurrentColor={true}
         rightIcon="chevron-down"
@@ -214,6 +224,19 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
         }}
       >
         {singleSelectPlaceholder}
+        {showClearBtn ? (
+          <Icon
+            name="main-delete"
+            className={css.clearSelection}
+            onClick={(e: React.MouseEvent<HTMLHeadingElement, MouseEvent>) => {
+              e.preventDefault()
+              e.stopPropagation()
+              clearSelection?.()
+            }}
+            size={14}
+            padding={{ top: 'small', right: 'xsmall', bottom: 'small' }}
+          />
+        ) : null}
       </Button>
     )
   }

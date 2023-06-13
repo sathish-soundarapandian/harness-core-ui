@@ -24,73 +24,6 @@ exports[`EXECUTION VIEW should should have the values prefilled and fields as di
             >
               <div>
                 <div
-                  class="Layout--vertical StyledProps--main pipelineHeader StyledProps--padding-top-xlarge StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge"
-                >
-                  <div
-                    class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-small"
-                  >
-                    <span
-                      class="bp3-popover-wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target Text--targetClass"
-                      >
-                        <p
-                          class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--font-variation-h6"
-                          data-testid="input-set-description-tooltip"
-                          style="display: flex; align-items: center;"
-                          tabindex="0"
-                        >
-                          pipeline.pipelineInputPanel.useExisitingInputSets
-                          <span
-                            class="bp3-icon StyledProps--main helpIcon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
-                            data-icon="question"
-                          >
-                            <svg
-                              height="16"
-                              viewBox="0 0 14 14"
-                              width="16"
-                            >
-                              <path
-                                d="M7 .1C3.2.1.1 3.2.1 7s3.1 6.9 6.9 6.9 6.9-3.1 6.9-6.9S10.8.1 7 .1zm0 1.2c3.2 0 5.7 2.6 5.7 5.7s-2.6 5.7-5.7 5.7S1.3 10.2 1.3 7 3.8 1.3 7 1.3zm0 2.3c-1.3 0-2.3 1-2.3 2.3h1.1c0-.6.5-1.1 1.1-1.1S8 5.3 8 5.9c0 .4-.3.8-.7 1h-.1c-.4.2-.8.6-.8 1.1v.7h1.1V8l.2-.1c.9-.3 1.5-1.1 1.5-2.1.1-1.2-.9-2.2-2.2-2.2zm-.6 5.7v1.1h1.1V9.3H6.4z"
-                                fill="#9AA5B5"
-                              />
-                            </svg>
-                          </span>
-                        </p>
-                      </span>
-                    </span>
-                    <span
-                      class="bp3-popover-wrapper disabledPopover"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <label
-                          class="bp3-control bp3-switch bp3-disabled bp3-align-right toggleExisitingProvide"
-                        >
-                          <input
-                            data-testid="selectExistingOrProvide"
-                            disabled=""
-                            tabindex="0"
-                            type="checkbox"
-                          />
-                          <span
-                            class="bp3-control-indicator"
-                          />
-                        </label>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-                <div
-                  class="dividerWrapper"
-                >
-                  <div
-                    class="divider"
-                  />
-                </div>
-                <div
                   class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container inputSetFormRunPipeline"
                 >
                   <div
@@ -613,6 +546,7 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                 </div>
                 <div
                   class="dividerWrapper"
+                  data-testid="inputSetFormDivider"
                 >
                   <div
                     class="divider"
@@ -1417,6 +1351,7 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                 </div>
                 <div
                   class="dividerWrapper"
+                  data-testid="inputSetFormDivider"
                 >
                   <div
                     class="divider"

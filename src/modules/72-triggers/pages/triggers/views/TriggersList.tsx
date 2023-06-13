@@ -28,15 +28,13 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { AddDrawer } from '@common/components'
 import { DrawerContext } from '@common/components/AddDrawer/AddDrawer'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import { usePermission } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getErrorMessage } from '@triggers/components/Triggers/utils'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { COMMON_DEFAULT_PAGE_SIZE } from '@common/constants/Pagination'
 
+import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
 import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
@@ -92,24 +90,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
 
   const triggerList = triggerListResponse?.data?.content || undefined
   const history = useHistory()
-  const [isEditable] = usePermission(
-    {
-      resourceScope: {
-        projectIdentifier: projectIdentifier,
-        orgIdentifier: orgIdentifier,
-        accountIdentifier: accountId
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EDIT_PIPELINE],
-      options: {
-        skipCache: true
-      }
-    },
-    [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
-  )
+  const isTriggerCreatePermission = useIsTriggerCreatePermission()
 
   const { data: branchesWithStatusData, refetch: getDefaultBranchName } = useGetListOfBranchesWithStatus({
     queryParams: {
@@ -212,7 +193,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
       <HelpPanel referenceId="triggers" type={HelpPanelType.FLOATING_CONTAINER} />
       <Page.SubHeader>
         <Button
-          disabled={!isEditable || incompatibleGitSyncBranch || isPipelineInvalid}
+          disabled={!isTriggerCreatePermission || incompatibleGitSyncBranch || isPipelineInvalid}
           tooltip={isPipelineInvalid ? getString('pipeline.cannotAddTriggerInvalidPipeline') : ''}
           text={getString('triggers.newTrigger')}
           variation={ButtonVariation.PRIMARY}
@@ -243,7 +224,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
                 message: getString('triggers.aboutTriggers'),
                 buttonText: getString('triggers.addNewTrigger'),
                 onClick: openDrawer,
-                buttonDisabled: !isEditable || incompatibleGitSyncBranch || isPipelineInvalid,
+                buttonDisabled: !isTriggerCreatePermission || incompatibleGitSyncBranch || isPipelineInvalid,
                 buttonDisabledTooltip: isPipelineInvalid ? getString('pipeline.cannotAddTriggerInvalidPipeline') : ''
               }
             : {

@@ -12,7 +12,7 @@ import userEvent from '@testing-library/user-event'
 import * as usePermission from '@rbac/hooks/usePermission'
 import * as pipelineng from 'services/pipeline-ng'
 import * as ExecutionContext from '@pipeline/context/ExecutionContext'
-import { TestWrapper } from '@common/utils/testUtils'
+import { CurrentLocation, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { ExecutionHeader } from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionHeader/ExecutionHeader'
@@ -40,15 +40,6 @@ jest.mock('services/pipeline-ng', () => ({
   useGetInputsetYaml: jest.fn(() => ({ data: null })),
   useRetryHistory: jest.fn(() => mockRetryHistory),
   useLatestExecutionId: jest.fn(() => mockLatestExecutionId)
-}))
-
-const mockHistoryPush = jest.fn()
-// eslint-disable-next-line jest-no-mock
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useHistory: () => ({
-    push: mockHistoryPush
-  })
 }))
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -109,9 +100,10 @@ describe('Retry History Button tests', () => {
 
   test.skip('retry history button should be enabled when view pipeline permission is truthy', async () => {
     jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [true, true, false])
-    render(
+    const { getByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ExecutionHeader />
+        <CurrentLocation />
       </TestWrapper>
     )
     const retryHistoryButton = await screen.findByRole('button', {
@@ -123,9 +115,13 @@ describe('Retry History Button tests', () => {
     expect(retryHistoryExecutionList).toMatchSnapshot('RetryHistoryExecutionList Snapshot')
     const executionDetailText = await screen.findByText('pipeline.recentExecutionText 2/2')
     userEvent.click(executionDetailText)
-    expect(mockHistoryPush).toBeCalledWith(
-      '/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/pWoxb6ZARgCrf2fYtZ4k5Q/pipeline'
-    )
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+    <div
+      data-testid="location"
+    >
+      /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/pWoxb6ZARgCrf2fYtZ4k5Q/pipeline
+    </div>
+  `)
   })
 
   test('render retry history execution list on loading state', async () => {
@@ -155,15 +151,20 @@ describe('Retry History Button tests', () => {
         }
       }
     } as any)
-    render(
+    const { getByTestId } = render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ExecutionHeader />
+        <CurrentLocation />
       </TestWrapper>
     )
     const viewLatestText = await screen.findByText('common.viewLatest')
     userEvent.click(viewLatestText)
-    expect(mockHistoryPush).toBeCalledWith(
-      '/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/pWoxb6ZARgCrf2fYtZ4k5Q/pipeline'
-    )
+    expect(getByTestId('location')).toMatchInlineSnapshot(`
+      <div
+        data-testid="location"
+      >
+        /account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions/pWoxb6ZARgCrf2fYtZ4k5Q/pipeline
+      </div>
+    `)
   })
 })

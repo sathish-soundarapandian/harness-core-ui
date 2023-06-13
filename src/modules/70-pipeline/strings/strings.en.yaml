@@ -973,7 +973,7 @@ infraSpecifications:
     amd64: AMD64
     arm64: ARM64
 imagePathLabel: Image Path
-digest: Digest
+digest: Digest (Optional)
 artifactPathLabel: Artifact Path
 applicationName: Application Name
 selectApplications: Select Applications
@@ -1188,6 +1188,7 @@ gitCloneStep:
   validation:
     associatedBuildInput: Associated build input
 tagDependencyRequired: required to fetch the tags
+digestDependencyRequired: required to fetch the digest
 artifactPathDependencyRequired: required to fetch the artifact paths
 artifactOrImagePathDependencyRequired: required to fetch the artifact/image path
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'

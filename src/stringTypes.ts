@@ -4173,6 +4173,7 @@ export interface StringsMap {
   'pipeline.deploymentRepoStore': string
   'pipeline.depth': string
   'pipeline.digest': string
+  'pipeline.digestDependencyRequired': string
   'pipeline.discard': string
   'pipeline.draft': string
   'pipeline.duplicateImport': string

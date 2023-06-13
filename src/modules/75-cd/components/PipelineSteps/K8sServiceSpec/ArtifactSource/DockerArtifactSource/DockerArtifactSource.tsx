@@ -33,7 +33,8 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource,
-  getValidInitialValuePath
+  getValidInitialValuePath,
+  DefaultParam
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
@@ -84,11 +85,16 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.imagePath`, ''), artifact?.spec?.imagePath),
     get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
   )
+  const tagRegexValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tagRegex`, ''), artifact?.spec?.tagRegex),
+    get(initialValues, `artifacts.${artifactPath}.spec.tagRegex`, '')
+  )
 
-  const tagValue = getImagePath(
+  const tagValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tag`, ''), artifact?.spec?.tag),
     get(initialValues, `artifacts.${artifactPath}.spec.tag`, '')
   )
+
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
@@ -332,9 +338,9 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               template={template}
             />
           )}
-
           {!fromTrigger &&
             CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            (isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) || tagValue !== DefaultParam) &&
             isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
               <DigestField
                 {...props}
@@ -346,6 +352,26 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
                 stageIdentifier={stageIdentifier}
                 digestData={digestData}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+              />
+            )}
+
+          {!fromTrigger &&
+            CD_NG_DOCKER_ARTIFACT_DIGEST &&
+            (isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) || tagRegexValue !== DefaultParam) &&
+            isFieldRuntime(`artifacts.${artifactPath}.spec.digest`, template) && (
+              <TextFieldInputSetView
+                tooltipProps={{
+                  dataTooltipId: 'artifactDigestTooltip'
+                }}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.digest`)}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={getString('pipeline.digest')}
+                name={`${path}.artifacts.${artifactPath}.spec.digest`}
+                fieldPath={`artifacts.${artifactPath}.spec.digest`}
+                template={template}
               />
             )}
         </Layout.Vertical>

@@ -78,6 +78,7 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
 
   return (
     <SelectInputSetView
+      placeholder={getString('pipeline.artifactsSelection.digestPlaceholder')}
       formik={formik}
       selectItems={
         fetchingDigest
@@ -127,6 +128,9 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
       fieldPath={`artifacts.${artifactPath}.spec.digest`}
       disabled={disabled}
       template={template}
+      tooltipProps={{
+        dataTooltipId: 'artifactDigestTooltip'
+      }}
     />
   )
 }
