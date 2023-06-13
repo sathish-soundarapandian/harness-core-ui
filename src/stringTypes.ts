@@ -1194,6 +1194,7 @@ export interface StringsMap {
   'common.subscriptions.usage.serviceInstances': string
   'common.subscriptions.usage.serviceLicenses': string
   'common.subscriptions.usage.services': string
+  'common.subscriptions.usage.servicesConsumed': string
   'common.subscriptions.usage.srvcInst': string
   'common.subscriptions.usage.stoDevelopers': string
   'common.subscriptions.usage.stoDevelopersTooltip': string

@@ -556,8 +556,9 @@ subscriptions:
     header: Activity & Usage
     last30days: Last 30 days
     services: Active Services
+    servicesConsumed: Active Services consuming total
     srvcInst: Active Service Instances
-    serviceLicenses: Service Licenses
+    serviceLicenses: Service License(s)
     serviceInstances: Service Instances
     cdUsers: Active CD Users
     buildCredits: Build Credits
