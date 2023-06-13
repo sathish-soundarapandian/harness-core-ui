@@ -20,6 +20,7 @@ import {
   useDownloadActiveServiceCSVReport,
   useGetCreditsByAccount
 } from 'services/cd-ng'
+import * as useGetUsageAndLimit from '@common/hooks/useGetUsageAndLimit'
 import { listActiveDevelopersPromise } from 'services/ci'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -102,8 +103,33 @@ const featureFlags = {
   CVNG_ENABLED: true,
   CENG_ENABLED: true
 }
+const useGetUsageAndLimitReturnMock = {
+  limitData: {
+    limit: {
+      cd: {
+        totalServiceInstances: 100,
+        totalWorkload: 200
+      }
+    }
+  },
+  usageData: {
+    usage: {
+      cd: {
+        activeServiceInstances: {
+          count: 20,
+          displayName: 'Last 30 Days'
+        },
+        activeServices: {
+          count: 45,
+          displayName: 'Last 30 Days'
+        }
+      }
+    }
+  }
+}
 
 describe('Subscriptions Page', () => {
+  jest.spyOn(useGetUsageAndLimit, 'useGetUsageAndLimit').mockReturnValue(useGetUsageAndLimitReturnMock)
   useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
     return {
       data: '',

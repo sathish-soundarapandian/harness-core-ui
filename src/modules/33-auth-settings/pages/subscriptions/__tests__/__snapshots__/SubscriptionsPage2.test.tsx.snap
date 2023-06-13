@@ -567,23 +567,6 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
                     style="width: 100%;"
                   >
                     <div
-                      class="exportButtonAlign"
-                    >
-                       
-                      <a
-                        class="exportButton"
-                        download="serviceLicensesData.csv"
-                        href="data:text/csv;charset=utf-8,"
-                      >
-                        Export CSV
-                      </a>
-                    </div>
-                  </div>
-                  <div
-                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
-                    style="width: 100%;"
-                  >
-                    <div
                       class="Layout--vertical StyledProps--main badgesContainer"
                     >
                       <div
@@ -596,7 +579,16 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
                            
                         </p>
                         <span>
-                          common.subscriptions.usage.services
+                          common.subscriptions.usage.servicesConsumed
+                        </span>
+                        <p
+                          class="StyledProps--font StyledProps--main badgeText"
+                        >
+                          undefined
+                           
+                        </p>
+                        <span>
+                          common.subscriptions.usage.serviceLicenses
                         </span>
                         <p
                           class="StyledProps--font StyledProps--main"
@@ -621,6 +613,23 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
                         </p>
                       </div>
                     </div>
+                    <div
+                      class="exportButtonAlign"
+                    >
+                       
+                      <a
+                        class="exportButton"
+                        download="serviceLicensesData.csv"
+                        href="data:text/csv;charset=utf-8,"
+                      >
+                        Export CSV
+                      </a>
+                    </div>
+                  </div>
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
+                    style="width: 100%;"
+                  >
                     <div
                       class="Layout--vertical StyledProps--main"
                     >

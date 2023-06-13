@@ -205,7 +205,10 @@ export function ServiceLicenseTable({
   const [selectedProj, setSelectedProj] = useState<SelectOption | undefined>()
   const [selectedService, setSelectedService] = useState<SelectOption | undefined>()
   const activeServiceText = `${totalElements}`
-  const licenseText = `${getLabel(usage?.cd?.serviceLicenses?.count || 0)}`
+
+  const licenseText = `${getLabel(
+    licenseType === 'SERVICES' ? usage?.cd?.serviceLicenses?.count : usage?.cd?.activeServiceInstances?.count || 0
+  )}`
   const [initialContent, setInitialContent] = useState<string>('')
 
   const { data: dataInCsv, refetch } = useDownloadActiveServiceCSVReport({
