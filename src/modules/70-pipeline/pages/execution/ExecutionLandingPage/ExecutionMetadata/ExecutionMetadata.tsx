@@ -13,7 +13,7 @@ import { defaultTo, get } from 'lodash-es'
 import { Link, useParams } from 'react-router-dom'
 import { useStrings, String } from 'framework/strings'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
-import { hasCDStage, hasCIStage, StageType } from '@pipeline/utils/stageHelpers'
+import { hasCDStage, hasCIStage, hasIACMStage, StageType } from '@pipeline/utils/stageHelpers'
 import factory from '@pipeline/factories/ExecutionFactory'
 import type { ExecutorInfoDTO, PipelineStageInfo } from 'services/pipeline-ng'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
@@ -143,8 +143,10 @@ export default function ExecutionMetadata(): React.ReactElement {
   const { getString } = useStrings()
   const HAS_CD = hasCDStage(pipelineExecutionSummary)
   const HAS_CI = hasCIStage(pipelineExecutionSummary)
+  const HAS_IACM = hasIACMStage(pipelineExecutionSummary)
   const ciData = factory.getSummary(StageType.BUILD)
   const cdData = factory.getSummary(StageType.DEPLOY)
+  const iacmData = factory.getSummary(StageType.IACM)
 
   const renderSingleStageExecutionInfo = (): React.ReactElement | null => {
     const stagesExecutedCount = defaultTo(pipelineExecutionSummary?.stagesExecuted?.length, 0)
@@ -217,6 +219,12 @@ export default function ExecutionMetadata(): React.ReactElement {
                   className: css.cdExecutionContainer
                 })
             })
+          : null}
+        {HAS_IACM && iacmData
+          ? React.createElement(iacmData.component, {
+            data: pipelineExecutionSummary?.moduleInfo?.iacm,
+            nodeMap: pipelineStagesMap
+          })
           : null}
       </div>
       <ExecutionMetadataTrigger />

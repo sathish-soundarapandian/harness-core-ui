@@ -28,7 +28,14 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineStudioV1'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
+import executionFactory from '@pipeline/factories/ExecutionFactory'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { IACMApp } from './components/IACMApp'
+import { IACMExecutionSummary } from './components/IACMStage/ExecutionSummary'
+
+executionFactory.registerSummary(StageType.IACM, {
+  component: IACMExecutionSummary
+})
 
 const moduleParams: ModulePathParams = {
   module: ':module(iacm)'

@@ -154,6 +154,10 @@ export function hasCDStage(pipelineExecution?: PipelineExecutionSummary): boolea
   return pipelineExecution?.modules?.includes('cd') || !isEmpty(pipelineExecution?.moduleInfo?.cd)
 }
 
+export function hasIACMStage(pipelineExecution?: PipelineExecutionSummary): boolean {
+  return pipelineExecution?.modules?.includes('iacm') || !isEmpty(pipelineExecution?.moduleInfo?.iacm)
+}
+
 export function hasServiceDetail(pipelineExecution?: PipelineExecutionSummary): boolean {
   return pipelineExecution?.modules?.includes('serviceDetail') || false
 }

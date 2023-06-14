@@ -15,7 +15,7 @@ import { getUIType, UIType } from '../common/getUIType'
 import { CICodebaseHeader } from '../CICodebaseHeader/CICodebaseHeader'
 import css from './CIExecutionSummary.module.scss'
 
-function getUIByType(
+export function getUIByType(
   uiType: UIType,
   { data, getString }: { data: ExecutionSummaryProps['data']; getString: UseStringsReturn['getString'] }
 ): React.ReactElement {
