@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { Page } from '@common/exports'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
@@ -53,22 +54,21 @@ function TriggerActivityHistoryPage(): React.ReactElement {
 
   useDocumentTitle([getString('activityHistoryLabel')])
 
+  const { data } = defaultTo(triggersListResponse, {})
   return (
     <>
       <Page.Body
         className={css.body}
         loading={triggersListLoading}
-        error={(error?.data as Error)?.message || error?.message}
+        error={defaultTo((error?.data as Error)?.message, error?.message)}
         retryOnError={() => refetch()}
         noData={{
-          when: () => !triggersListResponse?.data?.content?.length,
+          when: () => !data?.content?.length,
           image: TriggerActivityEmptyState,
           messageTitle: getString('triggers.activityHistory.emptyStateMessage')
         }}
       >
-        {!triggersListResponse?.data?.empty && (
-          <TriggerActivityList triggersListResponse={triggersListResponse?.data} />
-        )}
+        {!data?.empty && <TriggerActivityList triggersListResponse={data} />}
       </Page.Body>
     </>
   )

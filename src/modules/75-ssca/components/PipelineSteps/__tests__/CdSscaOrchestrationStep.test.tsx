@@ -23,7 +23,7 @@ const runtimeValues = {
     tool: {
       type: 'Syft',
       spec: {
-        format: 'SPDX v2.2'
+        format: 'spdx-json'
       }
     },
     source: {
@@ -64,7 +64,7 @@ const fixedValues = {
     tool: {
       type: 'Syft',
       spec: {
-        format: 'SPDX v2.2'
+        format: 'cyclonedx-json'
       }
     },
     source: {

@@ -14,12 +14,7 @@ import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import mockImport from 'framework/utils/mockImport'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import {
-  HandleInterruptQueryParams,
-  HandleStageInterruptQueryParams,
-  useHandleInterrupt,
-  useHandleStageInterrupt
-} from 'services/pipeline-ng'
+import { HandleStageInterruptQueryParams, useHandleInterrupt, useHandleStageInterrupt } from 'services/pipeline-ng'
 import { accountPathProps, executionPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import ExecutionActions from '../ExecutionActions'
@@ -112,27 +107,19 @@ describe('<ExecutionActions /> tests', () => {
     expect(document.body.querySelector('.bp3-menu')).toMatchSnapshot('Menu')
   })
 
-  test.each<
-    [
-      ExecutionStatus,
-      string,
-      HandleInterruptQueryParams['interruptType'] | HandleStageInterruptQueryParams['interruptType']
-    ]
-  >([
-    ['Running', 'stop', 'AbortAll'],
-    ['Running', 'mark-as-failed', 'UserMarkedFailure']
-  ])('Interrupt "%s" status  with action "%s"', async (executionStatus, icon, interruptType) => {
-    const mutate = jest.fn()
-    ;(useHandleInterrupt as jest.Mock).mockImplementation(() => ({
-      mutate,
-      loading: true,
-      data: null
-    }))
-
-    let result: RenderResult
-
-    act(() => {
-      result = render(
+  test.each<[ExecutionStatus, string]>([
+    ['Running', 'stop'],
+    ['Running', 'mark-as-failed']
+  ])(
+    'should not render interrupt "%s" status  with action "%s" if stageId is not present',
+    async (executionStatus, icon) => {
+      const mutate = jest.fn()
+      ;(useHandleInterrupt as jest.Mock).mockImplementation(() => ({
+        mutate,
+        loading: true,
+        data: null
+      }))
+      const { container } = render(
         <TestWrapper path={TEST_PATH} pathParams={pathParams}>
           <ExecutionActions
             params={pathParams as any}
@@ -142,46 +129,14 @@ describe('<ExecutionActions /> tests', () => {
           />
         </TestWrapper>
       )
-    })
+      const btn = container.querySelector(`[data-icon="${icon}"]`)?.closest('button')
+      expect(btn).toBeFalsy()
 
-    act(() => {
-      const btn = result!.container.querySelector(`[data-icon="${icon}"]`)?.closest('button')
-
-      // UserMarkedFailure interrupt is not allowed at pipeline level
-      if (interruptType === 'UserMarkedFailure') {
-        expect(btn).toBeFalsy()
-      } else {
-        fireEvent.click(btn!)
-      }
-    })
-
-    await waitFor(() => {
-      if (interruptType === 'AbortAll') {
-        const dialog = document.body.querySelector('.bp3-dialog')
-
-        expect(dialog).toBeDefined()
-        const confirmButton = dialog?.querySelector('.bp3-button')
-
-        fireEvent.click(confirmButton!)
-      }
-
-      if (interruptType === 'UserMarkedFailure') {
+      await waitFor(() => {
         expect(mutate).toHaveBeenCalledTimes(0)
-      } else {
-        expect(mutate).toHaveBeenCalledWith(
-          {},
-          {
-            queryParams: {
-              accountIdentifier: pathParams.accountId,
-              orgIdentifier: pathParams.orgIdentifier,
-              projectIdentifier: pathParams.projectIdentifier,
-              interruptType
-            }
-          }
-        )
-      }
-    })
-  })
+      })
+    }
+  )
 
   test.each<[ExecutionStatus, string, string, HandleStageInterruptQueryParams['interruptType']]>([
     ['Running', 'mark-as-failed', 'selectedStageId', 'UserMarkedFailure'],

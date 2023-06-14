@@ -169,7 +169,9 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
       filePath: data?.gitDetails?.filePath
     },
     extraQueryParams: { pipelineIdentifier: data.pipelineIdentifier },
-    modalTitle: getString('pipeline.editGitDetailsTitle', { entity: getString('inputSets.inputSetLabel') }),
+    modalTitle: getString('pipeline.editGitDetailsTitle', {
+      entity: `${getString('inputSets.inputSetLabel')}[${data.identifier}]`
+    }),
     onSuccess: () => (column as CustomColumn<InputSetLocal>).refetchInputSet?.()
   })
 

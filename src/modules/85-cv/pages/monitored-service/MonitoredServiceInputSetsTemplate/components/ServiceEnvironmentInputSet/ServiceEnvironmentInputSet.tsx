@@ -28,12 +28,16 @@ interface ServiceEnvironmentInputSetInterface {
   environmentValue?: string | SelectOption
   onChange: any
   isReadOnlyInputSet: boolean
+  serviceKey?: string
+  environmentKey?: string
 }
 export default function ServiceEnvironmentInputSet({
   serviceValue,
   environmentValue,
   isReadOnlyInputSet,
-  onChange
+  onChange,
+  serviceKey = 'serviceRef',
+  environmentKey = 'environmentRef'
 }: ServiceEnvironmentInputSetInterface): JSX.Element {
   let content = null
   const { getString } = useStrings()
@@ -51,8 +55,8 @@ export default function ServiceEnvironmentInputSet({
       <OrgAccountLevelServiceEnvField
         isInputSet
         isTemplate={isReadOnlyInputSet}
-        serviceOnSelect={(selectedService: SelectOption) => onChange('serviceRef', selectedService.value)}
-        environmentOnSelect={(selectedEnv: SelectOption) => onChange('environmentRef', selectedEnv.value)}
+        serviceOnSelect={(selectedService: SelectOption) => onChange(serviceKey, selectedService.value)}
+        environmentOnSelect={(selectedEnv: SelectOption) => onChange(environmentKey, selectedEnv.value)}
       />
     )
   } else {
@@ -61,7 +65,7 @@ export default function ServiceEnvironmentInputSet({
         {!isUndefined(serviceValue) && (
           <HarnessServiceAsFormField
             customRenderProps={{
-              name: 'serviceRef',
+              name: serviceKey,
               label: getString('cv.healthSource.serviceLabel')
             }}
             serviceProps={{
@@ -69,12 +73,12 @@ export default function ServiceEnvironmentInputSet({
               isMultiType: isReadOnlyInputSet,
               item: serviceOptions?.find(item => item?.value === serviceValue) || serviceValue,
               options: serviceOptions,
-              onSelect: (selectedService: SelectOption) => onChange('serviceRef', selectedService.value),
+              onSelect: (selectedService: SelectOption) => onChange(serviceKey, selectedService.value),
               onNewCreated: newOption => {
                 if (newOption?.identifier && newOption.name) {
                   const newServiceOption = { label: newOption.name, value: newOption.identifier }
                   setServiceOptions([newServiceOption, ...serviceOptions])
-                  onChange('serviceRef', newServiceOption.value)
+                  onChange(serviceKey, newServiceOption.value)
                 }
               }
             }}
@@ -83,7 +87,7 @@ export default function ServiceEnvironmentInputSet({
         {!isUndefined(environmentValue) && (
           <HarnessEnvironmentAsFormField
             customRenderProps={{
-              name: 'environmentRef',
+              name: environmentKey,
               label: getString('cv.healthSource.environmentLabel')
             }}
             isMultiSelectField={false}
@@ -92,13 +96,13 @@ export default function ServiceEnvironmentInputSet({
                 disabled: isReadOnlyInputSet,
                 isMultiType: isReadOnlyInputSet,
                 item: environmentRefValue || (environmentValue as SelectOption),
-                onSelect: (selectedEnv: SelectOption) => onChange('environmentRef', selectedEnv.value),
+                onSelect: (selectedEnv: SelectOption) => onChange(environmentKey, selectedEnv.value),
                 options: environmentOptions,
                 onNewCreated: newOption => {
                   if (newOption?.identifier && newOption.name) {
                     const newEnvOption = { label: newOption.name, value: newOption.identifier }
                     setEnvironmentOptions([newEnvOption, ...environmentOptions])
-                    onChange('environmentRef', newEnvOption.value)
+                    onChange(environmentKey, newEnvOption.value)
                   }
                 }
               } as EnvironmentMultiSelectOrCreateProps | EnvironmentSelectOrCreateProps

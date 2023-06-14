@@ -198,12 +198,8 @@ export const getConnectorDisplaySummary = (connector: ConnectorInfoDTO): JSX.Ele
 
 export type ConnectorsQueryParams = {
   searchTerm?: string
-  favorite?: boolean
 } & CommonPaginationQueryParams
-export type ConnectorsQueryParamsWithDefaults = RequiredPick<
-  ConnectorsQueryParams,
-  'page' | 'size' | 'searchTerm' | 'favorite'
->
+export type ConnectorsQueryParamsWithDefaults = RequiredPick<ConnectorsQueryParams, 'page' | 'size' | 'searchTerm'>
 
 export const CONNECTORS_PAGE_INDEX = 0
 export const CONNECTORS_PAGE_SIZE = 10
@@ -214,7 +210,6 @@ export const useConnectorsQueryParamOptions = (): UseQueryParamsOptions<Connecto
   return useQueryParamsOptions({
     page: CONNECTORS_PAGE_INDEX,
     size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : CONNECTORS_PAGE_SIZE,
-    searchTerm: '',
-    favorite: false
+    searchTerm: ''
   })
 }

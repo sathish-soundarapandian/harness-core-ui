@@ -183,12 +183,13 @@ export function hasSTOStage(pipelineExecution?: PipelineExecutionSummary): boole
   )
 }
 
-export const getHelperTextString = (
+const areMultipleInvalidFieldsPresent = (
   invalidFields: string[],
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false,
-  defaultErrorMessage = ''
-): string => {
+  defaultErrorMessage = '',
+  entity: any
+) => {
   return `${invalidFields.length > 1 ? invalidFields.join(', ') : invalidFields[0]} ${
     invalidFields.length > 1 ? ' are ' : ' is '
   } ${
@@ -196,8 +197,37 @@ export const getHelperTextString = (
       ? defaultErrorMessage
       : isServerlessDeploymentTypeSelected
       ? getString('pipeline.artifactPathDependencyRequired')
-      : getString('pipeline.tagDependencyRequired')
+      : getString(entity)
   }`
+}
+export const getHelperTextString = (
+  invalidFields: string[],
+  getString: (key: StringKeys) => string,
+  isServerlessDeploymentTypeSelected = false,
+  defaultErrorMessage = ''
+): string => {
+  return areMultipleInvalidFieldsPresent(
+    invalidFields,
+    getString,
+    isServerlessDeploymentTypeSelected,
+    defaultErrorMessage,
+    'pipeline.tagDependencyRequired'
+  )
+}
+
+export const getHelperTextStringForDigest = (
+  invalidFields: string[],
+  getString: (key: StringKeys) => string,
+  isServerlessDeploymentTypeSelected = false,
+  defaultErrorMessage = ''
+): string => {
+  return areMultipleInvalidFieldsPresent(
+    invalidFields,
+    getString,
+    isServerlessDeploymentTypeSelected,
+    defaultErrorMessage,
+    'pipeline.digestDependencyRequired'
+  )
 }
 
 export const getHelpeTextForTags = (
@@ -350,6 +380,182 @@ export const getHelpeTextForTags = (
   }
 
   const helpText = getHelperTextString(
+    invalidFields,
+    getString,
+    isServerlessDeploymentTypeSelected,
+    defaultErrorMessage
+  )
+
+  return invalidFields.length > 0 ? helpText : undefined
+}
+
+export const getHelperTextForDigest = (
+  fields: {
+    imagePath?: string
+    artifactPath?: string
+    region?: string
+    connectorRef: string
+    registryHostname?: string
+    repository?: string
+    repositoryPort?: number
+    artifactDirectory?: string
+    registry?: string
+    subscriptionId?: string
+    repositoryName?: string
+    package?: string
+    project?: string
+    repositoryFormat?: RepositoryFormatTypes
+    artifactId?: string
+    groupId?: string
+    packageName?: string
+    artifactArrayPath?: string
+    versionPath?: string
+    feed?: string
+    tag?: string
+    version?: string
+  },
+  getString: (key: StringKeys) => string,
+  isServerlessDeploymentTypeSelected = false,
+  defaultErrorMessage = ''
+): string | undefined => {
+  const {
+    connectorRef,
+    region,
+    imagePath,
+    artifactPath,
+    registryHostname,
+    repository,
+    repositoryPort,
+    artifactDirectory,
+    registry,
+    subscriptionId,
+    repositoryName,
+    package: packageVal,
+    project,
+    repositoryFormat,
+    artifactId,
+    groupId,
+    packageName,
+    feed,
+    artifactArrayPath,
+    versionPath,
+    tag,
+    version
+  } = fields
+  const invalidFields: string[] = []
+  if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
+    invalidFields.push(getString('connector'))
+  }
+  if (feed !== undefined && (!feed || getMultiTypeFromValue(feed) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.artifactsSelection.feed'))
+  }
+  if (
+    repositoryName !== undefined &&
+    (!repositoryName || getMultiTypeFromValue(repositoryName) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('common.repositoryName'))
+  }
+  if (
+    artifactArrayPath !== undefined &&
+    (!artifactArrayPath || getMultiTypeFromValue(artifactArrayPath) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactsSelection.artifactsArrayPath'))
+  }
+  if (
+    versionPath !== undefined &&
+    (!versionPath || getMultiTypeFromValue(versionPath) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactsSelection.versionPath'))
+  }
+  if (
+    packageName !== undefined &&
+    (!packageName || getMultiTypeFromValue(packageName) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.testsReports.callgraphField.package'))
+  }
+  if (packageVal !== undefined && (!packageVal || getMultiTypeFromValue(packageVal) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.testsReports.callgraphField.package'))
+  }
+  if (project !== undefined && (!project || getMultiTypeFromValue(project) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('projectLabel'))
+  }
+  if (region !== undefined && (!region || getMultiTypeFromValue(region) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('regionLabel'))
+  }
+  if (
+    registryHostname !== undefined &&
+    (!registryHostname || getMultiTypeFromValue(registryHostname) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('connectors.GCR.registryHostname'))
+  }
+  if (
+    !isServerlessDeploymentTypeSelected &&
+    (imagePath === '' || getMultiTypeFromValue(imagePath) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.imagePathLabel'))
+  }
+  if (
+    !isServerlessDeploymentTypeSelected &&
+    (tag === '' || getMultiTypeFromValue(tag) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push('Tag')
+  }
+
+  if (
+    !isServerlessDeploymentTypeSelected &&
+    (version === '' || getMultiTypeFromValue(version) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push('Version')
+  }
+  if (
+    !isServerlessDeploymentTypeSelected &&
+    (artifactPath === '' || getMultiTypeFromValue(artifactPath) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactPathLabel'))
+  }
+  if (repository !== undefined && (!repository || getMultiTypeFromValue(repository) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('repository'))
+  }
+  if (
+    repositoryPort !== undefined &&
+    (!repositoryPort || getMultiTypeFromValue(repositoryPort) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactsSelection.repositoryPort'))
+  }
+  if (
+    isServerlessDeploymentTypeSelected &&
+    (!artifactDirectory || getMultiTypeFromValue(artifactDirectory) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.artifactsSelection.artifactDirectory'))
+  }
+
+  if (registry !== undefined && (!registry || getMultiTypeFromValue(registry) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.ACR.registry'))
+  }
+
+  if (
+    repositoryFormat !== undefined &&
+    (!repositoryFormat || getMultiTypeFromValue(repositoryFormat) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('common.repositoryFormat'))
+  }
+
+  if (artifactId !== undefined && (!artifactId || getMultiTypeFromValue(artifactId) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.artifactsSelection.artifactId'))
+  }
+
+  if (groupId !== undefined && (!groupId || getMultiTypeFromValue(groupId) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.artifactsSelection.groupId'))
+  }
+
+  if (
+    subscriptionId !== undefined &&
+    (!subscriptionId || getMultiTypeFromValue(subscriptionId) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('pipeline.ACR.subscription'))
+  }
+
+  const helpText = getHelperTextStringForDigest(
     invalidFields,
     getString,
     isServerlessDeploymentTypeSelected,

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getHealthSourceOptions, isPositiveNumber } from '../useLogContentHook.utils'
+import { formatDate, getHealthSourceOptions, isPositiveNumber } from '../useLogContentHook.utils'
 
 const getString = (text: string): string => text
 
@@ -19,5 +19,8 @@ describe('utils', () => {
 
   test('getHealthSourceOptions', () => {
     expect(getHealthSourceOptions(getString, undefined)).toEqual([{ label: 'all', value: '' }])
+  })
+  test('formatDate should give correct result', () => {
+    expect(formatDate(1686724954098)).toEqual('06/14/2023, 6:42:34 AM')
   })
 })

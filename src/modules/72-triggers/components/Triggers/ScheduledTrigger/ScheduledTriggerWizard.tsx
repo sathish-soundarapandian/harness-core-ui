@@ -51,10 +51,6 @@ import { memoizedParse, yamlParse, yamlStringify } from '@common/utils/YamlHelpe
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 
-import { usePermission } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -99,6 +95,7 @@ import {
   getPanels
 } from './utils'
 import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
+import { useIsTriggerCreatePermission } from '../useIsTriggerCreatePermission'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 
@@ -987,26 +984,9 @@ export default function ScheduledTriggerWizard(
     }
   }
 
-  const [isExecutable] = usePermission(
-    {
-      resourceScope: {
-        projectIdentifier,
-        orgIdentifier,
-        accountIdentifier
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EXECUTE_PIPELINE],
-      options: {
-        skipCache: true
-      }
-    },
-    [accountIdentifier, orgIdentifier, projectIdentifier, pipelineIdentifier]
-  )
+  const isTriggerCreatePermission = useIsTriggerCreatePermission()
 
-  const isTriggerRbacDisabled = !isExecutable
+  const isTriggerRbacDisabled = !isTriggerCreatePermission
 
   const triggerHeading = isNewTrigger ? getString('triggers.onNewScheduleTitle') : `Trigger: ${triggerData?.name}`
 

@@ -41,14 +41,15 @@ import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/use
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+
 import css from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelector/DelegateSelector.module.scss'
 
-interface DelegateSelectorStepData extends BuildPayloadProps {
+export interface DelegateSelectorStepData extends BuildPayloadProps {
   delegateSelectors: Array<string>
 }
 
 export interface DelegateSelectorProps {
-  buildPayload: (data: DelegateSelectorStepData) => ConnectorRequestBody
+  buildPayload?: (data: DelegateSelectorStepData) => ConnectorRequestBody
   hideModal?: () => void
   onConnectorCreated?: (data?: ConnectorRequestBody) => void | Promise<void>
   isEditMode: boolean
@@ -60,6 +61,8 @@ export interface DelegateSelectorProps {
   customHandleCreate?: (payload: ConnectorConfigDTO) => Promise<ConnectorInfoDTO | undefined>
   customHandleUpdate?: (payload: ConnectorConfigDTO) => Promise<ConnectorInfoDTO | undefined>
   helpPanelReferenceId?: string
+  dialogTitle?: string
+  onSubmitForNonConnectors?: (data: DelegateSelectorStepData) => void
 }
 
 type InitialFormData = { delegateSelectors: Array<string> }
@@ -117,7 +120,16 @@ const isDelegateSelectorMandatory = (prevStepData: ConnectorConfigDTO = {}): boo
 }
 
 const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSelectorProps> = props => {
-  const { prevStepData, nextStep, buildPayload, customHandleCreate, customHandleUpdate, connectorInfo } = props
+  const {
+    prevStepData,
+    nextStep,
+    buildPayload,
+    customHandleCreate,
+    customHandleUpdate,
+    connectorInfo,
+    onSubmitForNonConnectors,
+    dialogTitle
+  } = props
   const {
     accountId,
     projectIdentifier: projectIdentifierFromUrl,
@@ -139,10 +151,10 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
   })
 
   const afterSuccessHandler = (response: ResponseConnectorResponse): void => {
-    props.onConnectorCreated?.(response?.data)
+    props.onConnectorCreated?.((response as ResponseConnectorResponse)?.data)
     if (prevStepData?.branch) {
       // updating connector branch to handle if new branch was created while commit
-      prevStepData.branch = response?.data?.gitDetails?.branch
+      prevStepData.branch = (response as ResponseConnectorResponse)?.data?.gitDetails?.branch
     }
 
     if (stepDataRef?.skipDefaultValidation) {
@@ -164,7 +176,6 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
   )
   const [delegatesFound, setDelegatesFound] = useState<DelegatesFoundState>(DelegatesFoundState.ActivelyConnected)
   let stepDataRef: ConnectorConfigDTO | null = null
-
   const { onInitiate, loading } = useCreateEditConnector<DelegateSelectorStepData>({
     accountId,
     isEditMode: props.isEditMode,
@@ -184,7 +195,6 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
   useTrackEvent(ConnectorActions.DelegateSelectorStepLoad, {
     category: Category.CONNECTOR
   })
-
   return (
     <>
       {!isGitSyncEnabled && loading ? (
@@ -220,9 +230,11 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
           //   })
           // })}
           onSubmit={stepData => {
-            trackEvent(ConnectorActions.DelegateSelectorStepSubmit, {
-              category: Category.CONNECTOR
-            })
+            if (!onSubmitForNonConnectors) {
+              trackEvent(ConnectorActions.DelegateSelectorStepSubmit, {
+                category: Category.CONNECTOR
+              })
+            }
             modalErrorHandler?.hide()
             const updatedStepData = {
               ...stepData,
@@ -242,12 +254,17 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
             }
             stepDataRef = updatedStepData
 
-            onInitiate({
-              connectorFormData: connectorData,
-              buildPayload,
-              customHandleCreate,
-              customHandleUpdate
-            })
+            if (onSubmitForNonConnectors) {
+              onSubmitForNonConnectors(connectorData)
+            }
+            if (buildPayload) {
+              onInitiate({
+                connectorFormData: connectorData,
+                buildPayload,
+                customHandleCreate,
+                customHandleUpdate
+              })
+            }
           }}
         >
           <Form>
@@ -261,6 +278,7 @@ const DelegateSelectorStep: React.FC<StepProps<ConnectorConfigDTO> & DelegateSel
               accountId={accountId}
               orgIdentifier={orgIdentifier}
               projectIdentifier={projectIdentifier}
+              dialogTitle={dialogTitle}
             />
             <Layout.Horizontal padding={{ top: 'small' }} margin={{ top: 'xxxlarge' }} spacing="medium">
               <Button

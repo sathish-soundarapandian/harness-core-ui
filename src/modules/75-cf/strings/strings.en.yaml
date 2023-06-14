@@ -156,7 +156,7 @@ featureFlags:
   flagWillTurnOff: Disable flag for this environment upon save
   targeting: Targeting
   activity: '{{ $.activity }}'
-  results: Results
+  results: '{{$.common.results}}'
   makeSure: Make sure your code is deployed
   changeOrReset: Change your filter criteria or reset
   resetFilters: Reset Filters

@@ -7,7 +7,9 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
-import { TabNavigation } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Layout, TabNavigation, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { Callout } from '@blueprintjs/core'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
@@ -19,6 +21,9 @@ import type { GetDelegateGroupsNGV2WithFilterQueryParams } from 'services/portal
 import { useListDelegateConfigsNgV2WithFilter } from 'services/cd-ng'
 import type { DelegateProfileDetailsNg } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useLocalStorage } from '@common/hooks'
+import css from './DelegatesPage.module.scss'
 
 const DelegatesPage: React.FC = ({ children }) => {
   const params = useParams<PipelineType<ProjectPathProps>>()
@@ -26,6 +31,12 @@ const DelegatesPage: React.FC = ({ children }) => {
   const { getString } = useStrings()
   const { pathname } = useLocation()
   const [profiles, setProfiles] = useState<DelegateProfileDetailsNg[]>([])
+  const { PL_HELM2_DELEGATE_BANNER } = useFeatureFlags()
+  const [isBannerDismissed, setIsBannerDismissed] = useLocalStorage<boolean | undefined>(
+    'helmv2_deprecation_banner_dismissed',
+    !PL_HELM2_DELEGATE_BANNER,
+    window.sessionStorage
+  )
   const isDelTokensPage =
     pathname.indexOf(
       routes.toDelegateTokens({ accountId: params.accountId, orgIdentifier, projectIdentifier, module })
@@ -77,6 +88,27 @@ const DelegatesPage: React.FC = ({ children }) => {
 
   return (
     <>
+      {!isBannerDismissed && (
+        <Callout className={css.callout} intent="warning" icon={null}>
+          <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+            <Text color={Color.BLACK}>
+              Harness will be deprecating the Helm 2 Binary by July 30th. Please reach out to our support team -&nbsp;
+              <a href="mailto:support.harness.io">support.harness.io</a>
+              &nbsp;for any questions or concerns. For the formal notice, please see our&nbsp;
+              <a href="https://developer.harness.io" target="_blank" rel="noreferrer">
+                docs
+              </a>
+            </Text>
+          </Layout.Horizontal>
+          <Button
+            aria-label={getString('close')}
+            variation={ButtonVariation.ICON}
+            size={ButtonSize.LARGE}
+            icon="cross"
+            onClick={() => setIsBannerDismissed(true)}
+          />
+        </Callout>
+      )}
       <Page.Header
         breadcrumbs={
           <NGBreadcrumbs

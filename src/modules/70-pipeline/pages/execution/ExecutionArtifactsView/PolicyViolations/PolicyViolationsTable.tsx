@@ -8,33 +8,54 @@
 import { TableV2 } from '@harness/uicore'
 import React from 'react'
 import type { Column } from 'react-table'
-import type { EnforcementResult, GetEnforcementResultsByIDResponseBody } from 'services/ssca'
+import type { EnforcementGetEnforcementResultsByIDResponseBody, EnforcementResultResponseBody } from 'services/ssca'
 import { useStrings } from 'framework/strings'
-import { PackageSupplierCell, PackageNameCell, VersionCell, ViolationsDetailsCell } from './PolicyViolationsTableCells'
+import {
+  PackageSupplierCell,
+  PackageNameCell,
+  VersionCell,
+  ViolationsDetailsCell,
+  EnforcementResultColumnActions,
+  SortBy
+} from './PolicyViolationsTableCells'
 import css from './PolicyViolations.module.scss'
 
-export interface PolicyViolationsTableProps {
-  data: GetEnforcementResultsByIDResponseBody
+export interface PolicyViolationsTableProps extends EnforcementResultColumnActions {
+  data: EnforcementGetEnforcementResultsByIDResponseBody | null
 }
 
-export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): React.ReactElement {
+export function PolicyViolationsTable({ data, sortBy, setSortBy }: PolicyViolationsTableProps): React.ReactElement {
   const { getString } = useStrings()
-  const columns: Column<EnforcementResult>[] = React.useMemo(() => {
+  const columns: Column<EnforcementResultResponseBody>[] = React.useMemo(() => {
+    const getServerSortProps = (id: string) => {
+      return {
+        enableServerSort: true,
+        isServerSorted: sortBy.sort === id,
+        isServerSortedDesc: sortBy.order === 'DESC',
+        getSortedColumn: ({ sort }: SortBy) => {
+          setSortBy({ sort, order: sortBy.order === 'DESC' ? 'ASC' : 'DESC' })
+        }
+      }
+    }
+
     return [
       {
         Header: getString('pipeline.artifactsSelection.packageName'),
         accessor: 'name',
-        Cell: PackageNameCell
+        Cell: PackageNameCell,
+        serverSortProps: getServerSortProps('name')
       },
       {
         Header: getString('version'),
         accessor: 'version',
-        Cell: VersionCell
+        Cell: VersionCell,
+        disableSortBy: true
       },
       {
         Header: getString('pipeline.supplier'),
         accessor: 'supplier',
-        Cell: PackageSupplierCell
+        Cell: PackageSupplierCell,
+        serverSortProps: getServerSortProps('supplier')
       },
       {
         Header: getString('pipeline.violationDetails'),
@@ -43,7 +64,7 @@ export function PolicyViolationsTable({ data }: PolicyViolationsTableProps): Rea
         disableSortBy: true
       }
     ]
-  }, [getString])
+  }, [getString, setSortBy, sortBy.order, sortBy.sort])
 
-  return <TableV2 className={css.table} columns={columns} data={data.results || []} sortable />
+  return <TableV2 className={css.table} columns={columns} data={data?.results || []} sortable />
 }

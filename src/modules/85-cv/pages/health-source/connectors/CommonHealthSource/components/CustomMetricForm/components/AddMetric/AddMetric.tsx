@@ -61,6 +61,7 @@ export default function AddMetric(props: AddMetricProps): JSX.Element {
           <Layout.Horizontal spacing="small" style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
             <Button
               variation={ButtonVariation.PRIMARY}
+              data-testid="addMetric_SubmitButton"
               text={getString('submit')}
               onClick={handleSubmitData}
               intent="primary"

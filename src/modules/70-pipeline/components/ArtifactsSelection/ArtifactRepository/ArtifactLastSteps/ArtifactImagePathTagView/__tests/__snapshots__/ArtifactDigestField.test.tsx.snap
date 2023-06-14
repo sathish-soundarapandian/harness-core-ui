@@ -12,7 +12,12 @@ exports[`ArtifactDigest tests api empty digest results 1`] = `
         class="bp3-label"
         for="digest"
       >
-        pipeline.digest
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="artifactDigestTooltip"
+        >
+          pipeline.digest
+        </span>
          
         <span
           class="bp3-text-muted"
@@ -43,7 +48,7 @@ exports[`ArtifactDigest tests api empty digest results 1`] = `
                       autocomplete="off"
                       class="bp3-input"
                       name="digest"
-                      placeholder="Search..."
+                      placeholder="pipeline.artifactsSelection.digestPlaceholder"
                       style="padding-right: 0px;"
                       type="text"
                       value=""
@@ -124,7 +129,12 @@ exports[`ArtifactDigest tests api is getting called when digest is focussed 1`] 
         class="bp3-label"
         for="digest"
       >
-        pipeline.digest
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="artifactDigestTooltip"
+        >
+          pipeline.digest
+        </span>
          
         <span
           class="bp3-text-muted"
@@ -155,7 +165,7 @@ exports[`ArtifactDigest tests api is getting called when digest is focussed 1`] 
                       autocomplete="off"
                       class="bp3-input"
                       name="digest"
-                      placeholder="Search..."
+                      placeholder="pipeline.artifactsSelection.digestPlaceholder"
                       style="padding-right: 0px;"
                       type="text"
                       value=""
@@ -236,7 +246,12 @@ exports[`ArtifactDigest tests initial render 1`] = `
         class="bp3-label"
         for="digest"
       >
-        pipeline.digest
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="artifactDigestTooltip"
+        >
+          pipeline.digest
+        </span>
          
         <span
           class="bp3-text-muted"
@@ -267,7 +282,7 @@ exports[`ArtifactDigest tests initial render 1`] = `
                       autocomplete="off"
                       class="bp3-input"
                       name="digest"
-                      placeholder="Search..."
+                      placeholder="pipeline.artifactsSelection.digestPlaceholder"
                       style="padding-right: 0px;"
                       type="text"
                       value=""
@@ -348,7 +363,12 @@ exports[`ArtifactDigest tests when digest is filled 1`] = `
         class="bp3-label"
         for="digest"
       >
-        pipeline.digest
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="artifactDigestTooltip"
+        >
+          pipeline.digest
+        </span>
          
         <span
           class="bp3-text-muted"
@@ -379,7 +399,7 @@ exports[`ArtifactDigest tests when digest is filled 1`] = `
                       autocomplete="off"
                       class="bp3-input"
                       name="digest"
-                      placeholder="Search..."
+                      placeholder="pipeline.artifactsSelection.digestPlaceholder"
                       style="padding-right: 0px;"
                       type="text"
                       value=""
@@ -460,7 +480,12 @@ exports[`ArtifactDigest tests when digest is runtime 1`] = `
         class="bp3-label"
         for="digest"
       >
-        pipeline.digest
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="artifactDigestTooltip"
+        >
+          pipeline.digest
+        </span>
          
         <span
           class="bp3-text-muted"
@@ -491,7 +516,7 @@ exports[`ArtifactDigest tests when digest is runtime 1`] = `
                       autocomplete="off"
                       class="bp3-input"
                       name="digest"
-                      placeholder="Search..."
+                      placeholder="pipeline.artifactsSelection.digestPlaceholder"
                       style="padding-right: 0px;"
                       type="text"
                       value=""

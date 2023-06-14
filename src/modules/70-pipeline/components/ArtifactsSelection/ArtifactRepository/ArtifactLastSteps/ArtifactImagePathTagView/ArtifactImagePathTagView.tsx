@@ -145,7 +145,11 @@ function ArtifactImagePathTagView({
   }
 
   const resetDigestValue = () => {
-    if (selectedArtifact === ENABLED_ARTIFACT_TYPES.DockerRegistry) {
+    if (
+      selectedArtifact === ENABLED_ARTIFACT_TYPES.DockerRegistry ||
+      selectedArtifact === ENABLED_ARTIFACT_TYPES.Gcr ||
+      selectedArtifact === ENABLED_ARTIFACT_TYPES.Ecr
+    ) {
       resetFieldValue(formik, 'digest')
     }
   }
@@ -190,7 +194,10 @@ function ArtifactImagePathTagView({
               name="imagePath"
               placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
               multiTextInputProps={{ expressions, allowableTypes }}
-              onChange={onChangeImageArtifactPath}
+              onChange={() => {
+                onChangeImageArtifactPath()
+                resetDigestValue()
+              }}
             />
             {getMultiTypeFromValue(formik?.values?.imagePath) === MultiTypeInputType.RUNTIME && (
               <div className={css.configureOptions}>

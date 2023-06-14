@@ -78,8 +78,6 @@ import type { SettingRendererProps } from '@default-settings/factories/DefaultSe
 import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import FavoriteStar from '@common/components/FavoriteStar/FavoriteStar'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ConnectorsEmptyState from './connectors-no-data.png'
 import css from './ConnectorReferenceField.module.scss'
 
@@ -130,6 +128,7 @@ export interface ConnectorReferenceFieldProps extends Omit<IFormGroupProps, 'lab
   projectIdentifier?: string
   selected?: ConnectorSelectedValue | string
   onChange?: (connector: ConnectorReferenceDTO, scope: Scope) => void
+  clearSelection?: () => void
   orgIdentifier?: string
   gitScope?: GitFilterScope
   defaultScope?: Scope
@@ -225,6 +224,7 @@ export function getEditRenderer(
     </Popover>
   )
 }
+
 export function getSelectedRenderer(
   selected: ConnectorSelectedValue,
   status = selected?.live,
@@ -265,7 +265,6 @@ interface GetReferenceFieldMethodProps extends ConnectorReferenceFieldProps {
   version?: string
   isRecordDisabled?: (item: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
-  isFavoritesEnabled?: boolean
 }
 
 interface RecordRenderProps {
@@ -416,13 +415,7 @@ const RecordRender: React.FC<RecordRenderProps> = props => {
           width={30}
           color={item.record.status?.status === 'SUCCESS' ? Color.GREEN_500 : Color.RED_500}
         />
-        <FavoriteStar
-          resourceType="CONNECTOR"
-          resourceId={item.record.identifier}
-          scope={{ projectIdentifier: item.record.projectIdentifier, orgIdentifier: item.record.orgIdentifier }}
-          className={css.favoriteStar}
-          activeClassName={css.favoriteActive}
-        />
+
         {!item.record.harnessManaged ? (
           <RbacButton
             minimal
@@ -473,8 +466,7 @@ export function getReferenceFieldProps({
   isMultiSelect,
   selectedConnectors,
   isRecordDisabled,
-  renderRecordDisabledWarning,
-  isFavoritesEnabled
+  renderRecordDisabledWarning
 }: GetReferenceFieldMethodProps): Omit<
   ReferenceSelectProps<ConnectorReferenceDTO>,
   'onChange' | 'onMultiSelectChange' | 'onCancel' | 'pagination'
@@ -489,7 +481,7 @@ export function getReferenceFieldProps({
     createNewLabel: getString('newConnector'),
     // recordClassName: css.listItem,
     isNewConnectorLabelVisible: true,
-    fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected, sortMethod, isFavorite) => {
+    fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected, sortMethod) => {
       const additionalParams = getAdditionalParams({ scope, projectIdentifier, orgIdentifier, allTabSelected })
       const gitFilterParams =
         gitScope?.repo && gitScope?.branch
@@ -510,7 +502,6 @@ export function getReferenceFieldProps({
             pageSize: 10,
             ...(version ? { version } : undefined),
             includeAllConnectorsAvailableAtScope: allTabSelected,
-            ...(isFavoritesEnabled ? { isFavorite } : undefined),
             // eslint-disable-next-line
             // @ts-ignore
             sortOrders: sortMethod
@@ -643,6 +634,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     type = 'K8sCluster',
     name,
     selected,
+    clearSelection,
     label,
     width = 400,
     placeholder,
@@ -706,7 +698,6 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
 
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { PL_FAVORITES } = useFeatureFlags()
   const [connectorStatusCheckInProgress, setConnectorStatusCheckInProgress] = React.useState(false)
   const [connectorStatus, setConnectorStatus] = React.useState(typeof selected !== 'string' && selected?.live)
   const scopeFromSelected = typeof selected === 'string' && getScopeFromValue(selected || '')
@@ -783,6 +774,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     }
 
     if (
+      selected &&
       typeof selected === 'string' &&
       getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED &&
       connectorData &&
@@ -882,8 +874,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     isMultiSelect,
     selectedConnectors,
     isRecordDisabled,
-    renderRecordDisabledWarning,
-    isFavoritesEnabled: PL_FAVORITES
+    renderRecordDisabledWarning
   })
 
   return (
@@ -908,6 +899,14 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
         )}
         {...optionalReferenceSelectProps}
         disabled={disabled || loading}
+        clearSelection={
+          props.clearSelection
+            ? () => {
+                setSelectedValue(undefined)
+                props.clearSelection?.()
+              }
+            : undefined
+        }
         componentName="Connector"
         noDataCard={{ image: ConnectorsEmptyState }}
         pagination={{
@@ -1000,6 +999,10 @@ export const DefaultSettingConnectorField: React.FC<SettingRendererProps & { typ
         selected={formik.values[identifier]}
         label={''}
         placeholder={`- ${getString('select')} -`}
+        clearSelection={() => {
+          setFieldValue(identifier, '')
+          onSettingSelectionChange('')
+        }}
         accountIdentifier={accountId}
         {...(orgIdentifier ? { orgIdentifier } : {})}
         {...(projectIdentifier ? { projectIdentifier } : {})}

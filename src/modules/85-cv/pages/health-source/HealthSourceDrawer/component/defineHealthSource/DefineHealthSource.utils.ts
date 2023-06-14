@@ -290,8 +290,8 @@ export const getFeatureOption = (
     case Connectors.SignalFX: {
       return [
         {
-          label: HealthSourceProducts[HealthSourceTypes.SignalFX].label,
-          value: HealthSourceProducts[HealthSourceTypes.SignalFX].value
+          label: HealthSourceProducts[HealthSourceTypes.SplunkSignalFXMetrics].label,
+          value: HealthSourceProducts[HealthSourceTypes.SplunkSignalFXMetrics].value
         }
       ]
     }
@@ -299,8 +299,8 @@ export const getFeatureOption = (
     case HealthSourceTypes.GrafanaLoki: {
       return [
         {
-          label: HealthSourceProducts[HealthSourceTypes.GrafanaLoki].label,
-          value: HealthSourceProducts[HealthSourceTypes.GrafanaLoki].value
+          label: HealthSourceProducts[HealthSourceTypes.GrafanaLokiLogs].label,
+          value: HealthSourceProducts[HealthSourceTypes.GrafanaLokiLogs].value
         }
       ]
     }

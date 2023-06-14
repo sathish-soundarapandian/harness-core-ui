@@ -24,6 +24,7 @@ export type TemplatesViewProps = {
   onDelete?: (template: TemplateSummaryResponse) => void
   onOpenMoveResource?: (template: TemplateSummaryResponse) => void
   gotoPage?: (pageNumber: number) => void
+  reloadTemplates?: () => void
 }
 
 export default function TemplatesView(props: TemplatesViewProps & { view: Views }): React.ReactElement {

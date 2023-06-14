@@ -1,0 +1,21 @@
+.drawerHeader {
+  height: 102px;
+  background: var(--white) !important;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  overflow-y: scroll;
+}
+.charts {
+  margin: var(--spacing-large) !important;
+}
+.sideDrawerTitle {
+  font-weight: 600 !important;
+  font-size: var(--font-size-medium) !important;
+  line-height: 24px !important;
+  color: var(--grey-700) !important;
+}
+.scoreLabels {
+  font-weight: 500 !important;
+  font-size: var(--font-size-small) !important;
+  line-height: 15px !important;
+  color: var(--grey-800) !important;
+}

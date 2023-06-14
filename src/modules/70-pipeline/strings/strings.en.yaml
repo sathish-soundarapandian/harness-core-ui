@@ -163,7 +163,7 @@ jenkinsStep:
   job: job
   addJobParameters: Add Job Parameter
   validations:
-    jobName: Jobname is a required field
+    jobName: Job Name is a required field
   jobNamePlaceholder: Select Job Name
   jobParameter: Job Parameters
   unstableStatusAsSuccess: Treat unstable Job status as success
@@ -973,7 +973,7 @@ infraSpecifications:
     amd64: AMD64
     arm64: ARM64
 imagePathLabel: Image Path
-digest: Digest
+digest: Digest (Optional)
 artifactPathLabel: Artifact Path
 applicationName: Application Name
 selectApplications: Select Applications
@@ -992,6 +992,7 @@ artifactsSelection:
   extension: Extension
   extensionPlaceholder: Enter Extension
   classifier: Classifier
+  container: container
   classifierPlaceholder: Enter Classifier
   digestPlaceholder: Enter Digest
   packageName: Package Name
@@ -1188,6 +1189,7 @@ gitCloneStep:
   validation:
     associatedBuildInput: Associated build input
 tagDependencyRequired: required to fetch the tags
+digestDependencyRequired: required to fetch the digest
 artifactPathDependencyRequired: required to fetch the artifact paths
 artifactOrImagePathDependencyRequired: required to fetch the artifact/image path
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
@@ -1834,7 +1836,6 @@ artifacts:
     cloudSourceRepositoryPlaceholder: Select Cloud Source Repository
     sourceDirectory: Source Directory
     sourceDirectoryPlaceholder: Enter Source Directory
-    commitId: Commit Id
     commitIdPlaceholder: Enter Commit Id
     tagPlaceholder: Enter Tag
     fetchType: Fetch Type

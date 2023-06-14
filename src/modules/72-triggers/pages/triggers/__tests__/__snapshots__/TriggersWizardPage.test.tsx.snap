@@ -4459,7 +4459,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                             class="bp3-form-content"
                           >
                             <label
-                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkboxAlignment Checkbox--checked StyledProps--main StyledProps--inline"
+                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkboxAlignment StyledProps--main StyledProps--inline"
                               style="position: relative; left: 0px;"
                             >
                               <input
@@ -5679,7 +5679,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
                             class="bp3-form-content"
                           >
                             <label
-                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkboxAlignment Checkbox--checked StyledProps--main StyledProps--inline"
+                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkboxAlignment StyledProps--main StyledProps--inline"
                               style="position: relative; left: 0px;"
                             >
                               <input

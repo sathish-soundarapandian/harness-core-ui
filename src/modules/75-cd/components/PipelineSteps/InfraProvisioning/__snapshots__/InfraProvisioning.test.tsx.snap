@@ -18,7 +18,7 @@ exports[`InfraProvisioning Edit View should render properly - loading case 1`] =
             class="bp3-form-content"
           >
             <label
-              class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--inline"
+              class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
             >
               <input
                 checked=""

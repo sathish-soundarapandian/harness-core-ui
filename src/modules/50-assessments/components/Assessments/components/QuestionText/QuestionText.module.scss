@@ -1,0 +1,14 @@
+.questionText {
+  .questionNumber {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+
+    background: var(--primary-10);
+    text-align: center;
+    .text {
+      color: var(--grey-0);
+    }
+  }
+}

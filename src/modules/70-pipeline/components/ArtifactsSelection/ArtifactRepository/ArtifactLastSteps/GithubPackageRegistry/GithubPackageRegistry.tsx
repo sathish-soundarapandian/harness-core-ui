@@ -99,6 +99,17 @@ function FormComponent({
   const packageNameValue = getGenuineValue(formik.values.spec.packageName || initialValues?.spec?.packageName)
   const orgValue = getGenuineValue(formik.values.spec.org)
 
+  const defaultPackageType = React.useMemo(
+    () => ({ label: getString('pipeline.artifactsSelection.container'), value: 'container' }),
+    [getString]
+  )
+
+  useEffect(() => {
+    if (packageTypeValue !== defaultPackageType.value) {
+      formik.setFieldValue('spec.packageType', defaultPackageType.value)
+    }
+  }, [packageTypeValue, defaultPackageType])
+
   const {
     data: packageDetails,
     refetch: refetchPackageDetails,
@@ -194,19 +205,23 @@ function FormComponent({
           <div className={cx(stepCss.formGroup, stepCss.xxlg)}>
             <FormInput.Select
               items={packageTypes}
+              // Fixing the default value to container since the input is disabled, this ensures value doesn't get cleared in case of artifact source template
+              value={defaultPackageType}
               name="spec.packageType"
               disabled
-              onChange={value => {
-                formik.setValues({
-                  ...formik.values,
-                  spec: {
-                    ...formik.values?.spec,
-                    packageType: value.value,
-                    packageName: formik.values?.spec?.packageName === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : '',
-                    version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
-                  }
-                })
-              }}
+              onChange={
+                /* istanbul ignore next */ value => {
+                  formik.setValues({
+                    ...formik.values,
+                    spec: {
+                      ...formik.values?.spec,
+                      packageType: value.value,
+                      packageName: formik.values?.spec?.packageName === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : '',
+                      version: formik.values?.spec?.version === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : ''
+                    }
+                  })
+                }
+              }
               label={getString('pipeline.packageType')}
               placeholder={getString('pipeline.packageTypePlaceholder')}
             />

@@ -355,11 +355,14 @@ function BootstrapDeployInfraDefinition(
     }
   }
 
-  const handleYamlChange = () => {
-    if (!isEmpty(infrastructureDefinition) && yamlHandler) {
-      const infraDefinitionConfigFromYaml = parse(defaultTo(yamlHandler.getLatestYaml(), '{}'))
+  const handleYamlChange = (
+    _isEditorDirty: boolean,
+    updatedYaml: string,
+    schemaValidationErrorMap?: Map<number, string>
+  ): void => {
+    if (!isEmpty(infrastructureDefinition)) {
+      const infraDefinitionConfigFromYaml = parse(defaultTo(updatedYaml, '{}'))
         .infrastructureDefinition as InfrastructureDefinitionConfig
-      const schemaValidationErrorMap = yamlHandler.getYAMLValidationErrorMap()
       const areSchemaValidationErrorsAbsent = !(schemaValidationErrorMap && schemaValidationErrorMap.size > 0)
       if (
         !isEmpty(infraDefinitionConfigFromYaml) &&

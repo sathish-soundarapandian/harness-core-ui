@@ -1,0 +1,26 @@
+import { getRecommendationImage } from '../HarnessRecommendation.utils'
+
+describe('testing getRecommendationImage method', () => {
+  test('should return image for all values', () => {
+    const chaos = getRecommendationImage('chaos')
+    expect(chaos).toEqual('test-file-stub')
+    const ci = getRecommendationImage('ci')
+    expect(ci).toEqual('test-file-stub')
+    const ccm = getRecommendationImage('ccm')
+    expect(ccm).toEqual('test-file-stub')
+    const cd = getRecommendationImage('cd')
+    expect(cd).toEqual('test-file-stub')
+    const sei = getRecommendationImage('sei')
+    expect(sei).toEqual('test-file-stub')
+    const ff = getRecommendationImage('ff')
+    expect(ff).toEqual('test-file-stub')
+    const cf = getRecommendationImage('cf')
+    expect(cf).toEqual('test-file-stub')
+    const srm = getRecommendationImage('srm')
+    expect(srm).toEqual('test-file-stub')
+    const cet = getRecommendationImage('cet')
+    expect(cet).toEqual('test-file-stub')
+    const empty = getRecommendationImage('')
+    expect(empty).toEqual('test-file-stub')
+  })
+})

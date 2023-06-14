@@ -17,6 +17,8 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import UserProfilePage from '@user-profile/pages/UserProfile/UserProfilePage'
 import UserPreferencesPage from '@user-profile/pages/UserPreferences/UserPreferences'
 import UserNav from '@user-profile/navigation/UserNav/UserNav'
+import { AccountSideNavProps } from '@common/RouteDestinations'
+import SmtpDetails from './components/Smtp/SmtpDetails'
 
 const RedirectToUserHome = (): React.ReactElement => {
   const params = useParams<AccountPathProps>()
@@ -31,6 +33,9 @@ export default (
   <>
     <RouteWithLayout sidebarProps={UserProfileSideNavProps} path={routes.toUser({ ...accountPathProps })} exact>
       <RedirectToUserHome />
+    </RouteWithLayout>
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toAccountSMTP({ ...accountPathProps })} exact>
+      <SmtpDetails />
     </RouteWithLayout>
     <RouteWithLayout sidebarProps={UserProfileSideNavProps} path={routes.toUserProfile({ ...accountPathProps })} exact>
       <UserProfilePage />

@@ -6,21 +6,24 @@
  */
 
 import { Drawer, Position } from '@blueprintjs/core'
-import { Button, ExpandingSearchInput, Heading, PageError, Text } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  ExpandingSearchInput,
+  ExpandingSearchInputHandle,
+  Heading,
+  Page,
+  Text
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import React, { ReactElement } from 'react'
-import { PageSpinner } from '@common/components'
+import React, { ReactElement, useRef, useState } from 'react'
 import { Width } from '@common/constants/Utils'
-import { useUpdateQueryParams } from '@common/hooks'
-import { useExecutionListQueryParams } from '@pipeline/pages/execution-list/utils/executionListUtil'
 import { useStrings } from 'framework/strings'
 import { useEnforcementGetEnforcementResultsById } from 'services/ssca'
-import {
-  ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
-  ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
-  EnforcementViolationsParamsWithDefaults
-} from './utils'
+import EmptySearchResults from '@common/images/EmptySearchResults.svg'
+import { ENFORCEMENT_VIOLATIONS_PAGE_INDEX, ENFORCEMENT_VIOLATIONS_PAGE_SIZE } from './utils'
 import { PolicyViolationsTable } from './PolicyViolationsTable'
+import type { SortBy } from './PolicyViolationsTableCells'
 import css from './PolicyViolations.module.scss'
 
 interface PolicyViolationsDrawerProps {
@@ -33,14 +36,26 @@ export function PolicyViolationsDrawer({
   showEnforcementViolations
 }: PolicyViolationsDrawerProps): ReactElement {
   const { getString } = useStrings()
-  const queryParams = useExecutionListQueryParams()
-  const { updateQueryParams } = useUpdateQueryParams<Partial<EnforcementViolationsParamsWithDefaults>>()
+  const searchRef = useRef({} as ExpandingSearchInputHandle)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sortBy, setSortBy] = useState<SortBy>({
+    sort: 'name',
+    order: 'ASC'
+  })
+
+  const resetFilter = (): void => {
+    setSearchTerm('')
+    searchRef.current.clear()
+  }
 
   const { data, loading, error, refetch } = useEnforcementGetEnforcementResultsById({
     enforcementId,
     queryParams: {
       page: ENFORCEMENT_VIOLATIONS_PAGE_INDEX,
-      pageSize: ENFORCEMENT_VIOLATIONS_PAGE_SIZE
+      pageSize: ENFORCEMENT_VIOLATIONS_PAGE_SIZE,
+      searchTerm,
+      sort: sortBy.sort,
+      order: sortBy.order
     }
   })
 
@@ -64,36 +79,45 @@ export function PolicyViolationsDrawer({
         withoutBoxShadow
         onClick={() => showEnforcementViolations()}
       />
-      {loading ? (
-        <PageSpinner />
-      ) : data ? (
-        <>
-          <Heading level={2} color={Color.GREY_800} font={{ weight: 'bold' }} padding="large">
-            {getString('pipeline.artifactViolationDetails')}
-          </Heading>
-          <div className={css.subHeader}>
-            <Text color={Color.GREY_900} font={{ weight: 'bold' }}>
-              {`${getString('total')}: ${data?.results?.length}`}
-            </Text>
-            <ExpandingSearchInput
-              defaultValue={queryParams.searchTerm}
-              alwaysExpanded
-              onChange={value => updateQueryParams({ searchTerm: value, page: ENFORCEMENT_VIOLATIONS_PAGE_INDEX })}
-              width={Width.LARGE}
-              autoFocus={false}
-            />
-          </div>
 
-          <PolicyViolationsTable data={data} />
-        </>
-      ) : (
-        <PageError
-          message={error}
-          onClick={() => {
-            refetch()
-          }}
-        />
-      )}
+      <Heading level={2} color={Color.GREY_800} font={{ weight: 'bold' }} padding="large">
+        {getString('pipeline.artifactViolationDetails')}
+      </Heading>
+
+      <Page.Body
+        loading={loading}
+        error={error?.message || error}
+        retryOnError={() => refetch()}
+        noData={{
+          when: () => !error && !data?.results?.length,
+          image: EmptySearchResults,
+          messageTitle: getString('common.filters.noResultsFound'),
+          message: getString('common.filters.noMatchingFilterData'),
+          button: (
+            <Button
+              variation={ButtonVariation.LINK}
+              onClick={resetFilter}
+              text={getString('common.filters.clearFilters')}
+            />
+          )
+        }}
+      >
+        <div className={css.subHeader}>
+          <Text color={Color.GREY_900} font={{ weight: 'bold' }}>
+            {`${getString('total')}: ${data?.results?.length}`}
+          </Text>
+          <ExpandingSearchInput
+            defaultValue={searchTerm}
+            alwaysExpanded
+            onChange={setSearchTerm}
+            width={Width.LARGE}
+            autoFocus={false}
+            ref={searchRef}
+          />
+        </div>
+
+        <PolicyViolationsTable data={data} setSortBy={setSortBy} sortBy={sortBy} />
+      </Page.Body>
     </Drawer>
   )
 }

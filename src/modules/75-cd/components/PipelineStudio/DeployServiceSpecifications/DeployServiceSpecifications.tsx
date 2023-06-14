@@ -22,7 +22,7 @@ import {
 } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import produce from 'immer'
-import { debounce, defaultTo, get, isEmpty, noop, set, unset } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop, set, unset } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
@@ -96,12 +96,10 @@ export default function DeployServiceSpecifications({
   const scrollRef = customRef || domRef
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debounceUpdateStage = useCallback(
-    debounce(
-      (changedStage?: StageElementConfig) =>
-        changedStage ? updateStage(changedStage) : /* istanbul ignore next */ Promise.resolve(),
-      300
-    ),
+  const updateStageCallback = useCallback(
+    (changedStage?: StageElementConfig) =>
+      changedStage ? updateStage(changedStage) : /* istanbul ignore next */ Promise.resolve(),
+
     [updateStage]
   )
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
@@ -168,7 +166,7 @@ export default function DeployServiceSpecifications({
         }
       })
       if (stageData?.stage) {
-        debounceUpdateStage(stageData?.stage)
+        updateStageCallback(stageData?.stage)
       }
     }
   }, [])
@@ -277,7 +275,7 @@ export default function DeployServiceSpecifications({
           delete draft.stage.spec.serviceConfig.serviceRef
         }
       })
-      debounceUpdateStage(stageData?.stage)
+      updateStageCallback(stageData?.stage)
       setSelectedDeploymentType(serviceDefinitionType(stageData))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -312,7 +310,7 @@ export default function DeployServiceSpecifications({
       }
     })
 
-    return debounceUpdateStage(stageData?.stage)
+    return updateStageCallback(stageData?.stage)
   }
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>): void => {
@@ -330,7 +328,7 @@ export default function DeployServiceSpecifications({
         }
       })
 
-      debounceUpdateStage(stageData?.stage)
+      updateStageCallback(stageData?.stage)
     }
   }
 
@@ -346,9 +344,9 @@ export default function DeployServiceSpecifications({
           delete serviceObj.service
         }
       })
-      await debounceUpdateStage(stageData?.stage)
+      await updateStageCallback(stageData?.stage)
     },
-    [debounceUpdateStage, stage]
+    [updateStageCallback, stage]
   )
 
   const handleDeploymentTypeChange = useCallback(
@@ -380,7 +378,7 @@ export default function DeployServiceSpecifications({
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
         deleteStageData(currStageData?.stage)
-        await debounceUpdateStage(currStageData?.stage)
+        await updateStageCallback(currStageData?.stage)
         setSelectedDeploymentType(serviceDefinitionType(currStageData))
       }
     }

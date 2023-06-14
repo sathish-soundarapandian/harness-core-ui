@@ -8,7 +8,8 @@
 import React from 'react'
 import { fireEvent, getByText, render, waitFor } from '@testing-library/react'
 import { Formik, FormikForm } from '@harness/uicore'
-import { TestWrapper } from '@common/utils/testUtils'
+import userEvent from '@testing-library/user-event'
+import { TestWrapper, findPopoverContainer } from '@common/utils/testUtils'
 import { accountPathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
 import DelegateSelectorPanel from '../DelegateSelectorPanel'
@@ -83,5 +84,23 @@ describe('<DelegateSelectorPanel /> test', () => {
     const option = getByText(container, 'Create "new-tag"')
     expect(container).toMatchSnapshot()
     waitFor(() => fireEvent.click(option))
+  })
+
+  test('delegate expression test - both selector & expression list should work correctly', async () => {
+    const { container, getByPlaceholderText } = render(
+      <WrapperComponent initialValues={{ delegateSelectors: ['harness-sample-k8s-delegate'] }} />
+    )
+    // make it expression
+    fireEvent.click(container.querySelector('[data-icon="fixed-input"]') as HTMLElement)
+    const findPopover = findPopoverContainer()
+    expect(findPopover).toBeTruthy()
+    userEvent.click(getByText(findPopover!, 'Expression'))
+
+    //radio btns
+    expect(getByText(container, 'delegate.DelegateSelector')).toBeInTheDocument()
+    expect(getByText(container, 'common.delegateExpressionList')).toBeInTheDocument()
+
+    userEvent.click(container.querySelector('input[value="List"]')!)
+    expect(getByPlaceholderText('<+expression>')).toBeInTheDocument()
   })
 })

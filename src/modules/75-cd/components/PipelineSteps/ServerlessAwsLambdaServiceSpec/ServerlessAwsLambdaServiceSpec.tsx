@@ -40,6 +40,11 @@ import {
 import { GenericServiceSpecInputSetMode } from '../Common/GenericServiceSpec/GenericServiceSpecInputSetMode'
 import GenericServiceSpecEditable from '../Common/GenericServiceSpec/GenericServiceSpecEditable'
 import type { ValidateInputSetFieldArgs, ValidateArtifactInputSetFieldArgs } from '../Common/types'
+import {
+  validateAmazonS3ArtifactFields,
+  validateArtifactoryArtifactFields,
+  validateECRArtifactFields
+} from '../Common/utils/runtimeViewValidation'
 
 const logger = loggerFor(ModuleName.CD)
 
@@ -205,6 +210,8 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
   validateManifestInputSetFields({ data, template, isRequired, errors, getString }: ValidateInputSetFieldArgs): void {
     data?.manifests?.forEach((manifest: ManifestConfigWrapper, index: number) => {
       const currentManifestTemplate = get(template, `manifests[${index}].manifest.spec.store.spec`, '')
+
+      // Git provider manifest store specific fields
       if (
         isEmpty(manifest?.manifest?.spec?.store?.spec?.connectorRef) &&
         isRequired &&
@@ -213,7 +220,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.connectorRef`,
-          getString?.('fieldRequired', { field: 'connectorRef' })
+          getString?.('fieldRequired', { field: getString('connector') })
         )
       }
 
@@ -228,6 +235,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
           getString?.('fieldRequired', { field: 'folderPath' })
         )
       }
+
       if (
         isEmpty(manifest?.manifest?.spec?.store?.spec?.branch) &&
         isRequired &&
@@ -236,7 +244,18 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.branch`,
-          getString?.('fieldRequired', { field: 'Branch' })
+          getString?.('fieldRequired', { field: getString?.('pipelineSteps.deploy.inputSet.branch') })
+        )
+      }
+      if (
+        isEmpty(manifest?.manifest?.spec?.store?.spec?.commitId) &&
+        isRequired &&
+        getMultiTypeFromValue(currentManifestTemplate?.commitId) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `manifests[${index}].manifest.spec.store.spec.commitId`,
+          getString?.('fieldRequired', { field: getString?.('common.commitId') })
         )
       }
       if (
@@ -247,7 +266,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.paths`,
-          getString?.('fieldRequired', { field: 'Paths' })
+          getString?.('fieldRequired', { field: getString?.('common.fileOrFolderPath') })
         )
       }
 
@@ -260,7 +279,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.region`,
-          getString?.('fieldRequired', { field: 'Region' })
+          getString?.('fieldRequired', { field: getString?.('regionLabel') })
         )
       }
       if (
@@ -271,7 +290,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.bucketName`,
-          getString?.('fieldRequired', { field: 'Bucket Name' })
+          getString?.('fieldRequired', { field: getString?.('common.bucketName') })
         )
       }
     })
@@ -287,103 +306,39 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
     isRequired,
     errors
   }: ValidateArtifactInputSetFieldArgs) {
-    /** Common Artifact fields across artifacts */
-    if (
-      isEmpty(get(data, `${dataPathToField}.connectorRef`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.connectorRef`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.connectorRef`, getString?.('fieldRequired', { field: 'Artifact Server' }))
-    }
-
-    /** Artifact specific fields */
     // Artifactory artifact specific fields
-    if (
-      isEmpty(get(data, `${dataPathToField}.repository`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.repository`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.repository`, getString?.('fieldRequired', { field: 'Repository' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.artifactDirectory`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.artifactDirectory`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.artifactDirectory`, getString?.('fieldRequired', { field: 'Artifact Directory' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.artifactPath`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.artifactPath`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.artifactPath`, getString?.('fieldRequired', { field: 'Artifact Path' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.artifactPathFilter`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.artifactPathFilter`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(
-        errors,
-        `${dataPathToField}.artifactPathFilter`,
-        getString?.('fieldRequired', { field: 'Artifact Path Filter' })
-      )
-    }
+    validateArtifactoryArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
     // Amazon S3 artifact specific field
-    if (
-      isEmpty(get(data, `${dataPathToField}.bucketName`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.bucketName`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.bucketName`, getString?.('fieldRequired', { field: 'Bucket Name' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.filePath`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.filePath`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.filePath`, getString?.('fieldRequired', { field: 'File Path' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.filePathRegex`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.filePathRegex`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.filePathRegex`, getString?.('fieldRequired', { field: 'File Path Regex' }))
-    }
+    validateAmazonS3ArtifactFields({
+      data,
+      dataPathToField,
+      template,
+      templatePathToField,
+      getString,
+      isRequired,
+      errors
+    })
 
     // ECR artifact specific fields
     if (artifactType === 'Ecr') {
-      if (
-        isEmpty(get(data, `${dataPathToField}.region`)) &&
-        isRequired &&
-        getMultiTypeFromValue(get(template, `${templatePathToField}.region`)) === MultiTypeInputType.RUNTIME
-      ) {
-        set(errors, `${dataPathToField}.region`, getString?.('fieldRequired', { field: 'Region' }))
-      }
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.imagePath`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.imagePath`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.imagePath`, getString?.('fieldRequired', { field: 'Image Path' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.tag`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.tag`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.tag`, getString?.('fieldRequired', { field: 'Tag' }))
-    }
-    if (
-      isEmpty(get(data, `${dataPathToField}.tagRegex`)) &&
-      isRequired &&
-      getMultiTypeFromValue(get(template, `${templatePathToField}.tagRegex`)) === MultiTypeInputType.RUNTIME
-    ) {
-      set(errors, `${dataPathToField}.tagRegex`, getString?.('fieldRequired', { field: 'Tag Regex' }))
+      validateECRArtifactFields({
+        data,
+        dataPathToField,
+        template,
+        templatePathToField,
+        getString,
+        isRequired,
+        errors
+      })
     }
   }
 
@@ -451,6 +406,56 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
     })
   }
 
+  validateConfigFields({ data, template, isRequired, errors, getString }: ValidateInputSetFieldArgs): void {
+    data?.configFiles?.forEach((configFile, index) => {
+      const currentFileTemplate = get(template, `configFiles[${index}].configFile.spec.store.spec`, '')
+      if (
+        isEmpty(configFile?.configFile?.spec?.store?.spec?.files) &&
+        isRequired &&
+        getMultiTypeFromValue(currentFileTemplate?.files) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `configFiles[${index}].configFile.spec.store.spec.files[0]`,
+          getString?.('fieldRequired', { field: 'File' })
+        )
+      }
+      if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.files)) {
+        configFile?.configFile?.spec?.store?.spec?.files?.forEach((value: string, fileIndex: number) => {
+          if (!value) {
+            set(
+              errors,
+              `configFiles[${index}].configFile.spec.store.spec.files[${fileIndex}]`,
+              getString?.('fieldRequired', { field: 'File' })
+            )
+          }
+        })
+      }
+      if (
+        isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles) &&
+        isRequired &&
+        getMultiTypeFromValue(currentFileTemplate?.secretFiles) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `configFiles[${index}].configFile.spec.store.spec.secretFiles[0]`,
+          getString?.('fieldRequired', { field: 'File' })
+        )
+      }
+      if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles)) {
+        configFile?.configFile?.spec?.store?.spec?.secretFiles?.forEach((value: string, secretFileIndex: number) => {
+          if (!value) {
+            set(
+              errors,
+              `configFiles[${index}].configFile.spec.store.spec.secretFiles[${secretFileIndex}]`,
+              getString?.('fieldRequired', { field: 'File' })
+            )
+          }
+        })
+      }
+    })
+  }
+
   validateInputSet({
     data,
     template,
@@ -493,6 +498,15 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
       template,
       getString,
       isRequired,
+      errors
+    })
+
+    /** Config Files Fields Validation */
+    this.validateConfigFields({
+      data,
+      template,
+      isRequired,
+      getString,
       errors
     })
 

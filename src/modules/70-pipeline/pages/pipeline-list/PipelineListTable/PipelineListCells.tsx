@@ -388,7 +388,9 @@ export const MenuCell: CellType = ({ row, column }) => {
       repo: data?.gitDetails?.repoName,
       filePath: data?.gitDetails?.filePath
     },
-    modalTitle: getString('pipeline.editGitDetailsTitle', { entity: getString('common.pipeline') }),
+    modalTitle: getString('pipeline.editGitDetailsTitle', {
+      entity: `${getString('common.pipeline')}[${data.identifier}]`
+    }),
     onSuccess: () => column.refetchList?.()
   })
 

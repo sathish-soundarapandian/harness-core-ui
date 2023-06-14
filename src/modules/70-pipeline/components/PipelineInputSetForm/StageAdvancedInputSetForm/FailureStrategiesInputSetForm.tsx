@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { useFormikContext } from 'formik'
 import {
@@ -29,6 +36,7 @@ export interface FailureStrategiesInputSetFormProps {
   viewType?: StepViewType
   allowableTypes?: AllowedTypes
   template?: FailureStrategyConfig[] | string
+  mode?: StepMode
 }
 
 export interface FormikState {
@@ -41,7 +49,8 @@ export function FailureStrategiesInputSetForm(props: FailureStrategiesInputSetFo
     path,
     stageType,
     viewType,
-    allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+    allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+    mode = StepMode.STAGE
   } = props
   const formik = useFormikContext()
   const { getString } = useStrings()
@@ -73,7 +82,7 @@ export function FailureStrategiesInputSetForm(props: FailureStrategiesInputSetFo
           />
         ) : null}
       </div>
-      <FailureStrategyPanel path={path} isReadonly={!!readonly} mode={StepMode.STAGE} stageType={stageType} />
+      <FailureStrategyPanel path={path} isReadonly={!!readonly} mode={mode} stageType={stageType} />
     </div>
   )
 }

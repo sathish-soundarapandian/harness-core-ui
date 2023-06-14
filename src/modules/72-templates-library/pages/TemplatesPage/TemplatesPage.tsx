@@ -365,6 +365,7 @@ export default function TemplatesPage(): React.ReactElement {
                 onOpenMoveResource={template => {
                   showMigrateTemplateResourceModal(template)
                 }}
+                reloadTemplates={() => reloadTemplates()}
                 view={view}
                 useQueryParamsForPagination
               />

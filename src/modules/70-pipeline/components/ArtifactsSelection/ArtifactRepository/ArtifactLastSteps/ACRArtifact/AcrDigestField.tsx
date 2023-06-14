@@ -14,11 +14,17 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import {
   ArtifactDigestWrapperDetails,
-  canFetchArtifactDigest
+  canFetchArtifactDigest,
+  checkIfQueryParamsisNotEmpty,
+  helperTextDataForDigest,
+  resetFieldValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useMutateAsGet } from '@common/hooks'
 import { useGetLastSuccessfulBuildForACRRepository } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { getHelperTextForDigest } from '@pipeline/utils/stageHelpers'
+import { TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { isValueFixed } from '@common/utils/utils'
 import BaseArtifactDigestField from '../ArtifactImagePathTagView/BaseArtifactDigestField'
 
 interface AcrDigestFieldWrapperProps {
@@ -53,6 +59,32 @@ export function AcrArtifactDigestField({
     get(formik?.values, 'subscriptionId'),
     get(formik?.values, 'tag')
   )
+
+  const tagValue = defaultTo(formik?.values?.tag?.value, formik?.values?.tag)
+  const digestValue = defaultTo(formik?.values?.digest?.value, formik?.values?.digest)
+
+  const isDigestDisabled = React.useMemo(() => {
+    if (formik?.values?.tagType === TagTypes.Value && tagValue) {
+      if ((isValueFixed(tagValue) && checkIfQueryParamsisNotEmpty([tagValue])) || !isValueFixed(tagValue)) return false
+    } else if (formik?.values?.tagType === TagTypes.Regex && formik?.values?.tagRegex) {
+      if (
+        (isValueFixed(formik?.values?.tagRegex) && checkIfQueryParamsisNotEmpty([formik?.values?.tagRegex])) ||
+        !isValueFixed(formik?.values?.tagRegex)
+      )
+        return false
+    }
+    // return true will disable the digest fields
+    else {
+      resetFieldValue(formik, 'digest')
+      return true
+    }
+  }, [tagValue, formik?.values?.tagRegex])
+
+  const isTagRegexType = formik?.values?.tagType === TagTypes.Regex
+
+  const helperText =
+    isValueFixed(digestValue) &&
+    getHelperTextForDigest(helperTextDataForDigest(artifactType, formik, connectorRefValue), getString, false)
 
   const {
     data: dataGar,
@@ -94,6 +126,9 @@ export function AcrArtifactDigestField({
       allowableTypes={allowableTypes}
       isReadonly={isReadonly}
       isBuildDetailsLoading={isVersionDetailsLoading}
+      isDigestDisabled={isDigestDisabled}
+      isLastBuildRegexType={isTagRegexType}
+      helperText={helperText}
     />
   )
 }

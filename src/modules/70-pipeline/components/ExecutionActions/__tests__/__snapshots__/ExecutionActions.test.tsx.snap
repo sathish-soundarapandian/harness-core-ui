@@ -418,40 +418,6 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: containe
     class="Layout--horizontal StyledProps--main"
   >
     <span
-      class="bp3-popover-wrapper"
-    >
-      <span
-        class="bp3-popover-target"
-      >
-        <button
-          aria-label="pipeline.execution.actions.abortPipeline"
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-stop StyledProps--main"
-            icon="stop"
-          >
-            <svg
-              data-icon="stop"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                stop
-              </desc>
-              <path
-                d="M12 3H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
-      </span>
-    </span>
-    <span
       class="bp3-popover-wrapper bp3-dark"
     >
       <span
@@ -554,40 +520,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: container 1`
   <div
     class="Layout--horizontal StyledProps--main"
   >
-    <span
-      class="bp3-popover-wrapper"
-    >
-      <span
-        class="bp3-popover-target"
-      >
-        <button
-          aria-label="pipeline.execution.actions.abortPipeline"
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-stop StyledProps--main"
-            icon="stop"
-          >
-            <svg
-              data-icon="stop"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                stop
-              </desc>
-              <path
-                d="M12 3H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
-      </span>
-    </span>
     <span
       class="bp3-popover-wrapper bp3-dark"
     >
@@ -692,40 +624,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: container 1`
     class="Layout--horizontal StyledProps--main"
   >
     <span
-      class="bp3-popover-wrapper"
-    >
-      <span
-        class="bp3-popover-target"
-      >
-        <button
-          aria-label="pipeline.execution.actions.abortPipeline"
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-stop StyledProps--main"
-            icon="stop"
-          >
-            <svg
-              data-icon="stop"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                stop
-              </desc>
-              <path
-                d="M12 3H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
-      </span>
-    </span>
-    <span
       class="bp3-popover-wrapper bp3-dark"
     >
       <span
@@ -829,40 +727,6 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: con
     class="Layout--horizontal StyledProps--main"
   >
     <span
-      class="bp3-popover-wrapper"
-    >
-      <span
-        class="bp3-popover-target"
-      >
-        <button
-          aria-label="pipeline.execution.actions.abortPipeline"
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-stop StyledProps--main"
-            icon="stop"
-          >
-            <svg
-              data-icon="stop"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                stop
-              </desc>
-              <path
-                d="M12 3H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
-      </span>
-    </span>
-    <span
       class="bp3-popover-wrapper bp3-dark"
     >
       <span
@@ -965,40 +829,6 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: container 1
   <div
     class="Layout--horizontal StyledProps--main"
   >
-    <span
-      class="bp3-popover-wrapper"
-    >
-      <span
-        class="bp3-popover-target"
-      >
-        <button
-          aria-label="pipeline.execution.actions.abortPipeline"
-          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon Button--size Button--small"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="bp3-icon bp3-icon-stop StyledProps--main"
-            icon="stop"
-          >
-            <svg
-              data-icon="stop"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-            >
-              <desc>
-                stop
-              </desc>
-              <path
-                d="M12 3H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-        </button>
-      </span>
-    </span>
     <span
       class="bp3-popover-wrapper bp3-dark"
     >

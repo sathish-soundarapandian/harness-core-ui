@@ -110,7 +110,7 @@ createAProject: Create a Project
 manageAProject: Click to manage project
 apiError: Unable to fetch data.
 landingDashboard:
-  atAGlance: At a Glance
+  atAGlance: '{{$.common.atAGlance}}'
   last30Days: Last 30 Days
   last60Days: Last 60 Days
   last90Days: Last 90 Days

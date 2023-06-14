@@ -546,6 +546,7 @@ awsKms:
   awsSTS: 'Assume Role using STS on Delegate'
 delegate:
   configure: Select the Delegates this Connector will use
+  configureForNonConnectors: Select the Delegates to be used
   delegateSelectorAny: Use any available Delegate
   delegateSelectorSelective: Only use Delegates with all of the following tags
   hearbeat: heartbeat

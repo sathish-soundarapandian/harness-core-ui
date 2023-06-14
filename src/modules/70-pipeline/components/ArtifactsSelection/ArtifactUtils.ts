@@ -32,6 +32,7 @@ import {
   AmazonMachineImageInitialValuesType,
   AzureArtifactsInitialValues
 } from './ArtifactInterface'
+import type { AcceptableValue } from '../PipelineInputSetForm/CICodebaseInputSetForm'
 
 export const shellScriptType: SelectOption[] = [
   { label: 'Bash', value: 'Bash' },
@@ -169,6 +170,54 @@ export const helperTextData = (
   }
 }
 
+export const helperTextDataForDigest = (
+  selectedArtifact: ArtifactType | null,
+  formik: FormikValues,
+  connectorIdValue: string
+): ArtifactTagHelperText => {
+  switch (selectedArtifact) {
+    case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+      return {
+        package: formik.values?.spec?.package,
+        project: formik.values?.spec?.project,
+        region: formik.values?.spec?.region,
+        repositoryName: formik.values?.spec?.repositoryName,
+        version: formik.values?.spec?.version,
+        connectorRef: connectorIdValue
+      }
+    case ENABLED_ARTIFACT_TYPES.DockerRegistry:
+      return {
+        imagePath: formik.values?.imagePath,
+        connectorRef: connectorIdValue,
+        tag: formik.values?.tag
+      }
+    case ENABLED_ARTIFACT_TYPES.Ecr:
+      return {
+        imagePath: formik.values?.imagePath,
+        region: formik.values?.region || '',
+        connectorRef: connectorIdValue,
+        tag: formik.values?.tag
+      }
+    case ENABLED_ARTIFACT_TYPES.Gcr:
+      return {
+        imagePath: formik.values?.imagePath,
+        registryHostname: formik.values?.registryHostname || '',
+        connectorRef: connectorIdValue,
+        tag: formik.values?.tag
+      }
+    case ENABLED_ARTIFACT_TYPES.Acr:
+      return {
+        subscriptionId: formik.values?.subscriptionId,
+        registry: formik.values?.registry,
+        repository: formik.values?.repository,
+        connectorRef: connectorIdValue,
+        tag: formik.values?.tag
+      }
+    default:
+      return {} as ArtifactTagHelperText
+  }
+}
+
 export const checkIfQueryParamsisNotEmpty = (queryParamList: Array<string | number | undefined>): boolean => {
   return queryParamList.every(querydata => {
     if (typeof querydata !== 'number') {
@@ -292,7 +341,10 @@ const getTagValues = (
 const getDigestValues = (specValues: any): ImagePathTypes => {
   const values = { ...specValues }
   if (specValues?.digest && getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED) {
-    if (getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED) {
+    if (
+      getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED &&
+      specValues?.tagType === TagTypes.Value
+    ) {
       values.digest = { label: specValues?.digest, value: specValues?.digest }
     } else {
       values.digest = specValues?.digest
@@ -300,10 +352,13 @@ const getDigestValues = (specValues: any): ImagePathTypes => {
   }
   return values
 }
-const getGarDigestValues = (specValues: GoogleArtifactRegistryInitialValuesType) => {
+const getGarDigestValues = (specValues: GoogleArtifactRegistryInitialValuesType & { [key: string]: any }) => {
   const values = produce(specValues, draft => {
     if (specValues?.spec?.digest && getMultiTypeFromValue(specValues?.spec?.digest) === MultiTypeInputType.FIXED) {
-      if (getMultiTypeFromValue(specValues?.spec?.digest) === MultiTypeInputType.FIXED) {
+      if (
+        getMultiTypeFromValue(specValues?.spec?.digest) === MultiTypeInputType.FIXED &&
+        (specValues?.versionType as unknown as any) === TagTypes.Value
+      ) {
         draft.spec.digest = { label: specValues?.spec?.digest, value: specValues?.spec?.digest } as any
       } else {
         draft.spec.digest = specValues?.spec?.digest
@@ -316,7 +371,10 @@ const getGarDigestValues = (specValues: GoogleArtifactRegistryInitialValuesType)
 const getGcrDigestValues = (specValues: ImagePathTypes) => {
   const values = produce(specValues, draft => {
     if (specValues?.digest && getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED) {
-      if (getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED) {
+      if (
+        getMultiTypeFromValue(specValues?.digest) === MultiTypeInputType.FIXED &&
+        (specValues?.tagType as unknown as any) === TagTypes.Value
+      ) {
         draft.digest = { label: specValues?.digest, value: specValues?.digest } as any
       } else {
         draft.digest = specValues?.digest
@@ -328,8 +386,8 @@ const getGcrDigestValues = (specValues: ImagePathTypes) => {
 
 export interface ArtifactDigestWrapperDetails {
   errorText: string
-  digestPath: string
-  formikDigestValueField: FormikValues | string
+  digestPath: SelectOption | string
+  formikDigestValueField: FormikValues | AcceptableValue | string
 }
 export type artifactInitialValueTypes =
   | ImagePathTypes
@@ -544,7 +602,8 @@ export const defaultArtifactInitialValues = (
           region: '',
           repositoryName: '',
           package: '',
-          version: RUNTIME_INPUT_VALUE
+          version: RUNTIME_INPUT_VALUE,
+          digest: RUNTIME_INPUT_VALUE
         }
       }
     case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
@@ -671,7 +730,8 @@ export const defaultArtifactInitialValues = (
         identifier: '',
         tag: RUNTIME_INPUT_VALUE,
         tagType: TagTypes.Value,
-        tagRegex: RUNTIME_INPUT_VALUE
+        tagRegex: RUNTIME_INPUT_VALUE,
+        digest: RUNTIME_INPUT_VALUE
       }
   }
 }

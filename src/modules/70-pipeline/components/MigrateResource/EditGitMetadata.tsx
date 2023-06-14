@@ -24,6 +24,11 @@ import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandl
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { getConnectorValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import {
+  ResponseTemplateUpdateGitDetailsResponse,
+  TemplateUpdateGitDetailsRequest,
+  updateGitDetailsPromise
+} from 'services/template-ng'
 import type { ExtraQueryParams } from './MigrateUtils'
 import css from './MigrateResource.module.scss'
 
@@ -57,11 +62,17 @@ export default function EditGitMetadata({
   const { getString } = useStrings()
 
   const getCommonQueryParams = (formValues: GitSyncFormFields): UpdatePipelineGitDetailsQueryParams => {
-    const { connectorRef, repo, filePath } = formValues
     return {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
+      ...getEditedGitDetails(formValues)
+    }
+  }
+
+  const getEditedGitDetails = (formValues: GitSyncFormFields): TemplateUpdateGitDetailsRequest => {
+    const { connectorRef, repo, filePath } = formValues
+    return {
       ...(connectorRef ? { connectorRef: getConnectorValue(connectorRef) } : {}),
       ...(repo ? { repoName: repo } : {}),
       ...(filePath ? { filePath } : {})
@@ -103,6 +114,25 @@ export default function EditGitMetadata({
       .catch(handleError)
   }
 
+  const editTemplateGitMetadata = (formValues: GitSyncFormFields): void => {
+    setIsLoading(true)
+    updateGitDetailsPromise({
+      templateIdentifier: identifier,
+      versionLabel: extraQueryParams?.versionLabel || '',
+      queryParams: {
+        ...getCommonQueryParams(formValues)
+      },
+      requestOptions: {
+        headers: {
+          'content-type': 'application/json'
+        }
+      },
+      body: getEditedGitDetails(formValues)
+    })
+      .then(handleResponse)
+      .catch(handleError)
+  }
+
   const editGitMetadata = (formValues: GitSyncFormFields): void => {
     switch (resourceType) {
       case ResourceType.PIPELINES:
@@ -111,10 +141,18 @@ export default function EditGitMetadata({
       case ResourceType.INPUT_SETS:
         editInputSetGitMetadata(formValues)
         break
+      case ResourceType.TEMPLATE:
+        editTemplateGitMetadata(formValues)
+        break
     }
   }
 
-  const handleResponse = (response: ResponseMoveConfigResponse | ResponseInputSetMoveConfigResponseDTO): void => {
+  const handleResponse = (
+    response:
+      | ResponseMoveConfigResponse
+      | ResponseInputSetMoveConfigResponseDTO
+      | ResponseTemplateUpdateGitDetailsResponse
+  ): void => {
     if (response.status === 'SUCCESS') {
       setIsLoading(false)
       showSuccess(getString('pipeline.editGitDetailsSuccess'))

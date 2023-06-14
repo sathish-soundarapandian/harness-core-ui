@@ -19,6 +19,7 @@ import { MinimalLayout } from '@common/layouts'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { MultiTypeSecretInput } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { MultiTypeDelegateSelector } from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -97,7 +98,7 @@ function IDPRoutes(): React.ReactElement {
       >
         <ChildAppMounter<IDPCustomMicroFrontendProps>
           ChildApp={IDPAdminMicroFrontend}
-          customComponents={{ ConnectorReferenceField, MultiTypeSecretInput }}
+          customComponents={{ ConnectorReferenceField, MultiTypeSecretInput, MultiTypeDelegateSelector }}
           customHooks={{ useQueryParams, useUpdateQueryParams }}
           idpServices={{ useGetUserGroupAggregateList }}
         />

@@ -36,7 +36,7 @@ exports[`ExternalAPICallContent should render ExternalAPICallContent 1`] = `
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey400"
             >
-              03/11/2022, 4:15 PM
+              03/11/2022, 4:15:42 PM
             </p>
             <p
               class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey900"
@@ -109,7 +109,7 @@ exports[`ExternalAPICallContent should render ExternalAPICallContent 1`] = `
                     class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey900"
                     style="--text-line-clamp: 1;"
                   >
-                    03/11/2022, 4:15 PM
+                    03/11/2022, 4:15:41 PM
                   </p>
                 </div>
                 <div
@@ -167,7 +167,7 @@ exports[`ExternalAPICallContent should render ExternalAPICallContent 1`] = `
                     class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey900"
                     style="--text-line-clamp: 1;"
                   >
-                    03/11/2022, 4:15 PM
+                    03/11/2022, 4:15:41 PM
                   </p>
                 </div>
                 <div

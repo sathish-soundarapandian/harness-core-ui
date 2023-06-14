@@ -30,6 +30,7 @@ export const TemplatesGridView: React.FC<TemplatesViewProps> = (props): JSX.Elem
     onDelete,
     onOpenMoveResource,
     gotoPage,
+    reloadTemplates,
     useQueryParamsForPagination
   } = props
 
@@ -65,6 +66,7 @@ export const TemplatesGridView: React.FC<TemplatesViewProps> = (props): JSX.Elem
               onOpenSettings={onOpenSettings}
               onDelete={onDelete}
               onOpenMoveResource={onOpenMoveResource}
+              reloadTemplates={reloadTemplates}
             />
           )}
           keyOf={(item: TemplateSummaryResponse) => getScopeBasedTemplateRef(item)}

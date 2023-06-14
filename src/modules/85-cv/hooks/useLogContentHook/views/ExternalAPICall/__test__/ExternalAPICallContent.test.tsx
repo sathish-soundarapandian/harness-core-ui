@@ -31,7 +31,7 @@ describe('ExternalAPICallContent', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByText('03/11/2022, 4:15 PM')).toBeInTheDocument()
+    expect(screen.getByText('03/11/2022, 4:15:42 PM')).toBeInTheDocument()
     expect(
       screen.getByText('cv.fetchingDataFrom https://qva35651.live.dynatrace.com/api/v2/metrics/query')
     ).toBeInTheDocument()

@@ -225,7 +225,7 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                             class="StyledProps--font StyledProps--main metricPack"
                           >
                             <label
-                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
+                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                             >
                               <input
                                 checked=""
@@ -238,7 +238,7 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                               Errors
                             </label>
                             <label
-                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
+                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                             >
                               <input
                                 checked=""
@@ -847,7 +847,7 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                           class="bp3-form-content"
                                         >
                                           <label
-                                            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--inline"
+                                            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
                                           >
                                             <input
                                               checked=""
@@ -873,7 +873,7 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                           class="bp3-form-content"
                                         >
                                           <label
-                                            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--inline"
+                                            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
                                           >
                                             <input
                                               checked=""
@@ -899,7 +899,7 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                           class="bp3-form-content"
                                         >
                                           <label
-                                            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--inline"
+                                            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
                                           >
                                             <input
                                               checked=""
@@ -1111,7 +1111,7 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                             class="bp3-form-content"
                                           >
                                             <label
-                                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main StyledProps--inline"
+                                              class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
                                             >
                                               <input
                                                 checked=""
@@ -1715,7 +1715,7 @@ exports[`Unit tests for createAppd monitoring source should render in  when conn
                       class="StyledProps--font StyledProps--main metricPack"
                     >
                       <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                       >
                         <input
                           name="Errors"
@@ -1727,7 +1727,7 @@ exports[`Unit tests for createAppd monitoring source should render in  when conn
                         Errors
                       </label>
                       <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                       >
                         <input
                           name="Performance"
@@ -2335,7 +2335,7 @@ exports[`Unit tests for createAppd monitoring source should render in  when conn
                       class="StyledProps--font StyledProps--main metricPack"
                     >
                       <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                       >
                         <input
                           name="Errors"
@@ -2347,7 +2347,7 @@ exports[`Unit tests for createAppd monitoring source should render in  when conn
                         Errors
                       </label>
                       <label
-                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox Checkbox--checked StyledProps--main"
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
                       >
                         <input
                           name="Performance"

@@ -1125,7 +1125,7 @@ exports[`RunTests Step Edit View Error tracking should render properly 1`] = `
                               style="flex-grow: 1;"
                             >
                               <label
-                                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input Checkbox--checked StyledProps--main"
+                                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox input StyledProps--main"
                               >
                                 <input
                                   checked=""

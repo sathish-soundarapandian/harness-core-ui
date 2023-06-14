@@ -12,6 +12,7 @@ export interface ExtraQueryParams {
   pipelineIdentifier?: string
   inputSetIdentifier?: string
   name?: string
+  versionLabel?: string
 }
 
 export type InitialValuesType = NameIdDescriptionTagsType &

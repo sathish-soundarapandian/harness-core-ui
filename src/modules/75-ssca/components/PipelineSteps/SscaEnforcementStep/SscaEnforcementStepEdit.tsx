@@ -27,7 +27,6 @@ import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeTe
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
-import { FileUsage } from '@filestore/interfaces/FileStore'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import {
   getFormValuesInCorrectFormat,
@@ -182,12 +181,8 @@ const SscaEnforcementStepEdit = (
               <MultiTypeTextField
                 name="spec.source.spec.image"
                 label={
-                  <Text
-                    className={css.formLabel}
-                    tooltipProps={{ dataTooltipId: 'image' }}
-                    placeholder={getString('imagePlaceholder')}
-                  >
-                    {getString('image')}
+                  <Text className={css.formLabel} tooltipProps={{ dataTooltipId: 'image' }}>
+                    {getString('imageLabel')}
                   </Text>
                 }
                 multiTextInputProps={{
@@ -231,7 +226,6 @@ const SscaEnforcementStepEdit = (
                 onChange={newValue => {
                   formik?.setFieldValue('spec.policy.store.spec.file', newValue)
                 }}
-                fileUsage={FileUsage.MANIFEST_FILE}
               />
 
               {stepType === StepType.CdSscaEnforcement ? (

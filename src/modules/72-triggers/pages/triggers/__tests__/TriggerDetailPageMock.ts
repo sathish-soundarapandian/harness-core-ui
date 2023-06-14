@@ -47,7 +47,7 @@ export const GetTriggerDetailsResponse: UseGetReturnData<ResponseNGTriggerDetail
           'Failed while requesting Pipeline ExecutionNo content to map due to end-of-input\n at [Source: java.io.StringReader@5dfa93c7; line: 1, column: 1]'
       },
       webhookDetails: { webhookSourceRepo: 'Github' },
-      tags: {},
+      tags: { tag1: 'trigger' },
       executions: [0, 0, 0, 0, 0, 0, 2],
       yaml: 'trigger:\n  name: Trigger__1\n  identifier: Trigger__1\n  target:\n    targetIdentifier: http\n    type: Pipeline\n    spec:\n      runtimeInputYaml:  ""\n  source:\n    type: Webhook\n    spec:\n      type: Github\n      spec:\n        repoUrl: https://github.com/wings-software/triggerNgDemo\n        event: Pull Request\n        actions:\n          - opened\n          - closed\n        payloadConditions:\n          - key: sourceBranch\n            operator: equals\n            value: ng-trigger-demo\n          - key: targetBranch\n            operator: in\n            value: master, main\n          - key: ${eventPayload.pull_request.user.id}\n            operator: equals\n            value: 56320710\n          - key: ${eventPayload.pull_request.head.ref}\n            operator: regex\n            value: ^ng-trigger-demo            ',
       enabled: true

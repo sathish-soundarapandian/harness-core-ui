@@ -947,6 +947,7 @@ smtp:
   validationSubject: Subject is required
   validationBody: Body is required
   deleteInProgress: Deleting SMTP Configuration
+  noSMTPConfig: No SMTP Configuration available
   savingSMTP: Saving SMTP Configuration
   updatingSMTP: Updating SMTP Configuration
 invalid: INVALID
@@ -1538,3 +1539,10 @@ delay15Sec: This can take up to 15 seconds.
 generatedAt: Generated at
 unknown: Unknown
 viewErrorDetails: Click to view error details
+fileOrFolderPath: File or Folder Path
+commitId: Commit Id
+delegateExpressionList: Delegate Selection Expression List
+atAGlance: At a Glance
+invite: Invite
+results: Results
+category: Category

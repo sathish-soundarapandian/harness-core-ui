@@ -16,10 +16,6 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { getNestedRuntimeInputs } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
-  useGetHarnessEnvironments,
-  useGetHarnessServices
-} from '@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment'
-import {
   checkIfRunTimeInput,
   enrichHealthSourceWithVersionForHealthsourceType,
   getMetricDefinitionData,
@@ -30,12 +26,12 @@ import {
 import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getLabelByName } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
-import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
 import {
   CONNECTOR_REF,
   INDEXES
 } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
+import { ServiceEnvironmentInputSetWrapper } from './components/ServiceEnvironmentInputSetWrapper/ServiceEnvironmentInputSetWrapper'
 import css from './TemplatisedRunTimeMonitoredService.module.scss'
 
 export interface TemplatisedRunTimeMonitoredServiceProps {
@@ -51,36 +47,22 @@ export default function TemplatisedRunTimeMonitoredService(
   const { prefix, monitoredService, expressions, allowableTypes } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
-  const { serviceOptions } = useGetHarnessServices()
-  const { environmentOptions } = useGetHarnessEnvironments()
   const healthSources = monitoredService?.spec?.templateInputs?.sources?.healthSources || []
   const healthSourcesVariables = monitoredService?.spec?.templateInputs?.variables || []
   const { serviceRef, environmentRef } = monitoredService?.spec?.templateInputs || {}
   const areRunTimeVariablesPresent = healthSourcesVariables?.some(variable => checkIfRunTimeInput(variable?.value))
-  const { setFieldValue: onChange } = useFormikContext()
+  const { setFieldValue: onChange } = useFormikContext<{ serviceRef: string; environmentRef: string }>()
 
   return (
     <Layout.Vertical>
       {checkIfRunTimeInput(serviceRef) || checkIfRunTimeInput(environmentRef) ? (
         <Card className={css.card}>
-          {checkIfRunTimeInput(serviceRef) ? (
-            <FormInput.MultiTypeInput
-              name={`${prefix}spec.monitoredService.spec.templateInputs.serviceRef`}
-              label={getString('service')}
-              selectItems={serviceOptions}
-              multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
-              useValue
-            />
-          ) : null}
-          {checkIfRunTimeInput(environmentRef) ? (
-            <FormInput.MultiTypeInput
-              name={`${prefix}spec.monitoredService.spec.templateInputs.environmentRef`}
-              label={getString('environment')}
-              selectItems={environmentOptions}
-              multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
-              useValue
-            />
-          ) : null}
+          <ServiceEnvironmentInputSetWrapper
+            prefix={prefix}
+            onChange={onChange}
+            serviceRef={serviceRef}
+            environmentRef={environmentRef}
+          />
         </Card>
       ) : null}
       {healthSources?.map((healthSourceData: any, index: number) => {

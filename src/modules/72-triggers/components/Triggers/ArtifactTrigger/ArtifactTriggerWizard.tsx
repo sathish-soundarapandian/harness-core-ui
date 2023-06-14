@@ -51,9 +51,6 @@ import {
   getPipelineWithoutCodebaseInputs
 } from '@pipeline/utils/CIUtils'
 import { useStrings } from 'framework/strings'
-import { usePermission } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
@@ -107,6 +104,7 @@ import {
 } from './TriggersWizardPageUtils'
 import useIsNewGitSyncRemotePipeline from '../useIsNewGitSyncRemotePipeline'
 import { isNewTrigger } from '../utils'
+import { useIsTriggerCreatePermission } from '../useIsTriggerCreatePermission'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -981,26 +979,9 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[]; isSimplifiedYAM
     }
   }
 
-  const [isExecutable] = usePermission(
-    {
-      resourceScope: {
-        projectIdentifier: projectIdentifier,
-        orgIdentifier: orgIdentifier,
-        accountIdentifier: accountId
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EXECUTE_PIPELINE],
-      options: {
-        skipCache: true
-      }
-    },
-    [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
-  )
+  const isTriggerCreatePermission = useIsTriggerCreatePermission()
 
-  const isTriggerRbacDisabled = !isExecutable
+  const isTriggerRbacDisabled = !isTriggerCreatePermission
 
   const wizardMap = initialValues.triggerType
     ? getArtifactWizardMap({

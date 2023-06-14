@@ -1,0 +1,13 @@
+.recommendationContainer {
+  display: flex;
+  flex-direction: column;
+  height: 90px;
+  padding: 2px 12px 2px 8px;
+  gap: 4px;
+}
+.iconMargin {
+  margin-right: var(--spacing-medium);
+}
+.noPadding {
+  padding: 0 !important;
+}

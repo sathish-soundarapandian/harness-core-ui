@@ -187,7 +187,7 @@ export function GoogleCloudSourceRepositories(
         .trim()
         .required(
           getString('common.validation.fieldIsRequired', {
-            name: getString('pipeline.artifacts.googleCloudSourceRepositories.commitId')
+            name: getString('common.commitId')
           })
         )
     }),
@@ -467,7 +467,7 @@ export function GoogleCloudSourceRepositories(
                   renderField(
                     formik,
                     'commitId',
-                    getString('pipeline.artifacts.googleCloudSourceRepositories.commitId'),
+                    getString('common.commitId'),
                     getString('pipeline.artifacts.googleCloudSourceRepositories.commitIdPlaceholder')
                   )}
 

@@ -1,0 +1,23 @@
+.surveyTable {
+  padding: var(--spacing-large) !important;
+  margin: 4px;
+}
+.scoreLabels {
+  font-weight: 500 !important;
+  font-size: var(--font-size-small) !important;
+  line-height: 15px !important;
+  color: var(--grey-800) !important;
+}
+.recommendationContainer {
+  padding: 2px 12px 2px 8px;
+  gap: 4px;
+  width: 174px;
+  height: 28px;
+  background: var(--primary-1);
+  border: 1px solid var(--primary-2);
+  border-radius: var(--spacing-xsmall);
+}
+.toggleAccordion {
+  // to have better click target area for toggle
+  padding: var(--spacing-none) var(--spacing-small) !important;
+}

@@ -24,7 +24,6 @@ import { String, useStrings } from 'framework/strings'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import useCreateSmtpModal from '@common/components/Smtp/useCreateSmtpModal'
 import { isOnPrem } from '@common/utils/utils'
 import { SettingType } from '@common/constants/Utils'
 import { useGetSettingValue, useGetSmtpConfig } from 'services/cd-ng'
@@ -77,11 +76,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     enableServiceOverrideSettings?.data?.value === 'true'
 
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
-  const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
-  const refetchSmtpData = (): void => {
-    refetch()
-  }
-  const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
+  const { loading, data } = useGetSmtpConfig({ queryParams: { accountId } })
   const showGitOpsCard = useMemo(
     () => history?.location?.pathname.includes('resources') && !hideGitopsOnPrem,
     [history?.location?.pathname]
@@ -95,11 +90,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       colorClass: css.smtp,
       onClick: () => {
         if (!loading) {
-          if (!data?.data) {
-            openCreateSmtpModal(data?.data)
-          } else {
-            history.push(routes.toAccountSMTP({ accountId }))
-          }
+          history.push(routes.toAccountSMTP({ accountId }))
         }
       },
       subLabel: (

@@ -35,11 +35,12 @@ type CustomColumn<T extends Record<string, any>> = Column<T> & {
   onOpenSettings?: (templateIdentifier: string) => void
   onDelete?: (template: TemplateSummaryResponse) => void
   onOpenMoveResource?: (template: TemplateSummaryResponse) => void
+  reloadTemplates?: () => void
 }
 
 const RenderColumnMenu: Renderer<CellProps<TemplateSummaryResponse>> = ({ row, column }) => {
   const data = row.original
-  const { onPreview, onOpenEdit, onOpenSettings, onDelete, onOpenMoveResource } =
+  const { onPreview, onOpenEdit, onOpenSettings, onDelete, onOpenMoveResource, reloadTemplates } =
     column as CustomColumn<TemplateSummaryResponse>
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
@@ -53,6 +54,7 @@ const RenderColumnMenu: Renderer<CellProps<TemplateSummaryResponse>> = ({ row, c
           onOpenMoveResource={template => {
             onOpenMoveResource?.(template)
           }}
+          reloadTemplates={reloadTemplates}
         />
       )}
     </Layout.Horizontal>
@@ -211,6 +213,7 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
     onSelect,
     onOpenMoveResource,
     gotoPage,
+    reloadTemplates,
     useQueryParamsForPagination
   } = props
   const {
@@ -287,7 +290,8 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
         onOpenEdit,
         onOpenSettings,
         onDelete,
-        onOpenMoveResource
+        onOpenMoveResource,
+        reloadTemplates
       }
     ],
     [
@@ -298,7 +302,8 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
       onOpenEdit,
       onOpenSettings,
       onDelete,
-      onOpenMoveResource
+      onOpenMoveResource,
+      reloadTemplates
     ]
   )
 

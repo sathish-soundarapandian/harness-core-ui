@@ -52,7 +52,7 @@ export const getDateRangeShortcuts = (getString: UseStringsReturn['getString']):
   }
 ]
 
-export const formatDate = (date?: number): string => (date ? moment(new Date(date)).format('L, LT') : '')
+export const formatDate = (date?: number): string => (date ? moment(new Date(date)).format('L, LTS') : '')
 
 export const getInfoText = (getString: UseStringsReturn['getString'], timeRange?: TimeRange): string => {
   if (!timeRange) {

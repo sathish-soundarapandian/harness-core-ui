@@ -16,7 +16,12 @@ import {
   screen
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { useGetPreflightCheckResponse, startPreflightCheckPromise, useGetPipeline } from 'services/pipeline-ng'
+import {
+  useGetPreflightCheckResponse,
+  startPreflightCheckPromise,
+  useGetPipeline,
+  useGetTemplateFromPipeline
+} from 'services/pipeline-ng'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { TestWrapper } from '@common/utils/testUtils'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
@@ -511,6 +516,34 @@ describe('STUDIO MODE', () => {
       }
     })
   })
+
+  test('should display the help text on hover disabled selectExistingOrProvide checkbox', async () => {
+    ;(useGetTemplateFromPipeline as jest.Mock).mockImplementation(() => ({
+      mutate: jest.fn().mockResolvedValue({
+        data: {
+          inputSetTemplateYaml: `pipeline:
+      identifier: "First"
+      variables:
+        - name: "checkVariable1"
+          type: "String"
+          value: "<+input>"
+        - name: "checkVariable2"
+          type: "String"
+          value: "<+input>"`
+        }
+      })
+    }))
+
+    render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" />
+      </TestWrapper>
+    )
+
+    const selectExistingOrProvide = await screen.findByTestId('selectExistingOrProvide')
+    fireEvent.mouseOver(selectExistingOrProvide)
+    expect(await screen.findByText('pipeline.inputSets.noInputSetsCreated')).toBeInTheDocument()
+  })
 })
 
 describe('STUDIO MODE - template API error', () => {
@@ -534,6 +567,8 @@ describe('STUDIO MODE - template API error', () => {
 
 describe('RERUN MODE', () => {
   test('preflight api getting called if skipPreflight is unchecked', async () => {
+    ;(useGetTemplateFromPipeline as jest.Mock).mockImplementation(() => getMockFor_useGetTemplateFromPipeline())
+
     const { container, getByText, findByTestId, queryByText } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
@@ -623,7 +658,7 @@ describe('RERUN MODE', () => {
         }
       })
     )
-    const { queryByText, queryAllByText, findByTestId } = render(
+    const { queryByText, queryAllByText } = render(
       <TestWrapper>
         <RunPipelineForm
           {...commonProps}
@@ -634,13 +669,9 @@ describe('RERUN MODE', () => {
       </TestWrapper>
     )
 
-    const selectExistingOrProvide = await findByTestId('selectExistingOrProvide')
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
-    expect(selectExistingOrProvide).toBeDisabled()
-    act(() => {
-      fireEvent.mouseOver(selectExistingOrProvide)
-    })
-    expect(await screen.findByText('pipeline.inputSets.noInputSetsCreated')).toBeInTheDocument()
+    expect(screen.queryByTestId('selectExistingOrProvide')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('inputSetFormDivider')).not.toBeInTheDocument()
 
     // Expect header and the submit button to show rerun pipeline
     expect(queryAllByText('pipeline.execution.actions.rerunPipeline')).toHaveLength(2)
@@ -675,6 +706,8 @@ describe('EXECUTION VIEW', () => {
     )
 
     await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
+    expect(screen.queryByTestId('selectExistingOrProvide')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('inputSetFormDivider')).not.toBeInTheDocument()
 
     expect(container).toMatchSnapshot('disabled view in execution inputs')
   })

@@ -14,4 +14,10 @@ describe('MonitoredServiceInputSetsTemplate Utils', () => {
 
     expect(result).toEqual('Aws')
   })
+
+  test('healthSourceTypeMapping should return Custom health for GrafanaLoki', () => {
+    const result = healthSourceTypeMapping(HealthSourceTypes.GrafanaLokiLogs)
+
+    expect(result).toEqual('CustomHealth')
+  })
 })

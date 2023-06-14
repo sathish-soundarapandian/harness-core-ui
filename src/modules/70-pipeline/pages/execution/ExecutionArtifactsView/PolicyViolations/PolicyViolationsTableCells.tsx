@@ -10,19 +10,28 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Layout, Text } from '@harness/uicore'
 import React from 'react'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseTableCellProps } from 'react-table'
-import type { EnforcementResult } from 'services/ssca'
+import type { EnforcementResultResponseBody } from 'services/ssca'
+
+export type SortBy = {
+  sort: 'name' | 'supplier'
+  order: 'ASC' | 'DESC'
+}
+export interface EnforcementResultColumnActions {
+  setSortBy: React.Dispatch<React.SetStateAction<SortBy>>
+  sortBy: SortBy
+}
 
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
-  column: ColumnInstance<D>
+  column: ColumnInstance<D> & EnforcementResultColumnActions
   row: Row<D>
   cell: Cell<D, V>
   value: CellValue<V>
 }
 
-type CellType = Renderer<CellTypeWithActions<EnforcementResult>>
+type CellType = Renderer<CellTypeWithActions<EnforcementResultResponseBody>>
 
 export interface CellTypeRegister {
-  component: React.ComponentType<UseTableCellProps<EnforcementResult>>
+  component: React.ComponentType<UseTableCellProps<EnforcementResultResponseBody>>
 }
 
 export const PackageNameCell: CellType = ({ row }) => {

@@ -131,7 +131,7 @@ export default function OptionalConfiguration(props: {
               isOptional
               optionalLabel={getString('common.optionalLabel')}
               defaultValueToReset={[]}
-              disableTypeSelection={false}
+              disableTypeSelection
               data-tooltip-id={`shellScriptOutputVariable_${formValues?.spec?.shell}`}
               tooltipProps={{ dataTooltipId: `shellScriptOutputVariable_${formValues?.spec?.shell}` }}
             >

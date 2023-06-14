@@ -330,7 +330,7 @@ describe('ECSServiceSpec tests', () => {
     expect(connectorRefInput).not.toBeInTheDocument()
   })
 
-  test.skip('check manifest form errors', async () => {
+  test('check manifest form errors', async () => {
     const initialValues = {
       manifests: [
         {
@@ -362,6 +362,7 @@ describe('ECSServiceSpec tests', () => {
     })
     const errors = await step.validateInputSet({
       data: initialValues,
+      template: ecsManifestTemplateGitStore,
       getString,
       viewType: StepViewType.DeploymentForm
     })
@@ -370,7 +371,7 @@ describe('ECSServiceSpec tests', () => {
     expect(errors.manifests[0].manifest.spec.store.spec.paths).toBe('fieldRequired')
   })
 
-  test.skip('check primary artifact form errors', async () => {
+  test('check primary artifact form errors', async () => {
     const initialValues = {
       artifacts: {
         primary: {
@@ -408,6 +409,7 @@ describe('ECSServiceSpec tests', () => {
     })
     const errors = await step.validateInputSet({
       data: initialValues,
+      template: primaryArtifactTemplate,
       getString,
       viewType: StepViewType.DeploymentForm
     })
@@ -417,7 +419,7 @@ describe('ECSServiceSpec tests', () => {
     expect(errors.artifacts.primary.spec.tagRegex).toBe('fieldRequired')
   })
 
-  test.skip('check primary artifact sources form errors when artifact type is S3', async () => {
+  test('check primary artifact sources form errors when artifact type is S3', async () => {
     const initialValues = {
       artifacts: {
         primary: {
@@ -463,6 +465,7 @@ describe('ECSServiceSpec tests', () => {
     })
     const errors = await step.validateInputSet({
       data: initialValues,
+      template: primaryArtifactSourceTemplate,
       getString,
       viewType: StepViewType.DeploymentForm
     })
@@ -471,7 +474,7 @@ describe('ECSServiceSpec tests', () => {
     expect(errors.artifacts.primary.sources[0].spec.tag).toBe('fieldRequired')
     expect(errors.artifacts.primary.sources[0].spec.tagRegex).toBe('fieldRequired')
   })
-  test.skip('check sidecar artifact form errors', async () => {
+  test('check sidecar artifact form errors', async () => {
     const initialValues = {
       artifacts: {
         sidecars: [
@@ -519,6 +522,7 @@ describe('ECSServiceSpec tests', () => {
     })
     const errors = await step.validateInputSet({
       data: initialValues,
+      template: sidecarArtifactTemplate,
       getString,
       viewType: StepViewType.DeploymentForm
     })

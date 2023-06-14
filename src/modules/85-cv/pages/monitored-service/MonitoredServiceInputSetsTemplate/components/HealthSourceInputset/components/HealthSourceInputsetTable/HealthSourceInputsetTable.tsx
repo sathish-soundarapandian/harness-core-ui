@@ -11,13 +11,19 @@ import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResult
 import { getIconBySourceType } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
 import { isHealthSourceVersionV2 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import { HealthSourceProducts } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { useStrings } from 'framework/strings'
+import { getFeatureNameDisplay } from './HealthSourceInputsetTable.utils'
 import css from './HealthSourceInputsetTable.module.scss'
 
 export default function HealthSourceInputsetTable({ healthSources }: any): JSX.Element {
+  const { getString } = useStrings()
+
   const tableData =
     healthSources?.map((healthSource: any) => {
       const { name, spec, type } = healthSource
-      const feature = isHealthSourceVersionV2(healthSource) ? HealthSourceProducts[type]?.label : spec?.feature
+      const feature = isHealthSourceVersionV2(healthSource)
+        ? HealthSourceProducts[type]?.label
+        : getFeatureNameDisplay({ featureName: spec?.feature, type, getString })
       return {
         healthSource: name,
         connector: spec?.connectorRef,

@@ -18,16 +18,13 @@ import {
 import { Color } from '@harness/design-system'
 import React, { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { isEmpty, get, pickBy } from 'lodash-es'
+import { isEmpty, get, pickBy, defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
 import { NGTriggerConfigV2, useGetTriggerDetails, useGetSchemaYaml, useGetPipelineSummary } from 'services/pipeline-ng'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { TagsPopover, PageSpinner } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSimplifiedYAMLEnabled } from '@common/utils/utils'
-import { usePermission } from '@rbac/hooks/usePermission'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import DetailPageCard, { ContentType, Content } from '@common/components/DetailPageCard/DetailPageCard'
 import routes from '@common/RouteDefinitions'
@@ -37,6 +34,7 @@ import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { useQueryParams } from '@common/hooks'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useTriggerView from '@common/components/Wizard/useTriggerView'
+import { useIsTriggerCreatePermission } from '@triggers/components/Triggers/useIsTriggerCreatePermission'
 import css from '../TriggerLandingPage.module.scss'
 
 export interface Condition {
@@ -191,24 +189,10 @@ export default function TriggerDetailPage(): JSX.Element {
     }
   })
 
-  const [isExecutable] = usePermission(
-    {
-      resourceScope: {
-        projectIdentifier: projectIdentifier,
-        orgIdentifier: orgIdentifier,
-        accountIdentifier: accountId
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipelineIdentifier
-      },
-      permissions: [PermissionIdentifier.EXECUTE_PIPELINE],
-      options: {
-        skipCache: true
-      }
-    },
-    [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
-  )
+  const triggerResponseData = triggerResponse?.data
+  const { lastTriggerExecutionDetails, name, description, identifier, tags, type } = defaultTo(triggerResponseData, {})
+
+  const isTriggerCreatePermission = useIsTriggerCreatePermission()
 
   const history = useHistory()
 
@@ -220,7 +204,7 @@ export default function TriggerDetailPage(): JSX.Element {
         projectIdentifier,
         pipelineIdentifier,
         triggerIdentifier,
-        triggerType: triggerResponse?.data?.type,
+        triggerType: type,
         module,
         repoIdentifier,
         branch,
@@ -250,7 +234,7 @@ export default function TriggerDetailPage(): JSX.Element {
   }
 
   const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
-    fileName: `${triggerResponse?.data?.identifier ?? 'Trigger'}.yaml`,
+    fileName: `${identifier ?? 'Trigger'}.yaml`,
     entityType: 'Triggers',
     existingJSON: triggerJSON,
     width: 900
@@ -289,9 +273,7 @@ export default function TriggerDetailPage(): JSX.Element {
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
-  const isTriggerRbacDisabled = !isExecutable || isPipelineInvalid
-
-  const triggerResponseData = triggerResponse?.data
+  const isTriggerRbacDisabled = !isTriggerCreatePermission || isPipelineInvalid
 
   let pipelineInputSet
   if (get(triggerObj, 'inputSetRefs')?.length) {
@@ -346,10 +328,10 @@ export default function TriggerDetailPage(): JSX.Element {
                 title={getString('overview')}
                 content={getOverviewContent({
                   getString,
-                  name: triggerResponseData?.name,
-                  description: triggerResponseData?.description,
-                  identifier: triggerResponseData?.identifier,
-                  tags: triggerResponseData?.tags
+                  name,
+                  description,
+                  identifier,
+                  tags
                 })}
               />
               {loadingTrigger ? (
@@ -399,9 +381,9 @@ export default function TriggerDetailPage(): JSX.Element {
               {getString('triggers.lastActivationDetails')}
               <HarnessDocTooltip tooltipId="lastActivationDetails" useStandAlone={true} />
             </Text>
-            {triggerResponseData?.lastTriggerExecutionDetails?.lastExecutionSuccessful === false ? (
+            {lastTriggerExecutionDetails?.lastExecutionSuccessful === false ? (
               <Text
-                tooltip={triggerResponseData?.lastTriggerExecutionDetails?.message}
+                tooltip={lastTriggerExecutionDetails?.message}
                 icon="warning-sign"
                 iconProps={{ color: Color.RED_500 }}
                 color={Color.RED_500}
@@ -411,9 +393,10 @@ export default function TriggerDetailPage(): JSX.Element {
                 {getString('failed')}
               </Text>
             ) : (
-              triggerResponseData?.lastTriggerExecutionDetails?.lastExecutionSuccessful === true && (
+              /* istanbul ignore next */
+              lastTriggerExecutionDetails?.lastExecutionSuccessful === true && (
                 <Text
-                  tooltip={triggerResponseData?.lastTriggerExecutionDetails?.message}
+                  tooltip={lastTriggerExecutionDetails?.message}
                   icon="execution-success"
                   color={Color.GREEN_500}
                   iconProps={{ color: Color.GREEN_500 }}
@@ -427,12 +410,12 @@ export default function TriggerDetailPage(): JSX.Element {
           </Layout.Horizontal>
           <Layout.Vertical spacing="small" margin={{ top: 'small' }}>
             <div>
-              {triggerResponseData?.lastTriggerExecutionDetails?.lastExecutionTime ? (
+              {lastTriggerExecutionDetails?.lastExecutionTime ? (
                 <Text>
                   {`${getString('triggers.lastActivationAt')}: ${new Date(
-                    triggerResponseData.lastTriggerExecutionDetails.lastExecutionTime
+                    lastTriggerExecutionDetails.lastExecutionTime
                   ).toLocaleDateString()} ${new Date(
-                    triggerResponseData.lastTriggerExecutionDetails.lastExecutionTime
+                    lastTriggerExecutionDetails.lastExecutionTime
                   ).toLocaleTimeString()}`}
                 </Text>
               ) : null}

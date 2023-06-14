@@ -395,6 +395,8 @@ export interface ArtifactTagHelperText {
   versionPath?: string
   packageName?: string
   feed?: string
+  tag?: string
+  version?: string
 }
 export interface ArtifactImagePathTagViewProps {
   selectedArtifact: ArtifactType

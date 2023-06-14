@@ -7,12 +7,23 @@
 
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
-import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper } from '@common/utils/testUtils'
 import * as cdngServices from 'services/cd-ng'
 import ResourceCardList from '../ResourceCardList'
 import { smtpConfig } from './mocks/mockData'
 
 jest.spyOn(cdngServices, 'useGetSmtpConfig').mockImplementation(() => ({ mutate: () => smtpConfig } as any))
+let smtpPageOpened = false
+const mockHistoryPush = jest.fn().mockImplementation(() => {
+  smtpPageOpened = true
+})
+// eslint-disable-next-line jest-no-mock
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    push: mockHistoryPush
+  })
+}))
 jest.spyOn(cdngServices, 'useGetSettingValue').mockImplementation(() => ({ data: { data: { value: 'false' } } } as any))
 
 describe('Resource card list test', () => {
@@ -37,6 +48,6 @@ describe('Resource card list test', () => {
       throw Error('no smtp card')
     }
     fireEvent.click(smptpCard)
-    expect(findDialogContainer()).toBeTruthy()
+    expect(smtpPageOpened).toBeTruthy()
   })
 })

@@ -38,7 +38,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { Connectors } from '@connectors/constants'
 import { useGitScope } from '@pipeline/utils/CIUtils'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
-import type { SbomOrchestrationTool, SbomSource, SyftSbomOrchestration } from 'services/ci'
+import type { SbomOrchestrationTool, SbomSource } from 'services/ci'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
@@ -61,8 +61,9 @@ const getTypedOptions = <T extends string>(input: T[]): SelectOption[] => {
 
 const artifactTypeOptions = getTypedOptions<SbomSource['type']>(['image'])
 const sbomGenerationToolOptions = getTypedOptions<SbomOrchestrationTool['type']>(['Syft'])
-const syftSbomFormats: { label: string; value: NonNullable<SyftSbomOrchestration['format']> }[] = [
-  { label: 'SPDX', value: 'spdx-json' }
+const syftSbomFormats: { label: string; value: string }[] = [
+  { label: 'SPDX', value: 'spdx-json' },
+  { label: 'CYCLONEDX', value: 'cyclonedx-json' }
 ]
 
 const SscaOrchestrationStepEdit = (
@@ -201,14 +202,10 @@ const SscaOrchestrationStepEdit = (
               />
 
               <MultiTypeTextField
-                name={`spec.source.spec.image`}
+                name="spec.source.spec.image"
                 label={
-                  <Text
-                    className={css.formLabel}
-                    tooltipProps={{ dataTooltipId: 'image' }}
-                    placeholder={getString('imagePlaceholder')}
-                  >
-                    {getString('image')}
+                  <Text className={css.formLabel} tooltipProps={{ dataTooltipId: 'image' }}>
+                    {getString('imageLabel')}
                   </Text>
                 }
                 multiTextInputProps={{

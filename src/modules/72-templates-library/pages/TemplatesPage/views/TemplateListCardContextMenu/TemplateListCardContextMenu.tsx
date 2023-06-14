@@ -24,7 +24,9 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
-
+import { ResourceType as GitResourceType } from '@common/interfaces/GitSyncInterface'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import useEditGitMetadata from '@pipeline/components/MigrateResource/useEditGitMetadata'
 import css from './TemplateListCardContextMenu.module.scss'
 
 export interface ContextMenuProps extends PopoverProps {
@@ -34,13 +36,23 @@ export interface ContextMenuProps extends PopoverProps {
   onOpenSettings: (templateIdentifier: string) => void
   onDelete: (template: TemplateSummaryResponse) => void
   onOpenMoveResource: (template: TemplateSummaryResponse) => void
+  reloadTemplates?: () => void
   className?: string
 }
 
 export const TemplateListCardContextMenu: React.FC<ContextMenuProps> = (props): JSX.Element => {
   const { getString } = useStrings()
-  const { template, onPreview, onOpenEdit, onOpenSettings, onDelete, onOpenMoveResource, className, ...popoverProps } =
-    props
+  const {
+    template,
+    onPreview,
+    onOpenEdit,
+    onOpenSettings,
+    onDelete,
+    onOpenMoveResource,
+    reloadTemplates,
+    className,
+    ...popoverProps
+  } = props
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { accountId, orgIdentifier, projectIdentifier, templateIdentifier } = useParams<TemplateStudioPathProps>()
 
@@ -63,7 +75,46 @@ export const TemplateListCardContextMenu: React.FC<ContextMenuProps> = (props): 
     },
     [orgIdentifier, projectIdentifier, accountId, templateIdentifier]
   )
+
+  const { showEditGitMetadataModal: showEditGitMetadataModal } = useEditGitMetadata({
+    resourceType: GitResourceType.TEMPLATE,
+    identifier: template.identifier || '',
+    metadata: {
+      connectorRef: (template as TemplateMetadataSummaryResponse)?.connectorRef,
+      repo: template?.gitDetails?.repoName,
+      filePath: template?.gitDetails?.filePath
+    },
+    extraQueryParams: { versionLabel: template?.versionLabel },
+    modalTitle: getString('pipeline.editGitDetailsTitle', {
+      entity: `${getString('common.template.label')}[${template.identifier}]`
+    }),
+    onSuccess: () => reloadTemplates?.()
+  })
+
   const items = React.useMemo((): TemplateMenuItem[] => {
+    const conditionalMenuItems: TemplateMenuItem[] =
+      (template as TemplateMetadataSummaryResponse)?.storeType === StoreType.REMOTE
+        ? [
+            {
+              icon: 'edit',
+              label: getString('pipeline.editGitDetails'),
+              disabled: !canEdit,
+              onClick: () => {
+                showEditGitMetadataModal()
+              }
+            }
+          ]
+        : [
+            {
+              icon: 'git-merge',
+              label: getString('common.moveToGit'),
+              disabled: !canEdit || template.templateEntityType === 'SecretManager', // TODO: Temp hotfix for https://harness.slack.com/archives/C05BGPBNXNG/p1686162048913289
+              onClick: () => {
+                onOpenMoveResource(template)
+              }
+            }
+          ]
+
     const menuItems: TemplateMenuItem[] = [
       {
         icon: 'main-view',
@@ -89,14 +140,7 @@ export const TemplateListCardContextMenu: React.FC<ContextMenuProps> = (props): 
           onOpenSettings(defaultTo(template.identifier, ''))
         }
       },
-      {
-        icon: 'git-merge',
-        label: getString('common.moveToGit'),
-        disabled: !canEdit || template.templateEntityType === 'SecretManager', // TODO: Temp hotfix for https://harness.slack.com/archives/C05BGPBNXNG/p1686162048913289
-        onClick: () => {
-          onOpenMoveResource(template)
-        }
-      },
+      ...conditionalMenuItems,
       {
         icon: 'main-trash',
         label: getString('templatesLibrary.deleteTemplate'),

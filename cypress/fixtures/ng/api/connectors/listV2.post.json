@@ -105,6 +105,55 @@
       },
       {
         "connector": {
+          "name": "Sumologic",
+          "identifier": "Sumologic_Log",
+          "description": "",
+          "orgIdentifier": null,
+          "projectIdentifier": null,
+          "tags": {},
+          "type": "SumoLogic",
+          "spec": {
+            "url": "https://api.us2.sumologic.com/",
+            "accessIdRef": "account.sumologic_log_access_id",
+            "accessKeyRef": "account.sumologic_log_access_key",
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1672890304709,
+        "lastModifiedAt": 1684175375628,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1686647249526,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1686647249526
+        },
+        "activityDetails": {
+          "lastActivityTime": 1684175375647
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null,
+          "parentEntityConnectorRef": null,
+          "parentEntityRepoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "governanceMetadata": null
+      },
+      {
+        "connector": {
           "name": "customconnector",
           "identifier": "customconnector",
           "description": null,

@@ -803,6 +803,7 @@ export function ACRArtifact({
                     onChange={() => {
                       resetFieldValue(formik, 'tagRegex')
                       resetFieldValue(formik, 'tag')
+                      resetFieldValue(formik, 'digest')
                     }}
                   />
                 </div>

@@ -449,6 +449,7 @@ function HarnessApprovalStepMode(
               })
           }),
           autoApproval: Yup.object().shape({
+            action: Yup.string().nullable(),
             scheduledDeadline: Yup.object().when('action', {
               is: val => val === ApproveAction.Approve,
               then: Yup.object({

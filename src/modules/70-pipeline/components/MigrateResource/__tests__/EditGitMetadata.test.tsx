@@ -34,6 +34,12 @@ jest.mock('services/pipeline-ng', () => ({
   })
 }))
 
+jest.mock('services/template-ng', () => ({
+  updateGitDetailsPromise: jest.fn().mockImplementation(() => {
+    return Promise.resolve({ status: 'SUCCESS' })
+  })
+}))
+
 const getGitConnector = jest.fn(() => Promise.resolve(gitConnectorMock))
 const fetchRepos = jest.fn(() => Promise.resolve(mockRepos))
 

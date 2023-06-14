@@ -51,7 +51,7 @@ export default function OrgAccountLevelServiceEnvField({
       {showEnvironment && (
         <MultiTypeEnvironmentField
           name="environmentRef"
-          className={cx({ [css.multiSelectEnvDropdown]: isInfra })}
+          labelClass={cx({ [css.multiSelectEnvDropdown]: isInfra })}
           label={getString('cv.healthSource.environmentLabel')}
           placeholder={getString('cv.selectOrCreateEnv')}
           isOnlyFixedType={!isTemplate}

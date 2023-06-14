@@ -52,30 +52,32 @@
 }
 
 .multiSelectEnvDropdown {
-  div[class*='FormMultiTypeEnvironmentField'] {
-    width: 400px !important;
-    box-shadow: none !important;
-    border: 1px solid var(--bp3-intent-color, var(--grey-200)) !important;
-    color: var(--grey-800) !important;
-    height: 32px !important;
-    position: relative;
-    background-color: var(--white) !important;
-    display: flex;
-    justify-content: space-between;
-    border-radius: var(--spacing-2);
-    cursor: pointer;
-    align-items: center !important;
-    p {
-      max-height: 32px;
-      text-decoration: none !important;
-      letter-spacing: 0.4px;
-      line-height: 20px !important;
-      color: var(--grey-350) !important;
-    }
+  :global {
+    .bp3-form-content > div {
+      width: 400px !important;
+      box-shadow: none !important;
+      border: 1px solid var(--bp3-intent-color, var(--grey-200)) !important;
+      color: var(--grey-800) !important;
+      height: 32px !important;
+      position: relative;
+      background-color: var(--white) !important;
+      display: flex;
+      justify-content: space-between;
+      border-radius: var(--spacing-2);
+      cursor: pointer;
+      align-items: center !important;
+      p {
+        max-height: 32px;
+        text-decoration: none !important;
+        letter-spacing: 0.4px;
+        line-height: 20px !important;
+        color: var(--grey-350) !important;
+      }
 
-    div[class*='groupedReferences'] > div {
-      padding: 0px 5px !important;
-      align-self: self-end !important;
+      div[class*='groupedReferences'] > div {
+        padding: 0px 5px !important;
+        align-self: self-end !important;
+      }
     }
   }
 }

@@ -93,7 +93,6 @@ function ServiceManifestOverridesList({
                     <span>
                       <Text
                         lineClamp={1}
-                        width={200}
                         tooltip={
                           isArray(manifestLocation) ? (
                             <LocationValue
@@ -121,7 +120,7 @@ function ServiceManifestOverridesList({
                   )}
                   {!isReadonly && (
                     <span>
-                      <Layout.Horizontal>
+                      <Layout.Horizontal background={Color.WHITE}>
                         <Button
                           icon="Edit"
                           onClick={() =>

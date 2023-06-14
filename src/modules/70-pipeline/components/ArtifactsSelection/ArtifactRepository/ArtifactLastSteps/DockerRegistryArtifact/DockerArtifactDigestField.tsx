@@ -9,12 +9,22 @@ import * as React from 'react'
 import { useParams } from 'react-router-dom'
 import type { AllowedTypes } from '@harness/uicore'
 import type { FormikValues } from 'formik'
+import { defaultTo } from 'lodash-es'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { ArtifactDigestWrapperDetails, canFetchDigest } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import {
+  ArtifactDigestWrapperDetails,
+  canFetchDigest,
+  checkIfQueryParamsisNotEmpty,
+  helperTextDataForDigest,
+  resetFieldValue
+} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useMutateAsGet } from '@common/hooks'
 import { useGetLastSuccessfulBuildForDocker } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { isValueFixed } from '@common/utils/utils'
+import { getHelperTextForDigest } from '@pipeline/utils/stageHelpers'
 import BaseArtifactDigestField from '../ArtifactImagePathTagView/BaseArtifactDigestField'
 
 interface DockerDigestFieldWrapperProps {
@@ -44,8 +54,32 @@ export function DockerArtifactDigestField({
     formikDigestValueField: formik?.values?.digest
   }
 
-  const canFetchDockerDigest = canFetchDigest(formik?.values?.imagePath, formik?.values?.tag, connectorRefValue)
+  const tagValue = defaultTo(formik?.values?.tag?.value, formik?.values?.tag)
+  const digestValue = defaultTo(formik?.values?.digest?.value, formik?.values?.digest)
 
+  const isDigestDisabled = React.useMemo(() => {
+    if (formik?.values?.tagType === TagTypes.Value && tagValue) {
+      if ((isValueFixed(tagValue) && checkIfQueryParamsisNotEmpty([tagValue])) || !isValueFixed(tagValue)) return false
+    } else if (formik?.values?.tagType === TagTypes.Regex && formik?.values?.tagRegex) {
+      if (
+        (isValueFixed(formik?.values?.tagRegex) && checkIfQueryParamsisNotEmpty([formik?.values?.tagRegex])) ||
+        !isValueFixed(formik?.values?.tagRegex)
+      )
+        return false
+    }
+    // return true will disable the digest fields
+    else {
+      resetFieldValue(formik, 'digest')
+      return true
+    }
+  }, [tagValue, formik?.values?.tagRegex])
+
+  const isTagRegexType = formik?.values?.tagType === TagTypes.Regex
+  const canFetchDockerDigest = canFetchDigest(formik?.values?.imagePath, tagValue, connectorRefValue)
+
+  const helperText =
+    isValueFixed(digestValue) &&
+    getHelperTextForDigest(helperTextDataForDigest(artifactType, formik, connectorRefValue), getString, false)
   const {
     data: dataDocker,
     loading: loadingDocker,
@@ -66,12 +100,13 @@ export function DockerArtifactDigestField({
     },
     lazy: true,
     body: {
-      tag: formik?.values?.tag?.value
+      tag: tagValue
     }
   })
 
   return (
     <BaseArtifactDigestField
+      isLastBuildRegexType={isTagRegexType}
       data={dataDocker}
       loading={loadingDocker}
       refetch={refetchDocker}
@@ -83,7 +118,9 @@ export function DockerArtifactDigestField({
       expressions={expressions}
       allowableTypes={allowableTypes}
       isReadonly={isReadonly}
+      isDigestDisabled={isDigestDisabled}
       isBuildDetailsLoading={isBuildDetailsLoading}
+      helperText={helperText}
     />
   )
 }

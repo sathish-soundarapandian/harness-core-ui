@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Formik, FormikForm, FormInput, Layout, Accordion } from '@harness/uicore'
+import { Formik, FormikForm, FormInput, Layout, Accordion, FormError } from '@harness/uicore'
 import { FormGroup, Label } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { isEqual } from 'lodash-es'
@@ -152,6 +152,7 @@ export const ChaosExperimentStepBase = (
                       )
                     }
                   />
+                  <FormError errorMessage={formikProps.errors.spec?.experimentRef} name={'spec.experimentRef'} />
                 </FormGroup>
                 <FormInput.Text
                   label={getString('chaos.pipelineStep.expectedResilienceScoreLabel')}

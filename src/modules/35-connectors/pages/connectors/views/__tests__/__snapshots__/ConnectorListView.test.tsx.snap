@@ -10056,7 +10056,7 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
       class="TableV2--body"
     >
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -10193,15 +10193,11 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
             class="TableV2--cell"
             role="cell"
             style="width: 5%;"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
-          </div>
+          />
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -10364,15 +10360,11 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
             class="TableV2--cell"
             role="cell"
             style="width: 5%;"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
-          </div>
+          />
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -10503,60 +10495,56 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
             style="width: 5%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main"
+              class="Layout--horizontal StyledProps--main layout"
             >
-              <div
-                class="Layout--horizontal StyledProps--main layout"
+              <span
+                class="bp3-popover-wrapper bp3-dark"
               >
                 <span
-                  class="bp3-popover-wrapper bp3-dark"
+                  class="bp3-popover-target"
                 >
-                  <span
-                    class="bp3-popover-target"
+                  <button
+                    aria-label="connector menu actions"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                    type="button"
                   >
-                    <button
-                      aria-label="connector menu actions"
-                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
-                      type="button"
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="Options"
                     >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="Options"
+                      <svg
+                        fill="currentColor"
+                        height="16"
+                        viewBox="0 0 4 16"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <svg
-                          fill="currentColor"
-                          height="16"
-                          viewBox="0 0 4 16"
-                          width="16"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle
-                            cx="2"
-                            cy="2"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="8"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="14"
-                            r="1.5"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
+                        <circle
+                          cx="2"
+                          cy="2"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="8"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="14"
+                          r="1.5"
+                        />
+                      </svg>
+                    </span>
+                  </button>
                 </span>
-              </div>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -10732,60 +10720,56 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
             style="width: 5%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main"
+              class="Layout--horizontal StyledProps--main layout"
             >
-              <div
-                class="Layout--horizontal StyledProps--main layout"
+              <span
+                class="bp3-popover-wrapper bp3-dark"
               >
                 <span
-                  class="bp3-popover-wrapper bp3-dark"
+                  class="bp3-popover-target"
                 >
-                  <span
-                    class="bp3-popover-target"
+                  <button
+                    aria-label="connector menu actions"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                    type="button"
                   >
-                    <button
-                      aria-label="connector menu actions"
-                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
-                      type="button"
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="Options"
                     >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="Options"
+                      <svg
+                        fill="currentColor"
+                        height="16"
+                        viewBox="0 0 4 16"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <svg
-                          fill="currentColor"
-                          height="16"
-                          viewBox="0 0 4 16"
-                          width="16"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle
-                            cx="2"
-                            cy="2"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="8"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="14"
-                            r="1.5"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
+                        <circle
+                          cx="2"
+                          cy="2"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="8"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="14"
+                          r="1.5"
+                        />
+                      </svg>
+                    </span>
+                  </button>
                 </span>
-              </div>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -10941,60 +10925,56 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
             style="width: 5%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main"
+              class="Layout--horizontal StyledProps--main layout"
             >
-              <div
-                class="Layout--horizontal StyledProps--main layout"
+              <span
+                class="bp3-popover-wrapper bp3-dark"
               >
                 <span
-                  class="bp3-popover-wrapper bp3-dark"
+                  class="bp3-popover-target"
                 >
-                  <span
-                    class="bp3-popover-target"
+                  <button
+                    aria-label="connector menu actions"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                    type="button"
                   >
-                    <button
-                      aria-label="connector menu actions"
-                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
-                      type="button"
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="Options"
                     >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="Options"
+                      <svg
+                        fill="currentColor"
+                        height="16"
+                        viewBox="0 0 4 16"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <svg
-                          fill="currentColor"
-                          height="16"
-                          viewBox="0 0 4 16"
-                          width="16"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle
-                            cx="2"
-                            cy="2"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="8"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="14"
-                            r="1.5"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
+                        <circle
+                          cx="2"
+                          cy="2"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="8"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="14"
+                          r="1.5"
+                        />
+                      </svg>
+                    </span>
+                  </button>
                 </span>
-              </div>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -11139,60 +11119,56 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
             style="width: 5%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main"
+              class="Layout--horizontal StyledProps--main layout"
             >
-              <div
-                class="Layout--horizontal StyledProps--main layout"
+              <span
+                class="bp3-popover-wrapper bp3-dark"
               >
                 <span
-                  class="bp3-popover-wrapper bp3-dark"
+                  class="bp3-popover-target"
                 >
-                  <span
-                    class="bp3-popover-target"
+                  <button
+                    aria-label="connector menu actions"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                    type="button"
                   >
-                    <button
-                      aria-label="connector menu actions"
-                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
-                      type="button"
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="Options"
                     >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="Options"
+                      <svg
+                        fill="currentColor"
+                        height="16"
+                        viewBox="0 0 4 16"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <svg
-                          fill="currentColor"
-                          height="16"
-                          viewBox="0 0 4 16"
-                          width="16"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle
-                            cx="2"
-                            cy="2"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="8"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="14"
-                            r="1.5"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
+                        <circle
+                          cx="2"
+                          cy="2"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="8"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="14"
+                          r="1.5"
+                        />
+                      </svg>
+                    </span>
+                  </button>
                 </span>
-              </div>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -11383,54 +11359,50 @@ exports[`Connectors List Test Initial render should match snapshot 1`] = `
             style="width: 5%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main"
+              class="Layout--horizontal StyledProps--main layout"
             >
-              <div
-                class="Layout--horizontal StyledProps--main layout"
+              <span
+                class="bp3-popover-wrapper bp3-dark"
               >
                 <span
-                  class="bp3-popover-wrapper bp3-dark"
+                  class="bp3-popover-target"
                 >
-                  <span
-                    class="bp3-popover-target"
+                  <button
+                    aria-label="connector menu actions"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                    type="button"
                   >
-                    <button
-                      aria-label="connector menu actions"
-                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
-                      type="button"
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="Options"
                     >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="Options"
+                      <svg
+                        fill="currentColor"
+                        height="16"
+                        viewBox="0 0 4 16"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <svg
-                          fill="currentColor"
-                          height="16"
-                          viewBox="0 0 4 16"
-                          width="16"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle
-                            cx="2"
-                            cy="2"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="8"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="14"
-                            r="1.5"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
+                        <circle
+                          cx="2"
+                          cy="2"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="8"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="14"
+                          r="1.5"
+                        />
+                      </svg>
+                    </span>
+                  </button>
                 </span>
-              </div>
+              </span>
             </div>
           </div>
         </div>
@@ -11711,7 +11683,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
       class="TableV2--body"
     >
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -11896,60 +11868,56 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
             style="width: 5%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main"
+              class="Layout--horizontal StyledProps--main layout"
             >
-              <div
-                class="Layout--horizontal StyledProps--main layout"
+              <span
+                class="bp3-popover-wrapper bp3-dark"
               >
                 <span
-                  class="bp3-popover-wrapper bp3-dark"
+                  class="bp3-popover-target"
                 >
-                  <span
-                    class="bp3-popover-target"
+                  <button
+                    aria-label="connector menu actions"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                    type="button"
                   >
-                    <button
-                      aria-label="connector menu actions"
-                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
-                      type="button"
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="Options"
                     >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="Options"
+                      <svg
+                        fill="currentColor"
+                        height="16"
+                        viewBox="0 0 4 16"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <svg
-                          fill="currentColor"
-                          height="16"
-                          viewBox="0 0 4 16"
-                          width="16"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle
-                            cx="2"
-                            cy="2"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="8"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="14"
-                            r="1.5"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
+                        <circle
+                          cx="2"
+                          cy="2"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="8"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="14"
+                          r="1.5"
+                        />
+                      </svg>
+                    </span>
+                  </button>
                 </span>
-              </div>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -12160,60 +12128,56 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
             style="width: 5%;"
           >
             <div
-              class="Layout--horizontal StyledProps--main"
+              class="Layout--horizontal StyledProps--main layout"
             >
-              <div
-                class="Layout--horizontal StyledProps--main layout"
+              <span
+                class="bp3-popover-wrapper bp3-dark"
               >
                 <span
-                  class="bp3-popover-wrapper bp3-dark"
+                  class="bp3-popover-target"
                 >
-                  <span
-                    class="bp3-popover-target"
+                  <button
+                    aria-label="connector menu actions"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                    type="button"
                   >
-                    <button
-                      aria-label="connector menu actions"
-                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
-                      type="button"
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="Options"
                     >
-                      <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="Options"
+                      <svg
+                        fill="currentColor"
+                        height="16"
+                        viewBox="0 0 4 16"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <svg
-                          fill="currentColor"
-                          height="16"
-                          viewBox="0 0 4 16"
-                          width="16"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle
-                            cx="2"
-                            cy="2"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="8"
-                            r="1.5"
-                          />
-                          <circle
-                            cx="2"
-                            cy="14"
-                            r="1.5"
-                          />
-                        </svg>
-                      </span>
-                    </button>
-                  </span>
+                        <circle
+                          cx="2"
+                          cy="2"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="8"
+                          r="1.5"
+                        />
+                        <circle
+                          cx="2"
+                          cy="14"
+                          r="1.5"
+                        />
+                      </svg>
+                    </span>
+                  </button>
                 </span>
-              </div>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -12347,15 +12311,11 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
             class="TableV2--cell"
             role="cell"
             style="width: 5%;"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
-          </div>
+          />
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -12534,15 +12494,11 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
             class="TableV2--cell"
             role="cell"
             style="width: 5%;"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
-          </div>
+          />
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -12701,15 +12657,11 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
             class="TableV2--cell"
             role="cell"
             style="width: 5%;"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
-          </div>
+          />
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -12857,15 +12809,11 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
             class="TableV2--cell"
             role="cell"
             style="width: 5%;"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
-          </div>
+          />
         </div>
       </div>
       <div
-        class="TableV2--row TableV2--card TableV2--clickable row"
+        class="TableV2--row TableV2--card TableV2--clickable"
         role="row"
       >
         <div
@@ -13059,11 +13007,7 @@ exports[`Connectors List Test Test of listing connectors with git enabled 1`] = 
             class="TableV2--cell"
             role="cell"
             style="width: 5%;"
-          >
-            <div
-              class="Layout--horizontal StyledProps--main"
-            />
-          </div>
+          />
         </div>
       </div>
     </div>

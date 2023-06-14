@@ -522,7 +522,7 @@ exports[`VerifyStepLogContent should render VerifyStepLogContent component of ty
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey400"
                   >
-                    03/16/2022, 8:23 AM
+                    03/16/2022, 8:23:10 AM
                   </p>
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey900"

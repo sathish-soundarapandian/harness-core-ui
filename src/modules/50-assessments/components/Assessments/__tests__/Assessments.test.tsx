@@ -1,17 +1,11 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import * as Formik from 'formik'
+import { fireEvent, render } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { useGetAssessmentForUser, useSaveAssessmentResponse, useSubmitAssessmentForUser } from 'services/assessments'
+import { TestWrapper } from '@common/utils/testUtils'
 import Assessments from '../Assessments'
-import { responseData } from './Assessments.mock'
-
-const mockHistoryPush = jest.fn()
-// eslint-disable-next-line jest-no-mock
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useHistory: () => ({
-    push: mockHistoryPush
-  })
-}))
+import { responseData, savedvalues, allAnsweredAssessment, allSavedValues } from './Assessments.mock'
 
 jest.mock('services/assessments', () => ({
   useGetAssessmentForUser: jest
@@ -19,20 +13,6 @@ jest.mock('services/assessments', () => ({
     .mockImplementation(() => ({ data: responseData, loading: false, error: null, refetch: jest.fn() })),
   useSaveAssessmentResponse: jest.fn().mockImplementation(() => ({ mutate: jest.fn(), loading: false, error: null })),
   useSubmitAssessmentForUser: jest.fn().mockImplementation(() => ({ mutate: jest.fn(), loading: false, error: null }))
-}))
-
-jest.mock('framework/strings', () => ({
-  useStrings: () => ({
-    getString: (key: string) => key
-  })
-}))
-
-// eslint-disable-next-line jest-no-mock
-jest.mock('react-router-dom', () => ({
-  useParams: jest.fn().mockReturnValue({ inviteCode: 'inviteCode' }),
-  useHistory: () => ({
-    push: jest.fn()
-  })
 }))
 
 describe('Assessments', () => {
@@ -57,7 +37,11 @@ describe('Assessments', () => {
       error: null
     }))
 
-    const { getByTestId } = render(<Assessments />)
+    const { getByTestId } = render(
+      <TestWrapper>
+        <Assessments />
+      </TestWrapper>
+    )
 
     expect(getByTestId('page-spinner')).toBeInTheDocument()
   })
@@ -79,12 +63,16 @@ describe('Assessments', () => {
       loading: false,
       error: null
     }))
-    const { getByText } = render(<Assessments />)
+    const { getByText } = render(
+      <TestWrapper>
+        <Assessments />
+      </TestWrapper>
+    )
 
     expect(getByText('Something went wrong')).toBeInTheDocument()
   })
 
-  test('renders the questionnaire when there is data and no error', () => {
+  test('renders the sections when there is data and no error', () => {
     ;(useGetAssessmentForUser as jest.Mock).mockImplementation(() => ({
       data: responseData,
       error: null,
@@ -101,15 +89,59 @@ describe('Assessments', () => {
       loading: false,
       error: null
     }))
-    const { getByText } = render(<Assessments />)
 
+    const useFormikContextMock = jest.spyOn(Formik, 'useFormikContext')
+    useFormikContextMock.mockReturnValue({
+      values: savedvalues,
+      touched: {}
+    } as unknown as any)
+    const { getAllByText, getByText } = render(
+      <TestWrapper>
+        <MemoryRouter>
+          <Assessments />
+        </MemoryRouter>
+      </TestWrapper>
+    )
+    expect(getAllByText('section1')).toHaveLength(2)
+    expect(getByText('section2')).toBeInTheDocument()
     expect(getByText('Question 1')).toBeInTheDocument()
-    expect(getByText('Option A')).toBeInTheDocument()
-    expect(getByText('Option B')).toBeInTheDocument()
-    expect(getByText('Question 2')).toBeInTheDocument()
-    expect(getByText('Option C')).toBeInTheDocument()
-    expect(getByText('Option D')).toBeInTheDocument()
-    expect(getByText('Yes')).toBeInTheDocument()
-    expect(getByText('No')).toBeInTheDocument()
+  })
+
+  test('renders last unanswered or last question when all others are answered', () => {
+    const submitFunction = jest.fn()
+    ;(useGetAssessmentForUser as jest.Mock).mockImplementation(() => ({
+      data: allAnsweredAssessment,
+      error: null,
+      loading: false,
+      refetch: jest.fn()
+    }))
+    ;(useSaveAssessmentResponse as jest.Mock).mockImplementation(() => ({
+      mutate: jest.fn(),
+      loading: false,
+      error: null
+    }))
+    ;(useSubmitAssessmentForUser as jest.Mock).mockImplementation(() => ({
+      mutate: submitFunction,
+      loading: false,
+      error: null
+    }))
+    const useFormikContextMock = jest.spyOn(Formik, 'useFormikContext')
+    useFormikContextMock.mockReturnValue({
+      values: allSavedValues,
+      setFieldValue: jest.fn(),
+      submitForm: submitFunction
+    } as unknown as any)
+    const { getByText, getByTestId } = render(
+      <TestWrapper>
+        <MemoryRouter>
+          <Assessments />
+        </MemoryRouter>
+      </TestWrapper>
+    )
+    expect(getByText('Question 3')).toBeInTheDocument()
+    const submitButton = getByTestId('questionSubmitButton')
+    expect(submitButton).toBeInTheDocument()
+    fireEvent.click(submitButton!)
+    expect(submitFunction).toHaveBeenCalled()
   })
 })
