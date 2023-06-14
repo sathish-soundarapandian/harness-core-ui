@@ -53,7 +53,7 @@ export const ToggleAccordionCell: Renderer<{ row: UseExpandedRowProps<ModuleCoun
 
 export const RecommendationCell: Renderer<CellProps<ModuleCount>> = ({ row }) => {
   const { getString } = useStrings()
-  const recommendationsCount = row?.original?.count || 0
+  const recommendationsCount = row.original.count
   return (
     <Container
       flex={{ justifyContent: 'left', alignItems: 'center' }}

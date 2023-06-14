@@ -24,12 +24,6 @@ export const questionMaturities: QuestionMaturity[] = [
     questionId: '93f1ab54-a33c-40a1-9000-7d17a5007227',
     questionText: 'Is there a structured curriculum for upskilling and reskilling engineers (internal and external) ?',
     capability: 'Ensuring there is a structured program for reskilling and upskilling engineers',
-    recommendation: {
-      recommendationId: '42',
-      recommendationText:
-        'Lack of structured learning ciriculum leads to decrease in engineer satisfaction and happiness. We recommend an established curriculum for upskilling and reskilling engineers',
-      currentMaturityLevel: 'LEVEL_1'
-    },
     currentScore: 0,
     projectedScore: 1,
     selected: false

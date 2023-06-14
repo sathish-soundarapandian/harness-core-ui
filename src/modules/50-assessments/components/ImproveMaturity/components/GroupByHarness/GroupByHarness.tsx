@@ -33,7 +33,7 @@ const GroupByHarness = ({ questionMaturityList, onModulesSelectionChange }: Grou
   }, [])
 
   useDeepCompareEffect(() => {
-    if (selectedModules?.length) {
+    if (selectedModules.length) {
       onModulesSelectionChange(selectedModules)
     }
   }, [selectedModules])
