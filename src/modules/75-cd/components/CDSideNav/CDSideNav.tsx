@@ -262,7 +262,7 @@ export default function CDSideNav(): React.ReactElement {
           <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module })} />
           <SidebarLink label={getString('services')} to={routes.toServices({ ...params, module })} />
           <SidebarLink label={getString('environments')} to={routes.toEnvironment({ ...params, module })} />
-          {isServiceOverridesEnabled && (
+          {!isServiceOverridesEnabled && (
             <SidebarLink label={getString('common.overrides')} to={routes.toServiceOverrides({ ...params, module })} />
           )}
           {!isCommunity && !hideGitopsOnPrem ? (
