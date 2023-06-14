@@ -64,6 +64,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormMultiTypeCheckboxField } from '@common/components'
 import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+
 import { TFMonaco } from './TFMonacoEditor'
 
 import {
@@ -822,6 +824,27 @@ export default function TerraformEditView(
                               disabled={readonly}
                             />
                           </div>
+                          <div className={cx(stepCss.formGroup, stepCss.md)}>
+                            <FormMultiTypeConnectorField
+                              label={getString('optionalField', { name: getString('cd.encryptJsonOutput') })}
+                              category={'SECRET_MANAGER'}
+                              setRefValue
+                              width={280}
+                              name={
+                                enableCloudCli
+                                  ? 'spec.cloudCliConfiguration.encryptOutput.outputSecretManagerRef'
+                                  : 'spec.configuration.encryptOutput.outputSecretManagerRef'
+                              }
+                              placeholder={getString('select')}
+                              accountIdentifier={accountId}
+                              projectIdentifier={projectIdentifier}
+                              orgIdentifier={orgIdentifier}
+                              style={{ marginBottom: 10 }}
+                              multiTypeProps={{ expressions, allowableTypes }}
+                              gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                              disabled={readonly}
+                            />
+                          </div>
                         </div>
                       }
                     />
@@ -847,6 +870,36 @@ export default function TerraformEditView(
                     )}
                   </Accordion>
                 </>
+              )}
+
+              {formik.values?.spec?.configuration?.type === ConfigurationTypes.InheritFromPlan && (
+                <Accordion className={stepCss.accordion}>
+                  <Accordion.Panel
+                    id="step-1"
+                    summary={getString('common.optionalConfig')}
+                    details={
+                      <div className={css.optionalConfigDetails}>
+                        <div className={cx(stepCss.formGroup, stepCss.md)}>
+                          <FormMultiTypeConnectorField
+                            label={getString('optionalField', { name: getString('cd.encryptJsonOutput') })}
+                            category={'SECRET_MANAGER'}
+                            setRefValue
+                            width={280}
+                            name={'spec.configuration.encryptOutput.outputSecretManagerRef'}
+                            placeholder={getString('select')}
+                            accountIdentifier={accountId}
+                            projectIdentifier={projectIdentifier}
+                            orgIdentifier={orgIdentifier}
+                            style={{ marginBottom: 10 }}
+                            multiTypeProps={{ expressions, allowableTypes }}
+                            gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                            disabled={readonly}
+                          />
+                        </div>
+                      </div>
+                    }
+                  />
+                </Accordion>
               )}
 
               {CDS_TERRAFORM_CLI_OPTIONS_NG &&

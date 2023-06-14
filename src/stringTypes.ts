@@ -5873,6 +5873,7 @@ export interface StringsMap {
   'cd.ecsRollingDeployStep.forceNewDeployment': string
   'cd.ecsRollingDeployStep.sameAsAlreadyRunningInstances': string
   'cd.editIdError': string
+  'cd.encryptJsonOutput': string
   'cd.enterTragets': string
   'cd.enterWorkDirectory': string
   'cd.envChanges': string
