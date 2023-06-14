@@ -20,9 +20,12 @@ import {
   sortByCreated,
   sortByLastModified,
   sortByName,
-  SortMethod
+  SortMethod,
+  Checkbox,
+  CheckboxVariant,
+  Icon
 } from '@harness/uicore'
-
+import { Color } from '@harness/design-system'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useGetProjectAggregateDTOList } from 'services/cd-ng'
 import type { Project } from 'services/cd-ng'
@@ -39,7 +42,7 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 import { projectsPageQueryParamOptions, ProjectsPageQueryParams } from '@projects-orgs/utils/utils'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ProjectsListView from './views/ProjectListView/ProjectListView'
 import ProjectsGridView from './views/ProjectGridView/ProjectGridView'
 import ProjectsEmptyState from './projects-empty-state.png'
@@ -48,6 +51,8 @@ import css from './ProjectsPage.module.scss'
 
 const ProjectsListPage: React.FC = () => {
   const { getString } = useStrings()
+  const { PL_FAVORITES } = useFeatureFlags()
+
   useDocumentTitle(getString('projectsText'))
   const { preference: sortPreference = SortMethod.Newest, setPreference: setSortPreference } =
     usePreferenceStore<SortMethod>(PreferenceScope.USER, `sort-${PAGE_NAME.ProjectListing}`)
@@ -57,7 +62,8 @@ const ProjectsListPage: React.FC = () => {
     verify,
     orgIdentifier: orgIdentifierQuery,
     page: pageIndex,
-    size: pageSize
+    size: pageSize,
+    favorite
   } = useQueryParams<ProjectsPageQueryParams>(projectsPageQueryParamOptions)
 
   const {
@@ -91,7 +97,8 @@ const ProjectsListPage: React.FC = () => {
       searchTerm: searchParam,
       pageIndex,
       pageSize,
-      sortOrders: [sortPreference]
+      sortOrders: [sortPreference],
+      isFavorite: favorite
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
@@ -122,7 +129,7 @@ const ProjectsListPage: React.FC = () => {
   return (
     <Container className={css.projectsPage} height="inherit">
       <Page.Header breadcrumbs={<NGBreadcrumbs />} title={getString('projectsText')} />
-      {data?.data?.totalItems || searchParam || loading || error || orgFilter ? (
+      {data?.data?.totalItems || searchParam || loading || error || orgFilter || favorite ? (
         <Layout.Horizontal spacing="large" className={css.header}>
           <RbacButton
             featuresProps={{
@@ -146,6 +153,17 @@ const ProjectsListPage: React.FC = () => {
               updateQueryParams({ orgIdentifier: item.value.toString() })
             }}
           />
+
+          {PL_FAVORITES && (
+            <Checkbox
+              variant={CheckboxVariant.BOXED}
+              checked={favorite}
+              labelElement={<Icon name="star" color={Color.YELLOW_900} size={14} />}
+              onChange={e => {
+                updateQueryParams({ favorite: e.currentTarget.checked })
+              }}
+            />
+          )}
           <div style={{ flex: 1 }}></div>
           <ExpandingSearchInput
             alwaysExpanded

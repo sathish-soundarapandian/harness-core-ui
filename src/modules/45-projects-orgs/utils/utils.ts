@@ -183,6 +183,7 @@ export interface ProjectsPageQueryParams {
   orgIdentifier?: string
   page?: number
   size?: number
+  favorite?: boolean
 }
 
 export const projectsPageQueryParamOptions = {
