@@ -157,7 +157,8 @@ describe('AMI Artifact Trigger Test', () => {
     userEvent.click(dropDownSelectOption)
 
     // Submit form
-    fireEvent.click(submitButton)
+    await userEvent.click(submitButton)
+
     await waitFor(() =>
       expect(handleSubmit).toHaveBeenCalledWith({
         connectorRef: 'connectorRef',

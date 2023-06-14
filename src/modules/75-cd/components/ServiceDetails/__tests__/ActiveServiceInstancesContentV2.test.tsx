@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import * as cdngServices from 'services/cd-ng'
@@ -293,7 +293,7 @@ describe('ActiveInstance Details Dialog', () => {
 
     const expandButtons = document.querySelectorAll('.bp3-icon')
     expandButtons.forEach(async expandButton => {
-      await userEvent.click(expandButton)
+      fireEvent.click(expandButton)
     })
     expect(popup).toMatchSnapshot()
   })
