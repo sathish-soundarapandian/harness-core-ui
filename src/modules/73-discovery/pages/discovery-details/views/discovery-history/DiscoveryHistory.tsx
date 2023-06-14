@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, Container, Layout, Text, CardSelect } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import moment from 'moment'
-import type { ApiListInstallInfraResponse } from 'services/servicediscovery'
+import { DatabaseInstallInfraCollection, useListInfraInstallations } from 'services/servicediscovery'
 import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { SimpleLogViewer } from '@common/components/LogViewer/SimpleLogViewer'
 import { DiscoveryAgentStatus } from '@discovery/components/DelegateAgentStatus/DelegateAgentStatus'
@@ -12,32 +12,29 @@ import css from './DiscoveryHistory.module.scss'
 const DiscoveryHistory: React.FC = () => {
   const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
 
-  const dummyData: ApiListInstallInfraResponse = {
-    items: [
-      {
-        id: '647ec9e1aa1033326a187518',
-        infraID: '647ec9e1aa1033326a187517',
-        created: '2023-06-06T05:53:37.989Z',
-        updated: '2023-06-06T05:53:43.449Z',
-        delegateTaskID: 'ciTrI0khSDO3McJ-zfV3LA',
-        delegateID: '',
-        delegateTaskStatus: 'SUCCESS'
-      },
-      {
-        id: '647ec9e1aa1033326a187518',
-        infraID: '647ec9e1aa1033326a187517',
-        created: '2023-06-06T05:53:37.989Z',
-        updated: '2023-06-06T05:53:43.449Z',
-        delegateTaskID: 'ciTrI0khSDO3McJ-zfV3LB',
-        delegateID: '',
-        delegateTaskStatus: 'FAILED'
+  const { data: infraInstalls, loading: infraInstallLoading } = useListInfraInstallations({
+    queryParams: {
+      accountIdentifier: accountId,
+      organizationIdentifier: orgIdentifier,
+      projectIdentifier: projectIdentifier,
+      page: 1,
+      limit: 25,
+      all: false
+    },
+    infraID: dAgentId
+  })
+
+  const [selected, setSelected] = React.useState<DatabaseInstallInfraCollection>()
+
+  useEffect(() => {
+    if (infraInstalls?.items && !infraInstallLoading) {
+      if (infraInstalls.items?.length > 0) {
+        setSelected(infraInstalls.items[0])
       }
-    ]
-  }
+    }
+  }, [infraInstalls, infraInstallLoading])
 
-  const [selected, setSelected] = React.useState(dummyData?.items ? dummyData.items[0] : {})
-
-  const convertTime = (time: string) => {
+  const convertTime = (time: string): string => {
     return moment(time).format('MMM DD, hh:mm A')
   }
 
@@ -52,17 +49,13 @@ const DiscoveryHistory: React.FC = () => {
           </div>
         </Layout.Horizontal>
         <CardSelect
-          data={dummyData.items ?? []}
+          data={infraInstalls?.items ?? []}
           className={css.selectableCard}
           renderItem={item => {
             return (
-              <Layout.Vertical>
-                <Text
-                  font={{ variation: FontVariation.BODY2 }}
-                  style={{ fontWeight: 500 }}
-                  padding={{ bottom: 'xsmall' }}
-                >
-                  {convertTime(item?.created ?? '')}
+              <Layout.Vertical padding={{ left: 'small' }}>
+                <Text font={{ variation: FontVariation.BODY2 }} style={{ fontWeight: 500 }}>
+                  {convertTime(item?.createdAt ?? '')}
                 </Text>
                 <DiscoveryAgentStatus status={item.delegateTaskStatus} />
               </Layout.Vertical>

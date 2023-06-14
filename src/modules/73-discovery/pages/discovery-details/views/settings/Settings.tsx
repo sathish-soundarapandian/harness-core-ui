@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, Container, Icon, Layout, Text, Toggle } from '@harness/uicore'
+import { Container, Icon, Layout, Text, Toggle } from '@harness/uicore'
 import { Divider } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -109,7 +109,7 @@ const Settings: React.FC = () => {
                 content={
                   <Layout.Horizontal flex={{ alignItems: 'center' }}>
                     <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
-                      {updateTime(dAgentData?.installationDetails?.created ?? '')}-{' '}
+                      {updateTime(dAgentData?.installationDetails?.createdAt ?? '')}-{' '}
                     </Text>
                     <DiscoveryAgentStatus status={dAgentData?.installationDetails?.delegateTaskStatus} />
                   </Layout.Horizontal>

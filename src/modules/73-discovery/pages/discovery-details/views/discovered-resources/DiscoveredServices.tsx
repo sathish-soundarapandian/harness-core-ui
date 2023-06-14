@@ -22,7 +22,6 @@ import React from 'react'
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
 import { useHistory, useParams } from 'react-router-dom'
-import { noop } from 'lodash-es'
 import {
   ApiCustomServiceConnection,
   DatabaseK8SCustomServiceCollection,
@@ -34,6 +33,9 @@ import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/Ro
 import { useStrings } from 'framework/strings'
 import ServiceDetails from '@discovery/components/ServiceDetails/ServiceDetails'
 import routes from '@common/RouteDefinitions'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { useQueryParams } from '@common/hooks'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
 import css from './DiscoveryServices.module.scss'
 
 export interface ConnectionMap {
@@ -137,18 +139,28 @@ const ThreeDotMenu: Renderer<CellProps<K8SCustomService>> = () => {
 const DiscoveredServices: React.FC = () => {
   const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { getString } = useStrings()
-
+  const [search, setSearch] = React.useState<string>('')
   const [namespace, selectedNamespace] = React.useState<string>()
   const connectionMap: ConnectionMap = {}
 
-  const { data: namespaceList, loading: namespaceListLoading } = useListNamespace({
+  //States for pagination
+  const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: 100,
+    pageSize: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
+    pageCount: 10,
+    pageIndex: page ? parseInt(page) : 0
+  })
+
+  const { data: namespaceList } = useListNamespace({
     infraID: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      page: 1,
-      limit: 25
+      all: true,
+      page: page ? parseInt(page) : DEFAULT_PAGE_INDEX,
+      limit: size ? parseInt(size) : DEFAULT_PAGE_SIZE
     }
   })
 
@@ -158,7 +170,11 @@ const DiscoveredServices: React.FC = () => {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      namespace
+      namespace,
+      page: page ? parseInt(page) : DEFAULT_PAGE_INDEX,
+      limit: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
+      all: false,
+      search: search
     }
   })
 
@@ -206,7 +222,7 @@ const DiscoveredServices: React.FC = () => {
   ]
 
   return (
-    <>
+    <Container>
       <Page.SubHeader>
         <Layout.Horizontal width="100%" flex={{ justifyContent: 'space-between' }}>
           <DropDown
@@ -221,9 +237,10 @@ const DiscoveredServices: React.FC = () => {
           <ExpandingSearchInput
             alwaysExpanded
             width={232}
+            defaultValue={search}
             placeholder="Search for a service"
-            throttle={200}
-            onChange={() => noop}
+            throttle={500}
+            onChange={value => setSearch(value)}
           />
         </Layout.Horizontal>
       </Page.SubHeader>
@@ -268,10 +285,11 @@ const DiscoveredServices: React.FC = () => {
               }
             ]}
             data={filteredServices ?? []}
+            pagination={paginationProps}
           />
         </Container>
       )}
-    </>
+    </Container>
   )
 }
 

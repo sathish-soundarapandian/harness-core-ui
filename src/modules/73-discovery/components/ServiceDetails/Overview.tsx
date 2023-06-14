@@ -229,7 +229,7 @@ const Overview: React.FC<Overview> = props => {
               padding={{ top: 'medium' }}
             />
             <Divider />
-            {serviceWorkloadData && serviceWorkloadData?.workloads[0]?.podLabels ? (
+            {serviceWorkloadData && serviceWorkloadData?.workloads && serviceWorkloadData?.workloads[0]?.podLabels ? (
               <>
                 <ListItems
                   title={getString('discovery.serviceDrawer.labels')}
@@ -258,7 +258,9 @@ const Overview: React.FC<Overview> = props => {
             ) : (
               <></>
             )}
-            {serviceWorkloadData && serviceWorkloadData?.workloads[0]?.podAnnotations ? (
+            {serviceWorkloadData &&
+            serviceWorkloadData?.workloads &&
+            serviceWorkloadData?.workloads[0]?.podAnnotations ? (
               <ListItems
                 title={getString('discovery.serviceDrawer.annotations')}
                 content={

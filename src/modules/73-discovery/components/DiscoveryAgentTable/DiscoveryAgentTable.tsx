@@ -17,10 +17,12 @@ import { getTimeAgo } from '@pipeline/utils/CIUtils'
 import type { ApiGetInfraResponse } from 'services/servicediscovery'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PaginationPropsWithDefaults } from '@common/hooks/useDefaultPaginationProps'
 import css from './DiscoveryAgentTable.module.scss'
 
 interface DiscoveryAgentTableProps {
   list: ApiGetInfraResponse[]
+  pagination: PaginationPropsWithDefaults
 }
 
 const Name: Renderer<CellProps<ApiGetInfraResponse>> = ({ row }) => {
@@ -123,7 +125,7 @@ const ThreeDotMenu: Renderer<CellProps<ApiGetInfraResponse>> = () => (
   </Layout.Horizontal>
 )
 
-const DiscoveryAgentTable: React.FC<DiscoveryAgentTableProps> = ({ list }) => {
+const DiscoveryAgentTable: React.FC<DiscoveryAgentTableProps> = ({ list, pagination }) => {
   return (
     <TableV2<ApiGetInfraResponse>
       className={css.tableBody}
@@ -161,6 +163,7 @@ const DiscoveryAgentTable: React.FC<DiscoveryAgentTableProps> = ({ list }) => {
         }
       ]}
       data={list}
+      pagination={pagination}
     />
   )
 }

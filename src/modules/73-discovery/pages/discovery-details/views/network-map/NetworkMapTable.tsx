@@ -10,7 +10,6 @@ import {
   Avatar,
   Button,
   ButtonVariation,
-  DropDown,
   ExpandingSearchInput,
   Layout,
   Page,
@@ -23,20 +22,29 @@ import React from 'react'
 import { Color } from '@harness/design-system'
 import type { CellProps, Renderer } from 'react-table'
 import { useHistory, useParams } from 'react-router-dom'
-import { noop } from 'lodash-es'
-import { killEvent } from '@common/utils/eventUtils'
 import { getTimeAgo } from '@pipeline/utils/CIUtils'
-import type { DiscoveryPathProps } from '@common/interfaces/RouteInterfaces'
-import { useStrings } from 'framework/strings'
+import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { DatabaseNetworkMapCollection, useDeleteNetworkMap, useListNetworkMap } from 'services/servicediscovery'
-import css from './NetworkMapTable.module.scss'
 import routes from '@common/RouteDefinitions'
+import { useQueryParams } from '@common/hooks'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
+import css from './NetworkMapTable.module.scss'
 
 const NetworkMapTable: React.FC = () => {
   const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
   const history = useHistory()
-  const { getString } = useStrings()
   const { showError, showSuccess } = useToaster()
+  const [search, setSearch] = React.useState('')
+
+  //States for pagination
+  const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: 100,
+    pageSize: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
+    pageCount: 10,
+    pageIndex: page ? parseInt(page) : 0
+  })
 
   const {
     data: networkMapList,
@@ -47,7 +55,10 @@ const NetworkMapTable: React.FC = () => {
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
-      projectIdentifier: projectIdentifier
+      projectIdentifier: projectIdentifier,
+      page: page ? parseInt(page) : DEFAULT_PAGE_INDEX,
+      limit: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
+      all: false
     }
   })
 
@@ -139,8 +150,9 @@ const NetworkMapTable: React.FC = () => {
             alwaysExpanded
             width={232}
             placeholder="Search for a network map"
-            throttle={200}
-            onChange={() => void 0}
+            throttle={500}
+            defaultValue={search}
+            onChange={value => setSearch(value)}
           />
         </Layout.Horizontal>
       </Page.SubHeader>
@@ -175,6 +187,7 @@ const NetworkMapTable: React.FC = () => {
             }
           ]}
           data={networkMapList?.items ?? []}
+          pagination={paginationProps}
         />
       )}
     </>

@@ -43,7 +43,8 @@ const SelectService: React.FC<Props> = ({ name }) => {
       organizationIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
       limit: limit,
-      page: page
+      page: page,
+      all: false
     }
   })
 
@@ -92,7 +93,7 @@ const SelectService: React.FC<Props> = ({ name }) => {
     }
     const response: ApiCreateNetworkMapRequest = {
       connections: connections,
-      infraID: dAgentId,
+      identity: dAgentId,
       resources,
       name
     }

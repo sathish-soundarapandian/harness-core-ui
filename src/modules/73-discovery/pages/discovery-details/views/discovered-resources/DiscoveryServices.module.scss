@@ -16,4 +16,6 @@
   div[class*='TableV2--rowSubComponent'] {
     background-color: var(--grey-50);
   }
+  padding-bottom: 0px !important;
+  overflow: auto;
 }

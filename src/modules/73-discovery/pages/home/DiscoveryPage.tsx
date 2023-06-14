@@ -20,6 +20,9 @@ import ScopedTitle from '@common/components/Title/ScopedTitle'
 import { useListInfra } from 'services/servicediscovery'
 import RbacButton from '@rbac/components/Button/Button'
 import DiscoveryAgentTable from '@discovery/components/DiscoveryAgentTable/DiscoveryAgentTable'
+import { useQueryParams } from '@common/hooks'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
 import EmptyStateDiscoveryAgent from './views/empty-state/EmptyStateDiscoveryAgent'
 import CreateDAgent from './views/create-discovery-agent/CreateDAgent'
 import css from './DiscoveryPage.module.scss'
@@ -28,15 +31,28 @@ const DiscoveryPage: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
   const discoveryLabel = getString('common.discovery')
+  const [search, setSearch] = useState('')
   const [isOpen, setDrawerOpen] = useState(false)
-
   useDocumentTitle(discoveryLabel)
+
+  //States for pagination
+  const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: 100,
+    pageSize: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
+    pageCount: 10,
+    pageIndex: page ? parseInt(page) : 0
+  })
 
   const { data: discoveryAgentList, loading: discoveryAgentListLoading } = useListInfra({
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
-      projectIdentifier: projectIdentifier
+      projectIdentifier: projectIdentifier,
+      search: search,
+      all: false,
+      page: page ? parseInt(page) : DEFAULT_PAGE_INDEX,
+      limit: size ? parseInt(size) : DEFAULT_PAGE_SIZE
     }
   })
 
@@ -87,16 +103,15 @@ const DiscoveryPage: React.FC = () => {
                       width={250}
                       alwaysExpanded
                       throttle={500}
-                      key={''}
-                      defaultValue={''}
-                      onChange={() => void 0}
+                      defaultValue={search}
+                      onChange={value => setSearch(value)}
                       placeholder={getString('discovery.homepage.searchNeworkMap')}
                     />
                   </Container>
                 </Layout.Horizontal>
               </Page.SubHeader>
               <Page.Body className={css.discoveryAgentTable}>
-                <DiscoveryAgentTable list={discoveryAgentList?.items} />
+                <DiscoveryAgentTable list={discoveryAgentList?.items} pagination={paginationProps} />
               </Page.Body>
             </>
           ) : (

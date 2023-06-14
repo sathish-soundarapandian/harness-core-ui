@@ -18,8 +18,8 @@ import { useGetInfra } from 'services/servicediscovery'
 import DiscoveredServices from './views/discovered-resources/DiscoveredServices'
 import NetworkMapTable from './views/network-map/NetworkMapTable'
 import DiscoveryHistory from './views/discovery-history/DiscoveryHistory'
-import css from './DiscoveryDetails.module.scss'
 import Settings from './views/settings/Settings'
+import css from './DiscoveryDetails.module.scss'
 
 const DiscoveryDetails: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
