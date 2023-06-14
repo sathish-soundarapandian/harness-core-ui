@@ -31,10 +31,9 @@ export const getOpenAPIClientInitiator = (
     return response
   }
   const urlInterceptor = (url: string): string => {
-    if (url.includes('favorites')) {
-      console.log('/gateway/ng/api' + window.getApiBaseUrl(url))
-      return '/gateway/ng/api' + window.getApiBaseUrl(url)
-    }
+    // if (url.includes('favorites')) {
+    //   return '/gateway/ng/api' + window.getApiBaseUrl(url)
+    // }
     return window.getApiBaseUrl(url)
   }
   const getRequestHeaders = (): Record<string, string> => {
