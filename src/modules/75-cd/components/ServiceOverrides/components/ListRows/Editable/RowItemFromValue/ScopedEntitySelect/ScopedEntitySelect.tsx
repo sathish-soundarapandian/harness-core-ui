@@ -88,13 +88,7 @@ export default function ScopedEntitySelect<T>({
                     <Text>{getString('common.all')}</Text>
                   </Layout.Horizontal>
                 ),
-                panel: (
-                  <ScopedEntitySelectTabContent
-                    onSelect={onSelect}
-                    scope={projectIdentifier ? Scope.PROJECT : orgIdentifier ? Scope.ORG : Scope.PROJECT}
-                    fieldKey={fieldKey}
-                  />
-                )
+                panel: <ScopedEntitySelectTabContent onSelect={onSelect} fieldKey={fieldKey} />
               },
               {
                 id: TAB_ID.PROJECT,
