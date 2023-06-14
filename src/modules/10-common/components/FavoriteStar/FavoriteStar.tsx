@@ -146,7 +146,7 @@ const FavoriteStar: React.FC<FavoriteStarProps> = props => {
       tooltipProps={{ isDark: true, interactionKind: PopoverInteractionKind.HOVER }}
     >
       <Icon
-        name={isFavorite ? 'star' : 'star_empty'}
+        name={isFavorite ? 'star' : 'star-empty'}
         color={isFavorite ? Color.YELLOW_700 : Color.GREY_400}
         size={24}
         onClick={handleClick}
