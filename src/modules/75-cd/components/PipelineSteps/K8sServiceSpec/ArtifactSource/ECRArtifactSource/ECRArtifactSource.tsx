@@ -41,16 +41,16 @@ import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/Triggers
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
+  DefaultParam,
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
   getImagePath,
-  getYamlData,
-  isFieldfromTriggerTabDisabled,
-  isNewServiceEnvEntity,
-  isExecutionTimeFieldDisabled,
   getValidInitialValuePath,
-  DefaultParam
+  getYamlData,
+  isExecutionTimeFieldDisabled,
+  isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import DigestField from '../ArtifactSourceRuntimeFields/DigestField'
@@ -89,10 +89,16 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     useArtifactV1Data = false
   } = props
 
-  const [lastQueryData, setLastQueryData] = React.useState({ connectorRef: '', imagePath: '', region: '' })
+  const [lastQueryData, setLastQueryData] = React.useState({
+    connectorRef: '',
+    imagePath: '',
+    region: '',
+    registryId: ''
+  })
   const [imagesListLastQueryData, setImagesListLastQueryData] = React.useState({
     connectorRef: '',
-    region: ''
+    region: '',
+    registryId: ''
   })
 
   const { getString } = useStrings()
@@ -115,6 +121,11 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     get(initialValues?.artifacts, `${artifactPath}.spec.region`, '')
   )
 
+  const registryIdValue = getDefaultQueryParam(
+    getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.registryId`, ''), artifact?.spec?.registryId),
+    get(initialValues?.artifacts, `${artifactPath}.spec.registryId`, '')
+  )
+
   const tagValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.tag`, ''), artifact?.spec?.tag),
     get(initialValues?.artifacts, `${artifactPath}.spec.tag`, '')
@@ -133,6 +144,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     projectIdentifier,
     connectorRef: getFinalQueryParamValue(connectorRefValue),
     region: getFinalQueryParamValue(regionValue),
+    registryId: getFinalQueryParamValue(registryIdValue),
     repoIdentifier,
     branch,
     pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
@@ -197,10 +209,18 @@ const Content = (props: ECRRenderContent): JSX.Element => {
           imagesListLastQueryData.region !== regionValue && checkIfQueryParamsisNotEmpty([regionValue])
         )
       }
+      if (!shouldFetchImages && isFieldRuntime(`artifacts.${artifactPath}.spec.registryId`, template)) {
+        shouldFetchImages = !!(
+          imagesListLastQueryData.registryId !== registryIdValue && checkIfQueryParamsisNotEmpty([registryIdValue])
+        )
+      }
+
       return shouldFetchImages || isNil(imagesListData?.data)
     } else {
       return !!(
-        (imagesListLastQueryData.connectorRef != connectorRefValue || imagesListLastQueryData.region !== regionValue) &&
+        (imagesListLastQueryData.connectorRef != connectorRefValue ||
+          imagesListLastQueryData.region !== regionValue ||
+          imagesListLastQueryData.registryId !== registryIdValue) &&
         checkIfQueryParamsisNotEmpty([connectorRefValue, regionValue])
       )
     }
@@ -210,7 +230,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     if (canFetchImagesList()) {
       setImagesListLastQueryData({
         connectorRef: connectorRefValue,
-        region: regionValue
+        region: regionValue,
+        registryId: registryIdValue
       })
       refetchImagesList()
     }
@@ -228,6 +249,10 @@ const Content = (props: ECRRenderContent): JSX.Element => {
       imagePath: defaultTo(getFinalQueryParamValue(imagePathValue), ''),
       connectorRef: defaultTo(getFinalQueryParamValue(connectorRefValue), ''),
       region: defaultTo(getFinalQueryParamValue(regionValue), ''),
+      registryId:
+        getMultiTypeFromValue(registryIdValue) === MultiTypeInputType.FIXED
+          ? defaultTo(getFinalQueryParamValue(registryIdValue), '')
+          : undefined,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
@@ -258,6 +283,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
       imagePath: getFinalQueryParamValue(imagePathValue),
       connectorRef: getFinalQueryParamValue(connectorRefValue),
       region: getFinalQueryParamValue(regionValue),
+      registryId: getFinalQueryParamValue(registryIdValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
       fqnPath: getFqnPath(
@@ -305,7 +331,12 @@ const Content = (props: ECRRenderContent): JSX.Element => {
 
   const fetchTags = (): void => {
     if (canFetchTags()) {
-      setLastQueryData({ connectorRef: connectorRefValue, imagePath: imagePathValue, region: regionValue })
+      setLastQueryData({
+        connectorRef: connectorRefValue,
+        imagePath: imagePathValue,
+        region: regionValue,
+        registryId: registryIdValue
+      })
       refetchTags()
     }
   }
@@ -316,7 +347,8 @@ const Content = (props: ECRRenderContent): JSX.Element => {
       ((lastQueryData.connectorRef != connectorRefValue ||
         lastQueryData.imagePath !== imagePathValue ||
         getMultiTypeFromValue(artifact?.spec?.imagePath) === MultiTypeInputType.EXPRESSION ||
-        lastQueryData.region !== regionValue) &&
+        lastQueryData.region !== regionValue ||
+        lastQueryData.registryId !== registryIdValue) &&
         checkIfQueryParamsisNotEmpty([connectorRefValue, imagePathValue, regionValue]))
     )
   }
@@ -330,6 +362,7 @@ const Content = (props: ECRRenderContent): JSX.Element => {
     connectorRef: getFinalQueryParamValue(connectorRefValue),
     imagePath: getFinalQueryParamValue(imagePathValue),
     region: getFinalQueryParamValue(regionValue),
+    registryId: getFinalQueryParamValue(registryIdValue),
     tag: getFinalQueryParamValue(tagValue),
     accountId,
     projectIdentifier,
@@ -473,6 +506,11 @@ const Content = (props: ECRRenderContent): JSX.Element => {
               }}
               fieldPath={`artifacts.${artifactPath}.spec.registryId`}
               template={template}
+              onChange={() => {
+                resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.imagePath`)
+                resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
+                resetFieldValue(formik, `${path}.artifacts.${artifactPath}.spec.digest`)
+              }}
             />
           )}
 

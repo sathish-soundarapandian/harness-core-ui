@@ -476,6 +476,7 @@ export interface Account {
     [key: string]: string
   }
   delegateConfiguration?: DelegateConfiguration
+  encryption?: EncryptionInterface
   forImport?: boolean
   globalDelegateAccount?: boolean
   harnessSupportAccessAllowed?: boolean
@@ -3532,6 +3533,7 @@ export interface DelegateGroup {
   name?: string
   ng?: boolean
   owner?: DelegateEntityOwner
+  runnerTypes?: string[]
   sizeDetails?: DelegateSizeDetails
   status?: 'ENABLED' | 'DELETED'
   tags?: string[]
@@ -3788,10 +3790,6 @@ export interface DeploymentInfoV2 {
   rate?: ChangeRate
 }
 
-export interface DeploymentMetaData {
-  [key: string]: any
-}
-
 export interface DeploymentReleaseDetails {
   deploymentDetails?: DeploymentDetails[]
   deploymentType?: string
@@ -3800,7 +3798,7 @@ export interface DeploymentReleaseDetails {
 
 export type DeploymentStageConfig = StageInfoConfig & {
   customDeploymentRef?: StepTemplateRef
-  deploymentMetadata?: DeploymentMetaData
+  deploymentMetadata?: GoogleCloudFunctionDeploymentMetaData
   deploymentType?:
     | 'Kubernetes'
     | 'NativeHelm'
@@ -4051,6 +4049,7 @@ export type EcrArtifactConfig = ArtifactConfig & {
   imagePath: string
   metadata?: string
   region: string
+  registryId?: string
   tag?: string
   tagRegex?: string
 }
@@ -4328,6 +4327,10 @@ export type EmptyDirYaml = CIVolume & {
 export interface EmptyDirYamlSpec {
   medium?: string
   size?: string
+}
+
+export interface EncryptionInterface {
+  [key: string]: any
 }
 
 export interface EntityDetail {
@@ -6105,6 +6108,8 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
+    | 'MULTIPLE_API_KEYS'
+    | 'MULTIPLE_API_TOKENS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -6198,6 +6203,8 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
+    | 'MULTIPLE_API_KEYS'
+    | 'MULTIPLE_API_TOKENS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -6309,6 +6316,8 @@ export interface FeatureRestrictionDetailsDTO {
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
+    | 'MULTIPLE_API_KEYS'
+    | 'MULTIPLE_API_TOKENS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -6428,6 +6437,8 @@ export interface FeatureRestrictionMetadataDTO {
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
+    | 'MULTIPLE_API_KEYS'
+    | 'MULTIPLE_API_TOKENS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -8954,11 +8965,16 @@ export interface GithubPackageDTO {
 }
 
 export type GithubPackagesArtifactConfig = ArtifactConfig & {
+  artifactId?: string
   connectorRef: string
   digest?: string
+  extension?: string
+  groupId?: string
   org?: string
   packageName: string
   packageType: 'npm' | 'maven' | 'rubygems' | 'nuget' | 'container'
+  repository?: string
+  user?: string
   version?: string
   versionRegex?: string
 }
@@ -9123,7 +9139,7 @@ export type GoogleCloudFunctionDefinitionManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type GoogleCloudFunctionDeploymentMetaData = DeploymentMetaData & {
+export interface GoogleCloudFunctionDeploymentMetaData {
   environmentType?: string
   metadata?: string
 }
@@ -10327,6 +10343,7 @@ export type K8sBlueGreenStepInfo = StepSpecType & {
   commandFlags?: K8sStepCommandFlag[]
   delegateSelectors?: string[]
   pruningEnabled?: boolean
+  skipDeploymentIfSameManifest?: boolean
   skipDryRun?: boolean
 }
 
@@ -11302,9 +11319,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -11886,17 +11904,6 @@ export interface PageProjectAggregateDTO {
 
 export interface PageProjectResponse {
   content?: ProjectResponse[]
-  empty?: boolean
-  pageIndex?: number
-  pageItemCount?: number
-  pageSize?: number
-  pageToken?: string
-  totalItems?: number
-  totalPages?: number
-}
-
-export interface PageRoleAssignmentResponse {
-  content?: RoleAssignmentResponse[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -12949,11 +12956,6 @@ export interface ResourceDTO {
     | 'BUDGET_GROUP'
     | 'IP_ALLOWLIST_CONFIG'
     | 'NETWORK_MAP'
-}
-
-export interface ResourceGroup {
-  identifier?: string
-  name?: string
 }
 
 export interface ResourceScope {
@@ -14402,13 +14404,6 @@ export interface ResponseListRegionGar {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseListRoleAssignmentResponse {
-  correlationId?: string
-  data?: RoleAssignmentResponse[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponseListScopeName {
   correlationId?: string
   data?: ScopeName[]
@@ -15259,13 +15254,6 @@ export interface ResponsePageProjectResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponsePageRoleAssignmentResponse {
-  correlationId?: string
-  data?: PageRoleAssignmentResponse
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponsePageSecretResponseWrapper {
   correlationId?: string
   data?: PageSecretResponseWrapper
@@ -15423,20 +15411,6 @@ export interface ResponseProjectsDashboardInfo {
 export interface ResponseRefreshResponse {
   correlationId?: string
   data?: RefreshResponse
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseRoleAssignmentAggregateResponse {
-  correlationId?: string
-  data?: RoleAssignmentAggregateResponse
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseRoleAssignmentResponse {
-  correlationId?: string
-  data?: RoleAssignmentResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -16210,48 +16184,6 @@ export type RetrySGFailureActionConfig = FailureStrategyActionConfig & {
   type: 'RetryStepGroup'
 }
 
-export interface Role {
-  allowedScopeLevels?: ('ACCOUNT' | 'ORGANIZATION' | 'PROJECT')[]
-  description?: string
-  identifier: string
-  name: string
-  permissions?: string[]
-  tags?: {
-    [key: string]: string
-  }
-}
-
-export interface RoleAssignment {
-  disabled?: boolean
-  identifier?: string
-  internal?: boolean
-  managed?: boolean
-  principal: Principal
-  resourceGroupIdentifier: string
-  roleIdentifier: string
-}
-
-export interface RoleAssignmentAggregateResponse {
-  resourceGroups?: ResourceGroup[]
-  roleAssignments?: RoleAssignment[]
-  roles?: RoleResponse[]
-  scope?: Scope
-}
-
-export interface RoleAssignmentCreateRequest {
-  roleAssignments?: RoleAssignment[]
-}
-
-export interface RoleAssignmentFilter {
-  disabledFilter?: boolean[]
-  harnessManagedFilter?: boolean[]
-  principalFilter?: Principal[]
-  principalScopeLevelFilter?: string[]
-  principalTypeFilter?: ('USER' | 'USER_GROUP' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT')[]
-  resourceGroupFilter?: string[]
-  roleFilter?: string[]
-}
-
 export interface RoleAssignmentMetadataDTO {
   identifier: string
   managedRole: boolean
@@ -16262,28 +16194,12 @@ export interface RoleAssignmentMetadataDTO {
   roleName: string
 }
 
-export interface RoleAssignmentResponse {
-  createdAt?: number
-  harnessManaged?: boolean
-  lastModifiedAt?: number
-  roleAssignment: RoleAssignment
-  scope: Scope
-}
-
 export interface RoleBinding {
   managedRole: boolean
   resourceGroupIdentifier?: string
   resourceGroupName?: string
   roleIdentifier: string
   roleName: string
-}
-
-export interface RoleResponse {
-  createdAt?: number
-  harnessManaged?: boolean
-  lastModifiedAt?: number
-  role: Role
-  scope: Scope
 }
 
 export type RunStepInfo = StepSpecType & {
@@ -18243,6 +18159,8 @@ export interface SvcEnvMigrationRequestDto {
   newBranch?: boolean
   orgIdentifier: string
   pipelineIdentifier: string
+  populateInfrastructureInputs?: boolean
+  populateServiceInputs?: boolean
   projectIdentifier: string
   skipInfras?: string[]
   skipServices?: string[]
@@ -19799,8 +19717,6 @@ export type PatchRequestRequestBody = PatchRequest
 export type PostProdRollbackRequestDTORequestBody = PostProdRollbackRequestDTO
 
 export type ProjectRequestRequestBody = ProjectRequest
-
-export type RoleAssignmentFilterRequestBody = RoleAssignmentFilter
 
 export type ScimGroupRequestBody = ScimGroup
 
@@ -26459,6 +26375,7 @@ export const validateArtifactImageForDockerPromise = (
   )
 
 export interface GetBuildDetailsForEcrQueryParams {
+  registryId?: string
   imagePath: string
   region: string
   connectorRef: string
@@ -26521,6 +26438,7 @@ export const getBuildDetailsForEcrPromise = (
   )
 
 export interface GetBuildDetailsForEcrWithYamlQueryParams {
+  registryId?: string
   imagePath?: string
   region?: string
   connectorRef?: string
@@ -26615,6 +26533,7 @@ export const getBuildDetailsForEcrWithYamlPromise = (
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getBuildDetailsV2`, props, signal)
 
 export interface GetImagesListForEcrQueryParams {
+  registryId?: string
   region?: string
   connectorRef?: string
   accountIdentifier: string
@@ -26708,6 +26627,7 @@ export const getImagesListForEcrPromise = (
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getImages`, props, signal)
 
 export interface GetLastSuccessfulBuildForEcrQueryParams {
+  registryId?: string
   imagePath: string
   connectorRef: string
   accountIdentifier: string
@@ -26789,6 +26709,7 @@ export const getLastSuccessfulBuildForEcrPromise = (
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getLastSuccessfulBuild`, props, signal)
 
 export interface GetLastSuccessfulBuildForEcrWithYamlQueryParams {
+  registryId?: string
   imagePath?: string
   connectorRef?: string
   accountIdentifier: string
@@ -26882,6 +26803,7 @@ export const getLastSuccessfulBuildForEcrWithYamlPromise = (
   >('POST', getConfig('ng/api'), `/artifacts/ecr/getLastSuccessfulBuildV2`, props, signal)
 
 export interface ValidateArtifactForEcrQueryParams {
+  registryId?: string
   imagePath: string
   region: string
   connectorRef: string
@@ -26944,6 +26866,7 @@ export const validateArtifactForEcrPromise = (
   )
 
 export interface ValidateArtifactServerForEcrQueryParams {
+  registryId?: string
   imagePath: string
   connectorRef: string
   region: string
@@ -26997,6 +26920,7 @@ export const validateArtifactServerForEcrPromise = (
   )
 
 export interface ValidateArtifactImageForEcrQueryParams {
+  registryId?: string
   imagePath: string
   region: string
   connectorRef: string
@@ -34870,6 +34794,54 @@ export const saveCardPromise = (
     signal
   )
 
+export interface HasAValidCardQueryParams {
+  accountIdentifier: string
+}
+
+export type HasAValidCardProps = Omit<
+  GetProps<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>,
+  'path'
+>
+
+/**
+ * Checks for a valid credit card
+ */
+export const HasAValidCard = (props: HasAValidCardProps) => (
+  <Get<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>
+    path={`/credit-cards/has-valid-card`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseHasAValidCardProps = Omit<
+  UseGetProps<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>,
+  'path'
+>
+
+/**
+ * Checks for a valid credit card
+ */
+export const useHasAValidCard = (props: UseHasAValidCardProps) =>
+  useGet<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>(`/credit-cards/has-valid-card`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Checks for a valid credit card
+ */
+export const hasAValidCardPromise = (
+  props: GetUsingFetchProps<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseBoolean, Failure | Error, HasAValidCardQueryParams, void>(
+    getConfig('ng/api'),
+    `/credit-cards/has-valid-card`,
+    props,
+    signal
+  )
+
 export interface CreateCreditQueryParams {
   accountIdentifier: string
 }
@@ -39490,6 +39462,8 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'MULTIPLE_SERVICE_ACCOUNTS'
     | 'MULTIPLE_VARIABLES'
     | 'MULTIPLE_CONNECTORS'
+    | 'MULTIPLE_API_KEYS'
+    | 'MULTIPLE_API_TOKENS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
     | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -39653,6 +39627,8 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'MULTIPLE_SERVICE_ACCOUNTS'
       | 'MULTIPLE_VARIABLES'
       | 'MULTIPLE_CONNECTORS'
+      | 'MULTIPLE_API_KEYS'
+      | 'MULTIPLE_API_TOKENS'
       | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
       | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
       | 'INTEGRATED_APPROVALS_WITH_JIRA'
@@ -54674,313 +54650,6 @@ export const validateInputsForYamlPromise = (
     NgManagerRefreshRequestDTORequestBody,
     void
   >('POST', getConfig('ng/api'), `/refresh-inputs/validate-inputs-yaml`, props, signal)
-
-export interface CreateRoleAssignmentQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export type CreateRoleAssignmentProps = Omit<
-  MutateProps<ResponseRoleAssignmentResponse, Failure | Error, CreateRoleAssignmentQueryParams, RoleAssignment, void>,
-  'path' | 'verb'
->
-
-/**
- * (Stub) Create Role Assignment
- */
-export const CreateRoleAssignment = (props: CreateRoleAssignmentProps) => (
-  <Mutate<ResponseRoleAssignmentResponse, Failure | Error, CreateRoleAssignmentQueryParams, RoleAssignment, void>
-    verb="POST"
-    path={`/roleassignments`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseCreateRoleAssignmentProps = Omit<
-  UseMutateProps<
-    ResponseRoleAssignmentResponse,
-    Failure | Error,
-    CreateRoleAssignmentQueryParams,
-    RoleAssignment,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * (Stub) Create Role Assignment
- */
-export const useCreateRoleAssignment = (props: UseCreateRoleAssignmentProps) =>
-  useMutate<ResponseRoleAssignmentResponse, Failure | Error, CreateRoleAssignmentQueryParams, RoleAssignment, void>(
-    'POST',
-    `/roleassignments`,
-    { base: getConfig('ng/api'), ...props }
-  )
-
-/**
- * (Stub) Create Role Assignment
- */
-export const createRoleAssignmentPromise = (
-  props: MutateUsingFetchProps<
-    ResponseRoleAssignmentResponse,
-    Failure | Error,
-    CreateRoleAssignmentQueryParams,
-    RoleAssignment,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseRoleAssignmentResponse,
-    Failure | Error,
-    CreateRoleAssignmentQueryParams,
-    RoleAssignment,
-    void
-  >('POST', getConfig('ng/api'), `/roleassignments`, props, signal)
-
-export interface GetRoleAssignmentsAggregateQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export type GetRoleAssignmentsAggregateProps = Omit<
-  MutateProps<
-    ResponseRoleAssignmentAggregateResponse,
-    Failure | Error,
-    GetRoleAssignmentsAggregateQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get Role Assignments Aggregate
- */
-export const GetRoleAssignmentsAggregate = (props: GetRoleAssignmentsAggregateProps) => (
-  <Mutate<
-    ResponseRoleAssignmentAggregateResponse,
-    Failure | Error,
-    GetRoleAssignmentsAggregateQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/roleassignments/aggregate`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetRoleAssignmentsAggregateProps = Omit<
-  UseMutateProps<
-    ResponseRoleAssignmentAggregateResponse,
-    Failure | Error,
-    GetRoleAssignmentsAggregateQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get Role Assignments Aggregate
- */
-export const useGetRoleAssignmentsAggregate = (props: UseGetRoleAssignmentsAggregateProps) =>
-  useMutate<
-    ResponseRoleAssignmentAggregateResponse,
-    Failure | Error,
-    GetRoleAssignmentsAggregateQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >('POST', `/roleassignments/aggregate`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get Role Assignments Aggregate
- */
-export const getRoleAssignmentsAggregatePromise = (
-  props: MutateUsingFetchProps<
-    ResponseRoleAssignmentAggregateResponse,
-    Failure | Error,
-    GetRoleAssignmentsAggregateQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseRoleAssignmentAggregateResponse,
-    Failure | Error,
-    GetRoleAssignmentsAggregateQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/roleassignments/aggregate`, props, signal)
-
-export interface GetFilteredRoleAssignmentListQueryParams {
-  pageIndex?: number
-  pageSize?: number
-  sortOrders?: string[]
-  pageToken?: string
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
-export type GetFilteredRoleAssignmentListProps = Omit<
-  MutateProps<
-    ResponsePageRoleAssignmentResponse,
-    Failure | Error,
-    GetFilteredRoleAssignmentListQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * (Stub) Get Filtered Role Assignments
- */
-export const GetFilteredRoleAssignmentList = (props: GetFilteredRoleAssignmentListProps) => (
-  <Mutate<
-    ResponsePageRoleAssignmentResponse,
-    Failure | Error,
-    GetFilteredRoleAssignmentListQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/roleassignments/filter`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetFilteredRoleAssignmentListProps = Omit<
-  UseMutateProps<
-    ResponsePageRoleAssignmentResponse,
-    Failure | Error,
-    GetFilteredRoleAssignmentListQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * (Stub) Get Filtered Role Assignments
- */
-export const useGetFilteredRoleAssignmentList = (props: UseGetFilteredRoleAssignmentListProps) =>
-  useMutate<
-    ResponsePageRoleAssignmentResponse,
-    Failure | Error,
-    GetFilteredRoleAssignmentListQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >('POST', `/roleassignments/filter`, { base: getConfig('ng/api'), ...props })
-
-/**
- * (Stub) Get Filtered Role Assignments
- */
-export const getFilteredRoleAssignmentListPromise = (
-  props: MutateUsingFetchProps<
-    ResponsePageRoleAssignmentResponse,
-    Failure | Error,
-    GetFilteredRoleAssignmentListQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponsePageRoleAssignmentResponse,
-    Failure | Error,
-    GetFilteredRoleAssignmentListQueryParams,
-    RoleAssignmentFilterRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/roleassignments/filter`, props, signal)
-
-export interface CreateRoleAssignmentsQueryParams {
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  managed?: boolean
-}
-
-export type CreateRoleAssignmentsProps = Omit<
-  MutateProps<
-    ResponseListRoleAssignmentResponse,
-    Failure | Error,
-    CreateRoleAssignmentsQueryParams,
-    RoleAssignmentCreateRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * (Stub) Create Multiple Role Assignments
- */
-export const CreateRoleAssignments = (props: CreateRoleAssignmentsProps) => (
-  <Mutate<
-    ResponseListRoleAssignmentResponse,
-    Failure | Error,
-    CreateRoleAssignmentsQueryParams,
-    RoleAssignmentCreateRequest,
-    void
-  >
-    verb="POST"
-    path={`/roleassignments/multi/internal`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseCreateRoleAssignmentsProps = Omit<
-  UseMutateProps<
-    ResponseListRoleAssignmentResponse,
-    Failure | Error,
-    CreateRoleAssignmentsQueryParams,
-    RoleAssignmentCreateRequest,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * (Stub) Create Multiple Role Assignments
- */
-export const useCreateRoleAssignments = (props: UseCreateRoleAssignmentsProps) =>
-  useMutate<
-    ResponseListRoleAssignmentResponse,
-    Failure | Error,
-    CreateRoleAssignmentsQueryParams,
-    RoleAssignmentCreateRequest,
-    void
-  >('POST', `/roleassignments/multi/internal`, { base: getConfig('ng/api'), ...props })
-
-/**
- * (Stub) Create Multiple Role Assignments
- */
-export const createRoleAssignmentsPromise = (
-  props: MutateUsingFetchProps<
-    ResponseListRoleAssignmentResponse,
-    Failure | Error,
-    CreateRoleAssignmentsQueryParams,
-    RoleAssignmentCreateRequest,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseListRoleAssignmentResponse,
-    Failure | Error,
-    CreateRoleAssignmentsQueryParams,
-    RoleAssignmentCreateRequest,
-    void
-  >('POST', getConfig('ng/api'), `/roleassignments/multi/internal`, props, signal)
 
 export interface CheckIfInstanceCanBeRolledBackQueryParams {
   accountIdentifier: string

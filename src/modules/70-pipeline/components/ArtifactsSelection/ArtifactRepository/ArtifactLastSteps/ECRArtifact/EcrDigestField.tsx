@@ -8,6 +8,7 @@
 import * as React from 'react'
 import { useParams } from 'react-router-dom'
 import type { AllowedTypes } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
 import type { FormikValues } from 'formik'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -95,7 +96,11 @@ export function EcrArtifactDigestField({
       projectIdentifier,
       orgIdentifier,
       connectorRef: connectorRefValue,
-      imagePath: formik?.values?.imagePath
+      imagePath: formik?.values?.imagePath,
+      registryId:
+        getMultiTypeFromValue(formik?.values?.registryId) === MultiTypeInputType.FIXED
+          ? formik?.values?.registryId
+          : undefined
     },
     requestOptions: {
       headers: {

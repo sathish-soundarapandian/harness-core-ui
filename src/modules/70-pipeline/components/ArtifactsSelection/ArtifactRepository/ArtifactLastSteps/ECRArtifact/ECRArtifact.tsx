@@ -7,7 +7,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react'
 import cx from 'classnames'
 import * as Yup from 'yup'
-import { defaultTo, get, memoize, merge } from 'lodash-es'
+import { defaultTo, get, memoize, merge, pick } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import type { IItemRendererProps } from '@blueprintjs/select'
@@ -86,12 +86,14 @@ export function ECRArtifact({
   const { CD_NG_DOCKER_ARTIFACT_DIGEST } = useFeatureFlags()
 
   const [tagList, setTagList] = React.useState([])
-  const [lastQueryData, setLastQueryData] = React.useState<{ imagePath: string; region: any }>({
+  const [lastQueryData, setLastQueryData] = React.useState<{ imagePath: string; region: any; registryId: string }>({
     imagePath: '',
-    region: ''
+    region: '',
+    registryId: ''
   })
-  const [imagesListLastQueryData, setImagesListLastQueryData] = React.useState<{ region: string }>({
-    region: ''
+  const [imagesListLastQueryData, setImagesListLastQueryData] = React.useState<{ region: string; registryId: string }>({
+    region: '',
+    registryId: ''
   })
 
   const modifiedPrevStepData = defaultTo(prevStepData, editArtifactModePrevStepData)
@@ -124,6 +126,10 @@ export function ECRArtifact({
     projectIdentifier,
     connectorRef: getConnectorRefQueryData(),
     region: imagesListLastQueryData.region,
+    registryId:
+      getMultiTypeFromValue(imagesListLastQueryData.registryId) === MultiTypeInputType.FIXED
+        ? imagesListLastQueryData.registryId
+        : undefined,
     repoIdentifier,
     branch
   }
@@ -158,19 +164,23 @@ export function ECRArtifact({
   }, [imagesListLoading, imagesListData])
 
   const canFetchImagesList = useCallback(
-    (region: string): boolean =>
-      !!(imagesListLastQueryData.region !== region && shouldFetchFieldOptions(modifiedPrevStepData, [region])),
+    (region: string, registryId: string): boolean =>
+      !!(
+        (imagesListLastQueryData.region !== region || imagesListLastQueryData.registryId !== registryId) &&
+        shouldFetchFieldOptions(modifiedPrevStepData, [region])
+      ),
     [imagesListLastQueryData, modifiedPrevStepData]
   )
 
   const fetchImagesList = useCallback(
-    (region = ''): void => {
-      if (canFetchImagesList(region)) {
-        setImagesListLastQueryData({ region })
+    (region = '', registryId = ''): void => {
+      if (canFetchImagesList(region, registryId)) {
+        setImagesListLastQueryData({ region, registryId })
         refetchImagesList({
           queryParams: {
             ...imagesListAPIQueryParams,
-            region
+            region,
+            registryId: getMultiTypeFromValue(registryId) === MultiTypeInputType.FIXED ? registryId : undefined
           }
         })
       }
@@ -192,6 +202,10 @@ export function ECRArtifact({
       orgIdentifier,
       projectIdentifier,
       region: defaultTo(lastQueryData.region.value, lastQueryData.region),
+      registryId:
+        getMultiTypeFromValue(lastQueryData.registryId) === MultiTypeInputType.FIXED
+          ? lastQueryData.registryId
+          : undefined,
       repoIdentifier,
       branch
     },
@@ -206,20 +220,22 @@ export function ECRArtifact({
   }, [ecrBuildData, ecrTagError])
 
   useEffect(() => {
-    if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
+    if (checkIfQueryParamsisNotEmpty(Object.values(pick(lastQueryData, ['imagePath', 'region'])))) {
       refetchECRBuilddata()
     }
   }, [lastQueryData, modifiedPrevStepData, refetchECRBuilddata])
 
-  const fetchTags = (imagePath = '', region = ''): void => {
-    if (canFetchTags(imagePath, region)) {
-      setLastQueryData({ imagePath, region })
+  const fetchTags = (imagePath = '', region = '', registryId = ''): void => {
+    if (canFetchTags(imagePath, region, registryId)) {
+      setLastQueryData({ imagePath, region, registryId })
     }
   }
   const canFetchTags = useCallback(
-    (imagePath: string, region: string): boolean =>
+    (imagePath: string, region: string, registryId: string): boolean =>
       !!(
-        (lastQueryData.imagePath !== imagePath || lastQueryData.region !== region) &&
+        (lastQueryData.imagePath !== imagePath ||
+          lastQueryData.region !== region ||
+          lastQueryData.registryId !== registryId) &&
         shouldFetchFieldOptions(modifiedPrevStepData, [imagePath, region])
       ),
     [lastQueryData, modifiedPrevStepData]
@@ -384,6 +400,11 @@ export function ECRArtifact({
                   disabled={isReadonly}
                   isOptional={true}
                   multiTextInputProps={{ expressions, allowableTypes }}
+                  onChange={() => {
+                    resetFieldValue(formik, 'imagePath')
+                    resetFieldValue(formik, 'tag')
+                    resetFieldValue(formik, 'digest')
+                  }}
                 />
                 {getMultiTypeFromValue(formik.values?.registryId) === MultiTypeInputType.RUNTIME && (
                   <div className={css.configureOptions}>
@@ -438,7 +459,7 @@ export function ECRArtifact({
                         return
                       }
                       if (!imagesListLoading) {
-                        fetchImagesList(formik.values.region)
+                        fetchImagesList(formik.values.region, formik.values.registryId)
                       }
                     }
                   }}
@@ -468,7 +489,7 @@ export function ECRArtifact({
                 allowableTypes={allowableTypes}
                 isReadonly={isReadonly}
                 connectorIdValue={getConnectorIdValue(modifiedPrevStepData)}
-                fetchTags={imagePath => fetchTags(imagePath, formik.values?.region)}
+                fetchTags={imagePath => fetchTags(imagePath, formik.values?.region, formik.values?.registryId)}
                 buildDetailsLoading={ecrBuildDetailsLoading}
                 tagError={ecrTagError}
                 tagList={tagList}

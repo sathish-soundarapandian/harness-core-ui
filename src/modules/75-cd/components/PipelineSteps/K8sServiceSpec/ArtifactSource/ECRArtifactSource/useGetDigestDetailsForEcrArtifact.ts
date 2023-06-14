@@ -6,6 +6,7 @@
  */
 
 import { defaultTo, get } from 'lodash-es'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useGetLastSuccessfulBuildForEcr, useGetLastSuccessfulBuildForEcrWithYaml } from 'services/cd-ng'
 import { getFqnPath, getYamlData } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/artifactSourceUtils'
 import { useMutateAsGet } from '@common/hooks'
@@ -34,12 +35,14 @@ export interface Params {
   stageIdentifier: string
   pipelineIdentifier?: string
   stepViewType?: StepViewType
+  registryId?: string
 }
 
 export function useGetDigestDetailsForEcrArtifact(params: Params) {
   const {
     connectorRef,
     imagePath,
+    registryId,
     tag,
     region,
     accountId,
@@ -71,7 +74,8 @@ export function useGetDigestDetailsForEcrArtifact(params: Params) {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      imagePath: imagePath
+      imagePath: imagePath,
+      registryId: getMultiTypeFromValue(registryId) === MultiTypeInputType.FIXED ? registryId : undefined
     },
     requestOptions: {
       headers: {
@@ -110,6 +114,7 @@ export function useGetDigestDetailsForEcrArtifact(params: Params) {
       branch,
       connectorRef,
       imagePath,
+      registryId,
       region,
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId,
