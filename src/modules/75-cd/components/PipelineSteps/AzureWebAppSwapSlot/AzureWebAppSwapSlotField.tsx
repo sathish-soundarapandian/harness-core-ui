@@ -84,7 +84,7 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
     },
 
     style: {
-      width: 600,
+      width: 400,
       minHeight: 240,
       borderLeft: 0,
       paddingBottom: 0,
@@ -176,7 +176,7 @@ const AzureSwapSlotDeploymentDynamic = (props: AzureSwapSlotDeploymentDynamicPro
     () => (
       <Dialog {...modalProps}>
         {
-          <Layout.Vertical spacing="xxlarge" width={'67%'} padding="medium">
+          <Layout.Vertical spacing="xxlarge" width={'380px'} padding="medium">
             <FormInput.MultiTypeInput
               selectItems={dynamicWebNames}
               multiTypeInputProps={{
