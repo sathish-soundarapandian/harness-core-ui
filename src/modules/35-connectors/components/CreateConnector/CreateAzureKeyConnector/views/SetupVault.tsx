@@ -50,10 +50,13 @@ import type { IOptionProps } from '@blueprintjs/core'
 
 export interface SetupVaultFormData {
   vaultName?: string
+
+  vaultType: string
 }
 
 const defaultInitialFormData: SetupVaultFormData = {
-  vaultName: undefined
+  vaultName: undefined,
+  vaultType: 'fetch'
 }
 
 const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> = ({

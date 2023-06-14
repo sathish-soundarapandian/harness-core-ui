@@ -1997,7 +1997,8 @@ export const buildAzureKeyVaultPayload = (formData: FormData): BuildAzureKeyVaul
     spec: {
       ...pick(formData, ['tenantId', 'default', 'subscription', 'vaultName', 'delegateSelectors']),
       ...delegateOutClusterFields,
-      ...delegateInClusterFields
+      ...delegateInClusterFields,
+      vaultConfiguredManullay: formData.vaultType === 'manual'
     }
   }
 
@@ -2543,7 +2544,8 @@ export const setupAzureKeyVaultFormData = async (
 
 export const setupAzureKeyVaultNameFormData = async (connectorInfo: ConnectorInfoDTO): Promise<FormData> => {
   return {
-    vaultName: connectorInfo?.spec?.vaultName
+    vaultName: connectorInfo?.spec?.vaultName,
+    vaultType: !connectorInfo?.spec?.vaultConfiguredManullay ? 'fetch' : 'manual'
   }
 }
 
