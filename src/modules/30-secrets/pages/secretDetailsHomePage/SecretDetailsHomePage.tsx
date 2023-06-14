@@ -24,6 +24,7 @@ import { SettingType } from '@common/constants/Utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import SecretDetails from '../secretDetails/SecretDetails'
 import SecretReferences from '../secretReferences/SecretReferences'
+import SecretRuntimeUsage from '../runTimeUsage/SecretRuntimeUsage'
 import { SecretMenuItem } from '../secrets/views/SecretsListView/SecretsList'
 import css from './SecretDetailsHomePage.module.scss'
 
@@ -39,7 +40,8 @@ interface SecretDetailsProps {
 
 export enum SecretDetailsTabs {
   OVERVIEW = 'overview',
-  REFERENCE = 'reference'
+  REFERENCE = 'reference',
+  USAGE = 'usage'
 }
 
 const getProjectUrl = ({ accountId, projectIdentifier, orgIdentifier, module }: OptionalIdentifiers): string => {
@@ -61,7 +63,7 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
     routes.toSecretDetailsReferences({ accountId, projectIdentifier, orgIdentifier, secretId, module })
   )?.isExact
 
-  const [isReference, setIsReference] = useState(Boolean(isReferenceTab))
+  const [tab, setTab] = useState(isReferenceTab ? SecretDetailsTabs.REFERENCE : SecretDetailsTabs.OVERVIEW)
   const { showError } = useToaster()
   const { selectedProject } = useAppStore()
   const { getRBACErrorMessage } = useRBACError()
@@ -150,7 +152,9 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
                 secret={data?.data?.secret || {}}
                 onSuccessfulDelete={onSuccessfulDeleteRedirect}
                 onSuccessfulEdit={refetch}
-                setIsReference={isRefereceView => setIsReference(isRefereceView)}
+                setIsReference={isRefereceView => {
+                  isRefereceView ? setTab(SecretDetailsTabs.REFERENCE) : undefined
+                }}
                 forceDeleteSupported={PL_FORCE_DELETE_CONNECTOR_SECRET && forceDeleteSettings?.data?.value === 'true'}
               />
             </div>
@@ -170,9 +174,9 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
         <div className={css.secretTabs}>
           <Tabs
             id={'horizontalTabs'}
-            selectedTabId={isReference ? SecretDetailsTabs.REFERENCE : SecretDetailsTabs.OVERVIEW}
+            selectedTabId={tab}
             onChange={newTabId => {
-              setIsReference(newTabId === SecretDetailsTabs.REFERENCE)
+              setTab(newTabId as SecretDetailsTabs)
             }}
             tabList={[
               {
@@ -184,6 +188,11 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
                 id: SecretDetailsTabs.REFERENCE,
                 title: getString('common.references'),
                 panel: <SecretReferences secretData={data || undefined} />
+              },
+              {
+                id: SecretDetailsTabs.USAGE,
+                title: getString('common.runTimeusage'),
+                panel: <SecretRuntimeUsage secretData={data || undefined} />
               }
             ]}
           ></Tabs>

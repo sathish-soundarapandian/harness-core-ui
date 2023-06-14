@@ -958,6 +958,7 @@ export interface StringsMap {
   'common.results': string
   'common.role': string
   'common.roleAssignmentLabel': string
+  'common.runTimeusage': string
   'common.saveAndClose': string
   'common.saveAsTemplate': string
   'common.savedSuccessfully': string
