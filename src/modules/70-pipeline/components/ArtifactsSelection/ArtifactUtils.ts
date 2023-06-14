@@ -410,7 +410,12 @@ const getVersionValues = (
   AmazonMachineImageInitialValuesType => {
   const formikInitialValues = {
     versionType: specValues?.version ? TagTypes.Value : TagTypes.Regex,
-    packageSource: specValues?.user ? PackageSourceTypes.User : PackageSourceTypes.Org,
+    packageSource:
+      specValues?.packageType === 'maven'
+        ? specValues?.user
+          ? PackageSourceTypes.User
+          : PackageSourceTypes.Org
+        : undefined,
     spec: {
       ...specValues,
       version: specValues?.version,
@@ -593,7 +598,6 @@ export const defaultArtifactInitialValues = (
       return {
         identifier: '',
         versionType: TagTypes.Value,
-        packageSource: 'org',
         spec: {
           connectorRef: '',
           packageType: 'container',

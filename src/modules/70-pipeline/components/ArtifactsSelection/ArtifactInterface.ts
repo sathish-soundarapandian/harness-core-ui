@@ -198,7 +198,6 @@ export interface GithubPackageRegistryInitialValuesType {
     packageName: string
     version: string
     versionRegex: string
-    repository?: string
     user?: string
     artifactId?: string
     groupId?: string

@@ -376,20 +376,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               }}
             />
           )}
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
-            <TextFieldInputSetView
-              fieldPath={`artifacts.${artifactPath}.spec.repository`}
-              template={template}
-              name={`${path}.artifacts.${artifactPath}.spec.repository`}
-              label={getString('repository')}
-              placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repository`)}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-            />
-          )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.groupId`, template) && (
             <TextFieldInputSetView
               fieldPath={`artifacts.${artifactPath}.spec.groupId`}

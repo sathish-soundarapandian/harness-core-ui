@@ -209,7 +209,7 @@ function FormComponent({
               onChange={value => {
                 formik.setValues({
                   ...omit(formik.values, ['packageSource']),
-                  packageSource: value.value !== PACKAGE_TYPES.MAVEN ? undefined : PackageSourceTypes.Org,
+                  packageSource: value.value === PACKAGE_TYPES.MAVEN ? PackageSourceTypes.Org : undefined,
                   spec: {
                     ...formik.values?.spec,
                     packageType: value.value,
@@ -406,31 +406,6 @@ function FormComponent({
             <div className={css.imagePathContainer}>
               <>
                 <FormInput.MultiTextInput
-                  label={getString('repository')}
-                  placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-                  name="spec.repository"
-                  multiTextInputProps={{ expressions, allowableTypes }}
-                />
-                {getMultiTypeFromValue(formik.values?.spec?.repository) === MultiTypeInputType.RUNTIME && (
-                  <div className={css.configureOptions}>
-                    <ConfigureOptions
-                      value={formik.values?.spec?.repository || ''}
-                      type="String"
-                      variableName="spec.repository"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      onChange={value => {
-                        formik.setFieldValue('spec.repository', value)
-                      }}
-                      isReadonly={isReadonly}
-                    />
-                  </div>
-                )}
-              </>
-            </div>
-            <div className={css.imagePathContainer}>
-              <>
-                <FormInput.MultiTextInput
                   label={getString('pipeline.artifactsSelection.groupId')}
                   name="spec.groupId"
                   placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
@@ -623,7 +598,6 @@ const getExtraDataForMavenIfApplicable = (formData: GithubPackageRegistryInitial
 
   return formData.spec?.packageType === PACKAGE_TYPES.MAVEN
     ? {
-        repository: formData.spec?.repository,
         groupId: formData.spec?.groupId,
         artifactId: formData.spec?.artifactId,
         extension: formData.spec?.extension,
@@ -714,13 +688,6 @@ export function GithubPackageRegistry(
       then: Yup.string()
         .trim()
         .required(getString('fieldRequired', { field: getString('pipeline.artifactsSelection.groupId') })),
-      otherwise: Yup.string().notRequired()
-    }),
-    repository: Yup.string().when('packageType', {
-      is: val => val === PACKAGE_TYPES.MAVEN,
-      then: Yup.string()
-        .trim()
-        .required(getString('fieldRequired', { field: getString('repository') })),
       otherwise: Yup.string().notRequired()
     })
   }
