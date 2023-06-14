@@ -153,7 +153,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       icon: 'layers-outline',
       route: routes.toServiceOverrides({ accountId, orgIdentifier }),
       colorClass: css.connectors,
-      hidden: isServiceOverridesEnabled,
+      hidden: !isServiceOverridesEnabled,
       fillColor: Color.PRIMARY_7
     },
 

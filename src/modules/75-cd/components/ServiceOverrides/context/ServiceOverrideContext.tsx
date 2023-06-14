@@ -31,7 +31,7 @@ interface ServiceOverridesContextInterface {
   serviceOverrideType: Required<ServiceOverridesResponseDTOV2>['type']
   handleNewOverride(): void
   onAdd(values: ServiceOverrideRowFormState): void
-  onDuplicate(rowIndex: number): void
+  onClone(rowIndex: number): void
   onEdit(rowIndex: number): void
   onUpdate(rowIndex: number, values: RequiredField<ServiceOverrideRowFormState, 'environmentRef'>): void
   onDelete(rowIndex: number): void
@@ -49,7 +49,7 @@ const ServiceOverridesContext = createContext<ServiceOverridesContextInterface>(
   canCreateNew: true,
   setCanCreateNewOrEdit: noop,
   onAdd: noop,
-  onDuplicate: noop,
+  onClone: noop,
   onEdit: noop,
   onUpdate: noop,
   onDelete: noop,
@@ -101,7 +101,7 @@ export function ServiceOverridesProvider({
   const handleNewOverride = (): void => {
     if (canCreateNew) {
       setCanCreateNewOrEdit(false)
-      setListRowItems(c => [{ isNew: true, isEdit: true, rowIndex: -1, groupKey: '' }, ...c])
+      setListRowItems(c => [{ isNew: true, isEdit: true, isClone: false, rowIndex: -1, groupKey: '' }, ...c])
     } else {
       showWarning(getString('common.serviceOverrides.editablePlaceholderExists'))
     }
@@ -257,11 +257,11 @@ export function ServiceOverridesProvider({
       })
   }
 
-  const onDuplicate = (rowIndex: number): void => {
+  const onClone = (rowIndex: number): void => {
     if (canCreateNew) {
       setCanCreateNewOrEdit(false)
       setListRowItems(c => {
-        c.splice(rowIndex + 1, 0, { ...c[rowIndex], isEdit: true, rowIndex: rowIndex + 0.5 })
+        c.splice(rowIndex + 1, 0, { ...c[rowIndex], isEdit: true, isClone: true, rowIndex: rowIndex + 0.5 })
         return c
       })
     } else {
@@ -290,7 +290,7 @@ export function ServiceOverridesProvider({
         setCanCreateNewOrEdit,
         handleNewOverride,
         onAdd,
-        onDuplicate,
+        onClone,
         onEdit,
         onUpdate,
         onDelete,

@@ -2,7 +2,16 @@ import React, { useCallback } from 'react'
 import { useFormikContext } from 'formik'
 import { isEmpty, isNil } from 'lodash-es'
 
-import { Button, ButtonVariation, Container, Formik, FormikForm, Layout, MultiTypeInputType } from '@harness/uicore'
+import {
+  AllowedTypes,
+  Button,
+  ButtonVariation,
+  Container,
+  Formik,
+  FormikForm,
+  Layout,
+  MultiTypeInputType
+} from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 
 import type {
@@ -49,14 +58,16 @@ import css from '../ListRows.module.scss'
 export default function EditableRow({
   rowIndex,
   overrideDetails,
-  isEdit
-}: PartiallyRequired<ServiceOverrideRowProps, 'rowIndex' | 'isEdit'>): React.ReactElement {
+  isNew,
+  isEdit,
+  isClone
+}: PartiallyRequired<ServiceOverrideRowProps, 'rowIndex' | 'isEdit' | 'isClone'>): React.ReactElement {
   const { onAdd, onUpdate } = useServiceOverridesContext()
 
   const { overrideType, environmentRef, infraIdentifier, serviceRef } = overrideDetails || ({} as OverrideDetails)
 
   const handleSubmit = (values: ServiceOverrideRowFormState): void =>
-    isNil(overrideDetails)
+    isNew || isClone
       ? onAdd?.(values)
       : onUpdate?.(rowIndex, values as RequiredField<ServiceOverrideRowFormState, 'environmentRef'>)
 
@@ -83,7 +94,7 @@ export default function EditableRow({
       onSubmit={handleSubmit}
     >
       <FormikForm>
-        <EditableRowInternal overrideDetails={overrideDetails} isEdit={isEdit} />
+        <EditableRowInternal overrideDetails={overrideDetails} isEdit={isEdit} isClone={isClone} />
       </FormikForm>
     </Formik>
   )
@@ -91,9 +102,11 @@ export default function EditableRow({
 
 function EditableRowInternal({
   overrideDetails,
-  isEdit
+  isEdit,
+  isClone
 }: {
   isEdit: boolean
+  isClone: boolean
   overrideDetails?: OverrideDetails
 }): React.ReactElement {
   const { values, setFieldValue, submitForm } = useFormikContext<ServiceOverrideRowFormState>()
@@ -125,13 +138,18 @@ function EditableRowInternal({
     []
   )
 
+  const allowableTypes: AllowedTypes =
+    serviceOverrideType === 'ENV_GLOBAL_OVERRIDE' || serviceOverrideType === 'ENV_SERVICE_OVERRIDE'
+      ? [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+      : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+
   const { editManifestOverride } = useServiceManifestOverride({
     manifestOverrides: isEdit ? [(overrideDetails as ManifestOverrideDetails).manifestValue] : [],
     isReadonly: false,
     handleManifestOverrideSubmit: manifestObj => handleOverrideSubmit(manifestObj, 'manifests'),
     fromEnvConfigPage: true,
     expressions: [],
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+    allowableTypes
   })
 
   const { editFileOverride } = useConfigFileOverride({
@@ -140,7 +158,7 @@ function EditableRowInternal({
     fromEnvConfigPage: true,
     handleConfigFileOverrideSubmit: filesObj => handleOverrideSubmit(filesObj, 'configFiles'),
     expressions: [],
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+    allowableTypes
   })
 
   const { editApplicationConfig } = useApplicationSettingOverride({
@@ -148,7 +166,7 @@ function EditableRowInternal({
       ? (overrideDetails as ApplicationSettingsOverrideDetails).applicationSettingsValue
       : undefined,
     isReadonly: false,
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+    allowableTypes,
     handleSubmitConfig: config => handleOverrideSubmit(config, 'applicationSettings')
   })
 
@@ -157,7 +175,7 @@ function EditableRowInternal({
       ? (overrideDetails as ConnectionStringsOverrideDetails).connectionStringsValue
       : undefined,
     isReadonly: false,
-    allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+    allowableTypes,
     handleSubmitConfig: config => handleOverrideSubmit(config, 'connectionStrings')
   })
 
@@ -171,7 +189,7 @@ function EditableRowInternal({
         if (rowConfig.accessKey) {
           return (
             <Container width={rowConfig.rowWidth}>
-              <RowItemFromValue value={rowConfig.value} isEdit={!!isEdit} />
+              <RowItemFromValue value={rowConfig.value} isEdit={isEdit} isClone={isClone} />
             </Container>
           )
         } else {

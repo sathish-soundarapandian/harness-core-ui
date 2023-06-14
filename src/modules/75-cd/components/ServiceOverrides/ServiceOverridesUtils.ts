@@ -207,7 +207,11 @@ export interface ServiceOverrideRowProps {
    */
   isEdit: boolean
   /**
-   * rowIndex is used to identify the row in case of any actions - duplicate, edit, delete
+   * isClone is set to true when cloning an existing override row
+   */
+  isClone: boolean
+  /**
+   * rowIndex is used to identify the row in case of any actions - clone, edit, delete
    */
   rowIndex: number
   /**

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Container, Layout } from '@harness/uicore'
+import { Container, Layout, Text } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 
@@ -39,9 +39,11 @@ export default function ViewOnlyRow({
         if (rowConfig.accessKey) {
           return (
             <Container width={rowConfig.rowWidth}>
-              {rowConfig.mapper
-                ? getString(rowConfig.mapper[overrideDetails[rowConfig.accessKey] as string])
-                : overrideDetails[rowConfig.accessKey]}
+              <Text lineClamp={1}>
+                {rowConfig.mapper
+                  ? getString(rowConfig.mapper[overrideDetails[rowConfig.accessKey] as string])
+                  : overrideDetails[rowConfig.accessKey]}
+              </Text>
             </Container>
           )
         } else {

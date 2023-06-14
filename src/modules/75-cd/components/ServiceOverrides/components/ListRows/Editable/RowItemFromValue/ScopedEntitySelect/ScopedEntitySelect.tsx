@@ -124,7 +124,7 @@ export default function ScopedEntitySelect<T>({
           setIsPopoverOpen(true)
         }}
       >
-        {selectedOption?.label || getString('common.entityPlaceholderText')}
+        <Text lineClamp={1}>{selectedOption?.label || getString('common.entityPlaceholderText')}</Text>
       </Button>
     </Popover>
   )

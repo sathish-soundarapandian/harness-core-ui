@@ -10,20 +10,32 @@ import ScopedEntitySelect from './ScopedEntitySelect/ScopedEntitySelect'
 
 export default function RowItemFromValue({
   value,
-  readonly,
-  isEdit
+  isEdit,
+  isClone,
+  readonly
 }: {
   value: StringKeys
   isEdit: boolean
+  isClone: boolean
   readonly?: boolean
 }): React.ReactElement {
   if (value === 'environment') {
-    return <ScopedEntitySelect<ServiceOverrideRowFormState> fieldKey="environmentRef" readonly={readonly || isEdit} />
+    return (
+      <ScopedEntitySelect<ServiceOverrideRowFormState>
+        fieldKey="environmentRef"
+        readonly={readonly || (isEdit && !isClone)}
+      />
+    )
   } else if (value === 'service') {
-    return <ScopedEntitySelect<ServiceOverrideRowFormState> fieldKey="serviceRef" readonly={readonly || isEdit} />
+    return (
+      <ScopedEntitySelect<ServiceOverrideRowFormState>
+        fieldKey="serviceRef"
+        readonly={readonly || (isEdit && !isClone)}
+      />
+    )
   } else if (value === 'infrastructureText') {
-    return <InfrastructureSelect readonly={readonly || isEdit} />
+    return <InfrastructureSelect readonly={readonly || (isEdit && !isClone)} />
   } else {
-    return <OverrideTypeInput readonly={readonly || isEdit} />
+    return <OverrideTypeInput readonly={readonly || (isEdit && !isClone)} />
   }
 }

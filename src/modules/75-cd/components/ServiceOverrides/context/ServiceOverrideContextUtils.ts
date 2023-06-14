@@ -27,6 +27,7 @@ export const formListRowItems = (dataItems: ServiceOverridesResponseDTOV2[]): Se
     const commonRowProps = {
       isEdit: false,
       isNew: false,
+      isClone: false,
       groupKey: formGroupKey(dataItem),
       overrideResponse: sanitize(dataItem, {
         removeEmptyArray: false,

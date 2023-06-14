@@ -8,15 +8,17 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableUtils'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { ServiceOverrideRowFormState } from '@cd/components/ServiceOverrides/ServiceOverridesUtils'
+import { useServiceOverridesContext } from '@cd/components/ServiceOverrides/context/ServiceOverrideContext'
 
 export function VariableOverrideEditable(): React.ReactElement {
   const { getString } = useStrings()
   const { values } = useFormikContext<ServiceOverrideRowFormState>()
+  const { serviceOverrideType } = useServiceOverridesContext()
   const variableType = values.variables?.[0]?.type
 
   return (
     <Layout.Horizontal spacing={'medium'}>
-      <FormInput.Text name="variables.0.name" />
+      <FormInput.Text name="variables.0.name" placeholder={getString('name')} />
       <FormInput.Select
         name="variables.0.type"
         items={[
@@ -24,6 +26,7 @@ export function VariableOverrideEditable(): React.ReactElement {
           { label: getString(labelStringMap[VariableType.Number]), value: VariableType.Number },
           { label: getString(labelStringMap[VariableType.Secret]), value: VariableType.Secret }
         ]}
+        placeholder={getString('typeLabel')}
       />
       {variableType === VariableType.Secret ? (
         <MultiTypeSecretInput small name={'variables.0.value'} label="" disabled={false} />
@@ -31,20 +34,19 @@ export function VariableOverrideEditable(): React.ReactElement {
         <FormInput.MultiTextInput
           className="variableInput"
           name={'variables.0.value'}
+          placeholder={getString('valueLabel')}
           label=""
           disabled={false}
           multiTextInputProps={{
             mini: true,
             defaultValueToReset: '',
-            // btnClassName:
-            //   getMultiTypeFromValue(variable.value as string) === MultiTypeInputType.RUNTIME
-            //     ? css.runtimeInputButton
-            //     : '',
             textProps: {
-              // disabled: !initialValues.canAddVariable || readonly,
               type: variableType === VariableType.Number ? 'number' : 'text'
             },
-            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+            allowableTypes:
+              serviceOverrideType === 'ENV_GLOBAL_OVERRIDE' || serviceOverrideType === 'ENV_SERVICE_OVERRIDE'
+                ? [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+                : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
           }}
           data-testid="variables-test"
         />

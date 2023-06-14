@@ -4,7 +4,7 @@ import { FontVariation } from '@harness/design-system'
 import { useServiceOverridesContext } from '@cd/components/ServiceOverrides/context/ServiceOverrideContext'
 
 export default function RowActionButtons({ rowIndex }: { rowIndex: number }): React.ReactElement {
-  const { onEdit, onDelete, onDuplicate } = useServiceOverridesContext()
+  const { onEdit, onDelete, onClone } = useServiceOverridesContext()
 
   return (
     <Layout.Horizontal spacing={'small'} width={110}>
@@ -12,7 +12,7 @@ export default function RowActionButtons({ rowIndex }: { rowIndex: number }): Re
         icon="duplicate"
         variation={ButtonVariation.ICON}
         font={{ variation: FontVariation.BODY1 }}
-        onClick={() => onDuplicate(rowIndex)}
+        onClick={() => onClone(rowIndex)}
       />
       <Button
         icon="Edit"
