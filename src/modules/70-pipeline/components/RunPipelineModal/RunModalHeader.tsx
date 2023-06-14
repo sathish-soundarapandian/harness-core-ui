@@ -12,13 +12,18 @@ import {
   MultiSelectDropDown,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
-  SelectOption
+  SelectOption,
+  Layout,
+  Utils,
+  Icon,
+  Text
 } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 
 import type { FormikErrors } from 'formik'
 import type { GetDataError } from 'restful-react'
+import { Position } from '@blueprintjs/core'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -28,7 +33,8 @@ import type {
   ResponseListStageExecutionResponse,
   ResponsePMSPipelineResponseDTO,
   Error,
-  Failure
+  Failure,
+  AccessControlCheckError
 } from 'services/pipeline-ng'
 import {
   ALL_STAGE_VALUE,
@@ -42,6 +48,7 @@ import type { InputSetDTO } from '@pipeline/utils/types'
 
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import GitPopover from '../GitPopover/GitPopover'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 
@@ -63,6 +70,7 @@ export interface RunModalHeaderProps {
   formRefDom: React.MutableRefObject<HTMLElement | undefined>
   formErrors: FormikErrors<InputSetDTO>
   stageExecutionData: ResponseListStageExecutionResponse | null
+  stageExecutionError: GetDataError<Failure | Error | AccessControlCheckError> | null
   executionStageList: SelectOption[]
   runModalHeaderTitle: string
   refetchPipeline: any
@@ -88,6 +96,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
     formRefDom,
     formErrors,
     stageExecutionData,
+    stageExecutionError,
     executionStageList,
     runModalHeaderTitle,
     refetchPipeline,
@@ -103,6 +112,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const [localSelectedStagesData, setLocalSelectedStagesData] = useState(selectedStageData)
   const isPipelineRemote =
     supportingGitSimplification &&
@@ -191,7 +201,11 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
 
         {remoteFetchError ? null : (
           <>
-            <div data-tooltip-id={stageExecutionDisabledTooltip}>
+            <Layout.Horizontal
+              data-tooltip-id={stageExecutionDisabledTooltip}
+              spacing="small"
+              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+            >
               <MultiSelectDropDown
                 popoverClassName={css.disabledStageDropdown}
                 hideItemCount={localSelectedStagesData.allStagesSelected}
@@ -209,7 +223,24 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
                 className={css.stagesDropdown}
               />
               <HarnessDocTooltip tooltipId={stageExecutionDisabledTooltip} useStandAlone={true} />
-            </div>
+              {!isEmpty(stageExecutionError) ? (
+                <Utils.WrapOptionalTooltip
+                  tooltip={
+                    <Text
+                      padding="medium"
+                      font={{ variation: FontVariation.BODY }}
+                      width={380}
+                      className={css.stageExecutionErrorTooltip}
+                    >
+                      {getRBACErrorMessage(stageExecutionError as RBACError, true)}
+                    </Text>
+                  }
+                  tooltipProps={{ usePortal: true, position: Position.RIGHT, isDark: true }}
+                >
+                  <Icon name="warning-sign" color={Color.RED_700} />
+                </Utils.WrapOptionalTooltip>
+              ) : null}
+            </Layout.Horizontal>
             <div className={css.optionBtns}>
               <VisualYamlToggle
                 selectedView={selectedView}

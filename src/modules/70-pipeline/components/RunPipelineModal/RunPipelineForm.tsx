@@ -393,7 +393,7 @@ function RunPipelineFormBasic({
     }
   })
 
-  const { data: stageExecutionData } = useGetStagesExecutionList({
+  const { data: stageExecutionData, error: stageExecutionError } = useGetStagesExecutionList({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
@@ -828,6 +828,7 @@ function RunPipelineFormBasic({
               formRefDom={formRefDom}
               formErrors={formErrors}
               stageExecutionData={stageExecutionData}
+              stageExecutionError={stageExecutionError}
               executionStageList={executionStageList}
               runModalHeaderTitle={formTitleText}
               selectedBranch={selectedBranch}
@@ -890,6 +891,7 @@ function RunPipelineFormBasic({
                     formRefDom={formRefDom}
                     formErrors={formErrors}
                     stageExecutionData={stageExecutionData}
+                    stageExecutionError={stageExecutionError}
                     executionStageList={executionStageList}
                     runModalHeaderTitle={formTitleText}
                     selectedBranch={selectedBranch}

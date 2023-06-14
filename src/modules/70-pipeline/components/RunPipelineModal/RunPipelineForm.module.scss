@@ -296,3 +296,10 @@
 .runPipelineBranchDetails {
   width: auto;
 }
+
+.stageExecutionErrorTooltip {
+  color: var(--grey-0) !important;
+  & p {
+    color: var(--grey-0) !important;
+  }
+}

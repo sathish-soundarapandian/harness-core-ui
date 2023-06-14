@@ -53,6 +53,7 @@ declare const styles: {
   readonly runPipelineBranchDetails: string
   readonly runPipelineDialog: string
   readonly secondaryButton: string
+  readonly stageExecutionErrorTooltip: string
   readonly stageName: string
   readonly stageSelectionItem: string
   readonly stageWarning: string
