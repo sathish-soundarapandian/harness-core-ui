@@ -7,14 +7,15 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly connectorContainer: string
+  readonly boxContainer: string
   readonly details: string
   readonly dialog: string
   readonly errorMessage: string
+  readonly form: string
   readonly formContainer: string
   readonly gap2: string
-  readonly gap4: string
   readonly image: string
+  readonly margin2: string
   readonly overviewContainer: string
 }
 export default styles

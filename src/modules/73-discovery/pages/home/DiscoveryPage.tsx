@@ -6,7 +6,7 @@
  */
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ButtonVariation, Container, ExpandingSearchInput, Icon, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Container, ExpandingSearchInput, Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Drawer, Position } from '@blueprintjs/core'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -122,6 +122,13 @@ const DiscoveryPage: React.FC = () => {
         </Container>
       )}
       <Drawer position={Position.RIGHT} isOpen={isOpen} isCloseButtonShown={true} size={'86%'}>
+        <Button
+          minimal
+          className={css.almostFullScreenCloseBtn}
+          icon="cross"
+          withoutBoxShadow
+          onClick={() => setDrawerOpen(false)}
+        />
         <CreateDAgent setDrawerOpen={setDrawerOpen} />
       </Drawer>
     </>

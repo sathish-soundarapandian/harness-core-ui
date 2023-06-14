@@ -4,8 +4,18 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React from 'react'
-import { Button, ButtonVariation, Container, FormInput, FormikForm, Layout, Text, useToaster } from '@harness/uicore'
+import React, { useState } from 'react'
+import {
+  Button,
+  ButtonVariation,
+  Container,
+  FormInput,
+  FormikForm,
+  Layout,
+  Switch,
+  Text,
+  useToaster
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Formik, FormikProps } from 'formik'
 import * as Yup from 'yup'
@@ -17,10 +27,15 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import List from '@discovery/components/List/List'
 import { useCreateInfra } from 'services/servicediscovery'
+import NumberedList from '@discovery/components/NumberedList/NumberedList'
+import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
 import css from './CreateDAgent.module.scss'
 
 interface FormValues {
   discoveryAgentName: string
+  detectNetworkTrace?: boolean
+  blacklistedNamespaces?: string[]
+  cronString?: string
   connectorRef: string | undefined
 }
 
@@ -32,6 +47,7 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const [isNetworkTraceDetected, setIsNetworkTraceDetected] = useState<boolean>(false)
   const dAgentFormRef = React.useRef<FormikProps<FormValues>>()
 
   const { mutate: infraMutate } = useCreateInfra({
@@ -44,7 +60,8 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
 
   const inputValues: FormValues = {
     discoveryAgentName: '',
-    connectorRef: undefined
+    connectorRef: undefined,
+    detectNetworkTrace: isNetworkTraceDetected
   }
 
   const handleSubmit = (): void => {
@@ -117,55 +134,103 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
             })}
             onSubmit={() => void 0}
           >
-            {() => {
+            {formikProps => {
               return (
-                <FormikForm>
-                  <Layout.Vertical className={classNames(css.formContainer, css.gap4)} padding="xxlarge" width={'60%'}>
-                    <Layout.Vertical width={'100%'}>
-                      <Layout.Vertical width={'600px'} margin={{ top: 'xxlarge' }}>
-                        <Text
-                          font={{ variation: FontVariation.H5, weight: 'semi-bold' }}
-                          margin={{ top: 'large', bottom: 'large' }}
-                        >
-                          {getString('discovery.selectAConnector')}
-                        </Text>
-                        <Text
-                          width="100%"
-                          font={{ variation: FontVariation.BODY }}
-                          margin={{ top: 'medium', bottom: 'large' }}
-                        >
-                          {getString('discovery.selectAConnectorDescription')}
-                        </Text>
-                        <Container
-                          className={css.connectorContainer}
-                          background={Color.WHITE}
-                          width="100%"
-                          padding="medium"
-                        >
-                          <FormConnectorReferenceField
-                            width={400}
-                            type={'K8sCluster'}
-                            name={'connectorRef'}
-                            label={
-                              <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
-                                {getString('connectors.selectConnector')}
-                              </Text>
-                            }
-                            accountIdentifier={accountId}
-                            projectIdentifier={projectIdentifier}
-                            orgIdentifier={orgIdentifier}
-                            placeholder={getString('connectors.selectConnector')}
-                            tooltipProps={{ dataTooltipId: 'selectNetworkMapConnector' }}
-                          />
+                <FormikForm className={css.form}>
+                  <Layout.Vertical className={classNames(css.formContainer, css.gap2)} padding="xxlarge" width={'60%'}>
+                    <NumberedList
+                      index={1}
+                      showLine
+                      content={
+                        <Layout.Vertical width={'900px'}>
+                          <Text
+                            font={{ variation: FontVariation.H5, weight: 'semi-bold' }}
+                            margin={{ bottom: 'large' }}
+                          >
+                            {getString('discovery.selectAConnector')}
+                          </Text>
+                          <Text
+                            width="100%"
+                            font={{ variation: FontVariation.BODY }}
+                            margin={{ top: 'medium', bottom: 'large' }}
+                          >
+                            {getString('discovery.selectAConnectorDescription')}
+                          </Text>
+                          <Container className={css.boxContainer} background={Color.WHITE} padding="medium">
+                            <FormConnectorReferenceField
+                              width={400}
+                              type={'K8sCluster'}
+                              name={'connectorRef'}
+                              label={
+                                <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
+                                  {getString('connectors.selectConnector')}
+                                </Text>
+                              }
+                              accountIdentifier={accountId}
+                              projectIdentifier={projectIdentifier}
+                              orgIdentifier={orgIdentifier}
+                              placeholder={getString('connectors.selectConnector')}
+                              tooltipProps={{ dataTooltipId: 'selectNetworkMapConnector' }}
+                            />
 
-                          <FormInput.Text
-                            name="discoveryAgentName"
-                            label={getString('discovery.dAgentName')}
-                            placeholder={getString('discovery.testConnector')}
-                          />
-                        </Container>
-                      </Layout.Vertical>
-                    </Layout.Vertical>
+                            <FormInput.Text
+                              name="discoveryAgentName"
+                              label={getString('discovery.dAgentName')}
+                              placeholder={getString('discovery.testConnector')}
+                            />
+                          </Container>
+                        </Layout.Vertical>
+                      }
+                    />
+
+                    <NumberedList
+                      index={2}
+                      margin={{ bottom: 'large' }}
+                      content={
+                        <Layout.Vertical width={'900px'} className={css.margin2}>
+                          <Text
+                            font={{ variation: FontVariation.H5, weight: 'semi-bold' }}
+                            margin={{ bottom: 'large' }}
+                          >
+                            {getString('discovery.dataCollectionSettings')}
+                          </Text>
+                          <Text
+                            width="100%"
+                            font={{ variation: FontVariation.BODY }}
+                            margin={{ top: 'medium', bottom: 'large' }}
+                          >
+                            {getString('discovery.dataCollectionSettingsDesc')}
+                          </Text>
+
+                          <Container className={css.boxContainer} background={Color.WHITE} padding="medium">
+                            <Switch
+                              name="detectNetworkTrace"
+                              label={getString('discovery.detectNetworkTrace')}
+                              font={{ weight: 'semi-bold', size: 'normal' }}
+                              color={Color.GREY_900}
+                              margin={{ bottom: 'medium' }}
+                              onChange={() => setIsNetworkTraceDetected(prev => !prev)}
+                              checked={isNetworkTraceDetected}
+                            />
+
+                            <FormInput.TagInput
+                              name="blacklistedNamespaces"
+                              label={getString('discovery.blacklistedNamespaces')}
+                              itemFromNewTag={tag => tag}
+                              items={[]}
+                              tagInputProps={{
+                                showClearAllButton: true,
+                                allowNewTag: true,
+                                showAddTagButton: false
+                              }}
+                              labelFor={tag => tag as string}
+                            />
+
+                            <SchedulePanel renderFormTitle={false} hideSeconds formikProps={formikProps} />
+                          </Container>
+                        </Layout.Vertical>
+                      }
+                    />
                   </Layout.Vertical>
                 </FormikForm>
               )

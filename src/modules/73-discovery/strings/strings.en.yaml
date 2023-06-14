@@ -34,6 +34,9 @@ approxTime: Approx time
 serviceDiscoveyTable: Service Discovery Table
 discoveredBy: Discovery by
 agentName: Agent Name
+optional: (Optional)
+dataCollectionSettings: Data Collection Settings
+dataCollectionSettingsDesc: Configure the period of detecting services in the connector, network traces and namespaces accessed
 createNetworkMap: Create Network Map
 allDiscoveredServices: All Discovered Services
 networkMap: Network Map
@@ -54,3 +57,5 @@ serviceDrawer:
   labels: Labels
   annotations: Annotations
   workloads: Workload Information
+detectNetworkTrace: Detect network trace connectivity
+blacklistedNamespaces: Backlisted Namespaces

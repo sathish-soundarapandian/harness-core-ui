@@ -239,7 +239,8 @@ const SelectService: React.FC<Props> = ({ name }) => {
                   pageCount: discoveredServices?.items ? Math.ceil(discoveredServices?.items?.length / limit) : 1,
                   pageIndex: page,
                   gotoPage: index => setPage(index),
-                  onPageSizeChange: index => setLimit(index)
+                  onPageSizeChange: index => setLimit(index),
+                  showPagination: true
                 }}
               />
             </Container>

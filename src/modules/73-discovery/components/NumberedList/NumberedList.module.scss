@@ -1,0 +1,26 @@
+.body {
+  position: relative;
+
+  .line {
+    margin: 10px auto 0px auto;
+    width: 3px;
+    background-color: var(--grey-200);
+    height: 93%;
+    border-radius: 2px;
+  }
+
+  .bulletIndex {
+    display: inline-block;
+    vertical-align: top;
+    padding: 11px;
+    height: 24px;
+    width: auto;
+    line-height: 0;
+    background-color: var(--grey-200);
+    border-radius: 50% !important;
+  }
+
+  .content {
+    margin-right: 30px;
+  }
+}

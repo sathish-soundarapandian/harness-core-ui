@@ -7,10 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly almostFullScreenCloseBtn: string
-  readonly discoveryAgentTable: string
-  readonly header: string
-  readonly hostingToggle: string
-  readonly search: string
+  readonly body: string
+  readonly bulletIndex: string
+  readonly content: string
+  readonly line: string
 }
 export default styles

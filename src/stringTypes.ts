@@ -5581,10 +5581,14 @@ export interface StringsMap {
   'discovery.agentName': string
   'discovery.allDiscoveredServices': string
   'discovery.approxTime': string
+  'discovery.blacklistedNamespaces': string
   'discovery.createDiscoveryAgent': string
   'discovery.createNetworkMap': string
   'discovery.createNewDiscoveryAgent': string
   'discovery.dAgentName': string
+  'discovery.dataCollectionSettings': string
+  'discovery.dataCollectionSettingsDesc': string
+  'discovery.detectNetworkTrace': string
   'discovery.discoverServices': string
   'discovery.discoveredBy': string
   'discovery.homepage.discoveryAgentDesc': string
@@ -5600,6 +5604,7 @@ export interface StringsMap {
   'discovery.howToCreateNetworkMapDesc': string
   'discovery.networkMap': string
   'discovery.networkMapDescription': string
+  'discovery.optional': string
   'discovery.selectAConnector': string
   'discovery.selectAConnectorDescription': string
   'discovery.serviceDiscoveyTable': string
