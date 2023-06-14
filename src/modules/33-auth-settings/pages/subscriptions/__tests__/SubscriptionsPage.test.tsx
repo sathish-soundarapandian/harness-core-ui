@@ -20,8 +20,7 @@ import {
   getProjectListPromise,
   getAllServicesPromise,
   useDownloadActiveServiceCSVReport,
-  useGetCreditsByAccount,
-  useGetLicensesAndSummary
+  useGetCreditsByAccount
 } from 'services/cd-ng'
 import { listActiveDevelopersPromise } from 'services/ci'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
@@ -36,7 +35,6 @@ const getOrganizationListPromiseMock = getOrganizationListPromise as jest.Mocked
 const useGetCreditsByAccountMock = useGetCreditsByAccount as jest.MockedFunction<any>
 const getListActiveDevelopersPromiseMock = listActiveDevelopersPromise as jest.MockedFunction<any>
 const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
-const useGetLicensesAndSummaryMock = useGetLicensesAndSummary as jest.MockedFunction<any>
 const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useDownloadActiveServiceCSVReportMock = useDownloadActiveServiceCSVReport as jest.MockedFunction<any>
