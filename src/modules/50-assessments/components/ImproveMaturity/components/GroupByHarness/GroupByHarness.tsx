@@ -55,7 +55,7 @@ const GroupByHarness = ({ questionMaturityList, onModulesSelectionChange }: Grou
   )
   const CheckboxCell: Renderer<CellProps<ModuleCount>> = useCallback(
     ({ row }) => {
-      const isSelected = selectedModules.includes(row.original?.module)
+      const isSelected = selectedModules.includes(row.original.module)
       return (
         <Checkbox
           checked={isSelected}
@@ -64,9 +64,9 @@ const GroupByHarness = ({ questionMaturityList, onModulesSelectionChange }: Grou
           onClick={e => {
             killEvent(e)
             if (isSelected) {
-              setSelectedModules(selectedModules.filter(module => module !== row.original?.module))
+              setSelectedModules(selectedModules.filter(module => module !== row.original.module))
             } else {
-              setSelectedModules([...selectedModules, row.original?.module])
+              setSelectedModules([...selectedModules, row.original.module])
             }
           }}
         />
