@@ -40,6 +40,7 @@ export interface ResourceOption {
   selectable?: boolean
   bgColor?: string
   hidden?: boolean
+  fillColor?: Color
 }
 interface ResourceCardListProps {
   items?: ResourceOption[]
@@ -136,21 +137,24 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       icon: 'services',
       route: routes.toServices({ accountId, orgIdentifier }),
       colorClass: css.connectors,
-      hidden: !CDS_OrgAccountLevelServiceEnvEnvGroup
+      hidden: !CDS_OrgAccountLevelServiceEnvEnvGroup,
+      fillColor: Color.PRIMARY_7
     },
     {
       label: <String stringID="environments" />,
       icon: 'infrastructure',
       route: routes.toEnvironment({ accountId, orgIdentifier }),
       colorClass: css.connectors,
-      hidden: !CDS_OrgAccountLevelServiceEnvEnvGroup
+      hidden: !CDS_OrgAccountLevelServiceEnvEnvGroup,
+      fillColor: Color.PRIMARY_7
     },
     {
       label: <String stringID="common.overrides" />,
-      icon: 'infrastructure',
+      icon: 'layers-outline',
       route: routes.toServiceOverrides({ accountId, orgIdentifier }),
       colorClass: css.connectors,
-      hidden: !isServiceOverridesEnabled
+      hidden: isServiceOverridesEnabled,
+      fillColor: Color.PRIMARY_7
     },
 
     {
@@ -247,7 +251,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
               selected={option.selectable && showGitOpsEntities}
             >
               <Layout.Vertical flex spacing="small">
-                <Icon name={option.icon} size={70} />
+                <Icon name={option.icon} size={70} {...(option.fillColor && { color: option.fillColor })} />
                 <Text color={Color.BLACK} font={{ weight: 'semi-bold' }}>
                   {option.label}
                 </Text>
