@@ -739,8 +739,6 @@ export const validateCICodebase = ({
   selectedStageData
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   const errors = {}
-  // const requiresConnectorRuntimeInputValue =
-  //   template?.properties?.ci?.codebase?.connectorRef && !pipeline?.properties?.ci?.codebase?.connectorRef
 
   let pipelineHasCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
   if (selectedStageData && !selectedStageData.allStagesSelected) {
@@ -823,14 +821,6 @@ export const validateCICodebase = ({
   }
 
   if (shouldValidate) {
-    // if (requiresConnectorRuntimeInputValue && pipelineHasCloneCodebase && !isInputSetForm) {
-    //   set(
-    //     errors,
-    //     'properties.ci.codebase.connectorRef',
-    //     getString?.('fieldRequired', { field: getString?.('connector') })
-    //   )
-    // }
-
     if (
       template?.properties?.ci?.codebase?.repoName &&
       pipeline?.properties?.ci?.codebase?.repoName?.trim() === '' &&

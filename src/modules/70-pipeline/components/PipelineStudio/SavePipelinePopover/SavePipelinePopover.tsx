@@ -418,13 +418,6 @@ function SavePipelinePopover(
       }
     }
 
-    // const ciCodeBaseConfigurationError = validateCICodebaseConfiguration({ pipeline: latestPipeline, getString })
-    // if (ciCodeBaseConfigurationError) {
-    //   clear()
-    //   showError(ciCodeBaseConfigurationError)
-    //   return
-    // }
-
     await initPipelinePublish(latestPipeline)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
