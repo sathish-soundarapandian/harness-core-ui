@@ -216,7 +216,60 @@ exports[`CICodebaseInputSetForm tests Run Pipeline Form  Initial Render 1`] = `
                   </div>
                 </div>
               </div>
-              
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="ciCodebaseBuildType"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                >
+                  filters.executions.buildType
+                </p>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
+              >
+                <label
+                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  style="width: 110px;"
+                >
+                  <input
+                    type="radio"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  gitBranch
+                </label>
+                <label
+                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 90px;"
+                >
+                  <input
+                    type="radio"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  gitTag
+                </label>
+                <label
+                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 110px;"
+                >
+                  <input
+                    type="radio"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  pipeline.gitPullRequest
+                </label>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                style="width: 50%;"
+              />
               <div
                 class="Text--withDocsTooltip"
                 data-tooltip-id="advanced"
@@ -1868,7 +1921,60 @@ exports[`CICodebaseInputSetForm tests Run Pipeline from Template Form Initial Re
                   
                 </p>
               </div>
-              
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="ciCodebaseBuildType"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+                >
+                  filters.executions.buildType
+                </p>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--padding-top-small StyledProps--padding-left-xsmall StyledProps--padding-bottom-xsmall StyledProps--margin-left-large"
+              >
+                <label
+                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--font-variation-form-label"
+                  style="width: 110px;"
+                >
+                  <input
+                    type="radio"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  gitBranch
+                </label>
+                <label
+                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 90px;"
+                >
+                  <input
+                    type="radio"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  gitTag
+                </label>
+                <label
+                  class="bp3-control bp3-radio StyledProps--font Radio--radio StyledProps--main StyledProps--margin-left-huge StyledProps--font-variation-form-label"
+                  style="width: 110px;"
+                >
+                  <input
+                    type="radio"
+                  />
+                  <span
+                    class="bp3-control-indicator"
+                  />
+                  pipeline.gitPullRequest
+                </label>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                style="width: 50%;"
+              />
               <div
                 class="Text--withDocsTooltip"
                 data-tooltip-id="advanced"

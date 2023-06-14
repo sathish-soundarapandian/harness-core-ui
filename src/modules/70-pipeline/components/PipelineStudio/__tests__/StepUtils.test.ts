@@ -188,7 +188,7 @@ describe('Test StepUtils', () => {
     })
 
     const errorKeys = Object.keys(get(errors, 'template.templateInputs.properties.ci.codebase') || {})
-    expect(errorKeys).toContain('connectorRef')
+    // connector will not be a required field post gitness GA
     expect(errorKeys).toContain('repoName')
   })
   test('Test pipeline template requires Connector and RepoName only when all CI Codebase fields are runtime inputs', () => {

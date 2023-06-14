@@ -176,7 +176,7 @@ export const EditStageView: React.FC<EditStageView> = ({
         ...(!codebase &&
           isContextTypeNotStageTemplate(contextType) &&
           values.cloneCodebase && {
-            connectorRef: Yup.mixed().required(getString('fieldRequired', { field: getString('connector') })),
+            connectorRef: Yup.mixed().nullable(),
             ...(connectionType === 'Account' && {
               repoName: Yup.string().required(getString('fieldRequired', { field: repositoryNameLabel }))
             })

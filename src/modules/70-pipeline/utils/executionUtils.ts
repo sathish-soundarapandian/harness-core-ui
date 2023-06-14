@@ -1283,6 +1283,31 @@ const getGroupSeperatedRunningIdentifiers = (
   return groupSeperatedRunningIdentifiers
 }
 
+// const getGroupSeperatedRunningIdentifiers = (
+//   nodeMap: { [key: string]: ExecutionNode },
+//   runningStageStepIdentifiers: string[]
+// ) => {
+//   const groupIdentifiers: string[] = []
+//   Object.entries(nodeMap).find(([_, val]) => {
+//     if (val.stepType === StepNodeType.STEP_GROUP) {
+//       val?.identifier && groupIdentifiers.push(val?.identifier)
+//     }
+//   })
+//   let groupSeperatedRunningIdentifiers: string[] = []
+//   if (groupIdentifiers.length) {
+//     runningStageStepIdentifiers.map((identifier: string) =>
+//       groupIdentifiers.forEach(
+//         (groupIdentifier: string) =>
+//           identifier.includes(groupIdentifier) &&
+//           groupSeperatedRunningIdentifiers.push(identifier.replace(`${groupIdentifier}_`, ''))
+//       )
+//     )
+//   } else {
+//     groupSeperatedRunningIdentifiers = runningStageStepIdentifiers
+//   }
+//   return groupSeperatedRunningIdentifiers
+// }
+
 const updateBackgroundStepNodeStatuses = ({
   runningStageId,
   nodeMap,
