@@ -7931,6 +7931,7 @@ export interface StringsMap {
   'cf.featureFlags.archiving.confirmFlag': string
   'cf.featureFlags.archiving.mismatchIdentifierError': string
   'cf.featureFlags.archiving.removeFlag': string
+  'cf.featureFlags.archiving.restore': string
   'cf.featureFlags.archiving.warningDescription': string
   'cf.featureFlags.booleanBtnText': string
   'cf.featureFlags.bucketBy': string
