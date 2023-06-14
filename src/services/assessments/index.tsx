@@ -10,7 +10,6 @@
 import React from 'react'
 import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, UseMutateProps } from 'restful-react'
 
-import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from '../config'
 export const SPEC_VERSION = '0.1'
 export interface AssessmentError {
   entityId?: string
@@ -317,8 +316,7 @@ export type SendAssessmentInviteProps = Omit<
 export const SendAssessmentInvite = (props: SendAssessmentInviteProps) => (
   <Mutate<AssessmentInviteDTO, unknown, void, AssessmentInviteDTO, void>
     verb="POST"
-    path={`/v1/assessment/invite`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/assessment/invite`}
     {...props}
   />
 )
@@ -332,24 +330,10 @@ export type UseSendAssessmentInviteProps = Omit<
  * Creates invites in the system with unique sign-up code, which is sent to the respective emails
  */
 export const useSendAssessmentInvite = (props: UseSendAssessmentInviteProps) =>
-  useMutate<AssessmentInviteDTO, unknown, void, AssessmentInviteDTO, void>('POST', `/v1/assessment/invite`, {
-    base: getConfig('assessments/api'),
-    ...props
-  })
-
-/**
- * Creates invites in the system with unique sign-up code, which is sent to the respective emails
- */
-export const sendAssessmentInvitePromise = (
-  props: MutateUsingFetchProps<AssessmentInviteDTO, unknown, void, AssessmentInviteDTO, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<AssessmentInviteDTO, unknown, void, AssessmentInviteDTO, void>(
+  useMutate<AssessmentInviteDTO, unknown, void, AssessmentInviteDTO, void>(
     'POST',
-    getConfig('assessments/api'),
-    `/v1/assessment/invite`,
-    props,
-    signal
+    `/assessments/api/v1/assessment/invite`,
+    props
   )
 
 export type SaveAssessmentResponseProps = Omit<
@@ -363,8 +347,7 @@ export type SaveAssessmentResponseProps = Omit<
 export const SaveAssessmentResponse = (props: SaveAssessmentResponseProps) => (
   <Mutate<UserAssessmentDTO, unknown, void, UserResponsesRequestRequestBody, void>
     verb="POST"
-    path={`/v1/attempt/save`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/attempt/save`}
     {...props}
   />
 )
@@ -378,24 +361,10 @@ export type UseSaveAssessmentResponseProps = Omit<
  * Save response for an assessment, and continue it for later.
  */
 export const useSaveAssessmentResponse = (props: UseSaveAssessmentResponseProps) =>
-  useMutate<UserAssessmentDTO, unknown, void, UserResponsesRequestRequestBody, void>('POST', `/v1/attempt/save`, {
-    base: getConfig('assessments/api'),
-    ...props
-  })
-
-/**
- * Save response for an assessment, and continue it for later.
- */
-export const saveAssessmentResponsePromise = (
-  props: MutateUsingFetchProps<UserAssessmentDTO, unknown, void, UserResponsesRequestRequestBody, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<UserAssessmentDTO, unknown, void, UserResponsesRequestRequestBody, void>(
+  useMutate<UserAssessmentDTO, unknown, void, UserResponsesRequestRequestBody, void>(
     'POST',
-    getConfig('assessments/api'),
-    `/v1/attempt/save`,
-    props,
-    signal
+    `/assessments/api/v1/attempt/save`,
+    props
   )
 
 export interface SubmitAssessmentForUserPathParams {
@@ -420,8 +389,7 @@ export type SubmitAssessmentForUserProps = Omit<
 export const SubmitAssessmentForUser = ({ assessmentId, ...props }: SubmitAssessmentForUserProps) => (
   <Mutate<AssessmentResultsResponse, unknown, void, UserResponsesRequestRequestBody, SubmitAssessmentForUserPathParams>
     verb="POST"
-    path={`/v1/attempt/${assessmentId}`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/attempt/${assessmentId}`}
     {...props}
   />
 )
@@ -448,35 +416,14 @@ export const useSubmitAssessmentForUser = ({ assessmentId, ...props }: UseSubmit
     void,
     UserResponsesRequestRequestBody,
     SubmitAssessmentForUserPathParams
-  >('POST', (paramsInPath: SubmitAssessmentForUserPathParams) => `/v1/attempt/${paramsInPath.assessmentId}`, {
-    base: getConfig('assessments/api'),
-    pathParams: { assessmentId },
-    ...props
-  })
-
-/**
- * Submit response for an assessment, and view the results
- */
-export const submitAssessmentForUserPromise = (
-  {
-    assessmentId,
-    ...props
-  }: MutateUsingFetchProps<
-    AssessmentResultsResponse,
-    unknown,
-    void,
-    UserResponsesRequestRequestBody,
-    SubmitAssessmentForUserPathParams
-  > & { assessmentId: string },
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    AssessmentResultsResponse,
-    unknown,
-    void,
-    UserResponsesRequestRequestBody,
-    SubmitAssessmentForUserPathParams
-  >('POST', getConfig('assessments/api'), `/v1/attempt/${assessmentId}`, props, signal)
+  >(
+    'POST',
+    (paramsInPath: SubmitAssessmentForUserPathParams) => `/assessments/api/v1/attempt/${paramsInPath.assessmentId}`,
+    {
+      pathParams: { assessmentId },
+      ...props
+    }
+  )
 
 export interface GetAssessmentForUserPathParams {
   assessmentInviteId: string
@@ -493,8 +440,7 @@ export type GetAssessmentForUserProps = Omit<
  */
 export const GetAssessmentForUser = ({ assessmentInviteId, ...props }: GetAssessmentForUserProps) => (
   <Get<UserAssessmentDTO, unknown, void, GetAssessmentForUserPathParams>
-    path={`/v1/attempt/${assessmentInviteId}`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/attempt/${assessmentInviteId}`}
     {...props}
   />
 )
@@ -510,27 +456,8 @@ export type UseGetAssessmentForUserProps = Omit<
  */
 export const useGetAssessmentForUser = ({ assessmentInviteId, ...props }: UseGetAssessmentForUserProps) =>
   useGet<UserAssessmentDTO, unknown, void, GetAssessmentForUserPathParams>(
-    (paramsInPath: GetAssessmentForUserPathParams) => `/v1/attempt/${paramsInPath.assessmentInviteId}`,
-    { base: getConfig('assessments/api'), pathParams: { assessmentInviteId }, ...props }
-  )
-
-/**
- * View assessment for a particular invite code
- */
-export const getAssessmentForUserPromise = (
-  {
-    assessmentInviteId,
-    ...props
-  }: GetUsingFetchProps<UserAssessmentDTO, unknown, void, GetAssessmentForUserPathParams> & {
-    assessmentInviteId: string
-  },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<UserAssessmentDTO, unknown, void, GetAssessmentForUserPathParams>(
-    getConfig('assessments/api'),
-    `/v1/attempt/${assessmentInviteId}`,
-    props,
-    signal
+    (paramsInPath: GetAssessmentForUserPathParams) => `/assessments/api/v1/attempt/${paramsInPath.assessmentInviteId}`,
+    { pathParams: { assessmentInviteId }, ...props }
   )
 
 export interface GetBenchmarksForResultCodePathParams {
@@ -548,8 +475,7 @@ export type GetBenchmarksForResultCodeProps = Omit<
  */
 export const GetBenchmarksForResultCode = ({ resultCode, ...props }: GetBenchmarksForResultCodeProps) => (
   <Get<BenchmarkDTO[], unknown, void, GetBenchmarksForResultCodePathParams>
-    path={`/v1/benchmark/${resultCode}`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/benchmark/${resultCode}`}
     {...props}
   />
 )
@@ -565,25 +491,8 @@ export type UseGetBenchmarksForResultCodeProps = Omit<
  */
 export const useGetBenchmarksForResultCode = ({ resultCode, ...props }: UseGetBenchmarksForResultCodeProps) =>
   useGet<BenchmarkDTO[], unknown, void, GetBenchmarksForResultCodePathParams>(
-    (paramsInPath: GetBenchmarksForResultCodePathParams) => `/v1/benchmark/${paramsInPath.resultCode}`,
-    { base: getConfig('assessments/api'), pathParams: { resultCode }, ...props }
-  )
-
-/**
- * Get list of benchmarks against a resultCode
- */
-export const getBenchmarksForResultCodePromise = (
-  {
-    resultCode,
-    ...props
-  }: GetUsingFetchProps<BenchmarkDTO[], unknown, void, GetBenchmarksForResultCodePathParams> & { resultCode: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<BenchmarkDTO[], unknown, void, GetBenchmarksForResultCodePathParams>(
-    getConfig('assessments/api'),
-    `/v1/benchmark/${resultCode}`,
-    props,
-    signal
+    (paramsInPath: GetBenchmarksForResultCodePathParams) => `/assessments/api/v1/benchmark/${paramsInPath.resultCode}`,
+    { pathParams: { resultCode }, ...props }
   )
 
 export interface GetAssessmentDetailedResultsQueryParams {
@@ -605,8 +514,7 @@ export type GetAssessmentDetailedResultsProps = Omit<
  */
 export const GetAssessmentDetailedResults = ({ resultCode, ...props }: GetAssessmentDetailedResultsProps) => (
   <Get<QuestionResultDTO, unknown, GetAssessmentDetailedResultsQueryParams, GetAssessmentDetailedResultsPathParams>
-    path={`/v1/detailed-results/${resultCode}`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/detailed-results/${resultCode}`}
     {...props}
   />
 )
@@ -627,31 +535,10 @@ export type UseGetAssessmentDetailedResultsProps = Omit<
  */
 export const useGetAssessmentDetailedResults = ({ resultCode, ...props }: UseGetAssessmentDetailedResultsProps) =>
   useGet<QuestionResultDTO, unknown, GetAssessmentDetailedResultsQueryParams, GetAssessmentDetailedResultsPathParams>(
-    (paramsInPath: GetAssessmentDetailedResultsPathParams) => `/v1/detailed-results/${paramsInPath.resultCode}`,
-    { base: getConfig('assessments/api'), pathParams: { resultCode }, ...props }
+    (paramsInPath: GetAssessmentDetailedResultsPathParams) =>
+      `/assessments/api/v1/detailed-results/${paramsInPath.resultCode}`,
+    { pathParams: { resultCode }, ...props }
   )
-
-/**
- * View detailed question level results of an assessment previously attempted.
- */
-export const getAssessmentDetailedResultsPromise = (
-  {
-    resultCode,
-    ...props
-  }: GetUsingFetchProps<
-    QuestionResultDTO,
-    unknown,
-    GetAssessmentDetailedResultsQueryParams,
-    GetAssessmentDetailedResultsPathParams
-  > & { resultCode: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    QuestionResultDTO,
-    unknown,
-    GetAssessmentDetailedResultsQueryParams,
-    GetAssessmentDetailedResultsPathParams
-  >(getConfig('assessments/api'), `/v1/detailed-results/${resultCode}`, props, signal)
 
 export type SaveImprovedMaturityProps = Omit<MutateProps<void, void, void, ImprovedMaturityDTO, void>, 'path' | 'verb'>
 
@@ -661,8 +548,7 @@ export type SaveImprovedMaturityProps = Omit<MutateProps<void, void, void, Impro
 export const SaveImprovedMaturity = (props: SaveImprovedMaturityProps) => (
   <Mutate<void, void, void, ImprovedMaturityDTO, void>
     verb="POST"
-    path={`/v1/improve-maturity`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/improve-maturity`}
     {...props}
   />
 )
@@ -676,25 +562,7 @@ export type UseSaveImprovedMaturityProps = Omit<
  * save an improved maturitySetting
  */
 export const useSaveImprovedMaturity = (props: UseSaveImprovedMaturityProps) =>
-  useMutate<void, void, void, ImprovedMaturityDTO, void>('POST', `/v1/improve-maturity`, {
-    base: getConfig('assessments/api'),
-    ...props
-  })
-
-/**
- * save an improved maturitySetting
- */
-export const saveImprovedMaturityPromise = (
-  props: MutateUsingFetchProps<void, void, void, ImprovedMaturityDTO, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<void, void, void, ImprovedMaturityDTO, void>(
-    'POST',
-    getConfig('assessments/api'),
-    `/v1/improve-maturity`,
-    props,
-    signal
-  )
+  useMutate<void, void, void, ImprovedMaturityDTO, void>('POST', `/assessments/api/v1/improve-maturity`, props)
 
 export interface GetImproveMaturityStatePathParams {
   resultCode: string
@@ -711,8 +579,7 @@ export type GetImproveMaturityStateProps = Omit<
  */
 export const GetImproveMaturityState = ({ resultCode, ...props }: GetImproveMaturityStateProps) => (
   <Get<ImprovedMaturityDTO, unknown, void, GetImproveMaturityStatePathParams>
-    path={`/v1/improve/${resultCode}`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/improve/${resultCode}`}
     {...props}
   />
 )
@@ -728,25 +595,8 @@ export type UseGetImproveMaturityStateProps = Omit<
  */
 export const useGetImproveMaturityState = ({ resultCode, ...props }: UseGetImproveMaturityStateProps) =>
   useGet<ImprovedMaturityDTO, unknown, void, GetImproveMaturityStatePathParams>(
-    (paramsInPath: GetImproveMaturityStatePathParams) => `/v1/improve/${paramsInPath.resultCode}`,
-    { base: getConfig('assessments/api'), pathParams: { resultCode }, ...props }
-  )
-
-/**
- * Get current status for improving maturity
- */
-export const getImproveMaturityStatePromise = (
-  {
-    resultCode,
-    ...props
-  }: GetUsingFetchProps<ImprovedMaturityDTO, unknown, void, GetImproveMaturityStatePathParams> & { resultCode: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ImprovedMaturityDTO, unknown, void, GetImproveMaturityStatePathParams>(
-    getConfig('assessments/api'),
-    `/v1/improve/${resultCode}`,
-    props,
-    signal
+    (paramsInPath: GetImproveMaturityStatePathParams) => `/assessments/api/v1/improve/${paramsInPath.resultCode}`,
+    { pathParams: { resultCode }, ...props }
   )
 
 export interface GetQuestionLevelOptionsQueryParams {
@@ -768,8 +618,7 @@ export type GetQuestionLevelOptionsProps = Omit<
  */
 export const GetQuestionLevelOptions = ({ resultCode, ...props }: GetQuestionLevelOptionsProps) => (
   <Get<Question, unknown, GetQuestionLevelOptionsQueryParams, GetQuestionLevelOptionsPathParams>
-    path={`/v1/question-level-results/${resultCode}`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/question-level-results/${resultCode}`}
     {...props}
   />
 )
@@ -785,27 +634,9 @@ export type UseGetQuestionLevelOptionsProps = Omit<
  */
 export const useGetQuestionLevelOptions = ({ resultCode, ...props }: UseGetQuestionLevelOptionsProps) =>
   useGet<Question, unknown, GetQuestionLevelOptionsQueryParams, GetQuestionLevelOptionsPathParams>(
-    (paramsInPath: GetQuestionLevelOptionsPathParams) => `/v1/question-level-results/${paramsInPath.resultCode}`,
-    { base: getConfig('assessments/api'), pathParams: { resultCode }, ...props }
-  )
-
-/**
- * View options for a specific question
- */
-export const getQuestionLevelOptionsPromise = (
-  {
-    resultCode,
-    ...props
-  }: GetUsingFetchProps<Question, unknown, GetQuestionLevelOptionsQueryParams, GetQuestionLevelOptionsPathParams> & {
-    resultCode: string
-  },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<Question, unknown, GetQuestionLevelOptionsQueryParams, GetQuestionLevelOptionsPathParams>(
-    getConfig('assessments/api'),
-    `/v1/question-level-results/${resultCode}`,
-    props,
-    signal
+    (paramsInPath: GetQuestionLevelOptionsPathParams) =>
+      `/assessments/api/v1/question-level-results/${paramsInPath.resultCode}`,
+    { pathParams: { resultCode }, ...props }
   )
 
 export interface GetAssessmentResultsQueryParams {
@@ -827,8 +658,7 @@ export type GetAssessmentResultsProps = Omit<
  */
 export const GetAssessmentResults = ({ resultCode, ...props }: GetAssessmentResultsProps) => (
   <Get<AssessmentResultsResponse, unknown, GetAssessmentResultsQueryParams, GetAssessmentResultsPathParams>
-    path={`/v1/results/${resultCode}`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/results/${resultCode}`}
     {...props}
   />
 )
@@ -844,30 +674,8 @@ export type UseGetAssessmentResultsProps = Omit<
  */
 export const useGetAssessmentResults = ({ resultCode, ...props }: UseGetAssessmentResultsProps) =>
   useGet<AssessmentResultsResponse, unknown, GetAssessmentResultsQueryParams, GetAssessmentResultsPathParams>(
-    (paramsInPath: GetAssessmentResultsPathParams) => `/v1/results/${paramsInPath.resultCode}`,
-    { base: getConfig('assessments/api'), pathParams: { resultCode }, ...props }
-  )
-
-/**
- * View results of an assessment previously attempted.
- */
-export const getAssessmentResultsPromise = (
-  {
-    resultCode,
-    ...props
-  }: GetUsingFetchProps<
-    AssessmentResultsResponse,
-    unknown,
-    GetAssessmentResultsQueryParams,
-    GetAssessmentResultsPathParams
-  > & { resultCode: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<AssessmentResultsResponse, unknown, GetAssessmentResultsQueryParams, GetAssessmentResultsPathParams>(
-    getConfig('assessments/api'),
-    `/v1/results/${resultCode}`,
-    props,
-    signal
+    (paramsInPath: GetAssessmentResultsPathParams) => `/assessments/api/v1/results/${paramsInPath.resultCode}`,
+    { pathParams: { resultCode }, ...props }
   )
 
 export interface GetAssessmentSectionOverviewResultsQueryParams {
@@ -902,8 +710,7 @@ export const GetAssessmentSectionOverviewResults = ({
     GetAssessmentSectionOverviewResultsQueryParams,
     GetAssessmentSectionOverviewResultsPathParams
   >
-    path={`/v1/section-result-overview/${resultCode}`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/section-result-overview/${resultCode}`}
     {...props}
   />
 )
@@ -933,31 +740,9 @@ export const useGetAssessmentSectionOverviewResults = ({
     GetAssessmentSectionOverviewResultsPathParams
   >(
     (paramsInPath: GetAssessmentSectionOverviewResultsPathParams) =>
-      `/v1/section-result-overview/${paramsInPath.resultCode}`,
-    { base: getConfig('assessments/api'), pathParams: { resultCode }, ...props }
+      `/assessments/api/v1/section-result-overview/${paramsInPath.resultCode}`,
+    { pathParams: { resultCode }, ...props }
   )
-
-/**
- * View overview of section wise results of an assessment previously attempted.
- */
-export const getAssessmentSectionOverviewResultsPromise = (
-  {
-    resultCode,
-    ...props
-  }: GetUsingFetchProps<
-    SectionResultDTO,
-    unknown,
-    GetAssessmentSectionOverviewResultsQueryParams,
-    GetAssessmentSectionOverviewResultsPathParams
-  > & { resultCode: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    SectionResultDTO,
-    unknown,
-    GetAssessmentSectionOverviewResultsQueryParams,
-    GetAssessmentSectionOverviewResultsPathParams
-  >(getConfig('assessments/api'), `/v1/section-result-overview/${resultCode}`, props, signal)
 
 export interface GetAssessmentSectionResultsQueryParams {
   benchmarkId?: string
@@ -988,8 +773,7 @@ export const GetAssessmentSectionResults = ({ resultCode, ...props }: GetAssessm
     GetAssessmentSectionResultsQueryParams,
     GetAssessmentSectionResultsPathParams
   >
-    path={`/v1/section-results/${resultCode}`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/section-results/${resultCode}`}
     {...props}
   />
 )
@@ -1014,33 +798,14 @@ export const useGetAssessmentSectionResults = ({ resultCode, ...props }: UseGetA
     unknown,
     GetAssessmentSectionResultsQueryParams,
     GetAssessmentSectionResultsPathParams
-  >((paramsInPath: GetAssessmentSectionResultsPathParams) => `/v1/section-results/${paramsInPath.resultCode}`, {
-    base: getConfig('assessments/api'),
-    pathParams: { resultCode },
-    ...props
-  })
-
-/**
- * View section wise results of an assessment previously attempted.
- */
-export const getAssessmentSectionResultsPromise = (
-  {
-    resultCode,
-    ...props
-  }: GetUsingFetchProps<
-    AssessmentSectionResultResponse,
-    unknown,
-    GetAssessmentSectionResultsQueryParams,
-    GetAssessmentSectionResultsPathParams
-  > & { resultCode: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    AssessmentSectionResultResponse,
-    unknown,
-    GetAssessmentSectionResultsQueryParams,
-    GetAssessmentSectionResultsPathParams
-  >(getConfig('assessments/api'), `/v1/section-results/${resultCode}`, props, signal)
+  >(
+    (paramsInPath: GetAssessmentSectionResultsPathParams) =>
+      `/assessments/api/v1/section-results/${paramsInPath.resultCode}`,
+    {
+      pathParams: { resultCode },
+      ...props
+    }
+  )
 
 export interface GetSectionsForAssessmentResponse {
   [key: string]: any
@@ -1062,8 +827,7 @@ export type GetSectionsForAssessmentProps = Omit<
  */
 export const GetSectionsForAssessment = ({ assessmentId, ...props }: GetSectionsForAssessmentProps) => (
   <Get<GetSectionsForAssessmentResponse, unknown, void, GetSectionsForAssessmentPathParams>
-    path={`/v1/sections/${assessmentId}`}
-    base={getConfig('assessments/api')}
+    path={`/assessments/api/v1/sections/${assessmentId}`}
     {...props}
   />
 )
@@ -1079,25 +843,6 @@ export type UseGetSectionsForAssessmentProps = Omit<
  */
 export const useGetSectionsForAssessment = ({ assessmentId, ...props }: UseGetSectionsForAssessmentProps) =>
   useGet<GetSectionsForAssessmentResponse, unknown, void, GetSectionsForAssessmentPathParams>(
-    (paramsInPath: GetSectionsForAssessmentPathParams) => `/v1/sections/${paramsInPath.assessmentId}`,
-    { base: getConfig('assessments/api'), pathParams: { assessmentId }, ...props }
-  )
-
-/**
- * View list of sections for an assessmentId
- */
-export const getSectionsForAssessmentPromise = (
-  {
-    assessmentId,
-    ...props
-  }: GetUsingFetchProps<GetSectionsForAssessmentResponse, unknown, void, GetSectionsForAssessmentPathParams> & {
-    assessmentId: string
-  },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<GetSectionsForAssessmentResponse, unknown, void, GetSectionsForAssessmentPathParams>(
-    getConfig('assessments/api'),
-    `/v1/sections/${assessmentId}`,
-    props,
-    signal
+    (paramsInPath: GetSectionsForAssessmentPathParams) => `/assessments/api/v1/sections/${paramsInPath.assessmentId}`,
+    { pathParams: { assessmentId }, ...props }
   )
