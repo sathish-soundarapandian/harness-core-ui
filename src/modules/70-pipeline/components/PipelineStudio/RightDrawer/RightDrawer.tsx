@@ -179,6 +179,10 @@ const processNodeImpl = (
       // Add/replace values only if they are present
       addReplace(item, node)
 
+      if ((item as StepElementConfig).spec) {
+        node.spec = Object.assign(defaultTo(node.spec, {}), (item as StepElementConfig).spec)
+      }
+
       // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
       if (
         (Array.isArray(item.failureStrategies) && item.failureStrategies.length > 0) ||
@@ -272,10 +276,6 @@ const processNodeImpl = (
       }
 
       if (isEmpty(node.spec)) delete node.spec
-
-      if ((item as StepElementConfig).spec) {
-        node.spec = Object.assign(defaultTo(node.spec, {}), (item as StepElementConfig).spec)
-      }
 
       if (data.stepConfig?.isStepGroup) {
         if ((item as K8sDirectInfraStepGroupElementConfig).sharedPaths) {
