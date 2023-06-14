@@ -5,11 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Suspense, lazy, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import moment from 'moment'
 import { Drawer, PopoverPosition, Position } from '@blueprintjs/core'
 import cx from 'classnames'
-const LazyReactMarkdown = lazy(() => import('react-markdown'))
+// const LazyReactMarkdown = lazy(() => import('react-markdown'))
 import { useParams } from 'react-router-dom'
 import { get, isEmpty } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
@@ -43,13 +43,14 @@ enum AIAnalysisStatus {
   Failure = 'FAILURE'
 }
 
-function ReactMarkdown({ children, className }: { children: string; className: string }): React.ReactElement {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <LazyReactMarkdown className={className}>{children}</LazyReactMarkdown>
-    </Suspense>
-  )
-}
+// function ReactMarkdown(): React.ReactElement {
+//   return (
+//     <Suspense fallback={<div>Loading...</div>}>
+//       {/* <LazyReactMarkdown className={className}>{children}</LazyReactMarkdown> */}
+//       <></>
+//     </Suspense>
+//   )
+// }
 
 function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
   const { mode } = props
@@ -302,41 +303,38 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
     }
   }, [status, showTooltip, remediations, error, logsToken])
 
-  const renderRemediation = useCallback(
-    (remediation: string): JSX.Element => {
-      return (
-        <Layout.Vertical spacing="xsmall">
-          <Layout.Vertical
-            className={css.remediation}
-            padding={{ top: 'large', left: 'xlarge', right: 'xlarge' }}
-            spacing="small"
-          >
-            <Text className={css.label} font={{ variation: FontVariation.H5 }}>
-              {getString('pipeline.copilot.possibleSolutions')}
-            </Text>
-            <ReactMarkdown className={cx(css.markdown, css.overflow)}>{remediation}</ReactMarkdown>
-          </Layout.Vertical>
-          <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-            {remediationsGeneratedAt ? (
-              <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} className={css.flex2}>
-                <Text color={Color.AI_PURPLE_600} font={{ variation: FontVariation.FORM_LABEL }}>{`${getString(
-                  'common.generatedAt'
-                )} ${moment(remediationsGeneratedAt).format('LLL')}`}</Text>
-              </Layout.Horizontal>
-            ) : null}
-            <Container flex className={css.flex1}>
-              <Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('common.isHelpful')}</Text>
-              <Container flex>
-                <Button variation={ButtonVariation.ICON} icon="main-tick" iconProps={{ size: 15 }} />
-                <Button variation={ButtonVariation.ICON} icon="small-cross" iconProps={{ size: 20 }} />
-              </Container>
-            </Container>
-          </Layout.Horizontal>
+  const renderRemediation = useCallback((): JSX.Element => {
+    return (
+      <Layout.Vertical spacing="xsmall">
+        <Layout.Vertical
+          className={css.remediation}
+          padding={{ top: 'large', left: 'xlarge', right: 'xlarge' }}
+          spacing="small"
+        >
+          <Text className={css.label} font={{ variation: FontVariation.H5 }}>
+            {getString('pipeline.copilot.possibleSolutions')}
+          </Text>
+          {/* <ReactMarkdown className={cx(css.markdown, css.overflow)}>{remediation}</ReactMarkdown> */}
         </Layout.Vertical>
-      )
-    },
-    [remediationsGeneratedAt]
-  )
+        <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+          {remediationsGeneratedAt ? (
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} className={css.flex2}>
+              <Text color={Color.AI_PURPLE_600} font={{ variation: FontVariation.FORM_LABEL }}>{`${getString(
+                'common.generatedAt'
+              )} ${moment(remediationsGeneratedAt).format('LLL')}`}</Text>
+            </Layout.Horizontal>
+          ) : null}
+          <Container flex className={css.flex1}>
+            <Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('common.isHelpful')}</Text>
+            <Container flex>
+              <Button variation={ButtonVariation.ICON} icon="main-tick" iconProps={{ size: 15 }} />
+              <Button variation={ButtonVariation.ICON} icon="small-cross" iconProps={{ size: 20 }} />
+            </Container>
+          </Container>
+        </Layout.Horizontal>
+      </Layout.Vertical>
+    )
+  }, [remediationsGeneratedAt])
 
   return (
     <>
@@ -367,9 +365,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
             </Container>
             <Text>{getString('pipeline.copilot.assist')}</Text>
           </Layout.Vertical>
-          <Layout.Vertical>
-            {remediations.map((remediation: ResponseRemediation) => renderRemediation(remediation.rca))}
-          </Layout.Vertical>
+          <Layout.Vertical>{remediations.map(() => renderRemediation())}</Layout.Vertical>
         </Layout.Vertical>
       </Drawer>
     </>
