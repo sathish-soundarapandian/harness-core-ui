@@ -176,7 +176,7 @@ describe('Environment Group Tests', () => {
       })
     )
 
-    await userEvent.type(searchInput!, '')
+    await userEvent.clear(searchInput!)
     await waitFor(() =>
       expect(cdNgServices.useGetEnvironmentGroupList).toHaveBeenCalledWith({
         body: {

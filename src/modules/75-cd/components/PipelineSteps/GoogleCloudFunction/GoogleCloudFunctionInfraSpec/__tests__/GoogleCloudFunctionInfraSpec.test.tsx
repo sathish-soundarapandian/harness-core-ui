@@ -102,7 +102,7 @@ describe('GoogleCloudFunctionInfraSpec tests', () => {
 
     // Choose project
     const projectDropdownIcon = allDropDownIcons[1]
-    userEvent.click(projectDropdownIcon!)
+    await userEvent.click(projectDropdownIcon!)
     expect(portalDivs.length).toBe(2)
     const projectPortalDiv = portalDivs[1]
     const projectListMenu = projectPortalDiv.querySelector('.bp3-menu')
@@ -112,7 +112,7 @@ describe('GoogleCloudFunctionInfraSpec tests', () => {
 
     // Choose region
     const regionDropdownIcon = allDropDownIcons[2]
-    userEvent.click(regionDropdownIcon!)
+    await userEvent.click(regionDropdownIcon!)
     expect(portalDivs.length).toBe(3)
     const regionDropdownPortalDiv = portalDivs[2]
     const regionSelectListMenu = regionDropdownPortalDiv.querySelector('.bp3-menu')
@@ -122,7 +122,7 @@ describe('GoogleCloudFunctionInfraSpec tests', () => {
 
     // check Allow simultaneous deployments on the same infrastructure checkbox
     const allowSimultaneousDeploymentsCheckbox = queryByNameAttribute('allowSimultaneousDeployments', container)
-    userEvent.click(allowSimultaneousDeploymentsCheckbox!)
+    await userEvent.click(allowSimultaneousDeploymentsCheckbox!)
     expect(allowSimultaneousDeploymentsCheckbox).toBeChecked()
     // submit form and verify
     ref.current?.submitForm()

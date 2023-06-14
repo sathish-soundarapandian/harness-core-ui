@@ -286,7 +286,7 @@ describe('FlagSettings', () => {
       await waitFor(() => {
         expect(patchTargetMock).toHaveBeenCalled()
         expect(refetchMock).not.toHaveBeenCalled()
-        expect(screen.getByText(message)).toBeInTheDocument()
+        expect(screen.getAllByText(message)).toHaveLength(3)
       })
     })
   })

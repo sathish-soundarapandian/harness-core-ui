@@ -145,7 +145,7 @@ describe('EditGitMetadata tests', () => {
     await waitFor(() => expect(getAllByText('pipeline.editGitDetailsSuccess')[0]).toBeDefined())
   })
 
-  test('clicking on cancel button should call onCancelClick prop function', () => {
+  test('clicking on cancel button should call onCancelClick prop function', async () => {
     const { getByText } = render(
       <TestWrapper path={TEST_PIPELINES_PATH} pathParams={TEST_PATH_PARAMS}>
         <EditGitMetadata
@@ -164,7 +164,7 @@ describe('EditGitMetadata tests', () => {
     )
 
     const cancelButton = getByText('cancel')
-    userEvent.click(cancelButton)
+    await userEvent.click(cancelButton)
     expect(onCancelClick).toHaveBeenCalled()
     expect(onCancelClick).toHaveBeenCalledTimes(1)
   })

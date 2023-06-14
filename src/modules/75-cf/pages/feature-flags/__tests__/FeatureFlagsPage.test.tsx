@@ -69,6 +69,8 @@ const mockEnvs = (includeEnvs = true): void => {
 
 describe('FeatureFlagsPage', () => {
   beforeEach(() => {
+    jest.useFakeTimers({ advanceTimers: true })
+    jest.runAllTimers()
     mockImport('services/cf', {
       useGetAllFeatures: () => ({ data: mockFeatureFlags, refetch: jest.fn() })
     })
@@ -202,9 +204,7 @@ describe('FeatureFlagsPage', () => {
     renderComponent()
 
     await act(async () => {
-      await fireEvent.click(
-        document.querySelector('[role="row"]:not(:first-of-type) [data-icon="Options"]') as HTMLElement
-      )
+      await fireEvent.click(document.querySelector('[role="row"] [data-icon="Options"]') as HTMLElement)
       await fireEvent.click(document.querySelector('[icon="trash"]') as HTMLElement)
       await fireEvent.click(document.querySelector('button[class*=intent-danger]') as HTMLButtonElement)
     })

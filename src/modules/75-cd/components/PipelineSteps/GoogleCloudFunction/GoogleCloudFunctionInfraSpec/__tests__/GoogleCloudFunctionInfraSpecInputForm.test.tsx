@@ -124,7 +124,7 @@ describe('GoogleCloudFunctionInfraSpecInputForm tests', () => {
 
     // Choose project
     const regionDropdownIcon = allDropDownIcons[1]
-    userEvent.click(regionDropdownIcon!)
+    await userEvent.click(regionDropdownIcon!)
     expect(portalDivs.length).toBe(2)
     const projectDropdownPortalDiv = portalDivs[1]
     const projectSelectListMenu = projectDropdownPortalDiv.querySelector('.bp3-menu')
@@ -137,7 +137,7 @@ describe('GoogleCloudFunctionInfraSpecInputForm tests', () => {
 
     // Choose region
     const projectDropdownIcon = allDropDownIcons[2]
-    userEvent.click(projectDropdownIcon!)
+    await userEvent.click(projectDropdownIcon!)
     expect(portalDivs.length).toBe(3)
     const regionDropdownPortalDiv = portalDivs[2]
     const regionSelectListMenu = regionDropdownPortalDiv.querySelector('.bp3-menu')

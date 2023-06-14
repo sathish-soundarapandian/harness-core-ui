@@ -69,13 +69,13 @@ describe('Edit Pipeline stage view test', () => {
   test('should onSubmit be called on submit button click when no template is provided', async () => {
     renderComponent()
 
-    userEvent.click(screen.getByText('pipelineSteps.build.create.setupStage'))
+    await userEvent.click(screen.getByText('pipelineSteps.build.create.setupStage'))
     expect(await screen.findByText('fieldRequired')).toBeDefined()
-    userEvent.type(screen.getByRole('textbox'), 'stagename')
-    userEvent.click(screen.getByTestId('description-edit'))
-    userEvent.type(await screen.findByPlaceholderText('common.descriptionPlaceholder'), 'stageDescription')
+    await userEvent.type(screen.getByRole('textbox'), 'stagename')
+    await userEvent.click(screen.getByTestId('description-edit'))
+    await userEvent.type(await screen.findByPlaceholderText('common.descriptionPlaceholder'), 'stageDescription')
 
-    userEvent.click(screen.getByText('pipelineSteps.build.create.setupStage'))
+    await userEvent.click(screen.getByText('pipelineSteps.build.create.setupStage'))
     await waitFor(() =>
       expect(mockSubmit).toBeCalledWith(
         {

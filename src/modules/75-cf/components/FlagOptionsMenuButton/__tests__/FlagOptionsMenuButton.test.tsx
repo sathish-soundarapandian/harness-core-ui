@@ -58,11 +58,11 @@ describe('FlagOptionsButton', () => {
   test('it should redirect user to Feature Flags Detail page when user clicks the Edit option', async () => {
     renderComponent()
 
-    userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+    await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
 
     expect(document.querySelector('[data-icon="edit"]')).toBeInTheDocument()
 
-    userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
+    await userEvent.click(document.querySelector('[data-icon="edit"]') as HTMLButtonElement)
 
     expect(screen.getByTestId('location')).toHaveTextContent(
       `/account/dummy/cf/orgs/dummy/projects/dummy/feature-flags/${mockFeature.identifier}`
@@ -334,7 +334,7 @@ describe('FlagOptionsButton', () => {
     test('it should render an ARCHIVE and EDIT button when FFM_7127_FF_MFE_Onboarding_Detail is toggled ON', async () => {
       renderComponent(isArchivingFfOn)
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
 
       expect(document.querySelector('[data-icon="edit"]')).toBeInTheDocument()
       expect(document.querySelector('[data-icon="archive"]')).toBeInTheDocument()
@@ -346,8 +346,8 @@ describe('FlagOptionsButton', () => {
     test('it should render archive modal when user clicks archive menu button', async () => {
       renderComponent(isArchivingFfOn)
 
-      userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
-      userEvent.click(document.querySelector('[data-icon="archive"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
+      await userEvent.click(document.querySelector('[data-icon="archive"]') as HTMLButtonElement)
 
       expect(screen.getByText('cf.featureFlags.archiving.archiveFlag')).toBeInTheDocument()
       expect(screen.getByRole('textbox')).toBeInTheDocument()

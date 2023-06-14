@@ -121,7 +121,7 @@ describe('Deploy service stage specifications', () => {
       </TestWrapper>
     )
 
-    const propagateFromDropdownDiv = document.getElementsByClassName('stageSelectDropDown')[0]
+    const propagateFromDropdownDiv = document.querySelector('.stageSelectDropDown') as HTMLElement
     await act(async () => {
       await userEvent.click(propagateFromDropdownDiv)
     })

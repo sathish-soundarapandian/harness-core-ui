@@ -325,7 +325,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     const toggle = container.querySelector('.Toggle--input')!
 
-    userEvent.click(toggle)
+    await userEvent.click(toggle)
 
     const confirmationDialog = findDialogContainer() as HTMLElement
     await waitFor(() => expect(confirmationDialog).toBeTruthy())
@@ -395,7 +395,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     const toggle = container.querySelector('.Toggle--input')!
 
-    userEvent.click(toggle)
+    await userEvent.click(toggle)
 
     const multiSvcConfirmationDialog = findDialogContainer() as HTMLElement
     await waitFor(() => expect(multiSvcConfirmationDialog).toBeTruthy())

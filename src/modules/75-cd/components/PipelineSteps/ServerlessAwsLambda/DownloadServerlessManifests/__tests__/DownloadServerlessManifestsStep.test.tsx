@@ -97,8 +97,8 @@ describe('DownloadServerlessManifestsStep tests', () => {
     userEvent.click(submitBtn)
     await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
     expect(onUpdate).not.toHaveBeenCalled()
-    userEvent.type(timeoutInput!, '20m')
-    userEvent.click(submitBtn)
+    await userEvent.type(timeoutInput!, '20m')
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Step_1',
