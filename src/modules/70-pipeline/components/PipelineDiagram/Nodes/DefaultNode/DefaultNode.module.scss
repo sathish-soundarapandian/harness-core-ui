@@ -38,21 +38,17 @@
 
 .defaultNode {
   --pipeline-selected-node: linear-gradient(123.92deg, var(--primary-6) 32.53%, #0778fc 112.21%);
-  --execution-pipeline-selected-running-bg: linear-gradient(
-    to top left,
-    transparent 33%,
-    rgba(100, 100, 100, 0.1) 50%,
-    transparent 66%
-  );
+  --execution-pipeline-selected-running-bg: linear-gradient(to top left,
+      transparent 33%,
+      rgba(100, 100, 100, 0.1) 50%,
+      transparent 66%);
   --pipeline-studio-bg: linear-gradient(90deg, var(--pipeline-bg) 9px, transparent 1%) center,
     linear-gradient(var(--pipeline-bg) 9px, transparent 1%) center, var(--pipeline-bg-dot);
 
-  --execution-pipeline-selected-running-bg-selected: linear-gradient(
-    to top left,
-    transparent 33%,
-    rgba(255, 255, 255, 0.3) 50%,
-    transparent 66%
-  );
+  --execution-pipeline-selected-running-bg-selected: linear-gradient(to top left,
+      transparent 33%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 66%);
   display: block;
   width: fit-content;
   height: fit-content;
@@ -70,7 +66,7 @@
 
   :global(.bp3-icon) {
     &[data-icon='custom-approval'] {
-      > svg {
+      >svg {
         path:nth-child(2) {
           fill: var(--grey-900) !important;
         }
@@ -104,7 +100,7 @@
       border-width: 2px;
 
       span[data-icon='slot-deployment'] {
-        svg > path {
+        svg>path {
           fill: var(--white);
           stroke: var(--white);
         }
@@ -472,11 +468,11 @@
   }
 }
 
-.disbaledIcon {
+.disabledIcon {
   &:global(.bp3-icon) {
     svg {
       path:first-child {
-        fill: #d9dae5 !important;
+        fill: var(--grey-200) !important;
       }
     }
   }
@@ -537,7 +533,7 @@
       }
     }
 
-    .bp3-control.bp3-switch input:checked ~ .bp3-control-indicator::before {
+    .bp3-control.bp3-switch input:checked~.bp3-control-indicator::before {
       left: calc(100% - 0.5em);
     }
   }
@@ -545,11 +541,11 @@
 
 .stageSelectedSwitch {
   :global {
-    .bp3-control.bp3-switch input:checked ~ .bp3-control-indicator {
+    .bp3-control.bp3-switch input:checked~.bp3-control-indicator {
       background-color: var(--white);
     }
 
-    .bp3-control.bp3-switch input:checked ~ .bp3-control-indicator::before {
+    .bp3-control.bp3-switch input:checked~.bp3-control-indicator::before {
       left: calc(100% - 0.5em);
       background-color: var(--diagram-selected) !important;
     }
@@ -565,6 +561,6 @@
 }
 
 .disabled {
-  background: #f3f3fa !important;
+  background: var(--grey-100) !important;
   box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
 }

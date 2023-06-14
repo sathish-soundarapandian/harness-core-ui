@@ -234,7 +234,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 size={40}
                 {...isSelectedCss()}
                 name={defaultTo(stepIcon, 'cross') as IconName}
-                {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
+                {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
               />
             </>
           )
@@ -285,7 +285,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             style={secondaryIconStyle}
             size={13}
             {...secondaryIconProps}
-            {...(whenCondition ? { className: defaultCss.disbaledIcon } : { className: defaultCss.secondaryIcon })}
+            {...(whenCondition ? { className: defaultCss.disabledIcon } : { className: defaultCss.secondaryIcon })}
           />
         )}
         {props.data?.skipCondition && (
@@ -299,7 +299,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
               <Icon
                 size={26}
                 name={'conditional-skip-new'}
-                {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
+                {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
               />
             </Text>
           </div>
@@ -315,7 +315,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
               <Icon
                 size={26}
                 name={'conditional-skip-new'}
-                {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
+                {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
               />
             </Text>
           </div>
@@ -332,7 +332,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
                 size={16}
                 name={'looping'}
                 {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-                {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
+                {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
               />
             </Text>
           </div>

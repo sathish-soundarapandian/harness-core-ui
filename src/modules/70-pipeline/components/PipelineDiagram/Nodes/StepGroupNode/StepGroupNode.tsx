@@ -276,7 +276,7 @@ export function StepGroupNode(props: any): JSX.Element {
                   <Icon
                     size={26}
                     name={'conditional-skip-new'}
-                    {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
+                    {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
                   />
                 </Text>
               </div>
@@ -330,7 +330,7 @@ export function StepGroupNode(props: any): JSX.Element {
                   <Icon
                     size={26}
                     name={'conditional-skip-new'}
-                    {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
+                    {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
                   />
                 </Text>
               </div>

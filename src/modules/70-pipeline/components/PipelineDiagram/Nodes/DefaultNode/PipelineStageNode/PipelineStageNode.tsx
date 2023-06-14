@@ -231,7 +231,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
                 size={28}
                 name={props.icon as IconName}
                 {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-                {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
+                {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
               />
             )
           )}
@@ -241,14 +241,14 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               style={secondaryIconStyle}
               size={13}
               {...secondaryIconProps}
-              {...(whenCondition ? { className: defaultCss.disbaledIcon } : { className: defaultCss.secondaryIcon })}
+              {...(whenCondition ? { className: defaultCss.disabledIcon } : { className: defaultCss.secondaryIcon })}
             />
           )}
           {props?.data?.tertiaryIcon && (
             <Icon
               name={props?.data?.tertiaryIcon}
               size={13}
-              {...(whenCondition ? { className: defaultCss.disbaledIcon } : { className: defaultCss.tertiaryIcon })}
+              {...(whenCondition ? { className: defaultCss.disabledIcon } : { className: defaultCss.tertiaryIcon })}
             />
           )}
           {isTemplateNode && (
@@ -352,7 +352,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             <Icon
               size={26}
               name={'conditional-skip-new'}
-              {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
+              {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
             />
           </Text>
         </div>
@@ -370,7 +370,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
               name={'looping'}
               background={Color.PURPLE_300}
               {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-              {...(whenCondition ? { className: defaultCss.disbaledIcon } : {})}
+              {...(whenCondition ? { className: defaultCss.disabledIcon } : {})}
             />
           </Text>
         </div>
