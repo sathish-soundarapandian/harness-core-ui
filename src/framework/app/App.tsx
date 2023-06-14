@@ -71,7 +71,9 @@ export const getRequestOptions = (): Partial<RequestInit> => {
 
   if (token && token.length > 0) {
     if (!window.noAuthHeader) {
-      headers.Authorization = `Bearer ${token}`
+        if(!window.publicAccessOnAccount){
+            headers.Authorization = `Bearer ${token}`
+        }
     }
   }
 
