@@ -94,7 +94,7 @@ describe('<DelegateSelectorPanel /> test', () => {
     fireEvent.click(container.querySelector('[data-icon="fixed-input"]') as HTMLElement)
     const findPopover = findPopoverContainer()
     expect(findPopover).toBeTruthy()
-    userEvent.click(getByText(findPopover!, 'Expression'))
+    await userEvent.click(getByText(findPopover!, 'Expression'))
 
     //radio btns
     expect(getByText(container, 'delegate.DelegateSelector')).toBeInTheDocument()

@@ -107,13 +107,13 @@ describe('DeployCloudFunctionNoTrafficShiftStep tests', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    userEvent.type(timeoutInput!, '20m')
+    await userEvent.type(timeoutInput!, '20m')
 
     const updateFieldMaskInput = queryByNameAttribute('spec.updateFieldMask', container)
     expect(updateFieldMaskInput).toBeVisible()
-    userEvent.type(updateFieldMaskInput!, '30')
+    await userEvent.type(updateFieldMaskInput!, '30')
 
-    userEvent.click(submitBtn)
+    await userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
     expect(onUpdate).toHaveBeenCalledWith({
       identifier: 'Step_1',
