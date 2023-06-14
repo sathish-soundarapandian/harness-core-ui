@@ -20,7 +20,7 @@ import {
   isExecutionNotStarted,
   isExecutionComplete
 } from '@pipeline/utils/statusHelpers'
-import type { ExecutionGraph } from 'services/pipeline-ng'
+import type { ExecutionGraph, StepGroupElementConfig } from 'services/pipeline-ng'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useUpdateQueryParams } from '@common/hooks'
@@ -373,6 +373,9 @@ export function StepGroupNode(props: any): JSX.Element {
             <div className={css.stepGroupBody}>
               <StepGroupGraph
                 {...props}
+                isContainerStepGroup={
+                  (props?.data?.stepGroup as StepGroupElementConfig)?.stepGroupInfra?.type === 'KubernetesDirect'
+                }
                 data={stageGroupTypes.includes(props?.type) ? childPipelineData : stepsData}
                 isNodeCollapsed={isNodeCollapsed}
                 parentIdentifier={props?.identifier}

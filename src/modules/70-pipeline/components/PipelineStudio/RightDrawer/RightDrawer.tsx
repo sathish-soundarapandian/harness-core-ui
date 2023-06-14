@@ -1026,7 +1026,11 @@ export function RightDrawer(): React.ReactElement {
             stageType,
             selectedStage?.stage,
             undefined,
-            getFlattenedStages(pipeline).stages
+            getFlattenedStages(pipeline).stages,
+            defaultTo(
+              data.paletteData.entity.node.data.isContainerStepGroup,
+              data.paletteData.entity.node.isContainerStepGroup
+            )
           )}
           stageType={stageType as StageType}
           onSelect={onStepSelection}

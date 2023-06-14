@@ -66,11 +66,25 @@ export function getAllStepPaletteModuleInfos(): StepPalleteModuleInfo[] {
   ]
 }
 
+const stepPalettePayloadContainerStepGroup = [
+  {
+    module: 'ci',
+    category: 'Plugin',
+    shouldShowCommonSteps: false
+  },
+  {
+    module: 'cd',
+    category: 'Plugin',
+    shouldShowCommonSteps: false
+  }
+]
+
 export function getStepPaletteModuleInfosFromStage(
   stageType?: string,
   stage?: StageElementConfig,
   initialCategory?: string,
-  stages?: StageElementWrapperConfig[]
+  stages?: StageElementWrapperConfig[],
+  isContainerStepGroup?: boolean
 ): StepPalleteModuleInfo[] {
   // When stage is propagated from other previous stage
   const propagateFromStageId = get(stage, 'spec.serviceConfig.useFromStage.stage', undefined)
@@ -148,13 +162,17 @@ export function getStepPaletteModuleInfosFromStage(
       category = deploymentType
   }
   switch (stageType) {
-    case StageType.BUILD:
+    case StageType.BUILD: {
+      if (isContainerStepGroup) {
+        return stepPalettePayloadContainerStepGroup
+      }
       return [
         {
           module: 'ci',
           shouldShowCommonSteps: false
         }
       ]
+    }
 
     case StageType.FEATURE:
       return [
@@ -205,6 +223,9 @@ export function getStepPaletteModuleInfosFromStage(
         }
       ]
     case StageType.DEPLOY: {
+      if (isContainerStepGroup) {
+        return stepPalettePayloadContainerStepGroup
+      }
       const stepPalleteInfo =
         deploymentType === ServiceDeploymentType.CustomDeployment
           ? [

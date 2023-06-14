@@ -430,6 +430,7 @@ interface GetPipelineGraphDataParams {
   parentPath?: string
   graphDataType?: PipelineGraphType
   isNestedGroup?: boolean
+  isContainerStepGroup?: boolean
 }
 const getPipelineGraphData = ({
   data = [],
@@ -439,7 +440,8 @@ const getPipelineGraphData = ({
   errorMap,
   parentPath,
   graphDataType,
-  isNestedGroup
+  isNestedGroup,
+  isContainerStepGroup
 }: GetPipelineGraphDataParams): PipelineGraphState[] => {
   let graphState: PipelineGraphState[] = []
   const pipGraphDataType = graphDataType ? graphDataType : getPipelineGraphDataType(data)
@@ -462,7 +464,8 @@ const getPipelineGraphData = ({
       errorMap,
       parentPath,
       offsetIndex: 0,
-      isNestedGroup
+      isNestedGroup,
+      isContainerStepGroup
     })
 
     if (Array.isArray(serviceDependencies) && serviceDependencies.length > 0) {
@@ -622,7 +625,8 @@ const transformStepsData = ({
   errorMap,
   parentPath,
   offsetIndex = 0,
-  isNestedGroup = false
+  isNestedGroup = false,
+  isContainerStepGroup = false
 }: {
   steps: ExecutionWrapperConfig[]
   graphType: PipelineGraphType
@@ -632,6 +636,7 @@ const transformStepsData = ({
   parentPath?: string
   offsetIndex?: number
   isNestedGroup?: boolean
+  isContainerStepGroup?: boolean
 }): PipelineGraphState[] => {
   const finalData: PipelineGraphState[] = []
 
@@ -665,7 +670,8 @@ const transformStepsData = ({
           loopingStrategyEnabled: !!step.step?.strategy,
           conditionalExecutionEnabled: getConditionalExecutionEnabled(step, isExecutionView),
           isTemplateNode: Boolean(templateRef),
-          isNestedGroup
+          isNestedGroup,
+          isContainerStepGroup
         },
         children: (step?.step as any)?.children
           ? transformStepsData({
@@ -706,6 +712,7 @@ const transformStepsData = ({
               identifier
             }),
             isNestedGroup,
+            isContainerStepGroup,
             isInComplete: isCustomGeneratedString(first.stepGroup?.identifier) || hasErrors,
             loopingStrategyEnabled: !!first.stepGroup?.strategy,
             conditionalExecutionEnabled: getConditionalExecutionEnabled(first, isExecutionView, true),
@@ -745,6 +752,7 @@ const transformStepsData = ({
             conditionalExecutionEnabled: getConditionalExecutionEnabled(first, isExecutionView),
             isTemplateNode: Boolean(templateRef),
             isNestedGroup,
+            isContainerStepGroup,
             graphType
           },
           children: transformStepsData({
@@ -782,6 +790,7 @@ const transformStepsData = ({
               identifier
             }),
             isNestedGroup,
+            isContainerStepGroup,
             type: 'StepGroup',
             nodeType: 'StepGroup',
             icon: iconName,
@@ -819,6 +828,7 @@ const transformStepsData = ({
               getConditionalExecutionEnabled({ step: stepData }, isExecutionView),
             graphType,
             isNestedGroup,
+            isContainerStepGroup,
             isInComplete: isCustomGeneratedString(identifier) || hasErrors
           }
         })

@@ -46,6 +46,7 @@ interface StepGroupGraphProps {
   isParentMatrix?: boolean
   type?: string
   baseFqn?: string
+  isContainerStepGroup?: boolean
 }
 
 function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
@@ -78,7 +79,8 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
           serviceDependencies: undefined,
           errorMap: errorMap,
           parentPath: baseFQN,
-          isNestedGroup: true
+          isNestedGroup: true,
+          isContainerStepGroup: props.isContainerStepGroup
         })
       )
     }
