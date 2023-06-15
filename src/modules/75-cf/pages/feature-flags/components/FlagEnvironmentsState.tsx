@@ -30,9 +30,8 @@ const FlagEnvironmentsState: FC<FlagEnvironmentsStateProps> = ({ environmentsByT
         .map(envType => (
           <Layout.Horizontal
             key={envType}
-            flex={{ distribution: 'space-between', align: 'center-center' }}
+            flex={{ justifyContent: 'space-between', alignItems: 'center' }}
             padding="small"
-            spacing="medium"
             className={cx(css.environmentTypeContainer, envType === 'prod' ? css.prod : css.nonProd)}
             data-testid="environmentTypeContainer"
           >
