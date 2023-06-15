@@ -1,7 +1,6 @@
 homepage:
   slogan: Network Map Slogan.
   learnMore: Learn more about Network Map
-  newNewtworkMapBtn: New Network Map
   searchNeworkMap: Search network map
   newServiceBtn: Discover New Services
   searchDelegate: Search delegate
@@ -71,3 +70,5 @@ serviceDrawer:
   workloads: Workload Information
 detectNetworkTrace: Detect network trace connectivity
 blacklistedNamespaces: Backlisted Namespaces
+newNetworkMap: New Network Map
+discoveryNamespacePlaceholder: Enter a discovery namespace

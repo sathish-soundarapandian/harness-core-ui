@@ -100,7 +100,7 @@ const NetworkMapStudio: React.FC = () => {
             <ModalDialog
               isOpen={isOpen}
               onClose={close}
-              title={getString('discovery.homepage.newNewtworkMapBtn')}
+              title={getString('discovery.newNetworkMap')}
               canEscapeKeyClose={false}
               canOutsideClickClose={true}
               enforceFocus={false}

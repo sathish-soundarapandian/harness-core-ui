@@ -5608,10 +5608,10 @@ export interface StringsMap {
   'discovery.discoveryDetails.tabTitles.history': string
   'discovery.discoveryDetails.tabTitles.networkMaps': string
   'discovery.discoveryDetails.tabTitles.resources': string
+  'discovery.discoveryNamespacePlaceholder': string
   'discovery.homepage.discoveryAgentDesc': string
   'discovery.homepage.learnMore': string
   'discovery.homepage.newDiscoveryAgentBtn': string
-  'discovery.homepage.newNewtworkMapBtn': string
   'discovery.homepage.newServiceBtn': string
   'discovery.homepage.noDiscoveryAgent': string
   'discovery.homepage.searchDelegate': string
@@ -5621,6 +5621,7 @@ export interface StringsMap {
   'discovery.howToCreateNetworkMap': string
   'discovery.howToCreateNetworkMapDesc': string
   'discovery.networkMapDescription': string
+  'discovery.newNetworkMap': string
   'discovery.selectAConnector': string
   'discovery.selectAConnectorDescription': string
   'discovery.serviceDiscoveyTable': string

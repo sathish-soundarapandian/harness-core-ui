@@ -33,6 +33,7 @@ import css from './CreateDAgent.module.scss'
 
 interface FormValues {
   discoveryAgentName: string
+  discoveryNamespace: string
   detectNetworkTrace?: boolean
   blacklistedNamespaces?: string[]
   cronString?: string
@@ -61,6 +62,7 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
 
   const inputValues: FormValues = {
     discoveryAgentName: '',
+    discoveryNamespace: '',
     connectorRef: undefined,
     identifier: undefined,
     detectNetworkTrace: isNetworkTraceDetected
@@ -76,7 +78,7 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
             identity: dAgentFormRef.current?.values.identifier,
             config: {
               kubernetes: {
-                namespace: 'sd1',
+                namespace: dAgentFormRef.current?.values.discoveryNamespace,
                 imageRegistry: 'index.docker.io/shovan1995',
                 serviceAccount: 'cluster-admin-1'
               }
@@ -87,7 +89,7 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
             })
             .catch(e => showError(e))
         } else {
-          showError('Invalid configuration, validation failed')
+          showError('Invalid configuration, either required fields were not filled or validation has failed')
         }
       })
     }
@@ -132,7 +134,8 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
                 .matches(/^.*[^-]$/, 'Discovery Agent name can not end with -')
                 .max(50, 'Discovery Agent name can have a max length of 50 characters')
                 .required('Discovery Agent name is required!'),
-              connectorRef: Yup.string().trim().required('Please select a Connector!')
+              connectorRef: Yup.string().trim().required('Please select a Connector!'),
+              discoveryNamespace: Yup.string().trim().required('Please select a discovery namespace')
             })}
             onSubmit={() => void 0}
           >
@@ -182,6 +185,11 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
                                 isIdentifierEditable
                                 inputLabel={getString('discovery.dAgentName')}
                               />
+                              <FormInput.Text
+                                name="discoveryNamespace"
+                                placeholder={getString('discovery.discoveryNamespacePlaceholder')}
+                                label={getString('common.namespace')}
+                              />
                             </div>
                           </Container>
                         </Layout.Vertical>
@@ -197,7 +205,7 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
                             font={{ variation: FontVariation.H5, weight: 'semi-bold' }}
                             margin={{ bottom: 'large' }}
                           >
-                            {getString('discovery.dataCollectionSettings')}
+                            {`${getString('discovery.dataCollectionSettings')} ${getString('common.optionalLabel')}`}
                           </Text>
                           <Text
                             width="100%"
@@ -220,7 +228,9 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
 
                             <FormInput.TagInput
                               name="blacklistedNamespaces"
-                              label={getString('discovery.blacklistedNamespaces')}
+                              label={`${getString('discovery.blacklistedNamespaces')} ${getString(
+                                'common.optionalLabel'
+                              )}`}
                               itemFromNewTag={tag => tag}
                               items={[]}
                               tagInputProps={{
