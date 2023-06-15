@@ -38,12 +38,13 @@ describe('Delegate Task Logs Modal', () => {
         }}
       >
         <DelegateTaskLogs
-          step={{ startTs: 123, endTs: 456, name: 'step name', delegateInfoList: [{ taskId: 'abc' }] }}
           telemetry={{
             taskContext: TaskContext.PipelineStep,
             hasError: false
           }}
-          taskList={[]}
+          taskIds={['abc']}
+          startTime={123}
+          endTime={456}
         />
       </TestWrapper>
     )
@@ -120,13 +121,9 @@ describe('Delegate Task Logs Modal', () => {
         }}
       >
         <DelegateTaskLogs
-          step={{
-            startTs: 123,
-            endTs: 456,
-            name: 'step name',
-            delegateInfoList: [{ taskId: 'abc' }, { taskId: 'qwe' }]
-          }}
-          taskList={[]}
+          taskIds={['abc']}
+          startTime={123}
+          endTime={456}
           telemetry={{
             taskContext: TaskContext.PipelineStep,
             hasError: false
@@ -158,16 +155,9 @@ describe('Delegate Task Logs Modal', () => {
         }}
       >
         <DelegateTaskLogs
-          step={{
-            startTs: 123,
-            endTs: 456,
-            name: 'step name',
-            delegateInfoList: []
-          }}
-          taskList={[
-            { taskId: 'abc123', taskName: 'Artifact Task: artifact' },
-            { taskId: 'def456', taskName: 'Config Task: config' }
-          ]}
+          taskIds={['abc']}
+          startTime={123}
+          endTime={456}
           telemetry={{
             taskContext: TaskContext.PipelineStep,
             hasError: false

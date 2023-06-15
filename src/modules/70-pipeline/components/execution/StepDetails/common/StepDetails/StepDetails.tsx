@@ -160,9 +160,9 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
             </th>
             <td>
               <Layout.Vertical spacing="small">
-                {delegateInfoList &&
-                  delegateInfoList.length > 0 &&
-                  delegateInfoList.map((item, index) => (
+                {step.delegateInfoList &&
+                  step.delegateInfoList.length > 0 &&
+                  step.delegateInfoList.map((item, index) => (
                     <div key={`${item.id}-${index}`}>
                       <Text font={{ size: 'small', weight: 'bold' }}>
                         <String
@@ -218,7 +218,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                 {taskList &&
                   taskList.length > 0 &&
                   taskList.map((item, index) =>
-                    delegateListContainsTask(delegateInfoList, item.taskId) ? null : (
+                    delegateListContainsTask(step.delegateInfoList, item.taskId) ? null : (
                       <div key={`${item.taskId}-${index}`}>
                         {isExecutionComplete(step.status) ? (
                           <Text font={{ size: 'small', weight: 'bold' }} color={Color.ORANGE_500}>

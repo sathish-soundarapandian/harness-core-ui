@@ -66,7 +66,7 @@ interface ConnectorTestConnectionProps {
   url?: string
   isLastStep?: boolean
   name?: string
-  connectorInfo: ConnectorInfoDTO
+  connectorInfo?: ConnectorInfoDTO | void
   helpPanelReferenceId?: string
   gitDetails?: EntityGitDetails
   stepIndex?: number // will make this mandatory once all usages sends the value
@@ -514,7 +514,7 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
               current={stepDetails.step}
               currentStatus={stepDetails.status}
             />
-            {connectorInfo?.spec?.executeOnDelegate ? (
+            {connectorInfo && connectorInfo?.spec?.executeOnDelegate ? (
               <DelegateTaskLogsButton
                 startTime={(testConnectionResponse?.data?.testedAt || 0) - timePadding}
                 endTime={(testConnectionResponse?.data?.testedAt || 0) + timePadding * 2}
