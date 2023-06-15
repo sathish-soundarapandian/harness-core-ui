@@ -5,6 +5,7 @@ homepage:
   searchNeworkMap: Search network map
   newServiceBtn: Discover New Services
   searchDelegate: Search delegate
+  searchDiscoveryAgent: Search Discovery Agent
   newDiscoveryAgentBtn: New Discovery Agent
   noDiscoveryAgent: You don’t have any Discovery Agent yet
   discoveryAgentDesc:
@@ -34,29 +35,39 @@ approxTime: Approx time
 serviceDiscoveyTable: Service Discovery Table
 discoveredBy: Discovery by
 agentName: Agent Name
-optional: (Optional)
 dataCollectionSettings: Data Collection Settings
 dataCollectionSettingsDesc: Configure the period of detecting services in the connector, network traces and namespaces accessed
 createNetworkMap: Create Network Map
 allDiscoveredServices: All Discovered Services
-networkMap: Network Map
-newNetworkMap: New Network Map
+discoveryDetails:
+  id: ID
+  lastDiscovery: Last discovery
+  tabTitles:
+    resources: Discovered Resources
+    networkMaps: Network Maps
+    history: Discovery History
+  settings:
+    overviewTitle: Discovery Agent Overview
+    agentName: Discovery Agent
+    discovertSettings: Discovery Settings
+    disable: Disable Discovery Agent
+    lastDiscovery: Last Discovery
+    disableDescription: >
+      Disable Discovery Agent will not stop your existing ongoing discovery. 
+      It will stop the subsequent discoveries. This action is not revertible. Learn More
+    detectNetwork: Detect network trace
+    enableEBPF: Enable EBPF
+  networkMaps:
+    noNetworkMapHeader: Let’s get started with your first network map
+    noNetworkMapDesc: >
+      Network map helps you to group the business related services and their dependencies, perform actions, and
+      observe their performance.
+    noNetworkMapChooseService: Choose Services
+  discoveredService:
+    portNumber: Port Number
 serviceDrawer:
-  header: SERVICE
-  overview: Overview
-  resources: Resources
-  serviceDetails: Service Details
-  cluster: Cluster
-  namespace: Namespace
   ipFamily: IP Families
-  ipAddress: IP Address
-  port: Port
-  targetPort: Target Port
   selector: Selector
-  kind: Kind
-  replicas: Replicas
-  labels: Labels
-  annotations: Annotations
   workloads: Workload Information
 detectNetworkTrace: Detect network trace connectivity
 blacklistedNamespaces: Backlisted Namespaces

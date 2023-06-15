@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly menuItem: string
+  readonly noNetworkMapDiv: string
   readonly serviceCountContainer: string
   readonly serviceCountText: string
   readonly servicesTable: string

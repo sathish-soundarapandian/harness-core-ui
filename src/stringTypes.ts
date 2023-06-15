@@ -5591,6 +5591,23 @@ export interface StringsMap {
   'discovery.detectNetworkTrace': string
   'discovery.discoverServices': string
   'discovery.discoveredBy': string
+  'discovery.discoveryDetails.discoveredService.portNumber': string
+  'discovery.discoveryDetails.id': string
+  'discovery.discoveryDetails.lastDiscovery': string
+  'discovery.discoveryDetails.networkMaps.noNetworkMapChooseService': string
+  'discovery.discoveryDetails.networkMaps.noNetworkMapDesc': string
+  'discovery.discoveryDetails.networkMaps.noNetworkMapHeader': string
+  'discovery.discoveryDetails.settings.agentName': string
+  'discovery.discoveryDetails.settings.detectNetwork': string
+  'discovery.discoveryDetails.settings.disable': string
+  'discovery.discoveryDetails.settings.disableDescription': string
+  'discovery.discoveryDetails.settings.discovertSettings': string
+  'discovery.discoveryDetails.settings.enableEBPF': string
+  'discovery.discoveryDetails.settings.lastDiscovery': string
+  'discovery.discoveryDetails.settings.overviewTitle': string
+  'discovery.discoveryDetails.tabTitles.history': string
+  'discovery.discoveryDetails.tabTitles.networkMaps': string
+  'discovery.discoveryDetails.tabTitles.resources': string
   'discovery.homepage.discoveryAgentDesc': string
   'discovery.homepage.learnMore': string
   'discovery.homepage.newDiscoveryAgentBtn': string
@@ -5598,32 +5615,17 @@ export interface StringsMap {
   'discovery.homepage.newServiceBtn': string
   'discovery.homepage.noDiscoveryAgent': string
   'discovery.homepage.searchDelegate': string
+  'discovery.homepage.searchDiscoveryAgent': string
   'discovery.homepage.searchNeworkMap': string
   'discovery.homepage.slogan': string
   'discovery.howToCreateNetworkMap': string
   'discovery.howToCreateNetworkMapDesc': string
-  'discovery.networkMap': string
   'discovery.networkMapDescription': string
-  'discovery.newNetworkMap': string
-  'discovery.optional': string
   'discovery.selectAConnector': string
   'discovery.selectAConnectorDescription': string
   'discovery.serviceDiscoveyTable': string
-  'discovery.serviceDrawer.annotations': string
-  'discovery.serviceDrawer.cluster': string
-  'discovery.serviceDrawer.header': string
-  'discovery.serviceDrawer.ipAddress': string
   'discovery.serviceDrawer.ipFamily': string
-  'discovery.serviceDrawer.kind': string
-  'discovery.serviceDrawer.labels': string
-  'discovery.serviceDrawer.namespace': string
-  'discovery.serviceDrawer.overview': string
-  'discovery.serviceDrawer.port': string
-  'discovery.serviceDrawer.replicas': string
-  'discovery.serviceDrawer.resources': string
   'discovery.serviceDrawer.selector': string
-  'discovery.serviceDrawer.serviceDetails': string
-  'discovery.serviceDrawer.targetPort': string
   'discovery.serviceDrawer.workloads': string
   'discovery.tabs.configureRelations': string
   'discovery.tabs.selectServices': string

@@ -93,7 +93,7 @@ const DiscoveryPage: React.FC = () => {
                 <Layout.Horizontal flex={{ justifyContent: 'space-between' }} width={'100%'}>
                   <Layout.Horizontal>
                     <RbacButton
-                      text="New Discovery Agent"
+                      text={getString('discovery.homepage.newDiscoveryAgentBtn')}
                       variation={ButtonVariation.PRIMARY}
                       icon="plus"
                       onClick={() => setDrawerOpen(true)}
@@ -106,7 +106,7 @@ const DiscoveryPage: React.FC = () => {
                       throttle={500}
                       defaultValue={search}
                       onChange={value => setSearch(value)}
-                      placeholder={'Search Discovery Agent'}
+                      placeholder={getString('discovery.homepage.searchDiscoveryAgent')}
                     />
                   </Container>
                 </Layout.Horizontal>

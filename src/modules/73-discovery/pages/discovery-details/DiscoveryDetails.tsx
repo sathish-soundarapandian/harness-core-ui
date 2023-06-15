@@ -60,18 +60,20 @@ const DiscoveryDetails: React.FC = () => {
                   tooltipProps={{ isDark: true, position: 'bottom' }}
                   font={{ size: 'small' }}
                 >
-                  Connected
+                  {getString('connected')}
                 </Text>
               </Layout.Horizontal>
-              <Text color={'#6B6D85'} font={{ size: 'small' }} margin={{ right: 'small' }}>
-                ID: {discoveryAgentData?.identity}
+              <Text color={Color.GREY_500} font={{ size: 'small' }} margin={{ right: 'small' }}>
+                {getString('discovery.discoveryDetails.id')}: {discoveryAgentData?.identity}
               </Text>
             </Layout.Vertical>
           </Container>
         }
         toolbar={
           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
-            <Text font={{ size: 'small' }}>Last discovery: {date}</Text>
+            <Text font={{ size: 'small' }}>
+              {getString('discovery.discoveryDetails.lastDiscovery')}: {date}
+            </Text>
             <Button
               margin={{ left: 'medium' }}
               icon="edit"
@@ -91,22 +93,22 @@ const DiscoveryDetails: React.FC = () => {
               tabList={[
                 {
                   id: 'discovered services',
-                  title: 'Discovered Resources',
+                  title: getString('discovery.discoveryDetails.tabTitles.resources'),
                   panel: <DiscoveredServices />
                 },
                 {
                   id: 'network maps',
-                  title: 'Network Maps',
+                  title: getString('discovery.discoveryDetails.tabTitles.networkMaps'),
                   panel: <NetworkMapTable />
                 },
                 {
                   id: 'discovery history',
-                  title: 'Discovery History',
+                  title: getString('discovery.discoveryDetails.tabTitles.history'),
                   panel: <DiscoveryHistory />
                 },
                 {
                   id: 'settings',
-                  title: 'Settings',
+                  title: getString('settingsLabel'),
                   panel: <Settings />
                 }
               ]}

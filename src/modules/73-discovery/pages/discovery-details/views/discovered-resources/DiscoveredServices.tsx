@@ -173,7 +173,7 @@ const DiscoveredServices: React.FC = () => {
         IP Address: {row.original.service?.clusterIP}
       </Text>
       <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_500}>
-        Port Number:{' '}
+        {getString('discovery.discoveryDetails.discoveredService.portNumber')}:{' '}
         {row.original.service &&
           row.original.service?.ports &&
           row.original.service?.ports.map((value, index) => {
@@ -204,7 +204,7 @@ const DiscoveredServices: React.FC = () => {
       <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
         <Button
           minimal
-          tooltip="Create Network Map"
+          tooltip={getString('discovery.createNetworkMap')}
           icon="plus"
           onClick={() => {
             history.push({
@@ -238,7 +238,7 @@ const DiscoveredServices: React.FC = () => {
             alwaysExpanded
             width={232}
             defaultValue={search}
-            placeholder="Search for a service"
+            placeholder={'Search a Service'}
             throttle={500}
             onChange={value => setSearch(value)}
           />

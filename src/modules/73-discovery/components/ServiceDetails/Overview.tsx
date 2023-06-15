@@ -57,7 +57,7 @@ const Overview: React.FC<Overview> = props => {
     <Layout.Horizontal spacing="medium" flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
       <Layout.Vertical style={{ width: '48%' }}>
         <Text color={Color.GREY_700} font={{ variation: FontVariation.H5, weight: 'semi-bold' }}>
-          {getString('discovery.serviceDrawer.serviceDetails')}
+          {getString('common.serviceDetails')}
         </Text>
         {getServiceLoader ? (
           <Container height={'100%'} width={'100%'} flex={{ align: 'center-center' }}>
@@ -79,7 +79,7 @@ const Overview: React.FC<Overview> = props => {
             }}
           >
             <ListItems
-              title={getString('discovery.serviceDrawer.cluster')}
+              title={getString('common.cluster')}
               content={
                 <Text icon={'kubernetes-harness'} color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
                   {serviceData?.infraID}
@@ -87,7 +87,7 @@ const Overview: React.FC<Overview> = props => {
               }
             />
             <ListItems
-              title={getString('discovery.serviceDrawer.namespace')}
+              title={getString('common.namespace')}
               content={
                 <Text icon={'kubernetes-harness'} color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
                   {serviceData?.namespace}
@@ -112,7 +112,7 @@ const Overview: React.FC<Overview> = props => {
               padding={{ top: 'medium' }}
             />
             <ListItems
-              title={getString('discovery.serviceDrawer.ipAddress')}
+              title={'IP Address'}
               content={
                 <>
                   {serviceData?.spec?.clusterIPs?.map(clusterIP => {
@@ -128,7 +128,7 @@ const Overview: React.FC<Overview> = props => {
             />
             <Divider />
             <ListItems
-              title={getString('discovery.serviceDrawer.port')}
+              title={getString('common.smtp.port')}
               content={
                 <>
                   {serviceData?.spec?.ports?.map(ports => {
@@ -144,7 +144,7 @@ const Overview: React.FC<Overview> = props => {
             />
 
             <ListItems
-              title={getString('discovery.serviceDrawer.targetPort')}
+              title={'Target Port'}
               content={
                 <>
                   {serviceData?.spec?.ports?.map((ports, index) => {
@@ -212,7 +212,7 @@ const Overview: React.FC<Overview> = props => {
             }}
           >
             <ListItems
-              title={getString('discovery.serviceDrawer.kind')}
+              title={getString('kind')}
               content={
                 <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
                   {serviceWorkloadData?.kind}
@@ -220,7 +220,7 @@ const Overview: React.FC<Overview> = props => {
               }
             />
             <ListItems
-              title={getString('discovery.serviceDrawer.replicas')}
+              title={getString('delegates.commandLineCreation.replicas')}
               content={
                 <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
                   {totalReplicas}
@@ -232,7 +232,7 @@ const Overview: React.FC<Overview> = props => {
             {serviceWorkloadData && serviceWorkloadData?.workloads && serviceWorkloadData?.workloads[0]?.podLabels ? (
               <>
                 <ListItems
-                  title={getString('discovery.serviceDrawer.labels')}
+                  title={getString('pipelineSteps.labelsLabel')}
                   content={
                     <Layout.Vertical width={'60%'}>
                       {Object.entries(serviceWorkloadData && serviceWorkloadData?.workloads[0]?.podLabels).map(
@@ -262,7 +262,7 @@ const Overview: React.FC<Overview> = props => {
             serviceWorkloadData?.workloads &&
             serviceWorkloadData?.workloads[0]?.podAnnotations ? (
               <ListItems
-                title={getString('discovery.serviceDrawer.annotations')}
+                title={getString('common.annotations')}
                 content={
                   <Layout.Vertical width={'60%'}>
                     {Object.entries(serviceWorkloadData && serviceWorkloadData?.workloads[0]?.podAnnotations).map(

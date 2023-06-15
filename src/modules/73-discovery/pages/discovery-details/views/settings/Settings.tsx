@@ -51,7 +51,7 @@ const Settings: React.FC = () => {
     if (dAgentData) fetchConnectorDetails(dAgentData?.k8sConnectorID ?? '')
   }, [dAgentData])
 
-  const updateTime = (time: string) => {
+  const updateTime = (time: string): string => {
     return moment(time).format('MMM DD, hh:mm A')
   }
 
@@ -74,7 +74,7 @@ const Settings: React.FC = () => {
         <>
           <Layout.Vertical style={{ width: '48%' }}>
             <Text color={Color.GREY_700} font={{ variation: FontVariation.H5, weight: 'semi-bold' }}>
-              Discovery Agent Overview
+              {getString('discovery.discoveryDetails.settings.overviewTitle')}
             </Text>
             <Layout.Vertical
               background={Color.WHITE}
@@ -85,9 +85,11 @@ const Settings: React.FC = () => {
                 borderRadius: '4px'
               }}
             >
-              <Text font={{ variation: FontVariation.CARD_TITLE }}>Discovery Agent</Text>
+              <Text font={{ variation: FontVariation.CARD_TITLE }}>
+                {getString('discovery.discoveryDetails.settings.agentName')}
+              </Text>
               <ListItems
-                title={'Name'}
+                title={getString('name')}
                 content={
                   <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
                     {dAgentData?.name}
@@ -96,7 +98,7 @@ const Settings: React.FC = () => {
                 padding={{ top: 'medium' }}
               />
               <ListItems
-                title={'Description'}
+                title={getString('description')}
                 content={
                   <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
                     {dAgentData?.description}
@@ -105,7 +107,7 @@ const Settings: React.FC = () => {
                 padding={{ top: 'medium' }}
               />
               <ListItems
-                title={'Last Discovery'}
+                title={getString('discovery.discoveryDetails.settings.lastDiscovery')}
                 content={
                   <Layout.Horizontal flex={{ alignItems: 'center' }}>
                     <Text color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
@@ -117,9 +119,9 @@ const Settings: React.FC = () => {
                 padding={{ top: 'medium' }}
               />
               <Divider />
-              <Text font={{ variation: FontVariation.CARD_TITLE }}>Connector Details</Text>
+              <Text font={{ variation: FontVariation.CARD_TITLE }}>{getString('connectors.connectorDetails')}</Text>
               <ListItems
-                title={'Connector Name'}
+                title={getString('connectors.name')}
                 content={
                   <Text icon={'kubernetes-harness'} color={Color.GREY_700} font={{ variation: FontVariation.BODY2 }}>
                     {connectorDetails?.data?.connector?.name}
@@ -128,7 +130,7 @@ const Settings: React.FC = () => {
                 padding={{ top: 'medium' }}
               />
               <ListItems
-                title={'Connector Name'}
+                title={'Connector Status'}
                 content={<RenderConnectorStatus status={connectorDetails?.data?.status?.status} />}
                 padding={{ top: 'medium' }}
               />
@@ -136,7 +138,7 @@ const Settings: React.FC = () => {
           </Layout.Vertical>
           <Layout.Vertical style={{ width: '48%' }}>
             <Text color={Color.GREY_700} font={{ variation: FontVariation.H5, weight: 'semi-bold' }}>
-              Discovery Settings
+              {getString('discovery.discoveryDetails.settings.discovertSettings')}
             </Text>
             <Layout.Vertical
               spacing="medium"
@@ -148,11 +150,11 @@ const Settings: React.FC = () => {
               }}
             >
               <ListItems
-                title={'Detect network trace'}
+                title={getString('discovery.discoveryDetails.settings.detectNetwork')}
                 content={<Toggle checked={dAgentData?.config?.kubernetes?.enableEBPF} />}
               />
               <ListItems
-                title={'Enable EBPF'}
+                title={getString('discovery.discoveryDetails.settings.enableEBPF')}
                 content={<Toggle checked={dAgentData?.config?.kubernetes?.enableEBPF} />}
                 padding={{ top: 'medium' }}
               />
@@ -166,11 +168,10 @@ const Settings: React.FC = () => {
                   padding={{ top: 'medium' }}
                   style={{ cursor: 'pointer' }}
                 >
-                  Disable Discovery Agent
+                  {getString('discovery.discoveryDetails.settings.disable')}
                 </Text>
                 <Text padding={{ top: 'medium' }} color={Color.GREY_600} font={{ variation: FontVariation.BODY }}>
-                  Disable Discovery Agent will not stop your existing ongoing discovery. It will stop the subsequent
-                  discoveries. This action is not revertible. Learn More
+                  {getString('discovery.discoveryDetails.settings.disableDescription')}
                 </Text>
               </Layout.Vertical>
             </Layout.Vertical>
