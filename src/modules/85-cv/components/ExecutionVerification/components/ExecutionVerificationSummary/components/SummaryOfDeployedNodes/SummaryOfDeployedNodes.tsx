@@ -14,6 +14,8 @@ import type { ExecutionQueryParams } from '@pipeline/utils/executionUtils'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import css from './SummaryOfDeployedNodes.module.scss'
+import type { VerificationSpec } from 'services/cv'
+import { VerificationJobType } from '@cv/constants'
 
 interface SummaryOfDeployedNodesProps {
   metricsInViolation: number
@@ -23,6 +25,7 @@ interface SummaryOfDeployedNodesProps {
   errorClustersInViolation: number
   totalErrorClusters: number
   onClickViewDetails?: (isMetrics: boolean) => void
+  analysisType?: VerificationSpec['analysisType']
 }
 
 interface SummaryTextProps {
@@ -64,10 +67,12 @@ function SummaryText(props: SummaryTextProps): JSX.Element {
 }
 
 export function SummaryOfDeployedNodes(props: SummaryOfDeployedNodesProps): JSX.Element {
-  const { metricsInViolation, totalMetrics, logClustersInViolation, totalLogClusters } = props
+  const { metricsInViolation, totalMetrics, logClustersInViolation, totalLogClusters, analysisType } = props
   const { errorClustersInViolation, totalErrorClusters } = props
   const { getString } = useStrings()
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
+
+  const isSimpleVerification = analysisType === VerificationJobType.SIMPLE
 
   return (
     <Container className={css.main}>
@@ -80,13 +85,15 @@ export function SummaryOfDeployedNodes(props: SummaryOfDeployedNodesProps): JSX.
           titleText={getString('pipeline.verification.metricsInViolation')}
           tabId={getString('pipeline.verification.analysisTab.metrics')}
         />
-        <SummaryText
-          numerator={logClustersInViolation}
-          denominator={totalLogClusters}
-          titleText={getString('pipeline.verification.logClustersInViolation')}
-          tabId={getString('pipeline.verification.analysisTab.logs')}
-        />
-        {isErrorTrackingEnabled && (
+        {!isSimpleVerification && (
+          <SummaryText
+            numerator={logClustersInViolation}
+            denominator={totalLogClusters}
+            titleText={getString('pipeline.verification.logClustersInViolation')}
+            tabId={getString('pipeline.verification.analysisTab.logs')}
+          />
+        )}
+        {isErrorTrackingEnabled && !isSimpleVerification && (
           <SummaryText
             numerator={errorClustersInViolation}
             denominator={totalErrorClusters}

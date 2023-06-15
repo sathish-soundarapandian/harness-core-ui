@@ -1101,6 +1101,9 @@ verification:
     pinModalTitle: Pin Baseline Verification
     pinModalMessage: An existing verification has been pinned as the baseline. If you choose to set a new verification as baseline, the current pinned verification will be unpinned. Are you sure you want to proceed?
     pinConfirmationButtonText: Yes, Pin baseline verification
+  simpleVerificationMessages:
+    passed: A simple verification analysis has been applied. Change the verification type if you wish to apply Harness machine learning to the analysis.
+    failed: The verification failed due to anomalies in the metric threshold. Threshold Analysis verification was performed. Change the verification type if you wish to apply Harness machine learning to the analysis.
   baselineTest: Baseline test
   pinBaseline: Pin baseline
   unpinBaseline: Unpin baseline

@@ -132,6 +132,7 @@ export function ExecutionVerificationSummary(props: VerifyExecutionProps): JSX.E
       />
       {displayAnalysisCount && (
         <SummaryOfDeployedNodes
+          analysisType={data?.spec?.analysisType}
           metricsInViolation={metricsAnalysis?.unhealthy || 0}
           totalMetrics={getTotalMetrics(metricsAnalysis)}
           logClustersInViolation={logClusters?.unknownClustersCount || 0}

@@ -10,7 +10,8 @@ export const VerificationJobType: { [key: string]: string } = {
   CANARY: 'CANARY',
   BLUE_GREEN: 'BLUE_GREEN',
   ROLLING: 'ROLLING',
-  NO_ANALYSIS: 'NO_ANALYSIS'
+  NO_ANALYSIS: 'NO_ANALYSIS',
+  SIMPLE: 'SIMPLE'
 }
 
 export enum HealthSourcesType {

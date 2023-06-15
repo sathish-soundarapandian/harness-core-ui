@@ -5391,6 +5391,8 @@ export interface StringsMap {
   'pipeline.verification.pinBaseline': string
   'pipeline.verification.predicted': string
   'pipeline.verification.refreshViewForNewData': string
+  'pipeline.verification.simpleVerificationMessages.failed': string
+  'pipeline.verification.simpleVerificationMessages.passed': string
   'pipeline.verification.tableHeaders.group': string
   'pipeline.verification.tableHeaders.metricName': string
   'pipeline.verification.tableHeaders.nodes': string

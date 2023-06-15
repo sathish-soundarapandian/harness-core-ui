@@ -7,11 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly baselineTest: string
-  readonly dialog: string
-  readonly mainLabel: string
-  readonly redirectLink: string
-  readonly subTitle: string
-  readonly testsSummaryView: string
+  readonly statusMessageDisplay: string
 }
 export default styles

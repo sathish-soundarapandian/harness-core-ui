@@ -20,8 +20,9 @@ import VerificationStatusCard from './components/VerificationStatusCard/Verifica
 import { DurationView } from './components/DurationView/DurationView'
 import TestsSummaryView from './components/TestSummaryView/TestsSummaryView'
 import PinBaslineButton from './components/PinBaslineButton/PinBaslineButton'
-import { canShowPinBaselineButton } from './DeploymentProgressAndNodes.utils'
+import { canShowPinBaselineButton, getStatusMessage } from './DeploymentProgressAndNodes.utils'
 import css from './DeploymentProgressAndNodes.module.scss'
+import { StatusMessageDisplay } from './components/StatusMessageDisplay/StatusMessageDisplay'
 
 export interface DeploymentProgressAndNodesProps {
   data: VerificationOverview | null
@@ -38,7 +39,7 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
 
   const baselineData = data?.baselineOverview
 
-  const { metricsAnalysis, verificationStartTimestamp, spec } = data || {}
+  const { metricsAnalysis, verificationStartTimestamp, spec, verificationStatus } = data || {}
   const { getString } = useStrings()
 
   const deploymentNodesData = useMemo(() => {
@@ -75,9 +76,13 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
     }
   }, [data?.controlNodes, data?.testNodes, spec?.analysisType])
 
-  const renderContent = (): JSX.Element | undefined => {
+  const renderContent = (): JSX.Element | undefined | null => {
     if (data?.verificationProgressPercentage === 0 && data?.verificationStatus === 'IN_PROGRESS') {
       return <Text className={css.waitAFew}>{getString('pipeline.verification.waitForAnalysis')}</Text>
+    }
+
+    if (spec?.analysisType === VerificationJobType.SIMPLE) {
+      return null
     }
 
     if (deploymentNodesData) {
@@ -99,6 +104,8 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
       )
     }
   }
+
+  const statusMessage = getStatusMessage({ getString, analysisType: spec?.analysisType, verificationStatus })
 
   return (
     <Container className={cx(css.main, className)}>
@@ -132,6 +139,7 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
         className={css.progressBar}
       />
       {metricsAnalysis && isConsoleView && <VerificationStatusCard status={data?.verificationStatus} />}
+      <StatusMessageDisplay message={statusMessage} messageTestId="statusMessageDisplay" />
       {renderContent()}
     </Container>
   )
