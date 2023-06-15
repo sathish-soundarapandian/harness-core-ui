@@ -21,6 +21,9 @@ import {
 } from 'services/servicediscovery'
 import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import { useQueryParams } from '@common/hooks'
+import type { ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import type { FormValues } from '../../NetworkMapStudio'
 import css from './SelectService.module.scss'
 
@@ -36,8 +39,7 @@ const SelectService: React.FC<Props> = ({ name, networkMapRef }) => {
   const [selectedServices, setSelectedServices] = useState<DatabaseServiceCollection[]>([])
   const { showError, showSuccess } = useToaster()
 
-  const [page, setPage] = useState<number>(0)
-  const [limit, setLimit] = useState<number>(15)
+  const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
 
   const { data: discoveredServices, loading } = useListService({
     infraIdentity: dAgentId,
@@ -45,10 +47,18 @@ const SelectService: React.FC<Props> = ({ name, networkMapRef }) => {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      limit: limit,
-      page: page,
+      limit: size ? parseInt(size) : 0,
+      page: page ? parseInt(page) : 0,
       all: false
     }
+  })
+
+  const paginationProps = useDefaultPaginationProps({
+    pageSize: size ? parseInt(size) : 0,
+    pageIndex: discoveredServices?.page?.index || 0,
+    itemCount: discoveredServices?.page?.totalItems || 0,
+    pageCount: discoveredServices?.page?.totalPages || 0,
+    showPagination: true
   })
 
   const { mutate: createNetworkMapMutate } = useCreateNetworkMap({
@@ -236,15 +246,7 @@ const SelectService: React.FC<Props> = ({ name, networkMapRef }) => {
                 className={css.tableBody}
                 columns={columns}
                 data={discoveredServices?.items ?? []}
-                pagination={{
-                  itemCount: discoveredServices?.items?.length || 0,
-                  pageSize: limit,
-                  pageCount: discoveredServices?.items ? Math.ceil(discoveredServices?.items?.length / limit) : 1,
-                  pageIndex: page,
-                  gotoPage: index => setPage(index),
-                  onPageSizeChange: index => setLimit(index),
-                  showPagination: true
-                }}
+                pagination={paginationProps}
               />
             </Container>
           )}
@@ -275,7 +277,8 @@ const SelectService: React.FC<Props> = ({ name, networkMapRef }) => {
         </Container>
       </Container>
 
-      <div className={css.visualization}>GRAPH HERE</div>
+      {/* TODO: Add Graph here */}
+      <div className={css.visualization}></div>
     </Layout.Horizontal>
   )
 }

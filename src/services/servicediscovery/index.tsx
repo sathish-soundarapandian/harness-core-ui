@@ -287,7 +287,8 @@ export interface ApiPagination {
   all?: boolean
   index?: number
   limit?: number
-  total?: number
+  totalItems?: number
+  totalPages?: number
 }
 
 export interface ApiUpdateInfraRequest {

@@ -22,7 +22,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import DiscoveryAgentTable from '@discovery/components/DiscoveryAgentTable/DiscoveryAgentTable'
 import { useQueryParams } from '@common/hooks'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
+import type { ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
 import EmptyStateDiscoveryAgent from './views/empty-state/EmptyStateDiscoveryAgent'
 import CreateDAgent from './views/create-discovery-agent/CreateDAgent'
 import css from './DiscoveryPage.module.scss'
@@ -39,7 +39,7 @@ const DiscoveryPage: React.FC = () => {
   const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
   const paginationProps = useDefaultPaginationProps({
     itemCount: 100,
-    pageSize: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
+    pageSize: size ? parseInt(size) : 0,
     pageCount: 10,
     pageIndex: page ? parseInt(page) : 0
   })
@@ -51,8 +51,8 @@ const DiscoveryPage: React.FC = () => {
       projectIdentifier: projectIdentifier,
       search: search,
       all: false,
-      page: page ? parseInt(page) : DEFAULT_PAGE_INDEX,
-      limit: size ? parseInt(size) : DEFAULT_PAGE_SIZE
+      page: page ? parseInt(page) : 0,
+      limit: size ? parseInt(size) : 0
     }
   })
 

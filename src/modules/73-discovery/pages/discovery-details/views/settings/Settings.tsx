@@ -23,7 +23,7 @@ const Settings: React.FC = () => {
   const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { getString } = useStrings()
   const { data: dAgentData, loading: dAgentDataLoading } = useGetInfra({
-    infraID: dAgentId,
+    infraIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,

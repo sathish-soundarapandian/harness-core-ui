@@ -153,7 +153,7 @@ const DiscoveredServices: React.FC = () => {
   })
 
   const { data: namespaceList } = useListNamespace({
-    infraID: dAgentId,
+    infraIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
@@ -165,7 +165,7 @@ const DiscoveredServices: React.FC = () => {
   })
 
   const { data: serviceList, loading: serviceListLoader } = useListK8SCustomService({
-    infraID: dAgentId,
+    infraIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
@@ -179,7 +179,7 @@ const DiscoveredServices: React.FC = () => {
   })
 
   const { data: connectionList, loading: connectionListLoading } = useListK8sCustomServiceConnection({
-    infraID: dAgentId,
+    infraIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,

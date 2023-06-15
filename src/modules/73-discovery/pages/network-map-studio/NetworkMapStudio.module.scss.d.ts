@@ -10,6 +10,7 @@ declare const styles: {
   readonly dialogStyles: string
   readonly headerIcon: string
   readonly listBody: string
+  readonly modal: string
   readonly networkMapTitle: string
   readonly setupShell: string
 }

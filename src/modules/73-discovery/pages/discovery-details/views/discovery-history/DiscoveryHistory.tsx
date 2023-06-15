@@ -21,7 +21,7 @@ const DiscoveryHistory: React.FC = () => {
       limit: 25,
       all: false
     },
-    infraID: dAgentId
+    infraIdentity: dAgentId
   })
 
   const [selected, setSelected] = React.useState<DatabaseInstallInfraCollection>()

@@ -51,7 +51,7 @@ const NetworkMapTable: React.FC = () => {
     loading: networkMapListLoading,
     refetch: refetchListNetwork
   } = useListNetworkMap({
-    infraID: dAgentId,
+    infraIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
@@ -68,7 +68,7 @@ const NetworkMapTable: React.FC = () => {
       organizationIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier
     },
-    infraID: dAgentId
+    infraIdentity: dAgentId
   })
 
   const handleDelete = (networkMapId: string) => {

@@ -6,7 +6,20 @@
  */
 import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Formik, Icon, Layout, ModalDialog, Tab, Tabs, Text, useToggleOpen } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Container,
+  FlexExpander,
+  Formik,
+  Icon,
+  Layout,
+  ModalDialog,
+  Tab,
+  Tabs,
+  Text,
+  useToggleOpen
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -92,8 +105,8 @@ const NetworkMapStudio: React.FC = () => {
               canOutsideClickClose={true}
               enforceFocus={false}
               lazy
-              width={800}
-              height={640}
+              width={400}
+              height={400}
               className={css.dialogStyles}
             >
               <Formik
@@ -105,13 +118,34 @@ const NetworkMapStudio: React.FC = () => {
                   tags: []
                 }}
                 formName="networkMapNameForm"
-                onSubmit={values => {
-                  setTitle(values.name)
-                  close()
-                }}
+                onSubmit={() => void 0}
               >
                 {formikProps => (
-                  <NameIdDescriptionTags formikProps={formikProps} identifierProps={{ isIdentifierEditable: true }} />
+                  <Layout.Vertical height={'100%'}>
+                    <Container width="300px" className={css.modal} padding={{ top: 'xsmall', bottom: 'small' }}>
+                      <NameIdDescriptionTags
+                        formikProps={formikProps}
+                        identifierProps={{ isIdentifierEditable: true }}
+                      />
+                    </Container>
+                    <FlexExpander />
+                    <Layout.Horizontal
+                      flex={{ justifyContent: 'flex-start' }}
+                      padding={{ left: 'huge' }}
+                      spacing={'medium'}
+                    >
+                      <Button
+                        type="submit"
+                        variation={ButtonVariation.PRIMARY}
+                        text={getString('confirm')}
+                        onClick={() => {
+                          setTitle(formikProps.values.name)
+                          close()
+                        }}
+                      />
+                      <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={() => close()} />
+                    </Layout.Horizontal>
+                  </Layout.Vertical>
                 )}
               </Formik>
             </ModalDialog>

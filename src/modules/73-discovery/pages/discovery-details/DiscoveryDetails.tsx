@@ -26,7 +26,7 @@ const DiscoveryDetails: React.FC = () => {
   const { getString } = useStrings()
 
   const { data: discoveryAgentData } = useGetInfra({
-    infraID: dAgentId,
+    infraIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
@@ -64,7 +64,7 @@ const DiscoveryDetails: React.FC = () => {
                 </Text>
               </Layout.Horizontal>
               <Text color={'#6B6D85'} font={{ size: 'small' }} margin={{ right: 'small' }}>
-                ID: {discoveryAgentData?.id}
+                ID: {discoveryAgentData?.identity}
               </Text>
             </Layout.Vertical>
           </Container>

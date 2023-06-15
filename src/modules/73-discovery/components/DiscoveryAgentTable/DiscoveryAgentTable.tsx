@@ -34,7 +34,7 @@ const Name: Renderer<CellProps<ApiGetInfraResponse>> = ({ row }) => {
           accountId,
           orgIdentifier,
           projectIdentifier,
-          dAgentId: row.original.id
+          dAgentId: row.original.identity
         })}
       >
         <Text
