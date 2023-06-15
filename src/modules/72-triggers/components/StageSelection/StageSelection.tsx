@@ -18,9 +18,10 @@ import {
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   useGetStagesExecutionList
 } from 'services/pipeline-ng'
-import type { GitQueryParams, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, TriggerPathProps } from '@common/interfaces/RouteInterfaces'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { isNewTrigger } from '../Triggers/utils'
 import css from './StageSelection.module.scss'
 
 const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikProps }) => {
@@ -33,10 +34,11 @@ const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikPr
     pipeline
   } = formikProps?.values ?? {}
   const allowStageExecutions = resolvedPipeline?.allowStageExecutions
-  const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier } = useParams<PipelinePathProps>()
-  const { repoIdentifier, branch, connectorRef } = useQueryParams<GitQueryParams>()
+  const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier } =
+    useParams<TriggerPathProps>()
+  const { repoIdentifier, branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
 
-  const [selectedStages, setStage] = useState<SelectOption[]>(
+  const [selectedStages, setSelectedStages] = useState<SelectOption[]>(
     /**
      * Pass the stagesToExecute as initial selectedStages do handle the edit case flow.
      * As we are using stage?.stageIdentifier both as name and value so creating the options using value only
@@ -50,30 +52,29 @@ const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikPr
   const [executionStageList, setExecutionStageList] = useState([getAllStageItem(getString)])
   const [allStagesSelected, setAllStagesSelect] = useState<boolean>(false)
 
+  const commonQueryParam = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    // GitX related query params
+    branch,
+    repoName,
+    parentEntityConnectorRef: connectorRef,
+    parentEntityRepoName: repoIdentifier
+  }
+
   const { data: stageExecutionData } = useGetStagesExecutionList({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      pipelineIdentifier,
-      branch,
-      repoIdentifier,
-      parentEntityConnectorRef: connectorRef
-    },
-    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
+    queryParams: commonQueryParam,
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
+    // Do not call the API if its new trigger and state execution is not allowed
+    lazy: !allowStageExecutions && isNewTrigger(triggerIdentifier)
   })
 
   const { data: inputSetData, refetch: refetchInputSetData } = useMutateAsGet(
     useGetMergeInputSetFromPipelineTemplateWithListInput,
     {
-      queryParams: {
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier,
-        pipelineIdentifier,
-
-        getDefaultFromOtherRepo: true
-      },
+      queryParams: commonQueryParam,
       requestOptions: { headers: { 'Load-From-Cache': 'true' } },
       lazy: true
     }
@@ -152,15 +153,15 @@ const StageSelection: React.FC<{ formikProps?: FormikProps<any> }> = ({ formikPr
           const isOnlyAllStagesUnChecked = allStagesChecked && !items.some(item => item.value === ALL_STAGE_VALUE)
 
           if (isOnlyAllStagesUnChecked || items?.length === 0 || (!allStagesSelected && isAllStagesChecked)) {
-            setStage([])
+            setSelectedStages([])
             setAllStagesSelect(true)
             formikProps?.setFieldValue('stagesToExecute', [])
           } else {
             const newItems = items.filter((option: SelectOption) => {
               return option.value !== ALL_STAGE_VALUE
             })
+            setSelectedStages(newItems)
             setAllStagesSelect(false)
-            setStage(newItems)
             formikProps?.setFieldValue(
               'stagesToExecute',
               newItems.map((stage: SelectOption) => stage.value)

@@ -221,6 +221,7 @@ export interface FlatOnEditValuesInterface {
   inputSetRefs?: string[]
   pollInterval?: string
   webhookId?: string
+  stagesToExecute?: string[]
 }
 
 export const getModifiedTemplateValues = (

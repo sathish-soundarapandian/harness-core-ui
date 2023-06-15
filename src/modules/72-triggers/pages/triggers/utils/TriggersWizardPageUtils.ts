@@ -2288,7 +2288,7 @@ export const getArtifactManifestTriggerYaml = ({
   replaceRunTimeVariables({ manifestType, artifactType, selectedArtifact })
   let newPipeline = cloneDeep(pipelineRuntimeInput)
   const newPipelineObj = newPipeline?.template ? newPipeline?.template?.templateInputs : newPipeline
-  const filteredStage = newPipelineObj.stages?.find((item: any) => item.stage?.identifier === stageId)
+  const filteredStage = newPipelineObj.stages?.find((item: any) => item?.stage?.identifier === stageId)
   if (manifestType) {
     replaceStageManifests({ filteredStage, selectedArtifact })
   } else if (artifactType) {
