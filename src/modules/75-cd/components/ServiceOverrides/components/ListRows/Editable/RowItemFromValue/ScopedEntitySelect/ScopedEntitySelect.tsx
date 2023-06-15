@@ -114,7 +114,7 @@ export default function ScopedEntitySelect<T>({
     >
       <Button
         minimal
-        data-testid={`scoped-select-popover-field`}
+        data-testid={`scoped-select-popover-field_${fieldKey}`}
         className={css.container}
         withoutCurrentColor={true}
         width={width}

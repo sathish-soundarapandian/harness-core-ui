@@ -188,7 +188,7 @@ function EditableRowInternal({
       {rowConfigs.map(rowConfig => {
         if (rowConfig.accessKey) {
           return (
-            <Container width={rowConfig.rowWidth}>
+            <Container width={rowConfig.rowWidth} key={rowConfig.value}>
               <RowItemFromValue value={rowConfig.value} isEdit={isEdit} isClone={isClone} />
             </Container>
           )
@@ -197,6 +197,7 @@ function EditableRowInternal({
 
           return (
             <Layout.Horizontal
+              key={rowConfig.value}
               flex={{ justifyContent: 'space-between' }}
               width={rowConfig.rowWidth}
               spacing={'medium'}

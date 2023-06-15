@@ -1,0 +1,219 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`global environment overrides create new override 1`] = `
+<div
+  class="bp3-popover-content"
+>
+  <div
+    class="StyledProps--font StyledProps--main tabList"
+  >
+    <div
+      class="bp3-tabs Tabs--main Tabs--horizontal"
+    >
+      <div
+        class="bp3-tab-list"
+        role="tablist"
+      >
+        <div
+          class="bp3-tab-indicator-wrapper"
+          style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+        >
+          <div
+            class="bp3-tab-indicator"
+          />
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_scoped-select-popover_all"
+          aria-disabled="false"
+          aria-expanded="true"
+          aria-selected="true"
+          class="bp3-tab"
+          data-tab-id="all"
+          id="bp3-tab-title_scoped-select-popover_all"
+          role="tab"
+          tabindex="0"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              common.all
+            </p>
+          </div>
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_scoped-select-popover_project"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="project"
+          id="bp3-tab-title_scoped-select-popover_project"
+          role="tab"
+          tabindex="0"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+              style="display: flex; align-items: center;"
+            >
+              <span
+                class="bp3-icon bp3-icon-cube StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--margin-right-xsmall"
+                icon="cube"
+              >
+                <svg
+                  data-icon="cube"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    cube
+                  </desc>
+                  <path
+                    d="M14.194 3.54L8 7.41 1.806 3.54 7.504.283a1 1 0 01.992 0l5.698 3.255zm.75.71a1 1 0 01.056.33v6.84a1 1 0 01-.504.868L8.5 15.714V8.277l6.444-4.027zm-13.888 0L7.5 8.277v7.437l-5.996-3.426A1 1 0 011 11.42V4.58a1 1 0 01.056-.33z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              projectLabel
+            </p>
+          </div>
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_scoped-select-popover_organization"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="organization"
+          id="bp3-tab-title_scoped-select-popover_organization"
+          role="tab"
+          tabindex="0"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+              style="display: flex; align-items: center;"
+            >
+              <span
+                class="bp3-icon bp3-icon-diagram-tree StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--margin-right-xsmall"
+                icon="diagram-tree"
+              >
+                <svg
+                  data-icon="diagram-tree"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    diagram-tree
+                  </desc>
+                  <path
+                    d="M15 8v3h-2V9H9v2H7V9H3v2H1V8a1 1 0 011-1h5V5h2v2h5a1 1 0 011 1zM1 12h2a1 1 0 011 1v2a1 1 0 01-1 1H1a1 1 0 01-1-1v-2a1 1 0 011-1zm12 0h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2a1 1 0 011-1zm-6 0h2a1 1 0 011 1v2a1 1 0 01-1 1H7a1 1 0 01-1-1v-2a1 1 0 011-1zM7 0h2a1 1 0 011 1v2a1 1 0 01-1 1H7a1 1 0 01-1-1V1a1 1 0 011-1z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              orgLabel
+            </p>
+          </div>
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_scoped-select-popover_account"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="account"
+          id="bp3-tab-title_scoped-select-popover_account"
+          role="tab"
+          tabindex="0"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+              style="display: flex; align-items: center;"
+            >
+              <span
+                class="bp3-icon bp3-icon-layers StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--margin-right-xsmall"
+                icon="layers"
+              >
+                <svg
+                  data-icon="layers"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    layers
+                  </desc>
+                  <path
+                    d="M.55 4.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5a.998.998 0 00-.06-1.81L8.4.08a1.006 1.006 0 00-.79 0l-6.99 3a.992.992 0 00-.07 1.81zM15 10c-.16 0-.31.04-.45.11L8 13.38 1.45 10.1c-.14-.06-.29-.1-.45-.1-.55 0-1 .45-1 1 0 .39.23.73.55.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5c.32-.16.55-.5.55-.89 0-.55-.45-1-1-1zm0-3.5c-.16 0-.31.04-.45.11L8 9.88 1.45 6.61A.997.997 0 001 6.5c-.55 0-1 .45-1 1 0 .39.23.73.55.89l7 3.5c.14.07.29.11.45.11s.31-.04.45-.11l7-3.5c.32-.16.55-.5.55-.89 0-.55-.45-1-1-1z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              account
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        aria-hidden="false"
+        aria-labelledby="bp3-tab-title_scoped-select-popover_all"
+        class="bp3-tab-panel"
+        id="bp3-tab-panel_scoped-select-popover_all"
+        role="tabpanel"
+      >
+        <div
+          class="bp3-input-group ui-search-box ExpandingSearchInput--main searchInput  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+          data-name=""
+        >
+          <span
+            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+            data-icon="thinner-search"
+          >
+            <svg
+              fill="none"
+              height="14"
+              viewBox="0 0 16 16"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <input
+            class="bp3-input  ExpandingSearchInput--filter"
+            dir="auto"
+            placeholder="Search"
+            style="padding-right: 38px;"
+            type="search"
+            value=""
+          />
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main listContainer StyledProps--margin-top-medium StyledProps--padding-left-medium StyledProps--padding-right-medium"
+          style="height: 240px;"
+        >
+          noSearchResultsFoundPeriod
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

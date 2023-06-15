@@ -20,7 +20,7 @@ export default function ListRows(): React.ReactElement {
           index === listRowItems.length - 1 ? true : groupKey !== listRowItems[index + 1].groupKey
 
         return (
-          <>
+          <React.Fragment key={groupKey + index}>
             {hasTopBorder && <Container height={1} />}
             <Card
               key={index}
@@ -48,7 +48,7 @@ export default function ListRows(): React.ReactElement {
                 ))
               )}
             </Card>
-          </>
+          </React.Fragment>
         )
       })}
     </>
