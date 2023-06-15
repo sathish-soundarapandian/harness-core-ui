@@ -27,6 +27,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
 import { useShouldDisableDeployment } from 'services/cd-ng'
+import * as pipelinengServices from 'services/pipeline-ng'
 import { RunPipelineForm } from '../RunPipelineForm'
 import {
   getMockFor_Generic_useMutate,
@@ -543,6 +544,44 @@ describe('STUDIO MODE', () => {
     const selectExistingOrProvide = await screen.findByTestId('selectExistingOrProvide')
     fireEvent.mouseOver(selectExistingOrProvide)
     expect(await screen.findByText('pipeline.inputSets.noInputSetsCreated')).toBeInTheDocument()
+  })
+
+  test('Stage selection error icon should be visible if we have stageExecutionListError', async () => {
+    jest.spyOn(pipelinengServices, 'useGetStagesExecutionList').mockReturnValue({
+      data: null,
+      refetch: jest.fn(),
+      loading: false,
+      error: {
+        message: 'something went wrong'
+      }
+    } as any)
+
+    const { getByTestId } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" />
+      </TestWrapper>
+    )
+
+    //error icon
+    const stageExecutionErrorIcon = getByTestId('stageExecutionErrorIcon')
+    expect(stageExecutionErrorIcon).toBeInTheDocument()
+  })
+
+  test('Stage selection error icon should not be visible if no stageExecutionListError', async () => {
+    jest.spyOn(pipelinengServices, 'useGetStagesExecutionList').mockReturnValue({
+      data: [],
+      refetch: jest.fn(),
+      loading: false,
+      error: false
+    } as any)
+
+    const { container } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('[data-testid="stageExecutionErrorIcon"]')).not.toBeInTheDocument()
   })
 })
 

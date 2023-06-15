@@ -236,6 +236,7 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
               runPipeline
             </h2>
             <div
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
               data-tooltip-id="stageExecutionDisabled"
             >
               <div
@@ -940,6 +941,7 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
               runPipeline
             </h2>
             <div
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
               data-tooltip-id="stageExecutionDisabled"
             >
               <div

@@ -237,7 +237,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
                   }
                   tooltipProps={{ usePortal: true, position: Position.RIGHT, isDark: true }}
                 >
-                  <Icon name="warning-sign" color={Color.RED_700} />
+                  <Icon name="warning-sign" color={Color.RED_700} data-testid="stageExecutionErrorIcon" />
                 </Utils.WrapOptionalTooltip>
               ) : null}
             </Layout.Horizontal>
