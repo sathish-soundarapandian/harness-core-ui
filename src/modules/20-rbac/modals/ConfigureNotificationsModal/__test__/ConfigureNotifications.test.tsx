@@ -112,8 +112,7 @@ describe('ConfigureNotifications', () => {
     await waitFor(() =>
       expect(handleSuccess).toHaveBeenCalledWith({
         type: NotificationType.Webhook,
-        webhookUrl: 'http://valid.url',
-        userGroups: []
+        webhookUrl: 'http://valid.url'
       })
     )
   })

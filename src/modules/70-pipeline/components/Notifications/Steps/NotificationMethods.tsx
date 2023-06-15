@@ -24,6 +24,7 @@ import ConfigureSlackNotifications from '@rbac/modals/ConfigureNotificationsModa
 import ConfigurePagerDutyNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigurePagerDutyNotifications/ConfigurePagerDutyNotifications'
 import ConfigureMSTeamsNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureMSTeamsNotifications/ConfigureMSTeamsNotifications'
 import ConfigureWebhookNotifications from '@rbac/modals/ConfigureNotificationsModal/views/ConfigureWebhookNotifications/ConfigureWebhookNotifications'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export interface NotificationMethodsProps extends StepProps<NotificationRules> {
   typeOptions?: SelectOption[]
@@ -38,6 +39,7 @@ function NotificationMethods({
   expressions
 }: NotificationMethodsProps): React.ReactElement {
   const { getString } = useStrings()
+  const { PIE_WEBHOOK_NOTIFICATION } = useFeatureFlags()
   const [method, setMethod] = useState<SelectOption | undefined>(
     prevStepData?.notificationMethod?.type
       ? {
@@ -46,6 +48,14 @@ function NotificationMethods({
         }
       : undefined
   )
+
+  const getFilteredOptions = (items: SelectOption[]): SelectOption[] => {
+    if (!PIE_WEBHOOK_NOTIFICATION) {
+      return items.filter(item => item.value !== NotificationType.Webhook)
+    }
+    return items
+  }
+
   return (
     <Layout.Vertical spacing="xxlarge" padding="small">
       <Text font="medium" color={Color.BLACK}>
@@ -58,7 +68,7 @@ function NotificationMethods({
             {getString('rbac.notifications.notificationMethod')}
           </Text>
           <Select
-            items={typeOptions || NotificationTypeSelectOptions}
+            items={getFilteredOptions(typeOptions || NotificationTypeSelectOptions)}
             value={method}
             onChange={item => {
               setMethod(item)
