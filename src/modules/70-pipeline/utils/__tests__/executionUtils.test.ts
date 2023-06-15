@@ -392,7 +392,8 @@ describe('ExecutionUtils tests', () => {
       expect(
         utils.showHarnessCoPilot({
           ...args,
-          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_stage_1', nodeLayoutForCIStage]])
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_stage_1', nodeLayoutForCIStage]]),
+          enableForCI: true
         })
       ).toBe(true)
       expect(
@@ -406,7 +407,8 @@ describe('ExecutionUtils tests', () => {
       expect(
         utils.showHarnessCoPilot({
           pipelineStagesMap: new Map<string, GraphLayoutNode>([['CD_stage_1', nodeLayoutForCDStage]]),
-          selectedStageId: 'CD_stage_1'
+          selectedStageId: 'CD_stage_1',
+          enableForCD: true
         })
       ).toBe(true)
       expect(
@@ -424,32 +426,18 @@ describe('ExecutionUtils tests', () => {
         })
       ).toBe(false)
 
-      /* Testing for Environment being local or QA */
-
-      // mock hostname
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      delete global.window.location
-      global.window = Object.create(window)
-      global.window.location = {
-        ...window.location,
-        hostname: 'qa.harness.io'
-      }
-
-      const commonArgs = {
-        ...args,
-        pipelineStagesMap: new Map<string, GraphLayoutNode>([['CI_stage_1', nodeLayoutForCIStage]])
-      }
-
-      expect(utils.showHarnessCoPilot(commonArgs)).toBe(true)
-
-      global.window.location = {
-        ...window.location,
-        hostname: 'app.harness.io'
-      }
-
-      expect(utils.showHarnessCoPilot(commonArgs)).toBe(false)
+      // for both CI and CD
+      expect(
+        utils.showHarnessCoPilot({
+          selectedStageId: 'CI_Stage_2',
+          pipelineStagesMap: new Map<string, GraphLayoutNode>([
+            ['CI_Stage_2', nodeLayoutForCIStage],
+            ['CD_Stage_2', nodeLayoutForCDStage]
+          ]),
+          enableForCI: true,
+          enableForCD: true
+        })
+      ).toBe(true)
     })
 
     test('Test resolveCurrentStep method', () => {

@@ -11,7 +11,7 @@ import { Drawer, PopoverPosition, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 const LazyReactMarkdown = lazy(() => import('react-markdown'))
 import { useParams } from 'react-router-dom'
-import { get, isEmpty } from 'lodash-es'
+import { get } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
 import { Button, ButtonVariation, Container, Icon, Layout, Text } from '@harness/uicore'
 import { Infrastructure, RcaRequestBody, ResponseRemediation, rcaPromise, Error } from 'services/logs'
@@ -20,6 +20,7 @@ import { pluralize } from '@common/utils/StringUtils'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useLocalStorage } from '@common/hooks'
 import { createFormDataFromObjectPayload } from '@common/constants/Utils'
+import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import {
   getCommandFromCurrentStep,
@@ -36,7 +37,7 @@ interface HarnessCopilotProps {
 }
 
 enum AIAnalysisStatus {
-  NotIniatied = 'NOT_INITIATED',
+  NotInitiated = 'NOT_INITIATED',
   Cancelled = 'CANCELLED',
   InProgress = 'IN_PROGRESS',
   Success = 'SUCCESS',
@@ -62,35 +63,29 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
     selectedStepId,
     queryParams,
     allNodeMap,
-    logsToken,
-    openAIRemediations,
-    setOpenAIRemediations
+    logsToken
   } = useExecutionContext()
   const [showTooltip, setShowTooltip] = useLocalStorage<boolean>('show_harness_ai_co-pilot_tooptip', true)
   const [showPanel, setShowPanel] = useState<boolean>(false)
   const [remediations, setRemediations] = useState<ResponseRemediation[]>([])
-  const [remediationsGeneratedAt, setRemediationsGeneratedAt] = useState<number>()
+  const [remediationsGeneratedAt, setRemediationsGeneratedAt] = useState<number | null>()
   const [error, setError] = useState<Error>()
-  const [status, setStatus] = useState<AIAnalysisStatus>(AIAnalysisStatus.NotIniatied)
+  const [status, setStatus] = useState<AIAnalysisStatus>(AIAnalysisStatus.NotInitiated)
   const currentStepId = resolveCurrentStep(selectedStepId, queryParams)
   const selectedStep = allNodeMap[currentStepId]
 
   useEffect(() => {
-    const { lastGeneratedAt, remediations: previouslyGeneratedRemediations } = openAIRemediations || {}
-    if (lastGeneratedAt && previouslyGeneratedRemediations && !isEmpty(previouslyGeneratedRemediations)) {
-      setRemediations(previouslyGeneratedRemediations)
-      setStatus(AIAnalysisStatus.Success)
-      setRemediationsGeneratedAt(lastGeneratedAt)
+    if (remediations.length) {
+      // reset and flush out existing remediations when a different step is selected
+      setRemediations([])
+      setRemediationsGeneratedAt(null)
+      setStatus(AIAnalysisStatus.NotInitiated)
     }
-  }, [openAIRemediations])
+  }, [currentStepId])
 
   const fetchAnalysis = useCallback((): void => {
     setStatus(AIAnalysisStatus.InProgress)
     const apiBodyPayload = getPostAPIBodyPayload()
-    if (isEmpty(apiBodyPayload)) {
-      setStatus(AIAnalysisStatus.Failure)
-      return
-    }
     if (!logsToken) {
       setStatus(AIAnalysisStatus.Failure)
       return
@@ -115,7 +110,6 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
             setRemediations(remediationFetched)
             setStatus(AIAnalysisStatus.Success)
             setRemediationsGeneratedAt(currentTime)
-            setOpenAIRemediations?.({ lastGeneratedAt: currentTime, remediations: remediationFetched })
           }
         })
         .catch((err: Error) => {
@@ -126,7 +120,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
       setError(e as Error)
       setStatus(AIAnalysisStatus.Failure)
     }
-  }, [logsToken])
+  }, [logsToken, pipelineStagesMap, selectedStageId, pipelineExecutionDetail, selectedStepId, selectedStep, accountId])
 
   const getPostAPIBodyPayload = useCallback((): RcaRequestBody => {
     return {
@@ -138,10 +132,15 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
       command: getCommandFromCurrentStep({ step: selectedStep, pipelineStagesMap, selectedStageId }),
       step_type: get(selectedStep, 'stepType', ''),
       accountID: accountId,
-      err_summary: get(selectedStep, 'failureInfo.message', ''),
+      err_summary:
+        get(selectedStep, 'failureInfo.message', '') ||
+        get(selectedStep, 'failureInfo.responseMessages', [])
+          ?.filter((respMssg: ResponseMessage) => !!respMssg?.message)
+          ?.map((respMssg: ResponseMessage) => respMssg.message)
+          ?.join(','),
       keys: get(getTaskFromExecutableResponse(selectedStep), 'logKeys', '""')
     }
-  }, [pipelineStagesMap, selectedStageId, pipelineExecutionDetail, selectedStep, accountId])
+  }, [pipelineStagesMap, selectedStageId, pipelineExecutionDetail, selectedStepId, selectedStep, accountId])
 
   const renderCTA = useCallback((): JSX.Element => {
     const hasRemediations = Array.isArray(remediations) && remediations.length > 0
@@ -149,7 +148,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
     const footerColor = mode === 'console-view' ? Color.GREY_200 : Color.GREY_900
 
     switch (status) {
-      case AIAnalysisStatus.NotIniatied:
+      case AIAnalysisStatus.NotInitiated:
         return (
           <Layout.Horizontal
             flex={{ justifyContent: 'flex-start' }}
@@ -217,7 +216,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
               </Layout.Horizontal>
               <Text
                 font={{ variation: FontVariation.BODY }}
-                onClick={() => setStatus(AIAnalysisStatus.NotIniatied)}
+                onClick={() => setStatus(AIAnalysisStatus.NotInitiated)}
                 className={css.statusActionBtn}
                 color={Color.AI_PURPLE_700}
               >
@@ -266,7 +265,7 @@ function HarnessCopilot(props: HarnessCopilotProps): React.ReactElement {
             ) : (
               <Text
                 font={{ variation: FontVariation.BODY }}
-                onClick={() => setStatus(AIAnalysisStatus.NotIniatied)}
+                onClick={() => setStatus(AIAnalysisStatus.NotInitiated)}
                 className={css.statusActionBtn}
                 color={Color.AI_PURPLE_700}
               >

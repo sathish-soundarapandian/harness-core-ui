@@ -18,6 +18,7 @@ import { LogsContentWithErrorBoundary as LogsContent } from '@pipeline/component
 import { isExecutionSkipped, isExecutionCompletedWithBadState } from '@pipeline/utils/statusHelpers'
 import { StepDetails, StepLabels } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ExecutionQueryParams, showHarnessCoPilot } from '@pipeline/utils/executionUtils'
 import HarnessCopilot from '@pipeline/components/HarnessCopilot/HarnessCopilot'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
@@ -35,6 +36,7 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
   const { pathname } = useLocation()
   const queryParams = useQueryParams<ExecutionQueryParams>()
   const { pipelineStagesMap, selectedStageId } = useExecutionContext()
+  const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
 
   const logUrl = `${pathname}?${qs.stringify({ ...queryParams, view: 'log' })}`
 
@@ -54,7 +56,9 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
       ) : null}
       {showHarnessCoPilot({
         pipelineStagesMap,
-        selectedStageId
+        selectedStageId,
+        enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
+        enableForCD: CD_AI_ENHANCED_REMEDIATIONS
       }) ? (
         <Container
           flex={{ justifyContent: 'flex-start' }}

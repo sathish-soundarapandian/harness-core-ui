@@ -8,10 +8,8 @@
 import { createContext, useContext } from 'react'
 
 import type { PipelineExecutionDetail, GraphLayoutNode, ExecutionNode } from 'services/pipeline-ng'
-import type { ResponseRemediation } from 'services/logs'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
-import type { OpenAIRemediationsForExecutionError } from '@pipeline/factories/ExecutionFactory/types'
 
 export interface ExecutionContextParams {
   pipelineExecutionDetail: PipelineExecutionDetail | null
@@ -35,10 +33,6 @@ export interface ExecutionContextParams {
   addNewNodeToMap(id: string, node: ExecutionNode): void
   setIsPipelineInvalid?: (flag: boolean) => void
   retriedHistoryInfo?: { retriedStages?: string[]; retriedExecutionUuids?: string[] }
-  /* Ask from Product is to persist remediations fetched from AI as long as the execution URL stays the same,
-   since it's both time and cost intensive to fetch remediations. */
-  openAIRemediations?: { lastGeneratedAt: number; remediations: ResponseRemediation[] }
-  setOpenAIRemediations?: ({ lastGeneratedAt, remediations }: OpenAIRemediationsForExecutionError) => void
 }
 
 export const ExecutionContext = createContext<ExecutionContextParams>({
@@ -62,9 +56,7 @@ export const ExecutionContext = createContext<ExecutionContextParams>({
   refetch: undefined,
   addNewNodeToMap: () => void 0,
   setIsPipelineInvalid: () => void 0,
-  retriedHistoryInfo: { retriedStages: [], retriedExecutionUuids: [] },
-  openAIRemediations: { lastGeneratedAt: 0, remediations: [] },
-  setOpenAIRemediations: () => void 0
+  retriedHistoryInfo: { retriedStages: [], retriedExecutionUuids: [] }
 })
 
 export default ExecutionContext

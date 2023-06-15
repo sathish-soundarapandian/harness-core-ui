@@ -34,7 +34,6 @@ import type {
 } from 'services/pipeline-ng'
 import type { CDStageModuleInfo } from 'services/cd-ng'
 import type { CIPipelineStageModuleInfo } from 'services/ci'
-import { isLocalHost, isQA } from '@common/utils/utils'
 import {
   ExecutionPipelineNode,
   ExecutionPipelineNodeType,
@@ -1559,15 +1558,17 @@ export const getInfraTypeFromStageForCurrentStep = ({
 
 export const showHarnessCoPilot = ({
   pipelineStagesMap,
-  selectedStageId
+  selectedStageId,
+  enableForCI = false,
+  enableForCD = false
 }: {
   pipelineStagesMap: ExecutionContextParams['pipelineStagesMap']
   selectedStageId: ExecutionContextParams['selectedStageId']
+  enableForCI?: boolean
+  enableForCD?: boolean
 }): boolean => {
-  return (
-    (isLocalHost() || isQA()) &&
-    (['ci', 'cd'] as Module[]).includes(getSelectedStageModule(pipelineStagesMap, selectedStageId) as Module)
-  )
+  const selectedModule = getSelectedStageModule(pipelineStagesMap, selectedStageId) as Module
+  return (enableForCI && 'ci' === selectedModule) || (enableForCD && 'cd' === selectedModule)
 }
 
 export function resolveCurrentStep(selectedStepId: string, queryParams: ExecutionPageQueryParams): string {

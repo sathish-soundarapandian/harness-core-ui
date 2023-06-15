@@ -39,6 +39,7 @@ import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 import { ExecutionStatus, isExecutionComplete, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import HarnessCopilot from '../HarnessCopilot/HarnessCopilot'
 import { useLogsContent } from './useLogsContent'
 import { GroupedLogsWithRef as GroupedLogs } from './components/GroupedLogs'
@@ -151,6 +152,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
   const hasLogs = state.units.length > 0
   const isSingleSectionLogs = state.units.length === 1
   const { openDialog } = useLogSettings()
+  const { CI_AI_ENHANCED_REMEDIATIONS, CD_AI_ENHANCED_REMEDIATIONS } = useFeatureFlags()
 
   const virtuosoRef = React.useRef<null | GroupedVirtuosoHandle | VirtuosoHandle>(null)
   const { setPreference: setSavedExecutionView } = usePreferenceStore<string | undefined>(
@@ -322,7 +324,12 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
               )
             })}
           </Container>
-          {showHarnessCoPilot({ pipelineStagesMap, selectedStageId }) ? (
+          {showHarnessCoPilot({
+            pipelineStagesMap,
+            selectedStageId,
+            enableForCI: CI_AI_ENHANCED_REMEDIATIONS,
+            enableForCD: CD_AI_ENHANCED_REMEDIATIONS
+          }) ? (
             <Container className={css.copilot} width="40%" flex={{ justifyContent: 'flex-end' }}>
               <HarnessCopilot mode="console-view" />
             </Container>

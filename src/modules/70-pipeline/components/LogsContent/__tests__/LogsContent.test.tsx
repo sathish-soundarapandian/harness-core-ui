@@ -9,6 +9,7 @@
 import React from 'react'
 import { render, waitFor, fireEvent, act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import mockImport from 'framework/utils/mockImport'
 import type { GraphLayoutNode } from 'services/pipeline-ng'
 import * as logsService from 'services/logs'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -74,6 +75,11 @@ jest.mock('../useLogsContent.tsx', () => ({
     actions
   }))
 }))
+
+mockImport('@common/hooks/useFeatureFlag', {
+  useFeatureFlags: () => ({ CI_AI_ENHANCED_REMEDIATIONS: true, CD_AI_ENHANCED_REMEDIATIONS: true })
+})
+
 describe('<LogsContent /> tests', () => {
   beforeEach(() => {
     Object.entries(actions).map(([_, fn]: [string, jest.Mock]) => fn.mockReset())
@@ -302,30 +308,8 @@ describe('<LogsContent /> tests', () => {
       expect(spy).toBeCalled()
     })
 
-    test('Validate no api call is made if remediations are already fetched for an execution', async () => {
-      const { getByText } = render(
-        <TestWrapper>
-          <ExecutionContext.Provider
-            value={{
-              ...commonArgs,
-              openAIRemediations: {
-                lastGeneratedAt: 12345678000,
-                remediations: [{ rca: '```debug failing issue```', detailed_rca: '' }]
-              }
-            }}
-          >
-            <LogsContent mode="console-view" />
-          </ExecutionContext.Provider>
-        </TestWrapper>
-      )
-      // Verify Ask AI button should not be visible as remediations are already available in execution context
-      expect(screen.queryByText('pipeline.copilot.askAICopilot')).not.toBeInTheDocument()
-
-      expect(getByText('pipeline.copilot.foundPossibleRemediations')).toBeInTheDocument()
-    })
-
     test('Test success scenario', async () => {
-      const { getByText } = render(
+      const { getByText, rerender } = render(
         <TestWrapper>
           <ExecutionContext.Provider value={commonArgs}>
             <LogsContent mode="console-view" />
@@ -367,9 +351,32 @@ describe('<LogsContent /> tests', () => {
       await waitFor(() => {
         expect(getByText('pipeline.copilot.foundPossibleRemediations')).toBeInTheDocument()
       })
+
+      const argsForNextStepSelection = {
+        ...execContextValues,
+        selectedStepId: 'SELECTED_STEP',
+        selectedStageId: 'SELECTED_CI_STAGE',
+        allNodeMap: {
+          SELECTED_STEP: { failureInfo: { responseMessages } },
+          SELECTED_STEP_1: { failureInfo: { responseMessages } }
+        } as any,
+        pipelineStagesMap: new Map<string, GraphLayoutNode>([['SELECTED_CI_STAGE', nodeLayoutForCIStage]]),
+        logsToken: 'x-harness-token'
+      }
+
+      rerender(
+        <TestWrapper>
+          <ExecutionContext.Provider value={{ ...argsForNextStepSelection, selectedStepId: 'SELECTED_STEP_1' }}>
+            <LogsContent mode="console-view" />
+          </ExecutionContext.Provider>
+        </TestWrapper>
+      )
+
+      // Ask AI option should be visible once again if a different step is selected
+      expect(getByText('pipeline.copilot.askAICopilot')).toBeInTheDocument()
     })
 
-    test('Abort options should be visible if remediations take too long to fetch', async () => {
+    test('Stop button option should be visible if remediations take too long to fetch', async () => {
       const { getByText } = render(
         <TestWrapper>
           <ExecutionContext.Provider value={commonArgs}>
@@ -392,13 +399,39 @@ describe('<LogsContent /> tests', () => {
       expect(stopBtn).toBeInTheDocument()
     })
 
-    test('Test failure scenario when api errors out', async () => {
-      jest.spyOn(logsService, 'rcaPromise').mockReturnValue({
-        error: {
-          message: 'error',
-          status: 400
-        }
-      } as any)
+    test('Test failure scenario when api fails', async () => {
+      jest.spyOn(logsService, 'rcaPromise').mockReturnValue(
+        Promise.reject({
+          error: {
+            message: 'error',
+            status: 400
+          }
+        })
+      )
+
+      const { getByText } = render(
+        <TestWrapper>
+          <ExecutionContext.Provider value={commonArgs}>
+            <LogsContent mode="console-view" />
+          </ExecutionContext.Provider>
+        </TestWrapper>
+      )
+
+      act(() => {
+        fireEvent.click(getByText('pipeline.copilot.askAICopilot'))
+      })
+
+      await waitFor(() => {
+        expect(getByText('retry')).toBeInTheDocument()
+      })
+    })
+
+    test('Test failure scenario when api returns error', async () => {
+      jest.spyOn(logsService, 'rcaPromise').mockReturnValue(
+        Promise.resolve({
+          error_msg: 'Could not connect'
+        } as any)
+      )
 
       const { getByText } = render(
         <TestWrapper>

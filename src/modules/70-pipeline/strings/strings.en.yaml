@@ -1870,13 +1870,13 @@ violationDetails: Violation details
 supplier: Supplier
 copilot:
   analyzeFailure: Unsure how to analyze failure?
-  askAICopilot: Ask AI Copilot
-  label: Harness AI Copilot
+  askAICopilot: Ask AI DevMate
+  label: Harness AI DevMate
   assist: I can assist you with debugging the issue and suggest solutions.
-  analyzing: AI Copilot is analyzing
+  analyzing: AI DevMate is analyzing
   requestTimedOut: Request Timed Out
   noRemediationFound: Sorry, no remediation found.
   foundPossibleRemediations: 'We found few possible remediations'
   possibleSolutions: Possible Solutions
-  introduction: Introducing Harness AI Copilot
+  introduction: Introducing Harness AI DevMate
   helpText: Click here for additional information on the errors occurring in this step and potential strategies for resolving them.

@@ -10,7 +10,6 @@ import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso'
 import type { IconName } from '@harness/uicore'
 
 import type { ExecutionGraph, ExecutionNode, GraphLayoutNode } from 'services/pipeline-ng'
-import type { ResponseRemediation } from 'services/logs'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { CardVariant } from '@pipeline/utils/constants'
 import type { State } from '@pipeline/components/LogsContent/LogsState/types'
@@ -89,9 +88,4 @@ export interface LogsContentProps {
   errorMessage?: string
   isWarning?: boolean
   renderLogs?: (props: RenderLogsInterface) => React.ReactNode
-}
-
-export interface OpenAIRemediationsForExecutionError {
-  lastGeneratedAt: number
-  remediations: ResponseRemediation[]
 }
