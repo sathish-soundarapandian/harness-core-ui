@@ -15,10 +15,13 @@ import { ExecutionPipelineNodeType } from '@pipeline/components/ExecutionStageDi
 import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import SVGMarker from '../SVGMarker'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
-import { getPositionOfAddIcon, attachDragImageToEventHandler } from '../utils'
+import { getPositionOfAddIcon, attachDragImageToEventHandler, isStageNodeExpansionDisabled } from '../utils'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
@@ -30,6 +33,8 @@ interface PipelineStepNodeProps extends BaseReactComponentProps {
 
 export function DiamondNodeWidget(props: any): JSX.Element {
   const { getString } = useStrings()
+  const { setSelection } = usePipelineContext()
+  const isUpgradedStudioEnabled = useFeatureFlag(FeatureFlag.CDS_PIPELINE_STUDIO_UPGRADES)
   const isSelected = props?.isSelected || props?.selectedNodeId === props?.id
   const stepStatus = defaultTo(props?.status, props?.data?.step?.status as ExecutionStatus)
   const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
@@ -40,6 +45,14 @@ export function DiamondNodeWidget(props: any): JSX.Element {
   const showMarkers = defaultTo(props?.showMarkers, true)
 
   const matrixNodeName = defaultTo(props?.matrixNodeName, props?.data?.matrixNodeName)
+
+  const handleStageExpansion = (): void => {
+    isUpgradedStudioEnabled &&
+      !props?.data?.isTemplateNode &&
+      !isStageNodeExpansionDisabled(props?.type) &&
+      setSelection({ stageExpanded: 'true' })
+  }
+
   return (
     <div
       className={cx(cssDefault.defaultNode, 'diamond-node')}
@@ -49,6 +62,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           props.onClick()
           return
         }
+        handleStageExpansion()
         props?.fireEvent?.({
           type: Event.ClickNode,
           target: event.target,

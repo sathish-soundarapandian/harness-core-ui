@@ -7,6 +7,7 @@
 
 import { isNumber } from 'lodash-es'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { dragPlaceholderImageBase64 } from './assets/dragImageBase64'
 import { dragStagePlaceholderImageBase64 } from './assets/dragStageImageBase64'
 import type { Dimension } from './NodeDimensionStore'
@@ -127,4 +128,8 @@ export const getEntityIdentifierBasedFqnPath = ({
 export const getBaseFqnWithoutEntityIdentifier = (fqn = ''): string => {
   const lastDotIndex = fqn.lastIndexOf('.')
   return lastDotIndex !== -1 ? fqn.substring(0, lastDotIndex) : fqn
+}
+
+export const isStageNodeExpansionDisabled = (nodeType?: string): boolean => {
+  return nodeType === StageType.PIPELINE
 }

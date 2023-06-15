@@ -25,6 +25,7 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 
 import VariableListTagRow from '@pipeline/components/VariablesListTable/VariableListTagRow'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { ServiceCardPanel } from './ServiceCard'
 import { ExecutionCardPanel } from './ExecutionCard'
 import { EnvironmentCardPanel } from './EnvironmentCard'
@@ -183,7 +184,7 @@ export default function StageCard(props: StageCardProps): React.ReactElement {
             }
           />
           {/* TODO: Temporary disable for  CI (TBD)*/}
-          {stage.type === 'Deployment' || stage.type === 'Approval' || stage.type === 'Custom' ? (
+          {stage.type === StageType.DEPLOY || stage.type === StageType.APPROVAL || stage.type === StageType.CUSTOM ? (
             <>
               {stageSpec.serviceConfig && originalSpec.serviceConfig ? (
                 <ServiceCardPanel

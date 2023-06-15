@@ -30,6 +30,7 @@ import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/Di
 import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
 import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import css from './TemplatePipelineCanvas.module.scss'
 
 export function TemplatePipelineCanvas(): React.ReactElement {
@@ -48,8 +49,8 @@ export function TemplatePipelineCanvas(): React.ReactElement {
 
   const diagram = new DiagramFactory('graph')
   const CDPipelineStudioNew = diagram.render()
-  diagram.registerNode('Deployment', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>, true)
-  diagram.registerNode('Approval', DiamondNodeWidget)
+  diagram.registerNode(StageType.DEPLOY, PipelineStageNode as unknown as React.FC<BaseReactComponentProps>, true)
+  diagram.registerNode(StageType.APPROVAL, DiamondNodeWidget)
   diagram.registerNode(NodeType.EndNode, EndNodeStage)
   diagram.registerNode(NodeType.StartNode, StartNodeStage)
 

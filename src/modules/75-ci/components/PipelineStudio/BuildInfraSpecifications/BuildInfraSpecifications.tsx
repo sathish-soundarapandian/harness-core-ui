@@ -87,6 +87,7 @@ import { Connectors } from '@connectors/constants'
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { isEnterprisePlan, isFreePlan, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { tolerationsCustomMap } from '@common/utils/ContainerRunStepUtils'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { BuildTabs } from '../CIPipelineStagesUtils'
 import {
   KUBERNETES_HOSTED_INFRA_ID,
@@ -526,7 +527,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     stages.forEach((item, index) => {
       if (
         index < stageIndex &&
-        item.stage?.type === 'CI' &&
+        item.stage?.type === StageType.BUILD &&
         (((item.stage as BuildStageElementConfig)?.spec?.infrastructure as K8sDirectInfraYaml)?.spec ||
           (item.stage as BuildStageElementConfig)?.spec?.platform)
       ) {

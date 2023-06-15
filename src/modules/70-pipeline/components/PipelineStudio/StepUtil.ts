@@ -431,7 +431,7 @@ export const validateStage = ({
         getString?.('fieldRequired', { field: getString?.('pipelineSteps.build.infraSpecifications.namespace') })
       )
     }
-    if (stage.type === 'Deployment' && templateStageConfig?.serviceConfig?.serviceRef) {
+    if (stage.type === StageType.DEPLOY && templateStageConfig?.serviceConfig?.serviceRef) {
       const step = factory.getStep(StepType.DeployService)
       const errorsResponse = step?.validateInputSet({
         data: stageConfig?.serviceConfig,
@@ -444,7 +444,7 @@ export const validateStage = ({
       }
     }
 
-    if (stage.type === 'Deployment' && templateStageConfig?.service) {
+    if (stage.type === StageType.DEPLOY && templateStageConfig?.service) {
       const currentStep = factory.getStep(StepType.DeployServiceEntity)
       const stepErrorsResponse = currentStep?.validateInputSet({
         data: stageConfig,
@@ -485,7 +485,7 @@ export const validateStage = ({
         }
       }
     }
-    if (stage.type === 'Deployment' && templateStageConfig?.services) {
+    if (stage.type === StageType.DEPLOY && templateStageConfig?.services) {
       const currentStep = factory.getStep(StepType.DeployServiceEntity)
       const stepErrorsResponse = currentStep?.validateInputSet({
         data: stageConfig,
@@ -534,7 +534,7 @@ export const validateStage = ({
       }
     }
 
-    if (stage.type === 'Deployment' && templateStageConfig?.infrastructure?.environmentRef) {
+    if (stage.type === StageType.DEPLOY && templateStageConfig?.infrastructure?.environmentRef) {
       const step = factory.getStep(StepType.DeployEnvironment)
       const errorsResponse = step?.validateInputSet({
         data: stageConfig?.infrastructure,

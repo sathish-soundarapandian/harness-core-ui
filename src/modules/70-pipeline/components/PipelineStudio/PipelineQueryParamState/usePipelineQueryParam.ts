@@ -12,6 +12,7 @@ export interface PipelineSelectionState {
   stepId?: string | null
   sectionId?: string | null
   storeType?: string
+  stageExpanded?: string | null
 }
 
 export function usePipelineQuestParamState() {

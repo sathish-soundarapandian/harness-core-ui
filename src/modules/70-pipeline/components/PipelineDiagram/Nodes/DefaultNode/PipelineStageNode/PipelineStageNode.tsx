@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { CSSProperties } from 'react'
+import React from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
 import { Icon, Text, Button, ButtonVariation, IconName, Container } from '@harness/uicore'
@@ -16,42 +16,30 @@ import { getStatusProps } from '@pipeline/components/ExecutionStageDiagram/Execu
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { useStrings } from 'framework/strings'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
-import { FireEventMethod, NodeType } from '../../../types'
-import { getPositionOfAddIcon, attachDragImageToEventHandler, NodeEntity } from '../../utils'
+import { NodeType } from '../../../types'
+import {
+  getPositionOfAddIcon,
+  attachDragImageToEventHandler,
+  NodeEntity,
+  isStageNodeExpansionDisabled
+} from '../../utils'
 import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
+import type { PipelineStageNodeProps } from '../PipelineStageNodeV1/PipelineStageNodeV1'
 import defaultCss from '../DefaultNode.module.scss'
 import css from './PipelineStageNode.module.scss'
 
 const CODE_ICON: IconName = 'command-echo'
 const TEMPLATE_ICON: IconName = 'template-library'
-interface PipelineStageNodeProps {
-  getNode?: (node: NodeType) => { component: React.FC<any> }
-  fireEvent?: FireEventMethod
-  status: string
-  data: any
-  readonly: boolean
-  onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
-  id: string
-  isSelected: boolean
-  icon: string
-  iconUrl?: string
-  identifier: string
-  name: JSX.Element | string
-  defaultSelected: any
-  parentIdentifier?: string
-  isParallelNode: boolean
-  prevNodeIdentifier?: string
-  nextNode?: any
-  allowAdd?: boolean
-  selectedNodeId?: string
-  showMarkers?: boolean
-  matrixNodeName?: string
-  customNodeStyle?: CSSProperties
-}
+
 function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const { getString } = useStrings()
+  const { setSelection } = usePipelineContext()
+  const isUpgradedStudioEnabled = useFeatureFlag(FeatureFlag.CDS_PIPELINE_STUDIO_UPGRADES)
   const allowAdd = defaultTo(props.allowAdd, false)
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
@@ -85,6 +73,14 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   }, 300)
   const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
   const isTemplateNode = props?.data?.isTemplateNode
+
+  const handleStageExpansion = (): void => {
+    isUpgradedStudioEnabled &&
+      !props?.data?.isTemplateNode &&
+      !isStageNodeExpansionDisabled(props?.type) &&
+      setSelection({ stageExpanded: 'true' })
+  }
+
   return (
     <div
       className={cx(defaultCss.defaultNode, 'default-node', {
@@ -98,6 +94,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
           props.onClick(event)
           return
         }
+        handleStageExpansion()
         props?.fireEvent?.({
           type: Event.ClickNode,
           target: event.target,

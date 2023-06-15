@@ -36,6 +36,7 @@ import { useCanvasDrag } from '../hooks/useCanvasDrag'
 import css from './PipelineGraph.module.scss'
 
 const DEFAULT_POSITION: Position = { x: 30, y: 120 }
+const DEFAULT_POSITION_V1: Position = { x: 0, y: 80 }
 export interface PipelineGraphProps {
   data: PipelineGraphState[]
   fireEvent: (event: any) => void
@@ -54,6 +55,9 @@ export interface PipelineGraphProps {
   graphActionsLayout?: 'horizontal' | 'vertical'
   graphLinkClassname?: string
   optimizeRender?: boolean
+  disableDragging?: boolean
+  hideGraphActions?: boolean
+  resetDefaultPosition?: boolean
 }
 
 function PipelineGraph({
@@ -71,7 +75,10 @@ function PipelineGraph({
   showEndNode = true,
   graphActionsLayout = 'vertical',
   graphLinkClassname,
-  optimizeRender
+  optimizeRender,
+  disableDragging = false,
+  hideGraphActions,
+  resetDefaultPosition
 }: PipelineGraphProps): React.ReactElement {
   const [svgPath, setSvgPath] = useState<SVGPathRecord[]>([])
 
@@ -79,7 +86,7 @@ function PipelineGraph({
   const [treeRectangle, setTreeRectangle] = useState<DOMRect | void>()
   const [state, setState] = useState<PipelineGraphState[]>(data)
   const [graphScale, setGraphScale] = useState(INITIAL_ZOOM_LEVEL)
-  const [position, setPosition] = useState<Position>(DEFAULT_POSITION)
+  const [position, setPosition] = useState<Position>(resetDefaultPosition ? DEFAULT_POSITION_V1 : DEFAULT_POSITION)
   const [isDragging, setDragging] = useState(false)
   const draggableParentRef = useRef<HTMLDivElement | null>(null)
   const graphRef = useRef<HTMLDivElement | null>(null)
@@ -228,10 +235,18 @@ function PipelineGraph({
       }}
     >
       <div id="draggable-parent" className={css.draggableParent} ref={draggableParentRefCallback}>
-        <Draggable position={position} onStart={onStart} onStop={onStop} onDrag={onDrag} offsetParent={document.body}>
+        <Draggable
+          position={position}
+          onStart={onStart}
+          onStop={onStop}
+          onDrag={onDrag}
+          offsetParent={document.body}
+          disabled={disableDragging}
+        >
           <div
             id="overlay"
-            onClick={() => {
+            onClick={event => {
+              event.stopPropagation()
               fireEvent?.({ type: Event.CanvasClick })
               dispatchCustomEvent(CANVAS_CLICK_EVENT, {})
             }}
@@ -260,13 +275,15 @@ function PipelineGraph({
             </div>
           </div>
         </Draggable>
-        <GraphActions
-          resetGraphState={resetGraphState}
-          setGraphScale={setGraphScale}
-          graphScale={graphScale}
-          handleScaleToFit={handleScaleToFit}
-          graphActionsLayout={graphActionsLayout}
-        />
+        {!hideGraphActions && (
+          <GraphActions
+            resetGraphState={resetGraphState}
+            setGraphScale={setGraphScale}
+            graphScale={graphScale}
+            handleScaleToFit={handleScaleToFit}
+            graphActionsLayout={graphActionsLayout}
+          />
+        )}
       </div>
     </GraphConfigStore.Provider>
   )

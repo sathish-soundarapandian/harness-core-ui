@@ -240,7 +240,7 @@ export const getFlattenedStages = (
 
 export const mayBeStripCIProps = (pipeline: PipelineInfoConfig): boolean => {
   // no CI stages exist
-  const areCIStagesAbsent = pipeline?.stages?.every(stage => stage.stage?.type !== 'CI')
+  const areCIStagesAbsent = pipeline?.stages?.every(stage => stage.stage?.type !== StageType.BUILD)
   if (areCIStagesAbsent) {
     const props = Object.keys(pipeline.properties || {})
     // figure out if only properties that are left is related to ci

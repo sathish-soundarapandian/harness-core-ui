@@ -144,6 +144,9 @@ export class DiagramFactory {
     graphActionsLayout?: 'horizontal' | 'vertical'
     graphLinkClassname?: string
     optimizeRender?: boolean
+    disableDragging?: boolean
+    hideGraphActions?: boolean
+    resetDefaultPosition?: boolean
   }> {
     function PipelineStudioHOC(
       this: DiagramFactory,
@@ -161,6 +164,9 @@ export class DiagramFactory {
         graphActionsLayout?: 'horizontal' | 'vertical'
         optimizeRender?: boolean
         graphLinkClassname?: string
+        disableDragging?: boolean
+        hideGraphActions?: boolean
+        resetDefaultPosition?: boolean
       }
     ): React.ReactElement {
       return (

@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
+import cx from 'classnames'
 import { cloneDeep, set, isEmpty, get, defaultTo, omit } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
@@ -243,6 +244,10 @@ export interface ExecutionGraphProp<T extends StageElementConfig> {
   templateTypes: { [key: string]: string }
   templateIcons?: TemplateIcons
   addLinkedTemplatesLabel?: string
+  disableDragging?: boolean
+  hideGraphActions?: boolean
+  canvasClassName?: string
+  resetDefaultPosition?: boolean
 }
 
 function ExecutionGraphRef<T extends StageElementConfig>(
@@ -266,7 +271,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     canvasButtonsLayout,
     templateTypes,
     templateIcons,
-    addLinkedTemplatesLabel
+    addLinkedTemplatesLabel,
+    canvasClassName = ''
   } = props
   const {
     state: { pipelineView },
@@ -847,7 +853,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         }
       }}
     >
-      <div className={css.canvas} ref={canvasRef}>
+      <div className={cx(css.canvas, canvasClassName)} ref={canvasRef}>
         {state.isRollback && (
           <Text font={{ size: 'medium' }} className={css.rollbackBanner} style={rollBackBannerStyle}>
             {getString('rollbackLabel')}
@@ -866,6 +872,9 @@ function ExecutionGraphRef<T extends StageElementConfig>(
               graphActionsLayout={canvasButtonsLayout}
               graphLinkClassname={css.graphLink}
               optimizeRender={false}
+              disableDragging={props?.disableDragging}
+              hideGraphActions={props?.hideGraphActions}
+              resetDefaultPosition={props?.resetDefaultPosition}
             />
             {hasRollback && (
               <RollbackToggleSwitch

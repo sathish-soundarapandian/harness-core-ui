@@ -42,6 +42,9 @@ import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { Event } from '@pipeline/components/PipelineDiagram/Constants'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import PipelineStageNodeV1 from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNodeV1/PipelineStageNodeV1'
 import { EmptyStageName, MinimumSplitPaneSize, DefaultSplitPaneSize, MaximumSplitPaneSize } from '../PipelineConstants'
 import {
   getNewStageFromType,
@@ -65,19 +68,6 @@ import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import type { PipelineSelectionState } from '../PipelineQueryParamState/usePipelineQueryParam'
 import css from './StageBuilder.module.scss'
 
-const diagram = new DiagramFactory('graph')
-
-diagram.registerNode('Deployment', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>, true)
-diagram.registerNode('CI', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
-diagram.registerNode('SecurityTests', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
-diagram.registerNode('IACM', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
-diagram.registerNode('Approval', DiamondNodeWidget)
-diagram.registerNode('Barrier', IconNode)
-diagram.registerNode(NodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
-diagram.registerNode(NodeType.EndNode, EndNodeStage)
-diagram.registerNode(NodeType.StartNode, StartNodeStage)
-
-const CDPipelineStudioNew = diagram.render()
 export type StageStateMap = Map<string, StageState>
 
 declare global {
@@ -206,7 +196,6 @@ function StageBuilder(): JSX.Element {
       gitDetails,
       storeMetadata
     },
-    // contextType = 'Pipeline',
     isReadonly,
     updatePipeline,
     updatePipelineView,
@@ -216,6 +205,27 @@ function StageBuilder(): JSX.Element {
   } = usePipelineContext()
   const { sectionId } = useQueryParams<PipelineSelectionState>()
   const { module } = useParams<ModulePathParams>()
+  const isUpgradedStudioEnabled = useFeatureFlag(FeatureFlag.CDS_PIPELINE_STUDIO_UPGRADES)
+  const diagram = new DiagramFactory('graph')
+
+  const PipelineStageNodeComponent = isUpgradedStudioEnabled ? PipelineStageNodeV1 : PipelineStageNode
+  const DiamondNodeWidgetComponent = isUpgradedStudioEnabled ? PipelineStageNodeV1 : DiamondNodeWidget
+
+  diagram.registerNode(
+    StageType.DEPLOY,
+    PipelineStageNodeComponent as unknown as React.FC<BaseReactComponentProps>,
+    true
+  )
+  diagram.registerNode(StageType.BUILD, PipelineStageNodeComponent as unknown as React.FC<BaseReactComponentProps>)
+  diagram.registerNode(StageType.SECURITY, PipelineStageNodeComponent as unknown as React.FC<BaseReactComponentProps>)
+  diagram.registerNode(StageType.IACM, PipelineStageNodeComponent as unknown as React.FC<BaseReactComponentProps>)
+  diagram.registerNode(StageType.APPROVAL, DiamondNodeWidgetComponent as unknown as React.FC<BaseReactComponentProps>)
+  diagram.registerNode('Barrier', IconNode)
+  diagram.registerNode(NodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
+  diagram.registerNode(NodeType.EndNode, EndNodeStage)
+  diagram.registerNode(NodeType.StartNode, StartNodeStage)
+
+  const CDPipelineStudioNew = diagram.render()
 
   // NOTE: we are using ref as setSelection is getting cached somewhere
   const setSelectionRef = React.useRef(setSelection)
@@ -574,7 +584,7 @@ function StageBuilder(): JSX.Element {
                 dynamicPopoverHandler?.hide()
               }
 
-              if (isSplitViewOpen) {
+              if (isSplitViewOpen && !isUpgradedStudioEnabled) {
                 setSelectionRef.current({ stageId: undefined, sectionId: undefined })
               }
             }}
@@ -585,9 +595,11 @@ function StageBuilder(): JSX.Element {
               data={stageData}
               loaderComponent={DiagramLoader}
               parentSelector={'.Pane1'}
-              collapsibleProps={{ percentageNodeVisible: 0.8, bottomMarginInPixels: 80 }}
               createNodeTitle={getString('addStage')}
               graphLinkClassname={css.graphLink}
+              {...(isUpgradedStudioEnabled
+                ? { optimizeRender: false }
+                : { collapsibleProps: { percentageNodeVisible: 0.8, bottomMarginInPixels: 80 } })}
             />
             <DynamicPopover
               darkMode={false}

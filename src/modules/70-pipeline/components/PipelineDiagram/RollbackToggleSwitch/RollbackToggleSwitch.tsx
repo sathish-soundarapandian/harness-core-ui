@@ -29,7 +29,10 @@ export function RollbackToggleSwitch({
 }: RollbackToggleSwitchProps): React.ReactElement {
   const { getString } = useStrings()
   return (
-    <div style={style} className={cx(css.rollbackToggle, { [css.rollbackToggleSmall]: !large })}>
+    <div
+      style={style}
+      className={cx(css.rollbackToggle, { [css.rollbackToggleSmall]: !large }, 'rollbackToggleSwitch')}
+    >
       {large && (
         <Text
           onClick={e => {

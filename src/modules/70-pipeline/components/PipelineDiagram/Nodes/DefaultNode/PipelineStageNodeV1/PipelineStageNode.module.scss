@@ -1,0 +1,125 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.loopingStrategy {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+}
+
+.conditional {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  color: var(--white) !important;
+}
+
+.canvasClassName {
+  background: none;
+
+  :global {
+    #draggable-parent {
+      overflow: visible;
+      margin-bottom: 120px !important; // for graph transform position
+
+      #overlay {
+        height: 100% !important;
+      }
+    }
+    .rollbackToggleSwitch {
+      background: none !important;
+    }
+  }
+}
+
+.nodeExpandedWrapper {
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+
+  border: 2px solid var(--primary-4);
+  border-radius: 8px;
+
+  &.marginBottom {
+    margin-bottom: 30px;
+  }
+  // position stage expanded node to be horizontal
+  &.firstnode {
+    top: -46px;
+  }
+
+  .horizontalBar {
+    position: absolute;
+    top: 44px;
+    height: 64px;
+    opacity: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .nodeHeader {
+    padding: var(--spacing-small) var(--spacing-small) 0 var(--spacing-small);
+
+    .collapseIcon {
+      color: var(--primary-7);
+      cursor: pointer;
+    }
+  }
+
+  .nodeBody {
+    padding: var(--spacing-large) var(--spacing-huge);
+  }
+
+  .conditional {
+    position: absolute;
+    top: -10px;
+    left: 5px;
+    color: var(--white) !important;
+  }
+  .incomplete {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+  }
+
+  .closeNode {
+    --icon-padding: 0 !important;
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    left: -15px;
+    background-color: var(--primary-7) !important;
+    min-width: 14px !important;
+    min-height: 14px !important;
+    height: 14px !important;
+    padding: 0 !important;
+    align-items: center;
+    z-index: 1;
+    cursor: pointer;
+
+    :global {
+      span.bp3-icon {
+        color: var(--white) !important;
+      }
+    }
+  }
+  &:hover > .closeNode {
+    opacity: 1;
+    &.readonly {
+      opacity: 0 !important;
+    }
+    pointer-events: initial;
+  }
+
+  .cursor {
+    cursor: pointer;
+  }
+}
