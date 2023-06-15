@@ -44,7 +44,7 @@ export async function fetcher<TResponse = unknown, TQueryParams = never, TBody =
     'Content-Type': 'application/json',
     ...(headers ? headers : {})
   }
-  if (!window.noAuthHeader) {
+  if (!window.noAuthHeader && !window.publicAccessOnAccount) {
     headersObj['Authorization'] = `Bearer ${token}`
   }
 
