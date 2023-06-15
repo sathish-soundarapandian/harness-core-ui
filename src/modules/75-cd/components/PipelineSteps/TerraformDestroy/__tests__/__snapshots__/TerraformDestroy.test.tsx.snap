@@ -192,6 +192,21 @@ exports[`Test TerraformDestroy add new terraform var file 1`] = `
       class="divider"
     />
     <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
+    <div
       class="formGroup md"
     >
       <div
@@ -1269,6 +1284,21 @@ exports[`Test TerraformDestroy expand backend Spec config 1`] = `
     <div
       class="divider"
     />
+    <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
     <div
       class="formGroup md"
     >
@@ -2373,6 +2403,21 @@ exports[`Test TerraformDestroy should render edit view as edit step - Inline 1`]
       class="divider"
     />
     <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
+    <div
       class="formGroup md"
     >
       <div
@@ -3451,6 +3496,21 @@ exports[`Test TerraformDestroy should render edit view as edit step - inheritfro
       class="divider"
     />
     <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
+    <div
       class="formGroup md"
     >
       <div
@@ -3789,6 +3849,21 @@ exports[`Test TerraformDestroy should render edit view as edit step - inheritfro
       class="divider"
     />
     <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
+    <div
       class="formGroup md"
     >
       <div
@@ -4124,6 +4199,21 @@ exports[`Test TerraformDestroy should render edit view as new step 1`] = `
     <div
       class="divider"
     />
+    <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
     <div
       class="formGroup md"
     >
@@ -4710,6 +4800,21 @@ exports[`Test TerraformDestroy should submit form for inheritfromplan config 1`]
     <div
       class="divider"
     />
+    <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
     <div
       class="formGroup md"
     >

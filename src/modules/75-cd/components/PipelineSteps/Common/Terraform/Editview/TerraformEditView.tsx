@@ -109,7 +109,7 @@ export default function TerraformEditView(
   const { stepType, isNewStep = true } = props
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, readonly = false } = props
   const { getString } = useStrings()
-  const { CD_TERRAFORM_CLOUD_CLI_NG, CDS_TERRAFORM_CLI_OPTIONS_NG } = useFeatureFlags()
+  const { CDS_TERRAFORM_CLI_OPTIONS_NG } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -565,18 +565,16 @@ export default function TerraformEditView(
                 />
               </div>
               <div className={css.divider} />
-              {CD_TERRAFORM_CLOUD_CLI_NG && (
-                <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
-                  <Checkbox
-                    label={getString('pipeline.terraformStep.runOnRemote')}
-                    checked={enableCloudCli}
-                    onChange={e => {
-                      setEnableCloudCli((e.target as any).checked)
-                      unset(values, (e.target as any).checked ? 'spec.configuration' : 'spec.cloudCliConfiguration')
-                    }}
-                  />
-                </div>
-              )}
+              <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
+                <Checkbox
+                  label={getString('pipeline.terraformStep.runOnRemote')}
+                  checked={enableCloudCli}
+                  onChange={e => {
+                    setEnableCloudCli((e.target as any).checked)
+                    unset(values, (e.target as any).checked ? 'spec.configuration' : 'spec.cloudCliConfiguration')
+                  }}
+                />
+              </div>
               {!enableCloudCli && (
                 <div className={cx(stepCss.formGroup, stepCss.md)}>
                   <FormInput.Select

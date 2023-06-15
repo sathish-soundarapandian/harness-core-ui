@@ -126,11 +126,8 @@ function TerraformPlanWidget(
 ): React.ReactElement {
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
-  const {
-    CD_TERRAFORM_CLOUD_CLI_NG,
-    CDS_TERRAFORM_CLI_OPTIONS_NG,
-    CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN
-  } = useFeatureFlags()
+  const { CDS_TERRAFORM_CLI_OPTIONS_NG, CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN } =
+    useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
@@ -542,18 +539,16 @@ function TerraformPlanWidget(
               </div>
 
               <div className={css.divider} />
-              {CD_TERRAFORM_CLOUD_CLI_NG && (
-                <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
-                  <Checkbox
-                    label={getString('pipeline.terraformStep.runOnRemote')}
-                    checked={enableCloudCli}
-                    onChange={e => {
-                      setEnableCloudCli((e.target as any).checked)
-                      unset(values, (e.target as any).checked ? 'spec.configuration' : 'spec.cloudCliConfiguration')
-                    }}
-                  />
-                </div>
-              )}
+              <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
+                <Checkbox
+                  label={getString('pipeline.terraformStep.runOnRemote')}
+                  checked={enableCloudCli}
+                  onChange={e => {
+                    setEnableCloudCli((e.target as any).checked)
+                    unset(values, (e.target as any).checked ? 'spec.configuration' : 'spec.cloudCliConfiguration')
+                  }}
+                />
+              </div>
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormInput.RadioGroup
                   name={`spec.${fieldPath}.command`}

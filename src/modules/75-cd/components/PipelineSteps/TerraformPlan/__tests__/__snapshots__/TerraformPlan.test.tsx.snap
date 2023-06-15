@@ -196,6 +196,21 @@ Object {
           class="divider"
         />
         <div
+          class="formGroup addMarginTop addMarginBottom"
+        >
+          <label
+            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+          >
+            <input
+              type="checkbox"
+            />
+            <span
+              class="bp3-control-indicator"
+            />
+            pipeline.terraformStep.runOnRemote
+          </label>
+        </div>
+        <div
           class="formGroup md"
         >
           <div
@@ -684,6 +699,21 @@ Object {
       <div
         class="divider"
       />
+      <div
+        class="formGroup addMarginTop addMarginBottom"
+      >
+        <label
+          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+        >
+          <input
+            type="checkbox"
+          />
+          <span
+            class="bp3-control-indicator"
+          />
+          pipeline.terraformStep.runOnRemote
+        </label>
+      </div>
       <div
         class="formGroup md"
       >
@@ -1227,6 +1257,21 @@ exports[`Test TerraformPlan renders more than one var file 1`] = `
     <div
       class="divider"
     />
+    <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
     <div
       class="formGroup md"
     >
@@ -2950,6 +2995,21 @@ exports[`Test TerraformPlan should render edit view as edit step 1`] = `
       class="divider"
     />
     <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
+    <div
       class="formGroup md"
     >
       <div
@@ -3439,6 +3499,21 @@ exports[`Test TerraformPlan should render edit view as new step 1`] = `
       class="divider"
     />
     <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
+    <div
       class="formGroup md"
     >
       <div
@@ -3926,6 +4001,21 @@ exports[`Test TerraformPlan should render edit view as new step 2`] = `
     <div
       class="divider"
     />
+    <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
     <div
       class="formGroup md"
     >
@@ -4639,6 +4729,21 @@ exports[`Test TerraformPlan should render edit view with command Destroy 1`] = `
     <div
       class="divider"
     />
+    <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
     <div
       class="formGroup md"
     >
@@ -5698,6 +5803,21 @@ exports[`Test TerraformPlan should submit form for terraform plan 1`] = `
     <div
       class="divider"
     />
+    <div
+      class="formGroup addMarginTop addMarginBottom"
+    >
+      <label
+        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        pipeline.terraformStep.runOnRemote
+      </label>
+    </div>
     <div
       class="formGroup md"
     >
