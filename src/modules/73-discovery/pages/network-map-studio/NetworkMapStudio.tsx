@@ -8,6 +8,7 @@ import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Formik, Icon, Layout, ModalDialog, Tab, Tabs, Text, useToggleOpen } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import type { FormikProps } from 'formik'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 
 import { useStrings, String } from 'framework/strings'
@@ -26,6 +27,13 @@ enum StudioTabs {
   CONFIGURE_RELATIONS = 'Configure Relations'
 }
 
+export interface FormValues {
+  name: string
+  description?: string
+  tags?: string[]
+  identifier: string | undefined
+}
+
 const NetworkMapStudio: React.FC = () => {
   const { dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
@@ -33,6 +41,7 @@ const NetworkMapStudio: React.FC = () => {
   const { isOpen, open, close } = useToggleOpen()
   const history = useHistory()
   const createNetworkMapLabel = getString('discovery.createNetworkMap')
+  const networkMapFormRef = React.useRef<FormikProps<FormValues>>()
 
   const [title, setTitle] = useState<string>('Untitled Network Map')
 
@@ -88,11 +97,12 @@ const NetworkMapStudio: React.FC = () => {
               className={css.dialogStyles}
             >
               <Formik
+                innerRef={networkMapFormRef as React.Ref<FormikProps<FormValues>>}
                 initialValues={{
                   identifier: '',
                   name: '',
                   description: '',
-                  tags: {}
+                  tags: []
                 }}
                 formName="networkMapNameForm"
                 onSubmit={values => {
@@ -113,7 +123,7 @@ const NetworkMapStudio: React.FC = () => {
           <Tabs id="networkMapTabs" onChange={handleTabChange} selectedTabId={StudioTabs.SELECT_SERVICES}>
             <Tab
               id={StudioTabs.SELECT_SERVICES}
-              panel={<SelectService name={title} />}
+              panel={<SelectService name={title} networkMapRef={networkMapFormRef.current} />}
               title={getString('discovery.tabs.selectServices')}
             />
             <Icon

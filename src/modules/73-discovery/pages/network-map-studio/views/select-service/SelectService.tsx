@@ -9,6 +9,7 @@ import { Button, ButtonVariation, Checkbox, Container, Icon, Layout, TableV2, Te
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import type { CellProps, Column, Renderer, Row } from 'react-table'
+import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import {
   ApiCreateNetworkMapRequest,
@@ -20,13 +21,15 @@ import {
 } from 'services/servicediscovery'
 import type { DiscoveryPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import type { FormValues } from '../../NetworkMapStudio'
 import css from './SelectService.module.scss'
 
 interface Props {
   name: string
+  networkMapRef: FormikProps<FormValues> | undefined
 }
 
-const SelectService: React.FC<Props> = ({ name }) => {
+const SelectService: React.FC<Props> = ({ name, networkMapRef }) => {
   const { getString } = useStrings()
   const history = useHistory()
   const { accountId, orgIdentifier, projectIdentifier, dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
@@ -93,7 +96,7 @@ const SelectService: React.FC<Props> = ({ name }) => {
     }
     const response: ApiCreateNetworkMapRequest = {
       connections: connections,
-      identity: dAgentId,
+      identity: networkMapRef?.values.identifier,
       resources,
       name
     }
