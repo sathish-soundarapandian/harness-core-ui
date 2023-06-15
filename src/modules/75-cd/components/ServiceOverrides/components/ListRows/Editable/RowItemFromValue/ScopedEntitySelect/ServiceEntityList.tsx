@@ -47,8 +47,7 @@ export default function ServiceEntityList({
       searchTerm,
       accountIdentifier: accountId,
       ...((scope === Scope.PROJECT || scope === Scope.ORG || (isNil(scope) && orgIdentifier)) && { orgIdentifier }),
-      ...((scope === Scope.PROJECT || (isNil(scope) && orgIdentifier)) && { projectIdentifier }),
-      includeAllAccessibleAtScope: isNil(scope)
+      ...((scope === Scope.PROJECT || (isNil(scope) && orgIdentifier)) && { projectIdentifier })
     }
   })
 
