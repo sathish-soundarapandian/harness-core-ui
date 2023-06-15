@@ -13,5 +13,6 @@ export enum VerificationTypes {
   Canary = 'Canary',
   Rolling = 'Rolling',
   Health = 'Health',
-  Auto = 'Auto'
+  Auto = 'Auto',
+  SimpleVerification = 'SimpleVerification'
 }

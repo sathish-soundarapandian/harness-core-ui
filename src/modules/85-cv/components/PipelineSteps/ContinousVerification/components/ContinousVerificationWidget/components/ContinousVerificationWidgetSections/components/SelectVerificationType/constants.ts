@@ -18,5 +18,6 @@ export const continousVerificationTypes = [
   },
   { value: 'Canary', label: 'Canary', icon: { name: 'canary' } },
   { value: 'Bluegreen', label: 'Blue Green', icon: { name: 'bluegreen' } },
-  { value: 'LoadTest', label: 'Load Test', icon: { name: 'lab-test' } }
+  { value: 'LoadTest', label: 'Load Test', icon: { name: 'lab-test' } },
+  { value: 'SimpleVerification', label: 'Threshold Analysis [No ML]', icon: { name: 'lab-test' } }
 ]

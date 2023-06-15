@@ -29,6 +29,20 @@ export default function ConfigureFields(props: {
 
   const renderConfigOptions = (): JSX.Element => {
     switch (formValues?.spec?.type) {
+      case VerificationTypes.SimpleVerification:
+        return (
+          <>
+            <div className={stepCss.formGroup}>
+              <Duration
+                name={`spec.spec.duration`}
+                label={getString('duration')}
+                expressions={expressions}
+                formik={formik}
+                allowableTypes={allowableTypes}
+              />
+            </div>
+          </>
+        )
       case VerificationTypes.LoadTest:
         return (
           <>
@@ -113,6 +127,8 @@ export default function ConfigureFields(props: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const canShowFailOnNoAnalysisCheckbox = formValues?.spec?.type !== VerificationTypes.SimpleVerification
+
   return (
     <>
       {renderConfigOptions()}
@@ -123,9 +139,11 @@ export default function ConfigureFields(props: {
           multiTextInputProps={{ expressions, allowableTypes }}
         />
       </div>
-      <div className={stepCss.formGroup}>
-        <FormInput.CheckBox name="spec.spec.failOnNoAnalysis" label={getString('connectors.cdng.failOnNoAnalysis')} />
-      </div>
+      {canShowFailOnNoAnalysisCheckbox && (
+        <div className={stepCss.formGroup}>
+          <FormInput.CheckBox name="spec.spec.failOnNoAnalysis" label={getString('connectors.cdng.failOnNoAnalysis')} />
+        </div>
+      )}
     </>
   )
 }
