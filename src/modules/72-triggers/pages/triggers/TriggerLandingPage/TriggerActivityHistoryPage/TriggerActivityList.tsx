@@ -174,16 +174,17 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
     pageIndex: get(pageable, 'pageNumber', 0)
   })
 
-  const isJSONValid = (): boolean => {
-    let isValid = true
+  const payloadValue = (): string => {
+    let value = ''
     try {
-      if (selectedPayloadRow) {
-        isValid = JSON.parse(selectedPayloadRow) && !!selectedPayloadRow
+      if (!!selectedPayloadRow && JSON.parse(selectedPayloadRow)) {
+        const parsedValue = (JSON.parse(selectedPayloadRow), null, 2)
+        value = JSON.stringify(parsedValue)
       }
     } catch (e) {
-      isValid = false
+      value = JSON.stringify(selectedPayloadRow)
     }
-    return isValid
+    return value
   }
 
   return (
@@ -211,7 +212,7 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
         >
           <MonacoEditor
             language="yaml"
-            value={isJSONValid() ? JSON.stringify(JSON.parse(selectedPayloadRow), null, 2) : ''}
+            value={payloadValue()}
             data-testid="monaco-editor"
             alwaysShowDarkTheme={true}
             options={
