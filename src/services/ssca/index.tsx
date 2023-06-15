@@ -13,131 +13,9 @@ import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, Use
 import { getConfig } from '../config'
 export const SPEC_VERSION = '0.1.0'
 /**
- * result of get artifacts by id
+ * createArtifact_BadGateway_response_body result type (default view)
  */
-export interface ArtifactResult {
-  artifact?: {
-    /**
-     * id of the artifact
-     */
-    id?: string
-    /**
-     * name of the artifact
-     */
-    name: string
-    /**
-     * tag of the artifact
-     */
-    tag?: string
-    /**
-     * type of the artifact
-     */
-    type: string
-    /**
-     * url of the artifact
-     */
-    url: string
-  }
-  attestation?: {
-    /**
-     * is the sbom attested or not
-     */
-    isAttested?: boolean
-    /**
-     * url of the attested file
-     */
-    url?: string
-  }
-  sbom?: {
-    /**
-     * name of the sbom
-     */
-    name: string
-    /**
-     * url of the sbom
-     */
-    url?: string
-  }
-}
-
-export interface CreateArtifactRequestBody {
-  /**
-   * name of the artifact
-   */
-  name: string
-  /**
-   * tag of the artifact
-   */
-  tag: string
-  /**
-   * type of the artifact
-   */
-  type: string
-  /**
-   * Url of the artifact
-   */
-  url: string
-}
-
-export interface CreateArtifactResponseBody {
-  artifactId: string
-}
-
-/**
- * An enforcement result for a matched rule
- */
-export interface EnforcementResult {
-  'X-Page-Number'?: number
-  'X-Page-Size'?: number
-  'X-Total-Elements'?: number
-  accountId: string
-  artifactId: string
-  enforcementId: string
-  imageName?: string
-  license: string
-  name: string
-  orchestrationId?: string
-  orgIdentifier?: string
-  packageManager: string
-  projectIdentifier?: string
-  purl: string
-  supplier: string
-  tag?: string
-  version: string
-  violationDetails: string
-  violationType: string
-}
-
-export interface EnforcesbomRequestBody {
-  artifact?: {
-    /**
-     * tag of the artifact
-     */
-    tag: string
-    /**
-     * url of the artifact
-     */
-    url: string
-  }
-  /**
-   * enforcementId
-   */
-  enforcementId?: string
-  policyFileId?: string
-}
-
-export interface EnforcesbomResponseBody {
-  /**
-   * ID of the enforcement of the SBOM
-   */
-  EnforcementId: string
-  /**
-   * Status of the enforcement
-   */
-  Status: string
-}
-
-export interface Error {
+export interface ArtifactCreateArtifactBadGatewayResponseBody {
   /**
    * Is the error a server-side fault?
    */
@@ -164,63 +42,330 @@ export interface Error {
   timeout: boolean
 }
 
-export interface FindResponseBody {
-  packageReferences: PackageReference[]
-}
-
-export interface FindanyRequestBody {
+/**
+ * createArtifact_BadRequest_response_body result type (default view)
+ */
+export interface ArtifactCreateArtifactBadRequestResponseBody {
   /**
-   * Harness ExecutionIdentifier ID
+   * Is the error a server-side fault?
    */
-  ExecutionIdentifier?: string
+  fault: boolean
   /**
-   * Harness pipeline ID
+   * ID is a unique identifier for this particular occurrence of the problem.
    */
-  PipelineIdentifier?: string
-  packageIdentifiers: PackageIdentifier[]
-}
-
-export interface GetArtifactsByIDOKResponseBody {
-  artifacts?: ArtifactResult[]
-}
-
-export interface GetEnforcementResultSummaryByIDResponseBody {
-  allowListViolationCount: number
-  artifact: {
-    /**
-     * id of the artifact
-     */
-    id?: string
-    /**
-     * name of the artifact
-     */
-    name: string
-    /**
-     * tag of the artifact
-     */
-    tag?: string
-    /**
-     * type of the artifact
-     */
-    type: string
-    /**
-     * url of the artifact
-     */
-    url: string
-  }
-  denyListViolationCount: number
-  enforcementId: string
-  status: string
-}
-
-export interface GetEnforcementResultsByIDResponseBody {
+  id: string
   /**
-   * enforcment results for a given enforcement Id
+   * Message is a human-readable explanation specific to this occurrence of the problem.
    */
-  results?: EnforcementResult[]
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
 }
 
-export interface GetUniqueArtifactResponseBody {
+/**
+ * createArtifact_Forbidden_response_body result type (default view)
+ */
+export interface ArtifactCreateArtifactForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * createArtifact_InternalServer_response_body result type (default view)
+ */
+export interface ArtifactCreateArtifactInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * createArtifact_NotFound_response_body result type (default view)
+ */
+export interface ArtifactCreateArtifactNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface ArtifactCreateArtifactRequestBody {
+  /**
+   * name of the artifact
+   */
+  name: string
+  /**
+   * tag of the artifact
+   */
+  tag: string
+  /**
+   * type of the artifact
+   */
+  type: string
+  /**
+   * Url of the artifact
+   */
+  url: string
+}
+
+export interface ArtifactCreateArtifactResponseBody {
+  artifactId: string
+}
+
+/**
+ * createArtifact_Unauthorized_response_body result type (default view)
+ */
+export interface ArtifactCreateArtifactUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactFromExecutionId_BadGateway_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactFromExecutionIDBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactFromExecutionId_BadRequest_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactFromExecutionIDBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactFromExecutionId_Forbidden_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactFromExecutionIDForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactFromExecutionId_InternalServer_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactFromExecutionIDInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactFromExecutionId_NotFound_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactFromExecutionIDNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface ArtifactGetArtifactFromExecutionIDResponseBody {
   Artifact?: {
     /**
      * id of the artifact
@@ -231,17 +376,17 @@ export interface GetUniqueArtifactResponseBody {
      */
     name: string
     /**
+     * url of the artifact
+     */
+    registryUrl: string
+    /**
      * tag of the artifact
      */
     tag?: string
     /**
      * type of the artifact
      */
-    type: string
-    /**
-     * url of the artifact
-     */
-    url: string
+    type?: string
   }
   Attestation?: {
     /**
@@ -265,7 +410,930 @@ export interface GetUniqueArtifactResponseBody {
   }
 }
 
-export interface LoginRequestBody {
+/**
+ * getArtifactFromExecutionId_Unauthorized_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactFromExecutionIDUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactSBOM_BadGateway_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactSBOMBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactSBOM_BadRequest_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactSBOMBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactSBOM_Forbidden_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactSBOMForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactSBOM_InternalServer_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactSBOMInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactSBOM_NotFound_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactSBOMNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactSBOM_Unauthorized_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactSBOMUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactsById_BadGateway_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactsByIDBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactsById_BadRequest_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactsByIDBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactsById_Forbidden_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactsByIDForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactsById_InternalServer_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactsByIDInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getArtifactsById_NotFound_response_body result type (default view)
+ */
+export interface ArtifactGetArtifactsByIDNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface ArtifactGetArtifactsByIDOKResponseBody {
+  artifacts?: ArtifactResultResponseBody[]
+}
+
+export interface ArtifactGetArtifactsByIDUnauthorizedResponseBody {
+  artifacts?: ArtifactResultResponseBody[]
+}
+
+/**
+ * getSBOMFromExecutionId_BadGateway_response_body result type (default view)
+ */
+export interface ArtifactGetSBOMFromExecutionIDBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getSBOMFromExecutionId_BadRequest_response_body result type (default view)
+ */
+export interface ArtifactGetSBOMFromExecutionIDBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getSBOMFromExecutionId_Forbidden_response_body result type (default view)
+ */
+export interface ArtifactGetSBOMFromExecutionIDForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getSBOMFromExecutionId_InternalServer_response_body result type (default view)
+ */
+export interface ArtifactGetSBOMFromExecutionIDInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getSBOMFromExecutionId_NotFound_response_body result type (default view)
+ */
+export interface ArtifactGetSBOMFromExecutionIDNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getSBOMFromExecutionId_Unauthorized_response_body result type (default view)
+ */
+export interface ArtifactGetSBOMFromExecutionIDUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getUniqueArtifact_BadGateway_response_body result type (default view)
+ */
+export interface ArtifactGetUniqueArtifactBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getUniqueArtifact_BadRequest_response_body result type (default view)
+ */
+export interface ArtifactGetUniqueArtifactBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getUniqueArtifact_Forbidden_response_body result type (default view)
+ */
+export interface ArtifactGetUniqueArtifactForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getUniqueArtifact_InternalServer_response_body result type (default view)
+ */
+export interface ArtifactGetUniqueArtifactInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getUniqueArtifact_NotFound_response_body result type (default view)
+ */
+export interface ArtifactGetUniqueArtifactNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface ArtifactGetUniqueArtifactResponseBody {
+  Artifact?: {
+    /**
+     * id of the artifact
+     */
+    id?: string
+    /**
+     * name of the artifact
+     */
+    name: string
+    /**
+     * url of the artifact
+     */
+    registryUrl: string
+    /**
+     * tag of the artifact
+     */
+    tag?: string
+    /**
+     * type of the artifact
+     */
+    type?: string
+  }
+  Attestation?: {
+    /**
+     * is the sbom attested or not
+     */
+    isAttested?: boolean
+    /**
+     * url of the attested file
+     */
+    url?: string
+  }
+  Sbom?: {
+    /**
+     * name of the sbom
+     */
+    name: string
+    /**
+     * url of the sbom
+     */
+    url?: string
+  }
+}
+
+/**
+ * getUniqueArtifact_Unauthorized_response_body result type (default view)
+ */
+export interface ArtifactGetUniqueArtifactUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * login_BadGateway_response_body result type (default view)
+ */
+export interface DevLoginBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * login_BadRequest_response_body result type (default view)
+ */
+export interface DevLoginBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * login_Forbidden_response_body result type (default view)
+ */
+export interface DevLoginForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * login_InternalServer_response_body result type (default view)
+ */
+export interface DevLoginInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * login_NotFound_response_body result type (default view)
+ */
+export interface DevLoginNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface DevLoginRequestBody {
   /**
    * Password
    */
@@ -273,65 +1341,621 @@ export interface LoginRequestBody {
 }
 
 /**
- * A package identifier
+ * login_Unauthorized_response_body result type (default view)
  */
-export interface PackageIdentifier {
+export interface DevLoginUnauthorizedResponseBody {
   /**
-   * name of the package
+   * Is the error a server-side fault?
    */
-  name?: string
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
 }
 
 /**
- * A package search request on sscs
+ * getEnforcementResultSummaryById_BadGateway_response_body result type (default view)
  */
-export interface PackageReference {
+export interface EnforcementGetEnforcementResultSummaryByIDBadGatewayResponseBody {
   /**
-   * name of the package
+   * Is the error a server-side fault?
    */
-  AccountName?: string
+  fault: boolean
   /**
-   * Source ID associated with this connection source
+   * ID is a unique identifier for this particular occurrence of the problem.
    */
-  ArtifactName?: string
+  id: string
   /**
-   * Source ID associated with this connection source
+   * Message is a human-readable explanation specific to this occurrence of the problem.
    */
-  BuildURL?: string
+  message: string
   /**
-   * name of the package
+   * Name is the name of this class of errors.
    */
-  Originator?: string
+  name: string
   /**
-   * name of the package
+   * Is the error temporary?
    */
-  PipelineIdentifier?: string
+  temporary: boolean
   /**
-   * Source ID associated with this connection source
+   * Is the error a timeout?
    */
-  SBOMURL?: string
-  /**
-   * name of the package
-   */
-  SequenceId?: string
-  /**
-   * stage name where sbom is generated
-   */
-  StageName?: string
-  /**
-   * name of the package
-   */
-  VersionInfo?: string
-  /**
-   * name of the package
-   */
-  name?: string
+  timeout: boolean
 }
 
 /**
- * A sbom process request on sscs
+ * getEnforcementResultSummaryById_BadRequest_response_body result type (default view)
  */
-export interface ProcesssbomRequestBody {
+export interface EnforcementGetEnforcementResultSummaryByIDBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getEnforcementResultSummaryById_Forbidden_response_body result type (default view)
+ */
+export interface EnforcementGetEnforcementResultSummaryByIDForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getEnforcementResultSummaryById_InternalServer_response_body result type (default view)
+ */
+export interface EnforcementGetEnforcementResultSummaryByIDInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getEnforcementResultSummaryById_NotFound_response_body result type (default view)
+ */
+export interface EnforcementGetEnforcementResultSummaryByIDNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface EnforcementGetEnforcementResultSummaryByIDResponseBody {
+  allowListViolationCount: number
+  artifact: {
+    /**
+     * id of the artifact
+     */
+    id?: string
+    /**
+     * name of the artifact
+     */
+    name: string
+    /**
+     * url of the artifact
+     */
+    registryUrl: string
+    /**
+     * tag of the artifact
+     */
+    tag?: string
+    /**
+     * type of the artifact
+     */
+    type?: string
+  }
+  denyListViolationCount: number
+  enforcementId: string
+  status: string
+}
+
+/**
+ * getEnforcementResultSummaryById_Unauthorized_response_body result type (default view)
+ */
+export interface EnforcementGetEnforcementResultSummaryByIDUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getEnforcementResultsById_BadGateway_response_body result type (default view)
+ */
+export interface EnforcementGetEnforcementResultsByIDBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getEnforcementResultsById_BadRequest_response_body result type (default view)
+ */
+export interface EnforcementGetEnforcementResultsByIDBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getEnforcementResultsById_Forbidden_response_body result type (default view)
+ */
+export interface EnforcementGetEnforcementResultsByIDForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getEnforcementResultsById_InternalServer_response_body result type (default view)
+ */
+export interface EnforcementGetEnforcementResultsByIDInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * getEnforcementResultsById_NotFound_response_body result type (default view)
+ */
+export interface EnforcementGetEnforcementResultsByIDNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface EnforcementGetEnforcementResultsByIDResponseBody {
+  /**
+   * enforcment results for a given enforcement Id
+   */
+  results?: EnforcementResultResponseBody[]
+}
+
+/**
+ * getEnforcementResultsById_Unauthorized_response_body result type (default view)
+ */
+export interface EnforcementGetEnforcementResultsByIDUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * An enforcement result for a matched rule
+ */
+export interface EnforcementResultResponseBody {
+  'X-Page-Number'?: number
+  'X-Page-Size'?: number
+  'X-Total-Elements'?: number
+  accountId: string
+  artifactId: string
+  enforcementId: string
+  imageName?: string
+  license: string[]
+  name: string
+  orchestrationId?: string
+  orgIdentifier?: string
+  packageManager: string
+  projectIdentifier?: string
+  purl: string
+  supplier: string
+  tag?: string
+  version: string
+  violationDetails: string
+  violationType: string
+}
+
+export interface IssueTokenIssueTokenOKResponseBody {
+  /**
+   * Issued cross-service JWT
+   */
+  token: string
+}
+
+export interface IssueTokenIssueTokenUnauthorizedResponseBody {
+  /**
+   * Issued cross-service JWT
+   */
+  token: string
+}
+
+/**
+ * enforcesbom_BadGateway_response_body result type (default view)
+ */
+export interface SbomprocessorEnforcesbomBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * enforcesbom_BadRequest_response_body result type (default view)
+ */
+export interface SbomprocessorEnforcesbomBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * enforcesbom_Forbidden_response_body result type (default view)
+ */
+export interface SbomprocessorEnforcesbomForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * enforcesbom_InternalServer_response_body result type (default view)
+ */
+export interface SbomprocessorEnforcesbomInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * enforcesbom_NotFound_response_body result type (default view)
+ */
+export interface SbomprocessorEnforcesbomNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface SbomprocessorEnforcesbomRequestBody {
   artifact?: {
     /**
      * id of the artifact
@@ -342,17 +1966,241 @@ export interface ProcesssbomRequestBody {
      */
     name: string
     /**
+     * url of the artifact
+     */
+    registryUrl: string
+    /**
      * tag of the artifact
      */
     tag?: string
     /**
      * type of the artifact
      */
-    type: string
+    type?: string
+  }
+  /**
+   * enforcementId
+   */
+  enforcementId?: string
+  policyFileId?: string
+}
+
+export interface SbomprocessorEnforcesbomResponseBody {
+  /**
+   * ID of the enforcement of the SBOM
+   */
+  EnforcementId: string
+  /**
+   * Status of the enforcement
+   */
+  Status: string
+}
+
+/**
+ * enforcesbom_Unauthorized_response_body result type (default view)
+ */
+export interface SbomprocessorEnforcesbomUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * processsbom_BadGateway_response_body result type (default view)
+ */
+export interface SbomprocessorProcesssbomBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * processsbom_BadRequest_response_body result type (default view)
+ */
+export interface SbomprocessorProcesssbomBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * processsbom_Forbidden_response_body result type (default view)
+ */
+export interface SbomprocessorProcesssbomForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * processsbom_InternalServer_response_body result type (default view)
+ */
+export interface SbomprocessorProcesssbomInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * processsbom_NotFound_response_body result type (default view)
+ */
+export interface SbomprocessorProcesssbomNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * A sbom process request on sscs
+ */
+export interface SbomprocessorProcesssbomRequestBody {
+  artifact?: {
+    /**
+     * id of the artifact
+     */
+    id?: string
+    /**
+     * name of the artifact
+     */
+    name: string
     /**
      * url of the artifact
      */
-    url: string
+    registryUrl: string
+    /**
+     * tag of the artifact
+     */
+    tag?: string
+    /**
+     * type of the artifact
+     */
+    type?: string
   }
   attestation?: {
     /**
@@ -408,6 +2256,10 @@ export interface ProcesssbomRequestBody {
      */
     data?: string
     /**
+     * format of the SBOM
+     */
+    format: string
+    /**
      * name of the sbom
      */
     name: string
@@ -418,14 +2270,544 @@ export interface ProcesssbomRequestBody {
   }
 }
 
-export interface ProcesssbomResponseBody {
+export interface SbomprocessorProcesssbomResponseBody {
   /**
    * ID of the artifact
    */
   ArtifactId: string
 }
 
-export interface ServiceVersion {
+/**
+ * processsbom_Unauthorized_response_body result type (default view)
+ */
+export interface SbomprocessorProcesssbomUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * find_BadGateway_response_body result type (default view)
+ */
+export interface SearchFindBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * find_BadRequest_response_body result type (default view)
+ */
+export interface SearchFindBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * find_Forbidden_response_body result type (default view)
+ */
+export interface SearchFindForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * find_InternalServer_response_body result type (default view)
+ */
+export interface SearchFindInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * find_NotFound_response_body result type (default view)
+ */
+export interface SearchFindNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface SearchFindResponseBody {
+  packageReferences: PackageReferenceResponseBody[]
+}
+
+/**
+ * find_Unauthorized_response_body result type (default view)
+ */
+export interface SearchFindUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * findany_BadGateway_response_body result type (default view)
+ */
+export interface SearchFindanyBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * findany_BadRequest_response_body result type (default view)
+ */
+export interface SearchFindanyBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * findany_Forbidden_response_body result type (default view)
+ */
+export interface SearchFindanyForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * findany_InternalServer_response_body result type (default view)
+ */
+export interface SearchFindanyInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * findany_NotFound_response_body result type (default view)
+ */
+export interface SearchFindanyNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface SearchFindanyRequestBody {
+  /**
+   * Harness ExecutionIdentifier ID
+   */
+  ExecutionIdentifier?: string
+  /**
+   * Harness pipeline ID
+   */
+  PipelineIdentifier?: string
+  packageIdentifiers: PackageIdentifierRequestBody[]
+}
+
+export interface SearchFindanyResponseBody {
+  packageReferences: PackageReferenceResponseBody[]
+}
+
+/**
+ * findany_Unauthorized_response_body result type (default view)
+ */
+export interface SearchFindanyUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * health_BadGateway_response_body result type (default view)
+ */
+export interface SystemHealthBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * health_InternalServer_response_body result type (default view)
+ */
+export interface SystemHealthInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * version_BadGateway_response_body result type (default view)
+ */
+export interface SystemVersionBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * version_InternalServer_response_body result type (default view)
+ */
+export interface SystemVersionInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface SystemVersionResponseBody {
   /**
    * Build identifier
    */
@@ -436,11 +2818,108 @@ export interface ServiceVersion {
   version: string
 }
 
-export interface TokenResponse {
+/**
+ * result of get artifacts by id
+ */
+export interface ArtifactResultResponseBody {
+  artifact?: {
+    /**
+     * id of the artifact
+     */
+    id?: string
+    /**
+     * name of the artifact
+     */
+    name: string
+    /**
+     * url of the artifact
+     */
+    registryUrl: string
+    /**
+     * tag of the artifact
+     */
+    tag?: string
+    /**
+     * type of the artifact
+     */
+    type?: string
+  }
+  attestation?: {
+    /**
+     * is the sbom attested or not
+     */
+    isAttested?: boolean
+    /**
+     * url of the attested file
+     */
+    url?: string
+  }
+  sbom?: {
+    /**
+     * name of the sbom
+     */
+    name: string
+    /**
+     * url of the sbom
+     */
+    url?: string
+  }
+}
+
+/**
+ * A package identifier
+ */
+export interface PackageIdentifierRequestBody {
   /**
-   * Issued cross-service JWT
+   * name of the package
    */
-  token: string
+  name?: string
+}
+
+/**
+ * A package search request on sscs
+ */
+export interface PackageReferenceResponseBody {
+  /**
+   * name of the package
+   */
+  AccountName?: string
+  /**
+   * Source ID associated with this connection source
+   */
+  ArtifactName?: string
+  /**
+   * Source ID associated with this connection source
+   */
+  BuildURL?: string
+  /**
+   * name of the package
+   */
+  Originator?: string
+  /**
+   * name of the package
+   */
+  PipelineIdentifier?: string
+  /**
+   * Source ID associated with this connection source
+   */
+  SBOMURL?: string
+  /**
+   * name of the package
+   */
+  SequenceId?: string
+  /**
+   * stage name where sbom is generated
+   */
+  StageName?: string
+  /**
+   * name of the package
+   */
+  VersionInfo?: string
+  /**
+   * name of the package
+   */
+  name?: string
 }
 
 export interface DevLoginQueryParams {
@@ -459,12 +2938,34 @@ export interface DevLoginQueryParams {
 }
 
 export type DevLoginProps = Omit<
-  MutateProps<string, void, DevLoginQueryParams, LoginRequestBody, void>,
+  MutateProps<
+    string,
+    | DevLoginBadRequestResponseBody
+    | DevLoginUnauthorizedResponseBody
+    | DevLoginForbiddenResponseBody
+    | DevLoginNotFoundResponseBody
+    | DevLoginInternalServerResponseBody
+    | DevLoginBadGatewayResponseBody,
+    DevLoginQueryParams,
+    DevLoginRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 export const DevLogin = (props: DevLoginProps) => (
-  <Mutate<string, void, DevLoginQueryParams, LoginRequestBody, void>
+  <Mutate<
+    string,
+    | DevLoginBadRequestResponseBody
+    | DevLoginUnauthorizedResponseBody
+    | DevLoginForbiddenResponseBody
+    | DevLoginNotFoundResponseBody
+    | DevLoginInternalServerResponseBody
+    | DevLoginBadGatewayResponseBody,
+    DevLoginQueryParams,
+    DevLoginRequestBody,
+    void
+  >
     verb="POST"
     path={`/api/login`}
     base={getConfig('ssca')}
@@ -473,15 +2974,34 @@ export const DevLogin = (props: DevLoginProps) => (
 )
 
 export type UseDevLoginProps = Omit<
-  UseMutateProps<string, void, DevLoginQueryParams, LoginRequestBody, void>,
+  UseMutateProps<
+    string,
+    | DevLoginBadRequestResponseBody
+    | DevLoginUnauthorizedResponseBody
+    | DevLoginForbiddenResponseBody
+    | DevLoginNotFoundResponseBody
+    | DevLoginInternalServerResponseBody
+    | DevLoginBadGatewayResponseBody,
+    DevLoginQueryParams,
+    DevLoginRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 export const useDevLogin = (props: UseDevLoginProps) =>
-  useMutate<string, void, DevLoginQueryParams, LoginRequestBody, void>('POST', `/api/login`, {
-    base: getConfig('ssca'),
-    ...props
-  })
+  useMutate<
+    string,
+    | DevLoginBadRequestResponseBody
+    | DevLoginUnauthorizedResponseBody
+    | DevLoginForbiddenResponseBody
+    | DevLoginNotFoundResponseBody
+    | DevLoginInternalServerResponseBody
+    | DevLoginBadGatewayResponseBody,
+    DevLoginQueryParams,
+    DevLoginRequestBody,
+    void
+  >('POST', `/api/login`, { base: getConfig('ssca'), ...props })
 
 export interface ArtifactCreateArtifactQueryParams {
   /**
@@ -499,15 +3019,40 @@ export interface ArtifactCreateArtifactQueryParams {
 }
 
 export type ArtifactCreateArtifactProps = Omit<
-  MutateProps<CreateArtifactResponseBody, void, ArtifactCreateArtifactQueryParams, CreateArtifactRequestBody, void>,
+  MutateProps<
+    ArtifactCreateArtifactResponseBody,
+    | ArtifactCreateArtifactBadRequestResponseBody
+    | ArtifactCreateArtifactUnauthorizedResponseBody
+    | ArtifactCreateArtifactForbiddenResponseBody
+    | ArtifactCreateArtifactNotFoundResponseBody
+    | ArtifactCreateArtifactInternalServerResponseBody
+    | ArtifactCreateArtifactBadGatewayResponseBody,
+    ArtifactCreateArtifactQueryParams,
+    ArtifactCreateArtifactRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 /**
  * create an artifact in the artifact db
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const ArtifactCreateArtifact = (props: ArtifactCreateArtifactProps) => (
-  <Mutate<CreateArtifactResponseBody, void, ArtifactCreateArtifactQueryParams, CreateArtifactRequestBody, void>
+  <Mutate<
+    ArtifactCreateArtifactResponseBody,
+    | ArtifactCreateArtifactBadRequestResponseBody
+    | ArtifactCreateArtifactUnauthorizedResponseBody
+    | ArtifactCreateArtifactForbiddenResponseBody
+    | ArtifactCreateArtifactNotFoundResponseBody
+    | ArtifactCreateArtifactInternalServerResponseBody
+    | ArtifactCreateArtifactBadGatewayResponseBody,
+    ArtifactCreateArtifactQueryParams,
+    ArtifactCreateArtifactRequestBody,
+    void
+  >
     verb="POST"
     path={`/api/v1/artifacts`}
     base={getConfig('ssca')}
@@ -516,19 +3061,40 @@ export const ArtifactCreateArtifact = (props: ArtifactCreateArtifactProps) => (
 )
 
 export type UseArtifactCreateArtifactProps = Omit<
-  UseMutateProps<CreateArtifactResponseBody, void, ArtifactCreateArtifactQueryParams, CreateArtifactRequestBody, void>,
+  UseMutateProps<
+    ArtifactCreateArtifactResponseBody,
+    | ArtifactCreateArtifactBadRequestResponseBody
+    | ArtifactCreateArtifactUnauthorizedResponseBody
+    | ArtifactCreateArtifactForbiddenResponseBody
+    | ArtifactCreateArtifactNotFoundResponseBody
+    | ArtifactCreateArtifactInternalServerResponseBody
+    | ArtifactCreateArtifactBadGatewayResponseBody,
+    ArtifactCreateArtifactQueryParams,
+    ArtifactCreateArtifactRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 /**
  * create an artifact in the artifact db
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useArtifactCreateArtifact = (props: UseArtifactCreateArtifactProps) =>
-  useMutate<CreateArtifactResponseBody, void, ArtifactCreateArtifactQueryParams, CreateArtifactRequestBody, void>(
-    'POST',
-    `/api/v1/artifacts`,
-    { base: getConfig('ssca'), ...props }
-  )
+  useMutate<
+    ArtifactCreateArtifactResponseBody,
+    | ArtifactCreateArtifactBadRequestResponseBody
+    | ArtifactCreateArtifactUnauthorizedResponseBody
+    | ArtifactCreateArtifactForbiddenResponseBody
+    | ArtifactCreateArtifactNotFoundResponseBody
+    | ArtifactCreateArtifactInternalServerResponseBody
+    | ArtifactCreateArtifactBadGatewayResponseBody,
+    ArtifactCreateArtifactQueryParams,
+    ArtifactCreateArtifactRequestBody,
+    void
+  >('POST', `/api/v1/artifacts`, { base: getConfig('ssca'), ...props })
 
 export interface ArtifactGetArtifactSBOMPathParams {
   /**
@@ -538,14 +3104,40 @@ export interface ArtifactGetArtifactSBOMPathParams {
   filename: string
 }
 
-export type ArtifactGetArtifactSBOMProps = Omit<GetProps<void, void, void, ArtifactGetArtifactSBOMPathParams>, 'path'> &
+export type ArtifactGetArtifactSBOMProps = Omit<
+  GetProps<
+    void,
+    | ArtifactGetArtifactSBOMBadRequestResponseBody
+    | ArtifactGetArtifactSBOMUnauthorizedResponseBody
+    | ArtifactGetArtifactSBOMForbiddenResponseBody
+    | ArtifactGetArtifactSBOMNotFoundResponseBody
+    | ArtifactGetArtifactSBOMInternalServerResponseBody
+    | ArtifactGetArtifactSBOMBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactSBOMPathParams
+  >,
+  'path'
+> &
   ArtifactGetArtifactSBOMPathParams
 
 /**
  * get the SBOM for an artifact of a particular version
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const ArtifactGetArtifactSBOM = ({ artifactId, filename, ...props }: ArtifactGetArtifactSBOMProps) => (
-  <Get<void, void, void, ArtifactGetArtifactSBOMPathParams>
+  <Get<
+    void,
+    | ArtifactGetArtifactSBOMBadRequestResponseBody
+    | ArtifactGetArtifactSBOMUnauthorizedResponseBody
+    | ArtifactGetArtifactSBOMForbiddenResponseBody
+    | ArtifactGetArtifactSBOMNotFoundResponseBody
+    | ArtifactGetArtifactSBOMInternalServerResponseBody
+    | ArtifactGetArtifactSBOMBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactSBOMPathParams
+  >
     path={`/api/v1/artifacts/artifactId/${artifactId}/sbom/${filename}`}
     base={getConfig('ssca')}
     {...props}
@@ -553,16 +3145,39 @@ export const ArtifactGetArtifactSBOM = ({ artifactId, filename, ...props }: Arti
 )
 
 export type UseArtifactGetArtifactSBOMProps = Omit<
-  UseGetProps<void, void, void, ArtifactGetArtifactSBOMPathParams>,
+  UseGetProps<
+    void,
+    | ArtifactGetArtifactSBOMBadRequestResponseBody
+    | ArtifactGetArtifactSBOMUnauthorizedResponseBody
+    | ArtifactGetArtifactSBOMForbiddenResponseBody
+    | ArtifactGetArtifactSBOMNotFoundResponseBody
+    | ArtifactGetArtifactSBOMInternalServerResponseBody
+    | ArtifactGetArtifactSBOMBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactSBOMPathParams
+  >,
   'path'
 > &
   ArtifactGetArtifactSBOMPathParams
 
 /**
  * get the SBOM for an artifact of a particular version
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useArtifactGetArtifactSBOM = ({ artifactId, filename, ...props }: UseArtifactGetArtifactSBOMProps) =>
-  useGet<void, void, void, ArtifactGetArtifactSBOMPathParams>(
+  useGet<
+    void,
+    | ArtifactGetArtifactSBOMBadRequestResponseBody
+    | ArtifactGetArtifactSBOMUnauthorizedResponseBody
+    | ArtifactGetArtifactSBOMForbiddenResponseBody
+    | ArtifactGetArtifactSBOMNotFoundResponseBody
+    | ArtifactGetArtifactSBOMInternalServerResponseBody
+    | ArtifactGetArtifactSBOMBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactSBOMPathParams
+  >(
     (paramsInPath: ArtifactGetArtifactSBOMPathParams) =>
       `/api/v1/artifacts/artifactId/${paramsInPath.artifactId}/sbom/${paramsInPath.filename}`,
     { base: getConfig('ssca'), pathParams: { artifactId, filename }, ...props }
@@ -573,7 +3188,17 @@ export interface ArtifactGetArtifactFromExecutionIdPathParams {
 }
 
 export type ArtifactGetArtifactFromExecutionIdProps = Omit<
-  GetProps<GetUniqueArtifactResponseBody, void, void, ArtifactGetArtifactFromExecutionIdPathParams>,
+  GetProps<
+    ArtifactGetArtifactFromExecutionIDResponseBody,
+    | ArtifactGetArtifactFromExecutionIDBadRequestResponseBody
+    | ArtifactGetArtifactFromExecutionIDUnauthorizedResponseBody
+    | ArtifactGetArtifactFromExecutionIDForbiddenResponseBody
+    | ArtifactGetArtifactFromExecutionIDNotFoundResponseBody
+    | ArtifactGetArtifactFromExecutionIDInternalServerResponseBody
+    | ArtifactGetArtifactFromExecutionIDBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactFromExecutionIdPathParams
+  >,
   'path'
 > &
   ArtifactGetArtifactFromExecutionIdPathParams
@@ -582,12 +3207,25 @@ export type ArtifactGetArtifactFromExecutionIdProps = Omit<
  * getArtifactFromExecutionId artifact
  *
  * get the artifact by passing the step execution id and the artifact id
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const ArtifactGetArtifactFromExecutionId = ({
   stepExeuctionId,
   ...props
 }: ArtifactGetArtifactFromExecutionIdProps) => (
-  <Get<GetUniqueArtifactResponseBody, void, void, ArtifactGetArtifactFromExecutionIdPathParams>
+  <Get<
+    ArtifactGetArtifactFromExecutionIDResponseBody,
+    | ArtifactGetArtifactFromExecutionIDBadRequestResponseBody
+    | ArtifactGetArtifactFromExecutionIDUnauthorizedResponseBody
+    | ArtifactGetArtifactFromExecutionIDForbiddenResponseBody
+    | ArtifactGetArtifactFromExecutionIDNotFoundResponseBody
+    | ArtifactGetArtifactFromExecutionIDInternalServerResponseBody
+    | ArtifactGetArtifactFromExecutionIDBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactFromExecutionIdPathParams
+  >
     path={`/api/v1/artifacts/stepExecutions/${stepExeuctionId}`}
     base={getConfig('ssca')}
     {...props}
@@ -595,7 +3233,17 @@ export const ArtifactGetArtifactFromExecutionId = ({
 )
 
 export type UseArtifactGetArtifactFromExecutionIdProps = Omit<
-  UseGetProps<GetUniqueArtifactResponseBody, void, void, ArtifactGetArtifactFromExecutionIdPathParams>,
+  UseGetProps<
+    ArtifactGetArtifactFromExecutionIDResponseBody,
+    | ArtifactGetArtifactFromExecutionIDBadRequestResponseBody
+    | ArtifactGetArtifactFromExecutionIDUnauthorizedResponseBody
+    | ArtifactGetArtifactFromExecutionIDForbiddenResponseBody
+    | ArtifactGetArtifactFromExecutionIDNotFoundResponseBody
+    | ArtifactGetArtifactFromExecutionIDInternalServerResponseBody
+    | ArtifactGetArtifactFromExecutionIDBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactFromExecutionIdPathParams
+  >,
   'path'
 > &
   ArtifactGetArtifactFromExecutionIdPathParams
@@ -604,12 +3252,25 @@ export type UseArtifactGetArtifactFromExecutionIdProps = Omit<
  * getArtifactFromExecutionId artifact
  *
  * get the artifact by passing the step execution id and the artifact id
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useArtifactGetArtifactFromExecutionId = ({
   stepExeuctionId,
   ...props
 }: UseArtifactGetArtifactFromExecutionIdProps) =>
-  useGet<GetUniqueArtifactResponseBody, void, void, ArtifactGetArtifactFromExecutionIdPathParams>(
+  useGet<
+    ArtifactGetArtifactFromExecutionIDResponseBody,
+    | ArtifactGetArtifactFromExecutionIDBadRequestResponseBody
+    | ArtifactGetArtifactFromExecutionIDUnauthorizedResponseBody
+    | ArtifactGetArtifactFromExecutionIDForbiddenResponseBody
+    | ArtifactGetArtifactFromExecutionIDNotFoundResponseBody
+    | ArtifactGetArtifactFromExecutionIDInternalServerResponseBody
+    | ArtifactGetArtifactFromExecutionIDBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactFromExecutionIdPathParams
+  >(
     (paramsInPath: ArtifactGetArtifactFromExecutionIdPathParams) =>
       `/api/v1/artifacts/stepExecutions/${paramsInPath.stepExeuctionId}`,
     { base: getConfig('ssca'), pathParams: { stepExeuctionId }, ...props }
@@ -623,16 +3284,39 @@ export interface ArtifactGetArtifactsByIdPathParams {
 }
 
 export type ArtifactGetArtifactsByIdProps = Omit<
-  GetProps<GetArtifactsByIDOKResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>,
+  GetProps<
+    ArtifactGetArtifactsByIDOKResponseBody,
+    | ArtifactGetArtifactsByIDBadRequestResponseBody
+    | ArtifactGetArtifactsByIDUnauthorizedResponseBody
+    | ArtifactGetArtifactsByIDForbiddenResponseBody
+    | ArtifactGetArtifactsByIDNotFoundResponseBody
+    | ArtifactGetArtifactsByIDInternalServerResponseBody
+    | ArtifactGetArtifactsByIDBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactsByIdPathParams
+  >,
   'path'
 > &
   ArtifactGetArtifactsByIdPathParams
 
 /**
  * get artifacts by passing an artifact id
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const ArtifactGetArtifactsById = ({ artifactId, ...props }: ArtifactGetArtifactsByIdProps) => (
-  <Get<GetArtifactsByIDOKResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>
+  <Get<
+    ArtifactGetArtifactsByIDOKResponseBody,
+    | ArtifactGetArtifactsByIDBadRequestResponseBody
+    | ArtifactGetArtifactsByIDUnauthorizedResponseBody
+    | ArtifactGetArtifactsByIDForbiddenResponseBody
+    | ArtifactGetArtifactsByIDNotFoundResponseBody
+    | ArtifactGetArtifactsByIDInternalServerResponseBody
+    | ArtifactGetArtifactsByIDBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactsByIdPathParams
+  >
     path={`/api/v1/artifacts/${artifactId}`}
     base={getConfig('ssca')}
     {...props}
@@ -640,19 +3324,43 @@ export const ArtifactGetArtifactsById = ({ artifactId, ...props }: ArtifactGetAr
 )
 
 export type UseArtifactGetArtifactsByIdProps = Omit<
-  UseGetProps<GetArtifactsByIDOKResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>,
+  UseGetProps<
+    ArtifactGetArtifactsByIDOKResponseBody,
+    | ArtifactGetArtifactsByIDBadRequestResponseBody
+    | ArtifactGetArtifactsByIDUnauthorizedResponseBody
+    | ArtifactGetArtifactsByIDForbiddenResponseBody
+    | ArtifactGetArtifactsByIDNotFoundResponseBody
+    | ArtifactGetArtifactsByIDInternalServerResponseBody
+    | ArtifactGetArtifactsByIDBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactsByIdPathParams
+  >,
   'path'
 > &
   ArtifactGetArtifactsByIdPathParams
 
 /**
  * get artifacts by passing an artifact id
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useArtifactGetArtifactsById = ({ artifactId, ...props }: UseArtifactGetArtifactsByIdProps) =>
-  useGet<GetArtifactsByIDOKResponseBody, void, void, ArtifactGetArtifactsByIdPathParams>(
-    (paramsInPath: ArtifactGetArtifactsByIdPathParams) => `/api/v1/artifacts/${paramsInPath.artifactId}`,
-    { base: getConfig('ssca'), pathParams: { artifactId }, ...props }
-  )
+  useGet<
+    ArtifactGetArtifactsByIDOKResponseBody,
+    | ArtifactGetArtifactsByIDBadRequestResponseBody
+    | ArtifactGetArtifactsByIDUnauthorizedResponseBody
+    | ArtifactGetArtifactsByIDForbiddenResponseBody
+    | ArtifactGetArtifactsByIDNotFoundResponseBody
+    | ArtifactGetArtifactsByIDInternalServerResponseBody
+    | ArtifactGetArtifactsByIDBadGatewayResponseBody,
+    void,
+    ArtifactGetArtifactsByIdPathParams
+  >((paramsInPath: ArtifactGetArtifactsByIdPathParams) => `/api/v1/artifacts/${paramsInPath.artifactId}`, {
+    base: getConfig('ssca'),
+    pathParams: { artifactId },
+    ...props
+  })
 
 export interface ArtifactGetSBOMFromExecutionIdPathParams {
   artifactId: string
@@ -661,7 +3369,17 @@ export interface ArtifactGetSBOMFromExecutionIdPathParams {
 }
 
 export type ArtifactGetSBOMFromExecutionIdProps = Omit<
-  GetProps<void, void, void, ArtifactGetSBOMFromExecutionIdPathParams>,
+  GetProps<
+    void,
+    | ArtifactGetSBOMFromExecutionIDBadRequestResponseBody
+    | ArtifactGetSBOMFromExecutionIDUnauthorizedResponseBody
+    | ArtifactGetSBOMFromExecutionIDForbiddenResponseBody
+    | ArtifactGetSBOMFromExecutionIDNotFoundResponseBody
+    | ArtifactGetSBOMFromExecutionIDInternalServerResponseBody
+    | ArtifactGetSBOMFromExecutionIDBadGatewayResponseBody,
+    void,
+    ArtifactGetSBOMFromExecutionIdPathParams
+  >,
   'path'
 > &
   ArtifactGetSBOMFromExecutionIdPathParams
@@ -670,6 +3388,9 @@ export type ArtifactGetSBOMFromExecutionIdProps = Omit<
  * getSBOMFromExecutionId artifact
  *
  * get the SBOM by passing the step execution id and the artifact id
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const ArtifactGetSBOMFromExecutionId = ({
   artifactId,
@@ -677,7 +3398,17 @@ export const ArtifactGetSBOMFromExecutionId = ({
   filename,
   ...props
 }: ArtifactGetSBOMFromExecutionIdProps) => (
-  <Get<void, void, void, ArtifactGetSBOMFromExecutionIdPathParams>
+  <Get<
+    void,
+    | ArtifactGetSBOMFromExecutionIDBadRequestResponseBody
+    | ArtifactGetSBOMFromExecutionIDUnauthorizedResponseBody
+    | ArtifactGetSBOMFromExecutionIDForbiddenResponseBody
+    | ArtifactGetSBOMFromExecutionIDNotFoundResponseBody
+    | ArtifactGetSBOMFromExecutionIDInternalServerResponseBody
+    | ArtifactGetSBOMFromExecutionIDBadGatewayResponseBody,
+    void,
+    ArtifactGetSBOMFromExecutionIdPathParams
+  >
     path={`/api/v1/artifacts/${artifactId}/stepExecutions/${stepExeuctionId}/sbom/${filename}`}
     base={getConfig('ssca')}
     {...props}
@@ -685,7 +3416,17 @@ export const ArtifactGetSBOMFromExecutionId = ({
 )
 
 export type UseArtifactGetSBOMFromExecutionIdProps = Omit<
-  UseGetProps<void, void, void, ArtifactGetSBOMFromExecutionIdPathParams>,
+  UseGetProps<
+    void,
+    | ArtifactGetSBOMFromExecutionIDBadRequestResponseBody
+    | ArtifactGetSBOMFromExecutionIDUnauthorizedResponseBody
+    | ArtifactGetSBOMFromExecutionIDForbiddenResponseBody
+    | ArtifactGetSBOMFromExecutionIDNotFoundResponseBody
+    | ArtifactGetSBOMFromExecutionIDInternalServerResponseBody
+    | ArtifactGetSBOMFromExecutionIDBadGatewayResponseBody,
+    void,
+    ArtifactGetSBOMFromExecutionIdPathParams
+  >,
   'path'
 > &
   ArtifactGetSBOMFromExecutionIdPathParams
@@ -694,6 +3435,9 @@ export type UseArtifactGetSBOMFromExecutionIdProps = Omit<
  * getSBOMFromExecutionId artifact
  *
  * get the SBOM by passing the step execution id and the artifact id
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useArtifactGetSBOMFromExecutionId = ({
   artifactId,
@@ -701,7 +3445,17 @@ export const useArtifactGetSBOMFromExecutionId = ({
   filename,
   ...props
 }: UseArtifactGetSBOMFromExecutionIdProps) =>
-  useGet<void, void, void, ArtifactGetSBOMFromExecutionIdPathParams>(
+  useGet<
+    void,
+    | ArtifactGetSBOMFromExecutionIDBadRequestResponseBody
+    | ArtifactGetSBOMFromExecutionIDUnauthorizedResponseBody
+    | ArtifactGetSBOMFromExecutionIDForbiddenResponseBody
+    | ArtifactGetSBOMFromExecutionIDNotFoundResponseBody
+    | ArtifactGetSBOMFromExecutionIDInternalServerResponseBody
+    | ArtifactGetSBOMFromExecutionIDBadGatewayResponseBody,
+    void,
+    ArtifactGetSBOMFromExecutionIdPathParams
+  >(
     (paramsInPath: ArtifactGetSBOMFromExecutionIdPathParams) =>
       `/api/v1/artifacts/${paramsInPath.artifactId}/stepExecutions/${paramsInPath.stepExeuctionId}/sbom/${paramsInPath.filename}`,
     { base: getConfig('ssca'), pathParams: { artifactId, stepExeuctionId, filename }, ...props }
@@ -714,13 +3468,26 @@ export interface ArtifactGetUniqueArtifactPathParams {
 }
 
 export type ArtifactGetUniqueArtifactProps = Omit<
-  GetProps<GetUniqueArtifactResponseBody, void, void, ArtifactGetUniqueArtifactPathParams>,
+  GetProps<
+    ArtifactGetUniqueArtifactResponseBody,
+    | ArtifactGetUniqueArtifactBadRequestResponseBody
+    | ArtifactGetUniqueArtifactUnauthorizedResponseBody
+    | ArtifactGetUniqueArtifactForbiddenResponseBody
+    | ArtifactGetUniqueArtifactNotFoundResponseBody
+    | ArtifactGetUniqueArtifactInternalServerResponseBody
+    | ArtifactGetUniqueArtifactBadGatewayResponseBody,
+    void,
+    ArtifactGetUniqueArtifactPathParams
+  >,
   'path'
 > &
   ArtifactGetUniqueArtifactPathParams
 
 /**
  * get a unique by passing an artifact id and other exeuction details
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const ArtifactGetUniqueArtifact = ({
   stepExecutionId,
@@ -728,7 +3495,17 @@ export const ArtifactGetUniqueArtifact = ({
   stepId,
   ...props
 }: ArtifactGetUniqueArtifactProps) => (
-  <Get<GetUniqueArtifactResponseBody, void, void, ArtifactGetUniqueArtifactPathParams>
+  <Get<
+    ArtifactGetUniqueArtifactResponseBody,
+    | ArtifactGetUniqueArtifactBadRequestResponseBody
+    | ArtifactGetUniqueArtifactUnauthorizedResponseBody
+    | ArtifactGetUniqueArtifactForbiddenResponseBody
+    | ArtifactGetUniqueArtifactNotFoundResponseBody
+    | ArtifactGetUniqueArtifactInternalServerResponseBody
+    | ArtifactGetUniqueArtifactBadGatewayResponseBody,
+    void,
+    ArtifactGetUniqueArtifactPathParams
+  >
     path={`/api/v1/artifacts/${stepExecutionId}/${stageId}/${stepId}`}
     base={getConfig('ssca')}
     {...props}
@@ -736,13 +3513,26 @@ export const ArtifactGetUniqueArtifact = ({
 )
 
 export type UseArtifactGetUniqueArtifactProps = Omit<
-  UseGetProps<GetUniqueArtifactResponseBody, void, void, ArtifactGetUniqueArtifactPathParams>,
+  UseGetProps<
+    ArtifactGetUniqueArtifactResponseBody,
+    | ArtifactGetUniqueArtifactBadRequestResponseBody
+    | ArtifactGetUniqueArtifactUnauthorizedResponseBody
+    | ArtifactGetUniqueArtifactForbiddenResponseBody
+    | ArtifactGetUniqueArtifactNotFoundResponseBody
+    | ArtifactGetUniqueArtifactInternalServerResponseBody
+    | ArtifactGetUniqueArtifactBadGatewayResponseBody,
+    void,
+    ArtifactGetUniqueArtifactPathParams
+  >,
   'path'
 > &
   ArtifactGetUniqueArtifactPathParams
 
 /**
  * get a unique by passing an artifact id and other exeuction details
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useArtifactGetUniqueArtifact = ({
   stepExecutionId,
@@ -750,7 +3540,17 @@ export const useArtifactGetUniqueArtifact = ({
   stepId,
   ...props
 }: UseArtifactGetUniqueArtifactProps) =>
-  useGet<GetUniqueArtifactResponseBody, void, void, ArtifactGetUniqueArtifactPathParams>(
+  useGet<
+    ArtifactGetUniqueArtifactResponseBody,
+    | ArtifactGetUniqueArtifactBadRequestResponseBody
+    | ArtifactGetUniqueArtifactUnauthorizedResponseBody
+    | ArtifactGetUniqueArtifactForbiddenResponseBody
+    | ArtifactGetUniqueArtifactNotFoundResponseBody
+    | ArtifactGetUniqueArtifactInternalServerResponseBody
+    | ArtifactGetUniqueArtifactBadGatewayResponseBody,
+    void,
+    ArtifactGetUniqueArtifactPathParams
+  >(
     (paramsInPath: ArtifactGetUniqueArtifactPathParams) =>
       `/api/v1/artifacts/${paramsInPath.stepExecutionId}/${paramsInPath.stageId}/${paramsInPath.stepId}`,
     { base: getConfig('ssca'), pathParams: { stepExecutionId, stageId, stepId }, ...props }
@@ -772,15 +3572,40 @@ export interface SbomprocessorEnforcesbomQueryParams {
 }
 
 export type SbomprocessorEnforcesbomProps = Omit<
-  MutateProps<EnforcesbomResponseBody, void, SbomprocessorEnforcesbomQueryParams, EnforcesbomRequestBody, void>,
+  MutateProps<
+    SbomprocessorEnforcesbomResponseBody,
+    | SbomprocessorEnforcesbomBadRequestResponseBody
+    | SbomprocessorEnforcesbomUnauthorizedResponseBody
+    | SbomprocessorEnforcesbomForbiddenResponseBody
+    | SbomprocessorEnforcesbomNotFoundResponseBody
+    | SbomprocessorEnforcesbomInternalServerResponseBody
+    | SbomprocessorEnforcesbomBadGatewayResponseBody,
+    SbomprocessorEnforcesbomQueryParams,
+    SbomprocessorEnforcesbomRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 /**
  * enforce an sbom
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const SbomprocessorEnforcesbom = (props: SbomprocessorEnforcesbomProps) => (
-  <Mutate<EnforcesbomResponseBody, void, SbomprocessorEnforcesbomQueryParams, EnforcesbomRequestBody, void>
+  <Mutate<
+    SbomprocessorEnforcesbomResponseBody,
+    | SbomprocessorEnforcesbomBadRequestResponseBody
+    | SbomprocessorEnforcesbomUnauthorizedResponseBody
+    | SbomprocessorEnforcesbomForbiddenResponseBody
+    | SbomprocessorEnforcesbomNotFoundResponseBody
+    | SbomprocessorEnforcesbomInternalServerResponseBody
+    | SbomprocessorEnforcesbomBadGatewayResponseBody,
+    SbomprocessorEnforcesbomQueryParams,
+    SbomprocessorEnforcesbomRequestBody,
+    void
+  >
     verb="POST"
     path={`/api/v1/sbom/enforcement`}
     base={getConfig('ssca')}
@@ -789,19 +3614,40 @@ export const SbomprocessorEnforcesbom = (props: SbomprocessorEnforcesbomProps) =
 )
 
 export type UseSbomprocessorEnforcesbomProps = Omit<
-  UseMutateProps<EnforcesbomResponseBody, void, SbomprocessorEnforcesbomQueryParams, EnforcesbomRequestBody, void>,
+  UseMutateProps<
+    SbomprocessorEnforcesbomResponseBody,
+    | SbomprocessorEnforcesbomBadRequestResponseBody
+    | SbomprocessorEnforcesbomUnauthorizedResponseBody
+    | SbomprocessorEnforcesbomForbiddenResponseBody
+    | SbomprocessorEnforcesbomNotFoundResponseBody
+    | SbomprocessorEnforcesbomInternalServerResponseBody
+    | SbomprocessorEnforcesbomBadGatewayResponseBody,
+    SbomprocessorEnforcesbomQueryParams,
+    SbomprocessorEnforcesbomRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 /**
  * enforce an sbom
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useSbomprocessorEnforcesbom = (props: UseSbomprocessorEnforcesbomProps) =>
-  useMutate<EnforcesbomResponseBody, void, SbomprocessorEnforcesbomQueryParams, EnforcesbomRequestBody, void>(
-    'POST',
-    `/api/v1/sbom/enforcement`,
-    { base: getConfig('ssca'), ...props }
-  )
+  useMutate<
+    SbomprocessorEnforcesbomResponseBody,
+    | SbomprocessorEnforcesbomBadRequestResponseBody
+    | SbomprocessorEnforcesbomUnauthorizedResponseBody
+    | SbomprocessorEnforcesbomForbiddenResponseBody
+    | SbomprocessorEnforcesbomNotFoundResponseBody
+    | SbomprocessorEnforcesbomInternalServerResponseBody
+    | SbomprocessorEnforcesbomBadGatewayResponseBody,
+    SbomprocessorEnforcesbomQueryParams,
+    SbomprocessorEnforcesbomRequestBody,
+    void
+  >('POST', `/api/v1/sbom/enforcement`, { base: getConfig('ssca'), ...props })
 
 export interface EnforcementGetEnforcementResultsByIdQueryParams {
   /**
@@ -812,6 +3658,9 @@ export interface EnforcementGetEnforcementResultsByIdQueryParams {
    * Number of results per page
    */
   pageSize?: number
+  searchTerm?: string
+  sort?: string
+  order?: string
 }
 
 export interface EnforcementGetEnforcementResultsByIdPathParams {
@@ -823,8 +3672,13 @@ export interface EnforcementGetEnforcementResultsByIdPathParams {
 
 export type EnforcementGetEnforcementResultsByIdProps = Omit<
   GetProps<
-    GetEnforcementResultsByIDResponseBody,
-    void,
+    EnforcementGetEnforcementResultsByIDResponseBody,
+    | EnforcementGetEnforcementResultsByIDBadRequestResponseBody
+    | EnforcementGetEnforcementResultsByIDUnauthorizedResponseBody
+    | EnforcementGetEnforcementResultsByIDForbiddenResponseBody
+    | EnforcementGetEnforcementResultsByIDNotFoundResponseBody
+    | EnforcementGetEnforcementResultsByIDInternalServerResponseBody
+    | EnforcementGetEnforcementResultsByIDBadGatewayResponseBody,
     EnforcementGetEnforcementResultsByIdQueryParams,
     EnforcementGetEnforcementResultsByIdPathParams
   >,
@@ -834,14 +3688,22 @@ export type EnforcementGetEnforcementResultsByIdProps = Omit<
 
 /**
  * get enforcement by passing an enforcement id
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const EnforcementGetEnforcementResultsById = ({
   enforcementId,
   ...props
 }: EnforcementGetEnforcementResultsByIdProps) => (
   <Get<
-    GetEnforcementResultsByIDResponseBody,
-    void,
+    EnforcementGetEnforcementResultsByIDResponseBody,
+    | EnforcementGetEnforcementResultsByIDBadRequestResponseBody
+    | EnforcementGetEnforcementResultsByIDUnauthorizedResponseBody
+    | EnforcementGetEnforcementResultsByIDForbiddenResponseBody
+    | EnforcementGetEnforcementResultsByIDNotFoundResponseBody
+    | EnforcementGetEnforcementResultsByIDInternalServerResponseBody
+    | EnforcementGetEnforcementResultsByIDBadGatewayResponseBody,
     EnforcementGetEnforcementResultsByIdQueryParams,
     EnforcementGetEnforcementResultsByIdPathParams
   >
@@ -853,8 +3715,13 @@ export const EnforcementGetEnforcementResultsById = ({
 
 export type UseEnforcementGetEnforcementResultsByIdProps = Omit<
   UseGetProps<
-    GetEnforcementResultsByIDResponseBody,
-    void,
+    EnforcementGetEnforcementResultsByIDResponseBody,
+    | EnforcementGetEnforcementResultsByIDBadRequestResponseBody
+    | EnforcementGetEnforcementResultsByIDUnauthorizedResponseBody
+    | EnforcementGetEnforcementResultsByIDForbiddenResponseBody
+    | EnforcementGetEnforcementResultsByIDNotFoundResponseBody
+    | EnforcementGetEnforcementResultsByIDInternalServerResponseBody
+    | EnforcementGetEnforcementResultsByIDBadGatewayResponseBody,
     EnforcementGetEnforcementResultsByIdQueryParams,
     EnforcementGetEnforcementResultsByIdPathParams
   >,
@@ -864,14 +3731,22 @@ export type UseEnforcementGetEnforcementResultsByIdProps = Omit<
 
 /**
  * get enforcement by passing an enforcement id
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useEnforcementGetEnforcementResultsById = ({
   enforcementId,
   ...props
 }: UseEnforcementGetEnforcementResultsByIdProps) =>
   useGet<
-    GetEnforcementResultsByIDResponseBody,
-    void,
+    EnforcementGetEnforcementResultsByIDResponseBody,
+    | EnforcementGetEnforcementResultsByIDBadRequestResponseBody
+    | EnforcementGetEnforcementResultsByIDUnauthorizedResponseBody
+    | EnforcementGetEnforcementResultsByIDForbiddenResponseBody
+    | EnforcementGetEnforcementResultsByIDNotFoundResponseBody
+    | EnforcementGetEnforcementResultsByIDInternalServerResponseBody
+    | EnforcementGetEnforcementResultsByIDBadGatewayResponseBody,
     EnforcementGetEnforcementResultsByIdQueryParams,
     EnforcementGetEnforcementResultsByIdPathParams
   >(
@@ -889,8 +3764,13 @@ export interface EnforcementGetEnforcementResultSummaryByIdPathParams {
 
 export type EnforcementGetEnforcementResultSummaryByIdProps = Omit<
   GetProps<
-    GetEnforcementResultSummaryByIDResponseBody,
-    void,
+    EnforcementGetEnforcementResultSummaryByIDResponseBody,
+    | EnforcementGetEnforcementResultSummaryByIDBadRequestResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDUnauthorizedResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDForbiddenResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDNotFoundResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDInternalServerResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDBadGatewayResponseBody,
     void,
     EnforcementGetEnforcementResultSummaryByIdPathParams
   >,
@@ -900,12 +3780,25 @@ export type EnforcementGetEnforcementResultSummaryByIdProps = Omit<
 
 /**
  * get enforcement by passing an enforcement id
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const EnforcementGetEnforcementResultSummaryById = ({
   enforcementId,
   ...props
 }: EnforcementGetEnforcementResultSummaryByIdProps) => (
-  <Get<GetEnforcementResultSummaryByIDResponseBody, void, void, EnforcementGetEnforcementResultSummaryByIdPathParams>
+  <Get<
+    EnforcementGetEnforcementResultSummaryByIDResponseBody,
+    | EnforcementGetEnforcementResultSummaryByIDBadRequestResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDUnauthorizedResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDForbiddenResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDNotFoundResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDInternalServerResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDBadGatewayResponseBody,
+    void,
+    EnforcementGetEnforcementResultSummaryByIdPathParams
+  >
     path={`/api/v1/sbom/enforcement/${enforcementId}/summary`}
     base={getConfig('ssca')}
     {...props}
@@ -914,8 +3807,13 @@ export const EnforcementGetEnforcementResultSummaryById = ({
 
 export type UseEnforcementGetEnforcementResultSummaryByIdProps = Omit<
   UseGetProps<
-    GetEnforcementResultSummaryByIDResponseBody,
-    void,
+    EnforcementGetEnforcementResultSummaryByIDResponseBody,
+    | EnforcementGetEnforcementResultSummaryByIDBadRequestResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDUnauthorizedResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDForbiddenResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDNotFoundResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDInternalServerResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDBadGatewayResponseBody,
     void,
     EnforcementGetEnforcementResultSummaryByIdPathParams
   >,
@@ -925,12 +3823,25 @@ export type UseEnforcementGetEnforcementResultSummaryByIdProps = Omit<
 
 /**
  * get enforcement by passing an enforcement id
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useEnforcementGetEnforcementResultSummaryById = ({
   enforcementId,
   ...props
 }: UseEnforcementGetEnforcementResultSummaryByIdProps) =>
-  useGet<GetEnforcementResultSummaryByIDResponseBody, void, void, EnforcementGetEnforcementResultSummaryByIdPathParams>(
+  useGet<
+    EnforcementGetEnforcementResultSummaryByIDResponseBody,
+    | EnforcementGetEnforcementResultSummaryByIDBadRequestResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDUnauthorizedResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDForbiddenResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDNotFoundResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDInternalServerResponseBody
+    | EnforcementGetEnforcementResultSummaryByIDBadGatewayResponseBody,
+    void,
+    EnforcementGetEnforcementResultSummaryByIdPathParams
+  >(
     (paramsInPath: EnforcementGetEnforcementResultSummaryByIdPathParams) =>
       `/api/v1/sbom/enforcement/${paramsInPath.enforcementId}/summary`,
     { base: getConfig('ssca'), pathParams: { enforcementId }, ...props }
@@ -952,15 +3863,40 @@ export interface SbomprocessorProcesssbomQueryParams {
 }
 
 export type SbomprocessorProcesssbomProps = Omit<
-  MutateProps<ProcesssbomResponseBody, void, SbomprocessorProcesssbomQueryParams, ProcesssbomRequestBody, void>,
+  MutateProps<
+    SbomprocessorProcesssbomResponseBody,
+    | SbomprocessorProcesssbomBadRequestResponseBody
+    | SbomprocessorProcesssbomUnauthorizedResponseBody
+    | SbomprocessorProcesssbomForbiddenResponseBody
+    | SbomprocessorProcesssbomNotFoundResponseBody
+    | SbomprocessorProcesssbomInternalServerResponseBody
+    | SbomprocessorProcesssbomBadGatewayResponseBody,
+    SbomprocessorProcesssbomQueryParams,
+    SbomprocessorProcesssbomRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 /**
  * process & inject sbom
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const SbomprocessorProcesssbom = (props: SbomprocessorProcesssbomProps) => (
-  <Mutate<ProcesssbomResponseBody, void, SbomprocessorProcesssbomQueryParams, ProcesssbomRequestBody, void>
+  <Mutate<
+    SbomprocessorProcesssbomResponseBody,
+    | SbomprocessorProcesssbomBadRequestResponseBody
+    | SbomprocessorProcesssbomUnauthorizedResponseBody
+    | SbomprocessorProcesssbomForbiddenResponseBody
+    | SbomprocessorProcesssbomNotFoundResponseBody
+    | SbomprocessorProcesssbomInternalServerResponseBody
+    | SbomprocessorProcesssbomBadGatewayResponseBody,
+    SbomprocessorProcesssbomQueryParams,
+    SbomprocessorProcesssbomRequestBody,
+    void
+  >
     verb="POST"
     path={`/api/v1/sbom/process`}
     base={getConfig('ssca')}
@@ -969,19 +3905,40 @@ export const SbomprocessorProcesssbom = (props: SbomprocessorProcesssbomProps) =
 )
 
 export type UseSbomprocessorProcesssbomProps = Omit<
-  UseMutateProps<ProcesssbomResponseBody, void, SbomprocessorProcesssbomQueryParams, ProcesssbomRequestBody, void>,
+  UseMutateProps<
+    SbomprocessorProcesssbomResponseBody,
+    | SbomprocessorProcesssbomBadRequestResponseBody
+    | SbomprocessorProcesssbomUnauthorizedResponseBody
+    | SbomprocessorProcesssbomForbiddenResponseBody
+    | SbomprocessorProcesssbomNotFoundResponseBody
+    | SbomprocessorProcesssbomInternalServerResponseBody
+    | SbomprocessorProcesssbomBadGatewayResponseBody,
+    SbomprocessorProcesssbomQueryParams,
+    SbomprocessorProcesssbomRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 /**
  * process & inject sbom
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useSbomprocessorProcesssbom = (props: UseSbomprocessorProcesssbomProps) =>
-  useMutate<ProcesssbomResponseBody, void, SbomprocessorProcesssbomQueryParams, ProcesssbomRequestBody, void>(
-    'POST',
-    `/api/v1/sbom/process`,
-    { base: getConfig('ssca'), ...props }
-  )
+  useMutate<
+    SbomprocessorProcesssbomResponseBody,
+    | SbomprocessorProcesssbomBadRequestResponseBody
+    | SbomprocessorProcesssbomUnauthorizedResponseBody
+    | SbomprocessorProcesssbomForbiddenResponseBody
+    | SbomprocessorProcesssbomNotFoundResponseBody
+    | SbomprocessorProcesssbomInternalServerResponseBody
+    | SbomprocessorProcesssbomBadGatewayResponseBody,
+    SbomprocessorProcesssbomQueryParams,
+    SbomprocessorProcesssbomRequestBody,
+    void
+  >('POST', `/api/v1/sbom/process`, { base: getConfig('ssca'), ...props })
 
 export interface SearchFindanyQueryParams {
   /**
@@ -999,15 +3956,40 @@ export interface SearchFindanyQueryParams {
 }
 
 export type SearchFindanyProps = Omit<
-  MutateProps<FindResponseBody, void, SearchFindanyQueryParams, FindanyRequestBody, void>,
+  MutateProps<
+    SearchFindanyResponseBody,
+    | SearchFindanyBadRequestResponseBody
+    | SearchFindanyUnauthorizedResponseBody
+    | SearchFindanyForbiddenResponseBody
+    | SearchFindanyNotFoundResponseBody
+    | SearchFindanyInternalServerResponseBody
+    | SearchFindanyBadGatewayResponseBody,
+    SearchFindanyQueryParams,
+    SearchFindanyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 /**
  * Find a package references by name
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const SearchFindany = (props: SearchFindanyProps) => (
-  <Mutate<FindResponseBody, void, SearchFindanyQueryParams, FindanyRequestBody, void>
+  <Mutate<
+    SearchFindanyResponseBody,
+    | SearchFindanyBadRequestResponseBody
+    | SearchFindanyUnauthorizedResponseBody
+    | SearchFindanyForbiddenResponseBody
+    | SearchFindanyNotFoundResponseBody
+    | SearchFindanyInternalServerResponseBody
+    | SearchFindanyBadGatewayResponseBody,
+    SearchFindanyQueryParams,
+    SearchFindanyRequestBody,
+    void
+  >
     verb="POST"
     path={`/api/v1/search/findany`}
     base={getConfig('ssca')}
@@ -1016,19 +3998,40 @@ export const SearchFindany = (props: SearchFindanyProps) => (
 )
 
 export type UseSearchFindanyProps = Omit<
-  UseMutateProps<FindResponseBody, void, SearchFindanyQueryParams, FindanyRequestBody, void>,
+  UseMutateProps<
+    SearchFindanyResponseBody,
+    | SearchFindanyBadRequestResponseBody
+    | SearchFindanyUnauthorizedResponseBody
+    | SearchFindanyForbiddenResponseBody
+    | SearchFindanyNotFoundResponseBody
+    | SearchFindanyInternalServerResponseBody
+    | SearchFindanyBadGatewayResponseBody,
+    SearchFindanyQueryParams,
+    SearchFindanyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
 /**
  * Find a package references by name
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useSearchFindany = (props: UseSearchFindanyProps) =>
-  useMutate<FindResponseBody, void, SearchFindanyQueryParams, FindanyRequestBody, void>(
-    'POST',
-    `/api/v1/search/findany`,
-    { base: getConfig('ssca'), ...props }
-  )
+  useMutate<
+    SearchFindanyResponseBody,
+    | SearchFindanyBadRequestResponseBody
+    | SearchFindanyUnauthorizedResponseBody
+    | SearchFindanyForbiddenResponseBody
+    | SearchFindanyNotFoundResponseBody
+    | SearchFindanyInternalServerResponseBody
+    | SearchFindanyBadGatewayResponseBody,
+    SearchFindanyQueryParams,
+    SearchFindanyRequestBody,
+    void
+  >('POST', `/api/v1/search/findany`, { base: getConfig('ssca'), ...props })
 
 export interface SearchFindQueryParams {
   /**
@@ -1053,16 +4056,39 @@ export interface SearchFindPathParams {
 }
 
 export type SearchFindProps = Omit<
-  GetProps<FindResponseBody, void, SearchFindQueryParams, SearchFindPathParams>,
+  GetProps<
+    SearchFindResponseBody,
+    | SearchFindBadRequestResponseBody
+    | SearchFindUnauthorizedResponseBody
+    | SearchFindForbiddenResponseBody
+    | SearchFindNotFoundResponseBody
+    | SearchFindInternalServerResponseBody
+    | SearchFindBadGatewayResponseBody,
+    SearchFindQueryParams,
+    SearchFindPathParams
+  >,
   'path'
 > &
   SearchFindPathParams
 
 /**
  * Find a package references by name
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const SearchFind = ({ packagename, ...props }: SearchFindProps) => (
-  <Get<FindResponseBody, void, SearchFindQueryParams, SearchFindPathParams>
+  <Get<
+    SearchFindResponseBody,
+    | SearchFindBadRequestResponseBody
+    | SearchFindUnauthorizedResponseBody
+    | SearchFindForbiddenResponseBody
+    | SearchFindNotFoundResponseBody
+    | SearchFindInternalServerResponseBody
+    | SearchFindBadGatewayResponseBody,
+    SearchFindQueryParams,
+    SearchFindPathParams
+  >
     path={`/api/v1/search/${packagename}`}
     base={getConfig('ssca')}
     {...props}
@@ -1070,55 +4096,122 @@ export const SearchFind = ({ packagename, ...props }: SearchFindProps) => (
 )
 
 export type UseSearchFindProps = Omit<
-  UseGetProps<FindResponseBody, void, SearchFindQueryParams, SearchFindPathParams>,
+  UseGetProps<
+    SearchFindResponseBody,
+    | SearchFindBadRequestResponseBody
+    | SearchFindUnauthorizedResponseBody
+    | SearchFindForbiddenResponseBody
+    | SearchFindNotFoundResponseBody
+    | SearchFindInternalServerResponseBody
+    | SearchFindBadGatewayResponseBody,
+    SearchFindQueryParams,
+    SearchFindPathParams
+  >,
   'path'
 > &
   SearchFindPathParams
 
 /**
  * Find a package references by name
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
 export const useSearchFind = ({ packagename, ...props }: UseSearchFindProps) =>
-  useGet<FindResponseBody, void, SearchFindQueryParams, SearchFindPathParams>(
-    (paramsInPath: SearchFindPathParams) => `/api/v1/search/${paramsInPath.packagename}`,
-    { base: getConfig('ssca'), pathParams: { packagename }, ...props }
-  )
+  useGet<
+    SearchFindResponseBody,
+    | SearchFindBadRequestResponseBody
+    | SearchFindUnauthorizedResponseBody
+    | SearchFindForbiddenResponseBody
+    | SearchFindNotFoundResponseBody
+    | SearchFindInternalServerResponseBody
+    | SearchFindBadGatewayResponseBody,
+    SearchFindQueryParams,
+    SearchFindPathParams
+  >((paramsInPath: SearchFindPathParams) => `/api/v1/search/${paramsInPath.packagename}`, {
+    base: getConfig('ssca'),
+    pathParams: { packagename },
+    ...props
+  })
 
-export type SystemHealthProps = Omit<GetProps<void, void, void, void>, 'path'>
+export type SystemHealthProps = Omit<
+  GetProps<void, SystemHealthInternalServerResponseBody | SystemHealthBadGatewayResponseBody, void, void>,
+  'path'
+>
 
 /**
  * Check service health
  */
 export const SystemHealth = (props: SystemHealthProps) => (
-  <Get<void, void, void, void> path={`/api/v1/system/health`} base={getConfig('ssca')} {...props} />
+  <Get<void, SystemHealthInternalServerResponseBody | SystemHealthBadGatewayResponseBody, void, void>
+    path={`/api/v1/system/health`}
+    base={getConfig('ssca')}
+    {...props}
+  />
 )
 
-export type UseSystemHealthProps = Omit<UseGetProps<void, void, void, void>, 'path'>
+export type UseSystemHealthProps = Omit<
+  UseGetProps<void, SystemHealthInternalServerResponseBody | SystemHealthBadGatewayResponseBody, void, void>,
+  'path'
+>
 
 /**
  * Check service health
  */
 export const useSystemHealth = (props: UseSystemHealthProps) =>
-  useGet<void, void, void, void>(`/api/v1/system/health`, { base: getConfig('ssca'), ...props })
+  useGet<void, SystemHealthInternalServerResponseBody | SystemHealthBadGatewayResponseBody, void, void>(
+    `/api/v1/system/health`,
+    { base: getConfig('ssca'), ...props }
+  )
 
-export type SystemVersionProps = Omit<GetProps<ServiceVersion, void, void, void>, 'path'>
+export type SystemVersionProps = Omit<
+  GetProps<
+    SystemVersionResponseBody,
+    SystemVersionInternalServerResponseBody | SystemVersionBadGatewayResponseBody,
+    void,
+    void
+  >,
+  'path'
+>
 
 /**
  * Check service version
  */
 export const SystemVersion = (props: SystemVersionProps) => (
-  <Get<ServiceVersion, void, void, void> path={`/api/v1/system/version`} base={getConfig('ssca')} {...props} />
+  <Get<
+    SystemVersionResponseBody,
+    SystemVersionInternalServerResponseBody | SystemVersionBadGatewayResponseBody,
+    void,
+    void
+  >
+    path={`/api/v1/system/version`}
+    base={getConfig('ssca')}
+    {...props}
+  />
 )
 
-export type UseSystemVersionProps = Omit<UseGetProps<ServiceVersion, void, void, void>, 'path'>
+export type UseSystemVersionProps = Omit<
+  UseGetProps<
+    SystemVersionResponseBody,
+    SystemVersionInternalServerResponseBody | SystemVersionBadGatewayResponseBody,
+    void,
+    void
+  >,
+  'path'
+>
 
 /**
  * Check service version
  */
 export const useSystemVersion = (props: UseSystemVersionProps) =>
-  useGet<ServiceVersion, void, void, void>(`/api/v1/system/version`, { base: getConfig('ssca'), ...props })
+  useGet<
+    SystemVersionResponseBody,
+    SystemVersionInternalServerResponseBody | SystemVersionBadGatewayResponseBody,
+    void,
+    void
+  >(`/api/v1/system/version`, { base: getConfig('ssca'), ...props })
 
-export interface TokenIssueTokenQueryParams {
+export interface IssueTokenIssueTokenQueryParams {
   /**
    * Harness account ID
    */
@@ -1133,32 +4226,55 @@ export interface TokenIssueTokenQueryParams {
   projectIdentifier: string
 }
 
-export type TokenIssueTokenProps = Omit<
-  GetProps<TokenResponse, TokenResponse, TokenIssueTokenQueryParams, void>,
+export type IssueTokenIssueTokenProps = Omit<
+  GetProps<
+    IssueTokenIssueTokenOKResponseBody,
+    IssueTokenIssueTokenUnauthorizedResponseBody,
+    IssueTokenIssueTokenQueryParams,
+    void
+  >,
   'path'
 >
 
 /**
  * Issue a cross-service token
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
-export const TokenIssueToken = (props: TokenIssueTokenProps) => (
-  <Get<TokenResponse, TokenResponse, TokenIssueTokenQueryParams, void>
+export const IssueTokenIssueToken = (props: IssueTokenIssueTokenProps) => (
+  <Get<
+    IssueTokenIssueTokenOKResponseBody,
+    IssueTokenIssueTokenUnauthorizedResponseBody,
+    IssueTokenIssueTokenQueryParams,
+    void
+  >
     path={`/api/v1/token`}
     base={getConfig('ssca')}
     {...props}
   />
 )
 
-export type UseTokenIssueTokenProps = Omit<
-  UseGetProps<TokenResponse, TokenResponse, TokenIssueTokenQueryParams, void>,
+export type UseIssueTokenIssueTokenProps = Omit<
+  UseGetProps<
+    IssueTokenIssueTokenOKResponseBody,
+    IssueTokenIssueTokenUnauthorizedResponseBody,
+    IssueTokenIssueTokenQueryParams,
+    void
+  >,
   'path'
 >
 
 /**
  * Issue a cross-service token
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
  */
-export const useTokenIssueToken = (props: UseTokenIssueTokenProps) =>
-  useGet<TokenResponse, TokenResponse, TokenIssueTokenQueryParams, void>(`/api/v1/token`, {
-    base: getConfig('ssca'),
-    ...props
-  })
+export const useIssueTokenIssueToken = (props: UseIssueTokenIssueTokenProps) =>
+  useGet<
+    IssueTokenIssueTokenOKResponseBody,
+    IssueTokenIssueTokenUnauthorizedResponseBody,
+    IssueTokenIssueTokenQueryParams,
+    void
+  >(`/api/v1/token`, { base: getConfig('ssca'), ...props })

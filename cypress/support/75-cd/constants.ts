@@ -16,6 +16,7 @@ export const environmentGroupYamlSchemaCall = `/ng/api/yaml-schema?routingId=${a
 export const environmentConfigurationCall = `/ng/api/environmentsV2/${environmentIdentifier}?routingId=${accountIdentifier}&accountIdentifier=${accountIdentifier}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const environmentFetchCall = `/ng/api/environmentsV2?routingId=${accountIdentifier}&accountIdentifier=${accountIdentifier}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const environmentSaveCall = `/ng/api/environmentsV2?routingId=${accountIdentifier}&accountIdentifier=${accountIdentifier}`
+export const infrastructureListCall = `/ng/api/infrastructures?routingId=${accountIdentifier}&accountIdentifier=${accountIdentifier}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&environmentIdentifier=${environmentIdentifier}`
 
 export const environmentConfigurationSecretCall = `/ng/api/v2/secrets?accountIdentifier=${accountIdentifier}&type=${secretText}&searchTerm=&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&pageIndex=0&pageSize=10&includeAllSecretsAccessibleAtScope=true`
 export const infrastructureDefinitionSaveCall = `/ng/api/infrastructures?routingId=${accountIdentifier}&accountIdentifier=${accountIdentifier}`
@@ -28,3 +29,4 @@ export const environmentGroupRoute = `${addHashInCypressURLBasedOnBrowserRouter(
 export const environmentRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments`
 export const environmentConfigurationRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments/${environmentIdentifier}/details?sectionId=CONFIGURATION`
 export const projectDashboardRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/dashboard`
+export const infrastructureDetailsDrawerRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments/${environmentIdentifier}/details?sectionId=INFRASTRUCTURE&infraDetailsTab=CONFIGURATION&infrastructureId=infra1`

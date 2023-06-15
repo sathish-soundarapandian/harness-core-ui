@@ -101,43 +101,46 @@ function ServiceConfiguration({
     }
   })
 
-  const getUpdatedPipelineYaml = useCallback((): PipelineInfoConfig | undefined => {
-    try {
-      const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-      const serviceSetYamlVisual = parse(yaml).service
+  const getUpdatedPipelineYaml = useCallback(
+    (updatedService?: PipelineInfoConfig): PipelineInfoConfig | undefined => {
+      try {
+        const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
+        const serviceSetYamlVisual = updatedService || parse(yaml).service
 
-      if (serviceSetYamlVisual) {
-        return produce({ ...service }, draft => {
-          setNameIDDescription(draft, serviceSetYamlVisual)
-          set(
-            draft,
-            'stages[0].stage.spec.serviceConfig.serviceDefinition',
-            cloneDeep(serviceSetYamlVisual.serviceDefinition)
-          )
-        })
+        if (serviceSetYamlVisual) {
+          return produce({ ...service }, draft => {
+            setNameIDDescription(draft, serviceSetYamlVisual)
+            set(
+              draft,
+              'stages[0].stage.spec.serviceConfig.serviceDefinition',
+              cloneDeep(serviceSetYamlVisual.serviceDefinition)
+            )
+          })
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(e)
       }
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn(e)
-    }
-  }, [service, yamlHandler])
+    },
+    [service, yamlHandler]
+  )
 
   const onYamlChange = useCallback(
-    (yamlChanged: boolean): void => {
+    (yamlChanged: boolean, updatedYaml, schemaValidationErrorMap): void => {
       if (yamlChanged) {
         try {
-          const yaml = defaultTo(yamlHandler?.getLatestYaml(), '')
+          const yaml = defaultTo(updatedYaml, '')
           const serviceSetYamlVisual = parse(yaml).service
           if (
             !isEmpty(serviceSetYamlVisual.serviceDefinition.spec) ||
             !isEmpty(serviceSetYamlVisual.serviceDefinition.type)
           ) {
             requestAnimationFrame(() => {
-              setHasYamlValidationErrors(!isEmpty(yamlHandler?.getYAMLValidationErrorMap()))
+              setHasYamlValidationErrors(!isEmpty(schemaValidationErrorMap))
             })
           }
 
-          const newServiceData = getUpdatedPipelineYaml()
+          const newServiceData = getUpdatedPipelineYaml(serviceSetYamlVisual)
           const isYamlUpdated = !isEqual(service, newServiceData)
           newServiceData && isYamlUpdated && updatePipeline(newServiceData)
         } catch (e) {

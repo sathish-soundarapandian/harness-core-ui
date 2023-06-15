@@ -21,7 +21,6 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { Scope } from '@common/interfaces/SecretsInterface'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { SettingType } from '@common/constants/Utils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import SecretDetails from '../secretDetails/SecretDetails'
 import SecretReferences from '../secretReferences/SecretReferences'
 import { SecretMenuItem } from '../secrets/views/SecretsListView/SecretsList'
@@ -65,7 +64,6 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
   const { showError } = useToaster()
   const { selectedProject } = useAppStore()
   const { getRBACErrorMessage } = useRBACError()
-  const { PL_FORCE_DELETE_CONNECTOR_SECRET } = useFeatureFlags()
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
@@ -151,7 +149,7 @@ const SecretDetaislHomePage: React.FC<SecretDetailsProps> = props => {
                 onSuccessfulDelete={onSuccessfulDeleteRedirect}
                 onSuccessfulEdit={refetch}
                 setIsReference={isRefereceView => setIsReference(isRefereceView)}
-                forceDeleteSupported={PL_FORCE_DELETE_CONNECTOR_SECRET && forceDeleteSettings?.data?.value === 'true'}
+                forceDeleteSupported={forceDeleteSettings?.data?.value === 'true'}
               />
             </div>
           )

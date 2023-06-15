@@ -177,6 +177,7 @@ export interface StringsMap {
   'common.commentModal.addCommentPlaceholder': string
   'common.commentModal.commentLabel': string
   'common.comments': string
+  'common.commitId': string
   'common.community': string
   'common.communityForum': string
   'common.condition': string
@@ -365,6 +366,7 @@ export interface StringsMap {
   'common.featureComingSoon': string
   'common.fetchingBranches': string
   'common.file': string
+  'common.fileOrFolderPath': string
   'common.files': string
   'common.filter': string
   'common.filterOnName': string
@@ -3868,7 +3870,6 @@ export interface StringsMap {
   'pipeline.artifactViolationDetails': string
   'pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepository': string
   'pipeline.artifacts.googleCloudSourceRepositories.cloudSourceRepositoryPlaceholder': string
-  'pipeline.artifacts.googleCloudSourceRepositories.commitId': string
   'pipeline.artifacts.googleCloudSourceRepositories.commitIdPlaceholder': string
   'pipeline.artifacts.googleCloudSourceRepositories.fetchType': string
   'pipeline.artifacts.googleCloudSourceRepositories.sourceDirectory': string

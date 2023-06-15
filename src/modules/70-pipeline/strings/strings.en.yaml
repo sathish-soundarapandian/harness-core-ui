@@ -163,7 +163,7 @@ jenkinsStep:
   job: job
   addJobParameters: Add Job Parameter
   validations:
-    jobName: Jobname is a required field
+    jobName: Job Name is a required field
   jobNamePlaceholder: Select Job Name
   jobParameter: Job Parameters
   unstableStatusAsSuccess: Treat unstable Job status as success
@@ -1836,7 +1836,6 @@ artifacts:
     cloudSourceRepositoryPlaceholder: Select Cloud Source Repository
     sourceDirectory: Source Directory
     sourceDirectoryPlaceholder: Enter Source Directory
-    commitId: Commit Id
     commitIdPlaceholder: Enter Commit Id
     tagPlaceholder: Enter Tag
     fetchType: Fetch Type

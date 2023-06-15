@@ -171,21 +171,19 @@ export default function EnvironmentConfiguration({
   })
 
   const handleYamlChange = useCallback(
-    (): void => {
-      if (yamlHandler) {
-        try {
-          const yaml = defaultTo(yamlHandler?.getLatestYaml(), '{}')
-          const yamlVisual = parse(yaml).environment as NGEnvironmentInfoConfig
+    (_isEditorDirty: boolean, updatedYaml: string, schemaValidationErrorMap?: Map<number, string>): void => {
+      try {
+        const environmentYaml = parse(defaultTo(updatedYaml, '{}')).environment as NGEnvironmentInfoConfig
+        const areSchemaValidationErrorsAbsent = !(schemaValidationErrorMap && schemaValidationErrorMap.size > 0)
 
-          if (yamlVisual && yamlHandler.getYAMLValidationErrorMap()?.size === 0) {
-            formikProps?.validateForm({
-              ...yamlVisual
-            })
-          }
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.warn(e)
+        if (environmentYaml && areSchemaValidationErrorsAbsent) {
+          formikProps?.validateForm({
+            ...environmentYaml
+          })
         }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(e)
       }
     },
 

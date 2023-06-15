@@ -18,8 +18,6 @@ import { actionToLabelMap, getOrgDropdownList, getProjectDropdownList } from '@a
 import UserItemRenderer from '@common/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@common/components/UserTagRenderer/UserTagRenderer'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { AuditTrailFormType } from './FilterDrawer'
 
 interface AuditTrailFormProps {
@@ -28,7 +26,6 @@ interface AuditTrailFormProps {
 
 const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const isForceDeleteSupported = useFeatureFlag(FeatureFlag.PL_FORCE_DELETE_CONNECTOR_SECRET)
   const [userQuery, setUserQuery] = useState<string>()
   const [orgQuery, setOrgQuery] = useState<string>()
   const [projectsQuery, setProjectsQuery] = useState<string>()
@@ -98,9 +95,7 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
 
   let auditActions = getOptionsForMultiSelect(actionToLabelMap)
 
-  if (!isForceDeleteSupported) {
-    auditActions = auditActions.filter(action => action?.value !== 'FORCE_DELETE')
-  }
+  auditActions = auditActions.filter(action => action?.value !== 'FORCE_DELETE')
 
   const projects = projectData?.data?.content ? getProjectDropdownList(projectData?.data?.content) : []
 

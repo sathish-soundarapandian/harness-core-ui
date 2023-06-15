@@ -126,7 +126,7 @@ export class AwsSamServiceSpec extends Step<ServiceSpec> {
         set(
           errors,
           `manifests[${index}].manifest.spec.store.spec.connectorRef`,
-          getString?.('fieldRequired', { field: 'connectorRef' })
+          getString?.('fieldRequired', { field: getString('connector') })
         )
       }
       if (
@@ -138,6 +138,17 @@ export class AwsSamServiceSpec extends Step<ServiceSpec> {
           errors,
           `manifests[${index}].manifest.spec.store.spec.branch`,
           getString?.('fieldRequired', { field: 'Branch' })
+        )
+      }
+      if (
+        isEmpty(manifest?.manifest?.spec?.store?.spec?.commitId) &&
+        isRequired &&
+        getMultiTypeFromValue(currentManifestTemplate?.commitId) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `manifests[${index}].manifest.spec.store.spec.commitId`,
+          getString?.('fieldRequired', { field: getString('common.commitId') })
         )
       }
       if (
@@ -167,6 +178,56 @@ export class AwsSamServiceSpec extends Step<ServiceSpec> {
     })
   }
 
+  validateConfigFields({ data, template, isRequired, errors, getString }: ValidateInputSetFieldArgs): void {
+    data?.configFiles?.forEach((configFile, index) => {
+      const currentFileTemplate = get(template, `configFiles[${index}].configFile.spec.store.spec`, '')
+      if (
+        isEmpty(configFile?.configFile?.spec?.store?.spec?.files) &&
+        isRequired &&
+        getMultiTypeFromValue(currentFileTemplate?.files) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `configFiles[${index}].configFile.spec.store.spec.files[0]`,
+          getString?.('fieldRequired', { field: 'File' })
+        )
+      }
+      if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.files)) {
+        configFile?.configFile?.spec?.store?.spec?.files?.forEach((value: string, fileIndex: number) => {
+          if (!value) {
+            set(
+              errors,
+              `configFiles[${index}].configFile.spec.store.spec.files[${fileIndex}]`,
+              getString?.('fieldRequired', { field: 'File' })
+            )
+          }
+        })
+      }
+      if (
+        isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles) &&
+        isRequired &&
+        getMultiTypeFromValue(currentFileTemplate?.secretFiles) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `configFiles[${index}].configFile.spec.store.spec.secretFiles[0]`,
+          getString?.('fieldRequired', { field: 'File' })
+        )
+      }
+      if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles)) {
+        configFile?.configFile?.spec?.store?.spec?.secretFiles?.forEach((value: string, secretFileIndex: number) => {
+          if (!value) {
+            set(
+              errors,
+              `configFiles[${index}].configFile.spec.store.spec.secretFiles[${secretFileIndex}]`,
+              getString?.('fieldRequired', { field: 'File' })
+            )
+          }
+        })
+      }
+    })
+  }
+
   validateInputSet({
     data,
     template,
@@ -178,6 +239,15 @@ export class AwsSamServiceSpec extends Step<ServiceSpec> {
 
     /** Manifest fields validation */
     this.validateManifestInputSetFields({
+      data,
+      template,
+      isRequired,
+      getString,
+      errors
+    })
+
+    /** Config Files Fields Validation */
+    this.validateConfigFields({
       data,
       template,
       isRequired,

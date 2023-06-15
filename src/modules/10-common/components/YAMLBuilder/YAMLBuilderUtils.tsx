@@ -116,7 +116,7 @@ const verifyYAML = (args: {
   showError: ToasterProps['showError']
   errorMessage: string
   schema?: Record<string, any>
-}): void => {
+}): Map<number, string> | undefined => {
   const { updatedYaml, setYamlValidationErrors, showError, schema, errorMessage } = args
   if (!schema) {
     return
@@ -125,7 +125,9 @@ const verifyYAML = (args: {
     try {
       validateYAMLWithSchema(updatedYaml, getSchemaWithLanguageSettings(schema))
         .then((errors: Diagnostic[]) => {
-          setYamlValidationErrors(getYAMLValidationErrors(errors))
+          const validationErrors = getYAMLValidationErrors(errors)
+          setYamlValidationErrors(validationErrors)
+          return validationErrors
         })
         .catch((error: string) => {
           showError(error, 5000)

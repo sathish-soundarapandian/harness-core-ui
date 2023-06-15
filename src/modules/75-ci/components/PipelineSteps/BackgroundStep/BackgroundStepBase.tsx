@@ -79,6 +79,37 @@ export const BackgroundStepBase = (
 
   const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
 
+  const EntryPointElement = (): JSX.Element => (
+    <div className={cx(css.fieldsGroup, css.withoutSpacing, css.topPadding3, css.bottomPadding3)}>
+      <MultiTypeList
+        name="spec.entrypoint"
+        multiTextInputProps={{
+          expressions,
+          allowableTypes: SupportedInputTypesForListItems
+        }}
+        multiTypeFieldSelectorProps={{
+          label: (
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
+              <Text
+                style={{ display: 'flex', alignItems: 'center' }}
+                className={css.inpLabel}
+                color={Color.GREY_800}
+                font={{ size: 'small', weight: 'semi-bold' }}
+              >
+                {getString('entryPointLabel')}
+              </Text>
+              &nbsp;
+              {getOptionalSubLabel(getString, 'dependencyEntryPoint')}
+            </Layout.Horizontal>
+          ),
+          allowedTypes: SupportedInputTypesForListTypeField
+        }}
+        disabled={readonly}
+        configureOptionsProps={{ hideExecutionTimeField: true }}
+      />
+    </div>
+  )
+
   return (
     <Formik
       initialValues={getInitialValuesInCorrectFormat<BackgroundStepData, BackgroundStepDataUI>(
@@ -139,11 +170,7 @@ export const BackgroundStepBase = (
                 description: {}
               }}
             />
-            {![
-              CIBuildInfrastructureType.VM,
-              CIBuildInfrastructureType.Cloud,
-              CIBuildInfrastructureType.Docker
-            ].includes(buildInfrastructureType) && stepViewType !== StepViewType.Template ? (
+            {!isBuildInfrastructureTypeVM && stepViewType !== StepViewType.Template ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -174,34 +201,7 @@ export const BackgroundStepBase = (
               />
             </Container>
 
-            <div className={cx(css.fieldsGroup, css.withoutSpacing, css.topPadding3, css.bottomPadding3)}>
-              <MultiTypeList
-                name="spec.entrypoint"
-                multiTextInputProps={{
-                  expressions,
-                  allowableTypes: SupportedInputTypesForListItems
-                }}
-                multiTypeFieldSelectorProps={{
-                  label: (
-                    <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'baseline' }}>
-                      <Text
-                        style={{ display: 'flex', alignItems: 'center' }}
-                        className={css.inpLabel}
-                        color={Color.GREY_800}
-                        font={{ size: 'small', weight: 'semi-bold' }}
-                      >
-                        {getString('entryPointLabel')}
-                      </Text>
-                      &nbsp;
-                      {getOptionalSubLabel(getString, 'dependencyEntryPoint')}
-                    </Layout.Horizontal>
-                  ),
-                  allowedTypes: SupportedInputTypesForListTypeField
-                }}
-                disabled={readonly}
-                configureOptionsProps={{ hideExecutionTimeField: true }}
-              />
-            </div>
+            {!isBuildInfrastructureTypeVM && stepViewType !== StepViewType.Template ? <EntryPointElement /> : null}
             <div className={cx(css.fieldsGroup, css.withoutSpacing, css.topPadding3, css.bottomPadding3)}>
               <MultiTypeFieldSelector
                 name="spec.command"
@@ -265,11 +265,14 @@ export const BackgroundStepBase = (
                 details={
                   <Container margin={{ top: 'medium' }}>
                     {isBuildInfrastructureTypeVM || stepViewType === StepViewType.Template ? (
-                      <ConnectorRefWithImage
-                        showOptionalSublabel={true}
-                        readonly={readonly}
-                        stepViewType={stepViewType}
-                      />
+                      <>
+                        <ConnectorRefWithImage
+                          showOptionalSublabel={true}
+                          readonly={readonly}
+                          stepViewType={stepViewType}
+                        />
+                        <EntryPointElement />
+                      </>
                     ) : null}
                     <CIStepOptionalConfig
                       stepViewType={stepViewType}

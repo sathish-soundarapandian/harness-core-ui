@@ -29,7 +29,6 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { Scope } from '@common/interfaces/SecretsInterface'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SettingType } from '@common/constants/Utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { getIconByType } from '../utils/ConnectorUtils'
@@ -257,7 +256,6 @@ const ConnectorDetailsPage: React.FC<ConnectorDetailsPageProps> = props => {
   const onSuccessfulDeleteRedirect = () => {
     history.push(routes.toConnectors({ accountId, projectIdentifier, orgIdentifier, module }))
   }
-  const { PL_FORCE_DELETE_CONNECTOR_SECRET } = useFeatureFlags()
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
@@ -287,7 +285,7 @@ const ConnectorDetailsPage: React.FC<ConnectorDetailsPageProps> = props => {
               switchToRefernceTab={() => {
                 setActiveCategory(ConnectorDetailsView.referencedBy)
               }}
-              forceDeleteSupported={!!(PL_FORCE_DELETE_CONNECTOR_SECRET && forceDeleteSettings?.data?.value === 'true')}
+              forceDeleteSupported={forceDeleteSettings?.data?.value === 'true'}
               openConnectorModal={openConnectorModal}
             />
           </div>

@@ -306,7 +306,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
           {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.commitId`, template) && (
             <TextFieldInputSetView
               name={`${path}.artifacts.${artifactPath}.spec.commitId`}
-              label={getString('pipeline.artifacts.googleCloudSourceRepositories.commitId')}
+              label={getString('common.commitId')}
               placeholder={getString('pipeline.artifacts.googleCloudSourceRepositories.commitIdPlaceholder')}
               disabled={isFieldDisabled(`${path}.artifacts.${artifactPath}.spec.commitId`)}
               multiTextInputProps={{

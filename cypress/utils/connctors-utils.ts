@@ -71,6 +71,8 @@ export const getConnectorIconByType = (type: string): string => {
       return 'service-gcp'
     case Connectors.AWS:
       return 'service-aws'
+    case Connectors.SUMOLOGIC:
+      return 'service-sumologic'
     default:
       return 'placeholder'
   }

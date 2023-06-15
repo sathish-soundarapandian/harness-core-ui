@@ -48,7 +48,7 @@ export interface YamlBuilderProps {
   theme?: Theme
   yamlSanityConfig?: YamlSanityConfig
   /* Snippet section related props */
-  onChange?: (isEditorDirty: boolean) => void
+  onChange?: (isEditorDirty: boolean, updatedYaml: string, schemaValidationErrorMap?: Map<number, string>) => void
   onErrorCallback?: (error: Record<string, any>) => void
   renderCustomHeader?: () => React.ReactElement | null
   openDialogProp?: () => void

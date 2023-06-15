@@ -297,17 +297,15 @@ DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_GITHUB_TRIGGER
 })
 
 export default function DefaultSettingsRoutes(): React.ReactElement {
-  const { PL_FORCE_DELETE_CONNECTOR_SECRET, PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT } = useFeatureFlags()
+  const { PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT } = useFeatureFlags()
   const { getString } = useStrings()
-  // Register  Category Factory only when Feature Flag is enabled
-  if (PL_FORCE_DELETE_CONNECTOR_SECRET) {
-    DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_FORCE_DELETE, {
-      label: 'defaultSettings.enableForceDelete',
-      settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
-      yupValidation: Yup.boolean(),
-      settingCategory: 'CORE'
-    })
-  }
+
+  DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_FORCE_DELETE, {
+    label: 'defaultSettings.enableForceDelete',
+    settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
+    yupValidation: Yup.boolean(),
+    settingCategory: 'CORE'
+  })
 
   if (PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT) {
     DefaultSettingsFactory.registerSettingHandler(SettingType.PIPELINE_TIMEOUT, {

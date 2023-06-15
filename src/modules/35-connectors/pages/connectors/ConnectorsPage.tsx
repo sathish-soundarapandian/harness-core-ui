@@ -134,7 +134,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   const history = useHistory()
   useDocumentTitle(getString('connectorsLabel'))
   const { trackEvent } = useTelemetry()
-  const { PL_FORCE_DELETE_CONNECTOR_SECRET, CDS_RANCHER_SUPPORT_NG } = useFeatureFlags()
+  const { CDS_RANCHER_SUPPORT_NG } = useFeatureFlags()
   const { data: forceDeleteSettings, error: forceDeleteSettingsError } = useGetSettingValue({
     identifier: SettingType.ENABLE_FORCE_DELETE,
     queryParams: { accountIdentifier: accountId },
@@ -676,7 +676,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
               data={connectors}
               reload={refetchAllConnectorsWithStats}
               openConnectorModal={openConnectorModal}
-              forceDeleteSupported={PL_FORCE_DELETE_CONNECTOR_SECRET && forceDeleteSettings?.data?.value === 'true'}
+              forceDeleteSupported={forceDeleteSettings?.data?.value === 'true'}
               selectedSort={sortPreference}
               onSortMethodChange={option => {
                 setSortPreference(option.value as SortMethod)

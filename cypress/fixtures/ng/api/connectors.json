@@ -569,6 +569,55 @@
           "valid": true,
           "invalidYaml": null
         }
+      },
+      {
+        "connector": {
+          "name": "Sumologic",
+          "identifier": "Sumo_logic",
+          "description": "",
+          "orgIdentifier": "cvng",
+          "projectIdentifier": "SRM_QA_Sign_Off_Automation",
+          "tags": {},
+          "type": "SumoLogic",
+          "spec": {
+            "url": "https://api.us2.sumologic.com/",
+            "accessIdRef": "sumoaccessid",
+            "accessKeyRef": "sumosecret",
+            "delegateSelectors": ["qa-automation-cv-chiplay"]
+          }
+        },
+        "createdAt": 1668063114827,
+        "lastModifiedAt": 1668063114825,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1684999284194,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1684999284194
+        },
+        "activityDetails": {
+          "lastActivityTime": 1668063114825
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null,
+          "parentEntityConnectorRef": null,
+          "parentEntityRepoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "governanceMetadata": null
       }
     ],
     "pageIndex": 0,

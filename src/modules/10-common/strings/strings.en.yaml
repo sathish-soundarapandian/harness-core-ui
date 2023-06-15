@@ -1539,6 +1539,8 @@ delay15Sec: This can take up to 15 seconds.
 generatedAt: Generated at
 unknown: Unknown
 viewErrorDetails: Click to view error details
+fileOrFolderPath: File or Folder Path
+commitId: Commit Id
 delegateExpressionList: Delegate Selection Expression List
 atAGlance: At a Glance
 invite: Invite

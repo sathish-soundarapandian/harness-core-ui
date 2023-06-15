@@ -279,14 +279,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const onYamlChange = useCallback(
     debounce((updatedYaml: string): void => {
       setCurrentYaml(updatedYaml)
-      verifyYAML({
+      const schemaValidationErrorMap = verifyYAML({
         updatedYaml,
         setYamlValidationErrors,
         showError,
         schema,
         errorMessage: yamlError
       })
-      onChange?.(!(updatedYaml === ''))
+      onChange?.(!(updatedYaml === ''), updatedYaml, schemaValidationErrorMap)
     }, 500),
     [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
   )
