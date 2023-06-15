@@ -62,8 +62,7 @@ export const triggerActivityHistoryList = {
       {
         accountId: 'rXUXvbFqRr2XwcjBu3Oq-Q',
         eventCorrelationId: '6486a3b5ed02dd7906c067f3',
-        payload:
-          '{"object_kind":"push","event_name":"push","before":"0000000000000000000000000000000000000000","after":"2180ca2dc18f7c2eca125ee0bfadcde7d40a85c9","ref":"refs/heads/newBranchZGbOQTHBXH","checkout_sha":"2180ca2dc18f7c2eca125ee0bfadcde7d40a85c9","message":null,"user_id":14016541,"user_name":"triggerAutomation","user_username":"project_44398478_bot_3ed79999ed1c2272aa5412d21e0ba9e5","user_email":null,"user_avatar":"https://secure.gravatar.com/avatar/367b057acf73962cf0a77add3967190f?s=80&d=identicon","project_id":44398478,"project":{"id":44398478,"name":"TriggerAutomation","description":null,"web_url":"https://gitlab.com/autouser1/triggerautomation","avatar_url":null,"git_ssh_url":"git@gitlab.com:autouser1/triggerautomation.git","git_http_url":"https://gitlab.com/autouser1/triggerautomation.git","namespace":"Auto User1","visibility_level":0,"path_with_namespace":"autouser1/triggerautomation","default_branch":"main","ci_config_path":"","homepage":"https://gitlab.com/autouser1/triggerautomation","url":"git@gitlab.com:autouser1/triggerautomation.git","ssh_url":"git@gitlab.com:autouser1/triggerautomation.git","http_url":"https://gitlab.com/autouser1/triggerautomation.git"},"commits":[],"total_commits_count":0,"push_options":{},"repository":{"name":"TriggerAutomation","url":"git@gitlab.com:autouser1/triggerautomation.git","description":null,"homepage":"https://gitlab.com/autouser1/triggerautomation","git_http_url":"https://gitlab.com/autouser1/triggerautomation.git","git_ssh_url":"git@gitlab.com:autouser1/triggerautomation.git","visibility_level":0}}',
+        payload: '{"sample_key": "sample_value}',
         eventCreatedAt: 1686545333868,
         finalStatus: 'TARGET_EXECUTION_REQUESTED',
         message: 'Pipeline execution was requested successfully',
@@ -79,8 +78,8 @@ export const triggerActivityHistoryList = {
           triggerId: 'dhhdhdh',
           targetId: 'djhsuhd',
           runtimeInput: 'pipeline: {}\n',
-          planExecutionId: '4VYqBZpWTNGAb3CEblwZuA',
-          runSequence: 2066,
+          planExecutionId: null,
+          runSequence: null,
           executionStatus: 'RUNNING',
           startTs: 1686545335052
         },

@@ -130,4 +130,14 @@ describe('Test Trigger Detail Page Test', () => {
       expect(viewPayloadyButton).toBeInTheDocument()
     })
   })
+
+  test('Should show empty payload when invalid json is passed', async () => {
+    jest.spyOn(pipelineServices, 'useTriggerEventHistoryNew').mockImplementation((): any => {
+      return { data: triggerActivityHistoryList, refetch: jest.fn(), error: null, loading: false }
+    })
+    render(<TestComponent />)
+    const viewPayloadyButton = document.querySelectorAll('[data-icon="main-notes"]')[2]
+    userEvent.click(viewPayloadyButton)
+    expect(await screen.findByRole('heading', { name: 'common.payload' })).toBeInTheDocument()
+  })
 })

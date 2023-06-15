@@ -37,7 +37,7 @@ const RenderColumnTime: CellType = ({ row }) => {
     <Layout.Vertical>
       <Layout.Horizontal spacing="small" width={230}>
         <Text color={Color.BLACK} lineClamp={1} font={{ variation: FontVariation.BODY2 }}>
-          <ReactTimeago date={defaultTo(data, 'startTs') as number} />
+          <ReactTimeago date={get(data, 'startTs') as number} />
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>
@@ -71,30 +71,39 @@ const RenderColumnStatus: CellType = ({ row }) => {
 const RenderColumnExecutionId: CellType = ({ row }) => {
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } =
     useParams<PipelineType<PipelinePathProps>>()
+  const { getString } = useStrings()
   const data = get(row.original, 'targetExecutionSummary')
+  if (!get(data, 'planExecutionId')) {
+    return null
+  }
   return (
-    <Layout.Horizontal flex={{ align: 'center-center' }} style={{ justifyContent: 'flex-start' }} spacing="xsmall">
-      <Link
-        to={routes.toExecutionPipelineView({
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          pipelineIdentifier: defaultTo(pipelineIdentifier, '-1'),
-          executionIdentifier: defaultTo(get(data, 'planExecutionId'), '-1'),
-          module,
-          source: 'executions'
-        })}
-      >
-        <Text
-          font={{ variation: FontVariation.LEAD }}
-          color={Color.PRIMARY_7}
-          tooltipProps={{ isDark: true }}
-          lineClamp={1}
+    <Layout.Vertical>
+      <Layout.Horizontal flex={{ align: 'center-center' }} style={{ justifyContent: 'flex-start' }} spacing="xsmall">
+        <Link
+          to={routes.toExecutionPipelineView({
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            pipelineIdentifier: defaultTo(pipelineIdentifier, '-1'),
+            executionIdentifier: defaultTo(get(data, 'planExecutionId'), '-1'),
+            module,
+            source: 'executions'
+          })}
         >
-          {get(data, 'targetId')}
-        </Text>
-      </Link>
-    </Layout.Horizontal>
+          <Text
+            font={{ variation: FontVariation.LEAD }}
+            color={Color.PRIMARY_7}
+            tooltipProps={{ isDark: true }}
+            lineClamp={1}
+          >
+            {get(data, 'targetId')}
+          </Text>
+        </Link>
+      </Layout.Horizontal>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500} lineClamp={1}>
+        {`${getString('pipeline.executionId')}: ${get(data, 'runSequence')}`}
+      </Text>
+    </Layout.Vertical>
   )
 }
 
@@ -165,6 +174,18 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
     pageIndex: get(pageable, 'pageNumber', 0)
   })
 
+  const isJSONValid = (): boolean => {
+    let isValid = true
+    try {
+      if (selectedPayloadRow) {
+        isValid = JSON.parse(selectedPayloadRow) && !!selectedPayloadRow
+      }
+    } catch (e) {
+      isValid = false
+    }
+    return isValid
+  }
+
   return (
     <>
       <TableV2<NGTriggerEventHistoryResponse>
@@ -190,7 +211,7 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
         >
           <MonacoEditor
             language="yaml"
-            value={JSON.stringify(JSON.parse(selectedPayloadRow), null, 2)}
+            value={isJSONValid() ? JSON.stringify(JSON.parse(selectedPayloadRow), null, 2) : ''}
             data-testid="monaco-editor"
             alwaysShowDarkTheme={true}
             options={
