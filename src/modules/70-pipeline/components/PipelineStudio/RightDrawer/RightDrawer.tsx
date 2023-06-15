@@ -59,6 +59,7 @@ import { RightDrawerTitle } from './RightDrawerTitle'
 import { getFlattenedStages } from '../StageBuilder/StageBuilderUtil'
 import { getFlattenedSteps } from '../CommonUtils/CommonUtils'
 import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
+import { TerraformSteps } from '../StepUtil'
 import css from './RightDrawer.module.scss'
 
 export const FullscreenDrawers: DrawerTypes[] = [
@@ -180,7 +181,11 @@ const processNodeImpl = (
       addReplace(item, node)
 
       if ((item as StepElementConfig).spec) {
-        node.spec = Object.assign(defaultTo(node.spec, {}), (item as StepElementConfig).spec)
+        if (TerraformSteps.includes((item as StepElementConfig).type)) {
+          node.spec = defaultTo((item as StepElementConfig).spec, node.spec)
+        } else {
+          node.spec = Object.assign(defaultTo(node.spec, {}), (item as StepElementConfig).spec)
+        }
       }
 
       // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
