@@ -377,6 +377,10 @@ export interface FeatureCounts {
    */
   totalActive?: number
   /**
+   * The total number of archived flags in the project/environment
+   */
+  totalArchived?: number
+  /**
    * The total number of flags that are turned on in a project/environment
    */
   totalEnabled?: number
@@ -455,9 +459,7 @@ export interface FeatureMetric {
 /**
  * A list of FeatureMetrics
  */
-export interface FeatureMetrics {
-  metrics?: FeatureMetric[]
-}
+export type FeatureMetrics = FeatureMetric[]
 
 /**
  * A pipeline configured to update a feature
@@ -3655,11 +3657,16 @@ export interface DeleteFeatureFlagQueryParams {
    * Git commit message
    */
   commitMsg?: string
+  /**
+   * Permanently deletes the the feature flag
+   */
+  forceDelete?: boolean
 }
 
 export type DeleteFeatureFlagProps = Omit<
   MutateProps<
     void,
+    | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
     | NotFoundResponse
@@ -3680,6 +3687,7 @@ export type DeleteFeatureFlagProps = Omit<
 export const DeleteFeatureFlag = (props: DeleteFeatureFlagProps) => (
   <Mutate<
     void,
+    | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
     | NotFoundResponse
@@ -3699,6 +3707,7 @@ export const DeleteFeatureFlag = (props: DeleteFeatureFlagProps) => (
 export type UseDeleteFeatureFlagProps = Omit<
   UseMutateProps<
     void,
+    | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
     | NotFoundResponse
@@ -3719,6 +3728,7 @@ export type UseDeleteFeatureFlagProps = Omit<
 export const useDeleteFeatureFlag = (props: UseDeleteFeatureFlagProps) =>
   useMutate<
     void,
+    | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
     | NotFoundResponse
@@ -3737,6 +3747,7 @@ export const useDeleteFeatureFlag = (props: UseDeleteFeatureFlagProps) =>
 export const deleteFeatureFlagPromise = (
   props: MutateUsingFetchProps<
     void,
+    | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
     | NotFoundResponse
@@ -3750,6 +3761,7 @@ export const deleteFeatureFlagPromise = (
 ) =>
   mutateUsingFetch<
     void,
+    | BadRequestResponse
     | UnauthenticatedResponse
     | UnauthorizedResponse
     | NotFoundResponse
@@ -4697,6 +4709,155 @@ export const createFlagPipelinePromise = (
     FeaturePipelineRequestRequestBody,
     CreateFlagPipelinePathParams
   >('POST', getConfig('cf'), `/admin/features/${identifier}/pipeline`, props, signal)
+
+export interface RestoreFeatureFlagQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * The Project identifier
+   */
+  projectIdentifier: string
+  /**
+   * Git commit message
+   */
+  commitMsg?: string
+}
+
+export interface RestoreFeatureFlagPathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type RestoreFeatureFlagProps = Omit<
+  MutateProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    RestoreFeatureFlagQueryParams,
+    void,
+    RestoreFeatureFlagPathParams
+  >,
+  'path' | 'verb'
+> &
+  RestoreFeatureFlagPathParams
+
+/**
+ * Restore a Feature Flag
+ *
+ * Restore Feature Flag for the given identifier and account ID
+ */
+export const RestoreFeatureFlag = ({ identifier, ...props }: RestoreFeatureFlagProps) => (
+  <Mutate<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    RestoreFeatureFlagQueryParams,
+    void,
+    RestoreFeatureFlagPathParams
+  >
+    verb="POST"
+    path={`/admin/features/${identifier}/restore`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseRestoreFeatureFlagProps = Omit<
+  UseMutateProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    RestoreFeatureFlagQueryParams,
+    void,
+    RestoreFeatureFlagPathParams
+  >,
+  'path' | 'verb'
+> &
+  RestoreFeatureFlagPathParams
+
+/**
+ * Restore a Feature Flag
+ *
+ * Restore Feature Flag for the given identifier and account ID
+ */
+export const useRestoreFeatureFlag = ({ identifier, ...props }: UseRestoreFeatureFlagProps) =>
+  useMutate<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    RestoreFeatureFlagQueryParams,
+    void,
+    RestoreFeatureFlagPathParams
+  >('POST', (paramsInPath: RestoreFeatureFlagPathParams) => `/admin/features/${paramsInPath.identifier}/restore`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Restore a Feature Flag
+ *
+ * Restore Feature Flag for the given identifier and account ID
+ */
+export const restoreFeatureFlagPromise = (
+  {
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    RestoreFeatureFlagQueryParams,
+    void,
+    RestoreFeatureFlagPathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    void,
+    | BadRequestResponse
+    | UnauthenticatedResponse
+    | UnauthorizedResponse
+    | NotFoundResponse
+    | GitSyncErrorResponse
+    | InternalServerErrorResponse,
+    RestoreFeatureFlagQueryParams,
+    void,
+    RestoreFeatureFlagPathParams
+  >('POST', getConfig('cf'), `/admin/features/${identifier}/restore`, props, signal)
 
 export interface GetJiraIssuesQueryParams {
   /**
