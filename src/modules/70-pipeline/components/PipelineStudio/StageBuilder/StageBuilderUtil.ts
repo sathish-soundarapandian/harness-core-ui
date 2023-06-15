@@ -421,9 +421,7 @@ export const getLinkEventListeners = (
 export const getNodeEventListerner = (
   updateStageOnAddLinkNew: (event: any, dropNode: StageElementWrapper | undefined, current: any) => void,
   setSelectionRef: any,
-  confirmDeleteStage: () => void,
-  updateDeleteId: (id: string | undefined) => void,
-
+  deleteStage: (stageId: string) => void,
   dynamicPopoverHandler: DynamicPopoverHandlerBinding<PopoverData> | undefined,
   pipelineContext: PipelineContextInterface,
   addStageNew: (
@@ -545,9 +543,7 @@ export const getNodeEventListerner = (
     // Can not remove this Any because of React Diagram Issue
     [Event.RemoveNode]: (event: any) => {
       event = { ...event, ...event?.data }
-      const stageIdToBeRemoved = event.identifier
-      updateDeleteId(stageIdToBeRemoved)
-      confirmDeleteStage()
+      deleteStage(event.identifier)
     },
     [Event.AddParallelNode]: (event: any) => {
       event = { ...event, ...event?.data }

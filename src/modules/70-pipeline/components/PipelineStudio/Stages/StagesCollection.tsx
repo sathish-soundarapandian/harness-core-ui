@@ -15,18 +15,39 @@ export type StageFactory = (
 ) => React.ReactElement<PipelineStageProps>
 export type StageAttributesFactory = (getString: UseStringsReturn['getString']) => StageAttributes
 
+export interface StageControlsProps {
+  stageId: string
+}
+export interface StageContextMenuProps {
+  stageId: string
+}
+export type StageControlsFactory = (props: StageControlsProps) => React.ReactElement
+export type StageContextMenuFactory = (props: StageControlsProps) => React.ReactElement
+
 class StagesCollection {
   protected stagesByType = new Map<
     string,
-    { stageFactory: StageFactory; stageAttributesFactory: StageAttributesFactory }
+    {
+      stageFactory: StageFactory
+      stageAttributesFactory: StageAttributesFactory
+      stageControlsFactory?: StageControlsFactory
+      stageContextMenuFactory?: StageContextMenuFactory
+    }
   >()
 
   registerStageFactory(
     stageType: string,
     stageAttributesFactory: StageAttributesFactory,
-    stageFactory: StageFactory
+    stageFactory: StageFactory,
+    stageControlsFactory?: StageControlsFactory,
+    stageContextMenuFactory?: StageContextMenuFactory
   ): void {
-    this.stagesByType.set(stageType, { stageFactory, stageAttributesFactory })
+    this.stagesByType.set(stageType, {
+      stageFactory,
+      stageAttributesFactory,
+      stageControlsFactory,
+      stageContextMenuFactory
+    })
   }
 
   getStage(
@@ -36,6 +57,16 @@ class StagesCollection {
   ): React.ReactElement<PipelineStageProps> | null {
     const stageFactories = this.stagesByType.get(stageType)
     return stageFactories?.stageFactory(isEnabled, getString) || null
+  }
+
+  getStageControls(stageType: string, props: StageControlsProps): React.ReactElement | null {
+    const stageFactories = this.stagesByType.get(stageType)
+    return stageFactories?.stageControlsFactory?.(props) || null
+  }
+
+  getStageContextMenu(stageType: string, props: StageContextMenuProps): React.ReactElement | null {
+    const stageFactories = this.stagesByType.get(stageType)
+    return stageFactories?.stageContextMenuFactory?.(props) || null
   }
 
   getStageAttributes(stageType: string, getString: UseStringsReturn['getString']): StageAttributes | undefined {

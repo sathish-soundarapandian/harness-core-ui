@@ -23,6 +23,7 @@ import type {
   StageElementWrapperConfig
 } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import HoverCard from '@pipeline/components/HoverCard/HoverCard'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
@@ -212,10 +213,12 @@ function StageBuilder(): JSX.Element {
     updatePipelineView,
     renderPipelineStage,
     getStageFromPipeline,
-    setSelection
+    setSelection,
+    deleteStage
   } = usePipelineContext()
   const { sectionId } = useQueryParams<PipelineSelectionState>()
   const { module } = useParams<ModulePathParams>()
+  const { CDS_PIPELINE_STUDIO_UPGRADES } = useFeatureFlags()
 
   // NOTE: we are using ref as setSelection is getting cached somewhere
   const setSelectionRef = React.useRef(setSelection)
@@ -450,11 +453,19 @@ function StageBuilder(): JSX.Element {
     }
   })
 
+  const deleteStageInternal = (deleteStageId: string): void => {
+    if (CDS_PIPELINE_STUDIO_UPGRADES) {
+      deleteStage(deleteStageId)
+    } else {
+      updateDeleteId(deleteStageId)
+      confirmDeleteStage()
+    }
+  }
+
   const nodeListenersNew: Listeners['nodeListeners'] = getNodeEventListerner(
     updateStageOnAddLinkNew,
     setSelectionRef,
-    confirmDeleteStage,
-    updateDeleteId,
+    deleteStageInternal,
     dynamicPopoverHandler,
     pipelineContext,
     addStageNew,
@@ -551,69 +562,80 @@ function StageBuilder(): JSX.Element {
         return 'PipelineStudio'
     }
   }
+
+  const renderStagesCanvas = (): JSX.Element => {
+    return (
+      <div
+        className={css.canvas}
+        ref={canvasRef}
+        onClick={e => {
+          const div = e.target as HTMLDivElement
+          if (div === canvasRef.current?.children[0]) {
+            dynamicPopoverHandler?.hide()
+          }
+
+          if (isSplitViewOpen) {
+            setSelectionRef.current({ stageId: undefined, sectionId: undefined })
+          }
+        }}
+      >
+        <CDPipelineStudioNew
+          readonly={isReadonly}
+          selectedNodeId={selectedStageId}
+          data={stageData}
+          loaderComponent={DiagramLoader}
+          parentSelector={'.Pane1'}
+          collapsibleProps={{ percentageNodeVisible: 0.8, bottomMarginInPixels: 80 }}
+          createNodeTitle={getString('addStage')}
+          graphLinkClassname={css.graphLink}
+        />
+        <DynamicPopover
+          darkMode={false}
+          className={css.renderPopover}
+          render={renderPopover.bind(null, gitDetails, storeMetadata)} // To use latest gitDetails and storeMetadata from pipeline context
+          bind={setDynamicPopoverHandler}
+        />
+      </div>
+    )
+  }
+
   return (
     <Layout.Horizontal className={cx(css.canvasContainer)} padding="medium">
       <div className={css.canvasWrapper}>
-        <SplitPane
-          size={openSplitView ? splitPaneSize : '100%'}
-          split="horizontal"
-          minSize={MinimumSplitPaneSize}
-          maxSize={MaximumSplitPaneSize}
-          style={{ overflow: openSplitView ? 'auto' : 'hidden' }}
-          pane2Style={{ overflow: 'initial', zIndex: 2 }}
-          resizerStyle={resizerStyle}
-          onChange={handleStageResize}
-          allowResize={openSplitView}
-        >
-          <div
-            className={css.canvas}
-            ref={canvasRef}
-            onClick={e => {
-              const div = e.target as HTMLDivElement
-              if (div === canvasRef.current?.children[0]) {
-                dynamicPopoverHandler?.hide()
-              }
-
-              if (isSplitViewOpen) {
-                setSelectionRef.current({ stageId: undefined, sectionId: undefined })
-              }
-            }}
+        {CDS_PIPELINE_STUDIO_UPGRADES ? (
+          renderStagesCanvas()
+        ) : (
+          <SplitPane
+            size={openSplitView ? splitPaneSize : '100%'}
+            split="horizontal"
+            minSize={MinimumSplitPaneSize}
+            maxSize={MaximumSplitPaneSize}
+            style={{ overflow: openSplitView ? 'auto' : 'hidden' }}
+            pane2Style={{ overflow: 'initial', zIndex: 2 }}
+            resizerStyle={resizerStyle}
+            onChange={handleStageResize}
+            allowResize={openSplitView}
           >
-            <CDPipelineStudioNew
-              readonly={isReadonly}
-              selectedNodeId={selectedStageId}
-              data={stageData}
-              loaderComponent={DiagramLoader}
-              parentSelector={'.Pane1'}
-              collapsibleProps={{ percentageNodeVisible: 0.8, bottomMarginInPixels: 80 }}
-              createNodeTitle={getString('addStage')}
-              graphLinkClassname={css.graphLink}
-            />
-            <DynamicPopover
-              darkMode={false}
-              className={css.renderPopover}
-              render={renderPopover.bind(null, gitDetails, storeMetadata)} // To use latest gitDetails and storeMetadata from pipeline context
-              bind={setDynamicPopoverHandler}
-            />
-          </div>
+            {renderStagesCanvas()}
 
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              background: 'white'
-            }}
-          >
-            {openSplitView && type === SplitViewTypes.StageView
-              ? renderPipelineStage({
-                  stageType: stageType,
-                  minimal: false,
-                  gitDetails,
-                  storeMetadata
-                })
-              : null}
-          </div>
-        </SplitPane>
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                background: 'white'
+              }}
+            >
+              {openSplitView && type === SplitViewTypes.StageView
+                ? renderPipelineStage({
+                    stageType: stageType,
+                    minimal: false,
+                    gitDetails,
+                    storeMetadata
+                  })
+                : null}
+            </div>
+          </SplitPane>
+        )}
       </div>
       {module === 'cd' && !isDrawerOpened ? (
         <HelpPanel referenceId={referenceId(sectionId)} type={HelpPanelType.FLOATING_CONTAINER} />
