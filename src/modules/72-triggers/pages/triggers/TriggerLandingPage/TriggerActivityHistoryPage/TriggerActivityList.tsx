@@ -175,16 +175,15 @@ const TriggerActivityList: React.FC<TriggerActivityListProps> = ({ triggersListR
   })
 
   const payloadValue = (): string => {
-    let value = ''
     try {
-      if (!!selectedPayloadRow && JSON.parse(selectedPayloadRow)) {
-        const parsedValue = (JSON.parse(selectedPayloadRow), null, 2)
-        value = JSON.stringify(parsedValue)
+      const parsedValue = selectedPayloadRow ? JSON.parse(selectedPayloadRow) : ''
+      if (parsedValue) {
+        return JSON.stringify(parsedValue, null, 2)
       }
+      return ''
     } catch (e) {
-      value = JSON.stringify(selectedPayloadRow)
+      return ''
     }
-    return value
   }
 
   return (
