@@ -120,4 +120,29 @@ describe('Test stepUtils', () => {
     expect(getStepPaletteModuleInfosFromStage(StageType.FEATURE, testStage, 'Kubernetes', [])[0].module).toBe('pms')
     expect(getStepPaletteModuleInfosFromStage(undefined, testStage, 'Kubernetes', []).length).toBe(2)
   })
+
+  test('category Plugin should be included in return value when isContainerStepGroup argument is passed TRUE to getStepPaletteModuleInfosFromStage', () => {
+    const testStage: StageElementConfig = {
+      identifier: 'teststage',
+      name: 'test'
+    }
+
+    const stepPaletteAPIPayload = getStepPaletteModuleInfosFromStage(
+      StageType.DEPLOY,
+      testStage,
+      'Kubernetes',
+      [],
+      true
+    )
+
+    expect(stepPaletteAPIPayload).toHaveLength(2)
+
+    expect(stepPaletteAPIPayload[0].module).toBe('ci')
+    expect(stepPaletteAPIPayload[0].category).toBe('Plugin')
+    expect(stepPaletteAPIPayload[0].shouldShowCommonSteps).toBe(false)
+
+    expect(stepPaletteAPIPayload[1].module).toBe('cd')
+    expect(stepPaletteAPIPayload[1].category).toBe('Plugin')
+    expect(stepPaletteAPIPayload[1].shouldShowCommonSteps).toBe(false)
+  })
 })
