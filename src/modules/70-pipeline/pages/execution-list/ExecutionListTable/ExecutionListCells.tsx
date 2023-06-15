@@ -279,16 +279,26 @@ export const ExecutionCell: CellType = ({ row }) => {
   const { module } = useModuleInfo()
   const { getString } = useStrings()
   const TimeAgo = module === 'cd' ? TimePopoverWithLocal : TimeAgoPopover
-  const name =
-    get(data, 'executionTriggerInfo.triggeredBy.identifier') ||
-    get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.name') ||
-    get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.id') ||
-    'Anonymous'
-  const email =
-    get(data, 'executionTriggerInfo.triggeredBy.extraInfo.email') ||
-    get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.email')
-  const profilePictureUrl =
-    get(data, 'executionTriggerInfo.triggeredBy.avatar') || get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.avatar')
+  const manualTrigger = get(data, 'executionTriggerInfo.triggerType') === 'MANUAL'
+  const name = manualTrigger
+    ? get(data, 'executionTriggerInfo.triggeredBy.identifier') ||
+      get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.name') ||
+      get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.id') ||
+      'Anonymous'
+    : get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.name') ||
+      get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.id') ||
+      get(data, 'executionTriggerInfo.triggeredBy.identifier') ||
+      'Anonymous'
+  const email = manualTrigger
+    ? get(data, 'executionTriggerInfo.triggeredBy.extraInfo.email') ||
+      get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.email')
+    : get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.email') ||
+      get(data, 'executionTriggerInfo.triggeredBy.extraInfo.email')
+  const profilePictureUrl = manualTrigger
+    ? get(data, 'executionTriggerInfo.triggeredBy.avatar') ||
+      get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.avatar')
+    : get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.avatar') ||
+      get(data, 'executionTriggerInfo.triggeredBy.avatar')
   const { hasparentpipeline = false, identifier: pipelineIdentifier } = get(
     data,
     'parentStageInfo',
