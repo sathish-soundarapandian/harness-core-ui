@@ -35,6 +35,7 @@ import type { ExecutionNode } from 'services/pipeline-ng'
 import {
   AnalysedDeploymentNode,
   GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+  VerificationOverview,
   useGetHealthSourcesForVerifyStepExecutionId,
   useGetMetricsAnalysisForVerifyStepExecutionId,
   useGetTransactionGroupsForVerifyStepExecutionId,
@@ -74,6 +75,7 @@ interface DeploymentMetricsProps {
   step: ExecutionNode
   activityId: string
   selectedNode?: AnalysedDeploymentNode
+  overviewData: VerificationOverview | null
 }
 
 type UpdateViewState = {
@@ -84,11 +86,16 @@ type UpdateViewState = {
 }
 
 export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
-  const { step, selectedNode, activityId } = props
+  const { step, selectedNode, activityId, overviewData } = props
   const { getString } = useStrings()
   const pageParams = useQueryParams<ExecutionQueryParams>()
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+
+  const startTimestampData = {
+    controlDataStartTimestamp: overviewData?.controlDataStartTimestamp || 0,
+    testDataStartTimestamp: overviewData?.testDataStartTimestamp || 0
+  }
 
   const [anomalousMetricsFilterChecked, setAnomalousMetricsFilterChecked] = useState(
     pageParams.filterAnomalous === 'true'
@@ -99,6 +106,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     pageIndex: INITIAL_PAGE_NUMBER,
     pageSize: PAGE_SIZE
   })
+
   const accordionRef = useRef<AccordionHandle>(null)
   const [pollingIntervalId, setPollingIntervalId] = useState(-1)
   const [selectedHealthSources, setSelectedHealthSources] = useState<MultiSelectOption[]>([])
@@ -216,7 +224,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     if (isErrorOrLoading(error, loading)) {
       return
     }
-    const updatedProps = transformMetricData(selectedDataFormat, data)
+    const updatedProps = transformMetricData(selectedDataFormat, startTimestampData, data)
 
     if (shouldUpdateView) {
       setUpdateViewInfo({
@@ -286,7 +294,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
 
   const hanldeDataFormatChange = useCallback(
     dataFormat => {
-      const updatedData = transformMetricData(dataFormat, data)
+      const updatedData = transformMetricData(dataFormat, startTimestampData, data)
       setUpdateViewInfo(prevState => ({
         ...prevState,
         currentViewData: updatedData
@@ -452,7 +460,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
                 setUpdateViewInfo(prevState => ({
                   ...prevState,
                   hasNewData: false,
-                  currentViewData: transformMetricData(selectedDataFormat, data)
+                  currentViewData: transformMetricData(selectedDataFormat, startTimestampData, data)
                 }))
               }}
             />

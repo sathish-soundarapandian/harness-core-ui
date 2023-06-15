@@ -7,15 +7,12 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { Container, Icon, Text, PageError } from '@harness/uicore'
-import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
 import { StepMode } from '@pipeline/utils/stepUtils'
 import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { useGetVerificationOverviewForVerifyStepExecutionId } from 'services/cv'
 import { getErrorMessage } from '../DeploymentMetrics/DeploymentMetrics.utils'
 import { DeploymentProgressAndNodes } from '../DeploymentProgressAndNodes/DeploymentProgressAndNodes'
 import type { VerifyExecutionProps } from './ExecutionVerificationSummary.types'
@@ -29,18 +26,21 @@ import css from './ExecutionVerificationSummary.module.scss'
 const POLLING_INTERVAL = 15000
 
 export function ExecutionVerificationSummary(props: VerifyExecutionProps): JSX.Element {
-  const { step, displayAnalysisCount = true, className, onSelectNode, stageType, isConsoleView } = props
-  const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const {
+    step,
+    displayAnalysisCount = true,
+    className,
+    onSelectNode,
+    stageType,
+    isConsoleView,
+    overviewData: data,
+    overviewError: error,
+    refetchOverview: refetch
+  } = props
   const [pollingIntervalId, setPollingIntervalId] = useState(-1)
   const [showSpinner, setShowSpinner] = useState(true)
   const activityId = useMemo(() => getActivityId(step), [step])
-  const { data, error, refetch } = useGetVerificationOverviewForVerifyStepExecutionId({
-    accountIdentifier,
-    orgIdentifier,
-    projectIdentifier,
-    verifyStepExecutionId: activityId,
-    lazy: true
-  })
+
   const { errorClusters = {}, logClusters = {}, metricsAnalysis = {} } = data || {}
   const failureStrategies = allowedStrategiesAsPerStep(stageType || StageType.DEPLOY)[StepMode.STEP].filter(
     st => st !== Strategy.ManualIntervention

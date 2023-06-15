@@ -6,6 +6,7 @@
  */
 
 import React, { useMemo, useState, useCallback } from 'react'
+import { useParams } from 'react-router-dom'
 import { Container, Tabs, Tab, NoDataCard, Layout, FlexExpander, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -13,7 +14,7 @@ import { useQueryParams } from '@common/hooks'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import { useLogContentHook } from '@cv/hooks/useLogContentHook/useLogContentHook'
 import { LogTypes } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
-import type { AnalysedDeploymentNode } from 'services/cv'
+import { AnalysedDeploymentNode, useGetVerificationOverviewForVerifyStepExecutionId } from 'services/cv'
 import { DeploymentMetrics } from './components/DeploymentMetrics/DeploymentMetrics'
 import { ExecutionVerificationSummary } from './components/ExecutionVerificationSummary/ExecutionVerificationSummary'
 import LogAnalysisContainer from './components/LogAnalysisContainer/LogAnalysisView.container'
@@ -21,6 +22,7 @@ import { getActivityId, getDefaultTabId } from './ExecutionVerificationView.util
 import { ManualInterventionVerifyStep } from './components/ManualInterventionVerifyStep/ManualInterventionVerifyStep'
 import InterruptedHistory from './components/InterruptedHistory/InterruptedHistory'
 import css from './ExecutionVerificationView.module.scss'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 interface ExecutionVerificationViewProps {
   step: ExecutionNode
@@ -40,6 +42,16 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
     setSelectedNode(undefined)
   }, [])
 
+  const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+
+  const { data, error, refetch } = useGetVerificationOverviewForVerifyStepExecutionId({
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId: activityId,
+    lazy: true
+  })
+
   const content = activityId ? (
     <>
       <ManualInterventionVerifyStep step={step} />
@@ -56,9 +68,12 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
                 step={step}
                 className={css.executionSummary}
                 onSelectNode={setSelectedNode}
+                refetchOverview={refetch}
+                overviewError={error}
+                overviewData={data}
                 isConsoleView
               />
-              <DeploymentMetrics step={step} selectedNode={selectedNode} activityId={activityId} />
+              <DeploymentMetrics step={step} selectedNode={selectedNode} activityId={activityId} overviewData={data} />
             </Layout.Horizontal>
           }
         />
@@ -73,6 +88,9 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
                 className={css.executionSummary}
                 onSelectNode={setSelectedNode}
                 isConsoleView
+                refetchOverview={refetch}
+                overviewError={error}
+                overviewData={data}
               />
               <LogAnalysisContainer step={step} hostName={selectedNode?.nodeIdentifier} />
             </Layout.Horizontal>

@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { GetDataError } from 'restful-react'
 import type { StageType } from '@pipeline/utils/stageHelpers'
-import type { AnalysedNodeOverview } from 'services/cv'
+import type { AnalysedNodeOverview, VerificationOverview } from 'services/cv'
 import type { ExecutionNode } from 'services/pipeline-ng'
 
 export interface VerifyExecutionProps {
@@ -16,4 +17,7 @@ export interface VerifyExecutionProps {
   onSelectNode?: (selectedNode?: AnalysedNodeOverview) => void
   className?: string
   isConsoleView?: boolean
+  refetchOverview: () => Promise<void>
+  overviewError: GetDataError<unknown> | null
+  overviewData: VerificationOverview | null
 }

@@ -32,6 +32,10 @@ import { DEFAULT_NODE_RISK_COUNTS, DEFAULT_PAGINATION_VALUEE } from './Deploymen
 
 export function transformMetricData(
   selectedDataFormat: SelectOption,
+  startTimestampData: {
+    controlDataStartTimestamp: number
+    testDataStartTimestamp: number
+  },
   metricData?: PageMetricsAnalysis | null
 ): DeploymentMetricsAnalysisRowProps[] {
   if (!(Array.isArray(metricData?.content) && metricData?.content.length)) {
@@ -82,7 +86,8 @@ export function transformMetricData(
         analysisResult: testAnalysisResult,
         analysisReason,
         nodeIdentifier: controlNodeIdentifier,
-        controlDataType
+        controlDataType,
+        startTime: startTimestampData.controlDataStartTimestamp
       })
 
       generatePointsForNodes({
@@ -91,7 +96,8 @@ export function transformMetricData(
         analysisResult: testAnalysisResult,
         analysisReason,
         nodeIdentifier: controlNodeIdentifier,
-        controlDataType
+        controlDataType,
+        startTime: startTimestampData.controlDataStartTimestamp
       })
 
       // generating points for testHost
@@ -102,7 +108,8 @@ export function transformMetricData(
         analysisReason,
         nodeIdentifier,
         controlDataType,
-        appliedThresholds
+        appliedThresholds,
+        startTime: startTimestampData.testDataStartTimestamp
       })
       generatePointsForNodes({
         inputTestData: normalisedTestData,
@@ -111,7 +118,8 @@ export function transformMetricData(
         analysisReason,
         nodeIdentifier,
         controlDataType,
-        appliedThresholds
+        appliedThresholds,
+        startTime: startTimestampData.testDataStartTimestamp
       })
 
       nodeRiskCountDTO = getNodeRiskCountDTO(testAnalysisResult, nodeRiskCountDTO)
@@ -141,7 +149,8 @@ function generatePointsForNodes({
   analysisReason,
   nodeIdentifier,
   controlDataType,
-  appliedThresholds
+  appliedThresholds,
+  startTime
 }: {
   inputTestData: MetricValueV2[] | undefined
   points: HostTestData[] | HostControlTestData[]
@@ -150,6 +159,7 @@ function generatePointsForNodes({
   nodeIdentifier: string | undefined
   controlDataType?: AnalysedDeploymentTestDataNode['controlDataType']
   appliedThresholds?: AnalysedDeploymentTestDataNode['appliedThresholds']
+  startTime: number
 }): void {
   const hostData: Highcharts.SeriesLineOptions['data'] = []
   const sortedTestData = inputTestData
@@ -157,7 +167,7 @@ function generatePointsForNodes({
     ?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
   const testDataInitialXValue = sortedTestData?.[0]?.timestampInMillis || 0
   sortedTestData?.forEach(({ timestampInMillis, value }) => {
-    hostData.push({ x: (timestampInMillis || 0) - testDataInitialXValue, y: value === -1 ? null : value })
+    hostData.push({ x: (timestampInMillis || 0) - startTime, y: value === -1 ? null : value })
   })
 
   points.push({
