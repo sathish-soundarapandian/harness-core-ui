@@ -46,96 +46,6 @@ export interface K8SCustomService extends DatabaseK8SCustomServiceCollection {
   relatedServices?: ApiCustomServiceConnection[]
 }
 
-const Name: Renderer<CellProps<K8SCustomService>> = ({ row }) => {
-  const [isOpen, setDrawerOpen] = React.useState(false)
-  return (
-    <>
-      <Text
-        font={{ size: 'normal', weight: 'semi-bold' }}
-        margin={{ left: 'medium' }}
-        color={Color.PRIMARY_7}
-        style={{ cursor: 'pointer' }}
-        onClick={() => {
-          setDrawerOpen(true)
-        }}
-      >
-        {row.original.name}
-      </Text>
-      <Drawer position={Position.RIGHT} isOpen={isOpen} isCloseButtonShown={true} size={'86%'}>
-        <ServiceDetails
-          serviceName={row.original.name ?? ''}
-          serviceId={row.original.id ?? ''}
-          infraId={row.original.infraID ?? ''}
-          closeModal={() => {
-            setDrawerOpen(false)
-          }}
-        />
-      </Drawer>
-    </>
-  )
-}
-
-const Namepspace: Renderer<CellProps<K8SCustomService>> = ({ row }) => (
-  <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-    <Icon name="app-kubernetes" size={24} margin={{ right: 'small' }} />
-    <Text>{row.original.namespace}</Text>
-  </Layout.Horizontal>
-)
-const NetworkDetails: Renderer<CellProps<K8SCustomService>> = ({ row }) => (
-  <Layout.Vertical>
-    <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_500}>
-      IP Address: {row.original.service?.clusterIP}
-    </Text>
-    <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_500}>
-      Port Number:{' '}
-      {row.original.service &&
-        row.original.service?.ports &&
-        row.original.service?.ports.map((value, index) => {
-          if (index + 1 == row.original.service?.ports?.length) {
-            return `${value.port} `
-          }
-          return `${value.port}, `
-        })}
-    </Text>
-  </Layout.Vertical>
-)
-const LastModified: Renderer<CellProps<K8SCustomService>> = ({ row }) => {
-  const relatedServices = row.original
-  return (
-    <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }}>
-      <Text lineClamp={1}>
-        {relatedServices.relatedServices?.map(services => {
-          return `${services.destinationName} `
-        })}
-      </Text>
-    </Layout.Horizontal>
-  )
-}
-
-const ThreeDotMenu: Renderer<CellProps<K8SCustomService>> = () => {
-  const history = useHistory()
-  const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
-  return (
-    <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
-      <Button
-        minimal
-        tooltip="Create Network Map"
-        icon="plus"
-        onClick={() => {
-          history.push({
-            pathname: routes.toCreateNetworkMap({
-              dAgentId: dAgentId,
-              accountId,
-              orgIdentifier,
-              projectIdentifier
-            })
-          })
-        }}
-      />
-    </Layout.Horizontal>
-  )
-}
-
 const DiscoveredServices: React.FC = () => {
   const { dAgentId, accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { getString } = useStrings()
@@ -145,12 +55,6 @@ const DiscoveredServices: React.FC = () => {
 
   //States for pagination
   const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
-  const paginationProps = useDefaultPaginationProps({
-    itemCount: 100,
-    pageSize: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
-    pageCount: 10,
-    pageIndex: page ? parseInt(page) : 0
-  })
 
   const { data: namespaceList } = useListNamespace({
     infraIdentity: dAgentId,
@@ -176,6 +80,13 @@ const DiscoveredServices: React.FC = () => {
       all: false,
       search: search
     }
+  })
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: serviceList?.page?.totalItems ?? 0,
+    pageSize: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
+    pageCount: serviceList?.page?.totalPages ?? 1,
+    pageIndex: page ? parseInt(page) : 0
   })
 
   const { data: connectionList, loading: connectionListLoading } = useListK8sCustomServiceConnection({
@@ -220,6 +131,95 @@ const DiscoveredServices: React.FC = () => {
         })
       : [])
   ]
+
+  const Name: Renderer<CellProps<K8SCustomService>> = ({ row }) => {
+    const [isOpen, setDrawerOpen] = React.useState(false)
+    return (
+      <>
+        <Text
+          font={{ size: 'normal', weight: 'semi-bold' }}
+          margin={{ left: 'medium' }}
+          color={Color.PRIMARY_7}
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            setDrawerOpen(true)
+          }}
+        >
+          {row.original.name}
+        </Text>
+        <Drawer position={Position.RIGHT} isOpen={isOpen} isCloseButtonShown={true} size={'86%'}>
+          <ServiceDetails
+            serviceName={row.original.name ?? ''}
+            serviceId={row.original.id ?? ''}
+            infraId={dAgentId ?? ''}
+            closeModal={() => {
+              setDrawerOpen(false)
+            }}
+          />
+        </Drawer>
+      </>
+    )
+  }
+
+  const Namepspace: Renderer<CellProps<K8SCustomService>> = ({ row }) => (
+    <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+      <Icon name="app-kubernetes" size={24} margin={{ right: 'small' }} />
+      <Text>{row.original.namespace}</Text>
+    </Layout.Horizontal>
+  )
+  const NetworkDetails: Renderer<CellProps<K8SCustomService>> = ({ row }) => (
+    <Layout.Vertical>
+      <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_500}>
+        IP Address: {row.original.service?.clusterIP}
+      </Text>
+      <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_500}>
+        Port Number:{' '}
+        {row.original.service &&
+          row.original.service?.ports &&
+          row.original.service?.ports.map((value, index) => {
+            if (index + 1 == row.original.service?.ports?.length) {
+              return `${value.port} `
+            }
+            return `${value.port}, `
+          })}
+      </Text>
+    </Layout.Vertical>
+  )
+  const LastModified: Renderer<CellProps<K8SCustomService>> = ({ row }) => {
+    const relatedServices = row.original
+    return (
+      <Layout.Horizontal flex={{ align: 'center-center', justifyContent: 'flex-start' }}>
+        <Text lineClamp={1}>
+          {relatedServices.relatedServices?.map(services => {
+            return `${services.destinationName} `
+          })}
+        </Text>
+      </Layout.Horizontal>
+    )
+  }
+
+  const ThreeDotMenu: Renderer<CellProps<K8SCustomService>> = () => {
+    const history = useHistory()
+    return (
+      <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
+        <Button
+          minimal
+          tooltip="Create Network Map"
+          icon="plus"
+          onClick={() => {
+            history.push({
+              pathname: routes.toCreateNetworkMap({
+                dAgentId: dAgentId,
+                accountId,
+                orgIdentifier,
+                projectIdentifier
+              })
+            })
+          }}
+        />
+      </Layout.Horizontal>
+    )
+  }
 
   return (
     <Container>

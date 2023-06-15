@@ -22,7 +22,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import DiscoveryAgentTable from '@discovery/components/DiscoveryAgentTable/DiscoveryAgentTable'
 import { useQueryParams } from '@common/hooks'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
-import type { ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
+import { DEFAULT_PAGE_SIZE, ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
 import EmptyStateDiscoveryAgent from './views/empty-state/EmptyStateDiscoveryAgent'
 import CreateDAgent from './views/create-discovery-agent/CreateDAgent'
 import css from './DiscoveryPage.module.scss'
@@ -37,12 +37,6 @@ const DiscoveryPage: React.FC = () => {
 
   //States for pagination
   const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
-  const paginationProps = useDefaultPaginationProps({
-    itemCount: 100,
-    pageSize: size ? parseInt(size) : 0,
-    pageCount: 10,
-    pageIndex: page ? parseInt(page) : 0
-  })
 
   const { data: discoveryAgentList, loading: discoveryAgentListLoading } = useListInfra({
     queryParams: {
@@ -54,6 +48,13 @@ const DiscoveryPage: React.FC = () => {
       page: page ? parseInt(page) : 0,
       limit: size ? parseInt(size) : 0
     }
+  })
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: discoveryAgentList?.page?.totalItems ?? 0,
+    pageSize: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
+    pageCount: discoveryAgentList?.page?.totalPages ?? 1,
+    pageIndex: page ? parseInt(page) : 0
   })
 
   return (
@@ -105,7 +106,7 @@ const DiscoveryPage: React.FC = () => {
                       throttle={500}
                       defaultValue={search}
                       onChange={value => setSearch(value)}
-                      placeholder={getString('discovery.homepage.searchNeworkMap')}
+                      placeholder={'Search Discovery Agent'}
                     />
                   </Container>
                 </Layout.Horizontal>

@@ -26,7 +26,7 @@ const Overview: React.FC<Overview> = props => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { getString } = useStrings()
   const { data: serviceData, loading: getServiceLoader } = useGetServiceFromK8SCustomService({
-    infraID: infraId,
+    infraIdentity: infraId,
     kcs_id: serviceId,
     queryParams: {
       accountIdentifier: accountId,
@@ -36,7 +36,7 @@ const Overview: React.FC<Overview> = props => {
   })
 
   const { data: serviceWorkloadData, loading: getServiceWorkloadLoading } = useGetK8SCustomService({
-    infraID: infraId,
+    infraIdentity: infraId,
     kcs_id: serviceId,
     queryParams: {
       accountIdentifier: accountId,

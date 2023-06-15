@@ -10,6 +10,7 @@ import {
   Avatar,
   Button,
   ButtonVariation,
+  Container,
   ExpandingSearchInput,
   Layout,
   Page,
@@ -29,6 +30,7 @@ import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, ServiceDiscoveryFilterParams } from '@discovery/interface/filters'
+import EmptyStateNetworkMap from './EmptyStateNetworkMap'
 import css from './NetworkMapTable.module.scss'
 
 const NetworkMapTable: React.FC = () => {
@@ -39,12 +41,6 @@ const NetworkMapTable: React.FC = () => {
 
   //States for pagination
   const { page, size } = useQueryParams<ServiceDiscoveryFilterParams>()
-  const paginationProps = useDefaultPaginationProps({
-    itemCount: 100,
-    pageSize: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
-    pageCount: 10,
-    pageIndex: page ? parseInt(page) : 0
-  })
 
   const {
     data: networkMapList,
@@ -60,6 +56,13 @@ const NetworkMapTable: React.FC = () => {
       limit: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
       all: false
     }
+  })
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: networkMapList?.page?.totalItems ?? 1,
+    pageSize: size ? parseInt(size) : DEFAULT_PAGE_SIZE,
+    pageCount: networkMapList?.page?.totalPages ?? 1,
+    pageIndex: page ? parseInt(page) : 0
   })
 
   const { mutate: deleteNetworkMap } = useDeleteNetworkMap({
@@ -128,69 +131,75 @@ const NetworkMapTable: React.FC = () => {
   }
 
   return (
-    <>
-      <Page.SubHeader>
-        <Layout.Horizontal width="100%" flex={{ justifyContent: 'space-between' }}>
-          <Button
-            text="New Network Map"
-            icon="plus"
-            variation={ButtonVariation.PRIMARY}
-            onClick={() => {
-              history.push({
-                pathname: routes.toCreateNetworkMap({
-                  dAgentId: dAgentId,
-                  accountId,
-                  orgIdentifier,
-                  projectIdentifier
-                })
-              })
-            }}
-          />
-          <ExpandingSearchInput
-            alwaysExpanded
-            width={232}
-            placeholder="Search for a network map"
-            throttle={500}
-            defaultValue={search}
-            onChange={value => setSearch(value)}
-          />
-        </Layout.Horizontal>
-      </Page.SubHeader>
-      {networkMapListLoading ? (
-        <></>
-      ) : (
-        <TableV2<DatabaseNetworkMapCollection>
-          className={css.tableBody}
-          sortable={true}
-          columns={[
-            {
-              Header: 'NETWORK MAPS',
-              width: '30%',
-              Cell: Name
-            },
+    <Container>
+      {networkMapList?.items?.length !== 0 ? (
+        <>
+          <Page.SubHeader>
+            <Layout.Horizontal width="100%" flex={{ justifyContent: 'space-between' }}>
+              <Button
+                text="New Network Map"
+                icon="plus"
+                variation={ButtonVariation.PRIMARY}
+                onClick={() => {
+                  history.push({
+                    pathname: routes.toCreateNetworkMap({
+                      dAgentId: dAgentId,
+                      accountId,
+                      orgIdentifier,
+                      projectIdentifier
+                    })
+                  })
+                }}
+              />
+              <ExpandingSearchInput
+                alwaysExpanded
+                width={232}
+                placeholder="Search for a network map"
+                throttle={500}
+                defaultValue={search}
+                onChange={value => setSearch(value)}
+              />
+            </Layout.Horizontal>
+          </Page.SubHeader>
+          {networkMapListLoading ? (
+            <Page.Spinner />
+          ) : (
+            <TableV2<DatabaseNetworkMapCollection>
+              className={css.tableBody}
+              sortable={true}
+              columns={[
+                {
+                  Header: 'NETWORK MAPS',
+                  width: '30%',
+                  Cell: Name
+                },
 
-            {
-              Header: 'NO OF SERVICES',
-              width: '30%',
-              Cell: ServiceCount
-            },
-            {
-              Header: 'LAST UPDATED BY',
-              width: '30%',
-              Cell: LastModified
-            },
-            {
-              Header: '',
-              id: 'threeDotMenu',
-              width: '10%',
-              Cell: ThreeDotMenu
-            }
-          ]}
-          data={networkMapList?.items ?? []}
-          pagination={paginationProps}
-        />
+                {
+                  Header: 'NO OF SERVICES',
+                  width: '30%',
+                  Cell: ServiceCount
+                },
+                {
+                  Header: 'LAST UPDATED BY',
+                  width: '30%',
+                  Cell: LastModified
+                },
+                {
+                  Header: '',
+                  id: 'threeDotMenu',
+                  width: '10%',
+                  Cell: ThreeDotMenu
+                }
+              ]}
+              data={networkMapList?.items ?? []}
+              pagination={paginationProps}
+            />
+          )}
+        </>
+      ) : (
+        <EmptyStateNetworkMap />
       )}
-    </>
+    </Container>
   )
 }
 
