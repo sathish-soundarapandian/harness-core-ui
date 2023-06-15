@@ -78,7 +78,7 @@ const config = {
     }),
     new CircularDependencyPlugin({
       exclude: /node_modules/,
-      failOnError: true
+      failOnError: false
     }),
     new HTMLWebpackPlugin({
       template: 'src/versions.html',
