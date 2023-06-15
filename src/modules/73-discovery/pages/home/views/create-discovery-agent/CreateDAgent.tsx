@@ -37,6 +37,7 @@ interface FormValues {
   blacklistedNamespaces?: string[]
   cronString?: string
   connectorRef: string | undefined
+  identifier: string | undefined
 }
 
 export interface DrawerProps {
@@ -61,6 +62,7 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
   const inputValues: FormValues = {
     discoveryAgentName: '',
     connectorRef: undefined,
+    identifier: undefined,
     detectNetworkTrace: isNetworkTraceDetected
   }
 
@@ -71,6 +73,7 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
           infraMutate({
             k8sConnectorID: dAgentFormRef.current?.values.connectorRef,
             name: dAgentFormRef.current?.values.discoveryAgentName,
+            identity: dAgentFormRef.current?.values.identifier,
             config: {
               kubernetes: {
                 namespace: 'sd1',
@@ -125,11 +128,10 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
             validationSchema={Yup.object().shape({
               discoveryAgentName: Yup.string()
                 .trim()
-                .matches(/^[a-z0-9-]*$/, 'Network Map name can only contain lowercase letters, numbers and dashes')
-                .matches(/^[^-].*$/, 'Network Map name can not start with -')
-                .matches(/^.*[^-]$/, 'Network Map name can not end with -')
-                .max(50, 'Network Map name can have a max length of 50 characters')
-                .required('Network Map name is required!'),
+                .matches(/^[^-].*$/, 'Discovery Agent name can not start with -')
+                .matches(/^.*[^-]$/, 'Discovery Agent name can not end with -')
+                .max(50, 'Discovery Agent name can have a max length of 50 characters')
+                .required('Discovery Agent name is required!'),
               connectorRef: Yup.string().trim().required('Please select a Connector!')
             })}
             onSubmit={() => void 0}
@@ -173,11 +175,14 @@ const CreateDAgent: React.FC<DrawerProps> = ({ setDrawerOpen }) => {
                               tooltipProps={{ dataTooltipId: 'selectNetworkMapConnector' }}
                             />
 
-                            <FormInput.Text
-                              name="discoveryAgentName"
-                              label={getString('discovery.dAgentName')}
-                              placeholder={getString('discovery.testConnector')}
-                            />
+                            <div style={{ width: '400px' }}>
+                              <FormInput.InputWithIdentifier
+                                inputName="discoveryAgentName"
+                                idName="identifier"
+                                isIdentifierEditable
+                                inputLabel={getString('discovery.dAgentName')}
+                              />
+                            </div>
                           </Container>
                         </Layout.Vertical>
                       }

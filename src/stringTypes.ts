@@ -5604,6 +5604,7 @@ export interface StringsMap {
   'discovery.howToCreateNetworkMapDesc': string
   'discovery.networkMap': string
   'discovery.networkMapDescription': string
+  'discovery.newNetworkMap': string
   'discovery.optional': string
   'discovery.selectAConnector': string
   'discovery.selectAConnectorDescription': string

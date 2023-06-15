@@ -6,7 +6,7 @@
  */
 import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Icon, Layout, Tab, Tabs, Text, TextInput } from '@harness/uicore'
+import { Formik, Icon, Layout, ModalDialog, Tab, Tabs, Text, useToggleOpen } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 
@@ -17,6 +17,7 @@ import type { DiscoveryPathProps, ModulePathParams, ProjectPathProps } from '@co
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
+import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import SelectService from './views/select-service/SelectService'
 import css from './NetworkMapStudio.module.scss'
 
@@ -29,10 +30,10 @@ const NetworkMapStudio: React.FC = () => {
   const { dAgentId } = useParams<DiscoveryPathProps & ModulePathParams>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
+  const { isOpen, open, close } = useToggleOpen()
   const history = useHistory()
   const createNetworkMapLabel = getString('discovery.createNetworkMap')
 
-  const [toggleEditName, setToggleEditName] = useState<boolean>(false)
   const [title, setTitle] = useState<string>('Untitled Network Map')
 
   useDocumentTitle(createNetworkMapLabel)
@@ -69,24 +70,41 @@ const NetworkMapStudio: React.FC = () => {
           <React.Fragment>
             <String tagName="div" className={css.networkMapTitle} stringID="common.networkMap" />
             <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-              <Icon
-                name="code-edit"
-                size={20}
-                className={css.headerIcon}
-                onClick={() => setToggleEditName(prev => !prev)}
-              />
-              {toggleEditName ? (
-                <TextInput
-                  defaultValue=""
-                  placeholder={title === 'Untitled Network Map' ? 'Network Map Name' : title}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value)}
-                />
-              ) : (
-                <Text color={title === 'Untitled Network Map' ? Color.GREY_200 : Color.GREY_900} font="medium">
-                  {title}
-                </Text>
-              )}
+              <Text color={title === 'Untitled Network Map' ? Color.GREY_200 : Color.GREY_900} font="medium">
+                {title}
+              </Text>
+              <Icon name="code-edit" size={20} className={css.headerIcon} onClick={() => open()} />
             </Layout.Horizontal>
+            <ModalDialog
+              isOpen={isOpen}
+              onClose={close}
+              title={getString('discovery.newNetworkMap')}
+              canEscapeKeyClose={false}
+              canOutsideClickClose={true}
+              enforceFocus={false}
+              lazy
+              width={800}
+              height={640}
+              className={css.dialogStyles}
+            >
+              <Formik
+                initialValues={{
+                  identifier: '',
+                  name: '',
+                  description: '',
+                  tags: {}
+                }}
+                formName="networkMapNameForm"
+                onSubmit={values => {
+                  setTitle(values.name)
+                  close()
+                }}
+              >
+                {formikProps => (
+                  <NameIdDescriptionTags formikProps={formikProps} identifierProps={{ isIdentifierEditable: true }} />
+                )}
+              </Formik>
+            </ModalDialog>
           </React.Fragment>
         }
       />

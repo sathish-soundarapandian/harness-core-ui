@@ -13,6 +13,24 @@
   --page-header-height: 146px;
 }
 
+.dialogStyles {
+  :global {
+    .ModalDialog--body {
+      padding: 0 !important;
+
+      &::before,
+      &::after {
+        margin: 0 !important;
+      }
+    }
+
+    .ModalDialog--bodyContent {
+      padding: 0 !important;
+    }
+  }
+  overflow: hidden;
+}
+
 .networkMapTitle {
   position: absolute;
   z-index: 1;

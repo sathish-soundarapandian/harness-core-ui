@@ -37,7 +37,7 @@ const SelectService: React.FC<Props> = ({ name }) => {
   const [limit, setLimit] = useState<number>(15)
 
   const { data: discoveredServices, loading } = useListService({
-    infraID: dAgentId,
+    infraIdentity: dAgentId,
     queryParams: {
       accountIdentifier: accountId,
       organizationIdentifier: orgIdentifier,
@@ -54,7 +54,7 @@ const SelectService: React.FC<Props> = ({ name }) => {
       organizationIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier
     },
-    infraID: dAgentId
+    infraIdentity: dAgentId
   })
 
   const handleSelectChange = (isSelect: boolean, row: Row<DatabaseServiceCollection>): void => {

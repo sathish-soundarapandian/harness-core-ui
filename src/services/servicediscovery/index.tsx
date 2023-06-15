@@ -192,8 +192,7 @@ export interface ApiListContainerVolume {
 
 export interface ApiListCronJobResponse {
   items?: DatabaseCronJobCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListCustomServiceConnection {
@@ -202,74 +201,62 @@ export interface ApiListCustomServiceConnection {
 
 export interface ApiListDaemonSetResponse {
   items?: DatabaseDaemonSetCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListDeploymentResponse {
   items?: DatabaseDeploymentCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListInfraResponse {
   items?: ApiGetInfraResponse[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListInstallInfraResponse {
   items?: DatabaseInstallInfraCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListJobResponse {
   items?: DatabaseJobCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListK8sCustomService {
   items?: DatabaseK8SCustomServiceCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListNamespaceResponse {
   items?: DatabaseNamespaceCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListNetworkMapResponse {
   items?: DatabaseNetworkMapCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListNodeResponse {
   items?: DatabaseNodeCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListPersistentVolumeClaimResponse {
   items?: DatabasePersistentVolumeClaimCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListPersistentVolumeResponse {
   items?: DatabasePersistentVolumeCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListPodResponse {
   items?: DatabasePodCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListProcess {
@@ -278,26 +265,29 @@ export interface ApiListProcess {
 
 export interface ApiListReplicaSetResponse {
   items?: DatabaseReplicaSetCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListReplicationControllerResponse {
   items?: DatabaseReplicationControllerCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListServiceResponse {
   items?: DatabaseServiceCollection[]
-  limit?: number
-  page?: number
+  page?: ApiPagination
 }
 
 export interface ApiListStatefulSetResponse {
   items?: DatabaseStatefulSetCollection[]
+  page?: ApiPagination
+}
+
+export interface ApiPagination {
+  all?: boolean
+  index?: number
   limit?: number
-  page?: number
+  total?: number
 }
 
 export interface ApiUpdateInfraRequest {
@@ -1363,6 +1353,7 @@ export interface V1Condition {
    * The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
    * +required
    * +kubebuilder:validation:Required
+   * +kubebuilder:validation:Pattern=``
    * +kubebuilder:validation:MaxLength=316
    */
   type?: string
@@ -5568,6 +5559,7 @@ export interface V1PortStatus {
    * The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
    * +optional
    * +kubebuilder:validation:Required
+   * +kubebuilder:validation:Pattern=``
    * +kubebuilder:validation:MaxLength=316
    */
   error?: string
@@ -8211,9 +8203,9 @@ export interface GetInfraQueryParams {
 
 export interface GetInfraPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type GetInfraProps = Omit<
@@ -8232,14 +8224,14 @@ export type GetInfraProps = Omit<
  *
  * Get an infra
  */
-export const GetInfra = ({ infraID, ...props }: GetInfraProps) => (
+export const GetInfra = ({ infraIdentity, ...props }: GetInfraProps) => (
   <Get<
     ApiGetInfraResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     GetInfraQueryParams,
     GetInfraPathParams
   >
-    path={`/api/v1/infras/${infraID}`}
+    path={`/api/v1/infras/${infraIdentity}`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -8261,15 +8253,15 @@ export type UseGetInfraProps = Omit<
  *
  * Get an infra
  */
-export const useGetInfra = ({ infraID, ...props }: UseGetInfraProps) =>
+export const useGetInfra = ({ infraIdentity, ...props }: UseGetInfraProps) =>
   useGet<
     ApiGetInfraResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     GetInfraQueryParams,
     GetInfraPathParams
-  >((paramsInPath: GetInfraPathParams) => `/api/v1/infras/${paramsInPath.infraID}`, {
+  >((paramsInPath: GetInfraPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -8280,7 +8272,7 @@ export const useGetInfra = ({ infraID, ...props }: UseGetInfraProps) =>
  */
 export const getInfraPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiGetInfraResponse,
@@ -8289,9 +8281,9 @@ export const getInfraPromise = (
     GetInfraPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -8300,7 +8292,7 @@ export const getInfraPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     GetInfraQueryParams,
     GetInfraPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}`, props, signal)
 
 export interface UpdateInfraQueryParams {
   /**
@@ -8319,9 +8311,9 @@ export interface UpdateInfraQueryParams {
 
 export interface UpdateInfraPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type UpdateInfraProps = Omit<
@@ -8341,7 +8333,7 @@ export type UpdateInfraProps = Omit<
  *
  * Update an infra
  */
-export const UpdateInfra = ({ infraID, ...props }: UpdateInfraProps) => (
+export const UpdateInfra = ({ infraIdentity, ...props }: UpdateInfraProps) => (
   <Mutate<
     ApiGetInfraResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -8350,7 +8342,7 @@ export const UpdateInfra = ({ infraID, ...props }: UpdateInfraProps) => (
     UpdateInfraPathParams
   >
     verb="PUT"
-    path={`/api/v1/infras/${infraID}`}
+    path={`/api/v1/infras/${infraIdentity}`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -8373,16 +8365,16 @@ export type UseUpdateInfraProps = Omit<
  *
  * Update an infra
  */
-export const useUpdateInfra = ({ infraID, ...props }: UseUpdateInfraProps) =>
+export const useUpdateInfra = ({ infraIdentity, ...props }: UseUpdateInfraProps) =>
   useMutate<
     ApiGetInfraResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     UpdateInfraQueryParams,
     ApiUpdateInfraRequest,
     UpdateInfraPathParams
-  >('PUT', (paramsInPath: UpdateInfraPathParams) => `/api/v1/infras/${paramsInPath.infraID}`, {
+  >('PUT', (paramsInPath: UpdateInfraPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -8393,7 +8385,7 @@ export const useUpdateInfra = ({ infraID, ...props }: UseUpdateInfraProps) =>
  */
 export const updateInfraPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: MutateUsingFetchProps<
     ApiGetInfraResponse,
@@ -8403,9 +8395,9 @@ export const updateInfraPromise = (
     UpdateInfraPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -8415,7 +8407,7 @@ export const updateInfraPromise = (
     UpdateInfraQueryParams,
     ApiUpdateInfraRequest,
     UpdateInfraPathParams
-  >('PUT', getConfig('servicediscovery'), `/api/v1/infras/${infraID}`, props, signal)
+  >('PUT', getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}`, props, signal)
 
 export interface ListConnectionQueryParams {
   /**
@@ -8434,9 +8426,9 @@ export interface ListConnectionQueryParams {
 
 export interface ListConnectionPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListConnectionProps = Omit<
@@ -8455,14 +8447,14 @@ export type ListConnectionProps = Omit<
  *
  * List connection
  */
-export const ListConnection = ({ infraID, ...props }: ListConnectionProps) => (
+export const ListConnection = ({ infraIdentity, ...props }: ListConnectionProps) => (
   <Get<
     ApiListConnection,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListConnectionQueryParams,
     ListConnectionPathParams
   >
-    path={`/api/v1/infras/${infraID}/connections`}
+    path={`/api/v1/infras/${infraIdentity}/connections`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -8484,15 +8476,15 @@ export type UseListConnectionProps = Omit<
  *
  * List connection
  */
-export const useListConnection = ({ infraID, ...props }: UseListConnectionProps) =>
+export const useListConnection = ({ infraIdentity, ...props }: UseListConnectionProps) =>
   useGet<
     ApiListConnection,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListConnectionQueryParams,
     ListConnectionPathParams
-  >((paramsInPath: ListConnectionPathParams) => `/api/v1/infras/${paramsInPath.infraID}/connections`, {
+  >((paramsInPath: ListConnectionPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/connections`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -8503,7 +8495,7 @@ export const useListConnection = ({ infraID, ...props }: UseListConnectionProps)
  */
 export const listConnectionPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListConnection,
@@ -8512,9 +8504,9 @@ export const listConnectionPromise = (
     ListConnectionPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -8523,7 +8515,7 @@ export const listConnectionPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListConnectionQueryParams,
     ListConnectionPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/connections`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/connections`, props, signal)
 
 export interface ListCronjobQueryParams {
   /**
@@ -8562,9 +8554,9 @@ export interface ListCronjobQueryParams {
 
 export interface ListCronjobPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListCronjobProps = Omit<
@@ -8583,14 +8575,14 @@ export type ListCronjobProps = Omit<
  *
  * Get list of cronjobs present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const ListCronjob = ({ infraID, ...props }: ListCronjobProps) => (
+export const ListCronjob = ({ infraIdentity, ...props }: ListCronjobProps) => (
   <Get<
     ApiListCronJobResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListCronjobQueryParams,
     ListCronjobPathParams
   >
-    path={`/api/v1/infras/${infraID}/cronjobs`}
+    path={`/api/v1/infras/${infraIdentity}/cronjobs`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -8612,15 +8604,15 @@ export type UseListCronjobProps = Omit<
  *
  * Get list of cronjobs present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const useListCronjob = ({ infraID, ...props }: UseListCronjobProps) =>
+export const useListCronjob = ({ infraIdentity, ...props }: UseListCronjobProps) =>
   useGet<
     ApiListCronJobResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListCronjobQueryParams,
     ListCronjobPathParams
-  >((paramsInPath: ListCronjobPathParams) => `/api/v1/infras/${paramsInPath.infraID}/cronjobs`, {
+  >((paramsInPath: ListCronjobPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/cronjobs`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -8631,7 +8623,7 @@ export const useListCronjob = ({ infraID, ...props }: UseListCronjobProps) =>
  */
 export const listCronjobPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListCronJobResponse,
@@ -8640,9 +8632,9 @@ export const listCronjobPromise = (
     ListCronjobPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -8651,7 +8643,7 @@ export const listCronjobPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListCronjobQueryParams,
     ListCronjobPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/cronjobs`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/cronjobs`, props, signal)
 
 export interface ListDeamonsetQueryParams {
   /**
@@ -8690,9 +8682,9 @@ export interface ListDeamonsetQueryParams {
 
 export interface ListDeamonsetPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListDeamonsetProps = Omit<
@@ -8711,14 +8703,14 @@ export type ListDeamonsetProps = Omit<
  *
  * Get list of daemonsets present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const ListDeamonset = ({ infraID, ...props }: ListDeamonsetProps) => (
+export const ListDeamonset = ({ infraIdentity, ...props }: ListDeamonsetProps) => (
   <Get<
     ApiListDaemonSetResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListDeamonsetQueryParams,
     ListDeamonsetPathParams
   >
-    path={`/api/v1/infras/${infraID}/daemonsets`}
+    path={`/api/v1/infras/${infraIdentity}/daemonsets`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -8740,15 +8732,15 @@ export type UseListDeamonsetProps = Omit<
  *
  * Get list of daemonsets present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const useListDeamonset = ({ infraID, ...props }: UseListDeamonsetProps) =>
+export const useListDeamonset = ({ infraIdentity, ...props }: UseListDeamonsetProps) =>
   useGet<
     ApiListDaemonSetResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListDeamonsetQueryParams,
     ListDeamonsetPathParams
-  >((paramsInPath: ListDeamonsetPathParams) => `/api/v1/infras/${paramsInPath.infraID}/daemonsets`, {
+  >((paramsInPath: ListDeamonsetPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/daemonsets`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -8759,7 +8751,7 @@ export const useListDeamonset = ({ infraID, ...props }: UseListDeamonsetProps) =
  */
 export const listDeamonsetPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListDaemonSetResponse,
@@ -8768,9 +8760,9 @@ export const listDeamonsetPromise = (
     ListDeamonsetPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -8779,7 +8771,7 @@ export const listDeamonsetPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListDeamonsetQueryParams,
     ListDeamonsetPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/daemonsets`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/daemonsets`, props, signal)
 
 export interface ListDeploymentQueryParams {
   /**
@@ -8818,9 +8810,9 @@ export interface ListDeploymentQueryParams {
 
 export interface ListDeploymentPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListDeploymentProps = Omit<
@@ -8839,14 +8831,14 @@ export type ListDeploymentProps = Omit<
  *
  * Get list of deployments present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const ListDeployment = ({ infraID, ...props }: ListDeploymentProps) => (
+export const ListDeployment = ({ infraIdentity, ...props }: ListDeploymentProps) => (
   <Get<
     ApiListDeploymentResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListDeploymentQueryParams,
     ListDeploymentPathParams
   >
-    path={`/api/v1/infras/${infraID}/deployments`}
+    path={`/api/v1/infras/${infraIdentity}/deployments`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -8868,15 +8860,15 @@ export type UseListDeploymentProps = Omit<
  *
  * Get list of deployments present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const useListDeployment = ({ infraID, ...props }: UseListDeploymentProps) =>
+export const useListDeployment = ({ infraIdentity, ...props }: UseListDeploymentProps) =>
   useGet<
     ApiListDeploymentResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListDeploymentQueryParams,
     ListDeploymentPathParams
-  >((paramsInPath: ListDeploymentPathParams) => `/api/v1/infras/${paramsInPath.infraID}/deployments`, {
+  >((paramsInPath: ListDeploymentPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/deployments`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -8887,7 +8879,7 @@ export const useListDeployment = ({ infraID, ...props }: UseListDeploymentProps)
  */
 export const listDeploymentPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListDeploymentResponse,
@@ -8896,9 +8888,9 @@ export const listDeploymentPromise = (
     ListDeploymentPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -8907,7 +8899,7 @@ export const listDeploymentPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListDeploymentQueryParams,
     ListDeploymentPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/deployments`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/deployments`, props, signal)
 
 export interface ListInfraInstallationsQueryParams {
   /**
@@ -8938,9 +8930,9 @@ export interface ListInfraInstallationsQueryParams {
 
 export interface ListInfraInstallationsPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListInfraInstallationsProps = Omit<
@@ -8959,14 +8951,14 @@ export type ListInfraInstallationsProps = Omit<
  *
  * Get list of infra's installations
  */
-export const ListInfraInstallations = ({ infraID, ...props }: ListInfraInstallationsProps) => (
+export const ListInfraInstallations = ({ infraIdentity, ...props }: ListInfraInstallationsProps) => (
   <Get<
     ApiListInstallInfraResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListInfraInstallationsQueryParams,
     ListInfraInstallationsPathParams
   >
-    path={`/api/v1/infras/${infraID}/installations`}
+    path={`/api/v1/infras/${infraIdentity}/installations`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -8988,15 +8980,15 @@ export type UseListInfraInstallationsProps = Omit<
  *
  * Get list of infra's installations
  */
-export const useListInfraInstallations = ({ infraID, ...props }: UseListInfraInstallationsProps) =>
+export const useListInfraInstallations = ({ infraIdentity, ...props }: UseListInfraInstallationsProps) =>
   useGet<
     ApiListInstallInfraResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListInfraInstallationsQueryParams,
     ListInfraInstallationsPathParams
-  >((paramsInPath: ListInfraInstallationsPathParams) => `/api/v1/infras/${paramsInPath.infraID}/installations`, {
+  >((paramsInPath: ListInfraInstallationsPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/installations`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -9007,7 +8999,7 @@ export const useListInfraInstallations = ({ infraID, ...props }: UseListInfraIns
  */
 export const listInfraInstallationsPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListInstallInfraResponse,
@@ -9016,9 +9008,9 @@ export const listInfraInstallationsPromise = (
     ListInfraInstallationsPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -9027,7 +9019,7 @@ export const listInfraInstallationsPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListInfraInstallationsQueryParams,
     ListInfraInstallationsPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/installations`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/installations`, props, signal)
 
 export interface InstallInfraQueryParams {
   /**
@@ -9046,9 +9038,9 @@ export interface InstallInfraQueryParams {
 
 export interface InstallInfraPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type InstallInfraProps = Omit<
@@ -9068,7 +9060,7 @@ export type InstallInfraProps = Omit<
  *
  * Install infra
  */
-export const InstallInfra = ({ infraID, ...props }: InstallInfraProps) => (
+export const InstallInfra = ({ infraIdentity, ...props }: InstallInfraProps) => (
   <Mutate<
     ApiGetInstallInfraResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -9077,7 +9069,7 @@ export const InstallInfra = ({ infraID, ...props }: InstallInfraProps) => (
     InstallInfraPathParams
   >
     verb="POST"
-    path={`/api/v1/infras/${infraID}/installations`}
+    path={`/api/v1/infras/${infraIdentity}/installations`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -9100,16 +9092,16 @@ export type UseInstallInfraProps = Omit<
  *
  * Install infra
  */
-export const useInstallInfra = ({ infraID, ...props }: UseInstallInfraProps) =>
+export const useInstallInfra = ({ infraIdentity, ...props }: UseInstallInfraProps) =>
   useMutate<
     ApiGetInstallInfraResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     InstallInfraQueryParams,
     void,
     InstallInfraPathParams
-  >('POST', (paramsInPath: InstallInfraPathParams) => `/api/v1/infras/${paramsInPath.infraID}/installations`, {
+  >('POST', (paramsInPath: InstallInfraPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/installations`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -9120,7 +9112,7 @@ export const useInstallInfra = ({ infraID, ...props }: UseInstallInfraProps) =>
  */
 export const installInfraPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: MutateUsingFetchProps<
     ApiGetInstallInfraResponse,
@@ -9130,9 +9122,9 @@ export const installInfraPromise = (
     InstallInfraPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -9142,7 +9134,7 @@ export const installInfraPromise = (
     InstallInfraQueryParams,
     void,
     InstallInfraPathParams
-  >('POST', getConfig('servicediscovery'), `/api/v1/infras/${infraID}/installations`, props, signal)
+  >('POST', getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/installations`, props, signal)
 
 export interface GetInfraInstallQueryParams {
   /**
@@ -9161,9 +9153,9 @@ export interface GetInfraInstallQueryParams {
 
 export interface GetInfraInstallPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
    * infra install id
    */
@@ -9186,14 +9178,14 @@ export type GetInfraInstallProps = Omit<
  *
  * Get an infra install
  */
-export const GetInfraInstall = ({ infraID, infraInstallID, ...props }: GetInfraInstallProps) => (
+export const GetInfraInstall = ({ infraIdentity, infraInstallID, ...props }: GetInfraInstallProps) => (
   <Get<
     ApiGetInstallInfraResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     GetInfraInstallQueryParams,
     GetInfraInstallPathParams
   >
-    path={`/api/v1/infras/${infraID}/installations/${infraInstallID}`}
+    path={`/api/v1/infras/${infraIdentity}/installations/${infraInstallID}`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -9215,7 +9207,7 @@ export type UseGetInfraInstallProps = Omit<
  *
  * Get an infra install
  */
-export const useGetInfraInstall = ({ infraID, infraInstallID, ...props }: UseGetInfraInstallProps) =>
+export const useGetInfraInstall = ({ infraIdentity, infraInstallID, ...props }: UseGetInfraInstallProps) =>
   useGet<
     ApiGetInstallInfraResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -9223,8 +9215,8 @@ export const useGetInfraInstall = ({ infraID, infraInstallID, ...props }: UseGet
     GetInfraInstallPathParams
   >(
     (paramsInPath: GetInfraInstallPathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/installations/${paramsInPath.infraInstallID}`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, infraInstallID }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/installations/${paramsInPath.infraInstallID}`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, infraInstallID }, ...props }
   )
 
 /**
@@ -9234,7 +9226,7 @@ export const useGetInfraInstall = ({ infraID, infraInstallID, ...props }: UseGet
  */
 export const getInfraInstallPromise = (
   {
-    infraID,
+    infraIdentity,
     infraInstallID,
     ...props
   }: GetUsingFetchProps<
@@ -9244,9 +9236,9 @@ export const getInfraInstallPromise = (
     GetInfraInstallPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
      * infra install id
      */
@@ -9259,7 +9251,7 @@ export const getInfraInstallPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     GetInfraInstallQueryParams,
     GetInfraInstallPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/installations/${infraInstallID}`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/installations/${infraInstallID}`, props, signal)
 
 export interface ListJobQueryParams {
   /**
@@ -9298,9 +9290,9 @@ export interface ListJobQueryParams {
 
 export interface ListJobPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListJobProps = Omit<
@@ -9319,14 +9311,14 @@ export type ListJobProps = Omit<
  *
  * Get list of jobs present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const ListJob = ({ infraID, ...props }: ListJobProps) => (
+export const ListJob = ({ infraIdentity, ...props }: ListJobProps) => (
   <Get<
     ApiListJobResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListJobQueryParams,
     ListJobPathParams
   >
-    path={`/api/v1/infras/${infraID}/jobs`}
+    path={`/api/v1/infras/${infraIdentity}/jobs`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -9348,15 +9340,15 @@ export type UseListJobProps = Omit<
  *
  * Get list of jobs present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const useListJob = ({ infraID, ...props }: UseListJobProps) =>
+export const useListJob = ({ infraIdentity, ...props }: UseListJobProps) =>
   useGet<
     ApiListJobResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListJobQueryParams,
     ListJobPathParams
-  >((paramsInPath: ListJobPathParams) => `/api/v1/infras/${paramsInPath.infraID}/jobs`, {
+  >((paramsInPath: ListJobPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/jobs`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -9367,7 +9359,7 @@ export const useListJob = ({ infraID, ...props }: UseListJobProps) =>
  */
 export const listJobPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListJobResponse,
@@ -9376,9 +9368,9 @@ export const listJobPromise = (
     ListJobPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -9387,7 +9379,7 @@ export const listJobPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListJobQueryParams,
     ListJobPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/jobs`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/jobs`, props, signal)
 
 export interface ListK8sCustomServiceConnectionQueryParams {
   /**
@@ -9406,9 +9398,9 @@ export interface ListK8sCustomServiceConnectionQueryParams {
 
 export interface ListK8sCustomServiceConnectionPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListK8sCustomServiceConnectionProps = Omit<
@@ -9427,14 +9419,14 @@ export type ListK8sCustomServiceConnectionProps = Omit<
  *
  * List connections in the context of k8s CustomService
  */
-export const ListK8sCustomServiceConnection = ({ infraID, ...props }: ListK8sCustomServiceConnectionProps) => (
+export const ListK8sCustomServiceConnection = ({ infraIdentity, ...props }: ListK8sCustomServiceConnectionProps) => (
   <Get<
     ApiListCustomServiceConnection,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListK8sCustomServiceConnectionQueryParams,
     ListK8sCustomServiceConnectionPathParams
   >
-    path={`/api/v1/infras/${infraID}/k8scustomserviceconnections`}
+    path={`/api/v1/infras/${infraIdentity}/k8scustomserviceconnections`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -9456,7 +9448,10 @@ export type UseListK8sCustomServiceConnectionProps = Omit<
  *
  * List connections in the context of k8s CustomService
  */
-export const useListK8sCustomServiceConnection = ({ infraID, ...props }: UseListK8sCustomServiceConnectionProps) =>
+export const useListK8sCustomServiceConnection = ({
+  infraIdentity,
+  ...props
+}: UseListK8sCustomServiceConnectionProps) =>
   useGet<
     ApiListCustomServiceConnection,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -9464,8 +9459,8 @@ export const useListK8sCustomServiceConnection = ({ infraID, ...props }: UseList
     ListK8sCustomServiceConnectionPathParams
   >(
     (paramsInPath: ListK8sCustomServiceConnectionPathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/k8scustomserviceconnections`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/k8scustomserviceconnections`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity }, ...props }
   )
 
 /**
@@ -9475,7 +9470,7 @@ export const useListK8sCustomServiceConnection = ({ infraID, ...props }: UseList
  */
 export const listK8sCustomServiceConnectionPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListCustomServiceConnection,
@@ -9484,9 +9479,9 @@ export const listK8sCustomServiceConnectionPromise = (
     ListK8sCustomServiceConnectionPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -9495,7 +9490,7 @@ export const listK8sCustomServiceConnectionPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListK8sCustomServiceConnectionQueryParams,
     ListK8sCustomServiceConnectionPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/k8scustomserviceconnections`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/k8scustomserviceconnections`, props, signal)
 
 export interface ListK8SCustomServiceQueryParams {
   /**
@@ -9534,9 +9529,9 @@ export interface ListK8SCustomServiceQueryParams {
 
 export interface ListK8SCustomServicePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListK8SCustomServiceProps = Omit<
@@ -9555,14 +9550,14 @@ export type ListK8SCustomServiceProps = Omit<
  *
  * Get list of custom services
  */
-export const ListK8SCustomService = ({ infraID, ...props }: ListK8SCustomServiceProps) => (
+export const ListK8SCustomService = ({ infraIdentity, ...props }: ListK8SCustomServiceProps) => (
   <Get<
     ApiListK8sCustomService,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListK8SCustomServiceQueryParams,
     ListK8SCustomServicePathParams
   >
-    path={`/api/v1/infras/${infraID}/k8scustomservices`}
+    path={`/api/v1/infras/${infraIdentity}/k8scustomservices`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -9584,17 +9579,16 @@ export type UseListK8SCustomServiceProps = Omit<
  *
  * Get list of custom services
  */
-export const useListK8SCustomService = ({ infraID, ...props }: UseListK8SCustomServiceProps) =>
+export const useListK8SCustomService = ({ infraIdentity, ...props }: UseListK8SCustomServiceProps) =>
   useGet<
     ApiListK8sCustomService,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListK8SCustomServiceQueryParams,
     ListK8SCustomServicePathParams
-  >((paramsInPath: ListK8SCustomServicePathParams) => `/api/v1/infras/${paramsInPath.infraID}/k8scustomservices`, {
-    base: getConfig('servicediscovery'),
-    pathParams: { infraID },
-    ...props
-  })
+  >(
+    (paramsInPath: ListK8SCustomServicePathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/k8scustomservices`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity }, ...props }
+  )
 
 /**
  * Get list of custom services
@@ -9603,7 +9597,7 @@ export const useListK8SCustomService = ({ infraID, ...props }: UseListK8SCustomS
  */
 export const listK8SCustomServicePromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListK8sCustomService,
@@ -9612,9 +9606,9 @@ export const listK8SCustomServicePromise = (
     ListK8SCustomServicePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -9623,7 +9617,7 @@ export const listK8SCustomServicePromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListK8SCustomServiceQueryParams,
     ListK8SCustomServicePathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/k8scustomservices`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/k8scustomservices`, props, signal)
 
 export interface GetK8SCustomServiceQueryParams {
   /**
@@ -9642,9 +9636,9 @@ export interface GetK8SCustomServiceQueryParams {
 
 export interface GetK8SCustomServicePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
    * custom service id
    */
@@ -9667,14 +9661,14 @@ export type GetK8SCustomServiceProps = Omit<
  *
  * Get custom service by id
  */
-export const GetK8SCustomService = ({ infraID, kcs_id, ...props }: GetK8SCustomServiceProps) => (
+export const GetK8SCustomService = ({ infraIdentity, kcs_id, ...props }: GetK8SCustomServiceProps) => (
   <Get<
     ApiGetK8sCustomService,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     GetK8SCustomServiceQueryParams,
     GetK8SCustomServicePathParams
   >
-    path={`/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}`}
+    path={`/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -9696,7 +9690,7 @@ export type UseGetK8SCustomServiceProps = Omit<
  *
  * Get custom service by id
  */
-export const useGetK8SCustomService = ({ infraID, kcs_id, ...props }: UseGetK8SCustomServiceProps) =>
+export const useGetK8SCustomService = ({ infraIdentity, kcs_id, ...props }: UseGetK8SCustomServiceProps) =>
   useGet<
     ApiGetK8sCustomService,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -9704,8 +9698,8 @@ export const useGetK8SCustomService = ({ infraID, kcs_id, ...props }: UseGetK8SC
     GetK8SCustomServicePathParams
   >(
     (paramsInPath: GetK8SCustomServicePathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/k8scustomservices/${paramsInPath.kcs_id}`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, kcs_id }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/k8scustomservices/${paramsInPath.kcs_id}`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, kcs_id }, ...props }
   )
 
 /**
@@ -9715,7 +9709,7 @@ export const useGetK8SCustomService = ({ infraID, kcs_id, ...props }: UseGetK8SC
  */
 export const getK8SCustomServicePromise = (
   {
-    infraID,
+    infraIdentity,
     kcs_id,
     ...props
   }: GetUsingFetchProps<
@@ -9725,9 +9719,9 @@ export const getK8SCustomServicePromise = (
     GetK8SCustomServicePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
      * custom service id
      */
@@ -9740,7 +9734,7 @@ export const getK8SCustomServicePromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     GetK8SCustomServiceQueryParams,
     GetK8SCustomServicePathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}`, props, signal)
 
 export interface ListConnectionOfPodsFromK8SCustomServiceQueryParams {
   /**
@@ -9759,9 +9753,9 @@ export interface ListConnectionOfPodsFromK8SCustomServiceQueryParams {
 
 export interface ListConnectionOfPodsFromK8SCustomServicePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
    * custom service id
    */
@@ -9785,7 +9779,7 @@ export type ListConnectionOfPodsFromK8SCustomServiceProps = Omit<
  * List connection of pods linked to custom service
  */
 export const ListConnectionOfPodsFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   ...props
 }: ListConnectionOfPodsFromK8SCustomServiceProps) => (
@@ -9795,7 +9789,7 @@ export const ListConnectionOfPodsFromK8SCustomService = ({
     ListConnectionOfPodsFromK8SCustomServiceQueryParams,
     ListConnectionOfPodsFromK8SCustomServicePathParams
   >
-    path={`/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/connections`}
+    path={`/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/connections`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -9818,7 +9812,7 @@ export type UseListConnectionOfPodsFromK8SCustomServiceProps = Omit<
  * List connection of pods linked to custom service
  */
 export const useListConnectionOfPodsFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   ...props
 }: UseListConnectionOfPodsFromK8SCustomServiceProps) =>
@@ -9829,8 +9823,8 @@ export const useListConnectionOfPodsFromK8SCustomService = ({
     ListConnectionOfPodsFromK8SCustomServicePathParams
   >(
     (paramsInPath: ListConnectionOfPodsFromK8SCustomServicePathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/k8scustomservices/${paramsInPath.kcs_id}/connections`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, kcs_id }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/k8scustomservices/${paramsInPath.kcs_id}/connections`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, kcs_id }, ...props }
   )
 
 /**
@@ -9840,7 +9834,7 @@ export const useListConnectionOfPodsFromK8SCustomService = ({
  */
 export const listConnectionOfPodsFromK8SCustomServicePromise = (
   {
-    infraID,
+    infraIdentity,
     kcs_id,
     ...props
   }: GetUsingFetchProps<
@@ -9850,9 +9844,9 @@ export const listConnectionOfPodsFromK8SCustomServicePromise = (
     ListConnectionOfPodsFromK8SCustomServicePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
      * custom service id
      */
@@ -9865,7 +9859,12 @@ export const listConnectionOfPodsFromK8SCustomServicePromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListConnectionOfPodsFromK8SCustomServiceQueryParams,
     ListConnectionOfPodsFromK8SCustomServicePathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/connections`, props, signal)
+  >(
+    getConfig('servicediscovery'),
+    `/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/connections`,
+    props,
+    signal
+  )
 
 export interface GetServiceFromK8SCustomServiceQueryParams {
   /**
@@ -9884,9 +9883,9 @@ export interface GetServiceFromK8SCustomServiceQueryParams {
 
 export interface GetServiceFromK8SCustomServicePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
    * custom service id
    */
@@ -9909,14 +9908,18 @@ export type GetServiceFromK8SCustomServiceProps = Omit<
  *
  * Get service linked to custom service
  */
-export const GetServiceFromK8SCustomService = ({ infraID, kcs_id, ...props }: GetServiceFromK8SCustomServiceProps) => (
+export const GetServiceFromK8SCustomService = ({
+  infraIdentity,
+  kcs_id,
+  ...props
+}: GetServiceFromK8SCustomServiceProps) => (
   <Get<
     ApiGetServiceResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     GetServiceFromK8SCustomServiceQueryParams,
     GetServiceFromK8SCustomServicePathParams
   >
-    path={`/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/service`}
+    path={`/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/service`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -9939,7 +9942,7 @@ export type UseGetServiceFromK8SCustomServiceProps = Omit<
  * Get service linked to custom service
  */
 export const useGetServiceFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   ...props
 }: UseGetServiceFromK8SCustomServiceProps) =>
@@ -9950,8 +9953,8 @@ export const useGetServiceFromK8SCustomService = ({
     GetServiceFromK8SCustomServicePathParams
   >(
     (paramsInPath: GetServiceFromK8SCustomServicePathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/k8scustomservices/${paramsInPath.kcs_id}/service`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, kcs_id }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/k8scustomservices/${paramsInPath.kcs_id}/service`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, kcs_id }, ...props }
   )
 
 /**
@@ -9961,7 +9964,7 @@ export const useGetServiceFromK8SCustomService = ({
  */
 export const getServiceFromK8SCustomServicePromise = (
   {
-    infraID,
+    infraIdentity,
     kcs_id,
     ...props
   }: GetUsingFetchProps<
@@ -9971,9 +9974,9 @@ export const getServiceFromK8SCustomServicePromise = (
     GetServiceFromK8SCustomServicePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
      * custom service id
      */
@@ -9986,7 +9989,7 @@ export const getServiceFromK8SCustomServicePromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     GetServiceFromK8SCustomServiceQueryParams,
     GetServiceFromK8SCustomServicePathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/service`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/service`, props, signal)
 
 export interface ListPodFromK8SCustomServiceQueryParams {
   /**
@@ -10005,9 +10008,9 @@ export interface ListPodFromK8SCustomServiceQueryParams {
 
 export interface ListPodFromK8SCustomServicePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
    * custom service id
    */
@@ -10035,7 +10038,7 @@ export type ListPodFromK8SCustomServiceProps = Omit<
  * List pods linked to custom service for a given workload
  */
 export const ListPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   ...props
@@ -10046,7 +10049,7 @@ export const ListPodFromK8SCustomService = ({
     ListPodFromK8SCustomServiceQueryParams,
     ListPodFromK8SCustomServicePathParams
   >
-    path={`/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods`}
+    path={`/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -10069,7 +10072,7 @@ export type UseListPodFromK8SCustomServiceProps = Omit<
  * List pods linked to custom service for a given workload
  */
 export const useListPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   ...props
@@ -10081,8 +10084,8 @@ export const useListPodFromK8SCustomService = ({
     ListPodFromK8SCustomServicePathParams
   >(
     (paramsInPath: ListPodFromK8SCustomServicePathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, kcs_id, wl_uid }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, kcs_id, wl_uid }, ...props }
   )
 
 /**
@@ -10092,7 +10095,7 @@ export const useListPodFromK8SCustomService = ({
  */
 export const listPodFromK8SCustomServicePromise = (
   {
-    infraID,
+    infraIdentity,
     kcs_id,
     wl_uid,
     ...props
@@ -10103,9 +10106,9 @@ export const listPodFromK8SCustomServicePromise = (
     ListPodFromK8SCustomServicePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
      * custom service id
      */
@@ -10124,7 +10127,7 @@ export const listPodFromK8SCustomServicePromise = (
     ListPodFromK8SCustomServicePathParams
   >(
     getConfig('servicediscovery'),
-    `/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods`,
+    `/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods`,
     props,
     signal
   )
@@ -10146,9 +10149,9 @@ export interface GetPodFromK8SCustomServiceQueryParams {
 
 export interface GetPodFromK8SCustomServicePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
    * custom service id
    */
@@ -10180,7 +10183,7 @@ export type GetPodFromK8SCustomServiceProps = Omit<
  * Get pod linked to custom service for a given workload
  */
 export const GetPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   pod_uid,
@@ -10192,7 +10195,7 @@ export const GetPodFromK8SCustomService = ({
     GetPodFromK8SCustomServiceQueryParams,
     GetPodFromK8SCustomServicePathParams
   >
-    path={`/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}`}
+    path={`/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -10215,7 +10218,7 @@ export type UseGetPodFromK8SCustomServiceProps = Omit<
  * Get pod linked to custom service for a given workload
  */
 export const useGetPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   pod_uid,
@@ -10228,8 +10231,8 @@ export const useGetPodFromK8SCustomService = ({
     GetPodFromK8SCustomServicePathParams
   >(
     (paramsInPath: GetPodFromK8SCustomServicePathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods/${paramsInPath.pod_uid}`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, kcs_id, wl_uid, pod_uid }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods/${paramsInPath.pod_uid}`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, kcs_id, wl_uid, pod_uid }, ...props }
   )
 
 /**
@@ -10239,7 +10242,7 @@ export const useGetPodFromK8SCustomService = ({
  */
 export const getPodFromK8SCustomServicePromise = (
   {
-    infraID,
+    infraIdentity,
     kcs_id,
     wl_uid,
     pod_uid,
@@ -10251,9 +10254,9 @@ export const getPodFromK8SCustomServicePromise = (
     GetPodFromK8SCustomServicePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
      * custom service id
      */
@@ -10276,7 +10279,7 @@ export const getPodFromK8SCustomServicePromise = (
     GetPodFromK8SCustomServicePathParams
   >(
     getConfig('servicediscovery'),
-    `/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}`,
+    `/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}`,
     props,
     signal
   )
@@ -10298,9 +10301,9 @@ export interface ListConnectionOfAPodFromK8SCustomServiceQueryParams {
 
 export interface ListConnectionOfAPodFromK8SCustomServicePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
    * custom service id
    */
@@ -10332,7 +10335,7 @@ export type ListConnectionOfAPodFromK8SCustomServiceProps = Omit<
  * List connection of a pod linked to custom service for a given workload
  */
 export const ListConnectionOfAPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   pod_uid,
@@ -10344,7 +10347,7 @@ export const ListConnectionOfAPodFromK8SCustomService = ({
     ListConnectionOfAPodFromK8SCustomServiceQueryParams,
     ListConnectionOfAPodFromK8SCustomServicePathParams
   >
-    path={`/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/connections`}
+    path={`/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/connections`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -10367,7 +10370,7 @@ export type UseListConnectionOfAPodFromK8SCustomServiceProps = Omit<
  * List connection of a pod linked to custom service for a given workload
  */
 export const useListConnectionOfAPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   pod_uid,
@@ -10380,8 +10383,8 @@ export const useListConnectionOfAPodFromK8SCustomService = ({
     ListConnectionOfAPodFromK8SCustomServicePathParams
   >(
     (paramsInPath: ListConnectionOfAPodFromK8SCustomServicePathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods/${paramsInPath.pod_uid}/connections`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, kcs_id, wl_uid, pod_uid }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods/${paramsInPath.pod_uid}/connections`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, kcs_id, wl_uid, pod_uid }, ...props }
   )
 
 /**
@@ -10391,7 +10394,7 @@ export const useListConnectionOfAPodFromK8SCustomService = ({
  */
 export const listConnectionOfAPodFromK8SCustomServicePromise = (
   {
-    infraID,
+    infraIdentity,
     kcs_id,
     wl_uid,
     pod_uid,
@@ -10403,9 +10406,9 @@ export const listConnectionOfAPodFromK8SCustomServicePromise = (
     ListConnectionOfAPodFromK8SCustomServicePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
      * custom service id
      */
@@ -10428,7 +10431,7 @@ export const listConnectionOfAPodFromK8SCustomServicePromise = (
     ListConnectionOfAPodFromK8SCustomServicePathParams
   >(
     getConfig('servicediscovery'),
-    `/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/connections`,
+    `/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/connections`,
     props,
     signal
   )
@@ -10450,9 +10453,9 @@ export interface ListContainerOfAPodFromK8SCustomServiceQueryParams {
 
 export interface ListContainerOfAPodFromK8SCustomServicePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
    * custom service id
    */
@@ -10484,7 +10487,7 @@ export type ListContainerOfAPodFromK8SCustomServiceProps = Omit<
  * List cantainer of a pod linked to custom service for a given workload
  */
 export const ListContainerOfAPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   pod_uid,
@@ -10496,7 +10499,7 @@ export const ListContainerOfAPodFromK8SCustomService = ({
     ListContainerOfAPodFromK8SCustomServiceQueryParams,
     ListContainerOfAPodFromK8SCustomServicePathParams
   >
-    path={`/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/containers`}
+    path={`/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/containers`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -10519,7 +10522,7 @@ export type UseListContainerOfAPodFromK8SCustomServiceProps = Omit<
  * List cantainer of a pod linked to custom service for a given workload
  */
 export const useListContainerOfAPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   pod_uid,
@@ -10532,8 +10535,8 @@ export const useListContainerOfAPodFromK8SCustomService = ({
     ListContainerOfAPodFromK8SCustomServicePathParams
   >(
     (paramsInPath: ListContainerOfAPodFromK8SCustomServicePathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods/${paramsInPath.pod_uid}/containers`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, kcs_id, wl_uid, pod_uid }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods/${paramsInPath.pod_uid}/containers`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, kcs_id, wl_uid, pod_uid }, ...props }
   )
 
 /**
@@ -10543,7 +10546,7 @@ export const useListContainerOfAPodFromK8SCustomService = ({
  */
 export const listContainerOfAPodFromK8SCustomServicePromise = (
   {
-    infraID,
+    infraIdentity,
     kcs_id,
     wl_uid,
     pod_uid,
@@ -10555,9 +10558,9 @@ export const listContainerOfAPodFromK8SCustomServicePromise = (
     ListContainerOfAPodFromK8SCustomServicePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
      * custom service id
      */
@@ -10580,7 +10583,7 @@ export const listContainerOfAPodFromK8SCustomServicePromise = (
     ListContainerOfAPodFromK8SCustomServicePathParams
   >(
     getConfig('servicediscovery'),
-    `/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/containers`,
+    `/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/containers`,
     props,
     signal
   )
@@ -10602,9 +10605,9 @@ export interface ListProcessOfAPodFromK8SCustomServiceQueryParams {
 
 export interface ListProcessOfAPodFromK8SCustomServicePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
    * custom service id
    */
@@ -10636,7 +10639,7 @@ export type ListProcessOfAPodFromK8SCustomServiceProps = Omit<
  * List process of a pod linked to custom service for a given workload
  */
 export const ListProcessOfAPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   pod_uid,
@@ -10648,7 +10651,7 @@ export const ListProcessOfAPodFromK8SCustomService = ({
     ListProcessOfAPodFromK8SCustomServiceQueryParams,
     ListProcessOfAPodFromK8SCustomServicePathParams
   >
-    path={`/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/processes`}
+    path={`/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/processes`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -10671,7 +10674,7 @@ export type UseListProcessOfAPodFromK8SCustomServiceProps = Omit<
  * List process of a pod linked to custom service for a given workload
  */
 export const useListProcessOfAPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   pod_uid,
@@ -10684,8 +10687,8 @@ export const useListProcessOfAPodFromK8SCustomService = ({
     ListProcessOfAPodFromK8SCustomServicePathParams
   >(
     (paramsInPath: ListProcessOfAPodFromK8SCustomServicePathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods/${paramsInPath.pod_uid}/processes`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, kcs_id, wl_uid, pod_uid }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods/${paramsInPath.pod_uid}/processes`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, kcs_id, wl_uid, pod_uid }, ...props }
   )
 
 /**
@@ -10695,7 +10698,7 @@ export const useListProcessOfAPodFromK8SCustomService = ({
  */
 export const listProcessOfAPodFromK8SCustomServicePromise = (
   {
-    infraID,
+    infraIdentity,
     kcs_id,
     wl_uid,
     pod_uid,
@@ -10707,9 +10710,9 @@ export const listProcessOfAPodFromK8SCustomServicePromise = (
     ListProcessOfAPodFromK8SCustomServicePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
      * custom service id
      */
@@ -10732,7 +10735,7 @@ export const listProcessOfAPodFromK8SCustomServicePromise = (
     ListProcessOfAPodFromK8SCustomServicePathParams
   >(
     getConfig('servicediscovery'),
-    `/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/processes`,
+    `/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/processes`,
     props,
     signal
   )
@@ -10754,9 +10757,9 @@ export interface ListPVCOfAPodFromK8SCustomServiceQueryParams {
 
 export interface ListPVCOfAPodFromK8SCustomServicePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
    * custom service id
    */
@@ -10788,7 +10791,7 @@ export type ListPVCOfAPodFromK8SCustomServiceProps = Omit<
  * List pvc of a pod linked to custom service for a given workload
  */
 export const ListPVCOfAPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   pod_uid,
@@ -10800,7 +10803,7 @@ export const ListPVCOfAPodFromK8SCustomService = ({
     ListPVCOfAPodFromK8SCustomServiceQueryParams,
     ListPVCOfAPodFromK8SCustomServicePathParams
   >
-    path={`/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/volumes`}
+    path={`/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/volumes`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -10823,7 +10826,7 @@ export type UseListPVCOfAPodFromK8SCustomServiceProps = Omit<
  * List pvc of a pod linked to custom service for a given workload
  */
 export const useListPVCOfAPodFromK8SCustomService = ({
-  infraID,
+  infraIdentity,
   kcs_id,
   wl_uid,
   pod_uid,
@@ -10836,8 +10839,8 @@ export const useListPVCOfAPodFromK8SCustomService = ({
     ListPVCOfAPodFromK8SCustomServicePathParams
   >(
     (paramsInPath: ListPVCOfAPodFromK8SCustomServicePathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods/${paramsInPath.pod_uid}/volumes`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, kcs_id, wl_uid, pod_uid }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/k8scustomservices/${paramsInPath.kcs_id}/workloads/${paramsInPath.wl_uid}/pods/${paramsInPath.pod_uid}/volumes`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, kcs_id, wl_uid, pod_uid }, ...props }
   )
 
 /**
@@ -10847,7 +10850,7 @@ export const useListPVCOfAPodFromK8SCustomService = ({
  */
 export const listPVCOfAPodFromK8SCustomServicePromise = (
   {
-    infraID,
+    infraIdentity,
     kcs_id,
     wl_uid,
     pod_uid,
@@ -10859,9 +10862,9 @@ export const listPVCOfAPodFromK8SCustomServicePromise = (
     ListPVCOfAPodFromK8SCustomServicePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
      * custom service id
      */
@@ -10884,7 +10887,7 @@ export const listPVCOfAPodFromK8SCustomServicePromise = (
     ListPVCOfAPodFromK8SCustomServicePathParams
   >(
     getConfig('servicediscovery'),
-    `/api/v1/infras/${infraID}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/volumes`,
+    `/api/v1/infras/${infraIdentity}/k8scustomservices/${kcs_id}/workloads/${wl_uid}/pods/${pod_uid}/volumes`,
     props,
     signal
   )
@@ -10922,9 +10925,9 @@ export interface ListNamespaceQueryParams {
 
 export interface ListNamespacePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListNamespaceProps = Omit<
@@ -10943,14 +10946,14 @@ export type ListNamespaceProps = Omit<
  *
  * Get list of namespaces present in the kubernetes infra, name can be passed as filter in query param
  */
-export const ListNamespace = ({ infraID, ...props }: ListNamespaceProps) => (
+export const ListNamespace = ({ infraIdentity, ...props }: ListNamespaceProps) => (
   <Get<
     ApiListNamespaceResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListNamespaceQueryParams,
     ListNamespacePathParams
   >
-    path={`/api/v1/infras/${infraID}/namespaces`}
+    path={`/api/v1/infras/${infraIdentity}/namespaces`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -10972,15 +10975,15 @@ export type UseListNamespaceProps = Omit<
  *
  * Get list of namespaces present in the kubernetes infra, name can be passed as filter in query param
  */
-export const useListNamespace = ({ infraID, ...props }: UseListNamespaceProps) =>
+export const useListNamespace = ({ infraIdentity, ...props }: UseListNamespaceProps) =>
   useGet<
     ApiListNamespaceResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListNamespaceQueryParams,
     ListNamespacePathParams
-  >((paramsInPath: ListNamespacePathParams) => `/api/v1/infras/${paramsInPath.infraID}/namespaces`, {
+  >((paramsInPath: ListNamespacePathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/namespaces`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -10991,7 +10994,7 @@ export const useListNamespace = ({ infraID, ...props }: UseListNamespaceProps) =
  */
 export const listNamespacePromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListNamespaceResponse,
@@ -11000,9 +11003,9 @@ export const listNamespacePromise = (
     ListNamespacePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -11011,7 +11014,7 @@ export const listNamespacePromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListNamespaceQueryParams,
     ListNamespacePathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/namespaces`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/namespaces`, props, signal)
 
 export interface ListNetworkMapQueryParams {
   /**
@@ -11046,9 +11049,9 @@ export interface ListNetworkMapQueryParams {
 
 export interface ListNetworkMapPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListNetworkMapProps = Omit<
@@ -11067,14 +11070,14 @@ export type ListNetworkMapProps = Omit<
  *
  * Get list of networkmaps
  */
-export const ListNetworkMap = ({ infraID, ...props }: ListNetworkMapProps) => (
+export const ListNetworkMap = ({ infraIdentity, ...props }: ListNetworkMapProps) => (
   <Get<
     ApiListNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListNetworkMapQueryParams,
     ListNetworkMapPathParams
   >
-    path={`/api/v1/infras/${infraID}/networkmaps`}
+    path={`/api/v1/infras/${infraIdentity}/networkmaps`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -11096,15 +11099,15 @@ export type UseListNetworkMapProps = Omit<
  *
  * Get list of networkmaps
  */
-export const useListNetworkMap = ({ infraID, ...props }: UseListNetworkMapProps) =>
+export const useListNetworkMap = ({ infraIdentity, ...props }: UseListNetworkMapProps) =>
   useGet<
     ApiListNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListNetworkMapQueryParams,
     ListNetworkMapPathParams
-  >((paramsInPath: ListNetworkMapPathParams) => `/api/v1/infras/${paramsInPath.infraID}/networkmaps`, {
+  >((paramsInPath: ListNetworkMapPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/networkmaps`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -11115,7 +11118,7 @@ export const useListNetworkMap = ({ infraID, ...props }: UseListNetworkMapProps)
  */
 export const listNetworkMapPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListNetworkMapResponse,
@@ -11124,9 +11127,9 @@ export const listNetworkMapPromise = (
     ListNetworkMapPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -11135,7 +11138,7 @@ export const listNetworkMapPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListNetworkMapQueryParams,
     ListNetworkMapPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/networkmaps`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/networkmaps`, props, signal)
 
 export interface CreateNetworkMapQueryParams {
   /**
@@ -11154,9 +11157,9 @@ export interface CreateNetworkMapQueryParams {
 
 export interface CreateNetworkMapPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type CreateNetworkMapProps = Omit<
@@ -11176,7 +11179,7 @@ export type CreateNetworkMapProps = Omit<
  *
  * Get list of networkmaps
  */
-export const CreateNetworkMap = ({ infraID, ...props }: CreateNetworkMapProps) => (
+export const CreateNetworkMap = ({ infraIdentity, ...props }: CreateNetworkMapProps) => (
   <Mutate<
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -11185,7 +11188,7 @@ export const CreateNetworkMap = ({ infraID, ...props }: CreateNetworkMapProps) =
     CreateNetworkMapPathParams
   >
     verb="POST"
-    path={`/api/v1/infras/${infraID}/networkmaps`}
+    path={`/api/v1/infras/${infraIdentity}/networkmaps`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -11208,16 +11211,16 @@ export type UseCreateNetworkMapProps = Omit<
  *
  * Get list of networkmaps
  */
-export const useCreateNetworkMap = ({ infraID, ...props }: UseCreateNetworkMapProps) =>
+export const useCreateNetworkMap = ({ infraIdentity, ...props }: UseCreateNetworkMapProps) =>
   useMutate<
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     CreateNetworkMapQueryParams,
     ApiCreateNetworkMapRequest,
     CreateNetworkMapPathParams
-  >('POST', (paramsInPath: CreateNetworkMapPathParams) => `/api/v1/infras/${paramsInPath.infraID}/networkmaps`, {
+  >('POST', (paramsInPath: CreateNetworkMapPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/networkmaps`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -11228,7 +11231,7 @@ export const useCreateNetworkMap = ({ infraID, ...props }: UseCreateNetworkMapPr
  */
 export const createNetworkMapPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: MutateUsingFetchProps<
     ApiGetNetworkMapResponse,
@@ -11238,9 +11241,9 @@ export const createNetworkMapPromise = (
     CreateNetworkMapPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -11250,7 +11253,7 @@ export const createNetworkMapPromise = (
     CreateNetworkMapQueryParams,
     ApiCreateNetworkMapRequest,
     CreateNetworkMapPathParams
-  >('POST', getConfig('servicediscovery'), `/api/v1/infras/${infraID}/networkmaps`, props, signal)
+  >('POST', getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/networkmaps`, props, signal)
 
 export interface DeleteNetworkMapQueryParams {
   /**
@@ -11269,9 +11272,9 @@ export interface DeleteNetworkMapQueryParams {
 
 export interface DeleteNetworkMapPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type DeleteNetworkMapProps = Omit<
@@ -11291,7 +11294,7 @@ export type DeleteNetworkMapProps = Omit<
  *
  * Delete a networkmap
  */
-export const DeleteNetworkMap = ({ infraID, ...props }: DeleteNetworkMapProps) => (
+export const DeleteNetworkMap = ({ infraIdentity, ...props }: DeleteNetworkMapProps) => (
   <Mutate<
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -11300,7 +11303,7 @@ export const DeleteNetworkMap = ({ infraID, ...props }: DeleteNetworkMapProps) =
     DeleteNetworkMapPathParams
   >
     verb="DELETE"
-    path={`/api/v1/infras/${infraID}/networkmaps`}
+    path={`/api/v1/infras/${infraIdentity}/networkmaps`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -11323,18 +11326,18 @@ export type UseDeleteNetworkMapProps = Omit<
  *
  * Delete a networkmap
  */
-export const useDeleteNetworkMap = ({ infraID, ...props }: UseDeleteNetworkMapProps) =>
+export const useDeleteNetworkMap = ({ infraIdentity, ...props }: UseDeleteNetworkMapProps) =>
   useMutate<
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     DeleteNetworkMapQueryParams,
     string,
     DeleteNetworkMapPathParams
-  >('DELETE', (paramsInPath: DeleteNetworkMapPathParams) => `/api/v1/infras/${paramsInPath.infraID}/networkmaps`, {
-    base: getConfig('servicediscovery'),
-    pathParams: { infraID },
-    ...props
-  })
+  >(
+    'DELETE',
+    (paramsInPath: DeleteNetworkMapPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/networkmaps`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity }, ...props }
+  )
 
 /**
  * Delete a networkmap
@@ -11343,7 +11346,7 @@ export const useDeleteNetworkMap = ({ infraID, ...props }: UseDeleteNetworkMapPr
  */
 export const deleteNetworkMapPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: MutateUsingFetchProps<
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
@@ -11353,9 +11356,9 @@ export const deleteNetworkMapPromise = (
     DeleteNetworkMapPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -11365,7 +11368,7 @@ export const deleteNetworkMapPromise = (
     DeleteNetworkMapQueryParams,
     string,
     DeleteNetworkMapPathParams
-  >('DELETE', getConfig('servicediscovery'), `/api/v1/infras/${infraID}/networkmaps`, props, signal)
+  >('DELETE', getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/networkmaps`, props, signal)
 
 export interface GetNetworkMapQueryParams {
   /**
@@ -11384,13 +11387,13 @@ export interface GetNetworkMapQueryParams {
 
 export interface GetNetworkMapPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
-   * network map id
+   * network map identity
    */
-  netmap_id: string
+  networkMapIdentity: string
 }
 
 export type GetNetworkMapProps = Omit<
@@ -11409,14 +11412,14 @@ export type GetNetworkMapProps = Omit<
  *
  * Get a networkmap
  */
-export const GetNetworkMap = ({ infraID, netmap_id, ...props }: GetNetworkMapProps) => (
+export const GetNetworkMap = ({ infraIdentity, networkMapIdentity, ...props }: GetNetworkMapProps) => (
   <Get<
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     GetNetworkMapQueryParams,
     GetNetworkMapPathParams
   >
-    path={`/api/v1/infras/${infraID}/networkmaps/${netmap_id}`}
+    path={`/api/v1/infras/${infraIdentity}/networkmaps/${networkMapIdentity}`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -11438,7 +11441,7 @@ export type UseGetNetworkMapProps = Omit<
  *
  * Get a networkmap
  */
-export const useGetNetworkMap = ({ infraID, netmap_id, ...props }: UseGetNetworkMapProps) =>
+export const useGetNetworkMap = ({ infraIdentity, networkMapIdentity, ...props }: UseGetNetworkMapProps) =>
   useGet<
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -11446,8 +11449,8 @@ export const useGetNetworkMap = ({ infraID, netmap_id, ...props }: UseGetNetwork
     GetNetworkMapPathParams
   >(
     (paramsInPath: GetNetworkMapPathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/networkmaps/${paramsInPath.netmap_id}`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, netmap_id }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/networkmaps/${paramsInPath.networkMapIdentity}`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, networkMapIdentity }, ...props }
   )
 
 /**
@@ -11457,8 +11460,8 @@ export const useGetNetworkMap = ({ infraID, netmap_id, ...props }: UseGetNetwork
  */
 export const getNetworkMapPromise = (
   {
-    infraID,
-    netmap_id,
+    infraIdentity,
+    networkMapIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiGetNetworkMapResponse,
@@ -11467,13 +11470,13 @@ export const getNetworkMapPromise = (
     GetNetworkMapPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
-     * network map id
+     * network map identity
      */
-    netmap_id: string
+    networkMapIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -11482,7 +11485,7 @@ export const getNetworkMapPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     GetNetworkMapQueryParams,
     GetNetworkMapPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/networkmaps/${netmap_id}`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/networkmaps/${networkMapIdentity}`, props, signal)
 
 export interface UpdateNetworkMapQueryParams {
   /**
@@ -11501,13 +11504,13 @@ export interface UpdateNetworkMapQueryParams {
 
 export interface UpdateNetworkMapPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
-   * network map id
+   * network map identity
    */
-  netmap_id: string
+  networkMapIdentity: string
 }
 
 export type UpdateNetworkMapProps = Omit<
@@ -11527,7 +11530,7 @@ export type UpdateNetworkMapProps = Omit<
  *
  * Update a networkmap
  */
-export const UpdateNetworkMap = ({ infraID, netmap_id, ...props }: UpdateNetworkMapProps) => (
+export const UpdateNetworkMap = ({ infraIdentity, networkMapIdentity, ...props }: UpdateNetworkMapProps) => (
   <Mutate<
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -11536,7 +11539,7 @@ export const UpdateNetworkMap = ({ infraID, netmap_id, ...props }: UpdateNetwork
     UpdateNetworkMapPathParams
   >
     verb="PUT"
-    path={`/api/v1/infras/${infraID}/networkmaps/${netmap_id}`}
+    path={`/api/v1/infras/${infraIdentity}/networkmaps/${networkMapIdentity}`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -11559,7 +11562,7 @@ export type UseUpdateNetworkMapProps = Omit<
  *
  * Update a networkmap
  */
-export const useUpdateNetworkMap = ({ infraID, netmap_id, ...props }: UseUpdateNetworkMapProps) =>
+export const useUpdateNetworkMap = ({ infraIdentity, networkMapIdentity, ...props }: UseUpdateNetworkMapProps) =>
   useMutate<
     ApiGetNetworkMapResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -11569,8 +11572,8 @@ export const useUpdateNetworkMap = ({ infraID, netmap_id, ...props }: UseUpdateN
   >(
     'PUT',
     (paramsInPath: UpdateNetworkMapPathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/networkmaps/${paramsInPath.netmap_id}`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, netmap_id }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/networkmaps/${paramsInPath.networkMapIdentity}`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, networkMapIdentity }, ...props }
   )
 
 /**
@@ -11580,8 +11583,8 @@ export const useUpdateNetworkMap = ({ infraID, netmap_id, ...props }: UseUpdateN
  */
 export const updateNetworkMapPromise = (
   {
-    infraID,
-    netmap_id,
+    infraIdentity,
+    networkMapIdentity,
     ...props
   }: MutateUsingFetchProps<
     ApiGetNetworkMapResponse,
@@ -11591,13 +11594,13 @@ export const updateNetworkMapPromise = (
     UpdateNetworkMapPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
-     * network map id
+     * network map identity
      */
-    netmap_id: string
+    networkMapIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -11607,7 +11610,13 @@ export const updateNetworkMapPromise = (
     UpdateNetworkMapQueryParams,
     ApiUpdateNetworkMapRequest,
     UpdateNetworkMapPathParams
-  >('PUT', getConfig('servicediscovery'), `/api/v1/infras/${infraID}/networkmaps/${netmap_id}`, props, signal)
+  >(
+    'PUT',
+    getConfig('servicediscovery'),
+    `/api/v1/infras/${infraIdentity}/networkmaps/${networkMapIdentity}`,
+    props,
+    signal
+  )
 
 export interface ListK8SCustomServiceForAllNetworkMapQueryParams {
   /**
@@ -11630,13 +11639,13 @@ export interface ListK8SCustomServiceForAllNetworkMapQueryParams {
 
 export interface ListK8SCustomServiceForAllNetworkMapPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
   /**
-   * network map id
+   * network map identity
    */
-  netmap_id: string
+  networkMapIdentity: string
 }
 
 export type ListK8SCustomServiceForAllNetworkMapProps = Omit<
@@ -11656,8 +11665,8 @@ export type ListK8SCustomServiceForAllNetworkMapProps = Omit<
  * Get list of custom services for a given netwrk map
  */
 export const ListK8SCustomServiceForAllNetworkMap = ({
-  infraID,
-  netmap_id,
+  infraIdentity,
+  networkMapIdentity,
   ...props
 }: ListK8SCustomServiceForAllNetworkMapProps) => (
   <Get<
@@ -11666,7 +11675,7 @@ export const ListK8SCustomServiceForAllNetworkMap = ({
     ListK8SCustomServiceForAllNetworkMapQueryParams,
     ListK8SCustomServiceForAllNetworkMapPathParams
   >
-    path={`/api/v1/infras/${infraID}/networkmaps/${netmap_id}/k8scustomservices`}
+    path={`/api/v1/infras/${infraIdentity}/networkmaps/${networkMapIdentity}/k8scustomservices`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -11689,8 +11698,8 @@ export type UseListK8SCustomServiceForAllNetworkMapProps = Omit<
  * Get list of custom services for a given netwrk map
  */
 export const useListK8SCustomServiceForAllNetworkMap = ({
-  infraID,
-  netmap_id,
+  infraIdentity,
+  networkMapIdentity,
   ...props
 }: UseListK8SCustomServiceForAllNetworkMapProps) =>
   useGet<
@@ -11700,8 +11709,8 @@ export const useListK8SCustomServiceForAllNetworkMap = ({
     ListK8SCustomServiceForAllNetworkMapPathParams
   >(
     (paramsInPath: ListK8SCustomServiceForAllNetworkMapPathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/networkmaps/${paramsInPath.netmap_id}/k8scustomservices`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID, netmap_id }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/networkmaps/${paramsInPath.networkMapIdentity}/k8scustomservices`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity, networkMapIdentity }, ...props }
   )
 
 /**
@@ -11711,8 +11720,8 @@ export const useListK8SCustomServiceForAllNetworkMap = ({
  */
 export const listK8SCustomServiceForAllNetworkMapPromise = (
   {
-    infraID,
-    netmap_id,
+    infraIdentity,
+    networkMapIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListK8sCustomService,
@@ -11721,13 +11730,13 @@ export const listK8SCustomServiceForAllNetworkMapPromise = (
     ListK8SCustomServiceForAllNetworkMapPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
     /**
-     * network map id
+     * network map identity
      */
-    netmap_id: string
+    networkMapIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -11738,7 +11747,7 @@ export const listK8SCustomServiceForAllNetworkMapPromise = (
     ListK8SCustomServiceForAllNetworkMapPathParams
   >(
     getConfig('servicediscovery'),
-    `/api/v1/infras/${infraID}/networkmaps/${netmap_id}/k8scustomservices`,
+    `/api/v1/infras/${infraIdentity}/networkmaps/${networkMapIdentity}/k8scustomservices`,
     props,
     signal
   )
@@ -11776,9 +11785,9 @@ export interface ListNodeQueryParams {
 
 export interface ListNodePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListNodeProps = Omit<
@@ -11797,14 +11806,14 @@ export type ListNodeProps = Omit<
  *
  * Get list of nodes present in the kubernetes infra, name can be passed as filter in query param
  */
-export const ListNode = ({ infraID, ...props }: ListNodeProps) => (
+export const ListNode = ({ infraIdentity, ...props }: ListNodeProps) => (
   <Get<
     ApiListNodeResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListNodeQueryParams,
     ListNodePathParams
   >
-    path={`/api/v1/infras/${infraID}/nodes`}
+    path={`/api/v1/infras/${infraIdentity}/nodes`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -11826,15 +11835,15 @@ export type UseListNodeProps = Omit<
  *
  * Get list of nodes present in the kubernetes infra, name can be passed as filter in query param
  */
-export const useListNode = ({ infraID, ...props }: UseListNodeProps) =>
+export const useListNode = ({ infraIdentity, ...props }: UseListNodeProps) =>
   useGet<
     ApiListNodeResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListNodeQueryParams,
     ListNodePathParams
-  >((paramsInPath: ListNodePathParams) => `/api/v1/infras/${paramsInPath.infraID}/nodes`, {
+  >((paramsInPath: ListNodePathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/nodes`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -11845,7 +11854,7 @@ export const useListNode = ({ infraID, ...props }: UseListNodeProps) =>
  */
 export const listNodePromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListNodeResponse,
@@ -11854,9 +11863,9 @@ export const listNodePromise = (
     ListNodePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -11865,7 +11874,7 @@ export const listNodePromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListNodeQueryParams,
     ListNodePathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/nodes`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/nodes`, props, signal)
 
 export interface ListPersistentVolumeClaimQueryParams {
   /**
@@ -11904,9 +11913,9 @@ export interface ListPersistentVolumeClaimQueryParams {
 
 export interface ListPersistentVolumeClaimPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListPersistentVolumeClaimProps = Omit<
@@ -11925,14 +11934,14 @@ export type ListPersistentVolumeClaimProps = Omit<
  *
  * Get list of persistentvolumeclaims present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const ListPersistentVolumeClaim = ({ infraID, ...props }: ListPersistentVolumeClaimProps) => (
+export const ListPersistentVolumeClaim = ({ infraIdentity, ...props }: ListPersistentVolumeClaimProps) => (
   <Get<
     ApiListPersistentVolumeClaimResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListPersistentVolumeClaimQueryParams,
     ListPersistentVolumeClaimPathParams
   >
-    path={`/api/v1/infras/${infraID}/persistentvolumeclaims`}
+    path={`/api/v1/infras/${infraIdentity}/persistentvolumeclaims`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -11954,7 +11963,7 @@ export type UseListPersistentVolumeClaimProps = Omit<
  *
  * Get list of persistentvolumeclaims present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const useListPersistentVolumeClaim = ({ infraID, ...props }: UseListPersistentVolumeClaimProps) =>
+export const useListPersistentVolumeClaim = ({ infraIdentity, ...props }: UseListPersistentVolumeClaimProps) =>
   useGet<
     ApiListPersistentVolumeClaimResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -11962,8 +11971,8 @@ export const useListPersistentVolumeClaim = ({ infraID, ...props }: UseListPersi
     ListPersistentVolumeClaimPathParams
   >(
     (paramsInPath: ListPersistentVolumeClaimPathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/persistentvolumeclaims`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/persistentvolumeclaims`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity }, ...props }
   )
 
 /**
@@ -11973,7 +11982,7 @@ export const useListPersistentVolumeClaim = ({ infraID, ...props }: UseListPersi
  */
 export const listPersistentVolumeClaimPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListPersistentVolumeClaimResponse,
@@ -11982,9 +11991,9 @@ export const listPersistentVolumeClaimPromise = (
     ListPersistentVolumeClaimPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -11993,7 +12002,7 @@ export const listPersistentVolumeClaimPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListPersistentVolumeClaimQueryParams,
     ListPersistentVolumeClaimPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/persistentvolumeclaims`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/persistentvolumeclaims`, props, signal)
 
 export interface ListPersistentVolumeQueryParams {
   /**
@@ -12028,9 +12037,9 @@ export interface ListPersistentVolumeQueryParams {
 
 export interface ListPersistentVolumePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListPersistentVolumeProps = Omit<
@@ -12049,14 +12058,14 @@ export type ListPersistentVolumeProps = Omit<
  *
  * Get list of persistentvolumes present in the kubernetes infra, name can be passed as filter in query param
  */
-export const ListPersistentVolume = ({ infraID, ...props }: ListPersistentVolumeProps) => (
+export const ListPersistentVolume = ({ infraIdentity, ...props }: ListPersistentVolumeProps) => (
   <Get<
     ApiListPersistentVolumeResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListPersistentVolumeQueryParams,
     ListPersistentVolumePathParams
   >
-    path={`/api/v1/infras/${infraID}/persistentvolumes`}
+    path={`/api/v1/infras/${infraIdentity}/persistentvolumes`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -12078,17 +12087,16 @@ export type UseListPersistentVolumeProps = Omit<
  *
  * Get list of persistentvolumes present in the kubernetes infra, name can be passed as filter in query param
  */
-export const useListPersistentVolume = ({ infraID, ...props }: UseListPersistentVolumeProps) =>
+export const useListPersistentVolume = ({ infraIdentity, ...props }: UseListPersistentVolumeProps) =>
   useGet<
     ApiListPersistentVolumeResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListPersistentVolumeQueryParams,
     ListPersistentVolumePathParams
-  >((paramsInPath: ListPersistentVolumePathParams) => `/api/v1/infras/${paramsInPath.infraID}/persistentvolumes`, {
-    base: getConfig('servicediscovery'),
-    pathParams: { infraID },
-    ...props
-  })
+  >(
+    (paramsInPath: ListPersistentVolumePathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/persistentvolumes`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity }, ...props }
+  )
 
 /**
  * Get list of persistentvolumes
@@ -12097,7 +12105,7 @@ export const useListPersistentVolume = ({ infraID, ...props }: UseListPersistent
  */
 export const listPersistentVolumePromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListPersistentVolumeResponse,
@@ -12106,9 +12114,9 @@ export const listPersistentVolumePromise = (
     ListPersistentVolumePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -12117,7 +12125,7 @@ export const listPersistentVolumePromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListPersistentVolumeQueryParams,
     ListPersistentVolumePathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/persistentvolumes`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/persistentvolumes`, props, signal)
 
 export interface ListPodQueryParams {
   /**
@@ -12156,9 +12164,9 @@ export interface ListPodQueryParams {
 
 export interface ListPodPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListPodProps = Omit<
@@ -12177,14 +12185,14 @@ export type ListPodProps = Omit<
  *
  * Get list of pods present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const ListPod = ({ infraID, ...props }: ListPodProps) => (
+export const ListPod = ({ infraIdentity, ...props }: ListPodProps) => (
   <Get<
     ApiListPodResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListPodQueryParams,
     ListPodPathParams
   >
-    path={`/api/v1/infras/${infraID}/pods`}
+    path={`/api/v1/infras/${infraIdentity}/pods`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -12206,15 +12214,15 @@ export type UseListPodProps = Omit<
  *
  * Get list of pods present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const useListPod = ({ infraID, ...props }: UseListPodProps) =>
+export const useListPod = ({ infraIdentity, ...props }: UseListPodProps) =>
   useGet<
     ApiListPodResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListPodQueryParams,
     ListPodPathParams
-  >((paramsInPath: ListPodPathParams) => `/api/v1/infras/${paramsInPath.infraID}/pods`, {
+  >((paramsInPath: ListPodPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/pods`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -12225,7 +12233,7 @@ export const useListPod = ({ infraID, ...props }: UseListPodProps) =>
  */
 export const listPodPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListPodResponse,
@@ -12234,9 +12242,9 @@ export const listPodPromise = (
     ListPodPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -12245,7 +12253,7 @@ export const listPodPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListPodQueryParams,
     ListPodPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/pods`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/pods`, props, signal)
 
 export interface ListReplicaSetQueryParams {
   /**
@@ -12284,9 +12292,9 @@ export interface ListReplicaSetQueryParams {
 
 export interface ListReplicaSetPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListReplicaSetProps = Omit<
@@ -12305,14 +12313,14 @@ export type ListReplicaSetProps = Omit<
  *
  * Get list of replicasets present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const ListReplicaSet = ({ infraID, ...props }: ListReplicaSetProps) => (
+export const ListReplicaSet = ({ infraIdentity, ...props }: ListReplicaSetProps) => (
   <Get<
     ApiListReplicaSetResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListReplicaSetQueryParams,
     ListReplicaSetPathParams
   >
-    path={`/api/v1/infras/${infraID}/replicasets`}
+    path={`/api/v1/infras/${infraIdentity}/replicasets`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -12334,15 +12342,15 @@ export type UseListReplicaSetProps = Omit<
  *
  * Get list of replicasets present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const useListReplicaSet = ({ infraID, ...props }: UseListReplicaSetProps) =>
+export const useListReplicaSet = ({ infraIdentity, ...props }: UseListReplicaSetProps) =>
   useGet<
     ApiListReplicaSetResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListReplicaSetQueryParams,
     ListReplicaSetPathParams
-  >((paramsInPath: ListReplicaSetPathParams) => `/api/v1/infras/${paramsInPath.infraID}/replicasets`, {
+  >((paramsInPath: ListReplicaSetPathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/replicasets`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -12353,7 +12361,7 @@ export const useListReplicaSet = ({ infraID, ...props }: UseListReplicaSetProps)
  */
 export const listReplicaSetPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListReplicaSetResponse,
@@ -12362,9 +12370,9 @@ export const listReplicaSetPromise = (
     ListReplicaSetPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -12373,7 +12381,7 @@ export const listReplicaSetPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListReplicaSetQueryParams,
     ListReplicaSetPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/replicasets`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/replicasets`, props, signal)
 
 export interface ListReplicationControllerQueryParams {
   /**
@@ -12412,9 +12420,9 @@ export interface ListReplicationControllerQueryParams {
 
 export interface ListReplicationControllerPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListReplicationControllerProps = Omit<
@@ -12433,14 +12441,14 @@ export type ListReplicationControllerProps = Omit<
  *
  * Get list of replicationcontrollers present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const ListReplicationController = ({ infraID, ...props }: ListReplicationControllerProps) => (
+export const ListReplicationController = ({ infraIdentity, ...props }: ListReplicationControllerProps) => (
   <Get<
     ApiListReplicationControllerResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListReplicationControllerQueryParams,
     ListReplicationControllerPathParams
   >
-    path={`/api/v1/infras/${infraID}/replicationcontrollers`}
+    path={`/api/v1/infras/${infraIdentity}/replicationcontrollers`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -12462,7 +12470,7 @@ export type UseListReplicationControllerProps = Omit<
  *
  * Get list of replicationcontrollers present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const useListReplicationController = ({ infraID, ...props }: UseListReplicationControllerProps) =>
+export const useListReplicationController = ({ infraIdentity, ...props }: UseListReplicationControllerProps) =>
   useGet<
     ApiListReplicationControllerResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
@@ -12470,8 +12478,8 @@ export const useListReplicationController = ({ infraID, ...props }: UseListRepli
     ListReplicationControllerPathParams
   >(
     (paramsInPath: ListReplicationControllerPathParams) =>
-      `/api/v1/infras/${paramsInPath.infraID}/replicationcontrollers`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID }, ...props }
+      `/api/v1/infras/${paramsInPath.infraIdentity}/replicationcontrollers`,
+    { base: getConfig('servicediscovery'), pathParams: { infraIdentity }, ...props }
   )
 
 /**
@@ -12481,7 +12489,7 @@ export const useListReplicationController = ({ infraID, ...props }: UseListRepli
  */
 export const listReplicationControllerPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListReplicationControllerResponse,
@@ -12490,9 +12498,9 @@ export const listReplicationControllerPromise = (
     ListReplicationControllerPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -12501,7 +12509,7 @@ export const listReplicationControllerPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListReplicationControllerQueryParams,
     ListReplicationControllerPathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/replicationcontrollers`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/replicationcontrollers`, props, signal)
 
 export interface ListServiceQueryParams {
   /**
@@ -12540,9 +12548,9 @@ export interface ListServiceQueryParams {
 
 export interface ListServicePathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListServiceProps = Omit<
@@ -12561,14 +12569,14 @@ export type ListServiceProps = Omit<
  *
  * Get list of services present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const ListService = ({ infraID, ...props }: ListServiceProps) => (
+export const ListService = ({ infraIdentity, ...props }: ListServiceProps) => (
   <Get<
     ApiListServiceResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListServiceQueryParams,
     ListServicePathParams
   >
-    path={`/api/v1/infras/${infraID}/services`}
+    path={`/api/v1/infras/${infraIdentity}/services`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -12590,15 +12598,15 @@ export type UseListServiceProps = Omit<
  *
  * Get list of services present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const useListService = ({ infraID, ...props }: UseListServiceProps) =>
+export const useListService = ({ infraIdentity, ...props }: UseListServiceProps) =>
   useGet<
     ApiListServiceResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListServiceQueryParams,
     ListServicePathParams
-  >((paramsInPath: ListServicePathParams) => `/api/v1/infras/${paramsInPath.infraID}/services`, {
+  >((paramsInPath: ListServicePathParams) => `/api/v1/infras/${paramsInPath.infraIdentity}/services`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -12609,7 +12617,7 @@ export const useListService = ({ infraID, ...props }: UseListServiceProps) =>
  */
 export const listServicePromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListServiceResponse,
@@ -12618,9 +12626,9 @@ export const listServicePromise = (
     ListServicePathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -12629,107 +12637,7 @@ export const listServicePromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListServiceQueryParams,
     ListServicePathParams
-  >(getConfig('servicediscovery'), `/api/v1/infras/${infraID}/services`, props, signal)
-
-export interface SyncK8SCustomServiceV1PathParams {
-  /**
-   * infra id
-   */
-  infraID: string
-}
-
-export type SyncK8SCustomServiceV1Props = Omit<
-  MutateProps<
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    void,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    SyncK8SCustomServiceV1PathParams
-  >,
-  'path' | 'verb'
-> &
-  SyncK8SCustomServiceV1PathParams
-
-/**
- * Sync k8s Custom Service
- *
- * Sync k8s Custom Service with available resources in DB
- */
-export const SyncK8SCustomServiceV1 = ({ infraID, ...props }: SyncK8SCustomServiceV1Props) => (
-  <Mutate<
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    void,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    SyncK8SCustomServiceV1PathParams
-  >
-    verb="POST"
-    path={`/api/v1/infras/${infraID}/synck8scustomservices`}
-    base={getConfig('servicediscovery')}
-    {...props}
-  />
-)
-
-export type UseSyncK8SCustomServiceV1Props = Omit<
-  UseMutateProps<
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    void,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    SyncK8SCustomServiceV1PathParams
-  >,
-  'path' | 'verb'
-> &
-  SyncK8SCustomServiceV1PathParams
-
-/**
- * Sync k8s Custom Service
- *
- * Sync k8s Custom Service with available resources in DB
- */
-export const useSyncK8SCustomServiceV1 = ({ infraID, ...props }: UseSyncK8SCustomServiceV1Props) =>
-  useMutate<
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    void,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    SyncK8SCustomServiceV1PathParams
-  >(
-    'POST',
-    (paramsInPath: SyncK8SCustomServiceV1PathParams) => `/api/v1/infras/${paramsInPath.infraID}/synck8scustomservices`,
-    { base: getConfig('servicediscovery'), pathParams: { infraID }, ...props }
-  )
-
-/**
- * Sync k8s Custom Service
- *
- * Sync k8s Custom Service with available resources in DB
- */
-export const syncK8SCustomServiceV1Promise = (
-  {
-    infraID,
-    ...props
-  }: MutateUsingFetchProps<
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    void,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    SyncK8SCustomServiceV1PathParams
-  > & {
-    /**
-     * infra id
-     */
-    infraID: string
-  },
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
-    void,
-    GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiEmpty,
-    SyncK8SCustomServiceV1PathParams
-  >('POST', getConfig('servicediscovery'), `/api/v1/infras/${infraID}/synck8scustomservices`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/infras/${infraIdentity}/services`, props, signal)
 
 export interface ListStatefulSetQueryParams {
   /**
@@ -12768,9 +12676,9 @@ export interface ListStatefulSetQueryParams {
 
 export interface ListStatefulSetPathParams {
   /**
-   * infra id
+   * infra identity
    */
-  infraID: string
+  infraIdentity: string
 }
 
 export type ListStatefulSetProps = Omit<
@@ -12789,14 +12697,14 @@ export type ListStatefulSetProps = Omit<
  *
  * Get list of statefulsets present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const ListStatefulSet = ({ infraID, ...props }: ListStatefulSetProps) => (
+export const ListStatefulSet = ({ infraIdentity, ...props }: ListStatefulSetProps) => (
   <Get<
     ApiListStatefulSetResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListStatefulSetQueryParams,
     ListStatefulSetPathParams
   >
-    path={`/api/v1/nfras/${infraID}/statefulsets`}
+    path={`/api/v1/nfras/${infraIdentity}/statefulsets`}
     base={getConfig('servicediscovery')}
     {...props}
   />
@@ -12818,15 +12726,15 @@ export type UseListStatefulSetProps = Omit<
  *
  * Get list of statefulsets present in the kubernetes infra, name and namespace can be passed as filter in query param
  */
-export const useListStatefulSet = ({ infraID, ...props }: UseListStatefulSetProps) =>
+export const useListStatefulSet = ({ infraIdentity, ...props }: UseListStatefulSetProps) =>
   useGet<
     ApiListStatefulSetResponse,
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListStatefulSetQueryParams,
     ListStatefulSetPathParams
-  >((paramsInPath: ListStatefulSetPathParams) => `/api/v1/nfras/${paramsInPath.infraID}/statefulsets`, {
+  >((paramsInPath: ListStatefulSetPathParams) => `/api/v1/nfras/${paramsInPath.infraIdentity}/statefulsets`, {
     base: getConfig('servicediscovery'),
-    pathParams: { infraID },
+    pathParams: { infraIdentity },
     ...props
   })
 
@@ -12837,7 +12745,7 @@ export const useListStatefulSet = ({ infraID, ...props }: UseListStatefulSetProp
  */
 export const listStatefulSetPromise = (
   {
-    infraID,
+    infraIdentity,
     ...props
   }: GetUsingFetchProps<
     ApiListStatefulSetResponse,
@@ -12846,9 +12754,9 @@ export const listStatefulSetPromise = (
     ListStatefulSetPathParams
   > & {
     /**
-     * infra id
+     * infra identity
      */
-    infraID: string
+    infraIdentity: string
   },
   signal?: RequestInit['signal']
 ) =>
@@ -12857,4 +12765,4 @@ export const listStatefulSetPromise = (
     GithubComWingsSoftwareServiceDiscoveryPkgTypesServerApiError,
     ListStatefulSetQueryParams,
     ListStatefulSetPathParams
-  >(getConfig('servicediscovery'), `/api/v1/nfras/${infraID}/statefulsets`, props, signal)
+  >(getConfig('servicediscovery'), `/api/v1/nfras/${infraIdentity}/statefulsets`, props, signal)
