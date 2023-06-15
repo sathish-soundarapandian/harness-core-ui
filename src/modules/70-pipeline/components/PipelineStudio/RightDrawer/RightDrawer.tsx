@@ -1033,8 +1033,8 @@ export function RightDrawer(): React.ReactElement {
             undefined,
             getFlattenedStages(pipeline).stages,
             defaultTo(
-              data.paletteData.entity.node.data.isContainerStepGroup,
-              data.paletteData.entity.node.isContainerStepGroup
+              data.paletteData?.entity?.node?.data?.isContainerStepGroup,
+              data.paletteData?.entity?.node?.isContainerStepGroup
             )
           )}
           stageType={stageType as StageType}
