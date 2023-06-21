@@ -1,0 +1,15 @@
+kind: Component
+spec:
+  type: Service
+  lifecycle: Unknown
+  owner: Unknown
+  system: sanodiaproject
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: sanodiaservice
+  description: dummy service
+  tags: []
+  annotations:
+    harness.io/cd-serviceId: sanodiaservice
+    harness.io/project-url-stress: https://stress.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/Harness_io/projects/sanodiaproject/details
+

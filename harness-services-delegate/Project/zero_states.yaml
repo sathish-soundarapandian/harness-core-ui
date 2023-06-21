@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: asdf
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: zero_states
+  description: ""
+  tags: []
+

@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: DONOTDELETE_ORG
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: Sanity
+  description: ""
+  tags: []
+

@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: AAAAJasmeet
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: jasmeetGitSync3
+  description: ""
+  tags: []
+

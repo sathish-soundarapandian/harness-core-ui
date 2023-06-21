@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: AASunny_org_do_not_delete
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: gitEnabled
+  description: ""
+  tags: []
+

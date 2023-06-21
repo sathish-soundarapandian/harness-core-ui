@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: KD
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: KD_Play
+  description: ""
+  tags: []
+

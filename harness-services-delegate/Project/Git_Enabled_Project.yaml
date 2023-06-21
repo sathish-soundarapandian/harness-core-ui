@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: aaaaaaaaaaaaaaaaDeepakOrg
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: Git_Enabled_Project
+  description: ""
+  tags: []
+

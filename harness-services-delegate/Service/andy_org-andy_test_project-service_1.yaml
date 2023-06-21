@@ -1,0 +1,14 @@
+kind: Component
+spec:
+  type: Service
+  lifecycle: Unknown
+  owner: Unknown
+  system: andy_test_project
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: andy_org-andy_test_project-service_1
+  tags: []
+  annotations:
+    harness.io/cd-serviceId: service_1
+    harness.io/project-url-stress: https://stress.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/andy_org/projects/andy_test_project/details
+

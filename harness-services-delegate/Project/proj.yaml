@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: bhavya_test
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: proj
+  description: ""
+  tags: []
+

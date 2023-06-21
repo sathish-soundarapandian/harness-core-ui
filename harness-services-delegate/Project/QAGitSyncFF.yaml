@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: Alexei
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: QAGitSyncFF
+  description: ""
+  tags: []
+

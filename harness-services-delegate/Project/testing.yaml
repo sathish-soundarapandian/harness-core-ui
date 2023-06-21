@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: arpittest
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: testing
+  description: ""
+  tags: []
+
