@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: nishant_org
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: nishant_org-Test_Project
+  description: ""
+  tags: []
+

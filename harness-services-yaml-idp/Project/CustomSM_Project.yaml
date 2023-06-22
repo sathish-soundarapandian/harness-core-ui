@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: Meenakshi_Test
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: CustomSM_Project
+  description: ""
+  tags: []
+

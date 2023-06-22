@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: deafult
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: Nofar_Templates_Scale_No_CaaC
+  description: ""
+  tags: []
+

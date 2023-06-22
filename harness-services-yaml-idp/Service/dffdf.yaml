@@ -1,0 +1,14 @@
+kind: Component
+spec:
+  type: Service
+  lifecycle: Unknown
+  owner: Unknown
+  system: testing_user_groups
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: dffdf
+  tags: []
+  annotations:
+    harness.io/cd-serviceId: dffdf
+    harness.io/project-url-stress: https://stress.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/shashank/projects/testing_user_groups/details
+

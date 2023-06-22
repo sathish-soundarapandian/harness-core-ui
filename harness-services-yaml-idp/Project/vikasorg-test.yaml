@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: vikasorg
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: vikasorg-test
+  description: ""
+  tags: []
+

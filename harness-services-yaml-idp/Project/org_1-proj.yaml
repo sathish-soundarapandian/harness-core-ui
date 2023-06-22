@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: org_1
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: org_1-proj
+  description: ""
+  tags: []
+

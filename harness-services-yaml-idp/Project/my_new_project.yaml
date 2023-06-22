@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: shashank
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: my_new_project
+  description: ""
+  tags: []
+

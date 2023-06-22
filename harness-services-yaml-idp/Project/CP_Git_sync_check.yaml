@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: Chirag
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: CP_Git_sync_check
+  description: ""
+  tags: []
+
