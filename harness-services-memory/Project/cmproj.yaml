@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: FF_SDK_Tests
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: cmproj
+  description: ""
+  tags: []
+

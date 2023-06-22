@@ -1,0 +1,14 @@
+kind: Component
+spec:
+  type: Service
+  lifecycle: Unknown
+  owner: Unknown
+  system: DocExampleProj
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: DocService
+  tags: []
+  annotations:
+    harness.io/project-url-stress: https://stress.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/DocExampleOrg/projects/DocExampleProj/details
+    harness.io/cd-serviceId: DocService
+

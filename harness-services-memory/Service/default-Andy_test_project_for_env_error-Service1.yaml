@@ -1,0 +1,14 @@
+kind: Component
+spec:
+  type: Service
+  lifecycle: Unknown
+  owner: Unknown
+  system: Andy_test_project_for_env_error
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: default-Andy_test_project_for_env_error-Service1
+  tags: []
+  annotations:
+    harness.io/project-url-stress: https://stress.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/Andy_test_project_for_env_error/details
+    harness.io/cd-serviceId: Service1
+

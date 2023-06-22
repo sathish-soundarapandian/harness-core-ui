@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: test_org
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: bhavyafullsync1
+  description: ""
+  tags: []
+

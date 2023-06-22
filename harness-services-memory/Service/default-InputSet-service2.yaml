@@ -1,0 +1,15 @@
+kind: Component
+spec:
+  type: Service
+  lifecycle: Unknown
+  owner: Unknown
+  system: InputSet
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: default-InputSet-service2
+  description: ""
+  tags: []
+  annotations:
+    harness.io/project-url-stress: https://stress.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/InputSet/details
+    harness.io/cd-serviceId: service2
+
