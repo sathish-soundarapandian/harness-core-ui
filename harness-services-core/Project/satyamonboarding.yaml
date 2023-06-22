@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: satyamorg1
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: satyamonboarding
+  description: ""
+  tags: []
+

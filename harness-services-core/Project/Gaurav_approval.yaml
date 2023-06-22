@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: Harness_io
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: Gaurav_approval
+  description: Test project
+  tags: []
+

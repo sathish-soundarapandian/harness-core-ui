@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: qa_sanity00
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: qasanity_00
+  description: ""
+  tags: []
+

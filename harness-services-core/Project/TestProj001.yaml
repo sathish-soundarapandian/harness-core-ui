@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: PrateekTestOrg1
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: TestProj001
+  description: ""
+  tags: []
+

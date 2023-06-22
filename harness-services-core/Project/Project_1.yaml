@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: aaaaaaaaaaaaaaaaDeepakOrg
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: Project_1
+  description: ""
+  tags: []
+

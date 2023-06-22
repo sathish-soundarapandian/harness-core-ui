@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: dev
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: vikasNG_test
+  description: ""
+  tags: []
+

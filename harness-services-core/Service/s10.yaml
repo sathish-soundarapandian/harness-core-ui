@@ -1,0 +1,14 @@
+kind: Component
+spec:
+  type: Service
+  lifecycle: Unknown
+  owner: Unknown
+  system: basic
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: s10
+  tags: []
+  annotations:
+    harness.io/cd-serviceId: s10
+    harness.io/project-url-stress: https://stress.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/default/projects/basic/details
+

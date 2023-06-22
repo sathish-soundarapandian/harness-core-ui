@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: deafult
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: Nofar_Jan_1st
+  description: ""
+  tags: []
+

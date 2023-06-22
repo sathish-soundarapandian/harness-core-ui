@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: bb2401
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: bb2401
+  description: ""
+  tags: []
+

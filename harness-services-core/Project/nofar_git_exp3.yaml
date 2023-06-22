@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: Archit
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: nofar_git_exp3
+  description: ""
+  tags: []
+

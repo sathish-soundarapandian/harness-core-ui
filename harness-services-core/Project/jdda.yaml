@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: andy_org
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: jdda
+  description: ""
+  tags: []
+

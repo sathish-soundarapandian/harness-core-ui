@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: sdsadssdsd
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: sdsadssdsd-test
+  description: ""
+  tags: []
+

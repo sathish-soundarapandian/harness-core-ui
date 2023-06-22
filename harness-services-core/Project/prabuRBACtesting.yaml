@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: Rbac_Bugbash_Org
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: prabuRBACtesting
+  description: ""
+  tags: []
+
