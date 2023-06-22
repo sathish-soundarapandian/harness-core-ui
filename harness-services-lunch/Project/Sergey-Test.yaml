@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: Sergey
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: Sergey-Test
+  description: ""
+  tags: []
+

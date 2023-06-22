@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: DocExampleOrg
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: DocExampleProj
+  description: ""
+  tags: []
+

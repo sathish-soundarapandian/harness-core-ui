@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: rmoyan
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: Template1Stage
+  description: ""
+  tags: []
+

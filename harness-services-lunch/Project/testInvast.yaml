@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: aaaorg
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: testInvast
+  description: ""
+  tags: []
+

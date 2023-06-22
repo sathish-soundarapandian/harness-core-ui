@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: deafult
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: manju_test_project
+  description: ""
+  tags: []
+

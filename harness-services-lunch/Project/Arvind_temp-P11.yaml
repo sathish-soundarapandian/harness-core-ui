@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: Arvind_temp
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: Arvind_temp-P11
+  description: ""
+  tags: []
+

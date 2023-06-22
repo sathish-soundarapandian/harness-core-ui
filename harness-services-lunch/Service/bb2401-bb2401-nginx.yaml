@@ -1,0 +1,14 @@
+kind: Component
+spec:
+  type: Service
+  lifecycle: Unknown
+  owner: Unknown
+  system: bb2401
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: bb2401-bb2401-nginx
+  tags: []
+  annotations:
+    harness.io/cd-serviceId: nginx
+    harness.io/project-url-stress: https://stress.harness.io/ng/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/bb2401/projects/bb2401/details
+

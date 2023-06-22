@@ -1,0 +1,10 @@
+kind: System
+spec:
+  owner: Unknown
+  domain: ss
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: fsadfsd
+  description: ""
+  tags: []
+
