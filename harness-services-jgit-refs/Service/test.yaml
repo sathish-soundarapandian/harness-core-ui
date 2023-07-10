@@ -1,0 +1,15 @@
+kind: Component
+spec:
+  type: Service
+  lifecycle: Unknown
+  owner: Unknown
+  system: CF_pfYJUEXJuWrt
+apiVersion: backstage.io/v1alpha1
+metadata:
+  name: test
+  description: ""
+  tags: []
+  annotations:
+    harness.io/project-url-stress: https://stress.harness.io/ng/account/zEaak-FLS425IEO7OLzMUg/home/orgs/default/projects/CF_pfYJUEXJuWrt/details
+    harness.io/cd-serviceId: test
+
