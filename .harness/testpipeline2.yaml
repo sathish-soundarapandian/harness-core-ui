@@ -1,0 +1,47 @@
+pipeline:
+  name: testpipeline2
+  identifier: testpipeline2
+  projectIdentifier: laura0006
+  orgIdentifier: default
+  tags: {}
+  stages:
+    - stage:
+        name: stagea
+        identifier: stagea
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: ECS
+          service:
+            serviceRef: <+input>
+            serviceInputs: <+input>
+          environment:
+            environmentRef: <+input>
+            deployToAll: false
+            environmentInputs: <+input>
+            serviceOverrideInputs: <+input>
+            infrastructureDefinitions: <+input>
+          execution:
+            steps:
+              - step:
+                  name: ECS Rolling Deploy
+                  identifier: ecsRollingDeploy
+                  type: EcsRollingDeploy
+                  timeout: <+input>
+                  spec:
+                    sameAsAlreadyRunningInstances: false
+                    forceNewDeployment: false
+            rollbackSteps:
+              - step:
+                  name: ECS Rolling Rollback
+                  identifier: ecsRollingRollback
+                  type: EcsRollingRollback
+                  timeout: 10m
+                  spec: {}
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
